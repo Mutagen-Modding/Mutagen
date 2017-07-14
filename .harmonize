@@ -1,0 +1,20 @@
+<HarmonizeConfig Version="1">
+   <ParentRepos>
+      <RepoListing>
+         <Nickname>CSharpExt</Nickname>
+         <Sha>104876e8ef2ef86dc33dbc4543d3a611aa5eaacc</Sha>
+         <Path>../CSharpExt</Path>
+         <CommitDate>07-13-2017 20:19:38</CommitDate>
+         <Description>TypeExt.IsNullable.  Fixes for XmlExt.TryGetAttribute /w nullables.  ByteExt.ToHexString and EqualsFast</Description>
+         <Author>Justin Swanson</Author>
+      </RepoListing>
+      <RepoListing>
+         <Nickname>Loqui</Nickname>
+         <Sha>964c4cad967fd760b8fd32f30eace7dcc0720764</Sha>
+         <Path>../Loqui</Path>
+         <CommitDate>07-13-2017 20:20:17</CommitDate>
+         <Description>ClassType and ByteArray field work</Description>
+         <Author>Justin Swanson</Author>
+      </RepoListing>
+   </ParentRepos>
+</HarmonizeConfig>
