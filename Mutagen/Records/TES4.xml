@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="TES4" recordType="TES4" GUID="d26d9f2a-53af-4c45-9490-dfdb377b6655" ID="2">
+    <Fields>
+      <ByteArray name="Fluff" nullable="false" length="16" />
+      <Int64 name="NumRecords" />
+      <UInt64 name="NextObjectID" />
+      <Ref name="Header" singleton="Singleton" >
+        <Direct refName="Header" />
+      </Ref>
+    </Fields>
+  </Object>
+</Loqui>
