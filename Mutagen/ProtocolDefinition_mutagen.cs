@@ -10,6 +10,7 @@ namespace Loqui
         {
             LoquiRegistration.Register(Mutagen.Internals.Header_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Internals.TES4_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Internals.OblivionMod_Registration.Instance);
         }
     }
 }

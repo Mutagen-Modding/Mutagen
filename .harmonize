@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>104876e8ef2ef86dc33dbc4543d3a611aa5eaacc</Sha>
+         <Sha>d6d6d968fa0ccd29cf582661f4cd63d682708782</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>07-13-2017 20:19:38</CommitDate>
-         <Description>TypeExt.IsNullable.  Fixes for XmlExt.TryGetAttribute /w nullables.  ByteExt.ToHexString and EqualsFast</Description>
+         <CommitDate>08-02-2017 21:45:01</CommitDate>
+         <Description>DirectoryExt.IsSubfolderOf</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>964c4cad967fd760b8fd32f30eace7dcc0720764</Sha>
+         <Sha>80d81a181d68f7ec55e9aaf969c80ed655133b6c</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>07-13-2017 20:20:17</CommitDate>
-         <Description>ClassType and ByteArray field work</Description>
+         <CommitDate>08-02-2017 21:45:04</CommitDate>
+         <Description>Improved project modification to fully add and include new generated files</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="MutagenSource"
+    targetNamespace="http://tempuri.org/LoquiSource.xsd"
+    elementFormDefault="qualified"
+    xmlns="http://tempuri.org/LoquiSource.xsd"
+    xmlns:mstns="http://tempuri.org/LoquiSource.xsd"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:redefine schemaLocation="../../Loqui/Loqui/LoquiSource.xsd">
+
+    <xs:complexType name="ObjectType">
+      <xs:complexContent>
+        <xs:extension base="ObjectType">
+          <xs:attribute name="recordType" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                Typical four letter ASCII tag used for the record type.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="StructType">
+      <xs:complexContent>
+        <xs:extension base="StructType">
+          <xs:attribute name="recordType" type="xs:string" >
+            <xs:annotation>
+              <xs:documentation>
+                Typical four letter ASCII tag used for the record type.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+    
+    <xs:complexType name="Field">
+      <xs:complexContent>
+        <xs:extension base="Field">
+          <xs:attribute name="vestigial" type="xs:boolean" >
+            <xs:annotation>
+              <xs:documentation>
+                A marker for an unknown or potentially unused field
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:redefine>
+  
+</xs:schema>

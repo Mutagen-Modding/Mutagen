@@ -14,21 +14,21 @@ namespace BethesdaProc.Generation
         static void Main(string[] args)
         {
             LoquiGenerator gen = new LoquiGenerator(
-                new DirectoryInfo("../../../BethesdaProc"))
+                new DirectoryInfo("../../../Mutagen"))
             {
-                DefaultNamespace = "BethesdaProc",
+                DefaultNamespace = "Mutagen",
                 RaisePropertyChangedDefault = false,
-                ProtocolDefault = new ProtocolKey("BethesdaProc")
+                ProtocolDefault = new ProtocolKey("Mutagen"),
             };
 
             // Add Projects
             gen.AddProjectToModify(
-                new FileInfo(Path.Combine(gen.CommonGenerationFolder.FullName, "BethesdaProc.csproj")));
+                new FileInfo(Path.Combine(gen.CommonGenerationFolder.FullName, "Mutagen.csproj")));
 
             gen.AddProtocol(
                 new ProtocolGeneration(
                     gen,
-                    gen.ProtocolDefault));
+                    new ProtocolKey("Mutagen")));
 
             gen.Generate();
         }
