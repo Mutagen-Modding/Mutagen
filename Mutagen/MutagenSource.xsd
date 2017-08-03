@@ -35,7 +35,7 @@
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>
-    
+
     <xs:complexType name="Field">
       <xs:complexContent>
         <xs:extension base="Field">
@@ -49,6 +49,47 @@
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>
+
+    <xs:group name="NamedFieldOptions">
+      <xs:choice>
+        <xs:group ref="NamedFieldOptions"/>
+        <xs:element name="Unknown" type="NUnknown"/>
+      </xs:choice>
+    </xs:group>
+
+    <xs:group name="FieldOptions">
+      <xs:choice>
+        <xs:group ref="FieldOptions"/>
+        <xs:element name="Unknown" type="Unknown"/>
+      </xs:choice>
+    </xs:group>
   </xs:redefine>
+
+  <xs:complexType name="Unknown" >
+    <xs:complexContent>
+      <xs:extension base="Field">
+        <xs:annotation>
+          <xs:documentation>
+            A unknown block of data that should be processed as a byte array.
+          </xs:documentation>
+        </xs:annotation>
+        <xs:attribute name="recordType" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>
+              Typical four letter ASCII tag used for the record type.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="NUnknown" >
+    <xs:complexContent>
+      <xs:extension base="Unknown">
+        <xs:attribute name="name" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
   
 </xs:schema>

@@ -45,14 +45,17 @@
       <Compile Include="ModID.cs" />
       <Compile Include="Properties\AssemblyInfo.cs" />
       <Compile Include="ProtocolDefinition_mutagen.cs" />
-      <Compile Include="Records\Header_LoquiGenerated.cs">
+      <Compile Include="Records\Header\Header_LoquiGenerated.cs">
          <DependentUpon>HEDR.xml</DependentUpon>
-      </Compile>
-      <Compile Include="Records\TES4_LoquiGenerated.cs">
-         <DependentUpon>TES4.xml</DependentUpon>
       </Compile>
       <Compile Include="Records\OblivionMod_LoquiGenerated.cs">
          <DependentUpon>OblivionMod.xml</DependentUpon>
+      </Compile>
+      <Compile Include="Records\UnknownData_LoquiGenerated.cs">
+         <DependentUpon>UnknownData.xml</DependentUpon>
+      </Compile>
+      <Compile Include="Records\Header\TES4_LoquiGenerated.cs">
+         <DependentUpon>TES4.xml</DependentUpon>
       </Compile>
    </ItemGroup>
    <ItemGroup>
@@ -66,13 +69,16 @@
       </ProjectReference>
    </ItemGroup>
    <ItemGroup>
+      <Content Include="Records\UnknownData.xml">
+         <SubType>Designer</SubType>
+      </Content>
       <Content Include="Records\OblivionMod.xml">
          <SubType>Designer</SubType>
       </Content>
-      <Content Include="Records\TES4.xml">
+      <Content Include="Records\Header\TES4.xml">
          <SubType>Designer</SubType>
       </Content>
-      <Content Include="Records\HEDR.xml">
+      <Content Include="Records\Header\HEDR.xml">
          <SubType>Designer</SubType>
       </Content>
    </ItemGroup>

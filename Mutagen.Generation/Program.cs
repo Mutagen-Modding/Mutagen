@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BethesdaProc.Generation
+namespace Mutagen.Generation
 {
     class Program
     {
@@ -20,6 +20,7 @@ namespace BethesdaProc.Generation
                 RaisePropertyChangedDefault = false,
                 ProtocolDefault = new ProtocolKey("Mutagen"),
             };
+            gen.AddTypeAssociation<UnknownType>("Unknown");
 
             // Add Projects
             gen.AddProjectToModify(

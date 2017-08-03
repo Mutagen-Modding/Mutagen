@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="UnknownData" GUID="be2743b7-9211-47b8-ad28-4dbbc5897731" ID="4">
+    <Fields>
+      <ByteArray name="Data" />
+    </Fields>
+  </Object>
+</Loqui>

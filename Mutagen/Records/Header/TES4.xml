@@ -8,6 +8,7 @@
       <Ref name="Header" singleton="Singleton" >
         <Direct refName="Header" />
       </Ref>
+      <Unknown name="TypeOffsets" />
     </Fields>
   </Object>
 </Loqui>

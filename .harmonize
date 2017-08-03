@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>80d81a181d68f7ec55e9aaf969c80ed655133b6c</Sha>
+         <Sha>917ab8a2ecf182a2d1783e63f1fc19b5ba7b2005</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>08-02-2017 21:45:04</CommitDate>
-         <Description>Improved project modification to fully add and include new generated files</Description>
+         <CommitDate>08-02-2017 22:55:24</CommitDate>
+         <Description>Made module mapping dictionaries private, and added inheritance trickledown</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>
