@@ -46,6 +46,20 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
+          <xs:attribute name="recordType" type="xs:string" >
+            <xs:annotation>
+              <xs:documentation>
+                Typical four letter ASCII tag used for the record type.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="includeInLength" type="xs:boolean" >
+            <xs:annotation>
+              <xs:documentation>
+                Whether length of field is considered in binary outputs
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>
@@ -73,7 +87,7 @@
             A unknown block of data that should be processed as a byte array.
           </xs:documentation>
         </xs:annotation>
-        <xs:attribute name="recordType" type="xs:string">
+        <xs:attribute name="recordType" type="xs:string" use="required" >
           <xs:annotation>
             <xs:documentation>
               Typical four letter ASCII tag used for the record type.

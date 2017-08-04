@@ -2,13 +2,15 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="TES4" recordType="TES4" GUID="d26d9f2a-53af-4c45-9490-dfdb377b6655" ID="2">
     <Fields>
-      <ByteArray name="Fluff" nullable="false" length="16" />
+      <ByteArray name="Fluff" nullable="false" length="12" includeInLength="false" />
       <Int64 name="NumRecords" />
       <UInt64 name="NextObjectID" />
-      <Ref name="Header" singleton="Singleton" >
-        <Direct refName="Header" />
-      </Ref>
-      <Unknown name="TypeOffsets" />
+      <RefDirect name="Header" refName="Header" singleton="Singleton" />
+      <Unknown name="TypeOffsets" recordType="OFST" />
+      <Unknown name="Deleted" recordType="DELE" />
+      <String name="Author" recordType="CNAM" maxLength="512" />
+      <String name="Description" recordType="SNAM" maxLength="512" />
+      <RefList name="MasterReferences" refName="Header" />
     </Fields>
   </Object>
 </Loqui>

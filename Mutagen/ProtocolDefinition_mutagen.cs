@@ -12,6 +12,7 @@ namespace Loqui
             LoquiRegistration.Register(Mutagen.Internals.TES4_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Internals.OblivionMod_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Internals.UnknownData_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Internals.MasterReference_Registration.Instance);
         }
     }
 }

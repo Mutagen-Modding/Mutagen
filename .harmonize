@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>917ab8a2ecf182a2d1783e63f1fc19b5ba7b2005</Sha>
+         <Sha>dbf54dab50558a81713d0b30210b28ef263dbe07</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>08-02-2017 22:55:24</CommitDate>
-         <Description>Made module mapping dictionaries private, and added inheritance trickledown</Description>
+         <CommitDate>08-03-2017 23:10:46</CommitDate>
+         <Description>Source XML can not use RefList for a more succinct line</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

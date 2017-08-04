@@ -57,6 +57,9 @@
       <Compile Include="Records\Header\TES4_LoquiGenerated.cs">
          <DependentUpon>TES4.xml</DependentUpon>
       </Compile>
+      <Compile Include="Records\Header\MasterReference_LoquiGenerated.cs">
+         <DependentUpon>MasterReference.xml</DependentUpon>
+      </Compile>
    </ItemGroup>
    <ItemGroup>
       <ProjectReference Include="..\..\CSharpExt\CSharpExt\CSharpExt.csproj">
@@ -69,6 +72,9 @@
       </ProjectReference>
    </ItemGroup>
    <ItemGroup>
+      <Content Include="Records\Header\MasterReference.xml">
+         <SubType>Designer</SubType>
+      </Content>
       <Content Include="Records\UnknownData.xml">
          <SubType>Designer</SubType>
       </Content>

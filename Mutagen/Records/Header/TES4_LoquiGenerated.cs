@@ -36,7 +36,7 @@ namespace Mutagen
         #endregion
 
         #region Fluff
-        private Byte[] _Fluff = new byte[16];
+        private Byte[] _Fluff = new byte[12];
         public Byte[] Fluff
         {
             get => Fluff;
@@ -45,7 +45,7 @@ namespace Mutagen
                 this.Fluff = value;
                 if (value == null)
                 {
-                    this.Fluff = new byte[16];
+                    this.Fluff = new byte[12];
                 }
             }
         }
@@ -62,6 +62,24 @@ namespace Mutagen
         #endregion
         #region TypeOffsets
         public UnknownData TypeOffsets { get; set; }
+        #endregion
+        #region Deleted
+        public UnknownData Deleted { get; set; }
+        #endregion
+        #region Author
+        public String Author { get; set; }
+        #endregion
+        #region Description
+        public String Description { get; set; }
+        #endregion
+        #region MasterReferences
+        private readonly INotifyingList<Header> _MasterReferences = new NotifyingList<Header>();
+        public INotifyingList<Header> MasterReferences => _MasterReferences;
+        #region Interface Members
+        INotifyingList<Header> ITES4.MasterReferences => _MasterReferences;
+        INotifyingListGetter<Header> ITES4Getter.MasterReferences => _MasterReferences;
+        #endregion
+
         #endregion
 
         #region Loqui Getter Interface
@@ -127,6 +145,10 @@ namespace Mutagen
             if (NextObjectID != rhs.NextObjectID) return false;
             if (!object.Equals(Header, rhs.Header)) return false;
             if (!object.Equals(TypeOffsets, rhs.TypeOffsets)) return false;
+            if (!object.Equals(Deleted, rhs.Deleted)) return false;
+            if (Author != rhs.Author) return false;
+            if (Description != rhs.Description) return false;
+            if (!MasterReferences.SequenceEqual(rhs.MasterReferences)) return false;
             return true;
         }
 
@@ -138,6 +160,10 @@ namespace Mutagen
             ret = HashHelper.GetHashCode(NextObjectID).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Header).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(TypeOffsets).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Deleted).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Author).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Description).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(MasterReferences).CombineHashCode(ret);
             return ret;
         }
 
@@ -340,6 +366,135 @@ namespace Mutagen
                         }
                     }
                     break;
+                case "Deleted":
+                    {
+                        MaskItem<Exception, UnknownData_ErrorMask> subMask;
+                        UnknownData_ErrorMask loquiMask;
+                        TryGet<UnknownData> tryGet;
+                        var typeStr = root.GetAttribute(XmlConstants.TYPE_ATTRIBUTE);
+                        if (typeStr != null
+                            && typeStr.Equals("Mutagen.UnknownData"))
+                        {
+                            tryGet = TryGet<UnknownData>.Succeed((UnknownData)UnknownData.Create_XML(
+                                root: root,
+                                doMasks: doMasks,
+                                errorMask: out loquiMask));
+                        }
+                        else
+                        {
+                            var register = LoquiRegistration.GetRegisterByFullName(typeStr ?? root.Name.LocalName);
+                            if (register == null)
+                            {
+                                var ex = new ArgumentException($"Unknown Loqui type: {root.Name.LocalName}");
+                                if (!doMasks) throw ex;
+                                subMask = new MaskItem<Exception, UnknownData_ErrorMask>(
+                                    ex,
+                                    null);
+                                break;
+                            }
+                            tryGet = XmlTranslator.GetTranslator(register.ClassType).Item.Value.Parse(
+                                root: root,
+                                doMasks: doMasks,
+                                maskObj: out var subErrorMaskObj).Bubble((o) => (UnknownData)o);
+                            loquiMask = (UnknownData_ErrorMask)subErrorMaskObj;
+                        }
+                        subMask = loquiMask == null ? null : new MaskItem<Exception, UnknownData_ErrorMask>(null, loquiMask);
+                        if (tryGet.Succeeded)
+                        {
+                            item.Deleted = tryGet.Value;
+                        }
+                        if (subMask != null)
+                        {
+                            errorMask().Deleted = subMask;
+                        }
+                    }
+                    break;
+                case "Author":
+                    {
+                        Exception subMask;
+                        var tryGet = StringXmlTranslation.Instance.Parse(
+                            root,
+                            doMasks: doMasks,
+                            errorMask: out subMask);
+                        if (tryGet.Succeeded)
+                        {
+                            item.Author = tryGet.Value;
+                        }
+                        if (subMask != null)
+                        {
+                            errorMask().Author = subMask;
+                        }
+                    }
+                    break;
+                case "Description":
+                    {
+                        Exception subMask;
+                        var tryGet = StringXmlTranslation.Instance.Parse(
+                            root,
+                            doMasks: doMasks,
+                            errorMask: out subMask);
+                        if (tryGet.Succeeded)
+                        {
+                            item.Description = tryGet.Value;
+                        }
+                        if (subMask != null)
+                        {
+                            errorMask().Description = subMask;
+                        }
+                    }
+                    break;
+                case "MasterReferences":
+                    {
+                        MaskItem<Exception, IEnumerable<MaskItem<Exception, Header_ErrorMask>>> subMask;
+                        var listTryGet = ListXmlTranslation<Header, MaskItem<Exception, Header_ErrorMask>>.Instance.Parse(
+                            root: root,
+                            doMasks: doMasks,
+                            maskObj: out subMask,
+                            transl: (XElement r, bool listDoMasks, out MaskItem<Exception, Header_ErrorMask> listSubMask) =>
+                            {
+                                Header_ErrorMask loquiMask;
+                                TryGet<Header> tryGet;
+                                var typeStr = r.GetAttribute(XmlConstants.TYPE_ATTRIBUTE);
+                                if (typeStr != null
+                                    && typeStr.Equals("Mutagen.Header"))
+                                {
+                                    tryGet = TryGet<Header>.Succeed((Header)Header.Create_XML(
+                                        root: r,
+                                        doMasks: listDoMasks,
+                                        errorMask: out loquiMask));
+                                }
+                                else
+                                {
+                                    var register = LoquiRegistration.GetRegisterByFullName(typeStr ?? r.Name.LocalName);
+                                    if (register == null)
+                                    {
+                                        var ex = new ArgumentException($"Unknown Loqui type: {r.Name.LocalName}");
+                                        if (!listDoMasks) throw ex;
+                                        listSubMask = new MaskItem<Exception, Header_ErrorMask>(
+                                            ex,
+                                            null);
+                                        return TryGet<Header>.Fail(null);
+                                    }
+                                    tryGet = XmlTranslator.GetTranslator(register.ClassType).Item.Value.Parse(
+                                        root: root,
+                                        doMasks: listDoMasks,
+                                        maskObj: out var subErrorMaskObj).Bubble((o) => (Header)o);
+                                    loquiMask = (Header_ErrorMask)subErrorMaskObj;
+                                }
+                                listSubMask = loquiMask == null ? null : new MaskItem<Exception, Header_ErrorMask>(null, loquiMask);
+                                return tryGet;
+                            }
+                            );
+                        if (listTryGet.Succeeded)
+                        {
+                            item._MasterReferences.SetTo(listTryGet.Value);
+                        }
+                        if (subMask != null)
+                        {
+                            errorMask().MasterReferences = subMask;
+                        }
+                    }
+                    break;
                 default:
                     break;
             }
@@ -494,6 +649,18 @@ namespace Mutagen
                 case TES4_FieldIndex.TypeOffsets:
                     this.TypeOffsets = (UnknownData)obj;
                     break;
+                case TES4_FieldIndex.Deleted:
+                    this.Deleted = (UnknownData)obj;
+                    break;
+                case TES4_FieldIndex.Author:
+                    this.Author = (String)obj;
+                    break;
+                case TES4_FieldIndex.Description:
+                    this.Description = (String)obj;
+                    break;
+                case TES4_FieldIndex.MasterReferences:
+                    this._MasterReferences.SetTo((IEnumerable<Header>)obj, cmds);
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -546,6 +713,18 @@ namespace Mutagen
                 case TES4_FieldIndex.TypeOffsets:
                     obj.TypeOffsets = (UnknownData)pair.Value;
                     break;
+                case TES4_FieldIndex.Deleted:
+                    obj.Deleted = (UnknownData)pair.Value;
+                    break;
+                case TES4_FieldIndex.Author:
+                    obj.Author = (String)pair.Value;
+                    break;
+                case TES4_FieldIndex.Description:
+                    obj.Description = (String)pair.Value;
+                    break;
+                case TES4_FieldIndex.MasterReferences:
+                    obj._MasterReferences.SetTo((IEnumerable<Header>)pair.Value, null);
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -569,6 +748,13 @@ namespace Mutagen
 
         new UnknownData TypeOffsets { get; set; }
 
+        new UnknownData Deleted { get; set; }
+
+        new String Author { get; set; }
+
+        new String Description { get; set; }
+
+        new INotifyingList<Header> MasterReferences { get; }
     }
 
     public interface ITES4Getter : ILoquiObject
@@ -593,6 +779,21 @@ namespace Mutagen
         UnknownData TypeOffsets { get; }
 
         #endregion
+        #region Deleted
+        UnknownData Deleted { get; }
+
+        #endregion
+        #region Author
+        String Author { get; }
+
+        #endregion
+        #region Description
+        String Description { get; }
+
+        #endregion
+        #region MasterReferences
+        INotifyingListGetter<Header> MasterReferences { get; }
+        #endregion
 
     }
 
@@ -610,6 +811,10 @@ namespace Mutagen.Internals
         NextObjectID = 2,
         Header = 3,
         TypeOffsets = 4,
+        Deleted = 5,
+        Author = 6,
+        Description = 7,
+        MasterReferences = 8,
     }
     #endregion
 
@@ -627,7 +832,7 @@ namespace Mutagen.Internals
 
         public const string GUID = "d26d9f2a-53af-4c45-9490-dfdb377b6655";
 
-        public const ushort FieldCount = 5;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(TES4_Mask<>);
 
@@ -665,6 +870,14 @@ namespace Mutagen.Internals
                     return (ushort)TES4_FieldIndex.Header;
                 case "TYPEOFFSETS":
                     return (ushort)TES4_FieldIndex.TypeOffsets;
+                case "DELETED":
+                    return (ushort)TES4_FieldIndex.Deleted;
+                case "AUTHOR":
+                    return (ushort)TES4_FieldIndex.Author;
+                case "DESCRIPTION":
+                    return (ushort)TES4_FieldIndex.Description;
+                case "MASTERREFERENCES":
+                    return (ushort)TES4_FieldIndex.MasterReferences;
                 default:
                     return null;
             }
@@ -675,11 +888,16 @@ namespace Mutagen.Internals
             TES4_FieldIndex enu = (TES4_FieldIndex)index;
             switch (enu)
             {
+                case TES4_FieldIndex.MasterReferences:
+                    return true;
                 case TES4_FieldIndex.Fluff:
                 case TES4_FieldIndex.NumRecords:
                 case TES4_FieldIndex.NextObjectID:
                 case TES4_FieldIndex.Header:
                 case TES4_FieldIndex.TypeOffsets:
+                case TES4_FieldIndex.Deleted:
+                case TES4_FieldIndex.Author:
+                case TES4_FieldIndex.Description:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -693,10 +911,14 @@ namespace Mutagen.Internals
             {
                 case TES4_FieldIndex.Header:
                 case TES4_FieldIndex.TypeOffsets:
+                case TES4_FieldIndex.Deleted:
+                case TES4_FieldIndex.MasterReferences:
                     return true;
                 case TES4_FieldIndex.Fluff:
                 case TES4_FieldIndex.NumRecords:
                 case TES4_FieldIndex.NextObjectID:
+                case TES4_FieldIndex.Author:
+                case TES4_FieldIndex.Description:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -714,6 +936,10 @@ namespace Mutagen.Internals
                 case TES4_FieldIndex.NumRecords:
                 case TES4_FieldIndex.NextObjectID:
                 case TES4_FieldIndex.TypeOffsets:
+                case TES4_FieldIndex.Deleted:
+                case TES4_FieldIndex.Author:
+                case TES4_FieldIndex.Description:
+                case TES4_FieldIndex.MasterReferences:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -735,6 +961,14 @@ namespace Mutagen.Internals
                     return "Header";
                 case TES4_FieldIndex.TypeOffsets:
                     return "TypeOffsets";
+                case TES4_FieldIndex.Deleted:
+                    return "Deleted";
+                case TES4_FieldIndex.Author:
+                    return "Author";
+                case TES4_FieldIndex.Description:
+                    return "Description";
+                case TES4_FieldIndex.MasterReferences:
+                    return "MasterReferences";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -750,6 +984,10 @@ namespace Mutagen.Internals
                 case TES4_FieldIndex.NextObjectID:
                 case TES4_FieldIndex.Header:
                 case TES4_FieldIndex.TypeOffsets:
+                case TES4_FieldIndex.Deleted:
+                case TES4_FieldIndex.Author:
+                case TES4_FieldIndex.Description:
+                case TES4_FieldIndex.MasterReferences:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -767,6 +1005,10 @@ namespace Mutagen.Internals
                 case TES4_FieldIndex.NumRecords:
                 case TES4_FieldIndex.NextObjectID:
                 case TES4_FieldIndex.TypeOffsets:
+                case TES4_FieldIndex.Deleted:
+                case TES4_FieldIndex.Author:
+                case TES4_FieldIndex.Description:
+                case TES4_FieldIndex.MasterReferences:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -788,6 +1030,14 @@ namespace Mutagen.Internals
                     return typeof(Header);
                 case TES4_FieldIndex.TypeOffsets:
                     return typeof(UnknownData);
+                case TES4_FieldIndex.Deleted:
+                    return typeof(UnknownData);
+                case TES4_FieldIndex.Author:
+                    return typeof(String);
+                case TES4_FieldIndex.Description:
+                    return typeof(String);
+                case TES4_FieldIndex.MasterReferences:
+                    return typeof(NotifyingList<Header>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -990,6 +1240,93 @@ namespace Mutagen.Internals
                     errorMask().SetNthException((ushort)TES4_FieldIndex.TypeOffsets, ex);
                 }
             }
+            if (copyMask?.Deleted.Overall != CopyOption.Skip)
+            {
+                try
+                {
+                    switch (copyMask?.Deleted.Overall ?? CopyOption.Reference)
+                    {
+                        case CopyOption.Reference:
+                            item.Deleted = rhs.Deleted;
+                            break;
+                        case CopyOption.CopyIn:
+                            UnknownDataCommon.CopyFieldsFrom(
+                                item: item.Deleted,
+                                rhs: rhs.Deleted,
+                                def: def?.Deleted,
+                                doErrorMask: doErrorMask,
+                                errorMask: (doErrorMask ? new Func<UnknownData_ErrorMask>(() =>
+                                {
+                                    var baseMask = errorMask();
+                                    if (baseMask.Deleted.Specific == null)
+                                    {
+                                        baseMask.Deleted = new MaskItem<Exception, UnknownData_ErrorMask>(null, new UnknownData_ErrorMask());
+                                    }
+                                    return baseMask.Deleted.Specific;
+                                }
+                                ) : null),
+                                copyMask: copyMask?.Deleted.Specific,
+                                cmds: cmds);
+                            break;
+                        case CopyOption.MakeCopy:
+                            if (rhs.Deleted == null)
+                            {
+                                item.Deleted = null;
+                            }
+                            else
+                            {
+                                item.Deleted = UnknownData.Copy(
+                                    rhs.Deleted,
+                                    copyMask?.Deleted.Specific,
+                                    def?.Deleted);
+                            }
+                            break;
+                        default:
+                            throw new NotImplementedException($"Unknown CopyOption {copyMask?.Deleted.Overall}. Cannot execute copy.");
+                    }
+                }
+                catch (Exception ex)
+                when (doErrorMask)
+                {
+                    errorMask().SetNthException((ushort)TES4_FieldIndex.Deleted, ex);
+                }
+            }
+            if (copyMask?.Author ?? true)
+            {
+                item.Author = rhs.Author;
+            }
+            if (copyMask?.Description ?? true)
+            {
+                item.Description = rhs.Description;
+            }
+            if (copyMask?.MasterReferences.Overall != CopyOption.Skip)
+            {
+                try
+                {
+                    item.MasterReferences.SetToWithDefault(
+                        rhs.MasterReferences,
+                        def?.MasterReferences,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.MasterReferences.Overall ?? CopyOption.Reference)
+                            {
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    return r.Copy(copyMask?.MasterReferences.Specific, d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.MasterReferences.Overall}. Cannot execute copy.");
+                            }
+                        }
+                        );
+                }
+                catch (Exception ex)
+                when (doErrorMask)
+                {
+                    errorMask().SetNthException((ushort)TES4_FieldIndex.MasterReferences, ex);
+                }
+            }
         }
 
         #endregion
@@ -1012,6 +1349,15 @@ namespace Mutagen.Internals
                 case TES4_FieldIndex.Header:
                     throw new ArgumentException("Tried to set at a readonly index " + index);
                 case TES4_FieldIndex.TypeOffsets:
+                    break;
+                case TES4_FieldIndex.Deleted:
+                    break;
+                case TES4_FieldIndex.Author:
+                    break;
+                case TES4_FieldIndex.Description:
+                    break;
+                case TES4_FieldIndex.MasterReferences:
+                    obj.MasterReferences.HasBeenSet = on;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1040,6 +1386,18 @@ namespace Mutagen.Internals
                 case TES4_FieldIndex.TypeOffsets:
                     obj.TypeOffsets = default(UnknownData);
                     break;
+                case TES4_FieldIndex.Deleted:
+                    obj.Deleted = default(UnknownData);
+                    break;
+                case TES4_FieldIndex.Author:
+                    obj.Author = default(String);
+                    break;
+                case TES4_FieldIndex.Description:
+                    obj.Description = default(String);
+                    break;
+                case TES4_FieldIndex.MasterReferences:
+                    obj.MasterReferences.Unset(cmds);
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1057,6 +1415,10 @@ namespace Mutagen.Internals
                 case TES4_FieldIndex.NextObjectID:
                 case TES4_FieldIndex.Header:
                 case TES4_FieldIndex.TypeOffsets:
+                case TES4_FieldIndex.Deleted:
+                case TES4_FieldIndex.Author:
+                case TES4_FieldIndex.Description:
+                case TES4_FieldIndex.MasterReferences:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1080,6 +1442,14 @@ namespace Mutagen.Internals
                     return obj.Header;
                 case TES4_FieldIndex.TypeOffsets:
                     return obj.TypeOffsets;
+                case TES4_FieldIndex.Deleted:
+                    return obj.Deleted;
+                case TES4_FieldIndex.Author:
+                    return obj.Author;
+                case TES4_FieldIndex.Description:
+                    return obj.Description;
+                case TES4_FieldIndex.MasterReferences:
+                    return obj.MasterReferences;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1093,6 +1463,10 @@ namespace Mutagen.Internals
             item.NumRecords = default(Int64);
             item.NextObjectID = default(UInt64);
             item.TypeOffsets = default(UnknownData);
+            item.Deleted = default(UnknownData);
+            item.Author = default(String);
+            item.Description = default(String);
+            item.MasterReferences.Unset(cmds.ToUnsetParams());
         }
 
         public static TES4_Mask<bool> GetEqualsMask(
@@ -1119,6 +1493,22 @@ namespace Mutagen.Internals
             ret.TypeOffsets = new MaskItem<bool, UnknownData_Mask<bool>>();
             ret.TypeOffsets.Specific = UnknownDataCommon.GetEqualsMask(item.TypeOffsets, rhs.TypeOffsets);
             ret.TypeOffsets.Overall = ret.TypeOffsets.Specific.AllEqual((b) => b);
+            ret.Deleted = new MaskItem<bool, UnknownData_Mask<bool>>();
+            ret.Deleted.Specific = UnknownDataCommon.GetEqualsMask(item.Deleted, rhs.Deleted);
+            ret.Deleted.Overall = ret.Deleted.Specific.AllEqual((b) => b);
+            ret.Author = item.Author == rhs.Author;
+            ret.Description = item.Description == rhs.Description;
+            ret.MasterReferences = new MaskItem<bool, IEnumerable<MaskItem<bool, Header_Mask<bool>>>>();
+            ret.MasterReferences.Specific = item.MasterReferences.SelectAgainst<Header, MaskItem<bool, Header_Mask<bool>>>(rhs.MasterReferences, ((l, r) =>
+            {
+                MaskItem<bool, Header_Mask<bool>> itemRet;
+                itemRet = new MaskItem<bool, Header_Mask<bool>>();
+                itemRet.Specific = HeaderCommon.GetEqualsMask(l, r);
+                itemRet.Overall = itemRet.Specific.AllEqual((b) => b);
+                return itemRet;
+            }
+            ), out ret.MasterReferences.Overall);
+            ret.MasterReferences.Overall = ret.MasterReferences.Overall && ret.MasterReferences.Specific.All((b) => b.Overall);
         }
 
         public static string ToString(
@@ -1168,6 +1558,36 @@ namespace Mutagen.Internals
                 {
                     item.TypeOffsets.ToString(fg, "TypeOffsets");
                 }
+                if (printMask?.Deleted?.Overall ?? true)
+                {
+                    item.Deleted.ToString(fg, "Deleted");
+                }
+                if (printMask?.Author ?? true)
+                {
+                    fg.AppendLine($"Author => {item.Author}");
+                }
+                if (printMask?.Description ?? true)
+                {
+                    fg.AppendLine($"Description => {item.Description}");
+                }
+                if (printMask?.MasterReferences?.Overall ?? true)
+                {
+                    fg.AppendLine("MasterReferences =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        foreach (var subItem in item.MasterReferences)
+                        {
+                            fg.AppendLine("[");
+                            using (new DepthWrapper(fg))
+                            {
+                                subItem.ToString(fg, "Item");
+                            }
+                            fg.AppendLine("]");
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
             }
             fg.AppendLine("]");
         }
@@ -1187,6 +1607,10 @@ namespace Mutagen.Internals
             ret.NextObjectID = true;
             ret.Header = new MaskItem<bool, Header_Mask<bool>>(true, HeaderCommon.GetHasBeenSetMask(item.Header));
             ret.TypeOffsets = new MaskItem<bool, UnknownData_Mask<bool>>(true, UnknownDataCommon.GetHasBeenSetMask(item.TypeOffsets));
+            ret.Deleted = new MaskItem<bool, UnknownData_Mask<bool>>(true, UnknownDataCommon.GetHasBeenSetMask(item.Deleted));
+            ret.Author = true;
+            ret.Description = true;
+            ret.MasterReferences = new MaskItem<bool, IEnumerable<MaskItem<bool, Header_Mask<bool>>>>(item.MasterReferences.HasBeenSet, item.MasterReferences.Select((i) => new MaskItem<bool, Header_Mask<bool>>(true, i.GetHasBeenSetMask())));
             return ret;
         }
 
@@ -1326,6 +1750,70 @@ namespace Mutagen.Internals
                             errorMask().TypeOffsets = subMask;
                         }
                     }
+                    {
+                        MaskItem<Exception, UnknownData_ErrorMask> subMask;
+                        UnknownDataCommon.Write_XML(
+                            writer: writer,
+                            item: item.Deleted,
+                            name: nameof(item.Deleted),
+                            doMasks: doMasks,
+                            errorMask: out UnknownData_ErrorMask loquiMask);
+                        subMask = loquiMask == null ? null : new MaskItem<Exception, UnknownData_ErrorMask>(null, loquiMask);
+                        if (subMask != null)
+                        {
+                            errorMask().Deleted = subMask;
+                        }
+                    }
+                    {
+                        Exception subMask;
+                        StringXmlTranslation.Instance.Write(
+                            writer,
+                            nameof(item.Author),
+                            item.Author,
+                            doMasks: doMasks,
+                            errorMask: out subMask);
+                        if (subMask != null)
+                        {
+                            errorMask().Author = subMask;
+                        }
+                    }
+                    {
+                        Exception subMask;
+                        StringXmlTranslation.Instance.Write(
+                            writer,
+                            nameof(item.Description),
+                            item.Description,
+                            doMasks: doMasks,
+                            errorMask: out subMask);
+                        if (subMask != null)
+                        {
+                            errorMask().Description = subMask;
+                        }
+                    }
+                    {
+                        MaskItem<Exception, IEnumerable<MaskItem<Exception, Header_ErrorMask>>> subMask;
+                        ListXmlTranslation<Header, MaskItem<Exception, Header_ErrorMask>>.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.MasterReferences),
+                            item: item.MasterReferences,
+                            doMasks: doMasks,
+                            maskObj: out subMask,
+                            transl: (Header subItem, bool listDoMasks, out MaskItem<Exception, Header_ErrorMask> listSubMask) =>
+                            {
+                                HeaderCommon.Write_XML(
+                                    writer: writer,
+                                    item: subItem,
+                                    name: "Item",
+                                    doMasks: doMasks,
+                                    errorMask: out Header_ErrorMask loquiMask);
+                                listSubMask = loquiMask == null ? null : new MaskItem<Exception, Header_ErrorMask>(null, loquiMask);
+                            }
+                            );
+                        if (subMask != null)
+                        {
+                            errorMask().MasterReferences = subMask;
+                        }
+                    }
                 }
             }
             catch (Exception ex)
@@ -1358,6 +1846,10 @@ namespace Mutagen.Internals
             this.NextObjectID = initialValue;
             this.Header = new MaskItem<T, Header_Mask<T>>(initialValue, new Header_Mask<T>(initialValue));
             this.TypeOffsets = new MaskItem<T, UnknownData_Mask<T>>(initialValue, new UnknownData_Mask<T>(initialValue));
+            this.Deleted = new MaskItem<T, UnknownData_Mask<T>>(initialValue, new UnknownData_Mask<T>(initialValue));
+            this.Author = initialValue;
+            this.Description = initialValue;
+            this.MasterReferences = new MaskItem<T, IEnumerable<MaskItem<T, Header_Mask<T>>>>(initialValue, null);
         }
         #endregion
 
@@ -1367,6 +1859,10 @@ namespace Mutagen.Internals
         public T NextObjectID;
         public MaskItem<T, Header_Mask<T>> Header { get; set; }
         public MaskItem<T, UnknownData_Mask<T>> TypeOffsets { get; set; }
+        public MaskItem<T, UnknownData_Mask<T>> Deleted { get; set; }
+        public T Author;
+        public T Description;
+        public MaskItem<T, IEnumerable<MaskItem<T, Header_Mask<T>>>> MasterReferences;
         #endregion
 
         #region Equals
@@ -1383,6 +1879,10 @@ namespace Mutagen.Internals
             if (!object.Equals(this.NextObjectID, rhs.NextObjectID)) return false;
             if (!object.Equals(this.Header, rhs.Header)) return false;
             if (!object.Equals(this.TypeOffsets, rhs.TypeOffsets)) return false;
+            if (!object.Equals(this.Deleted, rhs.Deleted)) return false;
+            if (!object.Equals(this.Author, rhs.Author)) return false;
+            if (!object.Equals(this.Description, rhs.Description)) return false;
+            if (!object.Equals(this.MasterReferences, rhs.MasterReferences)) return false;
             return true;
         }
         #endregion
@@ -1402,6 +1902,25 @@ namespace Mutagen.Internals
             {
                 if (!eval(this.TypeOffsets.Overall)) return false;
                 if (TypeOffsets.Specific != null && !TypeOffsets.Specific.AllEqual(eval)) return false;
+            }
+            if (Deleted != null)
+            {
+                if (!eval(this.Deleted.Overall)) return false;
+                if (Deleted.Specific != null && !Deleted.Specific.AllEqual(eval)) return false;
+            }
+            if (!eval(this.Author)) return false;
+            if (!eval(this.Description)) return false;
+            if (MasterReferences != null)
+            {
+                if (!eval(this.MasterReferences.Overall)) return false;
+                if (MasterReferences.Specific != null)
+                {
+                    foreach (var item in MasterReferences.Specific)
+                    {
+                        if (!eval(item.Overall)) return false;
+                        if (!item.Specific?.AllEqual(eval) ?? false) return false;
+                    }
+                }
             }
             return true;
         }
@@ -1432,6 +1951,41 @@ namespace Mutagen.Internals
                     ret.TypeOffsets.Specific = this.TypeOffsets.Specific.Translate(eval);
                 }
             }
+            if (this.Deleted != null)
+            {
+                ret.Deleted = new MaskItem<R, UnknownData_Mask<R>>();
+                ret.Deleted.Overall = eval(this.Deleted.Overall);
+                if (this.Deleted.Specific != null)
+                {
+                    ret.Deleted.Specific = this.Deleted.Specific.Translate(eval);
+                }
+            }
+            ret.Author = eval(this.Author);
+            ret.Description = eval(this.Description);
+            if (MasterReferences != null)
+            {
+                ret.MasterReferences = new MaskItem<R, IEnumerable<MaskItem<R, Header_Mask<R>>>>();
+                ret.MasterReferences.Overall = eval(this.MasterReferences.Overall);
+                if (MasterReferences.Specific != null)
+                {
+                    List<MaskItem<R, Header_Mask<R>>> l = new List<MaskItem<R, Header_Mask<R>>>();
+                    ret.MasterReferences.Specific = l;
+                    foreach (var item in MasterReferences.Specific)
+                    {
+                        MaskItem<R, Header_Mask<R>> mask = default(MaskItem<R, Header_Mask<R>>);
+                        if (item != null)
+                        {
+                            mask = new MaskItem<R, Header_Mask<R>>();
+                            mask.Overall = eval(item.Overall);
+                            if (item.Specific != null)
+                            {
+                                mask.Specific = item.Specific.Translate(eval);
+                            }
+                        }
+                        l.Add(mask);
+                    }
+                }
+            }
             return ret;
         }
         #endregion
@@ -1439,6 +1993,7 @@ namespace Mutagen.Internals
         #region Clear Enumerables
         public void ClearEnumerables()
         {
+            this.MasterReferences.Specific = null;
         }
         #endregion
 
@@ -1481,6 +2036,43 @@ namespace Mutagen.Internals
                 {
                     TypeOffsets.ToString(fg);
                 }
+                if (printMask?.Deleted?.Overall ?? true)
+                {
+                    Deleted.ToString(fg);
+                }
+                if (printMask?.Author ?? true)
+                {
+                    fg.AppendLine($"Author => {Author.ToStringSafe()}");
+                }
+                if (printMask?.Description ?? true)
+                {
+                    fg.AppendLine($"Description => {Description.ToStringSafe()}");
+                }
+                if (printMask?.MasterReferences?.Overall ?? true)
+                {
+                    fg.AppendLine("MasterReferences =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        if (MasterReferences.Overall != null)
+                        {
+                            fg.AppendLine(MasterReferences.Overall.ToString());
+                        }
+                        if (MasterReferences.Specific != null)
+                        {
+                            foreach (var subItem in MasterReferences.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
             }
             fg.AppendLine("]");
         }
@@ -1509,6 +2101,10 @@ namespace Mutagen.Internals
         public Exception NextObjectID;
         public MaskItem<Exception, Header_ErrorMask> Header;
         public MaskItem<Exception, UnknownData_ErrorMask> TypeOffsets;
+        public MaskItem<Exception, UnknownData_ErrorMask> Deleted;
+        public Exception Author;
+        public Exception Description;
+        public MaskItem<Exception, IEnumerable<MaskItem<Exception, Header_ErrorMask>>> MasterReferences;
         #endregion
 
         #region IErrorMask
@@ -1531,6 +2127,18 @@ namespace Mutagen.Internals
                     break;
                 case TES4_FieldIndex.TypeOffsets:
                     this.TypeOffsets = new MaskItem<Exception, UnknownData_ErrorMask>(ex, null);
+                    break;
+                case TES4_FieldIndex.Deleted:
+                    this.Deleted = new MaskItem<Exception, UnknownData_ErrorMask>(ex, null);
+                    break;
+                case TES4_FieldIndex.Author:
+                    this.Author = ex;
+                    break;
+                case TES4_FieldIndex.Description:
+                    this.Description = ex;
+                    break;
+                case TES4_FieldIndex.MasterReferences:
+                    this.MasterReferences = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Header_ErrorMask>>>(ex, null);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1556,6 +2164,18 @@ namespace Mutagen.Internals
                     break;
                 case TES4_FieldIndex.TypeOffsets:
                     this.TypeOffsets = (MaskItem<Exception, UnknownData_ErrorMask>)obj;
+                    break;
+                case TES4_FieldIndex.Deleted:
+                    this.Deleted = (MaskItem<Exception, UnknownData_ErrorMask>)obj;
+                    break;
+                case TES4_FieldIndex.Author:
+                    this.Author = (Exception)obj;
+                    break;
+                case TES4_FieldIndex.Description:
+                    this.Description = (Exception)obj;
+                    break;
+                case TES4_FieldIndex.MasterReferences:
+                    this.MasterReferences = (MaskItem<Exception, IEnumerable<MaskItem<Exception, Header_ErrorMask>>>)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1597,6 +2217,43 @@ namespace Mutagen.Internals
                 {
                     TypeOffsets.ToString(fg);
                 }
+                if (Deleted != null)
+                {
+                    Deleted.ToString(fg);
+                }
+                if (Author != null)
+                {
+                    fg.AppendLine($"Author => {Author.ToStringSafe()}");
+                }
+                if (Description != null)
+                {
+                    fg.AppendLine($"Description => {Description.ToStringSafe()}");
+                }
+                if (MasterReferences != null)
+                {
+                    fg.AppendLine("MasterReferences =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        if (MasterReferences.Overall != null)
+                        {
+                            fg.AppendLine(MasterReferences.Overall.ToString());
+                        }
+                        if (MasterReferences.Specific != null)
+                        {
+                            foreach (var subItem in MasterReferences.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
             }
             fg.AppendLine("]");
         }
@@ -1611,6 +2268,10 @@ namespace Mutagen.Internals
             ret.NextObjectID = this.NextObjectID.Combine(rhs.NextObjectID);
             ret.Header = new MaskItem<Exception, Header_ErrorMask>(this.Header.Overall.Combine(rhs.Header.Overall), this.Header.Specific.Combine(rhs.Header.Specific));
             ret.TypeOffsets = new MaskItem<Exception, UnknownData_ErrorMask>(this.TypeOffsets.Overall.Combine(rhs.TypeOffsets.Overall), this.TypeOffsets.Specific.Combine(rhs.TypeOffsets.Specific));
+            ret.Deleted = new MaskItem<Exception, UnknownData_ErrorMask>(this.Deleted.Overall.Combine(rhs.Deleted.Overall), this.Deleted.Specific.Combine(rhs.Deleted.Specific));
+            ret.Author = this.Author.Combine(rhs.Author);
+            ret.Description = this.Description.Combine(rhs.Description);
+            ret.MasterReferences = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Header_ErrorMask>>>(this.MasterReferences.Overall.Combine(rhs.MasterReferences.Overall), new List<MaskItem<Exception, Header_ErrorMask>>(this.MasterReferences.Specific.And(rhs.MasterReferences.Specific)));
             return ret;
         }
         public static TES4_ErrorMask Combine(TES4_ErrorMask lhs, TES4_ErrorMask rhs)
@@ -1629,6 +2290,10 @@ namespace Mutagen.Internals
         public bool NextObjectID;
         public MaskItem<bool, Header_CopyMask> Header;
         public MaskItem<CopyOption, UnknownData_CopyMask> TypeOffsets;
+        public MaskItem<CopyOption, UnknownData_CopyMask> Deleted;
+        public bool Author;
+        public bool Description;
+        public MaskItem<CopyOption, Header_CopyMask> MasterReferences;
         #endregion
 
     }
