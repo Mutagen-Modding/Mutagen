@@ -35,12 +35,15 @@ namespace Mutagen
         #endregion
 
         #region Data
-        private Byte[] _Data;
+        protected readonly IHasBeenSetItem<Byte[]> _Data = HasBeenSetItem.Factory<Byte[]>(markAsSet: false);
+        public IHasBeenSetItem<Byte[]> Data_Property => _Data;
         public Byte[] Data
         {
-            get => Data;
-            set { this._Data = value; }
+            get => this._Data.Item;
+            set => this._Data.Set(value);
         }
+        Byte[] IUnknownDataGetter.Data => this.Data;
+        IHasBeenSetItemGetter<Byte[]> IUnknownDataGetter.Data_Property => this.Data_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -101,14 +104,21 @@ namespace Mutagen
         public bool Equals(UnknownData rhs)
         {
             if (rhs == null) return false;
-            if (!Data.EqualsFast(rhs.Data)) return false;
+            if (Data_Property.HasBeenSet != rhs.Data_Property.HasBeenSet) return false;
+            if (Data_Property.HasBeenSet)
+            {
+                if (!Data.EqualsFast(rhs.Data)) return false;
+            }
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = HashHelper.GetHashCode(Data).CombineHashCode(ret);
+            if (Data_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Data).CombineHashCode(ret);
+            }
             return ret;
         }
 
@@ -201,9 +211,9 @@ namespace Mutagen
                             errorMask: out subMask);
                         if (tryGet.Succeeded)
                         {
-                            item.Data = tryGet.Value;
+                            item._Data.Item = tryGet.Value;
                         }
-                        if (subMask != null)
+                        if (doMasks && subMask != null)
                         {
                             errorMask().Data = subMask;
                         }
@@ -266,6 +276,165 @@ namespace Mutagen
             UnknownDataCommon.Write_XML(
                 writer: writer,
                 name: name,
+                item: this,
+                doMasks: false,
+                errorMask: out UnknownData_ErrorMask errorMask);
+        }
+
+        #endregion
+
+        #region OblivionBinary Translation
+        public static UnknownData Create_OblivionBinary(Stream stream)
+        {
+            using (var reader = new BinaryReader(stream))
+            {
+                return Create_OblivionBinary(reader);
+            }
+        }
+
+        public static UnknownData Create_OblivionBinary(BinaryReader reader)
+        {
+            return Create_OblivionBinary(
+                reader: reader,
+                doMasks: false,
+                errorMask: out var errorMask);
+        }
+
+        public static UnknownData Create_OblivionBinary(
+            BinaryReader reader,
+            out UnknownData_ErrorMask errorMask)
+        {
+            return Create_OblivionBinary(
+                reader: reader,
+                doMasks: true,
+                errorMask: out errorMask);
+        }
+
+        public static UnknownData Create_OblivionBinary(
+            BinaryReader reader,
+            bool doMasks,
+            out UnknownData_ErrorMask errorMask)
+        {
+            UnknownData_ErrorMask errMaskRet = null;
+            var ret = Create_OblivionBinary_Internal(
+                reader: reader,
+                doMasks: doMasks,
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new UnknownData_ErrorMask()) : default(Func<UnknownData_ErrorMask>));
+            errorMask = errMaskRet;
+            return ret;
+        }
+
+        private static UnknownData Create_OblivionBinary_Internal(
+            BinaryReader reader,
+            bool doMasks,
+            Func<UnknownData_ErrorMask> errorMask)
+        {
+            var ret = new UnknownData();
+            try
+            {
+                foreach (var elem in root.Elements())
+                {
+                    Fill_OblivionBinary_Internal(
+                        item: ret,
+                        root: elem,
+                        doMasks: doMasks,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (doMasks)
+            {
+                errorMask().Overall = ex;
+            }
+            return ret;
+        }
+
+        protected static void Fill_OblivionBinary_Internal(
+            UnknownData item,
+            BinaryReader reader,
+            string name,
+            bool doMasks,
+            Func<UnknownData_ErrorMask> errorMask)
+        {
+            switch (name)
+            {
+                case "Data":
+                    {
+                        Exception subMask;
+                        var tryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                            reader,
+                            nullable: true,
+                            doMasks: doMasks,
+                            errorMask: out subMask);
+                        if (tryGet.Succeeded)
+                        {
+                            item._Data.Item = tryGet.Value;
+                        }
+                        if (subMask != null)
+                        {
+                            errorMask().Data = subMask;
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public void CopyIn_OblivionBinary(BinaryReader reader, NotifyingFireParameters? cmds = null)
+        {
+            Mutagen.Binary.LoquiBinaryTranslation<UnknownData, UnknownData_ErrorMask>.Instance.CopyIn(
+                reader: reader,
+                item: this,
+                skipProtected: true,
+                doMasks: false,
+                mask: out UnknownData_ErrorMask errorMask,
+                cmds: cmds);
+        }
+
+        public virtual void CopyIn_OblivionBinary(BinaryReader reader, out UnknownData_ErrorMask errorMask, NotifyingFireParameters? cmds = null)
+        {
+            Mutagen.Binary.LoquiBinaryTranslation<UnknownData, UnknownData_ErrorMask>.Instance.CopyIn(
+                reader: reader,
+                item: this,
+                skipProtected: true,
+                doMasks: true,
+                mask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void Write_OblivionBinary(Stream stream)
+        {
+            UnknownDataCommon.Write_OblivionBinary(
+                this,
+                stream);
+        }
+
+        public void Write_OblivionBinary(
+            Stream stream,
+            out UnknownData_ErrorMask errorMask)
+        {
+            UnknownDataCommon.Write_OblivionBinary(
+                this,
+                stream,
+                out errorMask);
+        }
+
+        public void Write_OblivionBinary(
+            BinaryWriter writer,
+            out UnknownData_ErrorMask errorMask)
+        {
+            UnknownDataCommon.Write_OblivionBinary(
+                writer: writer,
+                item: this,
+                doMasks: true,
+                errorMask: out errorMask);
+        }
+
+        public void Write_OblivionBinary(BinaryWriter writer)
+        {
+            UnknownDataCommon.Write_OblivionBinary(
+                writer: writer,
                 item: this,
                 doMasks: false,
                 errorMask: out UnknownData_ErrorMask errorMask);
@@ -349,7 +518,7 @@ namespace Mutagen
             switch (enu)
             {
                 case UnknownData_FieldIndex.Data:
-                    this.Data = (Byte[])obj;
+                    this._Data.Set((Byte[])obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -389,7 +558,7 @@ namespace Mutagen
             switch (enu)
             {
                 case UnknownData_FieldIndex.Data:
-                    obj.Data = (Byte[])pair.Value;
+                    obj._Data.Set((Byte[])pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -407,6 +576,7 @@ namespace Mutagen
     public interface IUnknownData : IUnknownDataGetter, ILoquiClass<IUnknownData, IUnknownDataGetter>, ILoquiClass<UnknownData, IUnknownDataGetter>
     {
         new Byte[] Data { get; set; }
+        new IHasBeenSetItem<Byte[]> Data_Property { get; }
 
     }
 
@@ -414,6 +584,7 @@ namespace Mutagen
     {
         #region Data
         Byte[] Data { get; }
+        IHasBeenSetItemGetter<Byte[]> Data_Property { get; }
 
         #endregion
 
@@ -673,7 +844,9 @@ namespace Mutagen.Internals
         {
             if (copyMask?.Data ?? true)
             {
-                item.Data = rhs.Data;
+                item.Data_Property.SetToWithDefault(
+                    rhs.Data_Property,
+                    def?.Data_Property);
             }
         }
 
@@ -689,6 +862,7 @@ namespace Mutagen.Internals
             switch (enu)
             {
                 case UnknownData_FieldIndex.Data:
+                    obj.Data_Property.HasBeenSet = on;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -704,7 +878,7 @@ namespace Mutagen.Internals
             switch (enu)
             {
                 case UnknownData_FieldIndex.Data:
-                    obj.Data = default(Byte[]);
+                    obj.Data_Property.Unset();
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -719,7 +893,7 @@ namespace Mutagen.Internals
             switch (enu)
             {
                 case UnknownData_FieldIndex.Data:
-                    return true;
+                    return obj.Data_Property.HasBeenSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -761,7 +935,7 @@ namespace Mutagen.Internals
             UnknownData_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Data = item.Data.EqualsFast(rhs.Data);
+            ret.Data = item.Data_Property.Equals(rhs.Data_Property, (l, r) => l.EqualsFast(r));
         }
 
         public static string ToString(
@@ -803,13 +977,14 @@ namespace Mutagen.Internals
             this IUnknownDataGetter item,
             UnknownData_Mask<bool?> checkMask)
         {
+            if (checkMask.Data.HasValue && checkMask.Data.Value != item.Data_Property.HasBeenSet) return false;
             return true;
         }
 
         public static UnknownData_Mask<bool> GetHasBeenSetMask(IUnknownDataGetter item)
         {
             var ret = new UnknownData_Mask<bool>();
-            ret.Data = true;
+            ret.Data = item.Data_Property.HasBeenSet;
             return ret;
         }
 
@@ -882,6 +1057,7 @@ namespace Mutagen.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.UnknownData");
                     }
+                    if (item.Data_Property.HasBeenSet)
                     {
                         Exception subMask;
                         ByteArrayXmlTranslation.Instance.Write(
@@ -890,10 +1066,88 @@ namespace Mutagen.Internals
                             item.Data,
                             doMasks: doMasks,
                             errorMask: out subMask);
-                        if (subMask != null)
+                        if (doMasks && subMask != null)
                         {
                             errorMask().Data = subMask;
                         }
+                    }
+                }
+            }
+            catch (Exception ex)
+            when (doMasks)
+            {
+                errorMask().Overall = ex;
+            }
+        }
+        #endregion
+
+        #endregion
+
+        #region OblivionBinary Translation
+        #region OblivionBinary Write
+        public static void Write_OblivionBinary(
+            IUnknownDataGetter item,
+            Stream stream)
+        {
+            using (var writer = new BinaryWriter(stream))
+            {
+                Write_OblivionBinary(
+                    writer: writer,
+                    item: item,
+                    doMasks: false,
+                    errorMask: out UnknownData_ErrorMask errorMask);
+            }
+        }
+
+        public static void Write_OblivionBinary(
+            IUnknownDataGetter item,
+            Stream stream,
+            out UnknownData_ErrorMask errorMask)
+        {
+            using (var writer = new BinaryWriter(stream))
+            {
+                Write_OblivionBinary(
+                    writer: writer,
+                    item: item,
+                    doMasks: true,
+                    errorMask: out errorMask);
+            }
+        }
+
+        public static void Write_OblivionBinary(
+            BinaryWriter writer,
+            IUnknownDataGetter item,
+            bool doMasks,
+            out UnknownData_ErrorMask errorMask)
+        {
+            UnknownData_ErrorMask errMaskRet = null;
+            Write_OblivionBinary_Internal(
+                writer: writer,
+                item: item,
+                doMasks: doMasks,
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new UnknownData_ErrorMask()) : default(Func<UnknownData_ErrorMask>));
+            errorMask = errMaskRet;
+        }
+
+        private static void Write_OblivionBinary_Internal(
+            BinaryWriter writer,
+            IUnknownDataGetter item,
+            bool doMasks,
+            Func<UnknownData_ErrorMask> errorMask)
+        {
+            try
+            {
+                if (item.Data_Property.HasBeenSet)
+                {
+                    Exception subMask;
+                    Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                        writer,
+                        item.Data,
+                        doMasks: doMasks,
+                        errorMask: out subMask);
+                    if (subMask != null)
+                    {
+                        errorMask().Data = subMask;
                     }
                 }
             }
@@ -1090,6 +1344,7 @@ namespace Mutagen.Internals
 
     }
     #endregion
+
 
 
     #endregion

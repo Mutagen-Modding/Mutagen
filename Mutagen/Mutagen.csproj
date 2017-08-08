@@ -1,100 +1,126 @@
-<?xml version="1.0" encoding="us-ascii"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-   <PropertyGroup>
-      <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-      <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-      <ProjectGuid>{6E69A8C5-20C7-4564-9870-4CBED49B99BB}</ProjectGuid>
-      <OutputType>Library</OutputType>
-      <AppDesignerFolder>Properties</AppDesignerFolder>
-      <RootNamespace>Mutagen</RootNamespace>
-      <AssemblyName>Mutagen</AssemblyName>
-      <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-      <FileAlignment>512</FileAlignment>
-      <TargetFrameworkProfile />
-   </PropertyGroup>
-   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-      <DebugSymbols>true</DebugSymbols>
-      <DebugType>full</DebugType>
-      <Optimize>false</Optimize>
-      <OutputPath>bin\Debug\</OutputPath>
-      <DefineConstants>DEBUG;TRACE</DefineConstants>
-      <ErrorReport>prompt</ErrorReport>
-      <WarningLevel>4</WarningLevel>
-   </PropertyGroup>
-   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-      <DebugType>pdbonly</DebugType>
-      <Optimize>true</Optimize>
-      <OutputPath>bin\Release\</OutputPath>
-      <DefineConstants>TRACE</DefineConstants>
-      <ErrorReport>prompt</ErrorReport>
-      <WarningLevel>4</WarningLevel>
-   </PropertyGroup>
-   <ItemGroup>
-      <Reference Include="System" />
-      <Reference Include="System.Core" />
-      <Reference Include="System.Xml.Linq" />
-      <Reference Include="System.Data.DataSetExtensions" />
-      <Reference Include="Microsoft.CSharp" />
-      <Reference Include="System.Data" />
-      <Reference Include="System.Net.Http" />
-      <Reference Include="System.Xml" />
-   </ItemGroup>
-   <ItemGroup>
-      <Compile Include="FormID.cs" />
-      <Compile Include="ModID.cs" />
-      <Compile Include="Properties\AssemblyInfo.cs" />
-      <Compile Include="ProtocolDefinition_mutagen.cs" />
-      <Compile Include="Records\Header\Header_LoquiGenerated.cs">
-         <DependentUpon>HEDR.xml</DependentUpon>
-      </Compile>
-      <Compile Include="Records\OblivionMod_LoquiGenerated.cs">
-         <DependentUpon>OblivionMod.xml</DependentUpon>
-      </Compile>
-      <Compile Include="Records\UnknownData_LoquiGenerated.cs">
-         <DependentUpon>UnknownData.xml</DependentUpon>
-      </Compile>
-      <Compile Include="Records\Header\TES4_LoquiGenerated.cs">
-         <DependentUpon>TES4.xml</DependentUpon>
-      </Compile>
-      <Compile Include="Records\Header\MasterReference_LoquiGenerated.cs">
-         <DependentUpon>MasterReference.xml</DependentUpon>
-      </Compile>
-   </ItemGroup>
-   <ItemGroup>
-      <ProjectReference Include="..\..\CSharpExt\CSharpExt\CSharpExt.csproj">
-         <Project>{c56b9607-41cf-4f59-9eef-f79d57309eda}</Project>
-         <Name>CSharpExt</Name>
-      </ProjectReference>
-      <ProjectReference Include="..\..\Loqui\Loqui\Loqui.csproj">
-         <Project>{91f19c1e-adf8-4b84-9452-04c2cd8f46d4}</Project>
-         <Name>Loqui</Name>
-      </ProjectReference>
-   </ItemGroup>
-   <ItemGroup>
-      <Content Include="Records\Header\MasterReference.xml">
-         <SubType>Designer</SubType>
-      </Content>
-      <Content Include="Records\UnknownData.xml">
-         <SubType>Designer</SubType>
-      </Content>
-      <Content Include="Records\OblivionMod.xml">
-         <SubType>Designer</SubType>
-      </Content>
-      <Content Include="Records\Header\TES4.xml">
-         <SubType>Designer</SubType>
-      </Content>
-      <Content Include="Records\Header\HEDR.xml">
-         <SubType>Designer</SubType>
-      </Content>
-   </ItemGroup>
-   <ItemGroup>
-      <None Include="MutagenSource.xsd">
-         <SubType>Designer</SubType>
-      </None>
-   </ItemGroup>
-   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{6E69A8C5-20C7-4564-9870-4CBED49B99BB}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Mutagen</RootNamespace>
+    <AssemblyName>Mutagen</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="FormID.cs" />
+    <Compile Include="ModID.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ProtocolDefinition_mutagen.cs" />
+    <Compile Include="Records\Header\Header_LoquiGenerated.cs">
+      <DependentUpon>HEDR.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\OblivionMod_LoquiGenerated.cs">
+      <DependentUpon>OblivionMod.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\UnknownData_LoquiGenerated.cs">
+      <DependentUpon>UnknownData.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Header\TES4_LoquiGenerated.cs">
+      <DependentUpon>TES4.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Header\MasterReference_LoquiGenerated.cs">
+      <DependentUpon>MasterReference.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Translators\Binary\BinaryTranslator.cs" />
+    <Compile Include="Translators\Binary\BooleanBinaryTranslation.cs" />
+    <Compile Include="Translators\Binary\ByteArrayBinaryTranslation.cs" />
+    <Compile Include="Translators\Binary\ByteBinaryTranslation.cs" />
+    <Compile Include="Translators\Binary\CharBinaryTranslation.cs" />
+    <Compile Include="Translators\Binary\ContainerBinaryTranslation.cs" />
+    <Compile Include="Translators\Binary\DoubleBinaryTranslation.cs" />
+    <Compile Include="Translators\Binary\EnumBinaryTranslation.cs" />
+    <Compile Include="Translators\Binary\FloatBinaryTranslation.cs" />
+    <Compile Include="Translators\Binary\Int16BinaryTranslation.cs" />
+    <Compile Include="Translators\Binary\Int32BinaryTranslation.cs" />
+    <Compile Include="Translators\Binary\Int64BinaryTranslation.cs" />
+    <Compile Include="Translators\Binary\Int8BinaryTranslation.cs" />
+    <Compile Include="Translators\Binary\IBinaryTranslation.cs" />
+    <Compile Include="Translators\Binary\ListBinaryTranslation.cs" />
+    <Compile Include="Translators\Binary\LoquiBinaryTranslation.cs" />
+    <Compile Include="Translators\Binary\PrimitiveBinaryTranslation.cs" />
+    <Compile Include="Translators\Binary\StringBinaryTranslation.cs" />
+    <Compile Include="Translators\Binary\TypicalBinaryTranslation.cs" />
+    <Compile Include="Translators\Binary\UInt16BinaryTranslation.cs" />
+    <Compile Include="Translators\Binary\UInt32BinaryTranslation.cs" />
+    <Compile Include="Translators\Binary\UInt64BinaryTranslation.cs" />
+    <Compile Include="Translators\Binary\BinaryTranslationCaster.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\CSharpExt\CSharpExt\CSharpExt.csproj">
+      <Project>{c56b9607-41cf-4f59-9eef-f79d57309eda}</Project>
+      <Name>CSharpExt</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Loqui\Loqui\Loqui.csproj">
+      <Project>{91f19c1e-adf8-4b84-9452-04c2cd8f46d4}</Project>
+      <Name>Loqui</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Records\Header\MasterReference.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\UnknownData.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\OblivionMod.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Header\TES4.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Header\HEDR.xml">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="MutagenSource.xsd">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Translators\OblivionBinary\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>

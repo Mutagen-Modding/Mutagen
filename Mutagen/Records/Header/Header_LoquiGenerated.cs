@@ -35,13 +35,37 @@ namespace Mutagen
         #endregion
 
         #region Version
-        public Single Version { get; set; }
+        protected readonly IHasBeenSetItem<Single> _Version = HasBeenSetItem.Factory<Single>(markAsSet: false);
+        public IHasBeenSetItem<Single> Version_Property => _Version;
+        public Single Version
+        {
+            get => this._Version.Item;
+            set => this._Version.Set(value);
+        }
+        Single IHeaderGetter.Version => this.Version;
+        IHasBeenSetItemGetter<Single> IHeaderGetter.Version_Property => this.Version_Property;
         #endregion
         #region NumRecords
-        public Int64 NumRecords { get; set; }
+        protected readonly IHasBeenSetItem<Int64> _NumRecords = HasBeenSetItem.Factory<Int64>(markAsSet: false);
+        public IHasBeenSetItem<Int64> NumRecords_Property => _NumRecords;
+        public Int64 NumRecords
+        {
+            get => this._NumRecords.Item;
+            set => this._NumRecords.Set(value);
+        }
+        Int64 IHeaderGetter.NumRecords => this.NumRecords;
+        IHasBeenSetItemGetter<Int64> IHeaderGetter.NumRecords_Property => this.NumRecords_Property;
         #endregion
         #region NextObjectID
-        public UInt64 NextObjectID { get; set; }
+        protected readonly IHasBeenSetItem<UInt64> _NextObjectID = HasBeenSetItem.Factory<UInt64>(markAsSet: false);
+        public IHasBeenSetItem<UInt64> NextObjectID_Property => _NextObjectID;
+        public UInt64 NextObjectID
+        {
+            get => this._NextObjectID.Item;
+            set => this._NextObjectID.Set(value);
+        }
+        UInt64 IHeaderGetter.NextObjectID => this.NextObjectID;
+        IHasBeenSetItemGetter<UInt64> IHeaderGetter.NextObjectID_Property => this.NextObjectID_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -102,18 +126,39 @@ namespace Mutagen
         public bool Equals(Header rhs)
         {
             if (rhs == null) return false;
-            if (Version != rhs.Version) return false;
-            if (NumRecords != rhs.NumRecords) return false;
-            if (NextObjectID != rhs.NextObjectID) return false;
+            if (Version_Property.HasBeenSet != rhs.Version_Property.HasBeenSet) return false;
+            if (Version_Property.HasBeenSet)
+            {
+                if (Version != rhs.Version) return false;
+            }
+            if (NumRecords_Property.HasBeenSet != rhs.NumRecords_Property.HasBeenSet) return false;
+            if (NumRecords_Property.HasBeenSet)
+            {
+                if (NumRecords != rhs.NumRecords) return false;
+            }
+            if (NextObjectID_Property.HasBeenSet != rhs.NextObjectID_Property.HasBeenSet) return false;
+            if (NextObjectID_Property.HasBeenSet)
+            {
+                if (NextObjectID != rhs.NextObjectID) return false;
+            }
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = HashHelper.GetHashCode(Version).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(NumRecords).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(NextObjectID).CombineHashCode(ret);
+            if (Version_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Version).CombineHashCode(ret);
+            }
+            if (NumRecords_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(NumRecords).CombineHashCode(ret);
+            }
+            if (NextObjectID_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(NextObjectID).CombineHashCode(ret);
+            }
             return ret;
         }
 
@@ -206,9 +251,9 @@ namespace Mutagen
                             errorMask: out subMask);
                         if (tryGet.Succeeded)
                         {
-                            item.Version = tryGet.Value.Value;
+                            item._Version.Item = tryGet.Value.Value;
                         }
-                        if (subMask != null)
+                        if (doMasks && subMask != null)
                         {
                             errorMask().Version = subMask;
                         }
@@ -224,9 +269,9 @@ namespace Mutagen
                             errorMask: out subMask);
                         if (tryGet.Succeeded)
                         {
-                            item.NumRecords = tryGet.Value.Value;
+                            item._NumRecords.Item = tryGet.Value.Value;
                         }
-                        if (subMask != null)
+                        if (doMasks && subMask != null)
                         {
                             errorMask().NumRecords = subMask;
                         }
@@ -242,9 +287,9 @@ namespace Mutagen
                             errorMask: out subMask);
                         if (tryGet.Succeeded)
                         {
-                            item.NextObjectID = tryGet.Value.Value;
+                            item._NextObjectID.Item = tryGet.Value.Value;
                         }
-                        if (subMask != null)
+                        if (doMasks && subMask != null)
                         {
                             errorMask().NextObjectID = subMask;
                         }
@@ -307,6 +352,201 @@ namespace Mutagen
             HeaderCommon.Write_XML(
                 writer: writer,
                 name: name,
+                item: this,
+                doMasks: false,
+                errorMask: out Header_ErrorMask errorMask);
+        }
+
+        #endregion
+
+        #region OblivionBinary Translation
+        public static Header Create_OblivionBinary(Stream stream)
+        {
+            using (var reader = new BinaryReader(stream))
+            {
+                return Create_OblivionBinary(reader);
+            }
+        }
+
+        public static Header Create_OblivionBinary(BinaryReader reader)
+        {
+            return Create_OblivionBinary(
+                reader: reader,
+                doMasks: false,
+                errorMask: out var errorMask);
+        }
+
+        public static Header Create_OblivionBinary(
+            BinaryReader reader,
+            out Header_ErrorMask errorMask)
+        {
+            return Create_OblivionBinary(
+                reader: reader,
+                doMasks: true,
+                errorMask: out errorMask);
+        }
+
+        public static Header Create_OblivionBinary(
+            BinaryReader reader,
+            bool doMasks,
+            out Header_ErrorMask errorMask)
+        {
+            Header_ErrorMask errMaskRet = null;
+            var ret = Create_OblivionBinary_Internal(
+                reader: reader,
+                doMasks: doMasks,
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Header_ErrorMask()) : default(Func<Header_ErrorMask>));
+            errorMask = errMaskRet;
+            return ret;
+        }
+
+        private static Header Create_OblivionBinary_Internal(
+            BinaryReader reader,
+            bool doMasks,
+            Func<Header_ErrorMask> errorMask)
+        {
+            var ret = new Header();
+            try
+            {
+                foreach (var elem in root.Elements())
+                {
+                    Fill_OblivionBinary_Internal(
+                        item: ret,
+                        root: elem,
+                        doMasks: doMasks,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (doMasks)
+            {
+                errorMask().Overall = ex;
+            }
+            return ret;
+        }
+
+        protected static void Fill_OblivionBinary_Internal(
+            Header item,
+            BinaryReader reader,
+            string name,
+            bool doMasks,
+            Func<Header_ErrorMask> errorMask)
+        {
+            switch (name)
+            {
+                case "Version":
+                    {
+                        Exception subMask;
+                        var tryGet = Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
+                            reader,
+                            nullable: false,
+                            doMasks: doMasks,
+                            errorMask: out subMask);
+                        if (tryGet.Succeeded)
+                        {
+                            item._Version.Item = tryGet.Value.Value;
+                        }
+                        if (subMask != null)
+                        {
+                            errorMask().Version = subMask;
+                        }
+                    }
+                    break;
+                case "NumRecords":
+                    {
+                        Exception subMask;
+                        var tryGet = Mutagen.Binary.Int64BinaryTranslation.Instance.Parse(
+                            reader,
+                            nullable: false,
+                            doMasks: doMasks,
+                            errorMask: out subMask);
+                        if (tryGet.Succeeded)
+                        {
+                            item._NumRecords.Item = tryGet.Value.Value;
+                        }
+                        if (subMask != null)
+                        {
+                            errorMask().NumRecords = subMask;
+                        }
+                    }
+                    break;
+                case "NextObjectID":
+                    {
+                        Exception subMask;
+                        var tryGet = Mutagen.Binary.UInt64BinaryTranslation.Instance.Parse(
+                            reader,
+                            nullable: false,
+                            doMasks: doMasks,
+                            errorMask: out subMask);
+                        if (tryGet.Succeeded)
+                        {
+                            item._NextObjectID.Item = tryGet.Value.Value;
+                        }
+                        if (subMask != null)
+                        {
+                            errorMask().NextObjectID = subMask;
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public void CopyIn_OblivionBinary(BinaryReader reader, NotifyingFireParameters? cmds = null)
+        {
+            Mutagen.Binary.LoquiBinaryTranslation<Header, Header_ErrorMask>.Instance.CopyIn(
+                reader: reader,
+                item: this,
+                skipProtected: true,
+                doMasks: false,
+                mask: out Header_ErrorMask errorMask,
+                cmds: cmds);
+        }
+
+        public virtual void CopyIn_OblivionBinary(BinaryReader reader, out Header_ErrorMask errorMask, NotifyingFireParameters? cmds = null)
+        {
+            Mutagen.Binary.LoquiBinaryTranslation<Header, Header_ErrorMask>.Instance.CopyIn(
+                reader: reader,
+                item: this,
+                skipProtected: true,
+                doMasks: true,
+                mask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void Write_OblivionBinary(Stream stream)
+        {
+            HeaderCommon.Write_OblivionBinary(
+                this,
+                stream);
+        }
+
+        public void Write_OblivionBinary(
+            Stream stream,
+            out Header_ErrorMask errorMask)
+        {
+            HeaderCommon.Write_OblivionBinary(
+                this,
+                stream,
+                out errorMask);
+        }
+
+        public void Write_OblivionBinary(
+            BinaryWriter writer,
+            out Header_ErrorMask errorMask)
+        {
+            HeaderCommon.Write_OblivionBinary(
+                writer: writer,
+                item: this,
+                doMasks: true,
+                errorMask: out errorMask);
+        }
+
+        public void Write_OblivionBinary(BinaryWriter writer)
+        {
+            HeaderCommon.Write_OblivionBinary(
+                writer: writer,
                 item: this,
                 doMasks: false,
                 errorMask: out Header_ErrorMask errorMask);
@@ -390,13 +630,13 @@ namespace Mutagen
             switch (enu)
             {
                 case Header_FieldIndex.Version:
-                    this.Version = (Single)obj;
+                    this._Version.Set((Single)obj);
                     break;
                 case Header_FieldIndex.NumRecords:
-                    this.NumRecords = (Int64)obj;
+                    this._NumRecords.Set((Int64)obj);
                     break;
                 case Header_FieldIndex.NextObjectID:
-                    this.NextObjectID = (UInt64)obj;
+                    this._NextObjectID.Set((UInt64)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -436,13 +676,13 @@ namespace Mutagen
             switch (enu)
             {
                 case Header_FieldIndex.Version:
-                    obj.Version = (Single)pair.Value;
+                    obj._Version.Set((Single)pair.Value);
                     break;
                 case Header_FieldIndex.NumRecords:
-                    obj.NumRecords = (Int64)pair.Value;
+                    obj._NumRecords.Set((Int64)pair.Value);
                     break;
                 case Header_FieldIndex.NextObjectID:
-                    obj.NextObjectID = (UInt64)pair.Value;
+                    obj._NextObjectID.Set((UInt64)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -460,10 +700,13 @@ namespace Mutagen
     public interface IHeader : IHeaderGetter, ILoquiClass<IHeader, IHeaderGetter>, ILoquiClass<Header, IHeaderGetter>
     {
         new Single Version { get; set; }
+        new IHasBeenSetItem<Single> Version_Property { get; }
 
         new Int64 NumRecords { get; set; }
+        new IHasBeenSetItem<Int64> NumRecords_Property { get; }
 
         new UInt64 NextObjectID { get; set; }
+        new IHasBeenSetItem<UInt64> NextObjectID_Property { get; }
 
     }
 
@@ -471,14 +714,17 @@ namespace Mutagen
     {
         #region Version
         Single Version { get; }
+        IHasBeenSetItemGetter<Single> Version_Property { get; }
 
         #endregion
         #region NumRecords
         Int64 NumRecords { get; }
+        IHasBeenSetItemGetter<Int64> NumRecords_Property { get; }
 
         #endregion
         #region NextObjectID
         UInt64 NextObjectID { get; }
+        IHasBeenSetItemGetter<UInt64> NextObjectID_Property { get; }
 
         #endregion
 
@@ -762,15 +1008,21 @@ namespace Mutagen.Internals
         {
             if (copyMask?.Version ?? true)
             {
-                item.Version = rhs.Version;
+                item.Version_Property.SetToWithDefault(
+                    rhs.Version_Property,
+                    def?.Version_Property);
             }
             if (copyMask?.NumRecords ?? true)
             {
-                item.NumRecords = rhs.NumRecords;
+                item.NumRecords_Property.SetToWithDefault(
+                    rhs.NumRecords_Property,
+                    def?.NumRecords_Property);
             }
             if (copyMask?.NextObjectID ?? true)
             {
-                item.NextObjectID = rhs.NextObjectID;
+                item.NextObjectID_Property.SetToWithDefault(
+                    rhs.NextObjectID_Property,
+                    def?.NextObjectID_Property);
             }
         }
 
@@ -786,10 +1038,13 @@ namespace Mutagen.Internals
             switch (enu)
             {
                 case Header_FieldIndex.Version:
+                    obj.Version_Property.HasBeenSet = on;
                     break;
                 case Header_FieldIndex.NumRecords:
+                    obj.NumRecords_Property.HasBeenSet = on;
                     break;
                 case Header_FieldIndex.NextObjectID:
+                    obj.NextObjectID_Property.HasBeenSet = on;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -805,13 +1060,13 @@ namespace Mutagen.Internals
             switch (enu)
             {
                 case Header_FieldIndex.Version:
-                    obj.Version = default(Single);
+                    obj.Version_Property.Unset();
                     break;
                 case Header_FieldIndex.NumRecords:
-                    obj.NumRecords = default(Int64);
+                    obj.NumRecords_Property.Unset();
                     break;
                 case Header_FieldIndex.NextObjectID:
-                    obj.NextObjectID = default(UInt64);
+                    obj.NextObjectID_Property.Unset();
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -826,9 +1081,11 @@ namespace Mutagen.Internals
             switch (enu)
             {
                 case Header_FieldIndex.Version:
+                    return obj.Version_Property.HasBeenSet;
                 case Header_FieldIndex.NumRecords:
+                    return obj.NumRecords_Property.HasBeenSet;
                 case Header_FieldIndex.NextObjectID:
-                    return true;
+                    return obj.NextObjectID_Property.HasBeenSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -876,9 +1133,9 @@ namespace Mutagen.Internals
             Header_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Version = item.Version == rhs.Version;
-            ret.NumRecords = item.NumRecords == rhs.NumRecords;
-            ret.NextObjectID = item.NextObjectID == rhs.NextObjectID;
+            ret.Version = item.Version_Property.Equals(rhs.Version_Property, (l, r) => l == r);
+            ret.NumRecords = item.NumRecords_Property.Equals(rhs.NumRecords_Property, (l, r) => l == r);
+            ret.NextObjectID = item.NextObjectID_Property.Equals(rhs.NextObjectID_Property, (l, r) => l == r);
         }
 
         public static string ToString(
@@ -928,15 +1185,18 @@ namespace Mutagen.Internals
             this IHeaderGetter item,
             Header_Mask<bool?> checkMask)
         {
+            if (checkMask.Version.HasValue && checkMask.Version.Value != item.Version_Property.HasBeenSet) return false;
+            if (checkMask.NumRecords.HasValue && checkMask.NumRecords.Value != item.NumRecords_Property.HasBeenSet) return false;
+            if (checkMask.NextObjectID.HasValue && checkMask.NextObjectID.Value != item.NextObjectID_Property.HasBeenSet) return false;
             return true;
         }
 
         public static Header_Mask<bool> GetHasBeenSetMask(IHeaderGetter item)
         {
             var ret = new Header_Mask<bool>();
-            ret.Version = true;
-            ret.NumRecords = true;
-            ret.NextObjectID = true;
+            ret.Version = item.Version_Property.HasBeenSet;
+            ret.NumRecords = item.NumRecords_Property.HasBeenSet;
+            ret.NextObjectID = item.NextObjectID_Property.HasBeenSet;
             return ret;
         }
 
@@ -1009,6 +1269,7 @@ namespace Mutagen.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Header");
                     }
+                    if (item.Version_Property.HasBeenSet)
                     {
                         Exception subMask;
                         FloatXmlTranslation.Instance.Write(
@@ -1017,11 +1278,12 @@ namespace Mutagen.Internals
                             item.Version,
                             doMasks: doMasks,
                             errorMask: out subMask);
-                        if (subMask != null)
+                        if (doMasks && subMask != null)
                         {
                             errorMask().Version = subMask;
                         }
                     }
+                    if (item.NumRecords_Property.HasBeenSet)
                     {
                         Exception subMask;
                         Int64XmlTranslation.Instance.Write(
@@ -1030,11 +1292,12 @@ namespace Mutagen.Internals
                             item.NumRecords,
                             doMasks: doMasks,
                             errorMask: out subMask);
-                        if (subMask != null)
+                        if (doMasks && subMask != null)
                         {
                             errorMask().NumRecords = subMask;
                         }
                     }
+                    if (item.NextObjectID_Property.HasBeenSet)
                     {
                         Exception subMask;
                         UInt64XmlTranslation.Instance.Write(
@@ -1043,10 +1306,114 @@ namespace Mutagen.Internals
                             item.NextObjectID,
                             doMasks: doMasks,
                             errorMask: out subMask);
-                        if (subMask != null)
+                        if (doMasks && subMask != null)
                         {
                             errorMask().NextObjectID = subMask;
                         }
+                    }
+                }
+            }
+            catch (Exception ex)
+            when (doMasks)
+            {
+                errorMask().Overall = ex;
+            }
+        }
+        #endregion
+
+        #endregion
+
+        #region OblivionBinary Translation
+        #region OblivionBinary Write
+        public static void Write_OblivionBinary(
+            IHeaderGetter item,
+            Stream stream)
+        {
+            using (var writer = new BinaryWriter(stream))
+            {
+                Write_OblivionBinary(
+                    writer: writer,
+                    item: item,
+                    doMasks: false,
+                    errorMask: out Header_ErrorMask errorMask);
+            }
+        }
+
+        public static void Write_OblivionBinary(
+            IHeaderGetter item,
+            Stream stream,
+            out Header_ErrorMask errorMask)
+        {
+            using (var writer = new BinaryWriter(stream))
+            {
+                Write_OblivionBinary(
+                    writer: writer,
+                    item: item,
+                    doMasks: true,
+                    errorMask: out errorMask);
+            }
+        }
+
+        public static void Write_OblivionBinary(
+            BinaryWriter writer,
+            IHeaderGetter item,
+            bool doMasks,
+            out Header_ErrorMask errorMask)
+        {
+            Header_ErrorMask errMaskRet = null;
+            Write_OblivionBinary_Internal(
+                writer: writer,
+                item: item,
+                doMasks: doMasks,
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Header_ErrorMask()) : default(Func<Header_ErrorMask>));
+            errorMask = errMaskRet;
+        }
+
+        private static void Write_OblivionBinary_Internal(
+            BinaryWriter writer,
+            IHeaderGetter item,
+            bool doMasks,
+            Func<Header_ErrorMask> errorMask)
+        {
+            try
+            {
+                if (item.Version_Property.HasBeenSet)
+                {
+                    Exception subMask;
+                    Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
+                        writer,
+                        item.Version,
+                        doMasks: doMasks,
+                        errorMask: out subMask);
+                    if (subMask != null)
+                    {
+                        errorMask().Version = subMask;
+                    }
+                }
+                if (item.NumRecords_Property.HasBeenSet)
+                {
+                    Exception subMask;
+                    Mutagen.Binary.Int64BinaryTranslation.Instance.Write(
+                        writer,
+                        item.NumRecords,
+                        doMasks: doMasks,
+                        errorMask: out subMask);
+                    if (subMask != null)
+                    {
+                        errorMask().NumRecords = subMask;
+                    }
+                }
+                if (item.NextObjectID_Property.HasBeenSet)
+                {
+                    Exception subMask;
+                    Mutagen.Binary.UInt64BinaryTranslation.Instance.Write(
+                        writer,
+                        item.NextObjectID,
+                        doMasks: doMasks,
+                        errorMask: out subMask);
+                    if (subMask != null)
+                    {
+                        errorMask().NextObjectID = subMask;
                     }
                 }
             }
@@ -1287,6 +1654,7 @@ namespace Mutagen.Internals
 
     }
     #endregion
+
 
 
     #endregion

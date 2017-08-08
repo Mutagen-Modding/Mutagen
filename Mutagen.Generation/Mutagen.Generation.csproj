@@ -45,6 +45,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Fields\UnknownType.cs" />
+    <Compile Include="Modules\BinaryTranslationModule.cs" />
+    <Compile Include="Modules\EnumBinaryTranslationGeneration.cs" />
+    <Compile Include="Modules\ListBinaryTranslationGeneration.cs" />
+    <Compile Include="Modules\LoquiBinaryTranslationGeneration.cs" />
+    <Compile Include="Modules\Oblivion Binary\OblivionBinaryTranslationModule.cs" />
+    <Compile Include="Modules\PrimitiveBinaryTranslationGeneration.cs" />
+    <Compile Include="Modules\BinaryTranslationGeneration.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -68,6 +75,11 @@
       <Project>{6e69a8c5-20c7-4564-9870-4cbed49b99bb}</Project>
       <Name>Mutagen</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.ValueTuple">
+      <Version>4.4.0-preview2-25405-01</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

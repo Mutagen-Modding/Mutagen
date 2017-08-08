@@ -35,10 +35,26 @@ namespace Mutagen
         #endregion
 
         #region Master
-        public String Master { get; set; }
+        protected readonly IHasBeenSetItem<String> _Master = HasBeenSetItem.Factory<String>(markAsSet: false);
+        public IHasBeenSetItem<String> Master_Property => _Master;
+        public String Master
+        {
+            get => this._Master.Item;
+            set => this._Master.Set(value);
+        }
+        String IMasterReferenceGetter.Master => this.Master;
+        IHasBeenSetItemGetter<String> IMasterReferenceGetter.Master_Property => this.Master_Property;
         #endregion
         #region FileSize
-        public UInt64 FileSize { get; set; }
+        protected readonly IHasBeenSetItem<UInt64> _FileSize = HasBeenSetItem.Factory<UInt64>(markAsSet: false);
+        public IHasBeenSetItem<UInt64> FileSize_Property => _FileSize;
+        public UInt64 FileSize
+        {
+            get => this._FileSize.Item;
+            set => this._FileSize.Set(value);
+        }
+        UInt64 IMasterReferenceGetter.FileSize => this.FileSize;
+        IHasBeenSetItemGetter<UInt64> IMasterReferenceGetter.FileSize_Property => this.FileSize_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -99,16 +115,30 @@ namespace Mutagen
         public bool Equals(MasterReference rhs)
         {
             if (rhs == null) return false;
-            if (Master != rhs.Master) return false;
-            if (FileSize != rhs.FileSize) return false;
+            if (Master_Property.HasBeenSet != rhs.Master_Property.HasBeenSet) return false;
+            if (Master_Property.HasBeenSet)
+            {
+                if (Master != rhs.Master) return false;
+            }
+            if (FileSize_Property.HasBeenSet != rhs.FileSize_Property.HasBeenSet) return false;
+            if (FileSize_Property.HasBeenSet)
+            {
+                if (FileSize != rhs.FileSize) return false;
+            }
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = HashHelper.GetHashCode(Master).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(FileSize).CombineHashCode(ret);
+            if (Master_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Master).CombineHashCode(ret);
+            }
+            if (FileSize_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(FileSize).CombineHashCode(ret);
+            }
             return ret;
         }
 
@@ -200,9 +230,9 @@ namespace Mutagen
                             errorMask: out subMask);
                         if (tryGet.Succeeded)
                         {
-                            item.Master = tryGet.Value;
+                            item._Master.Item = tryGet.Value;
                         }
-                        if (subMask != null)
+                        if (doMasks && subMask != null)
                         {
                             errorMask().Master = subMask;
                         }
@@ -218,9 +248,9 @@ namespace Mutagen
                             errorMask: out subMask);
                         if (tryGet.Succeeded)
                         {
-                            item.FileSize = tryGet.Value.Value;
+                            item._FileSize.Item = tryGet.Value.Value;
                         }
-                        if (subMask != null)
+                        if (doMasks && subMask != null)
                         {
                             errorMask().FileSize = subMask;
                         }
@@ -283,6 +313,182 @@ namespace Mutagen
             MasterReferenceCommon.Write_XML(
                 writer: writer,
                 name: name,
+                item: this,
+                doMasks: false,
+                errorMask: out MasterReference_ErrorMask errorMask);
+        }
+
+        #endregion
+
+        #region OblivionBinary Translation
+        public static MasterReference Create_OblivionBinary(Stream stream)
+        {
+            using (var reader = new BinaryReader(stream))
+            {
+                return Create_OblivionBinary(reader);
+            }
+        }
+
+        public static MasterReference Create_OblivionBinary(BinaryReader reader)
+        {
+            return Create_OblivionBinary(
+                reader: reader,
+                doMasks: false,
+                errorMask: out var errorMask);
+        }
+
+        public static MasterReference Create_OblivionBinary(
+            BinaryReader reader,
+            out MasterReference_ErrorMask errorMask)
+        {
+            return Create_OblivionBinary(
+                reader: reader,
+                doMasks: true,
+                errorMask: out errorMask);
+        }
+
+        public static MasterReference Create_OblivionBinary(
+            BinaryReader reader,
+            bool doMasks,
+            out MasterReference_ErrorMask errorMask)
+        {
+            MasterReference_ErrorMask errMaskRet = null;
+            var ret = Create_OblivionBinary_Internal(
+                reader: reader,
+                doMasks: doMasks,
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new MasterReference_ErrorMask()) : default(Func<MasterReference_ErrorMask>));
+            errorMask = errMaskRet;
+            return ret;
+        }
+
+        private static MasterReference Create_OblivionBinary_Internal(
+            BinaryReader reader,
+            bool doMasks,
+            Func<MasterReference_ErrorMask> errorMask)
+        {
+            var ret = new MasterReference();
+            try
+            {
+                foreach (var elem in root.Elements())
+                {
+                    Fill_OblivionBinary_Internal(
+                        item: ret,
+                        root: elem,
+                        doMasks: doMasks,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (doMasks)
+            {
+                errorMask().Overall = ex;
+            }
+            return ret;
+        }
+
+        protected static void Fill_OblivionBinary_Internal(
+            MasterReference item,
+            BinaryReader reader,
+            string name,
+            bool doMasks,
+            Func<MasterReference_ErrorMask> errorMask)
+        {
+            switch (name)
+            {
+                case "Master":
+                    {
+                        Exception subMask;
+                        var tryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
+                            reader,
+                            doMasks: doMasks,
+                            errorMask: out subMask);
+                        if (tryGet.Succeeded)
+                        {
+                            item._Master.Item = tryGet.Value;
+                        }
+                        if (subMask != null)
+                        {
+                            errorMask().Master = subMask;
+                        }
+                    }
+                    break;
+                case "FileSize":
+                    {
+                        Exception subMask;
+                        var tryGet = Mutagen.Binary.UInt64BinaryTranslation.Instance.Parse(
+                            reader,
+                            nullable: false,
+                            doMasks: doMasks,
+                            errorMask: out subMask);
+                        if (tryGet.Succeeded)
+                        {
+                            item._FileSize.Item = tryGet.Value.Value;
+                        }
+                        if (subMask != null)
+                        {
+                            errorMask().FileSize = subMask;
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public void CopyIn_OblivionBinary(BinaryReader reader, NotifyingFireParameters? cmds = null)
+        {
+            Mutagen.Binary.LoquiBinaryTranslation<MasterReference, MasterReference_ErrorMask>.Instance.CopyIn(
+                reader: reader,
+                item: this,
+                skipProtected: true,
+                doMasks: false,
+                mask: out MasterReference_ErrorMask errorMask,
+                cmds: cmds);
+        }
+
+        public virtual void CopyIn_OblivionBinary(BinaryReader reader, out MasterReference_ErrorMask errorMask, NotifyingFireParameters? cmds = null)
+        {
+            Mutagen.Binary.LoquiBinaryTranslation<MasterReference, MasterReference_ErrorMask>.Instance.CopyIn(
+                reader: reader,
+                item: this,
+                skipProtected: true,
+                doMasks: true,
+                mask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void Write_OblivionBinary(Stream stream)
+        {
+            MasterReferenceCommon.Write_OblivionBinary(
+                this,
+                stream);
+        }
+
+        public void Write_OblivionBinary(
+            Stream stream,
+            out MasterReference_ErrorMask errorMask)
+        {
+            MasterReferenceCommon.Write_OblivionBinary(
+                this,
+                stream,
+                out errorMask);
+        }
+
+        public void Write_OblivionBinary(
+            BinaryWriter writer,
+            out MasterReference_ErrorMask errorMask)
+        {
+            MasterReferenceCommon.Write_OblivionBinary(
+                writer: writer,
+                item: this,
+                doMasks: true,
+                errorMask: out errorMask);
+        }
+
+        public void Write_OblivionBinary(BinaryWriter writer)
+        {
+            MasterReferenceCommon.Write_OblivionBinary(
+                writer: writer,
                 item: this,
                 doMasks: false,
                 errorMask: out MasterReference_ErrorMask errorMask);
@@ -366,10 +572,10 @@ namespace Mutagen
             switch (enu)
             {
                 case MasterReference_FieldIndex.Master:
-                    this.Master = (String)obj;
+                    this._Master.Set((String)obj);
                     break;
                 case MasterReference_FieldIndex.FileSize:
-                    this.FileSize = (UInt64)obj;
+                    this._FileSize.Set((UInt64)obj);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -409,10 +615,10 @@ namespace Mutagen
             switch (enu)
             {
                 case MasterReference_FieldIndex.Master:
-                    obj.Master = (String)pair.Value;
+                    obj._Master.Set((String)pair.Value);
                     break;
                 case MasterReference_FieldIndex.FileSize:
-                    obj.FileSize = (UInt64)pair.Value;
+                    obj._FileSize.Set((UInt64)pair.Value);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -430,8 +636,10 @@ namespace Mutagen
     public interface IMasterReference : IMasterReferenceGetter, ILoquiClass<IMasterReference, IMasterReferenceGetter>, ILoquiClass<MasterReference, IMasterReferenceGetter>
     {
         new String Master { get; set; }
+        new IHasBeenSetItem<String> Master_Property { get; }
 
         new UInt64 FileSize { get; set; }
+        new IHasBeenSetItem<UInt64> FileSize_Property { get; }
 
     }
 
@@ -439,10 +647,12 @@ namespace Mutagen
     {
         #region Master
         String Master { get; }
+        IHasBeenSetItemGetter<String> Master_Property { get; }
 
         #endregion
         #region FileSize
         UInt64 FileSize { get; }
+        IHasBeenSetItemGetter<UInt64> FileSize_Property { get; }
 
         #endregion
 
@@ -714,11 +924,15 @@ namespace Mutagen.Internals
         {
             if (copyMask?.Master ?? true)
             {
-                item.Master = rhs.Master;
+                item.Master_Property.SetToWithDefault(
+                    rhs.Master_Property,
+                    def?.Master_Property);
             }
             if (copyMask?.FileSize ?? true)
             {
-                item.FileSize = rhs.FileSize;
+                item.FileSize_Property.SetToWithDefault(
+                    rhs.FileSize_Property,
+                    def?.FileSize_Property);
             }
         }
 
@@ -734,8 +948,10 @@ namespace Mutagen.Internals
             switch (enu)
             {
                 case MasterReference_FieldIndex.Master:
+                    obj.Master_Property.HasBeenSet = on;
                     break;
                 case MasterReference_FieldIndex.FileSize:
+                    obj.FileSize_Property.HasBeenSet = on;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -751,10 +967,10 @@ namespace Mutagen.Internals
             switch (enu)
             {
                 case MasterReference_FieldIndex.Master:
-                    obj.Master = default(String);
+                    obj.Master_Property.Unset();
                     break;
                 case MasterReference_FieldIndex.FileSize:
-                    obj.FileSize = default(UInt64);
+                    obj.FileSize_Property.Unset();
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -769,8 +985,9 @@ namespace Mutagen.Internals
             switch (enu)
             {
                 case MasterReference_FieldIndex.Master:
+                    return obj.Master_Property.HasBeenSet;
                 case MasterReference_FieldIndex.FileSize:
-                    return true;
+                    return obj.FileSize_Property.HasBeenSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -815,8 +1032,8 @@ namespace Mutagen.Internals
             MasterReference_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Master = item.Master == rhs.Master;
-            ret.FileSize = item.FileSize == rhs.FileSize;
+            ret.Master = item.Master_Property.Equals(rhs.Master_Property, (l, r) => l == r);
+            ret.FileSize = item.FileSize_Property.Equals(rhs.FileSize_Property, (l, r) => l == r);
         }
 
         public static string ToString(
@@ -862,14 +1079,16 @@ namespace Mutagen.Internals
             this IMasterReferenceGetter item,
             MasterReference_Mask<bool?> checkMask)
         {
+            if (checkMask.Master.HasValue && checkMask.Master.Value != item.Master_Property.HasBeenSet) return false;
+            if (checkMask.FileSize.HasValue && checkMask.FileSize.Value != item.FileSize_Property.HasBeenSet) return false;
             return true;
         }
 
         public static MasterReference_Mask<bool> GetHasBeenSetMask(IMasterReferenceGetter item)
         {
             var ret = new MasterReference_Mask<bool>();
-            ret.Master = true;
-            ret.FileSize = true;
+            ret.Master = item.Master_Property.HasBeenSet;
+            ret.FileSize = item.FileSize_Property.HasBeenSet;
             return ret;
         }
 
@@ -942,6 +1161,7 @@ namespace Mutagen.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.MasterReference");
                     }
+                    if (item.Master_Property.HasBeenSet)
                     {
                         Exception subMask;
                         StringXmlTranslation.Instance.Write(
@@ -950,11 +1170,12 @@ namespace Mutagen.Internals
                             item.Master,
                             doMasks: doMasks,
                             errorMask: out subMask);
-                        if (subMask != null)
+                        if (doMasks && subMask != null)
                         {
                             errorMask().Master = subMask;
                         }
                     }
+                    if (item.FileSize_Property.HasBeenSet)
                     {
                         Exception subMask;
                         UInt64XmlTranslation.Instance.Write(
@@ -963,10 +1184,101 @@ namespace Mutagen.Internals
                             item.FileSize,
                             doMasks: doMasks,
                             errorMask: out subMask);
-                        if (subMask != null)
+                        if (doMasks && subMask != null)
                         {
                             errorMask().FileSize = subMask;
                         }
+                    }
+                }
+            }
+            catch (Exception ex)
+            when (doMasks)
+            {
+                errorMask().Overall = ex;
+            }
+        }
+        #endregion
+
+        #endregion
+
+        #region OblivionBinary Translation
+        #region OblivionBinary Write
+        public static void Write_OblivionBinary(
+            IMasterReferenceGetter item,
+            Stream stream)
+        {
+            using (var writer = new BinaryWriter(stream))
+            {
+                Write_OblivionBinary(
+                    writer: writer,
+                    item: item,
+                    doMasks: false,
+                    errorMask: out MasterReference_ErrorMask errorMask);
+            }
+        }
+
+        public static void Write_OblivionBinary(
+            IMasterReferenceGetter item,
+            Stream stream,
+            out MasterReference_ErrorMask errorMask)
+        {
+            using (var writer = new BinaryWriter(stream))
+            {
+                Write_OblivionBinary(
+                    writer: writer,
+                    item: item,
+                    doMasks: true,
+                    errorMask: out errorMask);
+            }
+        }
+
+        public static void Write_OblivionBinary(
+            BinaryWriter writer,
+            IMasterReferenceGetter item,
+            bool doMasks,
+            out MasterReference_ErrorMask errorMask)
+        {
+            MasterReference_ErrorMask errMaskRet = null;
+            Write_OblivionBinary_Internal(
+                writer: writer,
+                item: item,
+                doMasks: doMasks,
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new MasterReference_ErrorMask()) : default(Func<MasterReference_ErrorMask>));
+            errorMask = errMaskRet;
+        }
+
+        private static void Write_OblivionBinary_Internal(
+            BinaryWriter writer,
+            IMasterReferenceGetter item,
+            bool doMasks,
+            Func<MasterReference_ErrorMask> errorMask)
+        {
+            try
+            {
+                if (item.Master_Property.HasBeenSet)
+                {
+                    Exception subMask;
+                    Mutagen.Binary.StringBinaryTranslation.Instance.Write(
+                        writer,
+                        item.Master,
+                        doMasks: doMasks,
+                        errorMask: out subMask);
+                    if (subMask != null)
+                    {
+                        errorMask().Master = subMask;
+                    }
+                }
+                if (item.FileSize_Property.HasBeenSet)
+                {
+                    Exception subMask;
+                    Mutagen.Binary.UInt64BinaryTranslation.Instance.Write(
+                        writer,
+                        item.FileSize,
+                        doMasks: doMasks,
+                        errorMask: out subMask);
+                    if (subMask != null)
+                    {
+                        errorMask().FileSize = subMask;
                     }
                 }
             }
@@ -1185,6 +1497,7 @@ namespace Mutagen.Internals
 
     }
     #endregion
+
 
 
     #endregion
