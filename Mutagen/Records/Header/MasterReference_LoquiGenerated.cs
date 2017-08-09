@@ -35,26 +35,26 @@ namespace Mutagen
         #endregion
 
         #region Master
-        protected readonly IHasBeenSetItem<String> _Master = HasBeenSetItem.Factory<String>(markAsSet: false);
-        public IHasBeenSetItem<String> Master_Property => _Master;
+        protected readonly INotifyingItem<String> _Master = NotifyingItem.Factory<String>(markAsSet: false);
+        public INotifyingItem<String> Master_Property => _Master;
         public String Master
         {
             get => this._Master.Item;
             set => this._Master.Set(value);
         }
-        String IMasterReferenceGetter.Master => this.Master;
-        IHasBeenSetItemGetter<String> IMasterReferenceGetter.Master_Property => this.Master_Property;
+        INotifyingItem<String> IMasterReference.Master_Property => this.Master_Property;
+        INotifyingItemGetter<String> IMasterReferenceGetter.Master_Property => this.Master_Property;
         #endregion
         #region FileSize
-        protected readonly IHasBeenSetItem<UInt64> _FileSize = HasBeenSetItem.Factory<UInt64>(markAsSet: false);
-        public IHasBeenSetItem<UInt64> FileSize_Property => _FileSize;
+        protected readonly INotifyingItem<UInt64> _FileSize = NotifyingItem.Factory<UInt64>(markAsSet: false);
+        public INotifyingItem<UInt64> FileSize_Property => _FileSize;
         public UInt64 FileSize
         {
             get => this._FileSize.Item;
             set => this._FileSize.Set(value);
         }
-        UInt64 IMasterReferenceGetter.FileSize => this.FileSize;
-        IHasBeenSetItemGetter<UInt64> IMasterReferenceGetter.FileSize_Property => this.FileSize_Property;
+        INotifyingItem<UInt64> IMasterReference.FileSize_Property => this.FileSize_Property;
+        INotifyingItemGetter<UInt64> IMasterReferenceGetter.FileSize_Property => this.FileSize_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -573,10 +573,14 @@ namespace Mutagen
             switch (enu)
             {
                 case MasterReference_FieldIndex.Master:
-                    this._Master.Set((String)obj);
+                    this._Master.Set(
+                        (String)obj,
+                        cmds);
                     break;
                 case MasterReference_FieldIndex.FileSize:
-                    this._FileSize.Set((UInt64)obj);
+                    this._FileSize.Set(
+                        (UInt64)obj,
+                        cmds);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -616,10 +620,14 @@ namespace Mutagen
             switch (enu)
             {
                 case MasterReference_FieldIndex.Master:
-                    obj._Master.Set((String)pair.Value);
+                    obj._Master.Set(
+                        (String)pair.Value,
+                        null);
                     break;
                 case MasterReference_FieldIndex.FileSize:
-                    obj._FileSize.Set((UInt64)pair.Value);
+                    obj._FileSize.Set(
+                        (UInt64)pair.Value,
+                        null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -637,10 +645,10 @@ namespace Mutagen
     public interface IMasterReference : IMasterReferenceGetter, ILoquiClass<IMasterReference, IMasterReferenceGetter>, ILoquiClass<MasterReference, IMasterReferenceGetter>
     {
         new String Master { get; set; }
-        new IHasBeenSetItem<String> Master_Property { get; }
+        new INotifyingItem<String> Master_Property { get; }
 
         new UInt64 FileSize { get; set; }
-        new IHasBeenSetItem<UInt64> FileSize_Property { get; }
+        new INotifyingItem<UInt64> FileSize_Property { get; }
 
     }
 
@@ -648,12 +656,12 @@ namespace Mutagen
     {
         #region Master
         String Master { get; }
-        IHasBeenSetItemGetter<String> Master_Property { get; }
+        INotifyingItemGetter<String> Master_Property { get; }
 
         #endregion
         #region FileSize
         UInt64 FileSize { get; }
-        IHasBeenSetItemGetter<UInt64> FileSize_Property { get; }
+        INotifyingItemGetter<UInt64> FileSize_Property { get; }
 
         #endregion
 
@@ -925,15 +933,33 @@ namespace Mutagen.Internals
         {
             if (copyMask?.Master ?? true)
             {
-                item.Master_Property.SetToWithDefault(
-                    rhs.Master_Property,
-                    def?.Master_Property);
+                try
+                {
+                    item.Master_Property.SetToWithDefault(
+                        rhs.Master_Property,
+                        def?.Master_Property,
+                        cmds);
+                }
+                catch (Exception ex)
+                when (doErrorMask)
+                {
+                    errorMask().SetNthException((ushort)MasterReference_FieldIndex.Master, ex);
+                }
             }
             if (copyMask?.FileSize ?? true)
             {
-                item.FileSize_Property.SetToWithDefault(
-                    rhs.FileSize_Property,
-                    def?.FileSize_Property);
+                try
+                {
+                    item.FileSize_Property.SetToWithDefault(
+                        rhs.FileSize_Property,
+                        def?.FileSize_Property,
+                        cmds);
+                }
+                catch (Exception ex)
+                when (doErrorMask)
+                {
+                    errorMask().SetNthException((ushort)MasterReference_FieldIndex.FileSize, ex);
+                }
             }
         }
 
@@ -968,10 +994,10 @@ namespace Mutagen.Internals
             switch (enu)
             {
                 case MasterReference_FieldIndex.Master:
-                    obj.Master_Property.Unset();
+                    obj.Master_Property.Unset(cmds);
                     break;
                 case MasterReference_FieldIndex.FileSize:
-                    obj.FileSize_Property.Unset();
+                    obj.FileSize_Property.Unset(cmds);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1014,8 +1040,8 @@ namespace Mutagen.Internals
             IMasterReference item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.Master = default(String);
-            item.FileSize = default(UInt64);
+            item.Master_Property.Unset(cmds.ToUnsetParams());
+            item.FileSize_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static MasterReference_Mask<bool> GetEqualsMask(

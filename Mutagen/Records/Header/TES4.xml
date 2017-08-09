@@ -5,7 +5,7 @@
       <ByteArray name="Fluff" nullable="false" length="12" includeInLength="false" />
       <Int64 name="NumRecords" />
       <UInt64 name="NextObjectID" />
-      <RefDirect name="Header" refName="Header" singleton="Singleton" />
+      <RefDirect name="Header" refName="Header" singleton="NotNull" />
       <Unknown name="TypeOffsets" recordType="OFST" />
       <Unknown name="Deleted" recordType="DELE" />
       <String name="Author" recordType="CNAM" maxLength="512" />

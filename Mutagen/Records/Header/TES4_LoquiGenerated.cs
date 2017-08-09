@@ -30,103 +30,101 @@ namespace Mutagen
         #region Ctor
         public TES4()
         {
-            _Header = HasBeenSetItem.Factory<Header>(
-                defaultVal: _Header_Object,
-                markAsSet: true);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region Fluff
-        protected readonly IHasBeenSetItem<Byte[]> _Fluff = HasBeenSetItem.Factory<Byte[]>(
+        protected readonly INotifyingItem<Byte[]> _Fluff = NotifyingItem.Factory<Byte[]>(
             markAsSet: false,
             noNullFallback: () => new byte[12]);
-        public IHasBeenSetItem<Byte[]> Fluff_Property => _Fluff;
+        public INotifyingItem<Byte[]> Fluff_Property => _Fluff;
         public Byte[] Fluff
         {
             get => this._Fluff.Item;
             set => this._Fluff.Set(value);
         }
-        Byte[] ITES4Getter.Fluff => this.Fluff;
-        IHasBeenSetItemGetter<Byte[]> ITES4Getter.Fluff_Property => this.Fluff_Property;
+        INotifyingItem<Byte[]> ITES4.Fluff_Property => this.Fluff_Property;
+        INotifyingItemGetter<Byte[]> ITES4Getter.Fluff_Property => this.Fluff_Property;
         #endregion
         #region NumRecords
-        protected readonly IHasBeenSetItem<Int64> _NumRecords = HasBeenSetItem.Factory<Int64>(markAsSet: false);
-        public IHasBeenSetItem<Int64> NumRecords_Property => _NumRecords;
+        protected readonly INotifyingItem<Int64> _NumRecords = NotifyingItem.Factory<Int64>(markAsSet: false);
+        public INotifyingItem<Int64> NumRecords_Property => _NumRecords;
         public Int64 NumRecords
         {
             get => this._NumRecords.Item;
             set => this._NumRecords.Set(value);
         }
-        Int64 ITES4Getter.NumRecords => this.NumRecords;
-        IHasBeenSetItemGetter<Int64> ITES4Getter.NumRecords_Property => this.NumRecords_Property;
+        INotifyingItem<Int64> ITES4.NumRecords_Property => this.NumRecords_Property;
+        INotifyingItemGetter<Int64> ITES4Getter.NumRecords_Property => this.NumRecords_Property;
         #endregion
         #region NextObjectID
-        protected readonly IHasBeenSetItem<UInt64> _NextObjectID = HasBeenSetItem.Factory<UInt64>(markAsSet: false);
-        public IHasBeenSetItem<UInt64> NextObjectID_Property => _NextObjectID;
+        protected readonly INotifyingItem<UInt64> _NextObjectID = NotifyingItem.Factory<UInt64>(markAsSet: false);
+        public INotifyingItem<UInt64> NextObjectID_Property => _NextObjectID;
         public UInt64 NextObjectID
         {
             get => this._NextObjectID.Item;
             set => this._NextObjectID.Set(value);
         }
-        UInt64 ITES4Getter.NextObjectID => this.NextObjectID;
-        IHasBeenSetItemGetter<UInt64> ITES4Getter.NextObjectID_Property => this.NextObjectID_Property;
+        INotifyingItem<UInt64> ITES4.NextObjectID_Property => this.NextObjectID_Property;
+        INotifyingItemGetter<UInt64> ITES4Getter.NextObjectID_Property => this.NextObjectID_Property;
         #endregion
         #region Header
-        private Header _Header_Object = new Header();
-        protected readonly IHasBeenSetItem<Header> _Header;
-        public Header Header
-        {
-            get => this._Header_Object;
-        }
-        public IHasBeenSetItemGetter<Header> Header_Property => this._Header;
-        Header ITES4Getter.Header => this._Header_Object;
-        IHasBeenSetItemGetter<Header> ITES4Getter.Header_Property => this._Header;
+        private readonly INotifyingItem<Header> _Header = new NotifyingItemConvertWrapper<Header>(
+            defaultVal: new Header(),
+            incomingConverter: (change) =>
+            {
+                if (change.New == null)
+                {
+                    return TryGet<Header>.Succeed(new Header());
+                }
+                return TryGet<Header>.Succeed(change.New);
+            }
+        );
+        public INotifyingItem<Header> Header_Property => this._Header;
+        Header ITES4Getter.Header => this.Header;
+        public Header Header { get => _Header.Item; set => _Header.Item = value; }
+        INotifyingItem<Header> ITES4.Header_Property => this.Header_Property;
+        INotifyingItemGetter<Header> ITES4Getter.Header_Property => this.Header_Property;
         #endregion
         #region TypeOffsets
-        protected readonly IHasBeenSetItem<UnknownData> _TypeOffsets = HasBeenSetItem.Factory<UnknownData>(markAsSet: false);
-        public UnknownData TypeOffsets
-        {
-            get => this._TypeOffsets.Item;
-            set => this._TypeOffsets.Item = value;
-        }
-        public IHasBeenSetItem<UnknownData> TypeOffsets_Property => _TypeOffsets;
-        UnknownData ITES4Getter.TypeOffsets => this._TypeOffsets.Item;
-        IHasBeenSetItemGetter<UnknownData> ITES4Getter.TypeOffsets_Property => this._TypeOffsets;
+        private readonly INotifyingItem<UnknownData> _TypeOffsets = new NotifyingItem<UnknownData>();
+        public INotifyingItem<UnknownData> TypeOffsets_Property => this._TypeOffsets;
+        UnknownData ITES4Getter.TypeOffsets => this.TypeOffsets;
+        public UnknownData TypeOffsets { get => _TypeOffsets.Item; set => _TypeOffsets.Item = value; }
+        INotifyingItem<UnknownData> ITES4.TypeOffsets_Property => this.TypeOffsets_Property;
+        INotifyingItemGetter<UnknownData> ITES4Getter.TypeOffsets_Property => this.TypeOffsets_Property;
         #endregion
         #region Deleted
-        protected readonly IHasBeenSetItem<UnknownData> _Deleted = HasBeenSetItem.Factory<UnknownData>(markAsSet: false);
-        public UnknownData Deleted
-        {
-            get => this._Deleted.Item;
-            set => this._Deleted.Item = value;
-        }
-        public IHasBeenSetItem<UnknownData> Deleted_Property => _Deleted;
-        UnknownData ITES4Getter.Deleted => this._Deleted.Item;
-        IHasBeenSetItemGetter<UnknownData> ITES4Getter.Deleted_Property => this._Deleted;
+        private readonly INotifyingItem<UnknownData> _Deleted = new NotifyingItem<UnknownData>();
+        public INotifyingItem<UnknownData> Deleted_Property => this._Deleted;
+        UnknownData ITES4Getter.Deleted => this.Deleted;
+        public UnknownData Deleted { get => _Deleted.Item; set => _Deleted.Item = value; }
+        INotifyingItem<UnknownData> ITES4.Deleted_Property => this.Deleted_Property;
+        INotifyingItemGetter<UnknownData> ITES4Getter.Deleted_Property => this.Deleted_Property;
         #endregion
         #region Author
-        protected readonly IHasBeenSetItem<String> _Author = HasBeenSetItem.Factory<String>(markAsSet: false);
-        public IHasBeenSetItem<String> Author_Property => _Author;
+        protected readonly INotifyingItem<String> _Author = NotifyingItem.Factory<String>(markAsSet: false);
+        public INotifyingItem<String> Author_Property => _Author;
         public String Author
         {
             get => this._Author.Item;
             set => this._Author.Set(value);
         }
-        String ITES4Getter.Author => this.Author;
-        IHasBeenSetItemGetter<String> ITES4Getter.Author_Property => this.Author_Property;
+        INotifyingItem<String> ITES4.Author_Property => this.Author_Property;
+        INotifyingItemGetter<String> ITES4Getter.Author_Property => this.Author_Property;
         #endregion
         #region Description
-        protected readonly IHasBeenSetItem<String> _Description = HasBeenSetItem.Factory<String>(markAsSet: false);
-        public IHasBeenSetItem<String> Description_Property => _Description;
+        protected readonly INotifyingItem<String> _Description = NotifyingItem.Factory<String>(markAsSet: false);
+        public INotifyingItem<String> Description_Property => _Description;
         public String Description
         {
             get => this._Description.Item;
             set => this._Description.Set(value);
         }
-        String ITES4Getter.Description => this.Description;
-        IHasBeenSetItemGetter<String> ITES4Getter.Description_Property => this.Description_Property;
+        INotifyingItem<String> ITES4.Description_Property => this.Description_Property;
+        INotifyingItemGetter<String> ITES4Getter.Description_Property => this.Description_Property;
         #endregion
         #region MasterReferences
         private readonly INotifyingList<Header> _MasterReferences = new NotifyingList<Header>();
@@ -422,20 +420,40 @@ namespace Mutagen
                 case "Header":
                     {
                         MaskItem<Exception, Header_ErrorMask> subMask;
-                        var tmp = Header.Create_XML(
-                            root: root,
-                            doMasks: doMasks,
-                            errorMask: out Header_ErrorMask createMask);
-                        HeaderCommon.CopyFieldsFrom(
-                            item: item._Header_Object,
-                            rhs: tmp,
-                            def: null,
-                            cmds: null,
-                            copyMask: null,
-                            doErrorMask: doMasks,
-                            errorMask: out Header_ErrorMask copyMask);
-                        var loquiMask = Header_ErrorMask.Combine(createMask, copyMask);
+                        Header_ErrorMask loquiMask;
+                        TryGet<Header> tryGet;
+                        var typeStr = root.GetAttribute(XmlConstants.TYPE_ATTRIBUTE);
+                        if (typeStr != null
+                            && typeStr.Equals("Mutagen.Header"))
+                        {
+                            tryGet = TryGet<Header>.Succeed((Header)Header.Create_XML(
+                                root: root,
+                                doMasks: doMasks,
+                                errorMask: out loquiMask));
+                        }
+                        else
+                        {
+                            var register = LoquiRegistration.GetRegisterByFullName(typeStr ?? root.Name.LocalName);
+                            if (register == null)
+                            {
+                                var ex = new ArgumentException($"Unknown Loqui type: {root.Name.LocalName}");
+                                if (!doMasks) throw ex;
+                                subMask = new MaskItem<Exception, Header_ErrorMask>(
+                                    ex,
+                                    null);
+                                break;
+                            }
+                            tryGet = XmlTranslator.Instance.GetTranslator(register.ClassType).Item.Value.Parse(
+                                root: root,
+                                doMasks: doMasks,
+                                maskObj: out var subErrorMaskObj).Bubble((o) => (Header)o);
+                            loquiMask = (Header_ErrorMask)subErrorMaskObj;
+                        }
                         subMask = loquiMask == null ? null : new MaskItem<Exception, Header_ErrorMask>(null, loquiMask);
+                        if (tryGet.Succeeded)
+                        {
+                            item._Header.Item = tryGet.Value;
+                        }
                         if (doMasks && subMask != null)
                         {
                             errorMask().Header = subMask;
@@ -811,20 +829,16 @@ namespace Mutagen
                 case TES4_FieldIndex.Header:
                     {
                         MaskItem<Exception, Header_ErrorMask> subMask;
-                        var tmp = Header.Create_OblivionBinary(
+                        Header_ErrorMask loquiMask;
+                        TryGet<Header> tryGet = TryGet<Header>.Succeed((Header)Header.Create_OblivionBinary(
                             reader: reader,
                             doMasks: doMasks,
-                            errorMask: out Header_ErrorMask createMask);
-                        HeaderCommon.CopyFieldsFrom(
-                            item: item._Header_Object,
-                            rhs: tmp,
-                            def: null,
-                            cmds: null,
-                            copyMask: null,
-                            doErrorMask: doMasks,
-                            errorMask: out Header_ErrorMask copyMask);
-                        var loquiMask = Header_ErrorMask.Combine(createMask, copyMask);
+                            errorMask: out loquiMask));
                         subMask = loquiMask == null ? null : new MaskItem<Exception, Header_ErrorMask>(null, loquiMask);
+                        if (tryGet.Succeeded)
+                        {
+                            item._Header.Item = tryGet.Value;
+                        }
                         if (subMask != null)
                         {
                             errorMask().Header = subMask;
@@ -1073,28 +1087,44 @@ namespace Mutagen
             switch (enu)
             {
                 case TES4_FieldIndex.Fluff:
-                    this._Fluff.Set((Byte[])obj);
+                    this._Fluff.Set(
+                        (Byte[])obj,
+                        cmds);
                     break;
                 case TES4_FieldIndex.NumRecords:
-                    this._NumRecords.Set((Int64)obj);
+                    this._NumRecords.Set(
+                        (Int64)obj,
+                        cmds);
                     break;
                 case TES4_FieldIndex.NextObjectID:
-                    this._NextObjectID.Set((UInt64)obj);
+                    this._NextObjectID.Set(
+                        (UInt64)obj,
+                        cmds);
                     break;
                 case TES4_FieldIndex.Header:
-                    this._Header_Object.CopyFieldsFrom(rhs: (Header)obj, cmds: cmds);
+                    this._Header.Set(
+                        (Header)obj,
+                        cmds);
                     break;
                 case TES4_FieldIndex.TypeOffsets:
-                    this._TypeOffsets.Set((UnknownData)obj);
+                    this._TypeOffsets.Set(
+                        (UnknownData)obj,
+                        cmds);
                     break;
                 case TES4_FieldIndex.Deleted:
-                    this._Deleted.Set((UnknownData)obj);
+                    this._Deleted.Set(
+                        (UnknownData)obj,
+                        cmds);
                     break;
                 case TES4_FieldIndex.Author:
-                    this._Author.Set((String)obj);
+                    this._Author.Set(
+                        (String)obj,
+                        cmds);
                     break;
                 case TES4_FieldIndex.Description:
-                    this._Description.Set((String)obj);
+                    this._Description.Set(
+                        (String)obj,
+                        cmds);
                     break;
                 case TES4_FieldIndex.MasterReferences:
                     this._MasterReferences.SetTo((IEnumerable<Header>)obj, cmds);
@@ -1137,28 +1167,44 @@ namespace Mutagen
             switch (enu)
             {
                 case TES4_FieldIndex.Fluff:
-                    obj._Fluff.Set((Byte[])pair.Value);
+                    obj._Fluff.Set(
+                        (Byte[])pair.Value,
+                        null);
                     break;
                 case TES4_FieldIndex.NumRecords:
-                    obj._NumRecords.Set((Int64)pair.Value);
+                    obj._NumRecords.Set(
+                        (Int64)pair.Value,
+                        null);
                     break;
                 case TES4_FieldIndex.NextObjectID:
-                    obj._NextObjectID.Set((UInt64)pair.Value);
+                    obj._NextObjectID.Set(
+                        (UInt64)pair.Value,
+                        null);
                     break;
                 case TES4_FieldIndex.Header:
-                    obj._Header_Object.CopyFieldsFrom(rhs: (Header)pair.Value, cmds: null);
+                    obj._Header.Set(
+                        (Header)pair.Value,
+                        null);
                     break;
                 case TES4_FieldIndex.TypeOffsets:
-                    obj._TypeOffsets.Set((UnknownData)pair.Value);
+                    obj._TypeOffsets.Set(
+                        (UnknownData)pair.Value,
+                        null);
                     break;
                 case TES4_FieldIndex.Deleted:
-                    obj._Deleted.Set((UnknownData)pair.Value);
+                    obj._Deleted.Set(
+                        (UnknownData)pair.Value,
+                        null);
                     break;
                 case TES4_FieldIndex.Author:
-                    obj._Author.Set((String)pair.Value);
+                    obj._Author.Set(
+                        (String)pair.Value,
+                        null);
                     break;
                 case TES4_FieldIndex.Description:
-                    obj._Description.Set((String)pair.Value);
+                    obj._Description.Set(
+                        (String)pair.Value,
+                        null);
                     break;
                 case TES4_FieldIndex.MasterReferences:
                     obj._MasterReferences.SetTo((IEnumerable<Header>)pair.Value, null);
@@ -1179,25 +1225,28 @@ namespace Mutagen
     public interface ITES4 : ITES4Getter, ILoquiClass<ITES4, ITES4Getter>, ILoquiClass<TES4, ITES4Getter>
     {
         new Byte[] Fluff { get; set; }
-        new IHasBeenSetItem<Byte[]> Fluff_Property { get; }
+        new INotifyingItem<Byte[]> Fluff_Property { get; }
 
         new Int64 NumRecords { get; set; }
-        new IHasBeenSetItem<Int64> NumRecords_Property { get; }
+        new INotifyingItem<Int64> NumRecords_Property { get; }
 
         new UInt64 NextObjectID { get; set; }
-        new IHasBeenSetItem<UInt64> NextObjectID_Property { get; }
+        new INotifyingItem<UInt64> NextObjectID_Property { get; }
+
+        new Header Header { get; set; }
+        new INotifyingItem<Header> Header_Property { get; }
 
         new UnknownData TypeOffsets { get; set; }
-        new IHasBeenSetItem<UnknownData> TypeOffsets_Property { get; }
+        new INotifyingItem<UnknownData> TypeOffsets_Property { get; }
 
         new UnknownData Deleted { get; set; }
-        new IHasBeenSetItem<UnknownData> Deleted_Property { get; }
+        new INotifyingItem<UnknownData> Deleted_Property { get; }
 
         new String Author { get; set; }
-        new IHasBeenSetItem<String> Author_Property { get; }
+        new INotifyingItem<String> Author_Property { get; }
 
         new String Description { get; set; }
-        new IHasBeenSetItem<String> Description_Property { get; }
+        new INotifyingItem<String> Description_Property { get; }
 
         new INotifyingList<Header> MasterReferences { get; }
     }
@@ -1206,42 +1255,42 @@ namespace Mutagen
     {
         #region Fluff
         Byte[] Fluff { get; }
-        IHasBeenSetItemGetter<Byte[]> Fluff_Property { get; }
+        INotifyingItemGetter<Byte[]> Fluff_Property { get; }
 
         #endregion
         #region NumRecords
         Int64 NumRecords { get; }
-        IHasBeenSetItemGetter<Int64> NumRecords_Property { get; }
+        INotifyingItemGetter<Int64> NumRecords_Property { get; }
 
         #endregion
         #region NextObjectID
         UInt64 NextObjectID { get; }
-        IHasBeenSetItemGetter<UInt64> NextObjectID_Property { get; }
+        INotifyingItemGetter<UInt64> NextObjectID_Property { get; }
 
         #endregion
         #region Header
         Header Header { get; }
-        IHasBeenSetItemGetter<Header> Header_Property { get; }
+        INotifyingItemGetter<Header> Header_Property { get; }
 
         #endregion
         #region TypeOffsets
         UnknownData TypeOffsets { get; }
-        IHasBeenSetItemGetter<UnknownData> TypeOffsets_Property { get; }
+        INotifyingItemGetter<UnknownData> TypeOffsets_Property { get; }
 
         #endregion
         #region Deleted
         UnknownData Deleted { get; }
-        IHasBeenSetItemGetter<UnknownData> Deleted_Property { get; }
+        INotifyingItemGetter<UnknownData> Deleted_Property { get; }
 
         #endregion
         #region Author
         String Author { get; }
-        IHasBeenSetItemGetter<String> Author_Property { get; }
+        INotifyingItemGetter<String> Author_Property { get; }
 
         #endregion
         #region Description
         String Description { get; }
-        IHasBeenSetItemGetter<String> Description_Property { get; }
+        INotifyingItemGetter<String> Description_Property { get; }
 
         #endregion
         #region MasterReferences
@@ -1383,11 +1432,10 @@ namespace Mutagen.Internals
             TES4_FieldIndex enu = (TES4_FieldIndex)index;
             switch (enu)
             {
-                case TES4_FieldIndex.Header:
-                    return true;
                 case TES4_FieldIndex.Fluff:
                 case TES4_FieldIndex.NumRecords:
                 case TES4_FieldIndex.NextObjectID:
+                case TES4_FieldIndex.Header:
                 case TES4_FieldIndex.TypeOffsets:
                 case TES4_FieldIndex.Deleted:
                 case TES4_FieldIndex.Author:
@@ -1452,11 +1500,10 @@ namespace Mutagen.Internals
             TES4_FieldIndex enu = (TES4_FieldIndex)index;
             switch (enu)
             {
-                case TES4_FieldIndex.Header:
-                    return true;
                 case TES4_FieldIndex.Fluff:
                 case TES4_FieldIndex.NumRecords:
                 case TES4_FieldIndex.NextObjectID:
+                case TES4_FieldIndex.Header:
                 case TES4_FieldIndex.TypeOffsets:
                 case TES4_FieldIndex.Deleted:
                 case TES4_FieldIndex.Author:
@@ -1604,43 +1651,93 @@ namespace Mutagen.Internals
         {
             if (copyMask?.Fluff ?? true)
             {
-                item.Fluff_Property.SetToWithDefault(
-                    rhs.Fluff_Property,
-                    def?.Fluff_Property);
+                try
+                {
+                    item.Fluff_Property.SetToWithDefault(
+                        rhs.Fluff_Property,
+                        def?.Fluff_Property,
+                        cmds);
+                }
+                catch (Exception ex)
+                when (doErrorMask)
+                {
+                    errorMask().SetNthException((ushort)TES4_FieldIndex.Fluff, ex);
+                }
             }
             if (copyMask?.NumRecords ?? true)
             {
-                item.NumRecords_Property.SetToWithDefault(
-                    rhs.NumRecords_Property,
-                    def?.NumRecords_Property);
+                try
+                {
+                    item.NumRecords_Property.SetToWithDefault(
+                        rhs.NumRecords_Property,
+                        def?.NumRecords_Property,
+                        cmds);
+                }
+                catch (Exception ex)
+                when (doErrorMask)
+                {
+                    errorMask().SetNthException((ushort)TES4_FieldIndex.NumRecords, ex);
+                }
             }
             if (copyMask?.NextObjectID ?? true)
             {
-                item.NextObjectID_Property.SetToWithDefault(
-                    rhs.NextObjectID_Property,
-                    def?.NextObjectID_Property);
+                try
+                {
+                    item.NextObjectID_Property.SetToWithDefault(
+                        rhs.NextObjectID_Property,
+                        def?.NextObjectID_Property,
+                        cmds);
+                }
+                catch (Exception ex)
+                when (doErrorMask)
+                {
+                    errorMask().SetNthException((ushort)TES4_FieldIndex.NextObjectID, ex);
+                }
             }
-            if (copyMask?.Header.Overall ?? true)
+            if (copyMask?.Header.Overall != CopyOption.Skip)
             {
                 try
                 {
-                    HeaderCommon.CopyFieldsFrom(
-                        item: item.Header,
-                        rhs: rhs.Header,
-                        def: def?.Header,
-                        doErrorMask: doErrorMask,
-                        errorMask: (doErrorMask ? new Func<Header_ErrorMask>(() =>
+                    item.Header_Property.SetToWithDefault(
+                        rhs.Header_Property,
+                        def?.Header_Property,
+                        cmds,
+                        (r, d) =>
                         {
-                            var baseMask = errorMask();
-                            if (baseMask.Header.Specific == null)
+                            switch (copyMask?.Header.Overall ?? CopyOption.Reference)
                             {
-                                baseMask.Header = new MaskItem<Exception, Header_ErrorMask>(null, new Header_ErrorMask());
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    HeaderCommon.CopyFieldsFrom(
+                                        item: item.Header,
+                                        rhs: rhs.Header,
+                                        def: def?.Header,
+                                        doErrorMask: doErrorMask,
+                                        errorMask: (doErrorMask ? new Func<Header_ErrorMask>(() =>
+                                        {
+                                            var baseMask = errorMask();
+                                            if (baseMask.Header.Specific == null)
+                                            {
+                                                baseMask.Header = new MaskItem<Exception, Header_ErrorMask>(null, new Header_ErrorMask());
+                                            }
+                                            return baseMask.Header.Specific;
+                                        }
+                                        ) : null),
+                                        copyMask: copyMask?.Header.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(Header);
+                                    return Header.Copy(
+                                        r,
+                                        copyMask?.Header.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Header.Overall}. Cannot execute copy.");
                             }
-                            return baseMask.Header.Specific;
                         }
-                        ) : null),
-                        copyMask: copyMask?.Header.Specific,
-                        cmds: cmds);
+                        );
                 }
                 catch (Exception ex)
                 when (doErrorMask)
@@ -1655,6 +1752,7 @@ namespace Mutagen.Internals
                     item.TypeOffsets_Property.SetToWithDefault(
                         rhs.TypeOffsets_Property,
                         def?.TypeOffsets_Property,
+                        cmds,
                         (r, d) =>
                         {
                             switch (copyMask?.TypeOffsets.Overall ?? CopyOption.Reference)
@@ -1705,6 +1803,7 @@ namespace Mutagen.Internals
                     item.Deleted_Property.SetToWithDefault(
                         rhs.Deleted_Property,
                         def?.Deleted_Property,
+                        cmds,
                         (r, d) =>
                         {
                             switch (copyMask?.Deleted.Overall ?? CopyOption.Reference)
@@ -1750,15 +1849,33 @@ namespace Mutagen.Internals
             }
             if (copyMask?.Author ?? true)
             {
-                item.Author_Property.SetToWithDefault(
-                    rhs.Author_Property,
-                    def?.Author_Property);
+                try
+                {
+                    item.Author_Property.SetToWithDefault(
+                        rhs.Author_Property,
+                        def?.Author_Property,
+                        cmds);
+                }
+                catch (Exception ex)
+                when (doErrorMask)
+                {
+                    errorMask().SetNthException((ushort)TES4_FieldIndex.Author, ex);
+                }
             }
             if (copyMask?.Description ?? true)
             {
-                item.Description_Property.SetToWithDefault(
-                    rhs.Description_Property,
-                    def?.Description_Property);
+                try
+                {
+                    item.Description_Property.SetToWithDefault(
+                        rhs.Description_Property,
+                        def?.Description_Property,
+                        cmds);
+                }
+                catch (Exception ex)
+                when (doErrorMask)
+                {
+                    errorMask().SetNthException((ushort)TES4_FieldIndex.Description, ex);
+                }
             }
             if (copyMask?.MasterReferences.Overall != CopyOption.Skip)
             {
@@ -1811,7 +1928,8 @@ namespace Mutagen.Internals
                     obj.NextObjectID_Property.HasBeenSet = on;
                     break;
                 case TES4_FieldIndex.Header:
-                    throw new ArgumentException("Tried to set at a readonly index " + index);
+                    obj.Header_Property.HasBeenSet = on;
+                    break;
                 case TES4_FieldIndex.TypeOffsets:
                     obj.TypeOffsets_Property.HasBeenSet = on;
                     break;
@@ -1841,27 +1959,28 @@ namespace Mutagen.Internals
             switch (enu)
             {
                 case TES4_FieldIndex.Fluff:
-                    obj.Fluff_Property.Unset();
+                    obj.Fluff_Property.Unset(cmds);
                     break;
                 case TES4_FieldIndex.NumRecords:
-                    obj.NumRecords_Property.Unset();
+                    obj.NumRecords_Property.Unset(cmds);
                     break;
                 case TES4_FieldIndex.NextObjectID:
-                    obj.NextObjectID_Property.Unset();
+                    obj.NextObjectID_Property.Unset(cmds);
                     break;
                 case TES4_FieldIndex.Header:
-                    throw new ArgumentException("Tried to set at a readonly index " + index);
+                    obj.Header_Property.Unset(cmds);
+                    break;
                 case TES4_FieldIndex.TypeOffsets:
-                    obj.TypeOffsets_Property.Unset();
+                    obj.TypeOffsets_Property.Unset(cmds);
                     break;
                 case TES4_FieldIndex.Deleted:
-                    obj.Deleted_Property.Unset();
+                    obj.Deleted_Property.Unset(cmds);
                     break;
                 case TES4_FieldIndex.Author:
-                    obj.Author_Property.Unset();
+                    obj.Author_Property.Unset(cmds);
                     break;
                 case TES4_FieldIndex.Description:
-                    obj.Description_Property.Unset();
+                    obj.Description_Property.Unset(cmds);
                     break;
                 case TES4_FieldIndex.MasterReferences:
                     obj.MasterReferences.Unset(cmds);
@@ -1935,13 +2054,14 @@ namespace Mutagen.Internals
             ITES4 item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.Fluff = default(Byte[]);
-            item.NumRecords = default(Int64);
-            item.NextObjectID = default(UInt64);
-            item.TypeOffsets = default(UnknownData);
-            item.Deleted = default(UnknownData);
-            item.Author = default(String);
-            item.Description = default(String);
+            item.Fluff_Property.Unset(cmds.ToUnsetParams());
+            item.NumRecords_Property.Unset(cmds.ToUnsetParams());
+            item.NextObjectID_Property.Unset(cmds.ToUnsetParams());
+            item.Header_Property.Unset(cmds.ToUnsetParams());
+            item.TypeOffsets_Property.Unset(cmds.ToUnsetParams());
+            item.Deleted_Property.Unset(cmds.ToUnsetParams());
+            item.Author_Property.Unset(cmds.ToUnsetParams());
+            item.Description_Property.Unset(cmds.ToUnsetParams());
             item.MasterReferences.Unset(cmds.ToUnsetParams());
         }
 
@@ -2988,7 +3108,7 @@ namespace Mutagen.Internals
         public bool Fluff;
         public bool NumRecords;
         public bool NextObjectID;
-        public MaskItem<bool, Header_CopyMask> Header;
+        public MaskItem<CopyOption, Header_CopyMask> Header;
         public MaskItem<CopyOption, UnknownData_CopyMask> TypeOffsets;
         public MaskItem<CopyOption, UnknownData_CopyMask> Deleted;
         public bool Author;

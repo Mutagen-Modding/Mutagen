@@ -35,15 +35,15 @@ namespace Mutagen
         #endregion
 
         #region Data
-        protected readonly IHasBeenSetItem<Byte[]> _Data = HasBeenSetItem.Factory<Byte[]>(markAsSet: false);
-        public IHasBeenSetItem<Byte[]> Data_Property => _Data;
+        protected readonly INotifyingItem<Byte[]> _Data = NotifyingItem.Factory<Byte[]>(markAsSet: false);
+        public INotifyingItem<Byte[]> Data_Property => _Data;
         public Byte[] Data
         {
             get => this._Data.Item;
             set => this._Data.Set(value);
         }
-        Byte[] IUnknownDataGetter.Data => this.Data;
-        IHasBeenSetItemGetter<Byte[]> IUnknownDataGetter.Data_Property => this.Data_Property;
+        INotifyingItem<Byte[]> IUnknownData.Data_Property => this.Data_Property;
+        INotifyingItemGetter<Byte[]> IUnknownDataGetter.Data_Property => this.Data_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -519,7 +519,9 @@ namespace Mutagen
             switch (enu)
             {
                 case UnknownData_FieldIndex.Data:
-                    this._Data.Set((Byte[])obj);
+                    this._Data.Set(
+                        (Byte[])obj,
+                        cmds);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -559,7 +561,9 @@ namespace Mutagen
             switch (enu)
             {
                 case UnknownData_FieldIndex.Data:
-                    obj._Data.Set((Byte[])pair.Value);
+                    obj._Data.Set(
+                        (Byte[])pair.Value,
+                        null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -577,7 +581,7 @@ namespace Mutagen
     public interface IUnknownData : IUnknownDataGetter, ILoquiClass<IUnknownData, IUnknownDataGetter>, ILoquiClass<UnknownData, IUnknownDataGetter>
     {
         new Byte[] Data { get; set; }
-        new IHasBeenSetItem<Byte[]> Data_Property { get; }
+        new INotifyingItem<Byte[]> Data_Property { get; }
 
     }
 
@@ -585,7 +589,7 @@ namespace Mutagen
     {
         #region Data
         Byte[] Data { get; }
-        IHasBeenSetItemGetter<Byte[]> Data_Property { get; }
+        INotifyingItemGetter<Byte[]> Data_Property { get; }
 
         #endregion
 
@@ -845,9 +849,18 @@ namespace Mutagen.Internals
         {
             if (copyMask?.Data ?? true)
             {
-                item.Data_Property.SetToWithDefault(
-                    rhs.Data_Property,
-                    def?.Data_Property);
+                try
+                {
+                    item.Data_Property.SetToWithDefault(
+                        rhs.Data_Property,
+                        def?.Data_Property,
+                        cmds);
+                }
+                catch (Exception ex)
+                when (doErrorMask)
+                {
+                    errorMask().SetNthException((ushort)UnknownData_FieldIndex.Data, ex);
+                }
             }
         }
 
@@ -879,7 +892,7 @@ namespace Mutagen.Internals
             switch (enu)
             {
                 case UnknownData_FieldIndex.Data:
-                    obj.Data_Property.Unset();
+                    obj.Data_Property.Unset(cmds);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -918,7 +931,7 @@ namespace Mutagen.Internals
             IUnknownData item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.Data = default(Byte[]);
+            item.Data_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static UnknownData_Mask<bool> GetEqualsMask(

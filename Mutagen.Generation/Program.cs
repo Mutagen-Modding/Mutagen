@@ -19,7 +19,7 @@ namespace Mutagen.Generation
                 DefaultNamespace = "Mutagen",
                 RaisePropertyChangedDefault = false,
                 ProtocolDefault = new ProtocolKey("Mutagen"),
-                NotifyingDefault = NotifyingOption.HasBeenSet
+                NotifyingDefault = NotifyingOption.Notifying
             };
             gen.Add(new OblivionBinaryTranslationModule(gen));
             gen.AddTypeAssociation<UnknownType>("Unknown");

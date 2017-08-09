@@ -35,37 +35,37 @@ namespace Mutagen
         #endregion
 
         #region Version
-        protected readonly IHasBeenSetItem<Single> _Version = HasBeenSetItem.Factory<Single>(markAsSet: false);
-        public IHasBeenSetItem<Single> Version_Property => _Version;
+        protected readonly INotifyingItem<Single> _Version = NotifyingItem.Factory<Single>(markAsSet: false);
+        public INotifyingItem<Single> Version_Property => _Version;
         public Single Version
         {
             get => this._Version.Item;
             set => this._Version.Set(value);
         }
-        Single IHeaderGetter.Version => this.Version;
-        IHasBeenSetItemGetter<Single> IHeaderGetter.Version_Property => this.Version_Property;
+        INotifyingItem<Single> IHeader.Version_Property => this.Version_Property;
+        INotifyingItemGetter<Single> IHeaderGetter.Version_Property => this.Version_Property;
         #endregion
         #region NumRecords
-        protected readonly IHasBeenSetItem<Int64> _NumRecords = HasBeenSetItem.Factory<Int64>(markAsSet: false);
-        public IHasBeenSetItem<Int64> NumRecords_Property => _NumRecords;
+        protected readonly INotifyingItem<Int64> _NumRecords = NotifyingItem.Factory<Int64>(markAsSet: false);
+        public INotifyingItem<Int64> NumRecords_Property => _NumRecords;
         public Int64 NumRecords
         {
             get => this._NumRecords.Item;
             set => this._NumRecords.Set(value);
         }
-        Int64 IHeaderGetter.NumRecords => this.NumRecords;
-        IHasBeenSetItemGetter<Int64> IHeaderGetter.NumRecords_Property => this.NumRecords_Property;
+        INotifyingItem<Int64> IHeader.NumRecords_Property => this.NumRecords_Property;
+        INotifyingItemGetter<Int64> IHeaderGetter.NumRecords_Property => this.NumRecords_Property;
         #endregion
         #region NextObjectID
-        protected readonly IHasBeenSetItem<UInt64> _NextObjectID = HasBeenSetItem.Factory<UInt64>(markAsSet: false);
-        public IHasBeenSetItem<UInt64> NextObjectID_Property => _NextObjectID;
+        protected readonly INotifyingItem<UInt64> _NextObjectID = NotifyingItem.Factory<UInt64>(markAsSet: false);
+        public INotifyingItem<UInt64> NextObjectID_Property => _NextObjectID;
         public UInt64 NextObjectID
         {
             get => this._NextObjectID.Item;
             set => this._NextObjectID.Set(value);
         }
-        UInt64 IHeaderGetter.NextObjectID => this.NextObjectID;
-        IHasBeenSetItemGetter<UInt64> IHeaderGetter.NextObjectID_Property => this.NextObjectID_Property;
+        INotifyingItem<UInt64> IHeader.NextObjectID_Property => this.NextObjectID_Property;
+        INotifyingItemGetter<UInt64> IHeaderGetter.NextObjectID_Property => this.NextObjectID_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -631,13 +631,19 @@ namespace Mutagen
             switch (enu)
             {
                 case Header_FieldIndex.Version:
-                    this._Version.Set((Single)obj);
+                    this._Version.Set(
+                        (Single)obj,
+                        cmds);
                     break;
                 case Header_FieldIndex.NumRecords:
-                    this._NumRecords.Set((Int64)obj);
+                    this._NumRecords.Set(
+                        (Int64)obj,
+                        cmds);
                     break;
                 case Header_FieldIndex.NextObjectID:
-                    this._NextObjectID.Set((UInt64)obj);
+                    this._NextObjectID.Set(
+                        (UInt64)obj,
+                        cmds);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -677,13 +683,19 @@ namespace Mutagen
             switch (enu)
             {
                 case Header_FieldIndex.Version:
-                    obj._Version.Set((Single)pair.Value);
+                    obj._Version.Set(
+                        (Single)pair.Value,
+                        null);
                     break;
                 case Header_FieldIndex.NumRecords:
-                    obj._NumRecords.Set((Int64)pair.Value);
+                    obj._NumRecords.Set(
+                        (Int64)pair.Value,
+                        null);
                     break;
                 case Header_FieldIndex.NextObjectID:
-                    obj._NextObjectID.Set((UInt64)pair.Value);
+                    obj._NextObjectID.Set(
+                        (UInt64)pair.Value,
+                        null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -701,13 +713,13 @@ namespace Mutagen
     public interface IHeader : IHeaderGetter, ILoquiClass<IHeader, IHeaderGetter>, ILoquiClass<Header, IHeaderGetter>
     {
         new Single Version { get; set; }
-        new IHasBeenSetItem<Single> Version_Property { get; }
+        new INotifyingItem<Single> Version_Property { get; }
 
         new Int64 NumRecords { get; set; }
-        new IHasBeenSetItem<Int64> NumRecords_Property { get; }
+        new INotifyingItem<Int64> NumRecords_Property { get; }
 
         new UInt64 NextObjectID { get; set; }
-        new IHasBeenSetItem<UInt64> NextObjectID_Property { get; }
+        new INotifyingItem<UInt64> NextObjectID_Property { get; }
 
     }
 
@@ -715,17 +727,17 @@ namespace Mutagen
     {
         #region Version
         Single Version { get; }
-        IHasBeenSetItemGetter<Single> Version_Property { get; }
+        INotifyingItemGetter<Single> Version_Property { get; }
 
         #endregion
         #region NumRecords
         Int64 NumRecords { get; }
-        IHasBeenSetItemGetter<Int64> NumRecords_Property { get; }
+        INotifyingItemGetter<Int64> NumRecords_Property { get; }
 
         #endregion
         #region NextObjectID
         UInt64 NextObjectID { get; }
-        IHasBeenSetItemGetter<UInt64> NextObjectID_Property { get; }
+        INotifyingItemGetter<UInt64> NextObjectID_Property { get; }
 
         #endregion
 
@@ -1009,21 +1021,48 @@ namespace Mutagen.Internals
         {
             if (copyMask?.Version ?? true)
             {
-                item.Version_Property.SetToWithDefault(
-                    rhs.Version_Property,
-                    def?.Version_Property);
+                try
+                {
+                    item.Version_Property.SetToWithDefault(
+                        rhs.Version_Property,
+                        def?.Version_Property,
+                        cmds);
+                }
+                catch (Exception ex)
+                when (doErrorMask)
+                {
+                    errorMask().SetNthException((ushort)Header_FieldIndex.Version, ex);
+                }
             }
             if (copyMask?.NumRecords ?? true)
             {
-                item.NumRecords_Property.SetToWithDefault(
-                    rhs.NumRecords_Property,
-                    def?.NumRecords_Property);
+                try
+                {
+                    item.NumRecords_Property.SetToWithDefault(
+                        rhs.NumRecords_Property,
+                        def?.NumRecords_Property,
+                        cmds);
+                }
+                catch (Exception ex)
+                when (doErrorMask)
+                {
+                    errorMask().SetNthException((ushort)Header_FieldIndex.NumRecords, ex);
+                }
             }
             if (copyMask?.NextObjectID ?? true)
             {
-                item.NextObjectID_Property.SetToWithDefault(
-                    rhs.NextObjectID_Property,
-                    def?.NextObjectID_Property);
+                try
+                {
+                    item.NextObjectID_Property.SetToWithDefault(
+                        rhs.NextObjectID_Property,
+                        def?.NextObjectID_Property,
+                        cmds);
+                }
+                catch (Exception ex)
+                when (doErrorMask)
+                {
+                    errorMask().SetNthException((ushort)Header_FieldIndex.NextObjectID, ex);
+                }
             }
         }
 
@@ -1061,13 +1100,13 @@ namespace Mutagen.Internals
             switch (enu)
             {
                 case Header_FieldIndex.Version:
-                    obj.Version_Property.Unset();
+                    obj.Version_Property.Unset(cmds);
                     break;
                 case Header_FieldIndex.NumRecords:
-                    obj.NumRecords_Property.Unset();
+                    obj.NumRecords_Property.Unset(cmds);
                     break;
                 case Header_FieldIndex.NextObjectID:
-                    obj.NextObjectID_Property.Unset();
+                    obj.NextObjectID_Property.Unset(cmds);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1114,9 +1153,9 @@ namespace Mutagen.Internals
             IHeader item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.Version = default(Single);
-            item.NumRecords = default(Int64);
-            item.NextObjectID = default(UInt64);
+            item.Version_Property.Unset(cmds.ToUnsetParams());
+            item.NumRecords_Property.Unset(cmds.ToUnsetParams());
+            item.NextObjectID_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static Header_Mask<bool> GetEqualsMask(

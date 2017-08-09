@@ -30,7 +30,7 @@ namespace Mutagen
         #region Ctor
         public OblivionMod()
         {
-            _TES4 = HasBeenSetItem.Factory<TES4>(
+            _TES4 = NotifyingItem.Factory<TES4>(
                 defaultVal: _TES4_Object,
                 markAsSet: true);
             CustomCtor();
@@ -40,14 +40,11 @@ namespace Mutagen
 
         #region TES4
         private TES4 _TES4_Object = new TES4();
-        protected readonly IHasBeenSetItem<TES4> _TES4;
-        public TES4 TES4
-        {
-            get => this._TES4_Object;
-        }
-        public IHasBeenSetItemGetter<TES4> TES4_Property => this._TES4;
-        TES4 IOblivionModGetter.TES4 => this._TES4_Object;
-        IHasBeenSetItemGetter<TES4> IOblivionModGetter.TES4_Property => this._TES4;
+        protected readonly INotifyingItem<TES4> _TES4;
+        public INotifyingItemGetter<TES4> TES4_Property => this._TES4;
+        TES4 IOblivionModGetter.TES4 => this.TES4;
+        public TES4 TES4 { get => _TES4.Item; }
+        INotifyingItemGetter<TES4> IOblivionModGetter.TES4_Property => this.TES4_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -596,7 +593,7 @@ namespace Mutagen
     {
         #region TES4
         TES4 TES4 { get; }
-        IHasBeenSetItemGetter<TES4> TES4_Property { get; }
+        INotifyingItemGetter<TES4> TES4_Property { get; }
 
         #endregion
 
