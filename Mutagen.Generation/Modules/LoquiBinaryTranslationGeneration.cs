@@ -124,56 +124,12 @@ namespace Mutagen.Generation
             if (loquiGen.TargetObjectGeneration != null)
             {
                 fg.AppendLine($"{loquiGen.TargetObjectGeneration.ErrorMask} loquiMask;");
-                fg.AppendLine($"TryGet<{typeGen.TypeName}> tryGet;");
-                //fg.AppendLine($"var typeStr = {readerAccessor}.GetAttribute(XmlConstants.{nameof(XmlConstants.TYPE_ATTRIBUTE)});");
-                fg.AppendLine($"if (typeStr != null");
-                using (new DepthWrapper(fg))
+                using (var args = new ArgsWrapper(fg,
+                    $"TryGet<{typeGen.TypeName}> tryGet = TryGet<{typeGen.TypeName}>.Succeed(({typeGen.TypeName}){loquiGen.TargetObjectGeneration.Name}.Create_{this.ModNickname}"))
                 {
-                    fg.AppendLine($"&& typeStr.Equals(\"{loquiGen.TargetObjectGeneration.FullName}\"))");
-                }
-                using (new BraceWrapper(fg))
-                {
-                    using (var args = new ArgsWrapper(fg,
-                        $"tryGet = TryGet<{typeGen.TypeName}>.Succeed(({typeGen.TypeName}){loquiGen.TargetObjectGeneration.Name}.Create_XML"))
-                    {
-                        args.Add($"reader: {readerAccessor}");
-                        args.Add($"doMasks: {doMaskAccessor}");
-                        args.Add($"errorMask: out loquiMask)");
-                    }
-                }
-                fg.AppendLine("else");
-                using (new BraceWrapper(fg))
-                {
-                    fg.AppendLine($"var register = LoquiRegistration.GetRegisterByFullName(typeStr ?? {readerAccessor}.Name.LocalName);");
-                    fg.AppendLine("if (register == null)");
-                    using (new BraceWrapper(fg))
-                    {
-                        fg.AppendLine($"var ex = new ArgumentException($\"Unknown Loqui type: {{{readerAccessor}.Name.LocalName}}\");");
-                        fg.AppendLine($"if (!{doMaskAccessor}) throw ex;");
-                        using (var args = new ArgsWrapper(fg,
-                            $"{maskAccessor} = new MaskItem<Exception, {loquiGen.ErrorMaskItemString}>"))
-                        {
-                            args.Add($"ex");
-                            args.Add("null");
-                        }
-                        if (retAccessor != null)
-                        {
-                            fg.AppendLine($"{retAccessor}TryGet<{loquiGen.ObjectTypeName}>.Fail(null);");
-                        }
-                        else
-                        {
-                            fg.AppendLine("break;");
-                        }
-                    }
-                    using (var args = new ArgsWrapper(fg,
-                        $"tryGet = XmlTranslator.GetTranslator(register.ClassType).Item.Value.Parse",
-                        $".Bubble((o) => ({typeGen.TypeName})o)"))
-                    {
-                        args.Add("reader: reader");
-                        args.Add($"doMasks: {doMaskAccessor}");
-                        args.Add("maskObj: out var subErrorMaskObj");
-                    }
-                    fg.AppendLine($"loquiMask = ({loquiGen.TargetObjectGeneration.ErrorMask})subErrorMaskObj;");
+                    args.Add($"reader: {readerAccessor}");
+                    args.Add($"doMasks: {doMaskAccessor}");
+                    args.Add($"errorMask: out loquiMask)");
                 }
                 fg.AppendLine($"{maskAccessor} = loquiMask == null ? null : new MaskItem<Exception, {loquiGen.ErrorMaskItemString}>(null, loquiMask);");
                 if (retAccessor != null)

@@ -369,11 +369,12 @@ namespace Mutagen
             var ret = new MasterReference();
             try
             {
-                foreach (var elem in root.Elements())
+                foreach (var elem in EnumExt<MasterReference_FieldIndex>.Values)
                 {
                     Fill_OblivionBinary_Internal(
                         item: ret,
-                        root: elem,
+                        reader: reader,
+                        elem: elem,
                         doMasks: doMasks,
                         errorMask: errorMask);
                 }
@@ -389,13 +390,13 @@ namespace Mutagen
         protected static void Fill_OblivionBinary_Internal(
             MasterReference item,
             BinaryReader reader,
-            string name,
+            MasterReference_FieldIndex elem,
             bool doMasks,
             Func<MasterReference_ErrorMask> errorMask)
         {
-            switch (name)
+            switch (elem)
             {
-                case "Master":
+                case MasterReference_FieldIndex.Master:
                     {
                         Exception subMask;
                         var tryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
@@ -412,7 +413,7 @@ namespace Mutagen
                         }
                     }
                     break;
-                case "FileSize":
+                case MasterReference_FieldIndex.FileSize:
                     {
                         Exception subMask;
                         var tryGet = Mutagen.Binary.UInt64BinaryTranslation.Instance.Parse(

@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>d6d6d968fa0ccd29cf582661f4cd63d682708782</Sha>
+         <Sha>0c714e29df32de8553f80e6309a9a8d94dae3bd2</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>08-02-2017 21:45:01</CommitDate>
-         <Description>DirectoryExt.IsSubfolderOf</Description>
+         <CommitDate>08-08-2017 21:42:41</CommitDate>
+         <Description>EnumExt.Values /w cache</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>7a4ddee25b500b426a928c46b0ed2ea22942399a</Sha>
+         <Sha>7f8b36ce51abe72f474fe8ee68712cb9dd173b2e</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>08-08-2017 18:57:32</CommitDate>
-         <Description>Minor Translator refactoring</Description>
+         <CommitDate>08-08-2017 21:42:46</CommitDate>
+         <Description>ObjectGeneration.EnumName -&gt; FieldIndexName</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

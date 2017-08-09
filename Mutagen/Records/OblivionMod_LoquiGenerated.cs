@@ -341,11 +341,12 @@ namespace Mutagen
             var ret = new OblivionMod();
             try
             {
-                foreach (var elem in root.Elements())
+                foreach (var elem in EnumExt<OblivionMod_FieldIndex>.Values)
                 {
                     Fill_OblivionBinary_Internal(
                         item: ret,
-                        root: elem,
+                        reader: reader,
+                        elem: elem,
                         doMasks: doMasks,
                         errorMask: errorMask);
                 }
@@ -361,13 +362,13 @@ namespace Mutagen
         protected static void Fill_OblivionBinary_Internal(
             OblivionMod item,
             BinaryReader reader,
-            string name,
+            OblivionMod_FieldIndex elem,
             bool doMasks,
             Func<OblivionMod_ErrorMask> errorMask)
         {
-            switch (name)
+            switch (elem)
             {
-                case "TES4":
+                case OblivionMod_FieldIndex.TES4:
                     {
                         MaskItem<Exception, TES4_ErrorMask> subMask;
                         var tmp = TES4.Create_OblivionBinary(

@@ -408,11 +408,12 @@ namespace Mutagen
             var ret = new Header();
             try
             {
-                foreach (var elem in root.Elements())
+                foreach (var elem in EnumExt<Header_FieldIndex>.Values)
                 {
                     Fill_OblivionBinary_Internal(
                         item: ret,
-                        root: elem,
+                        reader: reader,
+                        elem: elem,
                         doMasks: doMasks,
                         errorMask: errorMask);
                 }
@@ -428,13 +429,13 @@ namespace Mutagen
         protected static void Fill_OblivionBinary_Internal(
             Header item,
             BinaryReader reader,
-            string name,
+            Header_FieldIndex elem,
             bool doMasks,
             Func<Header_ErrorMask> errorMask)
         {
-            switch (name)
+            switch (elem)
             {
-                case "Version":
+                case Header_FieldIndex.Version:
                     {
                         Exception subMask;
                         var tryGet = Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
@@ -452,7 +453,7 @@ namespace Mutagen
                         }
                     }
                     break;
-                case "NumRecords":
+                case Header_FieldIndex.NumRecords:
                     {
                         Exception subMask;
                         var tryGet = Mutagen.Binary.Int64BinaryTranslation.Instance.Parse(
@@ -470,7 +471,7 @@ namespace Mutagen
                         }
                     }
                     break;
-                case "NextObjectID":
+                case Header_FieldIndex.NextObjectID:
                     {
                         Exception subMask;
                         var tryGet = Mutagen.Binary.UInt64BinaryTranslation.Instance.Parse(

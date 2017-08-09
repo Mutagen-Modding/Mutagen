@@ -445,14 +445,15 @@ namespace Mutagen.Generation
                 fg.AppendLine("try");
                 using (new BraceWrapper(fg))
                 {
-                    fg.AppendLine("foreach (var elem in root.Elements())");
+                    fg.AppendLine($"foreach (var elem in EnumExt<{obj.FieldIndexName}>.Values)");
                     using (new BraceWrapper(fg))
                     {
                         using (var args = new ArgsWrapper(fg,
                             $"Fill_{this.ModuleNickname}_Internal"))
                         {
                             args.Add("item: ret");
-                            args.Add("root: elem");
+                            args.Add("reader: reader");
+                            args.Add("elem: elem");
                             args.Add("doMasks: doMasks");
                             args.Add("errorMask: errorMask");
                         }
@@ -473,13 +474,13 @@ namespace Mutagen.Generation
             {
                 args.Add($"{obj.ObjectName} item");
                 args.Add("BinaryReader reader");
-                args.Add("string name");
+                args.Add($"{obj.FieldIndexName} elem");
                 args.Add("bool doMasks");
                 args.Add($"Func<{obj.ErrorMask}> errorMask");
             }
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine("switch (name)");
+                fg.AppendLine("switch (elem)");
                 using (new BraceWrapper(fg))
                 {
                     foreach (var field in obj.IterateFields())
@@ -489,7 +490,7 @@ namespace Mutagen.Generation
                             throw new ArgumentException("Unsupported type generator: " + field.Field);
                         }
 
-                        fg.AppendLine($"case \"{field.Field.Name}\":");
+                        fg.AppendLine($"case {obj.FieldIndexName}.{field.Field.Name}:");
                         using (new DepthWrapper(fg))
                         {
                             if (generator.ShouldGenerateCopyIn(field.Field))

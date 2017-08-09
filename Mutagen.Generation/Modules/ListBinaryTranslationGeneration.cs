@@ -82,12 +82,12 @@ namespace Mutagen.Generation
             using (var args = new ArgsWrapper(fg,
                 $"{retAccessor}{this.Namespace}ListBinaryTranslation<{list.SubTypeGeneration.TypeName}, {subMaskStr}>.Instance.Parse"))
             {
-                args.Add($"writer: writer");
+                args.Add($"reader: reader");
                 args.Add($"doMasks: {doMaskAccessor}");
                 args.Add($"maskObj: out {maskAccessor}");
                 args.Add((gen) =>
                 {
-                    gen.AppendLine($"transl: (XElement r, bool listDoMasks, out {typeGen.ProtoGen.Gen.MaskModule.GetMaskModule(list.SubTypeGeneration.GetType()).GetErrorMaskTypeStr(list.SubTypeGeneration)} listSubMask) =>");
+                    gen.AppendLine($"transl: (BinaryReader r, bool listDoMasks, out {typeGen.ProtoGen.Gen.MaskModule.GetMaskModule(list.SubTypeGeneration.GetType()).GetErrorMaskTypeStr(list.SubTypeGeneration)} listSubMask) =>");
                     using (new BraceWrapper(gen))
                     {
                         var xmlGen = this.Module.GetTypeGeneration(list.SubTypeGeneration.GetType());

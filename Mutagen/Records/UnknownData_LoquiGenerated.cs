@@ -332,11 +332,12 @@ namespace Mutagen
             var ret = new UnknownData();
             try
             {
-                foreach (var elem in root.Elements())
+                foreach (var elem in EnumExt<UnknownData_FieldIndex>.Values)
                 {
                     Fill_OblivionBinary_Internal(
                         item: ret,
-                        root: elem,
+                        reader: reader,
+                        elem: elem,
                         doMasks: doMasks,
                         errorMask: errorMask);
                 }
@@ -352,13 +353,13 @@ namespace Mutagen
         protected static void Fill_OblivionBinary_Internal(
             UnknownData item,
             BinaryReader reader,
-            string name,
+            UnknownData_FieldIndex elem,
             bool doMasks,
             Func<UnknownData_ErrorMask> errorMask)
         {
-            switch (name)
+            switch (elem)
             {
-                case "Data":
+                case UnknownData_FieldIndex.Data:
                     {
                         Exception subMask;
                         var tryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(

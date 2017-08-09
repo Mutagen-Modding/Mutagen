@@ -727,11 +727,12 @@ namespace Mutagen
             var ret = new TES4();
             try
             {
-                foreach (var elem in root.Elements())
+                foreach (var elem in EnumExt<TES4_FieldIndex>.Values)
                 {
                     Fill_OblivionBinary_Internal(
                         item: ret,
-                        root: elem,
+                        reader: reader,
+                        elem: elem,
                         doMasks: doMasks,
                         errorMask: errorMask);
                 }
@@ -747,13 +748,13 @@ namespace Mutagen
         protected static void Fill_OblivionBinary_Internal(
             TES4 item,
             BinaryReader reader,
-            string name,
+            TES4_FieldIndex elem,
             bool doMasks,
             Func<TES4_ErrorMask> errorMask)
         {
-            switch (name)
+            switch (elem)
             {
-                case "Fluff":
+                case TES4_FieldIndex.Fluff:
                     {
                         Exception subMask;
                         var tryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
@@ -771,7 +772,7 @@ namespace Mutagen
                         }
                     }
                     break;
-                case "NumRecords":
+                case TES4_FieldIndex.NumRecords:
                     {
                         Exception subMask;
                         var tryGet = Mutagen.Binary.Int64BinaryTranslation.Instance.Parse(
@@ -789,7 +790,7 @@ namespace Mutagen
                         }
                     }
                     break;
-                case "NextObjectID":
+                case TES4_FieldIndex.NextObjectID:
                     {
                         Exception subMask;
                         var tryGet = Mutagen.Binary.UInt64BinaryTranslation.Instance.Parse(
@@ -807,7 +808,7 @@ namespace Mutagen
                         }
                     }
                     break;
-                case "Header":
+                case TES4_FieldIndex.Header:
                     {
                         MaskItem<Exception, Header_ErrorMask> subMask;
                         var tmp = Header.Create_OblivionBinary(
@@ -830,37 +831,14 @@ namespace Mutagen
                         }
                     }
                     break;
-                case "TypeOffsets":
+                case TES4_FieldIndex.TypeOffsets:
                     {
                         MaskItem<Exception, UnknownData_ErrorMask> subMask;
                         UnknownData_ErrorMask loquiMask;
-                        TryGet<UnknownData> tryGet;
-                        if (typeStr != null
-                            && typeStr.Equals("Mutagen.UnknownData"))
-                        {
-                            tryGet = TryGet<UnknownData>.Succeed((UnknownData)UnknownData.Create_XML(
-                                reader: reader,
-                                doMasks: doMasks,
-                                errorMask: out loquiMask));
-                        }
-                        else
-                        {
-                            var register = LoquiRegistration.GetRegisterByFullName(typeStr ?? reader.Name.LocalName);
-                            if (register == null)
-                            {
-                                var ex = new ArgumentException($"Unknown Loqui type: {reader.Name.LocalName}");
-                                if (!doMasks) throw ex;
-                                subMask = new MaskItem<Exception, UnknownData_ErrorMask>(
-                                    ex,
-                                    null);
-                                break;
-                            }
-                            tryGet = XmlTranslator.GetTranslator(register.ClassType).Item.Value.Parse(
-                                reader: reader,
-                                doMasks: doMasks,
-                                maskObj: out var subErrorMaskObj).Bubble((o) => (UnknownData)o);
-                            loquiMask = (UnknownData_ErrorMask)subErrorMaskObj;
-                        }
+                        TryGet<UnknownData> tryGet = TryGet<UnknownData>.Succeed((UnknownData)UnknownData.Create_OblivionBinary(
+                            reader: reader,
+                            doMasks: doMasks,
+                            errorMask: out loquiMask));
                         subMask = loquiMask == null ? null : new MaskItem<Exception, UnknownData_ErrorMask>(null, loquiMask);
                         if (tryGet.Succeeded)
                         {
@@ -872,37 +850,14 @@ namespace Mutagen
                         }
                     }
                     break;
-                case "Deleted":
+                case TES4_FieldIndex.Deleted:
                     {
                         MaskItem<Exception, UnknownData_ErrorMask> subMask;
                         UnknownData_ErrorMask loquiMask;
-                        TryGet<UnknownData> tryGet;
-                        if (typeStr != null
-                            && typeStr.Equals("Mutagen.UnknownData"))
-                        {
-                            tryGet = TryGet<UnknownData>.Succeed((UnknownData)UnknownData.Create_XML(
-                                reader: reader,
-                                doMasks: doMasks,
-                                errorMask: out loquiMask));
-                        }
-                        else
-                        {
-                            var register = LoquiRegistration.GetRegisterByFullName(typeStr ?? reader.Name.LocalName);
-                            if (register == null)
-                            {
-                                var ex = new ArgumentException($"Unknown Loqui type: {reader.Name.LocalName}");
-                                if (!doMasks) throw ex;
-                                subMask = new MaskItem<Exception, UnknownData_ErrorMask>(
-                                    ex,
-                                    null);
-                                break;
-                            }
-                            tryGet = XmlTranslator.GetTranslator(register.ClassType).Item.Value.Parse(
-                                reader: reader,
-                                doMasks: doMasks,
-                                maskObj: out var subErrorMaskObj).Bubble((o) => (UnknownData)o);
-                            loquiMask = (UnknownData_ErrorMask)subErrorMaskObj;
-                        }
+                        TryGet<UnknownData> tryGet = TryGet<UnknownData>.Succeed((UnknownData)UnknownData.Create_OblivionBinary(
+                            reader: reader,
+                            doMasks: doMasks,
+                            errorMask: out loquiMask));
                         subMask = loquiMask == null ? null : new MaskItem<Exception, UnknownData_ErrorMask>(null, loquiMask);
                         if (tryGet.Succeeded)
                         {
@@ -914,7 +869,7 @@ namespace Mutagen
                         }
                     }
                     break;
-                case "Author":
+                case TES4_FieldIndex.Author:
                     {
                         Exception subMask;
                         var tryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
@@ -931,7 +886,7 @@ namespace Mutagen
                         }
                     }
                     break;
-                case "Description":
+                case TES4_FieldIndex.Description:
                     {
                         Exception subMask;
                         var tryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
@@ -948,43 +903,20 @@ namespace Mutagen
                         }
                     }
                     break;
-                case "MasterReferences":
+                case TES4_FieldIndex.MasterReferences:
                     {
                         MaskItem<Exception, IEnumerable<MaskItem<Exception, Header_ErrorMask>>> subMask;
                         var listTryGet = Mutagen.Binary.ListBinaryTranslation<Header, MaskItem<Exception, Header_ErrorMask>>.Instance.Parse(
-                            writer: writer,
+                            reader: reader,
                             doMasks: doMasks,
                             maskObj: out subMask,
-                            transl: (XElement r, bool listDoMasks, out MaskItem<Exception, Header_ErrorMask> listSubMask) =>
+                            transl: (BinaryReader r, bool listDoMasks, out MaskItem<Exception, Header_ErrorMask> listSubMask) =>
                             {
                                 Header_ErrorMask loquiMask;
-                                TryGet<Header> tryGet;
-                                if (typeStr != null
-                                    && typeStr.Equals("Mutagen.Header"))
-                                {
-                                    tryGet = TryGet<Header>.Succeed((Header)Header.Create_XML(
-                                        reader: r,
-                                        doMasks: listDoMasks,
-                                        errorMask: out loquiMask));
-                                }
-                                else
-                                {
-                                    var register = LoquiRegistration.GetRegisterByFullName(typeStr ?? r.Name.LocalName);
-                                    if (register == null)
-                                    {
-                                        var ex = new ArgumentException($"Unknown Loqui type: {r.Name.LocalName}");
-                                        if (!listDoMasks) throw ex;
-                                        listSubMask = new MaskItem<Exception, Header_ErrorMask>(
-                                            ex,
-                                            null);
-                                        return TryGet<Header>.Fail(null);
-                                    }
-                                    tryGet = XmlTranslator.GetTranslator(register.ClassType).Item.Value.Parse(
-                                        reader: reader,
-                                        doMasks: listDoMasks,
-                                        maskObj: out var subErrorMaskObj).Bubble((o) => (Header)o);
-                                    loquiMask = (Header_ErrorMask)subErrorMaskObj;
-                                }
+                                TryGet<Header> tryGet = TryGet<Header>.Succeed((Header)Header.Create_OblivionBinary(
+                                    reader: r,
+                                    doMasks: listDoMasks,
+                                    errorMask: out loquiMask));
                                 listSubMask = loquiMask == null ? null : new MaskItem<Exception, Header_ErrorMask>(null, loquiMask);
                                 return tryGet;
                             }
