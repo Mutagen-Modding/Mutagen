@@ -152,6 +152,24 @@ namespace Mutagen
                 errorMask: out errorMask);
         }
 
+        public static UnknownData Create_XML(string path)
+        {
+            return Create_XML(
+                root: XDocument.Load(path).Root,
+                doMasks: false,
+                errorMask: out var errorMask);
+        }
+
+        public static UnknownData Create_XML(
+            string path,
+            out UnknownData_ErrorMask errorMask)
+        {
+            return Create_XML(
+                root: XDocument.Load(path).Root,
+                doMasks: true,
+                errorMask: out errorMask);
+        }
+
         public static UnknownData Create_XML(
             XElement root,
             bool doMasks,
@@ -224,7 +242,9 @@ namespace Mutagen
             }
         }
 
-        public void CopyIn_XML(XElement root, NotifyingFireParameters? cmds = null)
+        public void CopyIn_XML(
+            XElement root,
+            NotifyingFireParameters? cmds = null)
         {
             LoquiXmlTranslation<UnknownData, UnknownData_ErrorMask>.Instance.CopyIn(
                 root: root,
@@ -235,7 +255,10 @@ namespace Mutagen
                 cmds: cmds);
         }
 
-        public virtual void CopyIn_XML(XElement root, out UnknownData_ErrorMask errorMask, NotifyingFireParameters? cmds = null)
+        public virtual void CopyIn_XML(
+            XElement root,
+            out UnknownData_ErrorMask errorMask,
+            NotifyingFireParameters? cmds = null)
         {
             LoquiXmlTranslation<UnknownData, UnknownData_ErrorMask>.Instance.CopyIn(
                 root: root,
@@ -246,22 +269,58 @@ namespace Mutagen
                 cmds: cmds);
         }
 
-        public void Write_XML(Stream stream)
+        public void CopyIn_XML(
+            string path,
+            NotifyingFireParameters? cmds = null)
         {
-            UnknownDataCommon.Write_XML(
-                this,
-                stream);
+            LoquiXmlTranslation<UnknownData, UnknownData_ErrorMask>.Instance.CopyIn(
+                root: XDocument.Load(path).Root,
+                item: this,
+                skipProtected: true,
+                doMasks: false,
+                mask: out UnknownData_ErrorMask errorMask,
+                cmds: cmds);
         }
 
-        public void Write_XML(Stream stream, out UnknownData_ErrorMask errorMask)
+        public virtual void CopyIn_XML(
+            string path,
+            out UnknownData_ErrorMask errorMask,
+            NotifyingFireParameters? cmds = null)
         {
-            UnknownDataCommon.Write_XML(
-                this,
-                stream,
-                out errorMask);
+            LoquiXmlTranslation<UnknownData, UnknownData_ErrorMask>.Instance.CopyIn(
+                root: XDocument.Load(path).Root,
+                item: this,
+                skipProtected: true,
+                doMasks: true,
+                mask: out errorMask,
+                cmds: cmds);
         }
 
-        public void Write_XML(XmlWriter writer, out UnknownData_ErrorMask errorMask, string name = null)
+        public virtual void Write_XML(Stream stream, out UnknownData_ErrorMask errorMask)
+        {
+            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 3;
+                this.Write_XML(
+                    writer,
+                    out errorMask);
+            }
+        }
+
+        public virtual void Write_XML(string path, out UnknownData_ErrorMask errorMask)
+        {
+            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 3;
+                this.Write_XML(
+                    writer,
+                    out errorMask);
+            }
+        }
+
+        public virtual void Write_XML(XmlWriter writer, out UnknownData_ErrorMask errorMask, string name = null)
         {
             UnknownDataCommon.Write_XML(
                 writer: writer,
@@ -279,6 +338,26 @@ namespace Mutagen
                 item: this,
                 doMasks: false,
                 errorMask: out UnknownData_ErrorMask errorMask);
+        }
+
+        public void Write_XML(Stream stream)
+        {
+            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 3;
+                this.Write_XML(writer);
+            }
+        }
+
+        public void Write_XML(string path)
+        {
+            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 3;
+                this.Write_XML(writer);
+            }
         }
 
         #endregion
@@ -1040,6 +1119,41 @@ namespace Mutagen.Internals
         }
 
         public static void Write_XML(
+            IUnknownDataGetter item,
+            string path)
+        {
+            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 3;
+                Write_XML(
+                    writer: writer,
+                    name: null,
+                    item: item,
+                    doMasks: false,
+                    errorMask: out UnknownData_ErrorMask errorMask);
+            }
+        }
+
+        public static void Write_XML(
+            IUnknownDataGetter item,
+            string path,
+            out UnknownData_ErrorMask errorMask)
+        {
+            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 3;
+                Write_XML(
+                    writer: writer,
+                    name: null,
+                    item: item,
+                    doMasks: true,
+                    errorMask: out errorMask);
+            }
+        }
+
+        public static void Write_XML(
             XmlWriter writer,
             string name,
             IUnknownDataGetter item,
@@ -1199,17 +1313,25 @@ namespace Mutagen.Internals
         #endregion
 
         #region Equals
-        public override bool Equals(object rhs)
+        public override bool Equals(object obj)
         {
-            if (rhs == null) return false;
-            return Equals((UnknownData_Mask<T>)rhs);
+            if (!(obj is UnknownData_Mask<T> rhs)) return false;
+            return Equals(rhs);
         }
 
         public bool Equals(UnknownData_Mask<T> rhs)
         {
+            if (rhs == null) return false;
             if (!object.Equals(this.Data, rhs.Data)) return false;
             return true;
         }
+        public override int GetHashCode()
+        {
+            int ret = 0;
+            ret = ret.CombineHashCode(this.Data?.GetHashCode());
+            return ret;
+        }
+
         #endregion
 
         #region All Equal
@@ -1224,8 +1346,13 @@ namespace Mutagen.Internals
         public UnknownData_Mask<R> Translate<R>(Func<T, R> eval)
         {
             var ret = new UnknownData_Mask<R>();
-            ret.Data = eval(this.Data);
+            this.Translate_InternalFill(ret, eval);
             return ret;
+        }
+
+        protected void Translate_InternalFill<R>(UnknownData_Mask<R> obj, Func<T, R> eval)
+        {
+            obj.Data = eval(this.Data);
         }
         #endregion
 
@@ -1326,12 +1453,16 @@ namespace Mutagen.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (Data != null)
-                {
-                    fg.AppendLine($"Data => {Data.ToStringSafe()}");
-                }
+                ToString_FillInternal(fg);
             }
             fg.AppendLine("]");
+        }
+        protected void ToString_FillInternal(FileGeneration fg)
+        {
+            if (Data != null)
+            {
+                fg.AppendLine($"Data => {Data.ToStringSafe()}");
+            }
         }
         #endregion
 

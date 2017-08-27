@@ -86,6 +86,10 @@ namespace Mutagen.Generation
         {
         }
 
+        public override void Generate(ObjectGeneration obj)
+        {
+        }
+
         public override void GenerateInClass(ObjectGeneration obj, FileGeneration fg)
         {
             GenerateRead(obj, fg);

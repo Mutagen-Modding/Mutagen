@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>0c714e29df32de8553f80e6309a9a8d94dae3bd2</Sha>
+         <Sha>1694bf428abdc424ef5ea82374ac412dd67ec81f</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>08-08-2017 21:42:41</CommitDate>
-         <Description>EnumExt.Values /w cache</Description>
+         <CommitDate>08-27-2017 13:16:31</CommitDate>
+         <Description>Nuget Update</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>7f8b36ce51abe72f474fe8ee68712cb9dd173b2e</Sha>
+         <Sha>2214ec02f4625a6191e65dbf1e71d4b33a971803</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>08-08-2017 21:42:46</CommitDate>
-         <Description>ObjectGeneration.EnumName -&gt; FieldIndexName</Description>
+         <CommitDate>08-27-2017 14:42:45</CommitDate>
+         <Description>Mask module tostring with file generation respects base classes</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

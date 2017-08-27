@@ -118,7 +118,7 @@ namespace Mutagen
             if (Master_Property.HasBeenSet != rhs.Master_Property.HasBeenSet) return false;
             if (Master_Property.HasBeenSet)
             {
-                if (Master != rhs.Master) return false;
+                if (!object.Equals(Master, rhs.Master)) return false;
             }
             if (FileSize_Property.HasBeenSet != rhs.FileSize_Property.HasBeenSet) return false;
             if (FileSize_Property.HasBeenSet)
@@ -168,6 +168,24 @@ namespace Mutagen
         {
             return Create_XML(
                 root: root,
+                doMasks: true,
+                errorMask: out errorMask);
+        }
+
+        public static MasterReference Create_XML(string path)
+        {
+            return Create_XML(
+                root: XDocument.Load(path).Root,
+                doMasks: false,
+                errorMask: out var errorMask);
+        }
+
+        public static MasterReference Create_XML(
+            string path,
+            out MasterReference_ErrorMask errorMask)
+        {
+            return Create_XML(
+                root: XDocument.Load(path).Root,
                 doMasks: true,
                 errorMask: out errorMask);
         }
@@ -261,7 +279,9 @@ namespace Mutagen
             }
         }
 
-        public void CopyIn_XML(XElement root, NotifyingFireParameters? cmds = null)
+        public void CopyIn_XML(
+            XElement root,
+            NotifyingFireParameters? cmds = null)
         {
             LoquiXmlTranslation<MasterReference, MasterReference_ErrorMask>.Instance.CopyIn(
                 root: root,
@@ -272,7 +292,10 @@ namespace Mutagen
                 cmds: cmds);
         }
 
-        public virtual void CopyIn_XML(XElement root, out MasterReference_ErrorMask errorMask, NotifyingFireParameters? cmds = null)
+        public virtual void CopyIn_XML(
+            XElement root,
+            out MasterReference_ErrorMask errorMask,
+            NotifyingFireParameters? cmds = null)
         {
             LoquiXmlTranslation<MasterReference, MasterReference_ErrorMask>.Instance.CopyIn(
                 root: root,
@@ -283,22 +306,58 @@ namespace Mutagen
                 cmds: cmds);
         }
 
-        public void Write_XML(Stream stream)
+        public void CopyIn_XML(
+            string path,
+            NotifyingFireParameters? cmds = null)
         {
-            MasterReferenceCommon.Write_XML(
-                this,
-                stream);
+            LoquiXmlTranslation<MasterReference, MasterReference_ErrorMask>.Instance.CopyIn(
+                root: XDocument.Load(path).Root,
+                item: this,
+                skipProtected: true,
+                doMasks: false,
+                mask: out MasterReference_ErrorMask errorMask,
+                cmds: cmds);
         }
 
-        public void Write_XML(Stream stream, out MasterReference_ErrorMask errorMask)
+        public virtual void CopyIn_XML(
+            string path,
+            out MasterReference_ErrorMask errorMask,
+            NotifyingFireParameters? cmds = null)
         {
-            MasterReferenceCommon.Write_XML(
-                this,
-                stream,
-                out errorMask);
+            LoquiXmlTranslation<MasterReference, MasterReference_ErrorMask>.Instance.CopyIn(
+                root: XDocument.Load(path).Root,
+                item: this,
+                skipProtected: true,
+                doMasks: true,
+                mask: out errorMask,
+                cmds: cmds);
         }
 
-        public void Write_XML(XmlWriter writer, out MasterReference_ErrorMask errorMask, string name = null)
+        public virtual void Write_XML(Stream stream, out MasterReference_ErrorMask errorMask)
+        {
+            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 3;
+                this.Write_XML(
+                    writer,
+                    out errorMask);
+            }
+        }
+
+        public virtual void Write_XML(string path, out MasterReference_ErrorMask errorMask)
+        {
+            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 3;
+                this.Write_XML(
+                    writer,
+                    out errorMask);
+            }
+        }
+
+        public virtual void Write_XML(XmlWriter writer, out MasterReference_ErrorMask errorMask, string name = null)
         {
             MasterReferenceCommon.Write_XML(
                 writer: writer,
@@ -316,6 +375,26 @@ namespace Mutagen
                 item: this,
                 doMasks: false,
                 errorMask: out MasterReference_ErrorMask errorMask);
+        }
+
+        public void Write_XML(Stream stream)
+        {
+            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 3;
+                this.Write_XML(writer);
+            }
+        }
+
+        public void Write_XML(string path)
+        {
+            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 3;
+                this.Write_XML(writer);
+            }
         }
 
         #endregion
@@ -1059,7 +1138,7 @@ namespace Mutagen.Internals
             MasterReference_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Master = item.Master_Property.Equals(rhs.Master_Property, (l, r) => l == r);
+            ret.Master = item.Master_Property.Equals(rhs.Master_Property, (l, r) => object.Equals(l, r));
             ret.FileSize = item.FileSize_Property.Equals(rhs.FileSize_Property, (l, r) => l == r);
         }
 
@@ -1144,6 +1223,41 @@ namespace Mutagen.Internals
             out MasterReference_ErrorMask errorMask)
         {
             using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 3;
+                Write_XML(
+                    writer: writer,
+                    name: null,
+                    item: item,
+                    doMasks: true,
+                    errorMask: out errorMask);
+            }
+        }
+
+        public static void Write_XML(
+            IMasterReferenceGetter item,
+            string path)
+        {
+            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 3;
+                Write_XML(
+                    writer: writer,
+                    name: null,
+                    item: item,
+                    doMasks: false,
+                    errorMask: out MasterReference_ErrorMask errorMask);
+            }
+        }
+
+        public static void Write_XML(
+            IMasterReferenceGetter item,
+            string path,
+            out MasterReference_ErrorMask errorMask)
+        {
+            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
             {
                 writer.Formatting = Formatting.Indented;
                 writer.Indentation = 3;
@@ -1345,18 +1459,27 @@ namespace Mutagen.Internals
         #endregion
 
         #region Equals
-        public override bool Equals(object rhs)
+        public override bool Equals(object obj)
         {
-            if (rhs == null) return false;
-            return Equals((MasterReference_Mask<T>)rhs);
+            if (!(obj is MasterReference_Mask<T> rhs)) return false;
+            return Equals(rhs);
         }
 
         public bool Equals(MasterReference_Mask<T> rhs)
         {
+            if (rhs == null) return false;
             if (!object.Equals(this.Master, rhs.Master)) return false;
             if (!object.Equals(this.FileSize, rhs.FileSize)) return false;
             return true;
         }
+        public override int GetHashCode()
+        {
+            int ret = 0;
+            ret = ret.CombineHashCode(this.Master?.GetHashCode());
+            ret = ret.CombineHashCode(this.FileSize?.GetHashCode());
+            return ret;
+        }
+
         #endregion
 
         #region All Equal
@@ -1372,9 +1495,14 @@ namespace Mutagen.Internals
         public MasterReference_Mask<R> Translate<R>(Func<T, R> eval)
         {
             var ret = new MasterReference_Mask<R>();
-            ret.Master = eval(this.Master);
-            ret.FileSize = eval(this.FileSize);
+            this.Translate_InternalFill(ret, eval);
             return ret;
+        }
+
+        protected void Translate_InternalFill<R>(MasterReference_Mask<R> obj, Func<T, R> eval)
+        {
+            obj.Master = eval(this.Master);
+            obj.FileSize = eval(this.FileSize);
         }
         #endregion
 
@@ -1486,16 +1614,20 @@ namespace Mutagen.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (Master != null)
-                {
-                    fg.AppendLine($"Master => {Master.ToStringSafe()}");
-                }
-                if (FileSize != null)
-                {
-                    fg.AppendLine($"FileSize => {FileSize.ToStringSafe()}");
-                }
+                ToString_FillInternal(fg);
             }
             fg.AppendLine("]");
+        }
+        protected void ToString_FillInternal(FileGeneration fg)
+        {
+            if (Master != null)
+            {
+                fg.AppendLine($"Master => {Master.ToStringSafe()}");
+            }
+            if (FileSize != null)
+            {
+                fg.AppendLine($"FileSize => {FileSize.ToStringSafe()}");
+            }
         }
         #endregion
 

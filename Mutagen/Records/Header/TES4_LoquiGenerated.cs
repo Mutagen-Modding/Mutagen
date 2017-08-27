@@ -227,12 +227,12 @@ namespace Mutagen
             if (Author_Property.HasBeenSet != rhs.Author_Property.HasBeenSet) return false;
             if (Author_Property.HasBeenSet)
             {
-                if (Author != rhs.Author) return false;
+                if (!object.Equals(Author, rhs.Author)) return false;
             }
             if (Description_Property.HasBeenSet != rhs.Description_Property.HasBeenSet) return false;
             if (Description_Property.HasBeenSet)
             {
-                if (Description != rhs.Description) return false;
+                if (!object.Equals(Description, rhs.Description)) return false;
             }
             if (MasterReferences.HasBeenSet != rhs.MasterReferences.HasBeenSet) return false;
             if (MasterReferences.HasBeenSet)
@@ -310,6 +310,24 @@ namespace Mutagen
         {
             return Create_XML(
                 root: root,
+                doMasks: true,
+                errorMask: out errorMask);
+        }
+
+        public static TES4 Create_XML(string path)
+        {
+            return Create_XML(
+                root: XDocument.Load(path).Root,
+                doMasks: false,
+                errorMask: out var errorMask);
+        }
+
+        public static TES4 Create_XML(
+            string path,
+            out TES4_ErrorMask errorMask)
+        {
+            return Create_XML(
+                root: XDocument.Load(path).Root,
                 doMasks: true,
                 errorMask: out errorMask);
         }
@@ -637,7 +655,9 @@ namespace Mutagen
             }
         }
 
-        public void CopyIn_XML(XElement root, NotifyingFireParameters? cmds = null)
+        public void CopyIn_XML(
+            XElement root,
+            NotifyingFireParameters? cmds = null)
         {
             LoquiXmlTranslation<TES4, TES4_ErrorMask>.Instance.CopyIn(
                 root: root,
@@ -648,7 +668,10 @@ namespace Mutagen
                 cmds: cmds);
         }
 
-        public virtual void CopyIn_XML(XElement root, out TES4_ErrorMask errorMask, NotifyingFireParameters? cmds = null)
+        public virtual void CopyIn_XML(
+            XElement root,
+            out TES4_ErrorMask errorMask,
+            NotifyingFireParameters? cmds = null)
         {
             LoquiXmlTranslation<TES4, TES4_ErrorMask>.Instance.CopyIn(
                 root: root,
@@ -659,22 +682,58 @@ namespace Mutagen
                 cmds: cmds);
         }
 
-        public void Write_XML(Stream stream)
+        public void CopyIn_XML(
+            string path,
+            NotifyingFireParameters? cmds = null)
         {
-            TES4Common.Write_XML(
-                this,
-                stream);
+            LoquiXmlTranslation<TES4, TES4_ErrorMask>.Instance.CopyIn(
+                root: XDocument.Load(path).Root,
+                item: this,
+                skipProtected: true,
+                doMasks: false,
+                mask: out TES4_ErrorMask errorMask,
+                cmds: cmds);
         }
 
-        public void Write_XML(Stream stream, out TES4_ErrorMask errorMask)
+        public virtual void CopyIn_XML(
+            string path,
+            out TES4_ErrorMask errorMask,
+            NotifyingFireParameters? cmds = null)
         {
-            TES4Common.Write_XML(
-                this,
-                stream,
-                out errorMask);
+            LoquiXmlTranslation<TES4, TES4_ErrorMask>.Instance.CopyIn(
+                root: XDocument.Load(path).Root,
+                item: this,
+                skipProtected: true,
+                doMasks: true,
+                mask: out errorMask,
+                cmds: cmds);
         }
 
-        public void Write_XML(XmlWriter writer, out TES4_ErrorMask errorMask, string name = null)
+        public virtual void Write_XML(Stream stream, out TES4_ErrorMask errorMask)
+        {
+            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 3;
+                this.Write_XML(
+                    writer,
+                    out errorMask);
+            }
+        }
+
+        public virtual void Write_XML(string path, out TES4_ErrorMask errorMask)
+        {
+            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 3;
+                this.Write_XML(
+                    writer,
+                    out errorMask);
+            }
+        }
+
+        public virtual void Write_XML(XmlWriter writer, out TES4_ErrorMask errorMask, string name = null)
         {
             TES4Common.Write_XML(
                 writer: writer,
@@ -692,6 +751,26 @@ namespace Mutagen
                 item: this,
                 doMasks: false,
                 errorMask: out TES4_ErrorMask errorMask);
+        }
+
+        public void Write_XML(Stream stream)
+        {
+            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 3;
+                this.Write_XML(writer);
+            }
+        }
+
+        public void Write_XML(string path)
+        {
+            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 3;
+                this.Write_XML(writer);
+            }
         }
 
         #endregion
@@ -2086,8 +2165,8 @@ namespace Mutagen.Internals
             ret.Header = item.Header_Property.LoquiEqualsHelper(rhs.Header_Property, (loqLhs, loqRhs) => HeaderCommon.GetEqualsMask(loqLhs, loqRhs));
             ret.TypeOffsets = item.TypeOffsets_Property.LoquiEqualsHelper(rhs.TypeOffsets_Property, (loqLhs, loqRhs) => UnknownDataCommon.GetEqualsMask(loqLhs, loqRhs));
             ret.Deleted = item.Deleted_Property.LoquiEqualsHelper(rhs.Deleted_Property, (loqLhs, loqRhs) => UnknownDataCommon.GetEqualsMask(loqLhs, loqRhs));
-            ret.Author = item.Author_Property.Equals(rhs.Author_Property, (l, r) => l == r);
-            ret.Description = item.Description_Property.Equals(rhs.Description_Property, (l, r) => l == r);
+            ret.Author = item.Author_Property.Equals(rhs.Author_Property, (l, r) => object.Equals(l, r));
+            ret.Description = item.Description_Property.Equals(rhs.Description_Property, (l, r) => object.Equals(l, r));
             if (item.MasterReferences.HasBeenSet == rhs.MasterReferences.HasBeenSet)
             {
                 if (item.MasterReferences.HasBeenSet)
@@ -2255,6 +2334,41 @@ namespace Mutagen.Internals
             out TES4_ErrorMask errorMask)
         {
             using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 3;
+                Write_XML(
+                    writer: writer,
+                    name: null,
+                    item: item,
+                    doMasks: true,
+                    errorMask: out errorMask);
+            }
+        }
+
+        public static void Write_XML(
+            ITES4Getter item,
+            string path)
+        {
+            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 3;
+                Write_XML(
+                    writer: writer,
+                    name: null,
+                    item: item,
+                    doMasks: false,
+                    errorMask: out TES4_ErrorMask errorMask);
+            }
+        }
+
+        public static void Write_XML(
+            ITES4Getter item,
+            string path,
+            out TES4_ErrorMask errorMask)
+        {
+            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
             {
                 writer.Formatting = Formatting.Indented;
                 writer.Indentation = 3;
@@ -2686,14 +2800,15 @@ namespace Mutagen.Internals
         #endregion
 
         #region Equals
-        public override bool Equals(object rhs)
+        public override bool Equals(object obj)
         {
-            if (rhs == null) return false;
-            return Equals((TES4_Mask<T>)rhs);
+            if (!(obj is TES4_Mask<T> rhs)) return false;
+            return Equals(rhs);
         }
 
         public bool Equals(TES4_Mask<T> rhs)
         {
+            if (rhs == null) return false;
             if (!object.Equals(this.Fluff, rhs.Fluff)) return false;
             if (!object.Equals(this.NumRecords, rhs.NumRecords)) return false;
             if (!object.Equals(this.NextObjectID, rhs.NextObjectID)) return false;
@@ -2705,6 +2820,21 @@ namespace Mutagen.Internals
             if (!object.Equals(this.MasterReferences, rhs.MasterReferences)) return false;
             return true;
         }
+        public override int GetHashCode()
+        {
+            int ret = 0;
+            ret = ret.CombineHashCode(this.Fluff?.GetHashCode());
+            ret = ret.CombineHashCode(this.NumRecords?.GetHashCode());
+            ret = ret.CombineHashCode(this.NextObjectID?.GetHashCode());
+            ret = ret.CombineHashCode(this.Header?.GetHashCode());
+            ret = ret.CombineHashCode(this.TypeOffsets?.GetHashCode());
+            ret = ret.CombineHashCode(this.Deleted?.GetHashCode());
+            ret = ret.CombineHashCode(this.Author?.GetHashCode());
+            ret = ret.CombineHashCode(this.Description?.GetHashCode());
+            ret = ret.CombineHashCode(this.MasterReferences?.GetHashCode());
+            return ret;
+        }
+
         #endregion
 
         #region All Equal
@@ -2750,46 +2880,52 @@ namespace Mutagen.Internals
         public TES4_Mask<R> Translate<R>(Func<T, R> eval)
         {
             var ret = new TES4_Mask<R>();
-            ret.Fluff = eval(this.Fluff);
-            ret.NumRecords = eval(this.NumRecords);
-            ret.NextObjectID = eval(this.NextObjectID);
+            this.Translate_InternalFill(ret, eval);
+            return ret;
+        }
+
+        protected void Translate_InternalFill<R>(TES4_Mask<R> obj, Func<T, R> eval)
+        {
+            obj.Fluff = eval(this.Fluff);
+            obj.NumRecords = eval(this.NumRecords);
+            obj.NextObjectID = eval(this.NextObjectID);
             if (this.Header != null)
             {
-                ret.Header = new MaskItem<R, Header_Mask<R>>();
-                ret.Header.Overall = eval(this.Header.Overall);
+                obj.Header = new MaskItem<R, Header_Mask<R>>();
+                obj.Header.Overall = eval(this.Header.Overall);
                 if (this.Header.Specific != null)
                 {
-                    ret.Header.Specific = this.Header.Specific.Translate(eval);
+                    obj.Header.Specific = this.Header.Specific.Translate(eval);
                 }
             }
             if (this.TypeOffsets != null)
             {
-                ret.TypeOffsets = new MaskItem<R, UnknownData_Mask<R>>();
-                ret.TypeOffsets.Overall = eval(this.TypeOffsets.Overall);
+                obj.TypeOffsets = new MaskItem<R, UnknownData_Mask<R>>();
+                obj.TypeOffsets.Overall = eval(this.TypeOffsets.Overall);
                 if (this.TypeOffsets.Specific != null)
                 {
-                    ret.TypeOffsets.Specific = this.TypeOffsets.Specific.Translate(eval);
+                    obj.TypeOffsets.Specific = this.TypeOffsets.Specific.Translate(eval);
                 }
             }
             if (this.Deleted != null)
             {
-                ret.Deleted = new MaskItem<R, UnknownData_Mask<R>>();
-                ret.Deleted.Overall = eval(this.Deleted.Overall);
+                obj.Deleted = new MaskItem<R, UnknownData_Mask<R>>();
+                obj.Deleted.Overall = eval(this.Deleted.Overall);
                 if (this.Deleted.Specific != null)
                 {
-                    ret.Deleted.Specific = this.Deleted.Specific.Translate(eval);
+                    obj.Deleted.Specific = this.Deleted.Specific.Translate(eval);
                 }
             }
-            ret.Author = eval(this.Author);
-            ret.Description = eval(this.Description);
+            obj.Author = eval(this.Author);
+            obj.Description = eval(this.Description);
             if (MasterReferences != null)
             {
-                ret.MasterReferences = new MaskItem<R, IEnumerable<MaskItem<R, Header_Mask<R>>>>();
-                ret.MasterReferences.Overall = eval(this.MasterReferences.Overall);
+                obj.MasterReferences = new MaskItem<R, IEnumerable<MaskItem<R, Header_Mask<R>>>>();
+                obj.MasterReferences.Overall = eval(this.MasterReferences.Overall);
                 if (MasterReferences.Specific != null)
                 {
                     List<MaskItem<R, Header_Mask<R>>> l = new List<MaskItem<R, Header_Mask<R>>>();
-                    ret.MasterReferences.Specific = l;
+                    obj.MasterReferences.Specific = l;
                     foreach (var item in MasterReferences.Specific)
                     {
                         MaskItem<R, Header_Mask<R>> mask = default(MaskItem<R, Header_Mask<R>>);
@@ -2806,7 +2942,6 @@ namespace Mutagen.Internals
                     }
                 }
             }
-            return ret;
         }
         #endregion
 
@@ -3017,65 +3152,69 @@ namespace Mutagen.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (Fluff != null)
-                {
-                    fg.AppendLine($"Fluff => {Fluff.ToStringSafe()}");
-                }
-                if (NumRecords != null)
-                {
-                    fg.AppendLine($"NumRecords => {NumRecords.ToStringSafe()}");
-                }
-                if (NextObjectID != null)
-                {
-                    fg.AppendLine($"NextObjectID => {NextObjectID.ToStringSafe()}");
-                }
-                if (Header != null)
-                {
-                    Header.ToString(fg);
-                }
-                if (TypeOffsets != null)
-                {
-                    TypeOffsets.ToString(fg);
-                }
-                if (Deleted != null)
-                {
-                    Deleted.ToString(fg);
-                }
-                if (Author != null)
-                {
-                    fg.AppendLine($"Author => {Author.ToStringSafe()}");
-                }
-                if (Description != null)
-                {
-                    fg.AppendLine($"Description => {Description.ToStringSafe()}");
-                }
-                if (MasterReferences != null)
-                {
-                    fg.AppendLine("MasterReferences =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (MasterReferences.Overall != null)
-                        {
-                            fg.AppendLine(MasterReferences.Overall.ToString());
-                        }
-                        if (MasterReferences.Specific != null)
-                        {
-                            foreach (var subItem in MasterReferences.Specific)
-                            {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
-                                {
-                                    subItem.ToString(fg);
-                                }
-                                fg.AppendLine("]");
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
+                ToString_FillInternal(fg);
             }
             fg.AppendLine("]");
+        }
+        protected void ToString_FillInternal(FileGeneration fg)
+        {
+            if (Fluff != null)
+            {
+                fg.AppendLine($"Fluff => {Fluff.ToStringSafe()}");
+            }
+            if (NumRecords != null)
+            {
+                fg.AppendLine($"NumRecords => {NumRecords.ToStringSafe()}");
+            }
+            if (NextObjectID != null)
+            {
+                fg.AppendLine($"NextObjectID => {NextObjectID.ToStringSafe()}");
+            }
+            if (Header != null)
+            {
+                Header.ToString(fg);
+            }
+            if (TypeOffsets != null)
+            {
+                TypeOffsets.ToString(fg);
+            }
+            if (Deleted != null)
+            {
+                Deleted.ToString(fg);
+            }
+            if (Author != null)
+            {
+                fg.AppendLine($"Author => {Author.ToStringSafe()}");
+            }
+            if (Description != null)
+            {
+                fg.AppendLine($"Description => {Description.ToStringSafe()}");
+            }
+            if (MasterReferences != null)
+            {
+                fg.AppendLine("MasterReferences =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (MasterReferences.Overall != null)
+                    {
+                        fg.AppendLine(MasterReferences.Overall.ToString());
+                    }
+                    if (MasterReferences.Specific != null)
+                    {
+                        foreach (var subItem in MasterReferences.Specific)
+                        {
+                            fg.AppendLine("[");
+                            using (new DepthWrapper(fg))
+                            {
+                                subItem.ToString(fg);
+                            }
+                            fg.AppendLine("]");
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+            }
         }
         #endregion
 

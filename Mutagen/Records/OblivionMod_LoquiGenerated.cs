@@ -153,6 +153,24 @@ namespace Mutagen
                 errorMask: out errorMask);
         }
 
+        public static OblivionMod Create_XML(string path)
+        {
+            return Create_XML(
+                root: XDocument.Load(path).Root,
+                doMasks: false,
+                errorMask: out var errorMask);
+        }
+
+        public static OblivionMod Create_XML(
+            string path,
+            out OblivionMod_ErrorMask errorMask)
+        {
+            return Create_XML(
+                root: XDocument.Load(path).Root,
+                doMasks: true,
+                errorMask: out errorMask);
+        }
+
         public static OblivionMod Create_XML(
             XElement root,
             bool doMasks,
@@ -230,7 +248,9 @@ namespace Mutagen
             }
         }
 
-        public void CopyIn_XML(XElement root, NotifyingFireParameters? cmds = null)
+        public void CopyIn_XML(
+            XElement root,
+            NotifyingFireParameters? cmds = null)
         {
             LoquiXmlTranslation<OblivionMod, OblivionMod_ErrorMask>.Instance.CopyIn(
                 root: root,
@@ -241,7 +261,10 @@ namespace Mutagen
                 cmds: cmds);
         }
 
-        public virtual void CopyIn_XML(XElement root, out OblivionMod_ErrorMask errorMask, NotifyingFireParameters? cmds = null)
+        public virtual void CopyIn_XML(
+            XElement root,
+            out OblivionMod_ErrorMask errorMask,
+            NotifyingFireParameters? cmds = null)
         {
             LoquiXmlTranslation<OblivionMod, OblivionMod_ErrorMask>.Instance.CopyIn(
                 root: root,
@@ -252,22 +275,58 @@ namespace Mutagen
                 cmds: cmds);
         }
 
-        public void Write_XML(Stream stream)
+        public void CopyIn_XML(
+            string path,
+            NotifyingFireParameters? cmds = null)
         {
-            OblivionModCommon.Write_XML(
-                this,
-                stream);
+            LoquiXmlTranslation<OblivionMod, OblivionMod_ErrorMask>.Instance.CopyIn(
+                root: XDocument.Load(path).Root,
+                item: this,
+                skipProtected: true,
+                doMasks: false,
+                mask: out OblivionMod_ErrorMask errorMask,
+                cmds: cmds);
         }
 
-        public void Write_XML(Stream stream, out OblivionMod_ErrorMask errorMask)
+        public virtual void CopyIn_XML(
+            string path,
+            out OblivionMod_ErrorMask errorMask,
+            NotifyingFireParameters? cmds = null)
         {
-            OblivionModCommon.Write_XML(
-                this,
-                stream,
-                out errorMask);
+            LoquiXmlTranslation<OblivionMod, OblivionMod_ErrorMask>.Instance.CopyIn(
+                root: XDocument.Load(path).Root,
+                item: this,
+                skipProtected: true,
+                doMasks: true,
+                mask: out errorMask,
+                cmds: cmds);
         }
 
-        public void Write_XML(XmlWriter writer, out OblivionMod_ErrorMask errorMask, string name = null)
+        public virtual void Write_XML(Stream stream, out OblivionMod_ErrorMask errorMask)
+        {
+            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 3;
+                this.Write_XML(
+                    writer,
+                    out errorMask);
+            }
+        }
+
+        public virtual void Write_XML(string path, out OblivionMod_ErrorMask errorMask)
+        {
+            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 3;
+                this.Write_XML(
+                    writer,
+                    out errorMask);
+            }
+        }
+
+        public virtual void Write_XML(XmlWriter writer, out OblivionMod_ErrorMask errorMask, string name = null)
         {
             OblivionModCommon.Write_XML(
                 writer: writer,
@@ -285,6 +344,26 @@ namespace Mutagen
                 item: this,
                 doMasks: false,
                 errorMask: out OblivionMod_ErrorMask errorMask);
+        }
+
+        public void Write_XML(Stream stream)
+        {
+            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 3;
+                this.Write_XML(writer);
+            }
+        }
+
+        public void Write_XML(string path)
+        {
+            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 3;
+                this.Write_XML(writer);
+            }
         }
 
         #endregion
@@ -1055,6 +1134,41 @@ namespace Mutagen.Internals
         }
 
         public static void Write_XML(
+            IOblivionModGetter item,
+            string path)
+        {
+            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 3;
+                Write_XML(
+                    writer: writer,
+                    name: null,
+                    item: item,
+                    doMasks: false,
+                    errorMask: out OblivionMod_ErrorMask errorMask);
+            }
+        }
+
+        public static void Write_XML(
+            IOblivionModGetter item,
+            string path,
+            out OblivionMod_ErrorMask errorMask)
+        {
+            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 3;
+                Write_XML(
+                    writer: writer,
+                    name: null,
+                    item: item,
+                    doMasks: true,
+                    errorMask: out errorMask);
+            }
+        }
+
+        public static void Write_XML(
             XmlWriter writer,
             string name,
             IOblivionModGetter item,
@@ -1216,17 +1330,25 @@ namespace Mutagen.Internals
         #endregion
 
         #region Equals
-        public override bool Equals(object rhs)
+        public override bool Equals(object obj)
         {
-            if (rhs == null) return false;
-            return Equals((OblivionMod_Mask<T>)rhs);
+            if (!(obj is OblivionMod_Mask<T> rhs)) return false;
+            return Equals(rhs);
         }
 
         public bool Equals(OblivionMod_Mask<T> rhs)
         {
+            if (rhs == null) return false;
             if (!object.Equals(this.TES4, rhs.TES4)) return false;
             return true;
         }
+        public override int GetHashCode()
+        {
+            int ret = 0;
+            ret = ret.CombineHashCode(this.TES4?.GetHashCode());
+            return ret;
+        }
+
         #endregion
 
         #region All Equal
@@ -1245,16 +1367,21 @@ namespace Mutagen.Internals
         public OblivionMod_Mask<R> Translate<R>(Func<T, R> eval)
         {
             var ret = new OblivionMod_Mask<R>();
+            this.Translate_InternalFill(ret, eval);
+            return ret;
+        }
+
+        protected void Translate_InternalFill<R>(OblivionMod_Mask<R> obj, Func<T, R> eval)
+        {
             if (this.TES4 != null)
             {
-                ret.TES4 = new MaskItem<R, TES4_Mask<R>>();
-                ret.TES4.Overall = eval(this.TES4.Overall);
+                obj.TES4 = new MaskItem<R, TES4_Mask<R>>();
+                obj.TES4.Overall = eval(this.TES4.Overall);
                 if (this.TES4.Specific != null)
                 {
-                    ret.TES4.Specific = this.TES4.Specific.Translate(eval);
+                    obj.TES4.Specific = this.TES4.Specific.Translate(eval);
                 }
             }
-            return ret;
         }
         #endregion
 
@@ -1355,12 +1482,16 @@ namespace Mutagen.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (TES4 != null)
-                {
-                    TES4.ToString(fg);
-                }
+                ToString_FillInternal(fg);
             }
             fg.AppendLine("]");
+        }
+        protected void ToString_FillInternal(FileGeneration fg)
+        {
+            if (TES4 != null)
+            {
+                TES4.ToString(fg);
+            }
         }
         #endregion
 

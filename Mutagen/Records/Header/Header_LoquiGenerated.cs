@@ -192,6 +192,24 @@ namespace Mutagen
                 errorMask: out errorMask);
         }
 
+        public static Header Create_XML(string path)
+        {
+            return Create_XML(
+                root: XDocument.Load(path).Root,
+                doMasks: false,
+                errorMask: out var errorMask);
+        }
+
+        public static Header Create_XML(
+            string path,
+            out Header_ErrorMask errorMask)
+        {
+            return Create_XML(
+                root: XDocument.Load(path).Root,
+                doMasks: true,
+                errorMask: out errorMask);
+        }
+
         public static Header Create_XML(
             XElement root,
             bool doMasks,
@@ -300,7 +318,9 @@ namespace Mutagen
             }
         }
 
-        public void CopyIn_XML(XElement root, NotifyingFireParameters? cmds = null)
+        public void CopyIn_XML(
+            XElement root,
+            NotifyingFireParameters? cmds = null)
         {
             LoquiXmlTranslation<Header, Header_ErrorMask>.Instance.CopyIn(
                 root: root,
@@ -311,7 +331,10 @@ namespace Mutagen
                 cmds: cmds);
         }
 
-        public virtual void CopyIn_XML(XElement root, out Header_ErrorMask errorMask, NotifyingFireParameters? cmds = null)
+        public virtual void CopyIn_XML(
+            XElement root,
+            out Header_ErrorMask errorMask,
+            NotifyingFireParameters? cmds = null)
         {
             LoquiXmlTranslation<Header, Header_ErrorMask>.Instance.CopyIn(
                 root: root,
@@ -322,22 +345,58 @@ namespace Mutagen
                 cmds: cmds);
         }
 
-        public void Write_XML(Stream stream)
+        public void CopyIn_XML(
+            string path,
+            NotifyingFireParameters? cmds = null)
         {
-            HeaderCommon.Write_XML(
-                this,
-                stream);
+            LoquiXmlTranslation<Header, Header_ErrorMask>.Instance.CopyIn(
+                root: XDocument.Load(path).Root,
+                item: this,
+                skipProtected: true,
+                doMasks: false,
+                mask: out Header_ErrorMask errorMask,
+                cmds: cmds);
         }
 
-        public void Write_XML(Stream stream, out Header_ErrorMask errorMask)
+        public virtual void CopyIn_XML(
+            string path,
+            out Header_ErrorMask errorMask,
+            NotifyingFireParameters? cmds = null)
         {
-            HeaderCommon.Write_XML(
-                this,
-                stream,
-                out errorMask);
+            LoquiXmlTranslation<Header, Header_ErrorMask>.Instance.CopyIn(
+                root: XDocument.Load(path).Root,
+                item: this,
+                skipProtected: true,
+                doMasks: true,
+                mask: out errorMask,
+                cmds: cmds);
         }
 
-        public void Write_XML(XmlWriter writer, out Header_ErrorMask errorMask, string name = null)
+        public virtual void Write_XML(Stream stream, out Header_ErrorMask errorMask)
+        {
+            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 3;
+                this.Write_XML(
+                    writer,
+                    out errorMask);
+            }
+        }
+
+        public virtual void Write_XML(string path, out Header_ErrorMask errorMask)
+        {
+            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 3;
+                this.Write_XML(
+                    writer,
+                    out errorMask);
+            }
+        }
+
+        public virtual void Write_XML(XmlWriter writer, out Header_ErrorMask errorMask, string name = null)
         {
             HeaderCommon.Write_XML(
                 writer: writer,
@@ -355,6 +414,26 @@ namespace Mutagen
                 item: this,
                 doMasks: false,
                 errorMask: out Header_ErrorMask errorMask);
+        }
+
+        public void Write_XML(Stream stream)
+        {
+            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 3;
+                this.Write_XML(writer);
+            }
+        }
+
+        public void Write_XML(string path)
+        {
+            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 3;
+                this.Write_XML(writer);
+            }
         }
 
         #endregion
@@ -1278,6 +1357,41 @@ namespace Mutagen.Internals
         }
 
         public static void Write_XML(
+            IHeaderGetter item,
+            string path)
+        {
+            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 3;
+                Write_XML(
+                    writer: writer,
+                    name: null,
+                    item: item,
+                    doMasks: false,
+                    errorMask: out Header_ErrorMask errorMask);
+            }
+        }
+
+        public static void Write_XML(
+            IHeaderGetter item,
+            string path,
+            out Header_ErrorMask errorMask)
+        {
+            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 3;
+                Write_XML(
+                    writer: writer,
+                    name: null,
+                    item: item,
+                    doMasks: true,
+                    errorMask: out errorMask);
+            }
+        }
+
+        public static void Write_XML(
             XmlWriter writer,
             string name,
             IHeaderGetter item,
@@ -1495,19 +1609,29 @@ namespace Mutagen.Internals
         #endregion
 
         #region Equals
-        public override bool Equals(object rhs)
+        public override bool Equals(object obj)
         {
-            if (rhs == null) return false;
-            return Equals((Header_Mask<T>)rhs);
+            if (!(obj is Header_Mask<T> rhs)) return false;
+            return Equals(rhs);
         }
 
         public bool Equals(Header_Mask<T> rhs)
         {
+            if (rhs == null) return false;
             if (!object.Equals(this.Version, rhs.Version)) return false;
             if (!object.Equals(this.NumRecords, rhs.NumRecords)) return false;
             if (!object.Equals(this.NextObjectID, rhs.NextObjectID)) return false;
             return true;
         }
+        public override int GetHashCode()
+        {
+            int ret = 0;
+            ret = ret.CombineHashCode(this.Version?.GetHashCode());
+            ret = ret.CombineHashCode(this.NumRecords?.GetHashCode());
+            ret = ret.CombineHashCode(this.NextObjectID?.GetHashCode());
+            return ret;
+        }
+
         #endregion
 
         #region All Equal
@@ -1524,10 +1648,15 @@ namespace Mutagen.Internals
         public Header_Mask<R> Translate<R>(Func<T, R> eval)
         {
             var ret = new Header_Mask<R>();
-            ret.Version = eval(this.Version);
-            ret.NumRecords = eval(this.NumRecords);
-            ret.NextObjectID = eval(this.NextObjectID);
+            this.Translate_InternalFill(ret, eval);
             return ret;
+        }
+
+        protected void Translate_InternalFill<R>(Header_Mask<R> obj, Func<T, R> eval)
+        {
+            obj.Version = eval(this.Version);
+            obj.NumRecords = eval(this.NumRecords);
+            obj.NextObjectID = eval(this.NextObjectID);
         }
         #endregion
 
@@ -1650,20 +1779,24 @@ namespace Mutagen.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (Version != null)
-                {
-                    fg.AppendLine($"Version => {Version.ToStringSafe()}");
-                }
-                if (NumRecords != null)
-                {
-                    fg.AppendLine($"NumRecords => {NumRecords.ToStringSafe()}");
-                }
-                if (NextObjectID != null)
-                {
-                    fg.AppendLine($"NextObjectID => {NextObjectID.ToStringSafe()}");
-                }
+                ToString_FillInternal(fg);
             }
             fg.AppendLine("]");
+        }
+        protected void ToString_FillInternal(FileGeneration fg)
+        {
+            if (Version != null)
+            {
+                fg.AppendLine($"Version => {Version.ToStringSafe()}");
+            }
+            if (NumRecords != null)
+            {
+                fg.AppendLine($"NumRecords => {NumRecords.ToStringSafe()}");
+            }
+            if (NextObjectID != null)
+            {
+                fg.AppendLine($"NextObjectID => {NextObjectID.ToStringSafe()}");
+            }
         }
         #endregion
 

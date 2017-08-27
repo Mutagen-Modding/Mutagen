@@ -23,6 +23,7 @@ namespace Mutagen.Generation
             };
             gen.Add(new OblivionBinaryTranslationModule(gen));
             gen.AddTypeAssociation<UnknownType>("Unknown");
+            gen.XmlTranslation.ShouldGenerateXSD = false;
 
             // Add Projects
             gen.AddProjectToModify(
