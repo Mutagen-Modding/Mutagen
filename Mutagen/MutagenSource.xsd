@@ -46,6 +46,13 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
+          <xs:attribute name="optional" type="xs:boolean" >
+            <xs:annotation>
+              <xs:documentation>
+                Marks this field as optional
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
           <xs:attribute name="recordType" type="xs:string" >
             <xs:annotation>
               <xs:documentation>

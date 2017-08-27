@@ -6,10 +6,10 @@
       <Int64 name="NumRecords" />
       <UInt64 name="NextObjectID" />
       <RefDirect name="Header" refName="Header" singleton="NotNull" />
-      <Unknown name="TypeOffsets" recordType="OFST" />
-      <Unknown name="Deleted" recordType="DELE" />
-      <String name="Author" recordType="CNAM" maxLength="512" />
-      <String name="Description" recordType="SNAM" maxLength="512" />
+      <Unknown name="TypeOffsets" recordType="OFST" optional="true" />
+      <Unknown name="Deleted" recordType="DELE" optional="true" />
+      <String name="Author" recordType="CNAM" maxLength="512" optional="true" />
+      <String name="Description" recordType="SNAM" maxLength="512" optional="true" />
       <RefList name="MasterReferences" refName="Header" />
     </Fields>
   </Object>

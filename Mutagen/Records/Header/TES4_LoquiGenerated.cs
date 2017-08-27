@@ -18,6 +18,7 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
+using Mutagen.Binary;
 
 namespace Mutagen
 {
@@ -288,14 +289,7 @@ namespace Mutagen
 
 
         #region XML Translation
-        public static TES4 Create_XML(Stream stream)
-        {
-            using (var reader = new StreamReader(stream))
-            {
-                return Create_XML(XElement.Parse(reader.ReadToEnd()));
-            }
-        }
-
+        #region XML Create
         public static TES4 Create_XML(XElement root)
         {
             return Create_XML(
@@ -314,24 +308,6 @@ namespace Mutagen
                 errorMask: out errorMask);
         }
 
-        public static TES4 Create_XML(string path)
-        {
-            return Create_XML(
-                root: XDocument.Load(path).Root,
-                doMasks: false,
-                errorMask: out var errorMask);
-        }
-
-        public static TES4 Create_XML(
-            string path,
-            out TES4_ErrorMask errorMask)
-        {
-            return Create_XML(
-                root: XDocument.Load(path).Root,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
         public static TES4 Create_XML(
             XElement root,
             bool doMasks,
@@ -345,6 +321,202 @@ namespace Mutagen
             errorMask = errMaskRet;
             return ret;
         }
+
+        public static TES4 Create_XML(string path)
+        {
+            var root = XDocument.Load(path).Root;
+            return Create_XML(root: root);
+        }
+
+        public static TES4 Create_XML(
+            string path,
+            out TES4_ErrorMask errorMask)
+        {
+            var root = XDocument.Load(path).Root;
+            return Create_XML(
+                root: root,
+                errorMask: out errorMask);
+        }
+
+        public static TES4 Create_XML(Stream stream)
+        {
+            var root = XDocument.Load(stream).Root;
+            return Create_XML(root: root);
+        }
+
+        public static TES4 Create_XML(
+            Stream stream,
+            out TES4_ErrorMask errorMask)
+        {
+            var root = XDocument.Load(stream).Root;
+            return Create_XML(
+                root: root,
+                errorMask: out errorMask);
+        }
+
+        #endregion
+
+        #region XML Copy In
+        public void CopyIn_XML(
+            XElement root,
+            NotifyingFireParameters? cmds = null)
+        {
+            LoquiXmlTranslation<TES4, TES4_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: false,
+                mask: out TES4_ErrorMask errorMask,
+                cmds: cmds);
+        }
+
+        public virtual void CopyIn_XML(
+            XElement root,
+            out TES4_ErrorMask errorMask,
+            NotifyingFireParameters? cmds = null)
+        {
+            LoquiXmlTranslation<TES4, TES4_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: true,
+                mask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            NotifyingFireParameters? cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            out TES4_ErrorMask errorMask,
+            NotifyingFireParameters? cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            NotifyingFireParameters? cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            out TES4_ErrorMask errorMask,
+            NotifyingFireParameters? cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        #endregion
+
+        #region XML Write
+        public virtual void Write_XML(
+            XmlWriter writer,
+            out TES4_ErrorMask errorMask,
+            string name = null)
+        {
+            TES4Common.Write_XML(
+                writer: writer,
+                name: name,
+                item: this,
+                doMasks: true,
+                errorMask: out errorMask);
+        }
+
+        public virtual void Write_XML(
+            string path,
+            out TES4_ErrorMask errorMask,
+            string name = null)
+        {
+            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 3;
+                Write_XML(
+                    writer: writer,
+                    name: name,
+                    errorMask: out errorMask);
+            }
+        }
+
+        public virtual void Write_XML(
+            Stream stream,
+            out TES4_ErrorMask errorMask,
+            string name = null)
+        {
+            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 3;
+                Write_XML(
+                    writer: writer,
+                    name: name,
+                    errorMask: out errorMask);
+            }
+        }
+
+        public void Write_XML(
+            XmlWriter writer,
+            string name = null)
+        {
+            TES4Common.Write_XML(
+                writer: writer,
+                name: name,
+                item: this,
+                doMasks: false,
+                errorMask: out TES4_ErrorMask errorMask);
+        }
+
+        public void Write_XML(
+            string path,
+            string name = null)
+        {
+            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 3;
+                Write_XML(
+                    writer: writer,
+                    name: name);
+            }
+        }
+
+        public void Write_XML(
+            Stream stream,
+            string name = null)
+        {
+            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 3;
+                Write_XML(
+                    writer: writer,
+                    name: name);
+            }
+        }
+
+        #endregion
 
         private static TES4 Create_XML_Internal(
             XElement root,
@@ -655,135 +827,10 @@ namespace Mutagen
             }
         }
 
-        public void CopyIn_XML(
-            XElement root,
-            NotifyingFireParameters? cmds = null)
-        {
-            LoquiXmlTranslation<TES4, TES4_ErrorMask>.Instance.CopyIn(
-                root: root,
-                item: this,
-                skipProtected: true,
-                doMasks: false,
-                mask: out TES4_ErrorMask errorMask,
-                cmds: cmds);
-        }
-
-        public virtual void CopyIn_XML(
-            XElement root,
-            out TES4_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
-        {
-            LoquiXmlTranslation<TES4, TES4_ErrorMask>.Instance.CopyIn(
-                root: root,
-                item: this,
-                skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
-                cmds: cmds);
-        }
-
-        public void CopyIn_XML(
-            string path,
-            NotifyingFireParameters? cmds = null)
-        {
-            LoquiXmlTranslation<TES4, TES4_ErrorMask>.Instance.CopyIn(
-                root: XDocument.Load(path).Root,
-                item: this,
-                skipProtected: true,
-                doMasks: false,
-                mask: out TES4_ErrorMask errorMask,
-                cmds: cmds);
-        }
-
-        public virtual void CopyIn_XML(
-            string path,
-            out TES4_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
-        {
-            LoquiXmlTranslation<TES4, TES4_ErrorMask>.Instance.CopyIn(
-                root: XDocument.Load(path).Root,
-                item: this,
-                skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
-                cmds: cmds);
-        }
-
-        public virtual void Write_XML(Stream stream, out TES4_ErrorMask errorMask)
-        {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                this.Write_XML(
-                    writer,
-                    out errorMask);
-            }
-        }
-
-        public virtual void Write_XML(string path, out TES4_ErrorMask errorMask)
-        {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                this.Write_XML(
-                    writer,
-                    out errorMask);
-            }
-        }
-
-        public virtual void Write_XML(XmlWriter writer, out TES4_ErrorMask errorMask, string name = null)
-        {
-            TES4Common.Write_XML(
-                writer: writer,
-                name: name,
-                item: this,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        public void Write_XML(XmlWriter writer, string name = null)
-        {
-            TES4Common.Write_XML(
-                writer: writer,
-                name: name,
-                item: this,
-                doMasks: false,
-                errorMask: out TES4_ErrorMask errorMask);
-        }
-
-        public void Write_XML(Stream stream)
-        {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                this.Write_XML(writer);
-            }
-        }
-
-        public void Write_XML(string path)
-        {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                this.Write_XML(writer);
-            }
-        }
-
         #endregion
 
         #region OblivionBinary Translation
-        public static TES4 Create_OblivionBinary(Stream stream)
-        {
-            using (var reader = new BinaryReader(stream))
-            {
-                return Create_OblivionBinary(reader);
-            }
-        }
-
+        #region OblivionBinary Create
         public static TES4 Create_OblivionBinary(BinaryReader reader)
         {
             return Create_OblivionBinary(
@@ -816,222 +863,60 @@ namespace Mutagen
             return ret;
         }
 
-        private static TES4 Create_OblivionBinary_Internal(
-            BinaryReader reader,
-            bool doMasks,
-            Func<TES4_ErrorMask> errorMask)
+        public static TES4 Create_OblivionBinary(string path)
         {
-            var ret = new TES4();
-            try
+            using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
             {
-                foreach (var elem in EnumExt<TES4_FieldIndex>.Values)
+                using (var reader = new BinaryReader(fileStream))
                 {
-                    Fill_OblivionBinary_Internal(
-                        item: ret,
-                        reader: reader,
-                        elem: elem,
-                        doMasks: doMasks,
-                        errorMask: errorMask);
+                    return Create_OblivionBinary(reader: reader);
                 }
             }
-            catch (Exception ex)
-            when (doMasks)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
         }
 
-        protected static void Fill_OblivionBinary_Internal(
-            TES4 item,
+        public static TES4 Create_OblivionBinary(
+            string path,
+            out TES4_ErrorMask errorMask)
+        {
+            using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+            {
+                using (var reader = new BinaryReader(fileStream))
+                {
+                    return Create_OblivionBinary(
+                        reader: reader,
+                        errorMask: out errorMask);
+                }
+            }
+        }
+
+        public static TES4 Create_OblivionBinary(Stream stream)
+        {
+            using (var reader = new BinaryReader(stream))
+            {
+                return Create_OblivionBinary(reader: reader);
+            }
+        }
+
+        public static TES4 Create_OblivionBinary(
+            Stream stream,
+            out TES4_ErrorMask errorMask)
+        {
+            using (var reader = new BinaryReader(stream))
+            {
+                return Create_OblivionBinary(
+                    reader: reader,
+                    errorMask: out errorMask);
+            }
+        }
+
+        #endregion
+
+        #region OblivionBinary Copy In
+        public void CopyIn_OblivionBinary(
             BinaryReader reader,
-            TES4_FieldIndex elem,
-            bool doMasks,
-            Func<TES4_ErrorMask> errorMask)
+            NotifyingFireParameters? cmds = null)
         {
-            switch (elem)
-            {
-                case TES4_FieldIndex.Fluff:
-                    {
-                        Exception subMask;
-                        var tryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                            reader,
-                            nullable: true,
-                            doMasks: doMasks,
-                            errorMask: out subMask);
-                        if (tryGet.Succeeded)
-                        {
-                            item._Fluff.Item = tryGet.Value;
-                        }
-                        if (subMask != null)
-                        {
-                            errorMask().Fluff = subMask;
-                        }
-                    }
-                    break;
-                case TES4_FieldIndex.NumRecords:
-                    {
-                        Exception subMask;
-                        var tryGet = Mutagen.Binary.Int64BinaryTranslation.Instance.Parse(
-                            reader,
-                            nullable: false,
-                            doMasks: doMasks,
-                            errorMask: out subMask);
-                        if (tryGet.Succeeded)
-                        {
-                            item._NumRecords.Item = tryGet.Value.Value;
-                        }
-                        if (subMask != null)
-                        {
-                            errorMask().NumRecords = subMask;
-                        }
-                    }
-                    break;
-                case TES4_FieldIndex.NextObjectID:
-                    {
-                        Exception subMask;
-                        var tryGet = Mutagen.Binary.UInt64BinaryTranslation.Instance.Parse(
-                            reader,
-                            nullable: false,
-                            doMasks: doMasks,
-                            errorMask: out subMask);
-                        if (tryGet.Succeeded)
-                        {
-                            item._NextObjectID.Item = tryGet.Value.Value;
-                        }
-                        if (subMask != null)
-                        {
-                            errorMask().NextObjectID = subMask;
-                        }
-                    }
-                    break;
-                case TES4_FieldIndex.Header:
-                    {
-                        MaskItem<Exception, Header_ErrorMask> subMask;
-                        Header_ErrorMask loquiMask;
-                        TryGet<Header> tryGet = TryGet<Header>.Succeed((Header)Header.Create_OblivionBinary(
-                            reader: reader,
-                            doMasks: doMasks,
-                            errorMask: out loquiMask));
-                        subMask = loquiMask == null ? null : new MaskItem<Exception, Header_ErrorMask>(null, loquiMask);
-                        if (tryGet.Succeeded)
-                        {
-                            item._Header.Item = tryGet.Value;
-                        }
-                        if (subMask != null)
-                        {
-                            errorMask().Header = subMask;
-                        }
-                    }
-                    break;
-                case TES4_FieldIndex.TypeOffsets:
-                    {
-                        MaskItem<Exception, UnknownData_ErrorMask> subMask;
-                        UnknownData_ErrorMask loquiMask;
-                        TryGet<UnknownData> tryGet = TryGet<UnknownData>.Succeed((UnknownData)UnknownData.Create_OblivionBinary(
-                            reader: reader,
-                            doMasks: doMasks,
-                            errorMask: out loquiMask));
-                        subMask = loquiMask == null ? null : new MaskItem<Exception, UnknownData_ErrorMask>(null, loquiMask);
-                        if (tryGet.Succeeded)
-                        {
-                            item._TypeOffsets.Item = tryGet.Value;
-                        }
-                        if (subMask != null)
-                        {
-                            errorMask().TypeOffsets = subMask;
-                        }
-                    }
-                    break;
-                case TES4_FieldIndex.Deleted:
-                    {
-                        MaskItem<Exception, UnknownData_ErrorMask> subMask;
-                        UnknownData_ErrorMask loquiMask;
-                        TryGet<UnknownData> tryGet = TryGet<UnknownData>.Succeed((UnknownData)UnknownData.Create_OblivionBinary(
-                            reader: reader,
-                            doMasks: doMasks,
-                            errorMask: out loquiMask));
-                        subMask = loquiMask == null ? null : new MaskItem<Exception, UnknownData_ErrorMask>(null, loquiMask);
-                        if (tryGet.Succeeded)
-                        {
-                            item._Deleted.Item = tryGet.Value;
-                        }
-                        if (subMask != null)
-                        {
-                            errorMask().Deleted = subMask;
-                        }
-                    }
-                    break;
-                case TES4_FieldIndex.Author:
-                    {
-                        Exception subMask;
-                        var tryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
-                            reader,
-                            doMasks: doMasks,
-                            errorMask: out subMask);
-                        if (tryGet.Succeeded)
-                        {
-                            item._Author.Item = tryGet.Value;
-                        }
-                        if (subMask != null)
-                        {
-                            errorMask().Author = subMask;
-                        }
-                    }
-                    break;
-                case TES4_FieldIndex.Description:
-                    {
-                        Exception subMask;
-                        var tryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
-                            reader,
-                            doMasks: doMasks,
-                            errorMask: out subMask);
-                        if (tryGet.Succeeded)
-                        {
-                            item._Description.Item = tryGet.Value;
-                        }
-                        if (subMask != null)
-                        {
-                            errorMask().Description = subMask;
-                        }
-                    }
-                    break;
-                case TES4_FieldIndex.MasterReferences:
-                    {
-                        MaskItem<Exception, IEnumerable<MaskItem<Exception, Header_ErrorMask>>> subMask;
-                        var listTryGet = Mutagen.Binary.ListBinaryTranslation<Header, MaskItem<Exception, Header_ErrorMask>>.Instance.Parse(
-                            reader: reader,
-                            doMasks: doMasks,
-                            maskObj: out subMask,
-                            transl: (BinaryReader r, bool listDoMasks, out MaskItem<Exception, Header_ErrorMask> listSubMask) =>
-                            {
-                                Header_ErrorMask loquiMask;
-                                TryGet<Header> tryGet = TryGet<Header>.Succeed((Header)Header.Create_OblivionBinary(
-                                    reader: r,
-                                    doMasks: listDoMasks,
-                                    errorMask: out loquiMask));
-                                listSubMask = loquiMask == null ? null : new MaskItem<Exception, Header_ErrorMask>(null, loquiMask);
-                                return tryGet;
-                            }
-                            );
-                        if (listTryGet.Succeeded)
-                        {
-                            item._MasterReferences.SetTo(listTryGet.Value);
-                        }
-                        if (subMask != null)
-                        {
-                            errorMask().MasterReferences = subMask;
-                        }
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        public void CopyIn_OblivionBinary(BinaryReader reader, NotifyingFireParameters? cmds = null)
-        {
-            Mutagen.Binary.LoquiBinaryTranslation<TES4, TES4_ErrorMask>.Instance.CopyIn(
+            LoquiBinaryTranslation<TES4, TES4_ErrorMask>.Instance.CopyIn(
                 reader: reader,
                 item: this,
                 skipProtected: true,
@@ -1040,9 +925,12 @@ namespace Mutagen
                 cmds: cmds);
         }
 
-        public virtual void CopyIn_OblivionBinary(BinaryReader reader, out TES4_ErrorMask errorMask, NotifyingFireParameters? cmds = null)
+        public virtual void CopyIn_OblivionBinary(
+            BinaryReader reader,
+            out TES4_ErrorMask errorMask,
+            NotifyingFireParameters? cmds = null)
         {
-            Mutagen.Binary.LoquiBinaryTranslation<TES4, TES4_ErrorMask>.Instance.CopyIn(
+            LoquiBinaryTranslation<TES4, TES4_ErrorMask>.Instance.CopyIn(
                 reader: reader,
                 item: this,
                 skipProtected: true,
@@ -1051,24 +939,68 @@ namespace Mutagen
                 cmds: cmds);
         }
 
-        public void Write_OblivionBinary(Stream stream)
+        public void CopyIn_OblivionBinary(
+            string path,
+            NotifyingFireParameters? cmds = null)
         {
-            TES4Common.Write_OblivionBinary(
-                this,
-                stream);
+            using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+            {
+                using (var reader = new BinaryReader(fileStream))
+                {
+                    this.CopyIn_OblivionBinary(
+                        reader: reader,
+                        cmds: cmds);
+                }
+            }
         }
 
-        public void Write_OblivionBinary(
+        public void CopyIn_OblivionBinary(
+            string path,
+            out TES4_ErrorMask errorMask,
+            NotifyingFireParameters? cmds = null)
+        {
+            using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+            {
+                using (var reader = new BinaryReader(fileStream))
+                {
+                    this.CopyIn_OblivionBinary(
+                        reader: reader,
+                        errorMask: out errorMask,
+                        cmds: cmds);
+                }
+            }
+        }
+
+        public void CopyIn_OblivionBinary(
             Stream stream,
-            out TES4_ErrorMask errorMask)
+            NotifyingFireParameters? cmds = null)
         {
-            TES4Common.Write_OblivionBinary(
-                this,
-                stream,
-                out errorMask);
+            using (var reader = new BinaryReader(stream))
+            {
+                this.CopyIn_OblivionBinary(
+                    reader: reader,
+                    cmds: cmds);
+            }
         }
 
-        public void Write_OblivionBinary(
+        public void CopyIn_OblivionBinary(
+            Stream stream,
+            out TES4_ErrorMask errorMask,
+            NotifyingFireParameters? cmds = null)
+        {
+            using (var reader = new BinaryReader(stream))
+            {
+                this.CopyIn_OblivionBinary(
+                    reader: reader,
+                    errorMask: out errorMask,
+                    cmds: cmds);
+            }
+        }
+
+        #endregion
+
+        #region OblivionBinary Write
+        public virtual void Write_OblivionBinary(
             BinaryWriter writer,
             out TES4_ErrorMask errorMask)
         {
@@ -1077,6 +1009,33 @@ namespace Mutagen
                 item: this,
                 doMasks: true,
                 errorMask: out errorMask);
+        }
+
+        public virtual void Write_OblivionBinary(
+            string path,
+            out TES4_ErrorMask errorMask)
+        {
+            using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
+            {
+                using (var writer = new BinaryWriter(fileStream))
+                {
+                    Write_OblivionBinary(
+                        writer: writer,
+                        errorMask: out errorMask);
+                }
+            }
+        }
+
+        public virtual void Write_OblivionBinary(
+            Stream stream,
+            out TES4_ErrorMask errorMask)
+        {
+            using (var writer = new BinaryWriter(stream))
+            {
+                Write_OblivionBinary(
+                    writer: writer,
+                    errorMask: out errorMask);
+            }
         }
 
         public void Write_OblivionBinary(BinaryWriter writer)
@@ -1088,6 +1047,44 @@ namespace Mutagen
                 errorMask: out TES4_ErrorMask errorMask);
         }
 
+        public void Write_OblivionBinary(string path)
+        {
+            using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
+            {
+                using (var writer = new BinaryWriter(fileStream))
+                {
+                    Write_OblivionBinary(writer: writer);
+                }
+            }
+        }
+
+        public void Write_OblivionBinary(Stream stream)
+        {
+            using (var writer = new BinaryWriter(stream))
+            {
+                Write_OblivionBinary(writer: writer);
+            }
+        }
+
+        #endregion
+
+        private static TES4 Create_OblivionBinary_Internal(
+            BinaryReader reader,
+            bool doMasks,
+            Func<TES4_ErrorMask> errorMask)
+        {
+            var ret = new TES4();
+            throw new NotImplementedException();
+            try
+            {
+            }
+            catch (Exception ex)
+            when (doMasks)
+            {
+                errorMask().Overall = ex;
+            }
+            return ret;
+        }
         #endregion
 
         public TES4 Copy(
@@ -2312,81 +2309,11 @@ namespace Mutagen.Internals
         #region XML Translation
         #region XML Write
         public static void Write_XML(
-            ITES4Getter item,
-            Stream stream)
-        {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: null,
-                    item: item,
-                    doMasks: false,
-                    errorMask: out TES4_ErrorMask errorMask);
-            }
-        }
-
-        public static void Write_XML(
-            ITES4Getter item,
-            Stream stream,
-            out TES4_ErrorMask errorMask)
-        {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: null,
-                    item: item,
-                    doMasks: true,
-                    errorMask: out errorMask);
-            }
-        }
-
-        public static void Write_XML(
-            ITES4Getter item,
-            string path)
-        {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: null,
-                    item: item,
-                    doMasks: false,
-                    errorMask: out TES4_ErrorMask errorMask);
-            }
-        }
-
-        public static void Write_XML(
-            ITES4Getter item,
-            string path,
-            out TES4_ErrorMask errorMask)
-        {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: null,
-                    item: item,
-                    doMasks: true,
-                    errorMask: out errorMask);
-            }
-        }
-
-        public static void Write_XML(
             XmlWriter writer,
-            string name,
             ITES4Getter item,
             bool doMasks,
-            out TES4_ErrorMask errorMask)
+            out TES4_ErrorMask errorMask,
+            string name = null)
         {
             TES4_ErrorMask errMaskRet = null;
             Write_XML_Internal(
@@ -2400,10 +2327,10 @@ namespace Mutagen.Internals
 
         private static void Write_XML_Internal(
             XmlWriter writer,
-            string name,
             ITES4Getter item,
             bool doMasks,
-            Func<TES4_ErrorMask> errorMask)
+            Func<TES4_ErrorMask> errorMask,
+            string name = null)
         {
             try
             {
@@ -2568,35 +2495,6 @@ namespace Mutagen.Internals
         #region OblivionBinary Translation
         #region OblivionBinary Write
         public static void Write_OblivionBinary(
-            ITES4Getter item,
-            Stream stream)
-        {
-            using (var writer = new BinaryWriter(stream))
-            {
-                Write_OblivionBinary(
-                    writer: writer,
-                    item: item,
-                    doMasks: false,
-                    errorMask: out TES4_ErrorMask errorMask);
-            }
-        }
-
-        public static void Write_OblivionBinary(
-            ITES4Getter item,
-            Stream stream,
-            out TES4_ErrorMask errorMask)
-        {
-            using (var writer = new BinaryWriter(stream))
-            {
-                Write_OblivionBinary(
-                    writer: writer,
-                    item: item,
-                    doMasks: true,
-                    errorMask: out errorMask);
-            }
-        }
-
-        public static void Write_OblivionBinary(
             BinaryWriter writer,
             ITES4Getter item,
             bool doMasks,
@@ -2617,144 +2515,7 @@ namespace Mutagen.Internals
             bool doMasks,
             Func<TES4_ErrorMask> errorMask)
         {
-            try
-            {
-                if (item.Fluff_Property.HasBeenSet)
-                {
-                    Exception subMask;
-                    Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                        writer,
-                        item.Fluff,
-                        doMasks: doMasks,
-                        errorMask: out subMask);
-                    if (subMask != null)
-                    {
-                        errorMask().Fluff = subMask;
-                    }
-                }
-                if (item.NumRecords_Property.HasBeenSet)
-                {
-                    Exception subMask;
-                    Mutagen.Binary.Int64BinaryTranslation.Instance.Write(
-                        writer,
-                        item.NumRecords,
-                        doMasks: doMasks,
-                        errorMask: out subMask);
-                    if (subMask != null)
-                    {
-                        errorMask().NumRecords = subMask;
-                    }
-                }
-                if (item.NextObjectID_Property.HasBeenSet)
-                {
-                    Exception subMask;
-                    Mutagen.Binary.UInt64BinaryTranslation.Instance.Write(
-                        writer,
-                        item.NextObjectID,
-                        doMasks: doMasks,
-                        errorMask: out subMask);
-                    if (subMask != null)
-                    {
-                        errorMask().NextObjectID = subMask;
-                    }
-                }
-                if (item.Header_Property.HasBeenSet)
-                {
-                    MaskItem<Exception, Header_ErrorMask> subMask;
-                    HeaderCommon.Write_OblivionBinary(
-                        writer: writer,
-                        item: item.Header,
-                        doMasks: doMasks,
-                        errorMask: out Header_ErrorMask loquiMask);
-                    subMask = loquiMask == null ? null : new MaskItem<Exception, Header_ErrorMask>(null, loquiMask);
-                    if (subMask != null)
-                    {
-                        errorMask().Header = subMask;
-                    }
-                }
-                if (item.TypeOffsets_Property.HasBeenSet)
-                {
-                    MaskItem<Exception, UnknownData_ErrorMask> subMask;
-                    UnknownDataCommon.Write_OblivionBinary(
-                        writer: writer,
-                        item: item.TypeOffsets,
-                        doMasks: doMasks,
-                        errorMask: out UnknownData_ErrorMask loquiMask);
-                    subMask = loquiMask == null ? null : new MaskItem<Exception, UnknownData_ErrorMask>(null, loquiMask);
-                    if (subMask != null)
-                    {
-                        errorMask().TypeOffsets = subMask;
-                    }
-                }
-                if (item.Deleted_Property.HasBeenSet)
-                {
-                    MaskItem<Exception, UnknownData_ErrorMask> subMask;
-                    UnknownDataCommon.Write_OblivionBinary(
-                        writer: writer,
-                        item: item.Deleted,
-                        doMasks: doMasks,
-                        errorMask: out UnknownData_ErrorMask loquiMask);
-                    subMask = loquiMask == null ? null : new MaskItem<Exception, UnknownData_ErrorMask>(null, loquiMask);
-                    if (subMask != null)
-                    {
-                        errorMask().Deleted = subMask;
-                    }
-                }
-                if (item.Author_Property.HasBeenSet)
-                {
-                    Exception subMask;
-                    Mutagen.Binary.StringBinaryTranslation.Instance.Write(
-                        writer,
-                        item.Author,
-                        doMasks: doMasks,
-                        errorMask: out subMask);
-                    if (subMask != null)
-                    {
-                        errorMask().Author = subMask;
-                    }
-                }
-                if (item.Description_Property.HasBeenSet)
-                {
-                    Exception subMask;
-                    Mutagen.Binary.StringBinaryTranslation.Instance.Write(
-                        writer,
-                        item.Description,
-                        doMasks: doMasks,
-                        errorMask: out subMask);
-                    if (subMask != null)
-                    {
-                        errorMask().Description = subMask;
-                    }
-                }
-                if (item.MasterReferences.HasBeenSet)
-                {
-                    MaskItem<Exception, IEnumerable<MaskItem<Exception, Header_ErrorMask>>> subMask;
-                    Mutagen.Binary.ListBinaryTranslation<Header, MaskItem<Exception, Header_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.MasterReferences,
-                        doMasks: doMasks,
-                        maskObj: out subMask,
-                        transl: (Header subItem, bool listDoMasks, out MaskItem<Exception, Header_ErrorMask> listSubMask) =>
-                        {
-                            HeaderCommon.Write_OblivionBinary(
-                                writer: writer,
-                                item: subItem,
-                                doMasks: doMasks,
-                                errorMask: out Header_ErrorMask loquiMask);
-                            listSubMask = loquiMask == null ? null : new MaskItem<Exception, Header_ErrorMask>(null, loquiMask);
-                        }
-                        );
-                    if (subMask != null)
-                    {
-                        errorMask().MasterReferences = subMask;
-                    }
-                }
-            }
-            catch (Exception ex)
-            when (doMasks)
-            {
-                errorMask().Overall = ex;
-            }
+            throw new NotImplementedException();
         }
         #endregion
 

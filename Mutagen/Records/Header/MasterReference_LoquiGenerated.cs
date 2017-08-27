@@ -17,6 +17,7 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
+using Mutagen.Binary;
 
 namespace Mutagen
 {
@@ -146,14 +147,7 @@ namespace Mutagen
 
 
         #region XML Translation
-        public static MasterReference Create_XML(Stream stream)
-        {
-            using (var reader = new StreamReader(stream))
-            {
-                return Create_XML(XElement.Parse(reader.ReadToEnd()));
-            }
-        }
-
+        #region XML Create
         public static MasterReference Create_XML(XElement root)
         {
             return Create_XML(
@@ -172,24 +166,6 @@ namespace Mutagen
                 errorMask: out errorMask);
         }
 
-        public static MasterReference Create_XML(string path)
-        {
-            return Create_XML(
-                root: XDocument.Load(path).Root,
-                doMasks: false,
-                errorMask: out var errorMask);
-        }
-
-        public static MasterReference Create_XML(
-            string path,
-            out MasterReference_ErrorMask errorMask)
-        {
-            return Create_XML(
-                root: XDocument.Load(path).Root,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
         public static MasterReference Create_XML(
             XElement root,
             bool doMasks,
@@ -203,6 +179,202 @@ namespace Mutagen
             errorMask = errMaskRet;
             return ret;
         }
+
+        public static MasterReference Create_XML(string path)
+        {
+            var root = XDocument.Load(path).Root;
+            return Create_XML(root: root);
+        }
+
+        public static MasterReference Create_XML(
+            string path,
+            out MasterReference_ErrorMask errorMask)
+        {
+            var root = XDocument.Load(path).Root;
+            return Create_XML(
+                root: root,
+                errorMask: out errorMask);
+        }
+
+        public static MasterReference Create_XML(Stream stream)
+        {
+            var root = XDocument.Load(stream).Root;
+            return Create_XML(root: root);
+        }
+
+        public static MasterReference Create_XML(
+            Stream stream,
+            out MasterReference_ErrorMask errorMask)
+        {
+            var root = XDocument.Load(stream).Root;
+            return Create_XML(
+                root: root,
+                errorMask: out errorMask);
+        }
+
+        #endregion
+
+        #region XML Copy In
+        public void CopyIn_XML(
+            XElement root,
+            NotifyingFireParameters? cmds = null)
+        {
+            LoquiXmlTranslation<MasterReference, MasterReference_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: false,
+                mask: out MasterReference_ErrorMask errorMask,
+                cmds: cmds);
+        }
+
+        public virtual void CopyIn_XML(
+            XElement root,
+            out MasterReference_ErrorMask errorMask,
+            NotifyingFireParameters? cmds = null)
+        {
+            LoquiXmlTranslation<MasterReference, MasterReference_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: true,
+                mask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            NotifyingFireParameters? cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            out MasterReference_ErrorMask errorMask,
+            NotifyingFireParameters? cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            NotifyingFireParameters? cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            out MasterReference_ErrorMask errorMask,
+            NotifyingFireParameters? cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        #endregion
+
+        #region XML Write
+        public virtual void Write_XML(
+            XmlWriter writer,
+            out MasterReference_ErrorMask errorMask,
+            string name = null)
+        {
+            MasterReferenceCommon.Write_XML(
+                writer: writer,
+                name: name,
+                item: this,
+                doMasks: true,
+                errorMask: out errorMask);
+        }
+
+        public virtual void Write_XML(
+            string path,
+            out MasterReference_ErrorMask errorMask,
+            string name = null)
+        {
+            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 3;
+                Write_XML(
+                    writer: writer,
+                    name: name,
+                    errorMask: out errorMask);
+            }
+        }
+
+        public virtual void Write_XML(
+            Stream stream,
+            out MasterReference_ErrorMask errorMask,
+            string name = null)
+        {
+            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 3;
+                Write_XML(
+                    writer: writer,
+                    name: name,
+                    errorMask: out errorMask);
+            }
+        }
+
+        public void Write_XML(
+            XmlWriter writer,
+            string name = null)
+        {
+            MasterReferenceCommon.Write_XML(
+                writer: writer,
+                name: name,
+                item: this,
+                doMasks: false,
+                errorMask: out MasterReference_ErrorMask errorMask);
+        }
+
+        public void Write_XML(
+            string path,
+            string name = null)
+        {
+            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 3;
+                Write_XML(
+                    writer: writer,
+                    name: name);
+            }
+        }
+
+        public void Write_XML(
+            Stream stream,
+            string name = null)
+        {
+            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 3;
+                Write_XML(
+                    writer: writer,
+                    name: name);
+            }
+        }
+
+        #endregion
 
         private static MasterReference Create_XML_Internal(
             XElement root,
@@ -279,135 +451,10 @@ namespace Mutagen
             }
         }
 
-        public void CopyIn_XML(
-            XElement root,
-            NotifyingFireParameters? cmds = null)
-        {
-            LoquiXmlTranslation<MasterReference, MasterReference_ErrorMask>.Instance.CopyIn(
-                root: root,
-                item: this,
-                skipProtected: true,
-                doMasks: false,
-                mask: out MasterReference_ErrorMask errorMask,
-                cmds: cmds);
-        }
-
-        public virtual void CopyIn_XML(
-            XElement root,
-            out MasterReference_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
-        {
-            LoquiXmlTranslation<MasterReference, MasterReference_ErrorMask>.Instance.CopyIn(
-                root: root,
-                item: this,
-                skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
-                cmds: cmds);
-        }
-
-        public void CopyIn_XML(
-            string path,
-            NotifyingFireParameters? cmds = null)
-        {
-            LoquiXmlTranslation<MasterReference, MasterReference_ErrorMask>.Instance.CopyIn(
-                root: XDocument.Load(path).Root,
-                item: this,
-                skipProtected: true,
-                doMasks: false,
-                mask: out MasterReference_ErrorMask errorMask,
-                cmds: cmds);
-        }
-
-        public virtual void CopyIn_XML(
-            string path,
-            out MasterReference_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
-        {
-            LoquiXmlTranslation<MasterReference, MasterReference_ErrorMask>.Instance.CopyIn(
-                root: XDocument.Load(path).Root,
-                item: this,
-                skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
-                cmds: cmds);
-        }
-
-        public virtual void Write_XML(Stream stream, out MasterReference_ErrorMask errorMask)
-        {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                this.Write_XML(
-                    writer,
-                    out errorMask);
-            }
-        }
-
-        public virtual void Write_XML(string path, out MasterReference_ErrorMask errorMask)
-        {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                this.Write_XML(
-                    writer,
-                    out errorMask);
-            }
-        }
-
-        public virtual void Write_XML(XmlWriter writer, out MasterReference_ErrorMask errorMask, string name = null)
-        {
-            MasterReferenceCommon.Write_XML(
-                writer: writer,
-                name: name,
-                item: this,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        public void Write_XML(XmlWriter writer, string name = null)
-        {
-            MasterReferenceCommon.Write_XML(
-                writer: writer,
-                name: name,
-                item: this,
-                doMasks: false,
-                errorMask: out MasterReference_ErrorMask errorMask);
-        }
-
-        public void Write_XML(Stream stream)
-        {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                this.Write_XML(writer);
-            }
-        }
-
-        public void Write_XML(string path)
-        {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                this.Write_XML(writer);
-            }
-        }
-
         #endregion
 
         #region OblivionBinary Translation
-        public static MasterReference Create_OblivionBinary(Stream stream)
-        {
-            using (var reader = new BinaryReader(stream))
-            {
-                return Create_OblivionBinary(reader);
-            }
-        }
-
+        #region OblivionBinary Create
         public static MasterReference Create_OblivionBinary(BinaryReader reader)
         {
             return Create_OblivionBinary(
@@ -440,84 +487,60 @@ namespace Mutagen
             return ret;
         }
 
-        private static MasterReference Create_OblivionBinary_Internal(
-            BinaryReader reader,
-            bool doMasks,
-            Func<MasterReference_ErrorMask> errorMask)
+        public static MasterReference Create_OblivionBinary(string path)
         {
-            var ret = new MasterReference();
-            try
+            using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
             {
-                foreach (var elem in EnumExt<MasterReference_FieldIndex>.Values)
+                using (var reader = new BinaryReader(fileStream))
                 {
-                    Fill_OblivionBinary_Internal(
-                        item: ret,
-                        reader: reader,
-                        elem: elem,
-                        doMasks: doMasks,
-                        errorMask: errorMask);
+                    return Create_OblivionBinary(reader: reader);
                 }
             }
-            catch (Exception ex)
-            when (doMasks)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
         }
 
-        protected static void Fill_OblivionBinary_Internal(
-            MasterReference item,
+        public static MasterReference Create_OblivionBinary(
+            string path,
+            out MasterReference_ErrorMask errorMask)
+        {
+            using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+            {
+                using (var reader = new BinaryReader(fileStream))
+                {
+                    return Create_OblivionBinary(
+                        reader: reader,
+                        errorMask: out errorMask);
+                }
+            }
+        }
+
+        public static MasterReference Create_OblivionBinary(Stream stream)
+        {
+            using (var reader = new BinaryReader(stream))
+            {
+                return Create_OblivionBinary(reader: reader);
+            }
+        }
+
+        public static MasterReference Create_OblivionBinary(
+            Stream stream,
+            out MasterReference_ErrorMask errorMask)
+        {
+            using (var reader = new BinaryReader(stream))
+            {
+                return Create_OblivionBinary(
+                    reader: reader,
+                    errorMask: out errorMask);
+            }
+        }
+
+        #endregion
+
+        #region OblivionBinary Copy In
+        public void CopyIn_OblivionBinary(
             BinaryReader reader,
-            MasterReference_FieldIndex elem,
-            bool doMasks,
-            Func<MasterReference_ErrorMask> errorMask)
+            NotifyingFireParameters? cmds = null)
         {
-            switch (elem)
-            {
-                case MasterReference_FieldIndex.Master:
-                    {
-                        Exception subMask;
-                        var tryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
-                            reader,
-                            doMasks: doMasks,
-                            errorMask: out subMask);
-                        if (tryGet.Succeeded)
-                        {
-                            item._Master.Item = tryGet.Value;
-                        }
-                        if (subMask != null)
-                        {
-                            errorMask().Master = subMask;
-                        }
-                    }
-                    break;
-                case MasterReference_FieldIndex.FileSize:
-                    {
-                        Exception subMask;
-                        var tryGet = Mutagen.Binary.UInt64BinaryTranslation.Instance.Parse(
-                            reader,
-                            nullable: false,
-                            doMasks: doMasks,
-                            errorMask: out subMask);
-                        if (tryGet.Succeeded)
-                        {
-                            item._FileSize.Item = tryGet.Value.Value;
-                        }
-                        if (subMask != null)
-                        {
-                            errorMask().FileSize = subMask;
-                        }
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        public void CopyIn_OblivionBinary(BinaryReader reader, NotifyingFireParameters? cmds = null)
-        {
-            Mutagen.Binary.LoquiBinaryTranslation<MasterReference, MasterReference_ErrorMask>.Instance.CopyIn(
+            LoquiBinaryTranslation<MasterReference, MasterReference_ErrorMask>.Instance.CopyIn(
                 reader: reader,
                 item: this,
                 skipProtected: true,
@@ -526,9 +549,12 @@ namespace Mutagen
                 cmds: cmds);
         }
 
-        public virtual void CopyIn_OblivionBinary(BinaryReader reader, out MasterReference_ErrorMask errorMask, NotifyingFireParameters? cmds = null)
+        public virtual void CopyIn_OblivionBinary(
+            BinaryReader reader,
+            out MasterReference_ErrorMask errorMask,
+            NotifyingFireParameters? cmds = null)
         {
-            Mutagen.Binary.LoquiBinaryTranslation<MasterReference, MasterReference_ErrorMask>.Instance.CopyIn(
+            LoquiBinaryTranslation<MasterReference, MasterReference_ErrorMask>.Instance.CopyIn(
                 reader: reader,
                 item: this,
                 skipProtected: true,
@@ -537,24 +563,68 @@ namespace Mutagen
                 cmds: cmds);
         }
 
-        public void Write_OblivionBinary(Stream stream)
+        public void CopyIn_OblivionBinary(
+            string path,
+            NotifyingFireParameters? cmds = null)
         {
-            MasterReferenceCommon.Write_OblivionBinary(
-                this,
-                stream);
+            using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+            {
+                using (var reader = new BinaryReader(fileStream))
+                {
+                    this.CopyIn_OblivionBinary(
+                        reader: reader,
+                        cmds: cmds);
+                }
+            }
         }
 
-        public void Write_OblivionBinary(
+        public void CopyIn_OblivionBinary(
+            string path,
+            out MasterReference_ErrorMask errorMask,
+            NotifyingFireParameters? cmds = null)
+        {
+            using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+            {
+                using (var reader = new BinaryReader(fileStream))
+                {
+                    this.CopyIn_OblivionBinary(
+                        reader: reader,
+                        errorMask: out errorMask,
+                        cmds: cmds);
+                }
+            }
+        }
+
+        public void CopyIn_OblivionBinary(
             Stream stream,
-            out MasterReference_ErrorMask errorMask)
+            NotifyingFireParameters? cmds = null)
         {
-            MasterReferenceCommon.Write_OblivionBinary(
-                this,
-                stream,
-                out errorMask);
+            using (var reader = new BinaryReader(stream))
+            {
+                this.CopyIn_OblivionBinary(
+                    reader: reader,
+                    cmds: cmds);
+            }
         }
 
-        public void Write_OblivionBinary(
+        public void CopyIn_OblivionBinary(
+            Stream stream,
+            out MasterReference_ErrorMask errorMask,
+            NotifyingFireParameters? cmds = null)
+        {
+            using (var reader = new BinaryReader(stream))
+            {
+                this.CopyIn_OblivionBinary(
+                    reader: reader,
+                    errorMask: out errorMask,
+                    cmds: cmds);
+            }
+        }
+
+        #endregion
+
+        #region OblivionBinary Write
+        public virtual void Write_OblivionBinary(
             BinaryWriter writer,
             out MasterReference_ErrorMask errorMask)
         {
@@ -563,6 +633,33 @@ namespace Mutagen
                 item: this,
                 doMasks: true,
                 errorMask: out errorMask);
+        }
+
+        public virtual void Write_OblivionBinary(
+            string path,
+            out MasterReference_ErrorMask errorMask)
+        {
+            using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
+            {
+                using (var writer = new BinaryWriter(fileStream))
+                {
+                    Write_OblivionBinary(
+                        writer: writer,
+                        errorMask: out errorMask);
+                }
+            }
+        }
+
+        public virtual void Write_OblivionBinary(
+            Stream stream,
+            out MasterReference_ErrorMask errorMask)
+        {
+            using (var writer = new BinaryWriter(stream))
+            {
+                Write_OblivionBinary(
+                    writer: writer,
+                    errorMask: out errorMask);
+            }
         }
 
         public void Write_OblivionBinary(BinaryWriter writer)
@@ -574,6 +671,44 @@ namespace Mutagen
                 errorMask: out MasterReference_ErrorMask errorMask);
         }
 
+        public void Write_OblivionBinary(string path)
+        {
+            using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
+            {
+                using (var writer = new BinaryWriter(fileStream))
+                {
+                    Write_OblivionBinary(writer: writer);
+                }
+            }
+        }
+
+        public void Write_OblivionBinary(Stream stream)
+        {
+            using (var writer = new BinaryWriter(stream))
+            {
+                Write_OblivionBinary(writer: writer);
+            }
+        }
+
+        #endregion
+
+        private static MasterReference Create_OblivionBinary_Internal(
+            BinaryReader reader,
+            bool doMasks,
+            Func<MasterReference_ErrorMask> errorMask)
+        {
+            var ret = new MasterReference();
+            throw new NotImplementedException();
+            try
+            {
+            }
+            catch (Exception ex)
+            when (doMasks)
+            {
+                errorMask().Overall = ex;
+            }
+            return ret;
+        }
         #endregion
 
         public MasterReference Copy(
@@ -1201,81 +1336,11 @@ namespace Mutagen.Internals
         #region XML Translation
         #region XML Write
         public static void Write_XML(
-            IMasterReferenceGetter item,
-            Stream stream)
-        {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: null,
-                    item: item,
-                    doMasks: false,
-                    errorMask: out MasterReference_ErrorMask errorMask);
-            }
-        }
-
-        public static void Write_XML(
-            IMasterReferenceGetter item,
-            Stream stream,
-            out MasterReference_ErrorMask errorMask)
-        {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: null,
-                    item: item,
-                    doMasks: true,
-                    errorMask: out errorMask);
-            }
-        }
-
-        public static void Write_XML(
-            IMasterReferenceGetter item,
-            string path)
-        {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: null,
-                    item: item,
-                    doMasks: false,
-                    errorMask: out MasterReference_ErrorMask errorMask);
-            }
-        }
-
-        public static void Write_XML(
-            IMasterReferenceGetter item,
-            string path,
-            out MasterReference_ErrorMask errorMask)
-        {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: null,
-                    item: item,
-                    doMasks: true,
-                    errorMask: out errorMask);
-            }
-        }
-
-        public static void Write_XML(
             XmlWriter writer,
-            string name,
             IMasterReferenceGetter item,
             bool doMasks,
-            out MasterReference_ErrorMask errorMask)
+            out MasterReference_ErrorMask errorMask,
+            string name = null)
         {
             MasterReference_ErrorMask errMaskRet = null;
             Write_XML_Internal(
@@ -1289,10 +1354,10 @@ namespace Mutagen.Internals
 
         private static void Write_XML_Internal(
             XmlWriter writer,
-            string name,
             IMasterReferenceGetter item,
             bool doMasks,
-            Func<MasterReference_ErrorMask> errorMask)
+            Func<MasterReference_ErrorMask> errorMask,
+            string name = null)
         {
             try
             {
@@ -1345,35 +1410,6 @@ namespace Mutagen.Internals
         #region OblivionBinary Translation
         #region OblivionBinary Write
         public static void Write_OblivionBinary(
-            IMasterReferenceGetter item,
-            Stream stream)
-        {
-            using (var writer = new BinaryWriter(stream))
-            {
-                Write_OblivionBinary(
-                    writer: writer,
-                    item: item,
-                    doMasks: false,
-                    errorMask: out MasterReference_ErrorMask errorMask);
-            }
-        }
-
-        public static void Write_OblivionBinary(
-            IMasterReferenceGetter item,
-            Stream stream,
-            out MasterReference_ErrorMask errorMask)
-        {
-            using (var writer = new BinaryWriter(stream))
-            {
-                Write_OblivionBinary(
-                    writer: writer,
-                    item: item,
-                    doMasks: true,
-                    errorMask: out errorMask);
-            }
-        }
-
-        public static void Write_OblivionBinary(
             BinaryWriter writer,
             IMasterReferenceGetter item,
             bool doMasks,
@@ -1394,40 +1430,7 @@ namespace Mutagen.Internals
             bool doMasks,
             Func<MasterReference_ErrorMask> errorMask)
         {
-            try
-            {
-                if (item.Master_Property.HasBeenSet)
-                {
-                    Exception subMask;
-                    Mutagen.Binary.StringBinaryTranslation.Instance.Write(
-                        writer,
-                        item.Master,
-                        doMasks: doMasks,
-                        errorMask: out subMask);
-                    if (subMask != null)
-                    {
-                        errorMask().Master = subMask;
-                    }
-                }
-                if (item.FileSize_Property.HasBeenSet)
-                {
-                    Exception subMask;
-                    Mutagen.Binary.UInt64BinaryTranslation.Instance.Write(
-                        writer,
-                        item.FileSize,
-                        doMasks: doMasks,
-                        errorMask: out subMask);
-                    if (subMask != null)
-                    {
-                        errorMask().FileSize = subMask;
-                    }
-                }
-            }
-            catch (Exception ex)
-            when (doMasks)
-            {
-                errorMask().Overall = ex;
-            }
+            throw new NotImplementedException();
         }
         #endregion
 

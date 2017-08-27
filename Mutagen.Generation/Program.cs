@@ -21,6 +21,7 @@ namespace Mutagen.Generation
                 ProtocolDefault = new ProtocolKey("Mutagen"),
                 NotifyingDefault = NotifyingOption.Notifying
             };
+            gen.XmlTranslation.ShouldGenerateXSD = false;
             gen.Add(new OblivionBinaryTranslationModule(gen));
             gen.AddTypeAssociation<UnknownType>("Unknown");
             gen.XmlTranslation.ShouldGenerateXSD = false;

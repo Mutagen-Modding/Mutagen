@@ -32,8 +32,8 @@ namespace Mutagen.Generation
             using (var args = new ArgsWrapper(fg,
                 $"{this.Namespace}{this.typeName}BinaryTranslation.Instance.Write"))
             {
-                args.Add(writerAccessor);
-                args.Add(itemAccessor);
+                args.Add($"writer: {writerAccessor}");
+                args.Add($"item: {itemAccessor}");
                 args.Add($"doMasks: {doMaskAccessor}");
                 args.Add($"errorMask: out {maskAccessor}");
             }

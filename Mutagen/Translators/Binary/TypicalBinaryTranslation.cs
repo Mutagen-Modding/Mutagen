@@ -23,7 +23,30 @@ namespace Mutagen.Binary
             throw new NotImplementedException();
         }
 
-        public TryGet<T> Parse(BinaryReader reader, bool nullable, bool doMasks, out Exception errorMask)
+        public TryGet<T> Parse(BinaryReader reader, int length, bool doMasks, out Exception errorMask)
+        {
+            try
+            {
+                var parse = ParseValue(reader);
+                if (parse == null)
+                {
+                    throw new ArgumentException("Value was unexpectedly null.");
+                }
+                errorMask = null;
+                return TryGet<T>.Succeed(parse);
+            }
+            catch (Exception ex)
+            {
+                if (doMasks)
+                {
+                    errorMask = ex;
+                    return TryGet<T>.Failure;
+                }
+                throw;
+            }
+        }
+
+        public TryGet<T> Parse(BinaryReader reader, string header, int lengthLength, bool nullable, bool doMasks, out Exception errorMask)
         {
             try
             {
@@ -51,9 +74,14 @@ namespace Mutagen.Binary
             throw new NotImplementedException();
         }
 
-        TryGet<T> IBinaryTranslation<T, Exception>.Parse(BinaryReader reader, bool doMasks, out Exception errorMask)
+        TryGet<T> IBinaryTranslation<T, Exception>.Parse(BinaryReader reader, int length, bool doMasks, out Exception errorMask)
         {
-            return Parse(reader, nullable: true, doMasks: doMasks, errorMask: out errorMask);
+            return Parse(reader, length: length, doMasks: doMasks, errorMask: out errorMask);
+        }
+
+        TryGet<T> IBinaryTranslation<T, Exception>.Parse(BinaryReader reader, string header, int lengthLength, bool doMasks, out Exception maskObj)
+        {
+            return Parse(reader, header, lengthLength, true, doMasks, out maskObj);
         }
 
         private Exception Write_Internal(BinaryWriter writer, T item, bool doMasks, bool nullable)

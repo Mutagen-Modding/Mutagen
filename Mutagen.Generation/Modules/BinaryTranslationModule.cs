@@ -47,6 +47,25 @@ namespace Mutagen.Generation
             this._typeGenerations[typeof(UInt64Type)] = new PrimitiveBinaryTranslationGeneration<ulong>();
             this._typeGenerations[typeof(ListType)] = new ListBinaryTranslationGeneration();
             this._typeGenerations[typeof(ByteArrayType)] = new PrimitiveBinaryTranslationGeneration<byte[]>(typeName: "ByteArray", nullable: true);
+            this.MainAPI = new TranslationModuleAPI(
+                writerAPI: new MethodAPI("BinaryWriter writer"),
+                readerAPI: new MethodAPI("BinaryReader reader"));
+            this.MinorAPIs.Add(
+                new TranslationModuleAPI(new MethodAPI("string path"))
+                {
+                    Funnel = new TranslationFunnel(
+                        this.MainAPI,
+                        ConvertFromPathOut,
+                        ConvertFromPathIn)
+                });
+            this.MinorAPIs.Add(
+                new TranslationModuleAPI(new MethodAPI("Stream stream"))
+                {
+                    Funnel = new TranslationFunnel(
+                        this.MainAPI,
+                        ConvertFromStreamOut,
+                        ConvertFromStreamIn)
+                });
         }
 
         public override void Load()
@@ -60,7 +79,7 @@ namespace Mutagen.Generation
 
         public override IEnumerable<string> RequiredUsingStatements()
         {
-            yield break;
+            yield return "Mutagen.Binary";
         }
 
         public override IEnumerable<string> Interfaces(ObjectGeneration obj)
@@ -68,374 +87,32 @@ namespace Mutagen.Generation
             yield break;
         }
 
-        public override IEnumerable<string> GetWriterInterfaces(ObjectGeneration obj)
+        private void ConvertFromStreamOut(FileGeneration fg, InternalTranslation internalToDo)
         {
-            yield break;
+            fg.AppendLine("using (var writer = new BinaryWriter(stream))");
+            using (new BraceWrapper(fg))
+            {
+                internalToDo("writer");
+            }
         }
 
-        public override IEnumerable<string> GetReaderInterfaces(ObjectGeneration obj)
+        private void ConvertFromStreamIn(FileGeneration fg, InternalTranslation internalToDo)
         {
-            yield break;
+            fg.AppendLine("using (var reader = new BinaryReader(stream))");
+            using (new BraceWrapper(fg))
+            {
+                internalToDo("reader");
+            }
         }
-
-        public override void Modify(ObjectGeneration obj)
-        {
-        }
-
-        public override void Modify(LoquiGenerator gen)
-        {
-        }
-
-        public override void Generate(ObjectGeneration obj)
-        {
-        }
-
+        
         public override void GenerateInClass(ObjectGeneration obj, FileGeneration fg)
         {
-            GenerateRead(obj, fg);
-            if (obj.IsTopClass)
-            {
-                using (var args = new FunctionWrapper(fg,
-                    $"public void Write_{ModuleNickname}"))
-                {
-                    args.Add($"Stream stream");
-                }
-                using (new BraceWrapper(fg))
-                {
-                    using (var args = new ArgsWrapper(fg,
-                        $"{obj.ExtCommonName}.Write_{this.ModuleNickname}"))
-                    {
-                        args.Add("this");
-                        args.Add("stream");
-                    }
-                }
-                fg.AppendLine();
-            }
-
-            using (var args = new FunctionWrapper(fg,
-                $"public void Write_{ModuleNickname}"))
-            {
-                args.Add($"Stream stream");
-                args.Add($"out {obj.ErrorMask} errorMask");
-            }
-            using (new BraceWrapper(fg))
-            {
-                using (var args = new ArgsWrapper(fg,
-                    $"{obj.ExtCommonName}.Write_{this.ModuleNickname}"))
-                {
-                    args.Add("this");
-                    args.Add("stream");
-                    args.Add("out errorMask");
-                }
-            }
-            fg.AppendLine();
-
-            using (var args = new FunctionWrapper(fg,
-                $"public void Write_{ModuleNickname}"))
-            {
-                args.Add($"BinaryWriter writer");
-                args.Add($"out {obj.ErrorMask} errorMask");
-            }
-            using (new BraceWrapper(fg))
-            {
-                using (var args = new ArgsWrapper(fg,
-                    $"{obj.ExtCommonName}.Write_{this.ModuleNickname}"))
-                {
-                    args.Add($"writer: writer");
-                    args.Add($"item: this");
-                    args.Add($"doMasks: true");
-                    args.Add($"errorMask: out errorMask");
-                }
-            }
-            fg.AppendLine();
-
-            if (obj.Abstract)
-            {
-                if (!obj.BaseClass?.Abstract ?? true)
-                {
-                    fg.AppendLine($"public abstract void Write_{ModuleNickname}(BinaryWriter writer);");
-                    fg.AppendLine();
-                }
-            }
-            else if (obj.IsTopClass
-                || (!obj.Abstract && (obj.BaseClass?.Abstract ?? true)))
-            {
-                using (var args = new FunctionWrapper(fg,
-                    $"public{obj.FunctionOverride}void Write_{ModuleNickname}"))
-                {
-                    args.Add($"BinaryWriter writer");
-                }
-                using (new BraceWrapper(fg))
-                {
-                    using (var args = new ArgsWrapper(fg,
-                        $"{obj.ExtCommonName}.Write_{ModuleNickname}"))
-                    {
-                        args.Add($"writer: writer");
-                        args.Add($"item: this");
-                        args.Add($"doMasks: false");
-                        args.Add($"errorMask: out {obj.ErrorMask} errorMask");
-                    }
-                }
-                fg.AppendLine();
-            }
+            base.GenerateInClass(obj, fg);
+            GenerateCreateExtras(obj, fg);
         }
 
-        public override void GenerateInCommonExt(ObjectGeneration obj, FileGeneration fg)
+        private void GenerateCreateExtras(ObjectGeneration obj, FileGeneration fg)
         {
-            using (new RegionWrapper(fg, $"{ModuleNickname} Write"))
-            {
-                CommonWrite(obj, fg);
-            }
-        }
-
-        private void CommonWrite(ObjectGeneration obj, FileGeneration fg)
-        {
-            using (var args = new FunctionWrapper(fg,
-                $"public static void Write_{ModuleNickname}{obj.GenericTypes}",
-                obj.GenerateWhereClauses().ToArray()))
-            {
-                args.Add($"{obj.Getter_InterfaceStr} item");
-                args.Add($"Stream stream");
-            }
-            using (new BraceWrapper(fg))
-            {
-                fg.AppendLine("using (var writer = new BinaryWriter(stream))");
-                using (new BraceWrapper(fg))
-                {
-                    fg.AppendLine($"Write_{this.ModuleNickname}(");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"writer: writer,");
-                        fg.AppendLine($"item: item,");
-                        fg.AppendLine($"doMasks: false,");
-                        fg.AppendLine($"errorMask: out {obj.ErrorMask} errorMask);");
-                    }
-                }
-            }
-            fg.AppendLine();
-
-            using (var args = new FunctionWrapper(fg,
-                $"public static void Write_{ModuleNickname}{obj.GenericTypes}",
-                obj.GenerateWhereClauses().ToArray()))
-            {
-                args.Add($"{obj.Getter_InterfaceStr} item");
-                args.Add($"Stream stream");
-                args.Add($"out {obj.ErrorMask} errorMask");
-            }
-            using (new BraceWrapper(fg))
-            {
-                fg.AppendLine("using (var writer = new BinaryWriter(stream))");
-                using (new BraceWrapper(fg))
-                {
-                    fg.AppendLine($"Write_{this.ModuleNickname}(");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendLine($"writer: writer,");
-                        fg.AppendLine($"item: item,");
-                        fg.AppendLine($"doMasks: true,");
-                        fg.AppendLine($"errorMask: out errorMask);");
-                    }
-                }
-            }
-            fg.AppendLine();
-
-            using (var args = new FunctionWrapper(fg,
-                $"public static void Write_{ModuleNickname}{obj.GenericTypes}",
-                obj.GenerateWhereClauses().ToArray()))
-            {
-                args.Add($"BinaryWriter writer");
-                args.Add($"{obj.Getter_InterfaceStr} item");
-                args.Add($"bool doMasks");
-                args.Add($"out {obj.ErrorMask} errorMask");
-            }
-            using (new BraceWrapper(fg))
-            {
-                fg.AppendLine($"{obj.ErrorMask} errMaskRet = null;");
-                using (var args = new ArgsWrapper(fg,
-                    $"Write_{this.ModuleNickname}_Internal"))
-                {
-                    args.Add("writer: writer");
-                    args.Add("item: item");
-                    args.Add("doMasks: doMasks");
-                    args.Add($"errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new {obj.ErrorMask}()) : default(Func<{obj.ErrorMask}>)");
-                }
-                fg.AppendLine($"errorMask = errMaskRet;");
-            }
-            fg.AppendLine();
-
-            using (var args = new FunctionWrapper(fg,
-                $"private static void Write_{ModuleNickname}_Internal{obj.GenericTypes}",
-                obj.GenerateWhereClauses().ToArray()))
-            {
-                args.Add($"BinaryWriter writer");
-                args.Add($"{obj.Getter_InterfaceStr} item");
-                args.Add($"bool doMasks");
-                args.Add($"Func<{obj.ErrorMask}> errorMask");
-            }
-            using (new BraceWrapper(fg))
-            {
-                fg.AppendLine("try");
-                using (new BraceWrapper(fg))
-                {
-                    foreach (var field in obj.IterateFields())
-                    {
-                        if (field.Field.Derivative) continue;
-
-                        if (!this.TryGetTypeGeneration(field.Field.GetType(), out var generator))
-                        {
-                            throw new ArgumentException("Unsupported type generator: " + field.Field);
-                        }
-
-                        if (field.Field.Notifying != NotifyingOption.None)
-                        {
-                            fg.AppendLine($"if (item.{field.Field.HasBeenSetAccessor})");
-                        }
-                        using (new BraceWrapper(fg))
-                        {
-                            var maskType = this.Gen.MaskModule.GetMaskModule(field.Field.GetType()).GetErrorMaskTypeStr(field.Field);
-                            fg.AppendLine($"{maskType} subMask;");
-                            generator.GenerateWrite(
-                                fg: fg,
-                                typeGen: field.Field,
-                                writerAccessor: "writer",
-                                itemAccessor: $"item.{field.Field.Name}",
-                                doMaskAccessor: "doMasks",
-                                maskAccessor: $"subMask");
-                            fg.AppendLine("if (subMask != null)");
-                            using (new BraceWrapper(fg))
-                            {
-                                fg.AppendLine($"errorMask().{field.Field.Name} = subMask;");
-                            }
-                        }
-                    }
-                }
-                fg.AppendLine("catch (Exception ex)");
-                fg.AppendLine("when (doMasks)");
-                using (new BraceWrapper(fg))
-                {
-                    fg.AppendLine("errorMask().Overall = ex;");
-                }
-            }
-        }
-
-        private void GenerateRead(ObjectGeneration obj, FileGeneration fg)
-        {
-            if (!obj.Abstract)
-            {
-                GenerateCreate(obj, fg);
-            }
-
-            if (obj is StructGeneration) return;
-            fg.AppendLine($"public{obj.FunctionOverride}void CopyIn_{ModuleNickname}(BinaryReader reader, NotifyingFireParameters? cmds = null)");
-            using (new BraceWrapper(fg))
-            {
-                fg.AppendLine($"{this.Namespace}LoquiBinaryTranslation<{obj.ObjectName}, {obj.ErrorMask}>.Instance.CopyIn(");
-                using (new DepthWrapper(fg))
-                {
-                    fg.AppendLine($"reader: reader,");
-                    fg.AppendLine($"item: this,");
-                    fg.AppendLine($"skipProtected: true,");
-                    fg.AppendLine($"doMasks: false,");
-                    fg.AppendLine($"mask: out {obj.ErrorMask} errorMask,");
-                    fg.AppendLine($"cmds: cmds);");
-                }
-            }
-            fg.AppendLine();
-
-            fg.AppendLine($"public virtual void CopyIn_{ModuleNickname}(BinaryReader reader, out {obj.ErrorMask} errorMask, NotifyingFireParameters? cmds = null)");
-            using (new BraceWrapper(fg))
-            {
-                fg.AppendLine($"{this.Namespace}LoquiBinaryTranslation<{obj.ObjectName}, {obj.ErrorMask}>.Instance.CopyIn(");
-                using (new DepthWrapper(fg))
-                {
-                    fg.AppendLine($"reader: reader,");
-                    fg.AppendLine($"item: this,");
-                    fg.AppendLine($"skipProtected: true,");
-                    fg.AppendLine($"doMasks: true,");
-                    fg.AppendLine($"mask: out errorMask,");
-                    fg.AppendLine($"cmds: cmds);");
-                }
-            }
-            fg.AppendLine();
-
-            foreach (var baseClass in obj.BaseClassTrail())
-            {
-                fg.AppendLine($"public override void CopyIn_{ModuleNickname}(BinaryReader reader, out {baseClass.ErrorMask} errorMask, NotifyingFireParameters? cmds = null)");
-                using (new BraceWrapper(fg))
-                {
-                    fg.AppendLine($"CopyIn_{this.ModuleNickname}(reader, out {obj.ErrorMask} errMask, cmds: cmds);");
-                    fg.AppendLine("errorMask = errMask;");
-                }
-                fg.AppendLine();
-            }
-        }
-
-        private void GenerateCreate(ObjectGeneration obj, FileGeneration fg)
-        {
-            fg.AppendLine($"public{obj.NewOverride}static {obj.ObjectName} Create_{ModuleNickname}(Stream stream)");
-            using (new BraceWrapper(fg))
-            {
-                fg.AppendLine($"using (var reader = new BinaryReader(stream))");
-                using (new BraceWrapper(fg))
-                {
-                    fg.AppendLine($"return Create_{this.ModuleNickname}(reader);");
-                }
-            }
-            fg.AppendLine();
-
-            fg.AppendLine($"public{obj.NewOverride}static {obj.ObjectName} Create_{ModuleNickname}(BinaryReader reader)");
-            using (new BraceWrapper(fg))
-            {
-                using (var args = new ArgsWrapper(fg,
-                    $"return Create_{this.ModuleNickname}"))
-                {
-                    args.Add("reader: reader");
-                    args.Add("doMasks: false");
-                    args.Add("errorMask: out var errorMask");
-                }
-            }
-            fg.AppendLine();
-
-            using (var args = new FunctionWrapper(fg,
-                $"public static {obj.ObjectName} Create_{ModuleNickname}"))
-            {
-                args.Add("BinaryReader reader");
-                args.Add($"out {obj.ErrorMask} errorMask");
-            }
-            using (new BraceWrapper(fg))
-            {
-                using (var args = new ArgsWrapper(fg,
-                    $"return Create_{this.ModuleNickname}"))
-                {
-                    args.Add("reader: reader");
-                    args.Add("doMasks: true");
-                    args.Add("errorMask: out errorMask");
-                }
-            }
-            fg.AppendLine();
-
-            using (var args = new FunctionWrapper(fg,
-                $"public static {obj.ObjectName} Create_{ModuleNickname}"))
-            {
-                args.Add("BinaryReader reader");
-                args.Add("bool doMasks");
-                args.Add($"out {obj.ErrorMask} errorMask");
-            }
-            using (new BraceWrapper(fg))
-            {
-                fg.AppendLine($"{obj.ErrorMask} errMaskRet = null;");
-                using (var args = new ArgsWrapper(fg,
-                    $"var ret = Create_{this.ModuleNickname}_Internal"))
-                {
-                    args.Add("reader: reader");
-                    args.Add("doMasks: doMasks");
-                    args.Add($"errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new {obj.ErrorMask}()) : default(Func<{obj.ErrorMask}>)");
-                }
-                fg.AppendLine($"errorMask = errMaskRet;");
-                fg.AppendLine($"return ret;");
-            }
-            fg.AppendLine();
-
             using (var args = new FunctionWrapper(fg,
                 $"private static {obj.ObjectName} Create_{ModuleNickname}_Internal"))
             {
@@ -446,22 +123,10 @@ namespace Mutagen.Generation
             using (new BraceWrapper(fg))
             {
                 fg.AppendLine($"var ret = new {obj.Name}{obj.GenericTypes}();");
+                fg.AppendLine($"throw new NotImplementedException();");
                 fg.AppendLine("try");
                 using (new BraceWrapper(fg))
                 {
-                    fg.AppendLine($"foreach (var elem in EnumExt<{obj.FieldIndexName}>.Values)");
-                    using (new BraceWrapper(fg))
-                    {
-                        using (var args = new ArgsWrapper(fg,
-                            $"Fill_{this.ModuleNickname}_Internal"))
-                        {
-                            args.Add("item: ret");
-                            args.Add("reader: reader");
-                            args.Add("elem: elem");
-                            args.Add("doMasks: doMasks");
-                            args.Add("errorMask: errorMask");
-                        }
-                    }
                 }
                 fg.AppendLine("catch (Exception ex)");
                 fg.AppendLine("when (doMasks)");
@@ -471,83 +136,77 @@ namespace Mutagen.Generation
                 }
                 fg.AppendLine("return ret;");
             }
-            fg.AppendLine();
+        }
 
-            using (var args = new FunctionWrapper(fg,
-                $"protected static void Fill_{ModuleNickname}_Internal"))
-            {
-                args.Add($"{obj.ObjectName} item");
-                args.Add("BinaryReader reader");
-                args.Add($"{obj.FieldIndexName} elem");
-                args.Add("bool doMasks");
-                args.Add($"Func<{obj.ErrorMask}> errorMask");
-            }
+        private void ConvertFromPathOut(FileGeneration fg, InternalTranslation internalToDo)
+        {
+            fg.AppendLine($"using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))");
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine("switch (elem)");
+                fg.AppendLine("using (var writer = new BinaryWriter(fileStream))");
                 using (new BraceWrapper(fg))
                 {
-                    foreach (var field in obj.IterateFields())
-                    {
-                        if (!this.TryGetTypeGeneration(field.Field.GetType(), out var generator))
-                        {
-                            throw new ArgumentException("Unsupported type generator: " + field.Field);
-                        }
-
-                        fg.AppendLine($"case {obj.FieldIndexName}.{field.Field.Name}:");
-                        using (new DepthWrapper(fg))
-                        {
-                            if (generator.ShouldGenerateCopyIn(field.Field))
-                            {
-                                using (new BraceWrapper(fg))
-                                {
-                                    var maskType = this.Gen.MaskModule.GetMaskModule(field.Field.GetType()).GetErrorMaskTypeStr(field.Field);
-                                    fg.AppendLine($"{maskType} subMask;");
-                                    generator.GenerateCopyIn(
-                                        fg: fg,
-                                        typeGen: field.Field,
-                                        readerAccessor: "reader",
-                                        itemAccessor: $"item.{field.Field.ProtectedName}",
-                                        doMaskAccessor: "doMasks",
-                                        maskAccessor: $"subMask");
-                                    fg.AppendLine("if (subMask != null)");
-                                    using (new BraceWrapper(fg))
-                                    {
-                                        fg.AppendLine($"errorMask().{field.Field.Name} = subMask;");
-                                    }
-                                }
-                            }
-                            fg.AppendLine("break;");
-                        }
-                    }
-
-                    fg.AppendLine("default:");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (obj.HasBaseObject)
-                        {
-                            using (var args = new ArgsWrapper(fg,
-                                $"{obj.BaseClassName}.Fill_{this.ModuleNickname}_Internal"))
-                            {
-                                args.Add("item: item");
-                                args.Add("reader: reader");
-                                args.Add("doMasks: doMasks");
-                                args.Add("errorMask: errorMask");
-                            }
-                        }
-                        fg.AppendLine("break;");
-                    }
+                    internalToDo("writer");
                 }
             }
-            fg.AppendLine();
         }
 
-        public override void Generate(ObjectGeneration obj, FileGeneration fg)
+        private void ConvertFromPathIn(FileGeneration fg, InternalTranslation internalToDo)
         {
+            fg.AppendLine($"using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))");
+            using (new BraceWrapper(fg))
+            {
+                fg.AppendLine("using (var reader = new BinaryReader(fileStream))");
+                using (new BraceWrapper(fg))
+                {
+                    internalToDo("reader");
+                }
+            }
         }
 
-        public override void GenerateInInterfaceGetter(ObjectGeneration obj, FileGeneration fg)
+        protected override void GenerateCopyInSnippet(ObjectGeneration obj, FileGeneration fg, bool usingErrorMask)
         {
+            using (var args = new ArgsWrapper(fg,
+                $"LoquiBinaryTranslation<{obj.ObjectName}, {obj.ErrorMask}>.Instance.CopyIn"))
+            using (new DepthWrapper(fg))
+            {
+                foreach (var item in this.MainAPI.ReaderPassArgs)
+                {
+                    args.Add(item);
+                }
+                args.Add($"item: this");
+                args.Add($"skipProtected: true");
+                if (usingErrorMask)
+                {
+                    args.Add($"doMasks: true");
+                    args.Add($"mask: out errorMask");
+                }
+                else
+                {
+                    args.Add($"doMasks: false");
+                    args.Add($"mask: out {obj.ErrorMask} errorMask");
+                }
+                args.Add($"cmds: cmds");
+            }
+        }
+
+        protected override void GenerateCreateSnippet(ObjectGeneration obj, FileGeneration fg)
+        {
+            fg.AppendLine($"{obj.ErrorMask} errMaskRet = null;");
+            using (var args = new ArgsWrapper(fg,
+                $"var ret = Create_{ModuleNickname}_Internal"))
+            {
+                args.Add("reader: reader");
+                args.Add("doMasks: doMasks");
+                args.Add($"errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new {obj.ErrorMask}()) : default(Func<{obj.ErrorMask}>)");
+            }
+            fg.AppendLine($"errorMask = errMaskRet;");
+            fg.AppendLine($"return ret;");
+        }
+
+        protected override void GenerateWriteSnippet(ObjectGeneration obj, FileGeneration fg)
+        {
+            fg.AppendLine($"throw new NotImplementedException();");
         }
     }
 }

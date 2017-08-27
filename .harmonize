@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>2214ec02f4625a6191e65dbf1e71d4b33a971803</Sha>
+         <Sha>7f622552a7570c1ef645bf651fbd352dd42d6100</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>08-27-2017 14:42:45</CommitDate>
-         <Description>Mask module tostring with file generation respects base classes</Description>
+         <CommitDate>08-27-2017 16:02:08</CommitDate>
+         <Description>Missing use of mainapi in TranslationModule</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

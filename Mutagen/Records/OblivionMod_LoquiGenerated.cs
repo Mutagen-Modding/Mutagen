@@ -18,6 +18,7 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
+using Mutagen.Binary;
 
 namespace Mutagen
 {
@@ -127,14 +128,7 @@ namespace Mutagen
 
 
         #region XML Translation
-        public static OblivionMod Create_XML(Stream stream)
-        {
-            using (var reader = new StreamReader(stream))
-            {
-                return Create_XML(XElement.Parse(reader.ReadToEnd()));
-            }
-        }
-
+        #region XML Create
         public static OblivionMod Create_XML(XElement root)
         {
             return Create_XML(
@@ -153,24 +147,6 @@ namespace Mutagen
                 errorMask: out errorMask);
         }
 
-        public static OblivionMod Create_XML(string path)
-        {
-            return Create_XML(
-                root: XDocument.Load(path).Root,
-                doMasks: false,
-                errorMask: out var errorMask);
-        }
-
-        public static OblivionMod Create_XML(
-            string path,
-            out OblivionMod_ErrorMask errorMask)
-        {
-            return Create_XML(
-                root: XDocument.Load(path).Root,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
         public static OblivionMod Create_XML(
             XElement root,
             bool doMasks,
@@ -184,6 +160,202 @@ namespace Mutagen
             errorMask = errMaskRet;
             return ret;
         }
+
+        public static OblivionMod Create_XML(string path)
+        {
+            var root = XDocument.Load(path).Root;
+            return Create_XML(root: root);
+        }
+
+        public static OblivionMod Create_XML(
+            string path,
+            out OblivionMod_ErrorMask errorMask)
+        {
+            var root = XDocument.Load(path).Root;
+            return Create_XML(
+                root: root,
+                errorMask: out errorMask);
+        }
+
+        public static OblivionMod Create_XML(Stream stream)
+        {
+            var root = XDocument.Load(stream).Root;
+            return Create_XML(root: root);
+        }
+
+        public static OblivionMod Create_XML(
+            Stream stream,
+            out OblivionMod_ErrorMask errorMask)
+        {
+            var root = XDocument.Load(stream).Root;
+            return Create_XML(
+                root: root,
+                errorMask: out errorMask);
+        }
+
+        #endregion
+
+        #region XML Copy In
+        public void CopyIn_XML(
+            XElement root,
+            NotifyingFireParameters? cmds = null)
+        {
+            LoquiXmlTranslation<OblivionMod, OblivionMod_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: false,
+                mask: out OblivionMod_ErrorMask errorMask,
+                cmds: cmds);
+        }
+
+        public virtual void CopyIn_XML(
+            XElement root,
+            out OblivionMod_ErrorMask errorMask,
+            NotifyingFireParameters? cmds = null)
+        {
+            LoquiXmlTranslation<OblivionMod, OblivionMod_ErrorMask>.Instance.CopyIn(
+                root: root,
+                item: this,
+                skipProtected: true,
+                doMasks: true,
+                mask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            NotifyingFireParameters? cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            string path,
+            out OblivionMod_ErrorMask errorMask,
+            NotifyingFireParameters? cmds = null)
+        {
+            var root = XDocument.Load(path).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            NotifyingFireParameters? cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                cmds: cmds);
+        }
+
+        public void CopyIn_XML(
+            Stream stream,
+            out OblivionMod_ErrorMask errorMask,
+            NotifyingFireParameters? cmds = null)
+        {
+            var root = XDocument.Load(stream).Root;
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out errorMask,
+                cmds: cmds);
+        }
+
+        #endregion
+
+        #region XML Write
+        public virtual void Write_XML(
+            XmlWriter writer,
+            out OblivionMod_ErrorMask errorMask,
+            string name = null)
+        {
+            OblivionModCommon.Write_XML(
+                writer: writer,
+                name: name,
+                item: this,
+                doMasks: true,
+                errorMask: out errorMask);
+        }
+
+        public virtual void Write_XML(
+            string path,
+            out OblivionMod_ErrorMask errorMask,
+            string name = null)
+        {
+            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 3;
+                Write_XML(
+                    writer: writer,
+                    name: name,
+                    errorMask: out errorMask);
+            }
+        }
+
+        public virtual void Write_XML(
+            Stream stream,
+            out OblivionMod_ErrorMask errorMask,
+            string name = null)
+        {
+            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 3;
+                Write_XML(
+                    writer: writer,
+                    name: name,
+                    errorMask: out errorMask);
+            }
+        }
+
+        public void Write_XML(
+            XmlWriter writer,
+            string name = null)
+        {
+            OblivionModCommon.Write_XML(
+                writer: writer,
+                name: name,
+                item: this,
+                doMasks: false,
+                errorMask: out OblivionMod_ErrorMask errorMask);
+        }
+
+        public void Write_XML(
+            string path,
+            string name = null)
+        {
+            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 3;
+                Write_XML(
+                    writer: writer,
+                    name: name);
+            }
+        }
+
+        public void Write_XML(
+            Stream stream,
+            string name = null)
+        {
+            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 3;
+                Write_XML(
+                    writer: writer,
+                    name: name);
+            }
+        }
+
+        #endregion
 
         private static OblivionMod Create_XML_Internal(
             XElement root,
@@ -248,135 +420,10 @@ namespace Mutagen
             }
         }
 
-        public void CopyIn_XML(
-            XElement root,
-            NotifyingFireParameters? cmds = null)
-        {
-            LoquiXmlTranslation<OblivionMod, OblivionMod_ErrorMask>.Instance.CopyIn(
-                root: root,
-                item: this,
-                skipProtected: true,
-                doMasks: false,
-                mask: out OblivionMod_ErrorMask errorMask,
-                cmds: cmds);
-        }
-
-        public virtual void CopyIn_XML(
-            XElement root,
-            out OblivionMod_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
-        {
-            LoquiXmlTranslation<OblivionMod, OblivionMod_ErrorMask>.Instance.CopyIn(
-                root: root,
-                item: this,
-                skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
-                cmds: cmds);
-        }
-
-        public void CopyIn_XML(
-            string path,
-            NotifyingFireParameters? cmds = null)
-        {
-            LoquiXmlTranslation<OblivionMod, OblivionMod_ErrorMask>.Instance.CopyIn(
-                root: XDocument.Load(path).Root,
-                item: this,
-                skipProtected: true,
-                doMasks: false,
-                mask: out OblivionMod_ErrorMask errorMask,
-                cmds: cmds);
-        }
-
-        public virtual void CopyIn_XML(
-            string path,
-            out OblivionMod_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
-        {
-            LoquiXmlTranslation<OblivionMod, OblivionMod_ErrorMask>.Instance.CopyIn(
-                root: XDocument.Load(path).Root,
-                item: this,
-                skipProtected: true,
-                doMasks: true,
-                mask: out errorMask,
-                cmds: cmds);
-        }
-
-        public virtual void Write_XML(Stream stream, out OblivionMod_ErrorMask errorMask)
-        {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                this.Write_XML(
-                    writer,
-                    out errorMask);
-            }
-        }
-
-        public virtual void Write_XML(string path, out OblivionMod_ErrorMask errorMask)
-        {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                this.Write_XML(
-                    writer,
-                    out errorMask);
-            }
-        }
-
-        public virtual void Write_XML(XmlWriter writer, out OblivionMod_ErrorMask errorMask, string name = null)
-        {
-            OblivionModCommon.Write_XML(
-                writer: writer,
-                name: name,
-                item: this,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        public void Write_XML(XmlWriter writer, string name = null)
-        {
-            OblivionModCommon.Write_XML(
-                writer: writer,
-                name: name,
-                item: this,
-                doMasks: false,
-                errorMask: out OblivionMod_ErrorMask errorMask);
-        }
-
-        public void Write_XML(Stream stream)
-        {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                this.Write_XML(writer);
-            }
-        }
-
-        public void Write_XML(string path)
-        {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                this.Write_XML(writer);
-            }
-        }
-
         #endregion
 
         #region OblivionBinary Translation
-        public static OblivionMod Create_OblivionBinary(Stream stream)
-        {
-            using (var reader = new BinaryReader(stream))
-            {
-                return Create_OblivionBinary(reader);
-            }
-        }
-
+        #region OblivionBinary Create
         public static OblivionMod Create_OblivionBinary(BinaryReader reader)
         {
             return Create_OblivionBinary(
@@ -409,72 +456,60 @@ namespace Mutagen
             return ret;
         }
 
-        private static OblivionMod Create_OblivionBinary_Internal(
-            BinaryReader reader,
-            bool doMasks,
-            Func<OblivionMod_ErrorMask> errorMask)
+        public static OblivionMod Create_OblivionBinary(string path)
         {
-            var ret = new OblivionMod();
-            try
+            using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
             {
-                foreach (var elem in EnumExt<OblivionMod_FieldIndex>.Values)
+                using (var reader = new BinaryReader(fileStream))
                 {
-                    Fill_OblivionBinary_Internal(
-                        item: ret,
-                        reader: reader,
-                        elem: elem,
-                        doMasks: doMasks,
-                        errorMask: errorMask);
+                    return Create_OblivionBinary(reader: reader);
                 }
             }
-            catch (Exception ex)
-            when (doMasks)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
         }
 
-        protected static void Fill_OblivionBinary_Internal(
-            OblivionMod item,
+        public static OblivionMod Create_OblivionBinary(
+            string path,
+            out OblivionMod_ErrorMask errorMask)
+        {
+            using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+            {
+                using (var reader = new BinaryReader(fileStream))
+                {
+                    return Create_OblivionBinary(
+                        reader: reader,
+                        errorMask: out errorMask);
+                }
+            }
+        }
+
+        public static OblivionMod Create_OblivionBinary(Stream stream)
+        {
+            using (var reader = new BinaryReader(stream))
+            {
+                return Create_OblivionBinary(reader: reader);
+            }
+        }
+
+        public static OblivionMod Create_OblivionBinary(
+            Stream stream,
+            out OblivionMod_ErrorMask errorMask)
+        {
+            using (var reader = new BinaryReader(stream))
+            {
+                return Create_OblivionBinary(
+                    reader: reader,
+                    errorMask: out errorMask);
+            }
+        }
+
+        #endregion
+
+        #region OblivionBinary Copy In
+        public void CopyIn_OblivionBinary(
             BinaryReader reader,
-            OblivionMod_FieldIndex elem,
-            bool doMasks,
-            Func<OblivionMod_ErrorMask> errorMask)
+            NotifyingFireParameters? cmds = null)
         {
-            switch (elem)
-            {
-                case OblivionMod_FieldIndex.TES4:
-                    {
-                        MaskItem<Exception, TES4_ErrorMask> subMask;
-                        var tmp = TES4.Create_OblivionBinary(
-                            reader: reader,
-                            doMasks: doMasks,
-                            errorMask: out TES4_ErrorMask createMask);
-                        TES4Common.CopyFieldsFrom(
-                            item: item._TES4_Object,
-                            rhs: tmp,
-                            def: null,
-                            cmds: null,
-                            copyMask: null,
-                            doErrorMask: doMasks,
-                            errorMask: out TES4_ErrorMask copyMask);
-                        var loquiMask = TES4_ErrorMask.Combine(createMask, copyMask);
-                        subMask = loquiMask == null ? null : new MaskItem<Exception, TES4_ErrorMask>(null, loquiMask);
-                        if (subMask != null)
-                        {
-                            errorMask().TES4 = subMask;
-                        }
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        public void CopyIn_OblivionBinary(BinaryReader reader, NotifyingFireParameters? cmds = null)
-        {
-            Mutagen.Binary.LoquiBinaryTranslation<OblivionMod, OblivionMod_ErrorMask>.Instance.CopyIn(
+            LoquiBinaryTranslation<OblivionMod, OblivionMod_ErrorMask>.Instance.CopyIn(
                 reader: reader,
                 item: this,
                 skipProtected: true,
@@ -483,9 +518,12 @@ namespace Mutagen
                 cmds: cmds);
         }
 
-        public virtual void CopyIn_OblivionBinary(BinaryReader reader, out OblivionMod_ErrorMask errorMask, NotifyingFireParameters? cmds = null)
+        public virtual void CopyIn_OblivionBinary(
+            BinaryReader reader,
+            out OblivionMod_ErrorMask errorMask,
+            NotifyingFireParameters? cmds = null)
         {
-            Mutagen.Binary.LoquiBinaryTranslation<OblivionMod, OblivionMod_ErrorMask>.Instance.CopyIn(
+            LoquiBinaryTranslation<OblivionMod, OblivionMod_ErrorMask>.Instance.CopyIn(
                 reader: reader,
                 item: this,
                 skipProtected: true,
@@ -494,24 +532,68 @@ namespace Mutagen
                 cmds: cmds);
         }
 
-        public void Write_OblivionBinary(Stream stream)
+        public void CopyIn_OblivionBinary(
+            string path,
+            NotifyingFireParameters? cmds = null)
         {
-            OblivionModCommon.Write_OblivionBinary(
-                this,
-                stream);
+            using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+            {
+                using (var reader = new BinaryReader(fileStream))
+                {
+                    this.CopyIn_OblivionBinary(
+                        reader: reader,
+                        cmds: cmds);
+                }
+            }
         }
 
-        public void Write_OblivionBinary(
+        public void CopyIn_OblivionBinary(
+            string path,
+            out OblivionMod_ErrorMask errorMask,
+            NotifyingFireParameters? cmds = null)
+        {
+            using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+            {
+                using (var reader = new BinaryReader(fileStream))
+                {
+                    this.CopyIn_OblivionBinary(
+                        reader: reader,
+                        errorMask: out errorMask,
+                        cmds: cmds);
+                }
+            }
+        }
+
+        public void CopyIn_OblivionBinary(
             Stream stream,
-            out OblivionMod_ErrorMask errorMask)
+            NotifyingFireParameters? cmds = null)
         {
-            OblivionModCommon.Write_OblivionBinary(
-                this,
-                stream,
-                out errorMask);
+            using (var reader = new BinaryReader(stream))
+            {
+                this.CopyIn_OblivionBinary(
+                    reader: reader,
+                    cmds: cmds);
+            }
         }
 
-        public void Write_OblivionBinary(
+        public void CopyIn_OblivionBinary(
+            Stream stream,
+            out OblivionMod_ErrorMask errorMask,
+            NotifyingFireParameters? cmds = null)
+        {
+            using (var reader = new BinaryReader(stream))
+            {
+                this.CopyIn_OblivionBinary(
+                    reader: reader,
+                    errorMask: out errorMask,
+                    cmds: cmds);
+            }
+        }
+
+        #endregion
+
+        #region OblivionBinary Write
+        public virtual void Write_OblivionBinary(
             BinaryWriter writer,
             out OblivionMod_ErrorMask errorMask)
         {
@@ -520,6 +602,33 @@ namespace Mutagen
                 item: this,
                 doMasks: true,
                 errorMask: out errorMask);
+        }
+
+        public virtual void Write_OblivionBinary(
+            string path,
+            out OblivionMod_ErrorMask errorMask)
+        {
+            using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
+            {
+                using (var writer = new BinaryWriter(fileStream))
+                {
+                    Write_OblivionBinary(
+                        writer: writer,
+                        errorMask: out errorMask);
+                }
+            }
+        }
+
+        public virtual void Write_OblivionBinary(
+            Stream stream,
+            out OblivionMod_ErrorMask errorMask)
+        {
+            using (var writer = new BinaryWriter(stream))
+            {
+                Write_OblivionBinary(
+                    writer: writer,
+                    errorMask: out errorMask);
+            }
         }
 
         public void Write_OblivionBinary(BinaryWriter writer)
@@ -531,6 +640,44 @@ namespace Mutagen
                 errorMask: out OblivionMod_ErrorMask errorMask);
         }
 
+        public void Write_OblivionBinary(string path)
+        {
+            using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
+            {
+                using (var writer = new BinaryWriter(fileStream))
+                {
+                    Write_OblivionBinary(writer: writer);
+                }
+            }
+        }
+
+        public void Write_OblivionBinary(Stream stream)
+        {
+            using (var writer = new BinaryWriter(stream))
+            {
+                Write_OblivionBinary(writer: writer);
+            }
+        }
+
+        #endregion
+
+        private static OblivionMod Create_OblivionBinary_Internal(
+            BinaryReader reader,
+            bool doMasks,
+            Func<OblivionMod_ErrorMask> errorMask)
+        {
+            var ret = new OblivionMod();
+            throw new NotImplementedException();
+            try
+            {
+            }
+            catch (Exception ex)
+            when (doMasks)
+            {
+                errorMask().Overall = ex;
+            }
+            return ret;
+        }
         #endregion
 
         public OblivionMod Copy(
@@ -1099,81 +1246,11 @@ namespace Mutagen.Internals
         #region XML Translation
         #region XML Write
         public static void Write_XML(
-            IOblivionModGetter item,
-            Stream stream)
-        {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: null,
-                    item: item,
-                    doMasks: false,
-                    errorMask: out OblivionMod_ErrorMask errorMask);
-            }
-        }
-
-        public static void Write_XML(
-            IOblivionModGetter item,
-            Stream stream,
-            out OblivionMod_ErrorMask errorMask)
-        {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: null,
-                    item: item,
-                    doMasks: true,
-                    errorMask: out errorMask);
-            }
-        }
-
-        public static void Write_XML(
-            IOblivionModGetter item,
-            string path)
-        {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: null,
-                    item: item,
-                    doMasks: false,
-                    errorMask: out OblivionMod_ErrorMask errorMask);
-            }
-        }
-
-        public static void Write_XML(
-            IOblivionModGetter item,
-            string path,
-            out OblivionMod_ErrorMask errorMask)
-        {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: null,
-                    item: item,
-                    doMasks: true,
-                    errorMask: out errorMask);
-            }
-        }
-
-        public static void Write_XML(
             XmlWriter writer,
-            string name,
             IOblivionModGetter item,
             bool doMasks,
-            out OblivionMod_ErrorMask errorMask)
+            out OblivionMod_ErrorMask errorMask,
+            string name = null)
         {
             OblivionMod_ErrorMask errMaskRet = null;
             Write_XML_Internal(
@@ -1187,10 +1264,10 @@ namespace Mutagen.Internals
 
         private static void Write_XML_Internal(
             XmlWriter writer,
-            string name,
             IOblivionModGetter item,
             bool doMasks,
-            Func<OblivionMod_ErrorMask> errorMask)
+            Func<OblivionMod_ErrorMask> errorMask,
+            string name = null)
         {
             try
             {
@@ -1230,35 +1307,6 @@ namespace Mutagen.Internals
         #region OblivionBinary Translation
         #region OblivionBinary Write
         public static void Write_OblivionBinary(
-            IOblivionModGetter item,
-            Stream stream)
-        {
-            using (var writer = new BinaryWriter(stream))
-            {
-                Write_OblivionBinary(
-                    writer: writer,
-                    item: item,
-                    doMasks: false,
-                    errorMask: out OblivionMod_ErrorMask errorMask);
-            }
-        }
-
-        public static void Write_OblivionBinary(
-            IOblivionModGetter item,
-            Stream stream,
-            out OblivionMod_ErrorMask errorMask)
-        {
-            using (var writer = new BinaryWriter(stream))
-            {
-                Write_OblivionBinary(
-                    writer: writer,
-                    item: item,
-                    doMasks: true,
-                    errorMask: out errorMask);
-            }
-        }
-
-        public static void Write_OblivionBinary(
             BinaryWriter writer,
             IOblivionModGetter item,
             bool doMasks,
@@ -1279,28 +1327,7 @@ namespace Mutagen.Internals
             bool doMasks,
             Func<OblivionMod_ErrorMask> errorMask)
         {
-            try
-            {
-                if (item.TES4_Property.HasBeenSet)
-                {
-                    MaskItem<Exception, TES4_ErrorMask> subMask;
-                    TES4Common.Write_OblivionBinary(
-                        writer: writer,
-                        item: item.TES4,
-                        doMasks: doMasks,
-                        errorMask: out TES4_ErrorMask loquiMask);
-                    subMask = loquiMask == null ? null : new MaskItem<Exception, TES4_ErrorMask>(null, loquiMask);
-                    if (subMask != null)
-                    {
-                        errorMask().TES4 = subMask;
-                    }
-                }
-            }
-            catch (Exception ex)
-            when (doMasks)
-            {
-                errorMask().Overall = ex;
-            }
+            throw new NotImplementedException();
         }
         #endregion
 

@@ -69,6 +69,7 @@
     <Compile Include="Translators\Binary\DoubleBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\EnumBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\FloatBinaryTranslation.cs" />
+    <Compile Include="Translators\Binary\HeaderTranslation.cs" />
     <Compile Include="Translators\Binary\Int16BinaryTranslation.cs" />
     <Compile Include="Translators\Binary\Int32BinaryTranslation.cs" />
     <Compile Include="Translators\Binary\Int64BinaryTranslation.cs" />

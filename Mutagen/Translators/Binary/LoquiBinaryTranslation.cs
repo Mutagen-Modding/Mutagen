@@ -125,5 +125,15 @@ namespace Mutagen.Binary
         {
             throw new NotImplementedException();
         }
+
+        public TryGet<T> Parse(BinaryReader reader, int length, bool doMasks, out M maskObj)
+        {
+            throw new NotImplementedException();
+        }
+
+        public TryGet<T> Parse(BinaryReader reader, string header, int lengthLength, bool doMasks, out M maskObj)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
