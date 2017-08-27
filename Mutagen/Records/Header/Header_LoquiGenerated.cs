@@ -737,9 +737,13 @@ namespace Mutagen
             Func<Header_ErrorMask> errorMask)
         {
             var ret = new Header();
-            throw new NotImplementedException();
             try
             {
+                Fill_OblivionBinary_Internal(
+                    item: ret,
+                    reader: reader,
+                    doMasks: doMasks,
+                    errorMask: errorMask);
             }
             catch (Exception ex)
             when (doMasks)
@@ -748,6 +752,60 @@ namespace Mutagen
             }
             return ret;
         }
+
+        protected static void Fill_OblivionBinary_Internal(
+            Header item,
+            BinaryReader reader,
+            bool doMasks,
+            Func<Header_ErrorMask> errorMask)
+        {
+            {
+                Exception subMask;
+                var tryGet = Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
+                    reader,
+                    doMasks: doMasks,
+                    errorMask: out subMask);
+                if (tryGet.Succeeded)
+                {
+                    item._Version.Item = tryGet.Value;
+                }
+                if (doMasks && subMask != null)
+                {
+                    errorMask().Version = subMask;
+                }
+            }
+            {
+                Exception subMask;
+                var tryGet = Mutagen.Binary.Int64BinaryTranslation.Instance.Parse(
+                    reader,
+                    doMasks: doMasks,
+                    errorMask: out subMask);
+                if (tryGet.Succeeded)
+                {
+                    item._NumRecords.Item = tryGet.Value;
+                }
+                if (doMasks && subMask != null)
+                {
+                    errorMask().NumRecords = subMask;
+                }
+            }
+            {
+                Exception subMask;
+                var tryGet = Mutagen.Binary.UInt64BinaryTranslation.Instance.Parse(
+                    reader,
+                    doMasks: doMasks,
+                    errorMask: out subMask);
+                if (tryGet.Succeeded)
+                {
+                    item._NextObjectID.Item = tryGet.Value;
+                }
+                if (doMasks && subMask != null)
+                {
+                    errorMask().NextObjectID = subMask;
+                }
+            }
+        }
+
         #endregion
 
         public Header Copy(

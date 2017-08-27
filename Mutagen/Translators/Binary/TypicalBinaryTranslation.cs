@@ -23,7 +23,7 @@ namespace Mutagen.Binary
             throw new NotImplementedException();
         }
 
-        public TryGet<T> Parse(BinaryReader reader, int length, bool doMasks, out Exception errorMask)
+        public TryGet<T> Parse(BinaryReader reader, ulong length, bool doMasks, out Exception errorMask)
         {
             try
             {
@@ -46,7 +46,7 @@ namespace Mutagen.Binary
             }
         }
 
-        public TryGet<T> Parse(BinaryReader reader, string header, int lengthLength, bool nullable, bool doMasks, out Exception errorMask)
+        public TryGet<T> Parse(BinaryReader reader, TypeString header, byte lengthLength, bool nullable, bool doMasks, out Exception errorMask)
         {
             try
             {
@@ -74,12 +74,12 @@ namespace Mutagen.Binary
             throw new NotImplementedException();
         }
 
-        TryGet<T> IBinaryTranslation<T, Exception>.Parse(BinaryReader reader, int length, bool doMasks, out Exception errorMask)
+        TryGet<T> IBinaryTranslation<T, Exception>.Parse(BinaryReader reader, ulong length, bool doMasks, out Exception errorMask)
         {
             return Parse(reader, length: length, doMasks: doMasks, errorMask: out errorMask);
         }
 
-        TryGet<T> IBinaryTranslation<T, Exception>.Parse(BinaryReader reader, string header, int lengthLength, bool doMasks, out Exception maskObj)
+        TryGet<T> IBinaryTranslation<T, Exception>.Parse(BinaryReader reader, TypeString header, byte lengthLength, bool doMasks, out Exception maskObj)
         {
             return Parse(reader, header, lengthLength, true, doMasks, out maskObj);
         }

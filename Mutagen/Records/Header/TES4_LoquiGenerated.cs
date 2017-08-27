@@ -1074,9 +1074,13 @@ namespace Mutagen
             Func<TES4_ErrorMask> errorMask)
         {
             var ret = new TES4();
-            throw new NotImplementedException();
             try
             {
+                Fill_OblivionBinary_Internal(
+                    item: ret,
+                    reader: reader,
+                    doMasks: doMasks,
+                    errorMask: errorMask);
             }
             catch (Exception ex)
             when (doMasks)
@@ -1085,6 +1089,164 @@ namespace Mutagen
             }
             return ret;
         }
+
+        protected static void Fill_OblivionBinary_Internal(
+            TES4 item,
+            BinaryReader reader,
+            bool doMasks,
+            Func<TES4_ErrorMask> errorMask)
+        {
+            {
+                Exception subMask;
+                var tryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                    reader,
+                    doMasks: doMasks,
+                    errorMask: out subMask);
+                if (tryGet.Succeeded)
+                {
+                    item._Fluff.Item = tryGet.Value;
+                }
+                if (doMasks && subMask != null)
+                {
+                    errorMask().Fluff = subMask;
+                }
+            }
+            {
+                Exception subMask;
+                var tryGet = Mutagen.Binary.Int64BinaryTranslation.Instance.Parse(
+                    reader,
+                    doMasks: doMasks,
+                    errorMask: out subMask);
+                if (tryGet.Succeeded)
+                {
+                    item._NumRecords.Item = tryGet.Value;
+                }
+                if (doMasks && subMask != null)
+                {
+                    errorMask().NumRecords = subMask;
+                }
+            }
+            {
+                Exception subMask;
+                var tryGet = Mutagen.Binary.UInt64BinaryTranslation.Instance.Parse(
+                    reader,
+                    doMasks: doMasks,
+                    errorMask: out subMask);
+                if (tryGet.Succeeded)
+                {
+                    item._NextObjectID.Item = tryGet.Value;
+                }
+                if (doMasks && subMask != null)
+                {
+                    errorMask().NextObjectID = subMask;
+                }
+            }
+            {
+                MaskItem<Exception, Header_ErrorMask> subMask;
+                Header_ErrorMask loquiMask;
+                TryGet<Header> tryGet = TryGet<Header>.Succeed((Header)Header.Create_OblivionBinary(
+                    reader: reader,
+                    doMasks: doMasks,
+                    errorMask: out loquiMask));
+                subMask = loquiMask == null ? null : new MaskItem<Exception, Header_ErrorMask>(null, loquiMask);
+                if (tryGet.Succeeded)
+                {
+                    item._Header.Item = tryGet.Value;
+                }
+                if (doMasks && subMask != null)
+                {
+                    errorMask().Header = subMask;
+                }
+            }
+            {
+                MaskItem<Exception, UnknownData_ErrorMask> subMask;
+                UnknownData_ErrorMask loquiMask;
+                TryGet<UnknownData> tryGet = TryGet<UnknownData>.Succeed((UnknownData)UnknownData.Create_OblivionBinary(
+                    reader: reader,
+                    doMasks: doMasks,
+                    errorMask: out loquiMask));
+                subMask = loquiMask == null ? null : new MaskItem<Exception, UnknownData_ErrorMask>(null, loquiMask);
+                if (tryGet.Succeeded)
+                {
+                    item._TypeOffsets.Item = tryGet.Value;
+                }
+                if (doMasks && subMask != null)
+                {
+                    errorMask().TypeOffsets = subMask;
+                }
+            }
+            {
+                MaskItem<Exception, UnknownData_ErrorMask> subMask;
+                UnknownData_ErrorMask loquiMask;
+                TryGet<UnknownData> tryGet = TryGet<UnknownData>.Succeed((UnknownData)UnknownData.Create_OblivionBinary(
+                    reader: reader,
+                    doMasks: doMasks,
+                    errorMask: out loquiMask));
+                subMask = loquiMask == null ? null : new MaskItem<Exception, UnknownData_ErrorMask>(null, loquiMask);
+                if (tryGet.Succeeded)
+                {
+                    item._Deleted.Item = tryGet.Value;
+                }
+                if (doMasks && subMask != null)
+                {
+                    errorMask().Deleted = subMask;
+                }
+            }
+            {
+                Exception subMask;
+                var tryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse()
+                if (tryGet.Succeeded)
+                {
+                    item._Author.Item = tryGet.Value;
+                }
+                if (doMasks && subMask != null)
+                {
+                    errorMask().Author = subMask;
+                }
+            }
+            {
+                Exception subMask;
+                var tryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
+                    reader,
+                    doMasks: doMasks,
+                    errorMask: out subMask);
+                if (tryGet.Succeeded)
+                {
+                    item._Description.Item = tryGet.Value;
+                }
+                if (doMasks && subMask != null)
+                {
+                    errorMask().Description = subMask;
+                }
+            }
+            {
+                MaskItem<Exception, IEnumerable<MaskItem<Exception, Header_ErrorMask>>> subMask;
+                var listTryGet = Mutagen.Binary.ListBinaryTranslation<Header, MaskItem<Exception, Header_ErrorMask>>.Instance.Parse(
+                    reader: reader,
+                    doMasks: doMasks,
+                    maskObj: out subMask,
+                    transl: (BinaryReader r, bool listDoMasks, out MaskItem<Exception, Header_ErrorMask> listSubMask) =>
+                    {
+                        Header_ErrorMask loquiMask;
+                        TryGet<Header> tryGet = TryGet<Header>.Succeed((Header)Header.Create_OblivionBinary(
+                            reader: r,
+                            doMasks: listDoMasks,
+                            errorMask: out loquiMask));
+                        listSubMask = loquiMask == null ? null : new MaskItem<Exception, Header_ErrorMask>(null, loquiMask);
+                        return tryGet;
+                    }
+                    );
+                if (listTryGet.Succeeded)
+                {
+                    item._MasterReferences.SetTo(listTryGet.Value);
+                }
+                if (doMasks && subMask != null)
+                {
+                    errorMask().MasterReferences = subMask;
+                }
+            }
+        }
+
         #endregion
 
         public TES4 Copy(

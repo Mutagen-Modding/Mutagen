@@ -661,9 +661,13 @@ namespace Mutagen
             Func<UnknownData_ErrorMask> errorMask)
         {
             var ret = new UnknownData();
-            throw new NotImplementedException();
             try
             {
+                Fill_OblivionBinary_Internal(
+                    item: ret,
+                    reader: reader,
+                    doMasks: doMasks,
+                    errorMask: errorMask);
             }
             catch (Exception ex)
             when (doMasks)
@@ -672,6 +676,30 @@ namespace Mutagen
             }
             return ret;
         }
+
+        protected static void Fill_OblivionBinary_Internal(
+            UnknownData item,
+            BinaryReader reader,
+            bool doMasks,
+            Func<UnknownData_ErrorMask> errorMask)
+        {
+            {
+                Exception subMask;
+                var tryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                    reader,
+                    doMasks: doMasks,
+                    errorMask: out subMask);
+                if (tryGet.Succeeded)
+                {
+                    item._Data.Item = tryGet.Value;
+                }
+                if (doMasks && subMask != null)
+                {
+                    errorMask().Data = subMask;
+                }
+            }
+        }
+
         #endregion
 
         public UnknownData Copy(

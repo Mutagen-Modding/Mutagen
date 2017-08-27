@@ -7,6 +7,7 @@ namespace Mutagen.Binary
         where E : struct, IComparable, IConvertible
     {
         public readonly static EnumXmlTranslation<E> Instance = new EnumXmlTranslation<E>();
+        public override byte ExpectedLength => throw new NotImplementedException();
 
         protected override E ParseBytes(byte[] bytes)
         {

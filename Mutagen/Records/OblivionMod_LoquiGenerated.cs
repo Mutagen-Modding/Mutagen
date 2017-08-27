@@ -667,9 +667,13 @@ namespace Mutagen
             Func<OblivionMod_ErrorMask> errorMask)
         {
             var ret = new OblivionMod();
-            throw new NotImplementedException();
             try
             {
+                Fill_OblivionBinary_Internal(
+                    item: ret,
+                    reader: reader,
+                    doMasks: doMasks,
+                    errorMask: errorMask);
             }
             catch (Exception ex)
             when (doMasks)
@@ -678,6 +682,36 @@ namespace Mutagen
             }
             return ret;
         }
+
+        protected static void Fill_OblivionBinary_Internal(
+            OblivionMod item,
+            BinaryReader reader,
+            bool doMasks,
+            Func<OblivionMod_ErrorMask> errorMask)
+        {
+            {
+                MaskItem<Exception, TES4_ErrorMask> subMask;
+                var tmp = TES4.Create_OblivionBinary(
+                    reader: reader,
+                    doMasks: doMasks,
+                    errorMask: out TES4_ErrorMask createMask);
+                TES4Common.CopyFieldsFrom(
+                    item: item._TES4_Object,
+                    rhs: tmp,
+                    def: null,
+                    cmds: null,
+                    copyMask: null,
+                    doErrorMask: doMasks,
+                    errorMask: out TES4_ErrorMask copyMask);
+                var loquiMask = TES4_ErrorMask.Combine(createMask, copyMask);
+                subMask = loquiMask == null ? null : new MaskItem<Exception, TES4_ErrorMask>(null, loquiMask);
+                if (doMasks && subMask != null)
+                {
+                    errorMask().TES4 = subMask;
+                }
+            }
+        }
+
         #endregion
 
         public OblivionMod Copy(

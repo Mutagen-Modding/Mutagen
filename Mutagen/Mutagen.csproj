@@ -84,6 +84,7 @@
     <Compile Include="Translators\Binary\UInt32BinaryTranslation.cs" />
     <Compile Include="Translators\Binary\UInt64BinaryTranslation.cs" />
     <Compile Include="Translators\Binary\BinaryTranslationCaster.cs" />
+    <Compile Include="TypeString.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\CSharpExt\CSharpExt\CSharpExt.csproj">

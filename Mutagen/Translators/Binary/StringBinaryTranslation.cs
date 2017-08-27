@@ -8,12 +8,12 @@ namespace Mutagen.Binary
     {
         public readonly static StringBinaryTranslation Instance = new StringBinaryTranslation();
 
-        public TryGet<string> Parse(BinaryReader reader, int length, bool doMasks, out Exception maskObj)
+        public TryGet<string> Parse(BinaryReader reader, ulong length, bool doMasks, out Exception maskObj)
         {
             throw new NotImplementedException();
         }
 
-        public TryGet<string> Parse(BinaryReader reader, string header, int lengthLength, bool doMasks, out Exception maskObj)
+        public TryGet<string> Parse(BinaryReader reader, TypeString header, byte lengthLength, bool doMasks, out Exception maskObj)
         {
             throw new NotImplementedException();
         }

@@ -51,17 +51,13 @@ namespace Mutagen.Generation
                 $"var tryGet = {this.Namespace}{this.typeName}BinaryTranslation.Instance.Parse"))
             {
                 args.Add(nodeAccessor);
-                if (CanBeNotNullable)
-                {
-                    args.Add($"nullable: {Nullable.ToString().ToLower()}");
-                }
                 args.Add($"doMasks: {doMaskAccessor}");
                 args.Add($"errorMask: out {maskAccessor}");
             }
             fg.AppendLine("if (tryGet.Succeeded)");
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine($"{itemAccessor} = tryGet.Value{(Nullable ? null : ".Value")};");
+                fg.AppendLine($"{itemAccessor} = tryGet.Value;");
             }
         }
 

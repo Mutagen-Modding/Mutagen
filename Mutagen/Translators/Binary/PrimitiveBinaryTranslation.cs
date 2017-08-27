@@ -8,17 +8,18 @@ namespace Mutagen.Binary
         where T : struct
     {
         protected abstract T ParseBytes(byte[] bytes);
+        public abstract byte ExpectedLength { get; }
 
-        protected virtual T ParseValue(BinaryReader reader, int length)
+        protected virtual T ParseValue(BinaryReader reader)
         {
             throw new NotImplementedException();
         }
 
-        public TryGet<T> Parse(BinaryReader reader, int length, bool doMasks, out Exception errorMask)
+        public TryGet<T> Parse(BinaryReader reader, bool doMasks, out Exception errorMask)
         {
             try
             {
-                var parse = ParseValue(reader, length);
+                var parse = ParseValue(reader);
                 errorMask = null;
                 return TryGet<T>.Succeed(parse);
             }
@@ -33,7 +34,22 @@ namespace Mutagen.Binary
             }
         }
 
-        public TryGet<T?> Parse(BinaryReader reader, string header, int lengthLength, bool nullable, bool doMasks, out Exception errorMask)
+        public TryGet<T> Parse(BinaryReader reader, ulong length, bool doMasks, out Exception errorMask)
+        {
+            if (length != this.ExpectedLength)
+            {
+                var ex = new ArgumentException($"Expected length was {this.ExpectedLength}, but was passed {length}.");
+                if (doMasks)
+                {
+                    errorMask = ex;
+                    return TryGet<T>.Failure;
+                }
+                throw ex;
+            }
+            return Parse(reader, doMasks, out errorMask);
+        }
+
+        public TryGet<T?> Parse(BinaryReader reader, TypeString header, byte lengthLength, bool nullable, bool doMasks, out Exception errorMask)
         {
             try
             {
@@ -41,7 +57,7 @@ namespace Mutagen.Binary
                     reader, 
                     header,
                     lengthLength,
-                    out int contentLength))
+                    out var contentLength))
                 {
                     if (!nullable)
                     {
@@ -50,7 +66,17 @@ namespace Mutagen.Binary
                     errorMask = null;
                     return TryGet<T?>.Succeed(default(T?));
                 }
-                var parse = ParseValue(reader, contentLength);
+                if (contentLength != this.ExpectedLength)
+                {
+                    var ex = new ArgumentException($"Expected length was {this.ExpectedLength}, but was passed {contentLength}.");
+                    if (doMasks)
+                    {
+                        errorMask = ex;
+                        return TryGet<T?>.Failure;
+                    }
+                    throw ex;
+                }
+                var parse = ParseValue(reader);
                 errorMask = null;
                 return TryGet<T?>.Succeed(parse);
             }
@@ -70,7 +96,7 @@ namespace Mutagen.Binary
             throw new NotImplementedException();
         }
 
-        TryGet<T> IBinaryTranslation<T, Exception>.Parse(BinaryReader reader, string header, int lengthLength, bool doMasks, out Exception maskObj)
+        TryGet<T> IBinaryTranslation<T, Exception>.Parse(BinaryReader reader, TypeString header, byte lengthLength, bool doMasks, out Exception maskObj)
         {
             return Parse(
                 reader,
@@ -81,7 +107,7 @@ namespace Mutagen.Binary
                 errorMask: out maskObj).Bubble<T>((t) => t.Value);
         }
 
-        TryGet<T?> IBinaryTranslation<T?, Exception>.Parse(BinaryReader reader, string header, int lengthLength, bool doMasks, out Exception maskObj)
+        TryGet<T?> IBinaryTranslation<T?, Exception>.Parse(BinaryReader reader, TypeString header, byte lengthLength, bool doMasks, out Exception maskObj)
         {
             return Parse(
                 reader,
@@ -92,7 +118,7 @@ namespace Mutagen.Binary
                 errorMask: out maskObj);
         }
 
-        TryGet<T?> IBinaryTranslation<T?, Exception>.Parse(BinaryReader reader, int length, bool doMasks, out Exception maskObj)
+        TryGet<T?> IBinaryTranslation<T?, Exception>.Parse(BinaryReader reader, ulong length, bool doMasks, out Exception maskObj)
         {
             return Parse(
                 reader,

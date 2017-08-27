@@ -46,6 +46,20 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
+          <xs:attribute name="includeInLength" type="xs:boolean" >
+            <xs:annotation>
+              <xs:documentation>
+                Whether length of field is considered in binary outputs
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="String">
+      <xs:complexContent>
+        <xs:extension base="String">
           <xs:attribute name="optional" type="xs:boolean" >
             <xs:annotation>
               <xs:documentation>
@@ -57,13 +71,6 @@
             <xs:annotation>
               <xs:documentation>
                 Typical four letter ASCII tag used for the record type.
-              </xs:documentation>
-            </xs:annotation>
-          </xs:attribute>
-          <xs:attribute name="includeInLength" type="xs:boolean" >
-            <xs:annotation>
-              <xs:documentation>
-                Whether length of field is considered in binary outputs
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
