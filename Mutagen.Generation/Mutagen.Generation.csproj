@@ -44,14 +44,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Fields\ByteArrayType.cs" />
+    <Compile Include="Fields\IRecordTypeableField.cs" />
+    <Compile Include="Fields\LoquiListType.cs" />
+    <Compile Include="Fields\LoquiType.cs" />
+    <Compile Include="Fields\StringType.cs" />
     <Compile Include="Fields\UnknownType.cs" />
-    <Compile Include="Modules\BinaryTranslationModule.cs" />
-    <Compile Include="Modules\EnumBinaryTranslationGeneration.cs" />
-    <Compile Include="Modules\ListBinaryTranslationGeneration.cs" />
-    <Compile Include="Modules\LoquiBinaryTranslationGeneration.cs" />
-    <Compile Include="Modules\Oblivion Binary\OblivionBinaryTranslationModule.cs" />
-    <Compile Include="Modules\PrimitiveBinaryTranslationGeneration.cs" />
-    <Compile Include="Modules\BinaryTranslationGeneration.cs" />
+    <Compile Include="Modules\Binary\BinaryTranslationModule.cs" />
+    <Compile Include="Modules\Binary\ByteArrayTranslationGeneration.cs" />
+    <Compile Include="Modules\Binary\EnumBinaryTranslationGeneration.cs" />
+    <Compile Include="Modules\Binary\ListBinaryTranslationGeneration.cs" />
+    <Compile Include="Modules\Binary\LoquiBinaryTranslationGeneration.cs" />
+    <Compile Include="Modules\Binary\Oblivion Binary\OblivionBinaryTranslationModule.cs" />
+    <Compile Include="Modules\Binary\PrimitiveBinaryTranslationGeneration.cs" />
+    <Compile Include="Modules\Binary\BinaryTranslationGeneration.cs" />
+    <Compile Include="Modules\Binary\StringBinaryTranslationGeneration.cs" />
+    <Compile Include="Modules\RecordTypeEmbedder\RecordTypeEmbedderModule.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -81,6 +89,7 @@
       <Version>4.4.0</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -20,12 +20,12 @@ namespace Mutagen.Tests
                 FileMode.Open,
                 FileAccess.Read))
             {
-                var mod = OblivionMod.Create_OblivionBinary(fileStream);
-                using (var tmp = new TempFolder())
-                {
-                    var oblivionPath = Path.Combine(tmp.Dir.FullName, Path.GetRandomFileName());
-                    mod.Write_OblivionBinary(oblivionPath);
-                }
+                //var mod = OblivionMod.Create_OblivionBinary(fileStream);
+                //using (var tmp = new TempFolder())
+                //{
+                //    var oblivionPath = Path.Combine(tmp.Dir.FullName, Path.GetRandomFileName());
+                //    mod.Write_OblivionBinary(oblivionPath);
+                //}
             }
         }
     }

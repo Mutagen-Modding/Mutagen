@@ -26,7 +26,7 @@ namespace Mutagen.Binary
             return ret;
         }
 
-        TryGet<object> IBinaryTranslation<object, object>.Parse(BinaryReader reader, TypeString header, byte lengthLength, bool doMasks, out object maskObj)
+        TryGet<object> IBinaryTranslation<object, object>.Parse(BinaryReader reader, RecordType header, byte lengthLength, bool doMasks, out object maskObj)
         {
             var ret = Source.Parse(reader, header, lengthLength, doMasks, out var subMaskObj).Bubble<object>((i) => i);
             maskObj = subMaskObj;

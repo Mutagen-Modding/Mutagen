@@ -11,7 +11,7 @@ namespace Mutagen.Binary
     {
         public static bool TryParse(
             BinaryReader reader,
-            TypeString expectedHeader,
+            RecordType expectedHeader,
             int lengthLength,
             out ulong contentLength)
         {

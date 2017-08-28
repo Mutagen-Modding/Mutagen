@@ -422,6 +422,10 @@ namespace Mutagen
 
         #endregion
 
+        #region Record Types
+        public static readonly RecordType TES4_HEADER = new RecordType("TES4");
+        #endregion
+
         #region OblivionBinary Translation
         #region OblivionBinary Create
         public static OblivionMod Create_OblivionBinary(BinaryReader reader)
@@ -1579,6 +1583,7 @@ namespace Mutagen.Internals
 
     }
     #endregion
+
 
 
 

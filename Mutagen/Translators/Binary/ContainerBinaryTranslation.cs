@@ -27,7 +27,7 @@ namespace Mutagen.Binary
                 transl: (BinaryReader r, bool internalDoMasks, out M obj) => transl.Item.Value.Parse(reader: r, length: length, doMasks: internalDoMasks, maskObj: out obj));
         }
 
-        public TryGet<IEnumerable<T>> Parse(BinaryReader reader, TypeString header, byte lengthLength, bool doMasks, out MaskItem<Exception, IEnumerable<M>> maskObj)
+        public TryGet<IEnumerable<T>> Parse(BinaryReader reader, RecordType header, byte lengthLength, bool doMasks, out MaskItem<Exception, IEnumerable<M>> maskObj)
         {
             throw new NotImplementedException();
         }

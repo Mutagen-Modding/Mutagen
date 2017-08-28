@@ -36,7 +36,7 @@ namespace Mutagen.Generation
             this._typeGenerations[typeof(Int32Type)] = new PrimitiveBinaryTranslationGeneration<int>();
             this._typeGenerations[typeof(Int64NullType)] = new PrimitiveBinaryTranslationGeneration<long?>();
             this._typeGenerations[typeof(Int64Type)] = new PrimitiveBinaryTranslationGeneration<long>();
-            this._typeGenerations[typeof(StringType)] = new PrimitiveBinaryTranslationGeneration<string>(nullable: true) { CanBeNotNullable = false };
+            this._typeGenerations[typeof(StringType)] = new StringBinaryTranslationGeneration();
             this._typeGenerations[typeof(UInt8NullType)] = new PrimitiveBinaryTranslationGeneration<byte?>();
             this._typeGenerations[typeof(UInt8Type)] = new PrimitiveBinaryTranslationGeneration<byte>();
             this._typeGenerations[typeof(UInt16NullType)] = new PrimitiveBinaryTranslationGeneration<ushort?>();
@@ -46,7 +46,7 @@ namespace Mutagen.Generation
             this._typeGenerations[typeof(UInt64NullType)] = new PrimitiveBinaryTranslationGeneration<ulong?>();
             this._typeGenerations[typeof(UInt64Type)] = new PrimitiveBinaryTranslationGeneration<ulong>();
             this._typeGenerations[typeof(ListType)] = new ListBinaryTranslationGeneration();
-            this._typeGenerations[typeof(ByteArrayType)] = new PrimitiveBinaryTranslationGeneration<byte[]>(typeName: "ByteArray", nullable: true);
+            this._typeGenerations[typeof(ByteArrayType)] = new ByteArrayTranslationGeneration();
             this.MainAPI = new TranslationModuleAPI(
                 writerAPI: new MethodAPI("BinaryWriter writer"),
                 readerAPI: new MethodAPI("BinaryReader reader"));
@@ -68,7 +68,7 @@ namespace Mutagen.Generation
                 });
         }
 
-        public override void Load()
+        public override void PostLoad(ObjectGeneration obj)
         {
             foreach (var gen in _typeGenerations.Values)
             {

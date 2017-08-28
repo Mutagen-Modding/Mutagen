@@ -22,7 +22,12 @@ namespace Mutagen.Generation
                 NotifyingDefault = NotifyingOption.Notifying
             };
             gen.XmlTranslation.ShouldGenerateXSD = false;
+            gen.GenerationModules.Add(new RecordTypeEmbedderModule());
             gen.Add(new OblivionBinaryTranslationModule(gen));
+            gen.ReplaceTypeAssociation<Loqui.Generation.StringType, Mutagen.Generation.StringType>();
+            gen.ReplaceTypeAssociation<Loqui.Generation.ByteArrayType, Mutagen.Generation.ByteArrayType>();
+            gen.ReplaceTypeAssociation<Loqui.Generation.LoquiType, Mutagen.Generation.LoquiType>();
+            gen.ReplaceTypeAssociation<Loqui.Generation.LoquiListType, Mutagen.Generation.LoquiListType>();
             gen.AddTypeAssociation<UnknownType>("Unknown");
             gen.XmlTranslation.ShouldGenerateXSD = false;
 

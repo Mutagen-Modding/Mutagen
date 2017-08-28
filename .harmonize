@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>7f622552a7570c1ef645bf651fbd352dd42d6100</Sha>
+         <Sha>d4c4886c9e1357095279097de6ed4687896f5a8c</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>08-27-2017 16:02:08</CommitDate>
-         <Description>Missing use of mainapi in TranslationModule</Description>
+         <CommitDate>08-28-2017 18:14:03</CommitDate>
+         <Description>CustomData member in ObjectGeneration</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

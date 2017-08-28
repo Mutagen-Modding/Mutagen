@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 
 namespace Mutagen
 {
-    public struct TypeString : IEquatable<TypeString>, IEquatable<char[]>
+    public struct RecordType : IEquatable<RecordType>, IEquatable<char[]>
     {
         public readonly string Type;
         public const byte HEADER_LENGTH = 4;
+        public string HeaderName => $"{Type}_HEADER";
 
-        public TypeString(string type)
+        public RecordType(string type)
         {
             this.Type = type;
             if (this.Type == null
@@ -23,11 +24,11 @@ namespace Mutagen
 
         public override bool Equals(object obj)
         {
-            if (!(obj is TypeString rhs)) return false;
+            if (!(obj is RecordType rhs)) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(TypeString other)
+        public bool Equals(RecordType other)
         {
             return object.Equals(this.Type, other.Type);
         }
@@ -46,6 +47,11 @@ namespace Mutagen
         public override int GetHashCode()
         {
             return HashHelper.GetHashCode(this.Type);
+        }
+
+        public override string ToString()
+        {
+            return this.Type;
         }
     }
 }

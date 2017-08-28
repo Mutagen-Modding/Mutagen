@@ -90,20 +90,26 @@ namespace Mutagen
         INotifyingItemGetter<Header> ITES4Getter.Header_Property => this.Header_Property;
         #endregion
         #region TypeOffsets
-        private readonly INotifyingItem<UnknownData> _TypeOffsets = new NotifyingItem<UnknownData>();
-        public INotifyingItem<UnknownData> TypeOffsets_Property => this._TypeOffsets;
-        UnknownData ITES4Getter.TypeOffsets => this.TypeOffsets;
-        public UnknownData TypeOffsets { get => _TypeOffsets.Item; set => _TypeOffsets.Item = value; }
-        INotifyingItem<UnknownData> ITES4.TypeOffsets_Property => this.TypeOffsets_Property;
-        INotifyingItemGetter<UnknownData> ITES4Getter.TypeOffsets_Property => this.TypeOffsets_Property;
+        protected readonly INotifyingItem<Byte[]> _TypeOffsets = NotifyingItem.Factory<Byte[]>(markAsSet: false);
+        public INotifyingItem<Byte[]> TypeOffsets_Property => _TypeOffsets;
+        public Byte[] TypeOffsets
+        {
+            get => this._TypeOffsets.Item;
+            set => this._TypeOffsets.Set(value);
+        }
+        INotifyingItem<Byte[]> ITES4.TypeOffsets_Property => this.TypeOffsets_Property;
+        INotifyingItemGetter<Byte[]> ITES4Getter.TypeOffsets_Property => this.TypeOffsets_Property;
         #endregion
         #region Deleted
-        private readonly INotifyingItem<UnknownData> _Deleted = new NotifyingItem<UnknownData>();
-        public INotifyingItem<UnknownData> Deleted_Property => this._Deleted;
-        UnknownData ITES4Getter.Deleted => this.Deleted;
-        public UnknownData Deleted { get => _Deleted.Item; set => _Deleted.Item = value; }
-        INotifyingItem<UnknownData> ITES4.Deleted_Property => this.Deleted_Property;
-        INotifyingItemGetter<UnknownData> ITES4Getter.Deleted_Property => this.Deleted_Property;
+        protected readonly INotifyingItem<Byte[]> _Deleted = NotifyingItem.Factory<Byte[]>(markAsSet: false);
+        public INotifyingItem<Byte[]> Deleted_Property => _Deleted;
+        public Byte[] Deleted
+        {
+            get => this._Deleted.Item;
+            set => this._Deleted.Set(value);
+        }
+        INotifyingItem<Byte[]> ITES4.Deleted_Property => this.Deleted_Property;
+        INotifyingItemGetter<Byte[]> ITES4Getter.Deleted_Property => this.Deleted_Property;
         #endregion
         #region Author
         protected readonly INotifyingItem<String> _Author = NotifyingItem.Factory<String>(markAsSet: false);
@@ -218,12 +224,12 @@ namespace Mutagen
             if (TypeOffsets_Property.HasBeenSet != rhs.TypeOffsets_Property.HasBeenSet) return false;
             if (TypeOffsets_Property.HasBeenSet)
             {
-                if (!object.Equals(TypeOffsets, rhs.TypeOffsets)) return false;
+                if (!TypeOffsets.EqualsFast(rhs.TypeOffsets)) return false;
             }
             if (Deleted_Property.HasBeenSet != rhs.Deleted_Property.HasBeenSet) return false;
             if (Deleted_Property.HasBeenSet)
             {
-                if (!object.Equals(Deleted, rhs.Deleted)) return false;
+                if (!Deleted.EqualsFast(rhs.Deleted)) return false;
             }
             if (Author_Property.HasBeenSet != rhs.Author_Property.HasBeenSet) return false;
             if (Author_Property.HasBeenSet)
@@ -652,37 +658,12 @@ namespace Mutagen
                     break;
                 case "TypeOffsets":
                     {
-                        MaskItem<Exception, UnknownData_ErrorMask> subMask;
-                        UnknownData_ErrorMask loquiMask;
-                        TryGet<UnknownData> tryGet;
-                        var typeStr = root.GetAttribute(XmlConstants.TYPE_ATTRIBUTE);
-                        if (typeStr != null
-                            && typeStr.Equals("Mutagen.UnknownData"))
-                        {
-                            tryGet = TryGet<UnknownData>.Succeed((UnknownData)UnknownData.Create_XML(
-                                root: root,
-                                doMasks: doMasks,
-                                errorMask: out loquiMask));
-                        }
-                        else
-                        {
-                            var register = LoquiRegistration.GetRegisterByFullName(typeStr ?? root.Name.LocalName);
-                            if (register == null)
-                            {
-                                var ex = new ArgumentException($"Unknown Loqui type: {root.Name.LocalName}");
-                                if (!doMasks) throw ex;
-                                subMask = new MaskItem<Exception, UnknownData_ErrorMask>(
-                                    ex,
-                                    null);
-                                break;
-                            }
-                            tryGet = XmlTranslator.Instance.GetTranslator(register.ClassType).Item.Value.Parse(
-                                root: root,
-                                doMasks: doMasks,
-                                maskObj: out var subErrorMaskObj).Bubble((o) => (UnknownData)o);
-                            loquiMask = (UnknownData_ErrorMask)subErrorMaskObj;
-                        }
-                        subMask = loquiMask == null ? null : new MaskItem<Exception, UnknownData_ErrorMask>(null, loquiMask);
+                        Exception subMask;
+                        var tryGet = ByteArrayXmlTranslation.Instance.Parse(
+                            root,
+                            nullable: true,
+                            doMasks: doMasks,
+                            errorMask: out subMask);
                         if (tryGet.Succeeded)
                         {
                             item._TypeOffsets.Item = tryGet.Value;
@@ -695,37 +676,12 @@ namespace Mutagen
                     break;
                 case "Deleted":
                     {
-                        MaskItem<Exception, UnknownData_ErrorMask> subMask;
-                        UnknownData_ErrorMask loquiMask;
-                        TryGet<UnknownData> tryGet;
-                        var typeStr = root.GetAttribute(XmlConstants.TYPE_ATTRIBUTE);
-                        if (typeStr != null
-                            && typeStr.Equals("Mutagen.UnknownData"))
-                        {
-                            tryGet = TryGet<UnknownData>.Succeed((UnknownData)UnknownData.Create_XML(
-                                root: root,
-                                doMasks: doMasks,
-                                errorMask: out loquiMask));
-                        }
-                        else
-                        {
-                            var register = LoquiRegistration.GetRegisterByFullName(typeStr ?? root.Name.LocalName);
-                            if (register == null)
-                            {
-                                var ex = new ArgumentException($"Unknown Loqui type: {root.Name.LocalName}");
-                                if (!doMasks) throw ex;
-                                subMask = new MaskItem<Exception, UnknownData_ErrorMask>(
-                                    ex,
-                                    null);
-                                break;
-                            }
-                            tryGet = XmlTranslator.Instance.GetTranslator(register.ClassType).Item.Value.Parse(
-                                root: root,
-                                doMasks: doMasks,
-                                maskObj: out var subErrorMaskObj).Bubble((o) => (UnknownData)o);
-                            loquiMask = (UnknownData_ErrorMask)subErrorMaskObj;
-                        }
-                        subMask = loquiMask == null ? null : new MaskItem<Exception, UnknownData_ErrorMask>(null, loquiMask);
+                        Exception subMask;
+                        var tryGet = ByteArrayXmlTranslation.Instance.Parse(
+                            root,
+                            nullable: true,
+                            doMasks: doMasks,
+                            errorMask: out subMask);
                         if (tryGet.Succeeded)
                         {
                             item._Deleted.Item = tryGet.Value;
@@ -827,6 +783,14 @@ namespace Mutagen
             }
         }
 
+        #endregion
+
+        #region Record Types
+        public static readonly RecordType HEDR_HEADER = new RecordType("HEDR");
+        public static readonly RecordType OFST_HEADER = new RecordType("OFST");
+        public static readonly RecordType DELE_HEADER = new RecordType("DELE");
+        public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
+        public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
         #endregion
 
         #region OblivionBinary Translation
@@ -1101,7 +1065,8 @@ namespace Mutagen
                 var tryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                     reader,
                     doMasks: doMasks,
-                    errorMask: out subMask);
+                    errorMask: out subMask,
+                    length: 12);
                 if (tryGet.Succeeded)
                 {
                     item._Fluff.Item = tryGet.Value;
@@ -1159,13 +1124,14 @@ namespace Mutagen
                 }
             }
             {
-                MaskItem<Exception, UnknownData_ErrorMask> subMask;
-                UnknownData_ErrorMask loquiMask;
-                TryGet<UnknownData> tryGet = TryGet<UnknownData>.Succeed((UnknownData)UnknownData.Create_OblivionBinary(
-                    reader: reader,
+                Exception subMask;
+                var tryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                    reader,
                     doMasks: doMasks,
-                    errorMask: out loquiMask));
-                subMask = loquiMask == null ? null : new MaskItem<Exception, UnknownData_ErrorMask>(null, loquiMask);
+                    errorMask: out subMask,
+                    header: OFST_HEADER,
+                    lengthLength: 4,
+                    nullable: true);
                 if (tryGet.Succeeded)
                 {
                     item._TypeOffsets.Item = tryGet.Value;
@@ -1176,13 +1142,14 @@ namespace Mutagen
                 }
             }
             {
-                MaskItem<Exception, UnknownData_ErrorMask> subMask;
-                UnknownData_ErrorMask loquiMask;
-                TryGet<UnknownData> tryGet = TryGet<UnknownData>.Succeed((UnknownData)UnknownData.Create_OblivionBinary(
-                    reader: reader,
+                Exception subMask;
+                var tryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                    reader,
                     doMasks: doMasks,
-                    errorMask: out loquiMask));
-                subMask = loquiMask == null ? null : new MaskItem<Exception, UnknownData_ErrorMask>(null, loquiMask);
+                    errorMask: out subMask,
+                    header: DELE_HEADER,
+                    lengthLength: 4,
+                    nullable: true);
                 if (tryGet.Succeeded)
                 {
                     item._Deleted.Item = tryGet.Value;
@@ -1194,7 +1161,11 @@ namespace Mutagen
             }
             {
                 Exception subMask;
-                var tryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse()
+                var tryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
+                    reader,
+                    doMasks: doMasks,
+                    errorMask: out subMask,
+                    header: CNAM_HEADER);
                 if (tryGet.Succeeded)
                 {
                     item._Author.Item = tryGet.Value;
@@ -1209,7 +1180,8 @@ namespace Mutagen
                 var tryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
                     reader,
                     doMasks: doMasks,
-                    errorMask: out subMask);
+                    errorMask: out subMask,
+                    header: SNAM_HEADER);
                 if (tryGet.Succeeded)
                 {
                     item._Description.Item = tryGet.Value;
@@ -1346,12 +1318,12 @@ namespace Mutagen
                     break;
                 case TES4_FieldIndex.TypeOffsets:
                     this._TypeOffsets.Set(
-                        (UnknownData)obj,
+                        (Byte[])obj,
                         cmds);
                     break;
                 case TES4_FieldIndex.Deleted:
                     this._Deleted.Set(
-                        (UnknownData)obj,
+                        (Byte[])obj,
                         cmds);
                     break;
                 case TES4_FieldIndex.Author:
@@ -1426,12 +1398,12 @@ namespace Mutagen
                     break;
                 case TES4_FieldIndex.TypeOffsets:
                     obj._TypeOffsets.Set(
-                        (UnknownData)pair.Value,
+                        (Byte[])pair.Value,
                         null);
                     break;
                 case TES4_FieldIndex.Deleted:
                     obj._Deleted.Set(
-                        (UnknownData)pair.Value,
+                        (Byte[])pair.Value,
                         null);
                     break;
                 case TES4_FieldIndex.Author:
@@ -1474,11 +1446,11 @@ namespace Mutagen
         new Header Header { get; set; }
         new INotifyingItem<Header> Header_Property { get; }
 
-        new UnknownData TypeOffsets { get; set; }
-        new INotifyingItem<UnknownData> TypeOffsets_Property { get; }
+        new Byte[] TypeOffsets { get; set; }
+        new INotifyingItem<Byte[]> TypeOffsets_Property { get; }
 
-        new UnknownData Deleted { get; set; }
-        new INotifyingItem<UnknownData> Deleted_Property { get; }
+        new Byte[] Deleted { get; set; }
+        new INotifyingItem<Byte[]> Deleted_Property { get; }
 
         new String Author { get; set; }
         new INotifyingItem<String> Author_Property { get; }
@@ -1512,13 +1484,13 @@ namespace Mutagen
 
         #endregion
         #region TypeOffsets
-        UnknownData TypeOffsets { get; }
-        INotifyingItemGetter<UnknownData> TypeOffsets_Property { get; }
+        Byte[] TypeOffsets { get; }
+        INotifyingItemGetter<Byte[]> TypeOffsets_Property { get; }
 
         #endregion
         #region Deleted
-        UnknownData Deleted { get; }
-        INotifyingItemGetter<UnknownData> Deleted_Property { get; }
+        Byte[] Deleted { get; }
+        INotifyingItemGetter<Byte[]> Deleted_Property { get; }
 
         #endregion
         #region Author
@@ -1650,13 +1622,13 @@ namespace Mutagen.Internals
             switch (enu)
             {
                 case TES4_FieldIndex.Header:
-                case TES4_FieldIndex.TypeOffsets:
-                case TES4_FieldIndex.Deleted:
                 case TES4_FieldIndex.MasterReferences:
                     return true;
                 case TES4_FieldIndex.Fluff:
                 case TES4_FieldIndex.NumRecords:
                 case TES4_FieldIndex.NextObjectID:
+                case TES4_FieldIndex.TypeOffsets:
+                case TES4_FieldIndex.Deleted:
                 case TES4_FieldIndex.Author:
                 case TES4_FieldIndex.Description:
                     return false;
@@ -1767,9 +1739,9 @@ namespace Mutagen.Internals
                 case TES4_FieldIndex.Header:
                     return typeof(Header);
                 case TES4_FieldIndex.TypeOffsets:
-                    return typeof(UnknownData);
+                    return typeof(Byte[]);
                 case TES4_FieldIndex.Deleted:
-                    return typeof(UnknownData);
+                    return typeof(Byte[]);
                 case TES4_FieldIndex.Author:
                     return typeof(String);
                 case TES4_FieldIndex.Description:
@@ -1983,50 +1955,14 @@ namespace Mutagen.Internals
                     errorMask().SetNthException((ushort)TES4_FieldIndex.Header, ex);
                 }
             }
-            if (copyMask?.TypeOffsets.Overall != CopyOption.Skip)
+            if (copyMask?.TypeOffsets ?? true)
             {
                 try
                 {
                     item.TypeOffsets_Property.SetToWithDefault(
                         rhs.TypeOffsets_Property,
                         def?.TypeOffsets_Property,
-                        cmds,
-                        (r, d) =>
-                        {
-                            switch (copyMask?.TypeOffsets.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return r;
-                                case CopyOption.CopyIn:
-                                    UnknownDataCommon.CopyFieldsFrom(
-                                        item: item.TypeOffsets,
-                                        rhs: rhs.TypeOffsets,
-                                        def: def?.TypeOffsets,
-                                        doErrorMask: doErrorMask,
-                                        errorMask: (doErrorMask ? new Func<UnknownData_ErrorMask>(() =>
-                                        {
-                                            var baseMask = errorMask();
-                                            if (baseMask.TypeOffsets.Specific == null)
-                                            {
-                                                baseMask.TypeOffsets = new MaskItem<Exception, UnknownData_ErrorMask>(null, new UnknownData_ErrorMask());
-                                            }
-                                            return baseMask.TypeOffsets.Specific;
-                                        }
-                                        ) : null),
-                                        copyMask: copyMask?.TypeOffsets.Specific,
-                                        cmds: cmds);
-                                    return r;
-                                case CopyOption.MakeCopy:
-                                    if (r == null) return default(UnknownData);
-                                    return UnknownData.Copy(
-                                        r,
-                                        copyMask?.TypeOffsets.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.TypeOffsets.Overall}. Cannot execute copy.");
-                            }
-                        }
-                        );
+                        cmds);
                 }
                 catch (Exception ex)
                 when (doErrorMask)
@@ -2034,50 +1970,14 @@ namespace Mutagen.Internals
                     errorMask().SetNthException((ushort)TES4_FieldIndex.TypeOffsets, ex);
                 }
             }
-            if (copyMask?.Deleted.Overall != CopyOption.Skip)
+            if (copyMask?.Deleted ?? true)
             {
                 try
                 {
                     item.Deleted_Property.SetToWithDefault(
                         rhs.Deleted_Property,
                         def?.Deleted_Property,
-                        cmds,
-                        (r, d) =>
-                        {
-                            switch (copyMask?.Deleted.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return r;
-                                case CopyOption.CopyIn:
-                                    UnknownDataCommon.CopyFieldsFrom(
-                                        item: item.Deleted,
-                                        rhs: rhs.Deleted,
-                                        def: def?.Deleted,
-                                        doErrorMask: doErrorMask,
-                                        errorMask: (doErrorMask ? new Func<UnknownData_ErrorMask>(() =>
-                                        {
-                                            var baseMask = errorMask();
-                                            if (baseMask.Deleted.Specific == null)
-                                            {
-                                                baseMask.Deleted = new MaskItem<Exception, UnknownData_ErrorMask>(null, new UnknownData_ErrorMask());
-                                            }
-                                            return baseMask.Deleted.Specific;
-                                        }
-                                        ) : null),
-                                        copyMask: copyMask?.Deleted.Specific,
-                                        cmds: cmds);
-                                    return r;
-                                case CopyOption.MakeCopy:
-                                    if (r == null) return default(UnknownData);
-                                    return UnknownData.Copy(
-                                        r,
-                                        copyMask?.Deleted.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Deleted.Overall}. Cannot execute copy.");
-                            }
-                        }
-                        );
+                        cmds);
                 }
                 catch (Exception ex)
                 when (doErrorMask)
@@ -2322,8 +2222,8 @@ namespace Mutagen.Internals
             ret.NumRecords = item.NumRecords_Property.Equals(rhs.NumRecords_Property, (l, r) => l == r);
             ret.NextObjectID = item.NextObjectID_Property.Equals(rhs.NextObjectID_Property, (l, r) => l == r);
             ret.Header = item.Header_Property.LoquiEqualsHelper(rhs.Header_Property, (loqLhs, loqRhs) => HeaderCommon.GetEqualsMask(loqLhs, loqRhs));
-            ret.TypeOffsets = item.TypeOffsets_Property.LoquiEqualsHelper(rhs.TypeOffsets_Property, (loqLhs, loqRhs) => UnknownDataCommon.GetEqualsMask(loqLhs, loqRhs));
-            ret.Deleted = item.Deleted_Property.LoquiEqualsHelper(rhs.Deleted_Property, (loqLhs, loqRhs) => UnknownDataCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.TypeOffsets = item.TypeOffsets_Property.Equals(rhs.TypeOffsets_Property, (l, r) => l.EqualsFast(r));
+            ret.Deleted = item.Deleted_Property.Equals(rhs.Deleted_Property, (l, r) => l.EqualsFast(r));
             ret.Author = item.Author_Property.Equals(rhs.Author_Property, (l, r) => object.Equals(l, r));
             ret.Description = item.Description_Property.Equals(rhs.Description_Property, (l, r) => object.Equals(l, r));
             if (item.MasterReferences.HasBeenSet == rhs.MasterReferences.HasBeenSet)
@@ -2396,13 +2296,13 @@ namespace Mutagen.Internals
                 {
                     item.Header.ToString(fg, "Header");
                 }
-                if (printMask?.TypeOffsets?.Overall ?? true)
+                if (printMask?.TypeOffsets ?? true)
                 {
-                    item.TypeOffsets.ToString(fg, "TypeOffsets");
+                    fg.AppendLine($"TypeOffsets => {item.TypeOffsets}");
                 }
-                if (printMask?.Deleted?.Overall ?? true)
+                if (printMask?.Deleted ?? true)
                 {
-                    item.Deleted.ToString(fg, "Deleted");
+                    fg.AppendLine($"Deleted => {item.Deleted}");
                 }
                 if (printMask?.Author ?? true)
                 {
@@ -2443,10 +2343,8 @@ namespace Mutagen.Internals
             if (checkMask.NextObjectID.HasValue && checkMask.NextObjectID.Value != item.NextObjectID_Property.HasBeenSet) return false;
             if (checkMask.Header.Overall.HasValue && checkMask.Header.Overall.Value != item.Header_Property.HasBeenSet) return false;
             if (checkMask.Header.Specific != null && (item.Header_Property.Item == null || !item.Header_Property.Item.HasBeenSet(checkMask.Header.Specific))) return false;
-            if (checkMask.TypeOffsets.Overall.HasValue && checkMask.TypeOffsets.Overall.Value != item.TypeOffsets_Property.HasBeenSet) return false;
-            if (checkMask.TypeOffsets.Specific != null && (item.TypeOffsets_Property.Item == null || !item.TypeOffsets_Property.Item.HasBeenSet(checkMask.TypeOffsets.Specific))) return false;
-            if (checkMask.Deleted.Overall.HasValue && checkMask.Deleted.Overall.Value != item.Deleted_Property.HasBeenSet) return false;
-            if (checkMask.Deleted.Specific != null && (item.Deleted_Property.Item == null || !item.Deleted_Property.Item.HasBeenSet(checkMask.Deleted.Specific))) return false;
+            if (checkMask.TypeOffsets.HasValue && checkMask.TypeOffsets.Value != item.TypeOffsets_Property.HasBeenSet) return false;
+            if (checkMask.Deleted.HasValue && checkMask.Deleted.Value != item.Deleted_Property.HasBeenSet) return false;
             if (checkMask.Author.HasValue && checkMask.Author.Value != item.Author_Property.HasBeenSet) return false;
             if (checkMask.Description.HasValue && checkMask.Description.Value != item.Description_Property.HasBeenSet) return false;
             if (checkMask.MasterReferences.Overall.HasValue && checkMask.MasterReferences.Overall.Value != item.MasterReferences.HasBeenSet) return false;
@@ -2460,8 +2358,8 @@ namespace Mutagen.Internals
             ret.NumRecords = item.NumRecords_Property.HasBeenSet;
             ret.NextObjectID = item.NextObjectID_Property.HasBeenSet;
             ret.Header = new MaskItem<bool, Header_Mask<bool>>(item.Header_Property.HasBeenSet, HeaderCommon.GetHasBeenSetMask(item.Header_Property.Item));
-            ret.TypeOffsets = new MaskItem<bool, UnknownData_Mask<bool>>(item.TypeOffsets_Property.HasBeenSet, UnknownDataCommon.GetHasBeenSetMask(item.TypeOffsets_Property.Item));
-            ret.Deleted = new MaskItem<bool, UnknownData_Mask<bool>>(item.Deleted_Property.HasBeenSet, UnknownDataCommon.GetHasBeenSetMask(item.Deleted_Property.Item));
+            ret.TypeOffsets = item.TypeOffsets_Property.HasBeenSet;
+            ret.Deleted = item.Deleted_Property.HasBeenSet;
             ret.Author = item.Author_Property.HasBeenSet;
             ret.Description = item.Description_Property.HasBeenSet;
             ret.MasterReferences = new MaskItem<bool, IEnumerable<MaskItem<bool, Header_Mask<bool>>>>(item.MasterReferences.HasBeenSet, item.MasterReferences.Select((i) => new MaskItem<bool, Header_Mask<bool>>(true, i.GetHasBeenSetMask())));
@@ -2561,14 +2459,13 @@ namespace Mutagen.Internals
                     }
                     if (item.TypeOffsets_Property.HasBeenSet)
                     {
-                        MaskItem<Exception, UnknownData_ErrorMask> subMask;
-                        UnknownDataCommon.Write_XML(
-                            writer: writer,
-                            item: item.TypeOffsets,
-                            name: nameof(item.TypeOffsets),
+                        Exception subMask;
+                        ByteArrayXmlTranslation.Instance.Write(
+                            writer,
+                            nameof(item.TypeOffsets),
+                            item.TypeOffsets,
                             doMasks: doMasks,
-                            errorMask: out UnknownData_ErrorMask loquiMask);
-                        subMask = loquiMask == null ? null : new MaskItem<Exception, UnknownData_ErrorMask>(null, loquiMask);
+                            errorMask: out subMask);
                         if (doMasks && subMask != null)
                         {
                             errorMask().TypeOffsets = subMask;
@@ -2576,14 +2473,13 @@ namespace Mutagen.Internals
                     }
                     if (item.Deleted_Property.HasBeenSet)
                     {
-                        MaskItem<Exception, UnknownData_ErrorMask> subMask;
-                        UnknownDataCommon.Write_XML(
-                            writer: writer,
-                            item: item.Deleted,
-                            name: nameof(item.Deleted),
+                        Exception subMask;
+                        ByteArrayXmlTranslation.Instance.Write(
+                            writer,
+                            nameof(item.Deleted),
+                            item.Deleted,
                             doMasks: doMasks,
-                            errorMask: out UnknownData_ErrorMask loquiMask);
-                        subMask = loquiMask == null ? null : new MaskItem<Exception, UnknownData_ErrorMask>(null, loquiMask);
+                            errorMask: out subMask);
                         if (doMasks && subMask != null)
                         {
                             errorMask().Deleted = subMask;
@@ -2702,8 +2598,8 @@ namespace Mutagen.Internals
             this.NumRecords = initialValue;
             this.NextObjectID = initialValue;
             this.Header = new MaskItem<T, Header_Mask<T>>(initialValue, new Header_Mask<T>(initialValue));
-            this.TypeOffsets = new MaskItem<T, UnknownData_Mask<T>>(initialValue, new UnknownData_Mask<T>(initialValue));
-            this.Deleted = new MaskItem<T, UnknownData_Mask<T>>(initialValue, new UnknownData_Mask<T>(initialValue));
+            this.TypeOffsets = initialValue;
+            this.Deleted = initialValue;
             this.Author = initialValue;
             this.Description = initialValue;
             this.MasterReferences = new MaskItem<T, IEnumerable<MaskItem<T, Header_Mask<T>>>>(initialValue, null);
@@ -2715,8 +2611,8 @@ namespace Mutagen.Internals
         public T NumRecords;
         public T NextObjectID;
         public MaskItem<T, Header_Mask<T>> Header { get; set; }
-        public MaskItem<T, UnknownData_Mask<T>> TypeOffsets { get; set; }
-        public MaskItem<T, UnknownData_Mask<T>> Deleted { get; set; }
+        public T TypeOffsets;
+        public T Deleted;
         public T Author;
         public T Description;
         public MaskItem<T, IEnumerable<MaskItem<T, Header_Mask<T>>>> MasterReferences;
@@ -2771,16 +2667,8 @@ namespace Mutagen.Internals
                 if (!eval(this.Header.Overall)) return false;
                 if (Header.Specific != null && !Header.Specific.AllEqual(eval)) return false;
             }
-            if (TypeOffsets != null)
-            {
-                if (!eval(this.TypeOffsets.Overall)) return false;
-                if (TypeOffsets.Specific != null && !TypeOffsets.Specific.AllEqual(eval)) return false;
-            }
-            if (Deleted != null)
-            {
-                if (!eval(this.Deleted.Overall)) return false;
-                if (Deleted.Specific != null && !Deleted.Specific.AllEqual(eval)) return false;
-            }
+            if (!eval(this.TypeOffsets)) return false;
+            if (!eval(this.Deleted)) return false;
             if (!eval(this.Author)) return false;
             if (!eval(this.Description)) return false;
             if (MasterReferences != null)
@@ -2821,24 +2709,8 @@ namespace Mutagen.Internals
                     obj.Header.Specific = this.Header.Specific.Translate(eval);
                 }
             }
-            if (this.TypeOffsets != null)
-            {
-                obj.TypeOffsets = new MaskItem<R, UnknownData_Mask<R>>();
-                obj.TypeOffsets.Overall = eval(this.TypeOffsets.Overall);
-                if (this.TypeOffsets.Specific != null)
-                {
-                    obj.TypeOffsets.Specific = this.TypeOffsets.Specific.Translate(eval);
-                }
-            }
-            if (this.Deleted != null)
-            {
-                obj.Deleted = new MaskItem<R, UnknownData_Mask<R>>();
-                obj.Deleted.Overall = eval(this.Deleted.Overall);
-                if (this.Deleted.Specific != null)
-                {
-                    obj.Deleted.Specific = this.Deleted.Specific.Translate(eval);
-                }
-            }
+            obj.TypeOffsets = eval(this.TypeOffsets);
+            obj.Deleted = eval(this.Deleted);
             obj.Author = eval(this.Author);
             obj.Description = eval(this.Description);
             if (MasterReferences != null)
@@ -2910,13 +2782,13 @@ namespace Mutagen.Internals
                 {
                     Header.ToString(fg);
                 }
-                if (printMask?.TypeOffsets?.Overall ?? true)
+                if (printMask?.TypeOffsets ?? true)
                 {
-                    TypeOffsets.ToString(fg);
+                    fg.AppendLine($"TypeOffsets => {TypeOffsets.ToStringSafe()}");
                 }
-                if (printMask?.Deleted?.Overall ?? true)
+                if (printMask?.Deleted ?? true)
                 {
-                    Deleted.ToString(fg);
+                    fg.AppendLine($"Deleted => {Deleted.ToStringSafe()}");
                 }
                 if (printMask?.Author ?? true)
                 {
@@ -2978,8 +2850,8 @@ namespace Mutagen.Internals
         public Exception NumRecords;
         public Exception NextObjectID;
         public MaskItem<Exception, Header_ErrorMask> Header;
-        public MaskItem<Exception, UnknownData_ErrorMask> TypeOffsets;
-        public MaskItem<Exception, UnknownData_ErrorMask> Deleted;
+        public Exception TypeOffsets;
+        public Exception Deleted;
         public Exception Author;
         public Exception Description;
         public MaskItem<Exception, IEnumerable<MaskItem<Exception, Header_ErrorMask>>> MasterReferences;
@@ -3004,10 +2876,10 @@ namespace Mutagen.Internals
                     this.Header = new MaskItem<Exception, Header_ErrorMask>(ex, null);
                     break;
                 case TES4_FieldIndex.TypeOffsets:
-                    this.TypeOffsets = new MaskItem<Exception, UnknownData_ErrorMask>(ex, null);
+                    this.TypeOffsets = ex;
                     break;
                 case TES4_FieldIndex.Deleted:
-                    this.Deleted = new MaskItem<Exception, UnknownData_ErrorMask>(ex, null);
+                    this.Deleted = ex;
                     break;
                 case TES4_FieldIndex.Author:
                     this.Author = ex;
@@ -3041,10 +2913,10 @@ namespace Mutagen.Internals
                     this.Header = (MaskItem<Exception, Header_ErrorMask>)obj;
                     break;
                 case TES4_FieldIndex.TypeOffsets:
-                    this.TypeOffsets = (MaskItem<Exception, UnknownData_ErrorMask>)obj;
+                    this.TypeOffsets = (Exception)obj;
                     break;
                 case TES4_FieldIndex.Deleted:
-                    this.Deleted = (MaskItem<Exception, UnknownData_ErrorMask>)obj;
+                    this.Deleted = (Exception)obj;
                     break;
                 case TES4_FieldIndex.Author:
                     this.Author = (Exception)obj;
@@ -3099,11 +2971,11 @@ namespace Mutagen.Internals
             }
             if (TypeOffsets != null)
             {
-                TypeOffsets.ToString(fg);
+                fg.AppendLine($"TypeOffsets => {TypeOffsets.ToStringSafe()}");
             }
             if (Deleted != null)
             {
-                Deleted.ToString(fg);
+                fg.AppendLine($"Deleted => {Deleted.ToStringSafe()}");
             }
             if (Author != null)
             {
@@ -3149,8 +3021,8 @@ namespace Mutagen.Internals
             ret.NumRecords = this.NumRecords.Combine(rhs.NumRecords);
             ret.NextObjectID = this.NextObjectID.Combine(rhs.NextObjectID);
             ret.Header = new MaskItem<Exception, Header_ErrorMask>(this.Header.Overall.Combine(rhs.Header.Overall), this.Header.Specific.Combine(rhs.Header.Specific));
-            ret.TypeOffsets = new MaskItem<Exception, UnknownData_ErrorMask>(this.TypeOffsets.Overall.Combine(rhs.TypeOffsets.Overall), this.TypeOffsets.Specific.Combine(rhs.TypeOffsets.Specific));
-            ret.Deleted = new MaskItem<Exception, UnknownData_ErrorMask>(this.Deleted.Overall.Combine(rhs.Deleted.Overall), this.Deleted.Specific.Combine(rhs.Deleted.Specific));
+            ret.TypeOffsets = this.TypeOffsets.Combine(rhs.TypeOffsets);
+            ret.Deleted = this.Deleted.Combine(rhs.Deleted);
             ret.Author = this.Author.Combine(rhs.Author);
             ret.Description = this.Description.Combine(rhs.Description);
             ret.MasterReferences = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Header_ErrorMask>>>(this.MasterReferences.Overall.Combine(rhs.MasterReferences.Overall), new List<MaskItem<Exception, Header_ErrorMask>>(this.MasterReferences.Specific.And(rhs.MasterReferences.Specific)));
@@ -3171,8 +3043,8 @@ namespace Mutagen.Internals
         public bool NumRecords;
         public bool NextObjectID;
         public MaskItem<CopyOption, Header_CopyMask> Header;
-        public MaskItem<CopyOption, UnknownData_CopyMask> TypeOffsets;
-        public MaskItem<CopyOption, UnknownData_CopyMask> Deleted;
+        public bool TypeOffsets;
+        public bool Deleted;
         public bool Author;
         public bool Description;
         public MaskItem<CopyOption, Header_CopyMask> MasterReferences;
@@ -3180,6 +3052,7 @@ namespace Mutagen.Internals
 
     }
     #endregion
+
 
 
 

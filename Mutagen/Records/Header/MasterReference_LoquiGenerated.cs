@@ -453,6 +453,10 @@ namespace Mutagen
 
         #endregion
 
+        #region Record Types
+        public static readonly RecordType MAST_HEADER = new RecordType("MAST");
+        #endregion
+
         #region OblivionBinary Translation
         #region OblivionBinary Create
         public static MasterReference Create_OblivionBinary(BinaryReader reader)
@@ -725,7 +729,8 @@ namespace Mutagen
                 var tryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
                     reader,
                     doMasks: doMasks,
-                    errorMask: out subMask);
+                    errorMask: out subMask,
+                    header: MAST_HEADER);
                 if (tryGet.Succeeded)
                 {
                     item._Master.Item = tryGet.Value;
@@ -1702,6 +1707,7 @@ namespace Mutagen.Internals
 
     }
     #endregion
+
 
 
 

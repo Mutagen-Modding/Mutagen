@@ -8,34 +8,40 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Generation
 {
-    public class PrimitiveBinaryTranslationGeneration<T> : BinaryTranslationGeneration
+    public class ByteArrayTranslationGeneration : PrimitiveBinaryTranslationGeneration<byte[]>
     {
-        private string typeName;
-        private bool? nullable;
-        public bool Nullable => nullable ?? false || typeof(T).GetName().EndsWith("?");
-        public bool CanBeNotNullable = true;
-
-        public PrimitiveBinaryTranslationGeneration(string typeName = null, bool? nullable = null)
+        public ByteArrayTranslationGeneration()
+            : base(nullable: true,
+                  typeName: "ByteArray")
         {
-            this.nullable = nullable;
-            this.typeName = typeName ?? typeof(T).GetName().Replace("?", string.Empty);
         }
 
         public override void GenerateWrite(
             FileGeneration fg,
             TypeGeneration typeGen,
-            string writerAccessor, 
+            string writerAccessor,
             string itemAccessor,
             string doMaskAccessor,
             string maskAccessor)
         {
+            ByteArrayType stringType = typeGen as ByteArrayType;
             using (var args = new ArgsWrapper(fg,
-                $"{this.Namespace}{this.typeName}BinaryTranslation.Instance.Write"))
+                $"{this.Namespace}ByteArrayBinaryTranslation.Instance.Write"))
             {
                 args.Add($"writer: {writerAccessor}");
                 args.Add($"item: {itemAccessor}");
                 args.Add($"doMasks: {doMaskAccessor}");
                 args.Add($"errorMask: out {maskAccessor}");
+                if (stringType.RecordType.HasValue)
+                {
+                    args.Add($"header: {stringType.RecordType.Value.HeaderName}");
+                    args.Add($"lengthLength: {stringType.Length.Value}");
+                    args.Add($"nullable: {(stringType.Optional ? "true" : "false")}");
+                }
+                else
+                {
+                    args.Add($"length: {stringType.Length.Value}");
+                }
             }
         }
 
@@ -47,12 +53,23 @@ namespace Mutagen.Generation
             string doMaskAccessor,
             string maskAccessor)
         {
+            ByteArrayType stringType = typeGen as ByteArrayType;
             using (var args = new ArgsWrapper(fg,
-                $"var tryGet = {this.Namespace}{this.typeName}BinaryTranslation.Instance.Parse"))
+                $"var tryGet = {this.Namespace}ByteArrayBinaryTranslation.Instance.Parse"))
             {
                 args.Add(nodeAccessor);
                 args.Add($"doMasks: {doMaskAccessor}");
                 args.Add($"errorMask: out {maskAccessor}");
+                if (stringType.RecordType.HasValue)
+                {
+                    args.Add($"header: {stringType.RecordType.Value.HeaderName}");
+                    args.Add($"lengthLength: {stringType.Length.Value}");
+                    args.Add($"nullable: {(stringType.Optional ? "true" : "false")}");
+                }
+                else
+                {
+                    args.Add($"length: {stringType.Length.Value}");
+                }
             }
             fg.AppendLine("if (tryGet.Succeeded)");
             using (new BraceWrapper(fg))
@@ -66,11 +83,12 @@ namespace Mutagen.Generation
             TypeGeneration typeGen,
             string nodeAccessor,
             string retAccessor,
-            string doMaskAccessor, 
+            string doMaskAccessor,
             string maskAccessor)
         {
+            ByteArrayType stringType = typeGen as ByteArrayType;
             using (var args = new ArgsWrapper(fg,
-                $"{retAccessor}{this.Namespace}{this.typeName}BinaryTranslation.Instance.Parse",
+                $"{retAccessor}{this.Namespace}ByteArrayBinaryTranslation.Instance.Parse",
                 (this.Nullable ? string.Empty : $".Bubble((o) => o.Value)")))
             {
                 args.Add(nodeAccessor);
@@ -80,6 +98,16 @@ namespace Mutagen.Generation
                 }
                 args.Add($"doMasks: {doMaskAccessor}");
                 args.Add($"errorMask: out {maskAccessor}");
+                if (stringType.RecordType.HasValue)
+                {
+                    args.Add($"header: {stringType.RecordType.Value.HeaderName}");
+                    args.Add($"lengthLength: {stringType.Length.Value}");
+                    args.Add($"nullable: {(stringType.Optional ? "true" : "false")}");
+                }
+                else
+                {
+                    args.Add($"length: {stringType.Length.Value}");
+                }
             }
         }
     }

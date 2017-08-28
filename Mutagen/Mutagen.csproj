@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="Windows-1252"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -45,21 +45,6 @@
     <Compile Include="ModID.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProtocolDefinition_mutagen.cs" />
-    <Compile Include="Records\Header\Header_LoquiGenerated.cs">
-      <DependentUpon>HEDR.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\OblivionMod_LoquiGenerated.cs">
-      <DependentUpon>OblivionMod.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\UnknownData_LoquiGenerated.cs">
-      <DependentUpon>UnknownData.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Header\TES4_LoquiGenerated.cs">
-      <DependentUpon>TES4.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Header\MasterReference_LoquiGenerated.cs">
-      <DependentUpon>MasterReference.xml</DependentUpon>
-    </Compile>
     <Compile Include="Translators\Binary\BinaryTranslator.cs" />
     <Compile Include="Translators\Binary\BooleanBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\ByteArrayBinaryTranslation.cs" />
@@ -84,7 +69,19 @@
     <Compile Include="Translators\Binary\UInt32BinaryTranslation.cs" />
     <Compile Include="Translators\Binary\UInt64BinaryTranslation.cs" />
     <Compile Include="Translators\Binary\BinaryTranslationCaster.cs" />
-    <Compile Include="TypeString.cs" />
+    <Compile Include="RecordType.cs" />
+    <Compile Include="Records\OblivionMod_LoquiGenerated.cs">
+      <DependentUpon>OblivionMod.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Header\Header_LoquiGenerated.cs">
+      <DependentUpon>HEDR.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Header\MasterReference_LoquiGenerated.cs">
+      <DependentUpon>MasterReference.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Header\TES4_LoquiGenerated.cs">
+      <DependentUpon>TES4.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\CSharpExt\CSharpExt\CSharpExt.csproj">
@@ -98,9 +95,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Records\Header\MasterReference.xml">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Records\UnknownData.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\OblivionMod.xml">
