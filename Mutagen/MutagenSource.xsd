@@ -53,13 +53,6 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
-        </xs:extension>
-      </xs:complexContent>
-    </xs:complexType>
-
-    <xs:complexType name="String">
-      <xs:complexContent>
-        <xs:extension base="String">
           <xs:attribute name="recordType" type="xs:string" >
             <xs:annotation>
               <xs:documentation>
@@ -81,20 +74,6 @@
     <xs:complexType name="ByteArray">
       <xs:complexContent>
         <xs:extension base="ByteArray">
-          <xs:attribute name="recordType" type="xs:string" >
-            <xs:annotation>
-              <xs:documentation>
-                Typical four letter ASCII tag used for the record type.
-              </xs:documentation>
-            </xs:annotation>
-          </xs:attribute>
-          <xs:attribute name="optional" type="xs:boolean" >
-            <xs:annotation>
-              <xs:documentation>
-                Marks this field as optional
-              </xs:documentation>
-            </xs:annotation>
-          </xs:attribute>
           <xs:attribute name="length" type="xs:string" />
         </xs:extension>
       </xs:complexContent>

@@ -422,7 +422,7 @@ namespace Mutagen
 
         #endregion
 
-        #region Record Types
+        #region Mutagen
         public static readonly RecordType TES4_HEADER = new RecordType("TES4");
         #endregion
 

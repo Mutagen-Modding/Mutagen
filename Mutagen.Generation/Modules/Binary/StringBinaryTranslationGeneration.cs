@@ -24,7 +24,7 @@ namespace Mutagen.Generation
             string doMaskAccessor,
             string maskAccessor)
         {
-            StringType stringType = typeGen as StringType;
+            var data = typeGen.CustomData[MutagenFieldData.DATA_KEY] as MutagenFieldData;
             using (var args = new ArgsWrapper(fg,
                 $"{this.Namespace}StringBinaryTranslation.Instance.Write"))
             {
@@ -32,13 +32,13 @@ namespace Mutagen.Generation
                 args.Add($"item: {itemAccessor}");
                 args.Add($"doMasks: {doMaskAccessor}");
                 args.Add($"errorMask: out {maskAccessor}");
-                if (stringType.RecordType.HasValue)
+                if (data.RecordType.HasValue)
                 {
-                    args.Add($"header: {stringType.RecordType.Value.HeaderName}");
+                    args.Add($"header: {data.RecordType.Value.HeaderName}");
                 }
                 else
                 {
-                    args.Add($"length: {stringType.Length.Value}");
+                    args.Add($"length: {data.Length.Value}");
                 }
             }
         }
@@ -51,20 +51,20 @@ namespace Mutagen.Generation
             string doMaskAccessor,
             string maskAccessor)
         {
-            StringType stringType = typeGen as StringType;
+            var data = typeGen.CustomData[MutagenFieldData.DATA_KEY] as MutagenFieldData;
             using (var args = new ArgsWrapper(fg,
                 $"var tryGet = {this.Namespace}StringBinaryTranslation.Instance.Parse"))
             {
                 args.Add(nodeAccessor);
                 args.Add($"doMasks: {doMaskAccessor}");
                 args.Add($"errorMask: out {maskAccessor}");
-                if (stringType.RecordType.HasValue)
+                if (data.RecordType.HasValue)
                 {
-                    args.Add($"header: {stringType.RecordType.Value.HeaderName}");
+                    args.Add($"header: {data.RecordType.Value.HeaderName}");
                 }
                 else
                 {
-                    args.Add($"length: {stringType.Length.Value}");
+                    args.Add($"length: {data.Length.Value}");
                 }
             }
             fg.AppendLine("if (tryGet.Succeeded)");
@@ -82,7 +82,7 @@ namespace Mutagen.Generation
             string doMaskAccessor,
             string maskAccessor)
         {
-            StringType stringType = typeGen as StringType;
+            var data = typeGen.CustomData[MutagenFieldData.DATA_KEY] as MutagenFieldData;
             using (var args = new ArgsWrapper(fg,
                 $"{retAccessor}{this.Namespace}StringBinaryTranslation.Instance.Parse",
                 (this.Nullable ? string.Empty : $".Bubble((o) => o.Value)")))
@@ -94,13 +94,13 @@ namespace Mutagen.Generation
                 }
                 args.Add($"doMasks: {doMaskAccessor}");
                 args.Add($"errorMask: out {maskAccessor}");
-                if (stringType.RecordType.HasValue)
+                if (data.RecordType.HasValue)
                 {
-                    args.Add($"header: {stringType.RecordType.Value.HeaderName}");
+                    args.Add($"header: {data.RecordType.Value.HeaderName}");
                 }
                 else
                 {
-                    args.Add($"length: {stringType.Length.Value}");
+                    args.Add($"length: {data.Length.Value}");
                 }
             }
         }

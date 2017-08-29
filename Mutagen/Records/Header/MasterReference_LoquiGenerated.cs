@@ -453,8 +453,9 @@ namespace Mutagen
 
         #endregion
 
-        #region Record Types
+        #region Mutagen
         public static readonly RecordType MAST_HEADER = new RecordType("MAST");
+        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         #endregion
 
         #region OblivionBinary Translation

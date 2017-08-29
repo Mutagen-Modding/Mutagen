@@ -785,7 +785,7 @@ namespace Mutagen
 
         #endregion
 
-        #region Record Types
+        #region Mutagen
         public static readonly RecordType HEDR_HEADER = new RecordType("HEDR");
         public static readonly RecordType OFST_HEADER = new RecordType("OFST");
         public static readonly RecordType DELE_HEADER = new RecordType("DELE");
