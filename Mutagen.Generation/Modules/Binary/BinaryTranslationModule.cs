@@ -104,7 +104,7 @@ namespace Mutagen.Generation
                 internalToDo("reader");
             }
         }
-        
+
         public override void GenerateInClass(ObjectGeneration obj, FileGeneration fg)
         {
             base.GenerateInClass(obj, fg);
@@ -113,6 +113,11 @@ namespace Mutagen.Generation
 
         private void GenerateCreateExtras(ObjectGeneration obj, FileGeneration fg)
         {
+            RecordType? mutaData = null;
+            if (obj.CustomData.TryGetValue(nameof(RecordType), out var dat))
+            {
+                mutaData = (RecordType)dat;
+            }
             using (var args = new FunctionWrapper(fg,
                 $"private static {obj.ObjectName} Create_{ModuleNickname}_Internal"))
             {
@@ -122,17 +127,82 @@ namespace Mutagen.Generation
             }
             using (new BraceWrapper(fg))
             {
+                if (mutaData != null)
+                {
+                    using (var args = new ArgsWrapper(fg,
+                        $"var length = HeaderTranslation.Parse"))
+                    {
+                        args.Add("reader");
+                        args.Add(mutaData.Value.HeaderName);
+                    }
+                    fg.AppendLine($"var finalPosition = reader.BaseStream.Position + length;");
+                }
+                else
+                {
+                    fg.AppendLine($"var finalPosition = reader.BaseStream.Length;");
+                }
+                using (var args = new ArgsWrapper(fg,
+                    $"return Create_{ModuleNickname}_Internal"))
+                {
+                    args.Add("reader: reader");
+                    args.Add("doMasks: doMasks");
+                    args.Add("finalPosition: finalPosition");
+                    args.Add("errorMask: errorMask");
+                }
+            }
+            fg.AppendLine();
+
+            using (var args = new FunctionWrapper(fg,
+                $"private static {obj.ObjectName} Create_{ModuleNickname}_Internal"))
+            {
+                args.Add("BinaryReader reader");
+                args.Add("bool doMasks");
+                args.Add("long finalPosition");
+                args.Add($"Func<{obj.ErrorMask}> errorMask");
+            }
+            using (new BraceWrapper(fg))
+            {
                 fg.AppendLine($"var ret = new {obj.Name}{obj.GenericTypes}();");
                 fg.AppendLine("try");
                 using (new BraceWrapper(fg))
                 {
-                    using (var args = new ArgsWrapper(fg,
-                        $"Fill_{ModuleNickname}_Internal"))
+                    foreach (var field in obj.Fields)
                     {
-                        args.Add("item: ret");
-                        args.Add("reader: reader");
-                        args.Add("doMasks: doMasks");
-                        args.Add("errorMask: errorMask");
+                        if (field.TryGetFieldData(out var data)
+                            && data.RecordType.HasValue) continue;
+                        if (!this.TryGetTypeGeneration(field.GetType(), out var generator))
+                        {
+                            throw new ArgumentException("Unsupported type generator: " + field);
+                        }
+                        using (new BraceWrapper(fg))
+                        {
+                            var maskType = this.Gen.MaskModule.GetMaskModule(field.GetType()).GetErrorMaskTypeStr(field);
+                            fg.AppendLine($"{maskType} subMask;");
+                            generator.GenerateCopyIn(
+                                fg: fg,
+                                typeGen: field,
+                                readerAccessor: "reader",
+                                itemAccessor: $"ret.{field.ProtectedName}",
+                                doMaskAccessor: "doMasks",
+                                maskAccessor: $"subMask");
+                            fg.AppendLine("if (doMasks && subMask != null)");
+                            using (new BraceWrapper(fg))
+                            {
+                                fg.AppendLine($"errorMask().{field.Name} = subMask;");
+                            }
+                        }
+                    }
+                    fg.AppendLine($"while (reader.BaseStream.Position < finalPosition)");
+                    using (new BraceWrapper(fg))
+                    {
+                        using (var args = new ArgsWrapper(fg,
+                            $"Fill_{ModuleNickname}_Internal"))
+                        {
+                            args.Add("item: ret");
+                            args.Add("reader: reader");
+                            args.Add("doMasks: doMasks");
+                            args.Add("errorMask: errorMask");
+                        }
                     }
                 }
                 fg.AppendLine("catch (Exception ex)");
@@ -155,30 +225,44 @@ namespace Mutagen.Generation
             }
             using (new BraceWrapper(fg))
             {
-                foreach (var field in obj.IterateFields())
+                using (var args = new ArgsWrapper(fg,
+                    $"var nextRecordType = HeaderTranslation.GetNextRecordType"))
                 {
-                    if (!this.TryGetTypeGeneration(field.Field.GetType(), out var generator))
+                    args.Add("reader");
+                    args.Add("out var subLength");
+                }
+                fg.AppendLine("switch (nextRecordType.Type)");
+                using (new BraceWrapper(fg))
+                {
+                    foreach (var field in obj.IterateFields())
                     {
-                        throw new ArgumentException("Unsupported type generator: " + field.Field);
-                    }
-
-                    if (generator.ShouldGenerateCopyIn(field.Field))
-                    {
-                        using (new BraceWrapper(fg))
+                        if (!field.Field.TryGetFieldData(out var data)
+                            || !data.RecordType.HasValue) continue;
+                        if (!this.TryGetTypeGeneration(field.Field.GetType(), out var generator))
                         {
-                            var maskType = this.Gen.MaskModule.GetMaskModule(field.Field.GetType()).GetErrorMaskTypeStr(field.Field);
-                            fg.AppendLine($"{maskType} subMask;");
-                            generator.GenerateCopyIn(
-                                fg: fg,
-                                typeGen: field.Field,
-                                readerAccessor: "reader",
-                                itemAccessor: $"item.{field.Field.ProtectedName}",
-                                doMaskAccessor: "doMasks",
-                                maskAccessor: $"subMask");
-                            fg.AppendLine("if (doMasks && subMask != null)");
+                            throw new ArgumentException("Unsupported type generator: " + field.Field);
+                        }
+
+                        if (generator.ShouldGenerateCopyIn(field.Field))
+                        {
+                            fg.AppendLine($"case \"{data.RecordType.Value.Type}\":");
                             using (new BraceWrapper(fg))
                             {
-                                fg.AppendLine($"errorMask().{field.Field.Name} = subMask;");
+                                var maskType = this.Gen.MaskModule.GetMaskModule(field.Field.GetType()).GetErrorMaskTypeStr(field.Field);
+                                fg.AppendLine($"{maskType} subMask;");
+                                generator.GenerateCopyIn(
+                                    fg: fg,
+                                    typeGen: field.Field,
+                                    readerAccessor: "reader",
+                                    itemAccessor: $"item.{field.Field.ProtectedName}",
+                                    doMaskAccessor: "doMasks",
+                                    maskAccessor: $"subMask");
+                                fg.AppendLine("if (doMasks && subMask != null)");
+                                using (new BraceWrapper(fg))
+                                {
+                                    fg.AppendLine($"errorMask().{field.Field.Name} = subMask;");
+                                }
+                                fg.AppendLine("break;");
                             }
                         }
                     }

@@ -44,6 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\ObjectGenerationExt.cs" />
+    <Compile Include="Extensions\TypeGenerationExt.cs" />
     <Compile Include="Fields\MutagenFieldData.cs" />
     <Compile Include="Fields\UnknownType.cs" />
     <Compile Include="Modules\Binary\BinaryTranslationModule.cs" />

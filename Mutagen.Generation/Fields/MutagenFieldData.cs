@@ -11,7 +11,7 @@ namespace Mutagen.Generation
         public const string DATA_KEY = "MutagenData";
         public RecordType? RecordType;
         public bool Optional;
-        public ulong? Length;
+        public long? Length;
         public bool IncludeInLength;
         public bool Vestigial;
     }

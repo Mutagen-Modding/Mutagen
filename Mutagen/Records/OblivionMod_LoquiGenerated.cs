@@ -670,14 +670,31 @@ namespace Mutagen
             bool doMasks,
             Func<OblivionMod_ErrorMask> errorMask)
         {
+            var finalPosition = reader.BaseStream.Length;
+            return Create_OblivionBinary_Internal(
+                reader: reader,
+                doMasks: doMasks,
+                finalPosition: finalPosition,
+                errorMask: errorMask);
+        }
+
+        private static OblivionMod Create_OblivionBinary_Internal(
+            BinaryReader reader,
+            bool doMasks,
+            long finalPosition,
+            Func<OblivionMod_ErrorMask> errorMask)
+        {
             var ret = new OblivionMod();
             try
             {
-                Fill_OblivionBinary_Internal(
-                    item: ret,
-                    reader: reader,
-                    doMasks: doMasks,
-                    errorMask: errorMask);
+                while (reader.BaseStream.Position < finalPosition)
+                {
+                    Fill_OblivionBinary_Internal(
+                        item: ret,
+                        reader: reader,
+                        doMasks: doMasks,
+                        errorMask: errorMask);
+                }
             }
             catch (Exception ex)
             when (doMasks)
@@ -693,25 +710,33 @@ namespace Mutagen
             bool doMasks,
             Func<OblivionMod_ErrorMask> errorMask)
         {
+            var nextRecordType = HeaderTranslation.GetNextRecordType(
+                reader,
+                out var subLength);
+            switch (nextRecordType.Type)
             {
-                MaskItem<Exception, TES4_ErrorMask> subMask;
-                var tmp = TES4.Create_OblivionBinary(
-                    reader: reader,
-                    doMasks: doMasks,
-                    errorMask: out TES4_ErrorMask createMask);
-                TES4Common.CopyFieldsFrom(
-                    item: item._TES4_Object,
-                    rhs: tmp,
-                    def: null,
-                    cmds: null,
-                    copyMask: null,
-                    doErrorMask: doMasks,
-                    errorMask: out TES4_ErrorMask copyMask);
-                var loquiMask = TES4_ErrorMask.Combine(createMask, copyMask);
-                subMask = loquiMask == null ? null : new MaskItem<Exception, TES4_ErrorMask>(null, loquiMask);
-                if (doMasks && subMask != null)
+                case "TES4":
                 {
-                    errorMask().TES4 = subMask;
+                    MaskItem<Exception, TES4_ErrorMask> subMask;
+                    var tmp = TES4.Create_OblivionBinary(
+                        reader: reader,
+                        doMasks: doMasks,
+                        errorMask: out TES4_ErrorMask createMask);
+                    TES4Common.CopyFieldsFrom(
+                        item: item._TES4_Object,
+                        rhs: tmp,
+                        def: null,
+                        cmds: null,
+                        copyMask: null,
+                        doErrorMask: doMasks,
+                        errorMask: out TES4_ErrorMask copyMask);
+                    var loquiMask = TES4_ErrorMask.Combine(createMask, copyMask);
+                    subMask = loquiMask == null ? null : new MaskItem<Exception, TES4_ErrorMask>(null, loquiMask);
+                    if (doMasks && subMask != null)
+                    {
+                        errorMask().TES4 = subMask;
+                    }
+                    break;
                 }
             }
         }

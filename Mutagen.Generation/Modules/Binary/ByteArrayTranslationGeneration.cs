@@ -62,9 +62,7 @@ namespace Mutagen.Generation
                 args.Add($"errorMask: out {maskAccessor}");
                 if (data.RecordType.HasValue)
                 {
-                    args.Add($"header: {data.RecordType.Value.HeaderName}");
-                    args.Add($"lengthLength: {data.Length.Value}");
-                    args.Add($"nullable: {(data.Optional ? "true" : "false")}");
+                    args.Add($"length: subLength");
                 }
                 else
                 {
@@ -100,9 +98,7 @@ namespace Mutagen.Generation
                 args.Add($"errorMask: out {maskAccessor}");
                 if (data.RecordType.HasValue)
                 {
-                    args.Add($"header: {data.RecordType.Value.HeaderName}");
-                    args.Add($"lengthLength: {data.Length.Value}");
-                    args.Add($"nullable: {(data.Optional ? "true" : "false")}");
+                    args.Add($"length: subLength");
                 }
                 else
                 {

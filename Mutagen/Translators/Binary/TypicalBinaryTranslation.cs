@@ -23,7 +23,7 @@ namespace Mutagen.Binary
             throw new NotImplementedException();
         }
 
-        public TryGet<T> Parse(BinaryReader reader, ulong length, bool doMasks, out Exception errorMask)
+        public TryGet<T> Parse(BinaryReader reader, long length, bool doMasks, out Exception errorMask)
         {
             try
             {
@@ -46,42 +46,14 @@ namespace Mutagen.Binary
             }
         }
 
-        public TryGet<T> Parse(BinaryReader reader, RecordType header, byte lengthLength, bool nullable, bool doMasks, out Exception errorMask)
-        {
-            try
-            {
-                var parse = ParseValue(reader);
-                if (!nullable && parse == null)
-                {
-                    throw new ArgumentException("Value was unexpectedly null.");
-                }
-                errorMask = null;
-                return TryGet<T>.Succeed(parse);
-            }
-            catch (Exception ex)
-            {
-                if (doMasks)
-                {
-                    errorMask = ex;
-                    return TryGet<T>.Failure;
-                }
-                throw;
-            }
-        }
-
         protected virtual void WriteValue(BinaryWriter writer, T item)
         {
             throw new NotImplementedException();
         }
 
-        TryGet<T> IBinaryTranslation<T, Exception>.Parse(BinaryReader reader, ulong length, bool doMasks, out Exception errorMask)
+        TryGet<T> IBinaryTranslation<T, Exception>.Parse(BinaryReader reader, long length, bool doMasks, out Exception errorMask)
         {
             return Parse(reader, length: length, doMasks: doMasks, errorMask: out errorMask);
-        }
-
-        TryGet<T> IBinaryTranslation<T, Exception>.Parse(BinaryReader reader, RecordType header, byte lengthLength, bool doMasks, out Exception maskObj)
-        {
-            return Parse(reader, header, lengthLength, true, doMasks, out maskObj);
         }
 
         private Exception Write_Internal(BinaryWriter writer, T item, bool doMasks, bool nullable)

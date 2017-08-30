@@ -702,14 +702,31 @@ namespace Mutagen
             bool doMasks,
             Func<MasterReference_ErrorMask> errorMask)
         {
+            var finalPosition = reader.BaseStream.Length;
+            return Create_OblivionBinary_Internal(
+                reader: reader,
+                doMasks: doMasks,
+                finalPosition: finalPosition,
+                errorMask: errorMask);
+        }
+
+        private static MasterReference Create_OblivionBinary_Internal(
+            BinaryReader reader,
+            bool doMasks,
+            long finalPosition,
+            Func<MasterReference_ErrorMask> errorMask)
+        {
             var ret = new MasterReference();
             try
             {
-                Fill_OblivionBinary_Internal(
-                    item: ret,
-                    reader: reader,
-                    doMasks: doMasks,
-                    errorMask: errorMask);
+                while (reader.BaseStream.Position < finalPosition)
+                {
+                    Fill_OblivionBinary_Internal(
+                        item: ret,
+                        reader: reader,
+                        doMasks: doMasks,
+                        errorMask: errorMask);
+                }
             }
             catch (Exception ex)
             when (doMasks)
@@ -725,35 +742,45 @@ namespace Mutagen
             bool doMasks,
             Func<MasterReference_ErrorMask> errorMask)
         {
+            var nextRecordType = HeaderTranslation.GetNextRecordType(
+                reader,
+                out var subLength);
+            switch (nextRecordType.Type)
             {
-                Exception subMask;
-                var tryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
-                    reader,
-                    doMasks: doMasks,
-                    errorMask: out subMask,
-                    header: MAST_HEADER);
-                if (tryGet.Succeeded)
+                case "MAST":
                 {
-                    item._Master.Item = tryGet.Value;
+                    Exception subMask;
+                    var tryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
+                        reader,
+                        doMasks: doMasks,
+                        errorMask: out subMask,
+                        header: MAST_HEADER);
+                    if (tryGet.Succeeded)
+                    {
+                        item._Master.Item = tryGet.Value;
+                    }
+                    if (doMasks && subMask != null)
+                    {
+                        errorMask().Master = subMask;
+                    }
+                    break;
                 }
-                if (doMasks && subMask != null)
+                case "DATA":
                 {
-                    errorMask().Master = subMask;
-                }
-            }
-            {
-                Exception subMask;
-                var tryGet = Mutagen.Binary.UInt64BinaryTranslation.Instance.Parse(
-                    reader,
-                    doMasks: doMasks,
-                    errorMask: out subMask);
-                if (tryGet.Succeeded)
-                {
-                    item._FileSize.Item = tryGet.Value;
-                }
-                if (doMasks && subMask != null)
-                {
-                    errorMask().FileSize = subMask;
+                    Exception subMask;
+                    var tryGet = Mutagen.Binary.UInt64BinaryTranslation.Instance.Parse(
+                        reader,
+                        doMasks: doMasks,
+                        errorMask: out subMask);
+                    if (tryGet.Succeeded)
+                    {
+                        item._FileSize.Item = tryGet.Value;
+                    }
+                    if (doMasks && subMask != null)
+                    {
+                        errorMask().FileSize = subMask;
+                    }
+                    break;
                 }
             }
         }

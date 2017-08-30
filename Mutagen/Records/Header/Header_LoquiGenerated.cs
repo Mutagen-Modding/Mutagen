@@ -492,6 +492,10 @@ namespace Mutagen
 
         #endregion
 
+        #region Mutagen
+        public static readonly RecordType HEDR_HEADER = new RecordType("HEDR");
+        #endregion
+
         #region OblivionBinary Translation
         #region OblivionBinary Create
         public static Header Create_OblivionBinary(BinaryReader reader)
@@ -736,14 +740,76 @@ namespace Mutagen
             bool doMasks,
             Func<Header_ErrorMask> errorMask)
         {
+            var finalPosition = reader.BaseStream.Length;
+            return Create_OblivionBinary_Internal(
+                reader: reader,
+                doMasks: doMasks,
+                finalPosition: finalPosition,
+                errorMask: errorMask);
+        }
+
+        private static Header Create_OblivionBinary_Internal(
+            BinaryReader reader,
+            bool doMasks,
+            long finalPosition,
+            Func<Header_ErrorMask> errorMask)
+        {
             var ret = new Header();
             try
             {
-                Fill_OblivionBinary_Internal(
-                    item: ret,
-                    reader: reader,
-                    doMasks: doMasks,
-                    errorMask: errorMask);
+                {
+                    Exception subMask;
+                    var tryGet = Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
+                        reader,
+                        doMasks: doMasks,
+                        errorMask: out subMask);
+                    if (tryGet.Succeeded)
+                    {
+                        ret._Version.Item = tryGet.Value;
+                    }
+                    if (doMasks && subMask != null)
+                    {
+                        errorMask().Version = subMask;
+                    }
+                }
+                {
+                    Exception subMask;
+                    var tryGet = Mutagen.Binary.Int64BinaryTranslation.Instance.Parse(
+                        reader,
+                        doMasks: doMasks,
+                        errorMask: out subMask);
+                    if (tryGet.Succeeded)
+                    {
+                        ret._NumRecords.Item = tryGet.Value;
+                    }
+                    if (doMasks && subMask != null)
+                    {
+                        errorMask().NumRecords = subMask;
+                    }
+                }
+                {
+                    Exception subMask;
+                    var tryGet = Mutagen.Binary.UInt64BinaryTranslation.Instance.Parse(
+                        reader,
+                        doMasks: doMasks,
+                        errorMask: out subMask);
+                    if (tryGet.Succeeded)
+                    {
+                        ret._NextObjectID.Item = tryGet.Value;
+                    }
+                    if (doMasks && subMask != null)
+                    {
+                        errorMask().NextObjectID = subMask;
+                    }
+                }
+                while (reader.BaseStream.Position < finalPosition)
+                {
+                    Fill_OblivionBinary_Internal(
+                        item: ret,
+                        reader: reader,
+                        doMasks: doMasks,
+                        errorMask: errorMask);
+                }
             }
             catch (Exception ex)
             when (doMasks)
@@ -759,50 +825,11 @@ namespace Mutagen
             bool doMasks,
             Func<Header_ErrorMask> errorMask)
         {
+            var nextRecordType = HeaderTranslation.GetNextRecordType(
+                reader,
+                out var subLength);
+            switch (nextRecordType.Type)
             {
-                Exception subMask;
-                var tryGet = Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
-                    reader,
-                    doMasks: doMasks,
-                    errorMask: out subMask);
-                if (tryGet.Succeeded)
-                {
-                    item._Version.Item = tryGet.Value;
-                }
-                if (doMasks && subMask != null)
-                {
-                    errorMask().Version = subMask;
-                }
-            }
-            {
-                Exception subMask;
-                var tryGet = Mutagen.Binary.Int64BinaryTranslation.Instance.Parse(
-                    reader,
-                    doMasks: doMasks,
-                    errorMask: out subMask);
-                if (tryGet.Succeeded)
-                {
-                    item._NumRecords.Item = tryGet.Value;
-                }
-                if (doMasks && subMask != null)
-                {
-                    errorMask().NumRecords = subMask;
-                }
-            }
-            {
-                Exception subMask;
-                var tryGet = Mutagen.Binary.UInt64BinaryTranslation.Instance.Parse(
-                    reader,
-                    doMasks: doMasks,
-                    errorMask: out subMask);
-                if (tryGet.Succeeded)
-                {
-                    item._NextObjectID.Item = tryGet.Value;
-                }
-                if (doMasks && subMask != null)
-                {
-                    errorMask().NextObjectID = subMask;
-                }
             }
         }
 

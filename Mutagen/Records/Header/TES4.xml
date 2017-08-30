@@ -3,14 +3,12 @@
   <Object name="TES4" recordType="TES4" GUID="d26d9f2a-53af-4c45-9490-dfdb377b6655" ID="2">
     <Fields>
       <ByteArray name="Fluff" nullable="false" length="12" includeInLength="false" />
-      <Int64 name="NumRecords" />
-      <UInt64 name="NextObjectID" />
       <RefDirect name="Header" refName="Header" singleton="NotNull" />
       <ByteArray name="TypeOffsets" recordType="OFST"  optional="true" />
       <ByteArray name="Deleted" recordType="DELE" optional="true" />
       <String name="Author" recordType="CNAM" maxLength="512" optional="true" />
       <String name="Description" recordType="SNAM" maxLength="512" optional="true" />
-      <RefList name="MasterReferences" refName="Header" />
+      <RefList name="MasterReferences" refName="MasterReference" />
     </Fields>
   </Object>
 </Loqui>

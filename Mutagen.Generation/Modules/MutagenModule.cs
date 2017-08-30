@@ -16,9 +16,13 @@ namespace Mutagen.Generation
         public override void GenerateInClass(ObjectGeneration obj, FileGeneration fg)
         {
             HashSet<RecordType> recordTypes = new HashSet<RecordType>();
+            if (obj.TryGetRecordType(out var recType))
+            {
+                recordTypes.Add(recType);
+            }
             foreach (var field in obj.Fields)
             {
-                var data = field.CustomData[MutagenFieldData.DATA_KEY] as MutagenFieldData;
+                var data = field.GetFieldData();
                 if (!data.RecordType.HasValue) continue;
                 recordTypes.Add(data.RecordType.Value);
             }
@@ -33,7 +37,7 @@ namespace Mutagen.Generation
             var record = obj.Node.GetAttribute("recordType");
             if (record != null)
             {
-                obj.CustomData[nameof(RecordType)] = new RecordType(record);
+                obj.CustomData[typeof(RecordType)] = new RecordType(record);
             }
         }
 
@@ -46,18 +50,16 @@ namespace Mutagen.Generation
                 data.RecordType = new RecordType(recordAttr);
             }
             else if (field is LoquiType loqui
-                && loqui.RefGen.Obj.CustomData.TryGetValue(nameof(RecordType), out var recType)
-                && recType != null)
+                && loqui.RefGen.Obj.TryGetRecordType(out var recType))
             {
-                data.RecordType = (RecordType)recType;
+                data.RecordType = recType;
             }
             else if (field is LoquiListType loquiList)
             {
                 loqui = loquiList.SubTypeGeneration as LoquiType;
-                if (loqui.RefGen.Obj.CustomData.TryGetValue(nameof(RecordType), out recType)
-                    && recType != null)
+                if (loqui.RefGen.Obj.TryGetRecordType(out recType))
                 {
-                    data.RecordType = (RecordType)recType;
+                    data.RecordType = recType;
                 }
             }
             data.Optional = node.GetAttribute<bool>("optional", false);
@@ -65,7 +67,7 @@ namespace Mutagen.Generation
             {
                 throw new ArgumentException("Cannot have an optional field if it is not a record typed field.");
             }
-            data.Length = node.GetAttribute<ulong?>("length", null);
+            data.Length = node.GetAttribute<long?>("length", null);
             if (data.Length.HasValue && data.RecordType.HasValue)
             {
                 throw new ArgumentException("Cannot define both length and record type.");
@@ -77,7 +79,8 @@ namespace Mutagen.Generation
             }
             if (!data.Length.HasValue 
                 && !data.RecordType.HasValue
-                && !(field is PrimitiveType))
+                && !(field is PrimitiveType)
+                && !(field is ContainerType))
             {
                 throw new ArgumentException("Have to define either length or record type.");
             }
