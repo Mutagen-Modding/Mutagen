@@ -8,7 +8,6 @@ namespace Mutagen.Generation
 {
     public class MutagenFieldData
     {
-        public const string DATA_KEY = "MutagenData";
         public RecordType? RecordType;
         public bool Optional;
         public long? Length;

@@ -24,7 +24,7 @@ namespace Mutagen.Generation
             string doMaskAccessor,
             string maskAccessor)
         {
-            var data = typeGen.CustomData[MutagenFieldData.DATA_KEY] as MutagenFieldData;
+            var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
             using (var args = new ArgsWrapper(fg,
                 $"{this.Namespace}StringBinaryTranslation.Instance.Write"))
             {
@@ -51,7 +51,7 @@ namespace Mutagen.Generation
             string doMaskAccessor,
             string maskAccessor)
         {
-            var data = typeGen.CustomData[MutagenFieldData.DATA_KEY] as MutagenFieldData;
+            var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
             using (var args = new ArgsWrapper(fg,
                 $"var tryGet = {this.Namespace}StringBinaryTranslation.Instance.Parse"))
             {
@@ -82,7 +82,7 @@ namespace Mutagen.Generation
             string doMaskAccessor,
             string maskAccessor)
         {
-            var data = typeGen.CustomData[MutagenFieldData.DATA_KEY] as MutagenFieldData;
+            var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
             using (var args = new ArgsWrapper(fg,
                 $"{retAccessor}{this.Namespace}StringBinaryTranslation.Instance.Parse",
                 (this.Nullable ? string.Empty : $".Bubble((o) => o.Value)")))

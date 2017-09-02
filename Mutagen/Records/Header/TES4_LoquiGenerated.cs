@@ -716,6 +716,7 @@ namespace Mutagen
         public static readonly RecordType DELE_HEADER = new RecordType("DELE");
         public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
         public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
+        public static readonly RecordType MAST_HEADER = new RecordType("MAST");
         #endregion
 
         #region OblivionBinary Translation
@@ -962,7 +963,10 @@ namespace Mutagen
             bool doMasks,
             Func<TES4_ErrorMask> errorMask)
         {
-            var finalPosition = reader.BaseStream.Length;
+            var length = HeaderTranslation.Parse(
+                reader,
+                TES4_HEADER);
+            var finalPosition = reader.BaseStream.Position + length;
             return Create_OblivionBinary_Internal(
                 reader: reader,
                 doMasks: doMasks,
@@ -993,32 +997,6 @@ namespace Mutagen
                     if (doMasks && subMask != null)
                     {
                         errorMask().Fluff = subMask;
-                    }
-                }
-                {
-                    MaskItem<Exception, IEnumerable<MaskItem<Exception, MasterReference_ErrorMask>>> subMask;
-                    var listTryGet = Mutagen.Binary.ListBinaryTranslation<MasterReference, MaskItem<Exception, MasterReference_ErrorMask>>.Instance.Parse(
-                        reader: reader,
-                        doMasks: doMasks,
-                        maskObj: out subMask,
-                        transl: (BinaryReader r, bool listDoMasks, out MaskItem<Exception, MasterReference_ErrorMask> listSubMask) =>
-                        {
-                            MasterReference_ErrorMask loquiMask;
-                            TryGet<MasterReference> tryGet = TryGet<MasterReference>.Succeed((MasterReference)MasterReference.Create_OblivionBinary(
-                                reader: r,
-                                doMasks: listDoMasks,
-                                errorMask: out loquiMask));
-                            listSubMask = loquiMask == null ? null : new MaskItem<Exception, MasterReference_ErrorMask>(null, loquiMask);
-                            return tryGet;
-                        }
-                        );
-                    if (listTryGet.Succeeded)
-                    {
-                        ret._MasterReferences.SetTo(listTryGet.Value);
-                    }
-                    if (doMasks && subMask != null)
-                    {
-                        errorMask().MasterReferences = subMask;
                     }
                 }
                 while (reader.BaseStream.Position < finalPosition)
@@ -1137,6 +1115,34 @@ namespace Mutagen
                     if (doMasks && subMask != null)
                     {
                         errorMask().Description = subMask;
+                    }
+                    break;
+                }
+                case "MAST":
+                {
+                    MaskItem<Exception, IEnumerable<MaskItem<Exception, MasterReference_ErrorMask>>> subMask;
+                    var listTryGet = Mutagen.Binary.ListBinaryTranslation<MasterReference, MaskItem<Exception, MasterReference_ErrorMask>>.Instance.Parse(
+                        reader: reader,
+                        doMasks: doMasks,
+                        maskObj: out subMask,
+                        transl: (BinaryReader r, bool listDoMasks, out MaskItem<Exception, MasterReference_ErrorMask> listSubMask) =>
+                        {
+                            MasterReference_ErrorMask loquiMask;
+                            TryGet<MasterReference> tryGet = TryGet<MasterReference>.Succeed((MasterReference)MasterReference.Create_OblivionBinary(
+                                reader: r,
+                                doMasks: listDoMasks,
+                                errorMask: out loquiMask));
+                            listSubMask = loquiMask == null ? null : new MaskItem<Exception, MasterReference_ErrorMask>(null, loquiMask);
+                            return tryGet;
+                        }
+                        );
+                    if (listTryGet.Succeeded)
+                    {
+                        item._MasterReferences.SetTo(listTryGet.Value);
+                    }
+                    if (doMasks && subMask != null)
+                    {
+                        errorMask().MasterReferences = subMask;
                     }
                     break;
                 }

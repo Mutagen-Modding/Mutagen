@@ -16,7 +16,7 @@ namespace Mutagen.Generation
         public override void GenerateInClass(ObjectGeneration obj, FileGeneration fg)
         {
             HashSet<RecordType> recordTypes = new HashSet<RecordType>();
-            if (obj.TryGetRecordType(out var recType))
+            if (obj.TryGetTriggeringRecordType(out var recType))
             {
                 recordTypes.Add(recType);
             }
@@ -37,7 +37,20 @@ namespace Mutagen.Generation
             var record = obj.Node.GetAttribute("recordType");
             if (record != null)
             {
-                obj.CustomData[typeof(RecordType)] = new RecordType(record);
+                obj.CustomData[Constants.RECORD_TYPE] = new RecordType(record);
+                obj.CustomData[Constants.TRIGGERING_RECORD_TYPE] = new RecordType(record);
+            }
+            else
+            {
+                var field = obj.Node.Element(XName.Get("Fields", LoquiGenerator.Namespace))?.Elements().FirstOrDefault();
+                if (field != null)
+                {
+                    record = field.GetAttribute("recordType");
+                    if (record != null)
+                    {
+                        obj.CustomData[Constants.TRIGGERING_RECORD_TYPE] = new RecordType(record);
+                    }
+                }
             }
         }
 
@@ -57,7 +70,7 @@ namespace Mutagen.Generation
             else if (field is LoquiListType loquiList)
             {
                 loqui = loquiList.SubTypeGeneration as LoquiType;
-                if (loqui.RefGen.Obj.TryGetRecordType(out recType))
+                if (loqui.RefGen.Obj.TryGetTriggeringRecordType(out recType))
                 {
                     data.RecordType = recType;
                 }
@@ -86,7 +99,7 @@ namespace Mutagen.Generation
             }
             data.IncludeInLength = node.GetAttribute<bool>("includeInLength", true);
             data.Vestigial = node.GetAttribute<bool>("vestigial", false);
-            field.CustomData[MutagenFieldData.DATA_KEY] = data;
+            field.CustomData[Constants.DATA_KEY] = data;
         }
     }
 }

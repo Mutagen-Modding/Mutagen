@@ -18,10 +18,7 @@ namespace Mutagen.Binary
 
         protected abstract T ParseBytes(byte[] bytes);
 
-        protected virtual T ParseValue(BinaryReader reader, long length)
-        {
-            throw new NotImplementedException();
-        }
+        protected abstract T ParseValue(BinaryReader reader, long length);
 
         public TryGet<T> Parse(BinaryReader reader, long length, bool doMasks, out Exception errorMask)
         {

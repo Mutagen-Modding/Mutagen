@@ -17,7 +17,18 @@ namespace Mutagen.Generation
 
         public static bool TryGetRecordType(this ObjectGeneration objGen, out RecordType recType)
         {
-            if (objGen.CustomData.TryGetValue(typeof(RecordType), out var dataObj))
+            if (objGen.CustomData.TryGetValue(Constants.RECORD_TYPE, out var dataObj))
+            {
+                recType = (RecordType)dataObj;
+                return true;
+            }
+            recType = default(RecordType);
+            return false;
+        }
+
+        public static bool TryGetTriggeringRecordType(this ObjectGeneration objGen, out RecordType recType)
+        {
+            if (objGen.CustomData.TryGetValue(Constants.TRIGGERING_RECORD_TYPE, out var dataObj))
             {
                 recType = (RecordType)dataObj;
                 return true;

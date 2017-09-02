@@ -27,11 +27,6 @@ namespace Mutagen.Binary
                 transl: (BinaryReader r, bool internalDoMasks, out M obj) => transl.Item.Value.Parse(reader: r, length: length, doMasks: internalDoMasks, maskObj: out obj));
         }
 
-        public TryGet<IEnumerable<T>> Parse(BinaryReader reader, RecordType header, byte lengthLength, bool doMasks, out MaskItem<Exception, IEnumerable<M>> maskObj)
-        {
-            throw new NotImplementedException();
-        }
-
         public TryGet<IEnumerable<T>> Parse(
             BinaryReader reader,
             bool doMasks,
@@ -63,6 +58,48 @@ namespace Mutagen.Binary
                 //        maskList.Add(subMaskObj);
                 //    }
                 //}
+                maskObj = maskList == null ? null : new MaskItem<Exception, IEnumerable<M>>(null, maskList);
+                return TryGet<IEnumerable<T>>.Succeed(ret);
+            }
+            catch (Exception ex)
+            when (doMasks)
+            {
+                maskObj = new MaskItem<Exception, IEnumerable<M>>(ex, null);
+                return TryGet<IEnumerable<T>>.Failure;
+            }
+        }
+
+        public TryGet<IEnumerable<T>> ParseRepeatedItem(
+            BinaryReader reader,
+            bool doMasks,
+            long finalPosition,
+            out MaskItem<Exception, IEnumerable<M>> maskObj,
+            BinarySubParseDelegate<T, M> transl)
+        {
+            try
+            {
+                List<M> maskList = null;
+                var ret = new List<T>();
+                while (reader.BaseStream.Position < finalPosition)
+                {
+                    var get = transl(reader, doMasks, out var subMaskObj);
+                    if (get.Succeeded)
+                    {
+                        ret.Add(get.Value);
+                    }
+                    else
+                    {
+                        if (!doMasks)
+                        { // This shouldn't actually throw, as subparse is expected to throw if doMasks is off
+                            throw new ArgumentException("Error parsing list.  Could not parse subitem.");
+                        }
+                        if (maskList == null)
+                        {
+                            maskList = new List<M>();
+                        }
+                        maskList.Add(subMaskObj);
+                    }
+                }
                 maskObj = maskList == null ? null : new MaskItem<Exception, IEnumerable<M>>(null, maskList);
                 return TryGet<IEnumerable<T>>.Succeed(ret);
             }

@@ -114,7 +114,7 @@ namespace Mutagen.Generation
         private void GenerateCreateExtras(ObjectGeneration obj, FileGeneration fg)
         {
             RecordType? mutaData = null;
-            if (obj.CustomData.TryGetValue(nameof(RecordType), out var dat))
+            if (obj.CustomData.TryGetValue(Constants.RECORD_TYPE, out var dat))
             {
                 mutaData = (RecordType)dat;
             }

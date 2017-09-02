@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>24a05b82a39a7a97e38ea6cebf9a552f70648d46</Sha>
+         <Sha>53fbb00055b4e33c67d8e803f28b1140657c93d0</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>08-28-2017 19:13:57</CommitDate>
-         <Description>GenerationModule.PostFieldLoad.  TypeGeneration custom data</Description>
+         <CommitDate>09-02-2017 16:54:44</CommitDate>
+         <Description>TypeGeneration ToString prints name</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>
