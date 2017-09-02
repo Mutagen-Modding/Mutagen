@@ -15,17 +15,11 @@ namespace Mutagen.Tests
         [Fact]
         public void OblivionESM()
         {
-            using (var fileStream = File.Open(
-                Properties.Settings.Default.OblivionESM,
-                FileMode.Open,
-                FileAccess.Read))
+            var mod = OblivionMod.Create_OblivionBinary(Properties.Settings.Default.OblivionESM);
+            using (var tmp = new TempFolder())
             {
-                //var mod = OblivionMod.Create_OblivionBinary(fileStream);
-                //using (var tmp = new TempFolder())
-                //{
-                //    var oblivionPath = Path.Combine(tmp.Dir.FullName, Path.GetRandomFileName());
-                //    mod.Write_OblivionBinary(oblivionPath);
-                //}
+                var oblivionPath = Path.Combine(tmp.Dir.FullName, Path.GetRandomFileName());
+                mod.Write_OblivionBinary(oblivionPath);
             }
         }
     }

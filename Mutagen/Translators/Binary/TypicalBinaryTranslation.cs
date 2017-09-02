@@ -18,7 +18,7 @@ namespace Mutagen.Binary
 
         protected abstract T ParseBytes(byte[] bytes);
 
-        protected virtual T ParseValue(BinaryReader reader)
+        protected virtual T ParseValue(BinaryReader reader, long length)
         {
             throw new NotImplementedException();
         }
@@ -27,7 +27,7 @@ namespace Mutagen.Binary
         {
             try
             {
-                var parse = ParseValue(reader);
+                var parse = ParseValue(reader, length);
                 if (parse == null)
                 {
                     throw new ArgumentException("Value was unexpectedly null.");
