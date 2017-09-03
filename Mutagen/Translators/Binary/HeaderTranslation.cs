@@ -15,10 +15,11 @@ namespace Mutagen.Binary
             out long contentLength,
             int lengthLength = 4)
         {
-            var header = reader.ReadChars(4);
+            var header = reader.ReadChars(Constants.HEADER_LENGTH);
             if (!expectedHeader.Equals(header))
             {
                 contentLength = 0;
+                reader.BaseStream.Position -= Constants.HEADER_LENGTH;
                 return false;
             }
             switch (lengthLength)
@@ -27,10 +28,10 @@ namespace Mutagen.Binary
                     contentLength = reader.ReadByte();
                     break;
                 case 2:
-                    contentLength = reader.ReadUInt16();
+                    contentLength = reader.ReadInt16();
                     break;
                 case 4:
-                    contentLength = reader.ReadUInt32();
+                    contentLength = reader.ReadInt32();
                     break;
                 case 8:
                     contentLength = reader.ReadInt64();
@@ -62,7 +63,7 @@ namespace Mutagen.Binary
             out long contentLength,
             int lengthLength = 4)
         {
-            var header = reader.ReadChars(4);
+            var header = reader.ReadChars(Constants.HEADER_LENGTH);
             switch (lengthLength)
             {
                 case 1:
@@ -80,6 +81,7 @@ namespace Mutagen.Binary
                 default:
                     throw new NotImplementedException();
             }
+            reader.BaseStream.Position -= lengthLength + Constants.HEADER_LENGTH;
             return new RecordType(new string(header));
         }
     }
