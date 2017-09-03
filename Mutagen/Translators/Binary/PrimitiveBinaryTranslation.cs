@@ -7,13 +7,9 @@ namespace Mutagen.Binary
     public abstract class PrimitiveBinaryTranslation<T> : IBinaryTranslation<T, Exception>, IBinaryTranslation<T?, Exception>
         where T : struct
     {
-        protected abstract T ParseBytes(byte[] bytes);
         public abstract byte ExpectedLength { get; }
 
-        protected virtual T ParseValue(BinaryReader reader)
-        {
-            throw new NotImplementedException();
-        }
+        protected abstract T ParseValue(BinaryReader reader);
 
         public TryGet<T> Parse(BinaryReader reader, bool doMasks, out Exception errorMask)
         {

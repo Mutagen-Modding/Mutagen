@@ -1,5 +1,6 @@
 ﻿using Noggog;
 using System;
+using System.IO;
 
 namespace Mutagen.Binary
 {
@@ -8,9 +9,9 @@ namespace Mutagen.Binary
         public readonly static BooleanBinaryTranslation Instance = new BooleanBinaryTranslation();
         public override byte ExpectedLength => 1;
 
-        protected override bool ParseBytes(byte[] bytes)
+        protected override bool ParseValue(BinaryReader reader)
         {
-            throw new NotImplementedException();
+            return reader.ReadBoolean();
         }
     }
 }
