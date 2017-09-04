@@ -727,6 +727,11 @@ namespace Mutagen
                         doMasks: doMasks,
                         errorMask: errorMask);
                 }
+                if (reader.BaseStream.Position != finalPosition)
+                {
+                    reader.BaseStream.Position = finalPosition;
+                    throw new ArgumentException("Read more bytes than allocated");
+                }
             }
             catch (Exception ex)
             when (doMasks)

@@ -204,6 +204,12 @@ namespace Mutagen.Generation
                             args.Add("errorMask: errorMask");
                         }
                     }
+                    fg.AppendLine($"if (reader.BaseStream.Position != finalPosition)");
+                    using (new BraceWrapper(fg))
+                    {
+                        fg.AppendLine("reader.BaseStream.Position = finalPosition;");
+                        fg.AppendLine("throw new ArgumentException(\"Read more bytes than allocated\");");
+                    }
                 }
                 fg.AppendLine("catch (Exception ex)");
                 fg.AppendLine("when (doMasks)");
