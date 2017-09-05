@@ -52,6 +52,13 @@ namespace Mutagen.Generation
                     }
                 }
             }
+
+            var objType = obj.Node.GetAttribute("objType");
+            if (!Enum.TryParse<ObjectType>(objType, out var objTypeEnum))
+            {
+                throw new ArgumentException("Must specify object type.");
+            }
+            obj.CustomData[Constants.OBJECT_TYPE] = objTypeEnum;
         }
 
         public override void PostFieldLoad(ObjectGeneration obj, TypeGeneration field, XElement node)

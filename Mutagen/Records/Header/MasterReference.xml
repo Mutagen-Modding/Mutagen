@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="MasterReference" GUID="8f2ed19a-5edb-4f8f-9d29-43dc638aade9" ID="5">
+  <Object name="MasterReference" objType="Subrecord" GUID="8f2ed19a-5edb-4f8f-9d29-43dc638aade9" ID="5">
     <Fields>
       <String name="Master" recordType="MAST" />
       <UInt64 name="FileSize" recordType="DATA" />

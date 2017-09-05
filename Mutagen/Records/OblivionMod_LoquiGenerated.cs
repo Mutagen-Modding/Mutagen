@@ -715,9 +715,9 @@ namespace Mutagen
             bool doMasks,
             Func<OblivionMod_ErrorMask> errorMask)
         {
-            var nextRecordType = HeaderTranslation.GetNextRecordType(
-                reader,
-                out var subLength);
+            var nextRecordType = HeaderTranslation.GetNextSubRecordType(
+                reader: reader,
+                contentLength: out var subLength);
             switch (nextRecordType.Type)
             {
                 case "TES4":

@@ -11,7 +11,10 @@ namespace Mutagen.Generation
     {
         public static RecordType GetRecordType(this ObjectGeneration objGen)
         {
-            TryGetRecordType(objGen, out var data);
+            if (!TryGetRecordType(objGen, out var data))
+            {
+                throw new ArgumentException($"Object {objGen.Name} did not have a record type.");
+            }
             return data;
         }
 
@@ -26,6 +29,15 @@ namespace Mutagen.Generation
             return false;
         }
 
+        public static RecordType GetTriggeringRecordType(this ObjectGeneration objGen)
+        {
+            if (!TryGetTriggeringRecordType(objGen, out var data))
+            {
+                throw new ArgumentException($"Object {objGen.Name} did not have a triggering record type.");
+            }
+            return data;
+        }
+
         public static bool TryGetTriggeringRecordType(this ObjectGeneration objGen, out RecordType recType)
         {
             if (objGen.CustomData.TryGetValue(Constants.TRIGGERING_RECORD_TYPE, out var dataObj))
@@ -35,6 +47,15 @@ namespace Mutagen.Generation
             }
             recType = default(RecordType);
             return false;
+        }
+
+        public static ObjectType GetObjectType(this ObjectGeneration objGen)
+        {
+            if (objGen.CustomData.TryGetValue(Constants.OBJECT_TYPE, out var dataObj))
+            {
+                return (ObjectType)dataObj;
+            }
+            throw new ArgumentException($"Object {objGen.Name} did not have object type defined.");
         }
     }
 }

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Header" recordType="HEDR" GUID="88a14b36-530f-42a1-aa1f-b8ee1852e625" ID="1">
+  <Object name="Header" recordType="HEDR" objType="Subrecord" GUID="88a14b36-530f-42a1-aa1f-b8ee1852e625" ID="1">
     <Fields>
       <Float name="Version" />
-      <Int64 name="NumRecords" />
-      <UInt64 name="NextObjectID" />
+      <Int32 name="NumRecords" />
+      <UInt32 name="NextObjectID" />
     </Fields>
   </Object>
 </Loqui>

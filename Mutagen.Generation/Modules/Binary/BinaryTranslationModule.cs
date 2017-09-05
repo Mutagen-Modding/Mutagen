@@ -113,11 +113,7 @@ namespace Mutagen.Generation
 
         private void GenerateCreateExtras(ObjectGeneration obj, FileGeneration fg)
         {
-            RecordType? mutaData = null;
-            if (obj.CustomData.TryGetValue(Constants.RECORD_TYPE, out var dat))
-            {
-                mutaData = (RecordType)dat;
-            }
+            ObjectType objType = obj.GetObjectType();
             using (var args = new FunctionWrapper(fg,
                 $"private static {obj.ObjectName} Create_{ModuleNickname}_Internal"))
             {
@@ -127,19 +123,25 @@ namespace Mutagen.Generation
             }
             using (new BraceWrapper(fg))
             {
-                if (mutaData != null)
+                switch (objType)
                 {
-                    using (var args = new ArgsWrapper(fg,
-                        $"var length = HeaderTranslation.Parse"))
-                    {
-                        args.Add("reader");
-                        args.Add(mutaData.Value.HeaderName);
-                    }
-                    fg.AppendLine($"var finalPosition = reader.BaseStream.Position + length;");
-                }
-                else
-                {
-                    fg.AppendLine($"var finalPosition = reader.BaseStream.Length;");
+                    case ObjectType.Subrecord:
+                    case ObjectType.Record:
+                        RecordType? mutaData = obj.GetTriggeringRecordType();
+                        using (var args = new ArgsWrapper(fg,
+                            $"var length = HeaderTranslation.Parse{(objType == ObjectType.Subrecord ? "Subrecord" : "Record")}"))
+                        {
+                            args.Add("reader");
+                            args.Add(mutaData.Value.HeaderName);
+                        }
+                        fg.AppendLine($"var finalPosition = reader.BaseStream.Position + length;");
+                        break;
+                    case ObjectType.Mod:
+                        fg.AppendLine($"var finalPosition = reader.BaseStream.Length;");
+                        break;
+                    case ObjectType.Group:
+                    default:
+                        throw new NotImplementedException();
                 }
                 using (var args = new ArgsWrapper(fg,
                     $"return Create_{ModuleNickname}_Internal"))
@@ -232,10 +234,10 @@ namespace Mutagen.Generation
             using (new BraceWrapper(fg))
             {
                 using (var args = new ArgsWrapper(fg,
-                    $"var nextRecordType = HeaderTranslation.GetNextRecordType"))
+                    $"var nextRecordType = HeaderTranslation.GetNextSubRecordType"))
                 {
-                    args.Add("reader");
-                    args.Add("out var subLength");
+                    args.Add("reader: reader");
+                    args.Add("contentLength: out var subLength");
                 }
                 fg.AppendLine("switch (nextRecordType.Type)");
                 using (new BraceWrapper(fg))

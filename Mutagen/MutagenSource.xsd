@@ -7,7 +7,7 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
   <xs:redefine schemaLocation="../../Loqui/Loqui/LoquiSource.xsd">
-
+    
     <xs:complexType name="ObjectType">
       <xs:complexContent>
         <xs:extension base="ObjectType">
@@ -15,6 +15,13 @@
             <xs:annotation>
               <xs:documentation>
                 Typical four letter ASCII tag used for the record type.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="objType" type="MutagenObjectType" use="required">
+            <xs:annotation>
+              <xs:documentation>
+                Type of mutagen object this is creating.
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
@@ -91,5 +98,14 @@
       </xs:choice>
     </xs:group>
   </xs:redefine>
+
+  <xs:simpleType name="MutagenObjectType" final="restriction" >
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Record" />
+      <xs:enumeration value="Subrecord" />
+      <xs:enumeration value="Group" />
+      <xs:enumeration value="Mod" />
+    </xs:restriction>
+  </xs:simpleType>
   
 </xs:schema>

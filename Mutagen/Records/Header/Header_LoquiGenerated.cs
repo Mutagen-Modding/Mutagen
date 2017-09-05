@@ -47,26 +47,26 @@ namespace Mutagen
         INotifyingItemGetter<Single> IHeaderGetter.Version_Property => this.Version_Property;
         #endregion
         #region NumRecords
-        protected readonly INotifyingItem<Int64> _NumRecords = NotifyingItem.Factory<Int64>(markAsSet: false);
-        public INotifyingItem<Int64> NumRecords_Property => _NumRecords;
-        public Int64 NumRecords
+        protected readonly INotifyingItem<Int32> _NumRecords = NotifyingItem.Factory<Int32>(markAsSet: false);
+        public INotifyingItem<Int32> NumRecords_Property => _NumRecords;
+        public Int32 NumRecords
         {
             get => this._NumRecords.Item;
             set => this._NumRecords.Set(value);
         }
-        INotifyingItem<Int64> IHeader.NumRecords_Property => this.NumRecords_Property;
-        INotifyingItemGetter<Int64> IHeaderGetter.NumRecords_Property => this.NumRecords_Property;
+        INotifyingItem<Int32> IHeader.NumRecords_Property => this.NumRecords_Property;
+        INotifyingItemGetter<Int32> IHeaderGetter.NumRecords_Property => this.NumRecords_Property;
         #endregion
         #region NextObjectID
-        protected readonly INotifyingItem<UInt64> _NextObjectID = NotifyingItem.Factory<UInt64>(markAsSet: false);
-        public INotifyingItem<UInt64> NextObjectID_Property => _NextObjectID;
-        public UInt64 NextObjectID
+        protected readonly INotifyingItem<UInt32> _NextObjectID = NotifyingItem.Factory<UInt32>(markAsSet: false);
+        public INotifyingItem<UInt32> NextObjectID_Property => _NextObjectID;
+        public UInt32 NextObjectID
         {
             get => this._NextObjectID.Item;
             set => this._NextObjectID.Set(value);
         }
-        INotifyingItem<UInt64> IHeader.NextObjectID_Property => this.NextObjectID_Property;
-        INotifyingItemGetter<UInt64> IHeaderGetter.NextObjectID_Property => this.NextObjectID_Property;
+        INotifyingItem<UInt32> IHeader.NextObjectID_Property => this.NextObjectID_Property;
+        INotifyingItemGetter<UInt32> IHeaderGetter.NextObjectID_Property => this.NextObjectID_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -452,7 +452,7 @@ namespace Mutagen
                 case "NumRecords":
                     {
                         Exception subMask;
-                        var tryGet = Int64XmlTranslation.Instance.Parse(
+                        var tryGet = Int32XmlTranslation.Instance.Parse(
                             root,
                             nullable: false,
                             doMasks: doMasks,
@@ -470,7 +470,7 @@ namespace Mutagen
                 case "NextObjectID":
                     {
                         Exception subMask;
-                        var tryGet = UInt64XmlTranslation.Instance.Parse(
+                        var tryGet = UInt32XmlTranslation.Instance.Parse(
                             root,
                             nullable: false,
                             doMasks: doMasks,
@@ -740,7 +740,7 @@ namespace Mutagen
             bool doMasks,
             Func<Header_ErrorMask> errorMask)
         {
-            var length = HeaderTranslation.Parse(
+            var length = HeaderTranslation.ParseSubrecord(
                 reader,
                 HEDR_HEADER);
             var finalPosition = reader.BaseStream.Position + length;
@@ -777,7 +777,7 @@ namespace Mutagen
                 }
                 {
                     Exception subMask;
-                    var tryGet = Mutagen.Binary.Int64BinaryTranslation.Instance.Parse(
+                    var tryGet = Mutagen.Binary.Int32BinaryTranslation.Instance.Parse(
                         reader,
                         doMasks: doMasks,
                         errorMask: out subMask);
@@ -792,7 +792,7 @@ namespace Mutagen
                 }
                 {
                     Exception subMask;
-                    var tryGet = Mutagen.Binary.UInt64BinaryTranslation.Instance.Parse(
+                    var tryGet = Mutagen.Binary.UInt32BinaryTranslation.Instance.Parse(
                         reader,
                         doMasks: doMasks,
                         errorMask: out subMask);
@@ -833,9 +833,9 @@ namespace Mutagen
             bool doMasks,
             Func<Header_ErrorMask> errorMask)
         {
-            var nextRecordType = HeaderTranslation.GetNextRecordType(
-                reader,
-                out var subLength);
+            var nextRecordType = HeaderTranslation.GetNextSubRecordType(
+                reader: reader,
+                contentLength: out var subLength);
             switch (nextRecordType.Type)
             {
             }
@@ -925,12 +925,12 @@ namespace Mutagen
                     break;
                 case Header_FieldIndex.NumRecords:
                     this._NumRecords.Set(
-                        (Int64)obj,
+                        (Int32)obj,
                         cmds);
                     break;
                 case Header_FieldIndex.NextObjectID:
                     this._NextObjectID.Set(
-                        (UInt64)obj,
+                        (UInt32)obj,
                         cmds);
                     break;
                 default:
@@ -977,12 +977,12 @@ namespace Mutagen
                     break;
                 case Header_FieldIndex.NumRecords:
                     obj._NumRecords.Set(
-                        (Int64)pair.Value,
+                        (Int32)pair.Value,
                         null);
                     break;
                 case Header_FieldIndex.NextObjectID:
                     obj._NextObjectID.Set(
-                        (UInt64)pair.Value,
+                        (UInt32)pair.Value,
                         null);
                     break;
                 default:
@@ -1003,11 +1003,11 @@ namespace Mutagen
         new Single Version { get; set; }
         new INotifyingItem<Single> Version_Property { get; }
 
-        new Int64 NumRecords { get; set; }
-        new INotifyingItem<Int64> NumRecords_Property { get; }
+        new Int32 NumRecords { get; set; }
+        new INotifyingItem<Int32> NumRecords_Property { get; }
 
-        new UInt64 NextObjectID { get; set; }
-        new INotifyingItem<UInt64> NextObjectID_Property { get; }
+        new UInt32 NextObjectID { get; set; }
+        new INotifyingItem<UInt32> NextObjectID_Property { get; }
 
     }
 
@@ -1019,13 +1019,13 @@ namespace Mutagen
 
         #endregion
         #region NumRecords
-        Int64 NumRecords { get; }
-        INotifyingItemGetter<Int64> NumRecords_Property { get; }
+        Int32 NumRecords { get; }
+        INotifyingItemGetter<Int32> NumRecords_Property { get; }
 
         #endregion
         #region NextObjectID
-        UInt64 NextObjectID { get; }
-        INotifyingItemGetter<UInt64> NextObjectID_Property { get; }
+        UInt32 NextObjectID { get; }
+        INotifyingItemGetter<UInt32> NextObjectID_Property { get; }
 
         #endregion
 
@@ -1193,9 +1193,9 @@ namespace Mutagen.Internals
                 case Header_FieldIndex.Version:
                     return typeof(Single);
                 case Header_FieldIndex.NumRecords:
-                    return typeof(Int64);
+                    return typeof(Int32);
                 case Header_FieldIndex.NextObjectID:
-                    return typeof(UInt64);
+                    return typeof(UInt32);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1579,7 +1579,7 @@ namespace Mutagen.Internals
                     if (item.NumRecords_Property.HasBeenSet)
                     {
                         Exception subMask;
-                        Int64XmlTranslation.Instance.Write(
+                        Int32XmlTranslation.Instance.Write(
                             writer,
                             nameof(item.NumRecords),
                             item.NumRecords,
@@ -1593,7 +1593,7 @@ namespace Mutagen.Internals
                     if (item.NextObjectID_Property.HasBeenSet)
                     {
                         Exception subMask;
-                        UInt64XmlTranslation.Instance.Write(
+                        UInt32XmlTranslation.Instance.Write(
                             writer,
                             nameof(item.NextObjectID),
                             item.NextObjectID,

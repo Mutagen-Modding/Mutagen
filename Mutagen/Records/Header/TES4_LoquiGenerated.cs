@@ -963,7 +963,7 @@ namespace Mutagen
             bool doMasks,
             Func<TES4_ErrorMask> errorMask)
         {
-            var length = HeaderTranslation.Parse(
+            var length = HeaderTranslation.ParseRecord(
                 reader,
                 TES4_HEADER);
             var finalPosition = reader.BaseStream.Position + length;
@@ -1027,9 +1027,9 @@ namespace Mutagen
             bool doMasks,
             Func<TES4_ErrorMask> errorMask)
         {
-            var nextRecordType = HeaderTranslation.GetNextRecordType(
-                reader,
-                out var subLength);
+            var nextRecordType = HeaderTranslation.GetNextSubRecordType(
+                reader: reader,
+                contentLength: out var subLength);
             switch (nextRecordType.Type)
             {
                 case "HEDR":

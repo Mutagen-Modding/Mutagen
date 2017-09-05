@@ -13,7 +13,7 @@ namespace Mutagen.Binary
             BinaryReader reader,
             RecordType expectedHeader,
             out long contentLength,
-            int lengthLength = 4)
+            int lengthLength)
         {
             var header = reader.ReadChars(Constants.HEADER_LENGTH);
             if (!expectedHeader.Equals(header))
@@ -45,7 +45,7 @@ namespace Mutagen.Binary
         public static long Parse(
             BinaryReader reader,
             RecordType expectedHeader,
-            int lengthLength = 4)
+            int lengthLength)
         {
             if (!TryParse(
                 reader,
@@ -58,10 +58,40 @@ namespace Mutagen.Binary
             return contentLength;
         }
 
+        public static long ParseRecord(
+            BinaryReader reader,
+            RecordType expectedHeader)
+        {
+            if (!TryParse(
+                reader,
+                expectedHeader,
+                out var contentLength,
+                4))
+            {
+                throw new ArgumentException($"Expected header was not read in: {expectedHeader}");
+            }
+            return contentLength;
+        }
+
+        public static long ParseSubrecord(
+            BinaryReader reader,
+            RecordType expectedHeader)
+        {
+            if (!TryParse(
+                reader,
+                expectedHeader,
+                out var contentLength,
+                2))
+            {
+                throw new ArgumentException($"Expected header was not read in: {expectedHeader}");
+            }
+            return contentLength;
+        }
+
         public static RecordType GetNextRecordType(
             BinaryReader reader,
-            out long contentLength,
-            int lengthLength = 4)
+            int lengthLength,
+            out long contentLength)
         {
             var header = reader.ReadChars(Constants.HEADER_LENGTH);
             switch (lengthLength)
@@ -83,6 +113,26 @@ namespace Mutagen.Binary
             }
             reader.BaseStream.Position -= lengthLength + Constants.HEADER_LENGTH;
             return new RecordType(new string(header));
+        }
+
+        public static RecordType GetNextRecordType(
+            BinaryReader reader,
+            out long contentLength)
+        {
+            return GetNextRecordType(
+                reader,
+                4,
+                out contentLength);
+        }
+
+        public static RecordType GetNextSubRecordType(
+            BinaryReader reader,
+            out long contentLength)
+        {
+            return GetNextRecordType(
+                reader,
+                2,
+                out contentLength);
         }
     }
 }
