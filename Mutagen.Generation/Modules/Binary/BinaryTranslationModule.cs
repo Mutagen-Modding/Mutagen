@@ -111,6 +111,16 @@ namespace Mutagen.Generation
             GenerateCreateExtras(obj, fg);
         }
 
+        private bool HasRecordTypeFields(ObjectGeneration obj)
+        {
+            foreach (var field in obj.Fields)
+            {
+                if (field.TryGetFieldData(out var data)
+                    && data.RecordType.HasValue) return true;
+            }
+            return false;
+        }
+
         private void GenerateCreateExtras(ObjectGeneration obj, FileGeneration fg)
         {
             ObjectType objType = obj.GetObjectType();
@@ -183,7 +193,7 @@ namespace Mutagen.Generation
                             generator.GenerateCopyIn(
                                 fg: fg,
                                 typeGen: field,
-                                readerAccessor: "reader", 
+                                readerAccessor: "reader",
                                 itemAccessor: new Accessor()
                                 {
                                     DirectAccess = $"ret.{field.ProtectedName}",
@@ -198,16 +208,19 @@ namespace Mutagen.Generation
                             }
                         }
                     }
-                    fg.AppendLine($"while (reader.BaseStream.Position < finalPosition)");
-                    using (new BraceWrapper(fg))
+                    if (HasRecordTypeFields(obj))
                     {
-                        using (var args = new ArgsWrapper(fg,
-                            $"Fill_{ModuleNickname}_Internal"))
+                        fg.AppendLine($"while (reader.BaseStream.Position < finalPosition)");
+                        using (new BraceWrapper(fg))
                         {
-                            args.Add("item: ret");
-                            args.Add("reader: reader");
-                            args.Add("doMasks: doMasks");
-                            args.Add("errorMask: errorMask");
+                            using (var args = new ArgsWrapper(fg,
+                                $"Fill_{ModuleNickname}_Internal"))
+                            {
+                                args.Add("item: ret");
+                                args.Add("reader: reader");
+                                args.Add("doMasks: doMasks");
+                                args.Add("errorMask: errorMask");
+                            }
                         }
                     }
                     fg.AppendLine($"if (reader.BaseStream.Position != finalPosition)");
@@ -227,64 +240,67 @@ namespace Mutagen.Generation
             }
             fg.AppendLine();
 
-            using (var args = new FunctionWrapper(fg,
+            if (HasRecordTypeFields(obj))
+            {
+                using (var args = new FunctionWrapper(fg,
                 $"protected static void Fill_{ModuleNickname}_Internal"))
-            {
-                args.Add($"{obj.ObjectName} item");
-                args.Add("BinaryReader reader");
-                args.Add("bool doMasks");
-                args.Add($"Func<{obj.ErrorMask}> errorMask");
-            }
-            using (new BraceWrapper(fg))
-            {
-                using (var args = new ArgsWrapper(fg,
-                    $"var nextRecordType = HeaderTranslation.GetNextSubRecordType"))
                 {
-                    args.Add("reader: reader");
-                    args.Add("contentLength: out var subLength");
+                    args.Add($"{obj.ObjectName} item");
+                    args.Add("BinaryReader reader");
+                    args.Add("bool doMasks");
+                    args.Add($"Func<{obj.ErrorMask}> errorMask");
                 }
-                fg.AppendLine("switch (nextRecordType.Type)");
                 using (new BraceWrapper(fg))
                 {
-                    foreach (var field in obj.IterateFields())
+                    using (var args = new ArgsWrapper(fg,
+                        $"var nextRecordType = HeaderTranslation.GetNextSubRecordType"))
                     {
-                        if (!field.Field.TryGetFieldData(out var data)
-                            || !data.RecordType.HasValue) continue;
-                        if (!this.TryGetTypeGeneration(field.Field.GetType(), out var generator))
+                        args.Add("reader: reader");
+                        args.Add("contentLength: out var subLength");
+                    }
+                    fg.AppendLine("switch (nextRecordType.Type)");
+                    using (new BraceWrapper(fg))
+                    {
+                        foreach (var field in obj.IterateFields())
                         {
-                            throw new ArgumentException("Unsupported type generator: " + field.Field);
-                        }
-
-                        if (generator.ShouldGenerateCopyIn(field.Field))
-                        {
-                            fg.AppendLine($"case \"{data.RecordType.Value.Type}\":");
-                            using (new BraceWrapper(fg))
+                            if (!field.Field.TryGetFieldData(out var data)
+                                || !data.RecordType.HasValue) continue;
+                            if (!this.TryGetTypeGeneration(field.Field.GetType(), out var generator))
                             {
-                                var maskType = this.Gen.MaskModule.GetMaskModule(field.Field.GetType()).GetErrorMaskTypeStr(field.Field);
-                                fg.AppendLine($"{maskType} subMask;");
-                                generator.GenerateCopyIn(
-                                    fg: fg,
-                                    typeGen: field.Field,
-                                    readerAccessor: "reader",
-                                    itemAccessor: new Accessor()
-                                    {
-                                        DirectAccess = $"item.{field.Field.ProtectedName}",
-                                        PropertyAccess = field.Field.Notifying == NotifyingOption.None ? null : $"item.{field.Field.ProtectedProperty}"
-                                    },
-                                    doMaskAccessor: "doMasks",
-                                    maskAccessor: $"subMask");
-                                fg.AppendLine("if (doMasks && subMask != null)");
+                                throw new ArgumentException("Unsupported type generator: " + field.Field);
+                            }
+
+                            if (generator.ShouldGenerateCopyIn(field.Field))
+                            {
+                                fg.AppendLine($"case \"{data.RecordType.Value.Type}\":");
                                 using (new BraceWrapper(fg))
                                 {
-                                    fg.AppendLine($"errorMask().{field.Field.Name} = subMask;");
+                                    var maskType = this.Gen.MaskModule.GetMaskModule(field.Field.GetType()).GetErrorMaskTypeStr(field.Field);
+                                    fg.AppendLine($"{maskType} subMask;");
+                                    generator.GenerateCopyIn(
+                                        fg: fg,
+                                        typeGen: field.Field,
+                                        readerAccessor: "reader",
+                                        itemAccessor: new Accessor()
+                                        {
+                                            DirectAccess = $"item.{field.Field.ProtectedName}",
+                                            PropertyAccess = field.Field.Notifying == NotifyingOption.None ? null : $"item.{field.Field.ProtectedProperty}"
+                                        },
+                                        doMaskAccessor: "doMasks",
+                                        maskAccessor: $"subMask");
+                                    fg.AppendLine("if (doMasks && subMask != null)");
+                                    using (new BraceWrapper(fg))
+                                    {
+                                        fg.AppendLine($"errorMask().{field.Field.Name} = subMask;");
+                                    }
+                                    fg.AppendLine("break;");
                                 }
-                                fg.AppendLine("break;");
                             }
                         }
                     }
                 }
+                fg.AppendLine();
             }
-            fg.AppendLine();
         }
 
         private void ConvertFromPathOut(FileGeneration fg, InternalTranslation internalToDo)

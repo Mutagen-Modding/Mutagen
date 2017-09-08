@@ -784,14 +784,6 @@ namespace Mutagen
                         errorMask().NextObjectID = subMask;
                     }
                 }
-                while (reader.BaseStream.Position < finalPosition)
-                {
-                    Fill_OblivionBinary_Internal(
-                        item: ret,
-                        reader: reader,
-                        doMasks: doMasks,
-                        errorMask: errorMask);
-                }
                 if (reader.BaseStream.Position != finalPosition)
                 {
                     reader.BaseStream.Position = finalPosition;
@@ -804,20 +796,6 @@ namespace Mutagen
                 errorMask().Overall = ex;
             }
             return ret;
-        }
-
-        protected static void Fill_OblivionBinary_Internal(
-            Header item,
-            BinaryReader reader,
-            bool doMasks,
-            Func<Header_ErrorMask> errorMask)
-        {
-            var nextRecordType = HeaderTranslation.GetNextSubRecordType(
-                reader: reader,
-                contentLength: out var subLength);
-            switch (nextRecordType.Type)
-            {
-            }
         }
 
         #endregion
