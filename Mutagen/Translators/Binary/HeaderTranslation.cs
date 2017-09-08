@@ -55,7 +55,7 @@ namespace Mutagen.Binary
             return contentLength;
         }
 
-        public static int ParseRecord(
+        public static long ParseRecord(
             BinaryReader reader,
             RecordType expectedHeader)
         {
@@ -67,10 +67,10 @@ namespace Mutagen.Binary
             {
                 throw new ArgumentException($"Expected header was not read in: {expectedHeader}");
             }
-            return contentLength;
+            return reader.BaseStream.Position + contentLength + Constants.RECORD_HEADER_SKIP;
         }
 
-        public static int ParseSubrecord(
+        public static long ParseSubrecord(
             BinaryReader reader,
             RecordType expectedHeader)
         {
@@ -82,7 +82,7 @@ namespace Mutagen.Binary
             {
                 throw new ArgumentException($"Expected header was not read in: {expectedHeader}");
             }
-            return contentLength;
+            return reader.BaseStream.Position + contentLength;
         }
 
         public static RecordType ReadNextRecordType(

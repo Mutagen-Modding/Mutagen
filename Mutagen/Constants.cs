@@ -13,5 +13,7 @@ namespace Mutagen
         public const byte RECORD_LENGTH = HEADER_LENGTH + RECORD_LENGTHLENGTH;
         public const byte SUBRECORD_LENGTHLENGTH = 2;
         public const byte SUBRECORD_LENGTH = HEADER_LENGTH + SUBRECORD_LENGTHLENGTH;
+        public const byte RECORD_HEADER_LENGTH = 16;
+        public const byte RECORD_HEADER_SKIP = RECORD_HEADER_LENGTH - RECORD_LENGTHLENGTH;
     }
 }

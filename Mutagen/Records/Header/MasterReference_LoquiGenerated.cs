@@ -695,10 +695,9 @@ namespace Mutagen
             bool doMasks,
             Func<MasterReference_ErrorMask> errorMask)
         {
-            var length = HeaderTranslation.ParseSubrecord(
+            var finalPosition = HeaderTranslation.ParseSubrecord(
                 reader,
                 MAST_HEADER);
-            var finalPosition = reader.BaseStream.Position + length;
             return Create_OblivionBinary_Internal(
                 reader: reader,
                 doMasks: doMasks,

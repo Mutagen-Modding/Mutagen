@@ -139,12 +139,11 @@ namespace Mutagen.Generation
                     case ObjectType.Record:
                         RecordType? mutaData = obj.GetTriggeringRecordType();
                         using (var args = new ArgsWrapper(fg,
-                            $"var length = HeaderTranslation.Parse{(objType == ObjectType.Subrecord ? "Subrecord" : "Record")}"))
+                            $"var finalPosition = HeaderTranslation.Parse{(objType == ObjectType.Subrecord ? "Subrecord" : "Record")}"))
                         {
                             args.Add("reader");
                             args.Add(mutaData.Value.HeaderName);
                         }
-                        fg.AppendLine($"var finalPosition = reader.BaseStream.Position + length;");
                         break;
                     case ObjectType.Mod:
                         fg.AppendLine($"var finalPosition = reader.BaseStream.Length;");

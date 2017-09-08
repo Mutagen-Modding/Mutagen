@@ -939,10 +939,9 @@ namespace Mutagen
             bool doMasks,
             Func<TES4_ErrorMask> errorMask)
         {
-            var length = HeaderTranslation.ParseRecord(
+            var finalPosition = HeaderTranslation.ParseRecord(
                 reader,
                 TES4_HEADER);
-            var finalPosition = reader.BaseStream.Position + length;
             return Create_OblivionBinary_Internal(
                 reader: reader,
                 doMasks: doMasks,
