@@ -524,13 +524,9 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = ByteArrayXmlTranslation.Instance.Parse(
                             root,
-                            nullable: true,
                             doMasks: doMasks,
                             errorMask: out subMask);
-                        if (tryGet.Succeeded)
-                        {
-                            item._Fluff.Item = tryGet.Value;
-                        }
+                        item._Fluff.SetIfSucceeded(tryGet);
                         if (doMasks && subMask != null)
                         {
                             errorMask().Fluff = subMask;
@@ -570,10 +566,7 @@ namespace Mutagen
                             loquiMask = (Header_ErrorMask)subErrorMaskObj;
                         }
                         subMask = loquiMask == null ? null : new MaskItem<Exception, Header_ErrorMask>(null, loquiMask);
-                        if (tryGet.Succeeded)
-                        {
-                            item._Header.Item = tryGet.Value;
-                        }
+                        item._Header.SetIfSucceeded(tryGet);
                         if (doMasks && subMask != null)
                         {
                             errorMask().Header = subMask;
@@ -585,13 +578,9 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = ByteArrayXmlTranslation.Instance.Parse(
                             root,
-                            nullable: true,
                             doMasks: doMasks,
                             errorMask: out subMask);
-                        if (tryGet.Succeeded)
-                        {
-                            item._TypeOffsets.Item = tryGet.Value;
-                        }
+                        item._TypeOffsets.SetIfSucceeded(tryGet);
                         if (doMasks && subMask != null)
                         {
                             errorMask().TypeOffsets = subMask;
@@ -603,13 +592,9 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = ByteArrayXmlTranslation.Instance.Parse(
                             root,
-                            nullable: true,
                             doMasks: doMasks,
                             errorMask: out subMask);
-                        if (tryGet.Succeeded)
-                        {
-                            item._Deleted.Item = tryGet.Value;
-                        }
+                        item._Deleted.SetIfSucceeded(tryGet);
                         if (doMasks && subMask != null)
                         {
                             errorMask().Deleted = subMask;
@@ -623,10 +608,7 @@ namespace Mutagen
                             root,
                             doMasks: doMasks,
                             errorMask: out subMask);
-                        if (tryGet.Succeeded)
-                        {
-                            item._Author.Item = tryGet.Value;
-                        }
+                        item._Author.SetIfSucceeded(tryGet);
                         if (doMasks && subMask != null)
                         {
                             errorMask().Author = subMask;
@@ -640,10 +622,7 @@ namespace Mutagen
                             root,
                             doMasks: doMasks,
                             errorMask: out subMask);
-                        if (tryGet.Succeeded)
-                        {
-                            item._Description.Item = tryGet.Value;
-                        }
+                        item._Description.SetIfSucceeded(tryGet);
                         if (doMasks && subMask != null)
                         {
                             errorMask().Description = subMask;
@@ -692,10 +671,7 @@ namespace Mutagen
                                 return tryGet;
                             }
                             );
-                        if (listTryGet.Succeeded)
-                        {
-                            item._MasterReferences.SetTo(listTryGet.Value);
-                        }
+                        item._MasterReferences.SetIfSucceeded(listTryGet);
                         if (doMasks && subMask != null)
                         {
                             errorMask().MasterReferences = subMask;
@@ -990,10 +966,7 @@ namespace Mutagen
                         doMasks: doMasks,
                         errorMask: out subMask,
                         length: 12);
-                    if (tryGet.Succeeded)
-                    {
-                        ret._Fluff.Item = tryGet.Value;
-                    }
+                    ret._Fluff.SetIfSucceeded(tryGet);
                     if (doMasks && subMask != null)
                     {
                         errorMask().Fluff = subMask;
@@ -1041,10 +1014,7 @@ namespace Mutagen
                         doMasks: doMasks,
                         errorMask: out loquiMask));
                     subMask = loquiMask == null ? null : new MaskItem<Exception, Header_ErrorMask>(null, loquiMask);
-                    if (tryGet.Succeeded)
-                    {
-                        item._Header.Item = tryGet.Value;
-                    }
+                    item._Header.SetIfSucceeded(tryGet);
                     if (doMasks && subMask != null)
                     {
                         errorMask().Header = subMask;
@@ -1059,10 +1029,7 @@ namespace Mutagen
                         doMasks: doMasks,
                         errorMask: out subMask,
                         length: subLength);
-                    if (tryGet.Succeeded)
-                    {
-                        item._TypeOffsets.Item = tryGet.Value;
-                    }
+                    item._TypeOffsets.SetIfSucceeded(tryGet);
                     if (doMasks && subMask != null)
                     {
                         errorMask().TypeOffsets = subMask;
@@ -1077,10 +1044,7 @@ namespace Mutagen
                         doMasks: doMasks,
                         errorMask: out subMask,
                         length: subLength);
-                    if (tryGet.Succeeded)
-                    {
-                        item._Deleted.Item = tryGet.Value;
-                    }
+                    item._Deleted.SetIfSucceeded(tryGet);
                     if (doMasks && subMask != null)
                     {
                         errorMask().Deleted = subMask;
@@ -1095,10 +1059,7 @@ namespace Mutagen
                         doMasks: doMasks,
                         errorMask: out subMask,
                         header: CNAM_HEADER);
-                    if (tryGet.Succeeded)
-                    {
-                        item._Author.Item = tryGet.Value;
-                    }
+                    item._Author.SetIfSucceeded(tryGet);
                     if (doMasks && subMask != null)
                     {
                         errorMask().Author = subMask;
@@ -1113,10 +1074,7 @@ namespace Mutagen
                         doMasks: doMasks,
                         errorMask: out subMask,
                         header: SNAM_HEADER);
-                    if (tryGet.Succeeded)
-                    {
-                        item._Description.Item = tryGet.Value;
-                    }
+                    item._Description.SetIfSucceeded(tryGet);
                     if (doMasks && subMask != null)
                     {
                         errorMask().Description = subMask;
@@ -1141,10 +1099,7 @@ namespace Mutagen
                             return tryGet;
                         }
                         );
-                    if (listTryGet.Succeeded)
-                    {
-                        item._MasterReferences.SetTo(listTryGet.Value);
-                    }
+                    item._MasterReferences.SetIfSucceeded(listTryGet);
                     if (doMasks && subMask != null)
                     {
                         errorMask().MasterReferences = subMask;

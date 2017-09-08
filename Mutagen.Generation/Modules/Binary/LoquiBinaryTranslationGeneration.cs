@@ -54,7 +54,7 @@ namespace Mutagen.Generation
             FileGeneration fg,
             TypeGeneration typeGen,
             string readerAccessor,
-            string itemAccessor,
+            Accessor itemAccessor,
             string doMaskAccessor,
             string maskAccessor)
         {
@@ -74,7 +74,7 @@ namespace Mutagen.Generation
                     using (var args = new ArgsWrapper(fg,
                         $"{loquiGen.TargetObjectGeneration.ExtCommonName}.CopyFieldsFrom"))
                     {
-                        args.Add($"item: {itemAccessor}");
+                        args.Add($"item: {itemAccessor.DirectAccess}");
                         args.Add("rhs: tmp");
                         args.Add("def: null");
                         args.Add("cmds: null");
@@ -88,10 +88,17 @@ namespace Mutagen.Generation
                 else
                 {
                     GenerateCopyInRet(fg, typeGen, readerAccessor, null, doMaskAccessor, maskAccessor);
-                    fg.AppendLine("if (tryGet.Succeeded)");
-                    using (new BraceWrapper(fg))
+                    if (itemAccessor.PropertyAccess != null)
                     {
-                        fg.AppendLine($"{itemAccessor} = tryGet.Value;");
+                        fg.AppendLine($"{itemAccessor.PropertyAccess}.{nameof(INotifyingCollectionExt.SetIfSucceeded)}(tryGet);");
+                    }
+                    else
+                    {
+                        fg.AppendLine("if (tryGet.Succeeded)");
+                        using (new BraceWrapper(fg))
+                        {
+                            fg.AppendLine($"{itemAccessor.DirectAccess} = tryGet.Value;");
+                        }
                     }
                 }
             }

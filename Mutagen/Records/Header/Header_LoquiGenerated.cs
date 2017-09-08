@@ -434,15 +434,11 @@ namespace Mutagen
                 case "Version":
                     {
                         Exception subMask;
-                        var tryGet = FloatXmlTranslation.Instance.Parse(
+                        var tryGet = FloatXmlTranslation.Instance.ParseNonNull(
                             root,
-                            nullable: false,
                             doMasks: doMasks,
                             errorMask: out subMask);
-                        if (tryGet.Succeeded)
-                        {
-                            item._Version.Item = tryGet.Value.Value;
-                        }
+                        item._Version.SetIfSucceeded(tryGet);
                         if (doMasks && subMask != null)
                         {
                             errorMask().Version = subMask;
@@ -452,15 +448,11 @@ namespace Mutagen
                 case "NumRecords":
                     {
                         Exception subMask;
-                        var tryGet = Int32XmlTranslation.Instance.Parse(
+                        var tryGet = Int32XmlTranslation.Instance.ParseNonNull(
                             root,
-                            nullable: false,
                             doMasks: doMasks,
                             errorMask: out subMask);
-                        if (tryGet.Succeeded)
-                        {
-                            item._NumRecords.Item = tryGet.Value.Value;
-                        }
+                        item._NumRecords.SetIfSucceeded(tryGet);
                         if (doMasks && subMask != null)
                         {
                             errorMask().NumRecords = subMask;
@@ -470,15 +462,11 @@ namespace Mutagen
                 case "NextObjectID":
                     {
                         Exception subMask;
-                        var tryGet = UInt32XmlTranslation.Instance.Parse(
+                        var tryGet = UInt32XmlTranslation.Instance.ParseNonNull(
                             root,
-                            nullable: false,
                             doMasks: doMasks,
                             errorMask: out subMask);
-                        if (tryGet.Succeeded)
-                        {
-                            item._NextObjectID.Item = tryGet.Value.Value;
-                        }
+                        item._NextObjectID.SetIfSucceeded(tryGet);
                         if (doMasks && subMask != null)
                         {
                             errorMask().NextObjectID = subMask;
@@ -766,10 +754,7 @@ namespace Mutagen
                         reader,
                         doMasks: doMasks,
                         errorMask: out subMask);
-                    if (tryGet.Succeeded)
-                    {
-                        ret._Version.Item = tryGet.Value;
-                    }
+                    ret._Version.SetIfSucceeded(tryGet);
                     if (doMasks && subMask != null)
                     {
                         errorMask().Version = subMask;
@@ -781,10 +766,7 @@ namespace Mutagen
                         reader,
                         doMasks: doMasks,
                         errorMask: out subMask);
-                    if (tryGet.Succeeded)
-                    {
-                        ret._NumRecords.Item = tryGet.Value;
-                    }
+                    ret._NumRecords.SetIfSucceeded(tryGet);
                     if (doMasks && subMask != null)
                     {
                         errorMask().NumRecords = subMask;
@@ -796,10 +778,7 @@ namespace Mutagen
                         reader,
                         doMasks: doMasks,
                         errorMask: out subMask);
-                    if (tryGet.Succeeded)
-                    {
-                        ret._NextObjectID.Item = tryGet.Value;
-                    }
+                    ret._NextObjectID.SetIfSucceeded(tryGet);
                     if (doMasks && subMask != null)
                     {
                         errorMask().NextObjectID = subMask;

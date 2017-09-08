@@ -418,10 +418,7 @@ namespace Mutagen
                             root,
                             doMasks: doMasks,
                             errorMask: out subMask);
-                        if (tryGet.Succeeded)
-                        {
-                            item._Master.Item = tryGet.Value;
-                        }
+                        item._Master.SetIfSucceeded(tryGet);
                         if (doMasks && subMask != null)
                         {
                             errorMask().Master = subMask;
@@ -431,15 +428,11 @@ namespace Mutagen
                 case "FileSize":
                     {
                         Exception subMask;
-                        var tryGet = UInt64XmlTranslation.Instance.Parse(
+                        var tryGet = UInt64XmlTranslation.Instance.ParseNonNull(
                             root,
-                            nullable: false,
                             doMasks: doMasks,
                             errorMask: out subMask);
-                        if (tryGet.Succeeded)
-                        {
-                            item._FileSize.Item = tryGet.Value.Value;
-                        }
+                        item._FileSize.SetIfSucceeded(tryGet);
                         if (doMasks && subMask != null)
                         {
                             errorMask().FileSize = subMask;
@@ -763,10 +756,7 @@ namespace Mutagen
                         doMasks: doMasks,
                         errorMask: out subMask,
                         header: MAST_HEADER);
-                    if (tryGet.Succeeded)
-                    {
-                        item._Master.Item = tryGet.Value;
-                    }
+                    item._Master.SetIfSucceeded(tryGet);
                     if (doMasks && subMask != null)
                     {
                         errorMask().Master = subMask;
@@ -780,10 +770,7 @@ namespace Mutagen
                         reader,
                         doMasks: doMasks,
                         errorMask: out subMask);
-                    if (tryGet.Succeeded)
-                    {
-                        item._FileSize.Item = tryGet.Value;
-                    }
+                    item._FileSize.SetIfSucceeded(tryGet);
                     if (doMasks && subMask != null)
                     {
                         errorMask().FileSize = subMask;

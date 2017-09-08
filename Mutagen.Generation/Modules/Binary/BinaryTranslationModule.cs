@@ -183,8 +183,12 @@ namespace Mutagen.Generation
                             generator.GenerateCopyIn(
                                 fg: fg,
                                 typeGen: field,
-                                readerAccessor: "reader",
-                                itemAccessor: $"ret.{field.ProtectedName}",
+                                readerAccessor: "reader", 
+                                itemAccessor: new Accessor()
+                                {
+                                    DirectAccess = $"ret.{field.ProtectedName}",
+                                    PropertyAccess = field.Notifying == NotifyingOption.None ? null : $"ret.{field.ProtectedProperty}"
+                                },
                                 doMaskAccessor: "doMasks",
                                 maskAccessor: $"subMask");
                             fg.AppendLine("if (doMasks && subMask != null)");
@@ -262,7 +266,11 @@ namespace Mutagen.Generation
                                     fg: fg,
                                     typeGen: field.Field,
                                     readerAccessor: "reader",
-                                    itemAccessor: $"item.{field.Field.ProtectedName}",
+                                    itemAccessor: new Accessor()
+                                    {
+                                        DirectAccess = $"item.{field.Field.ProtectedName}",
+                                        PropertyAccess = field.Field.Notifying == NotifyingOption.None ? null : $"item.{field.Field.ProtectedProperty}"
+                                    },
                                     doMaskAccessor: "doMasks",
                                     maskAccessor: $"subMask");
                                 fg.AppendLine("if (doMasks && subMask != null)");

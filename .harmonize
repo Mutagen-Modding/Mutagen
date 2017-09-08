@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>1694bf428abdc424ef5ea82374ac412dd67ec81f</Sha>
+         <Sha>e95b23197d765b5ff770940c791df01f9595b39f</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>08-27-2017 13:16:31</CommitDate>
-         <Description>Nuget Update</Description>
+         <CommitDate>09-07-2017 19:39:09</CommitDate>
+         <Description>IHasBeenSetItem.SetIfSucceeded()</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>53fbb00055b4e33c67d8e803f28b1140657c93d0</Sha>
+         <Sha>f932e52383e025a5fa44e503c4ca808cba8888d8</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>09-02-2017 16:54:44</CommitDate>
-         <Description>TypeGeneration ToString prints name</Description>
+         <CommitDate>09-07-2017 19:39:13</CommitDate>
+         <Description>SetIfSucceeded calls to shorten generated code</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

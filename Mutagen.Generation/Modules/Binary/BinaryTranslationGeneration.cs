@@ -28,7 +28,7 @@ namespace Mutagen.Generation
             FileGeneration fg,
             TypeGeneration typeGen,
             string readerAccessor,
-            string itemAccessor,
+            Accessor itemAccessor,
             string doMaskAccessor,
             string maskAccessor);
 

@@ -49,7 +49,7 @@ namespace Mutagen.Generation
             FileGeneration fg,
             TypeGeneration typeGen,
             string nodeAccessor,
-            string itemAccessor,
+            Accessor itemAccessor,
             string doMaskAccessor,
             string maskAccessor)
         {
@@ -69,10 +69,17 @@ namespace Mutagen.Generation
                     args.Add($"length: {data.Length.Value}");
                 }
             }
-            fg.AppendLine("if (tryGet.Succeeded)");
-            using (new BraceWrapper(fg))
+            if (itemAccessor.PropertyAccess != null)
             {
-                fg.AppendLine($"{itemAccessor} = tryGet.Value;");
+                fg.AppendLine($"{itemAccessor.PropertyAccess}.{nameof(INotifyingCollectionExt.SetIfSucceeded)}(tryGet);");
+            }
+            else
+            {
+                fg.AppendLine("if (tryGet.Succeeded)");
+                using (new BraceWrapper(fg))
+                {
+                    fg.AppendLine($"{itemAccessor.DirectAccess} = tryGet.Value;");
+                }
             }
         }
 

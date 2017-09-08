@@ -53,15 +53,22 @@ namespace Mutagen.Generation
             FileGeneration fg,
             TypeGeneration typeGen, 
             string nodeAccessor, 
-            string itemAccessor,
+            Accessor itemAccessor,
             string doMaskAccessor,
             string maskAccessor)
         {
             GenerateCopyInRet(fg, typeGen, nodeAccessor, "var listTryGet = ", doMaskAccessor, maskAccessor);
-            fg.AppendLine($"if (listTryGet.Succeeded)");
-            using (new BraceWrapper(fg))
+            if (itemAccessor.PropertyAccess != null)
             {
-                fg.AppendLine($"{itemAccessor}.SetTo(listTryGet.Value);");
+                fg.AppendLine($"{itemAccessor.PropertyAccess}.{nameof(INotifyingCollectionExt.SetIfSucceeded)}(listTryGet);");
+            }
+            else
+            {
+                fg.AppendLine("if (listTryGet.Succeeded)");
+                using (new BraceWrapper(fg))
+                {
+                    fg.AppendLine($"{itemAccessor.DirectAccess} = listTryGet.Value;");
+                }
             }
         }
 
