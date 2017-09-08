@@ -88,7 +88,7 @@ namespace Mutagen.Binary
             return contentLength;
         }
 
-        public static RecordType GetNextRecordType(
+        public static RecordType ReadNextRecordType(
             BinaryReader reader,
             int lengthLength,
             out long contentLength)
@@ -111,25 +111,24 @@ namespace Mutagen.Binary
                 default:
                     throw new NotImplementedException();
             }
-            reader.BaseStream.Position -= lengthLength + Constants.HEADER_LENGTH;
             return new RecordType(new string(header));
         }
 
-        public static RecordType GetNextRecordType(
+        public static RecordType ReadNextRecordType(
             BinaryReader reader,
             out long contentLength)
         {
-            return GetNextRecordType(
+            return ReadNextRecordType(
                 reader,
                 4,
                 out contentLength);
         }
 
-        public static RecordType GetNextSubRecordType(
+        public static RecordType ReadNextSubRecordType(
             BinaryReader reader,
             out long contentLength)
         {
-            return GetNextRecordType(
+            return ReadNextRecordType(
                 reader,
                 2,
                 out contentLength);

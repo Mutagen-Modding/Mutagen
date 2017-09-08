@@ -1000,7 +1000,7 @@ namespace Mutagen
             bool doMasks,
             Func<TES4_ErrorMask> errorMask)
         {
-            var nextRecordType = HeaderTranslation.GetNextSubRecordType(
+            var nextRecordType = HeaderTranslation.ReadNextSubRecordType(
                 reader: reader,
                 contentLength: out var subLength);
             switch (nextRecordType.Type)
@@ -1008,6 +1008,7 @@ namespace Mutagen
                 case "HEDR":
                 {
                     MaskItem<Exception, Header_ErrorMask> subMask;
+                    reader.BaseStream.Position -= Constants.SUBRECORD_LENGTH;
                     Header_ErrorMask loquiMask;
                     TryGet<Header> tryGet = TryGet<Header>.Succeed((Header)Header.Create_OblivionBinary(
                         reader: reader,
@@ -1090,6 +1091,7 @@ namespace Mutagen
                         maskObj: out subMask,
                         transl: (BinaryReader r, bool listDoMasks, out MaskItem<Exception, MasterReference_ErrorMask> listSubMask) =>
                         {
+                            r.BaseStream.Position -= Constants.SUBRECORD_LENGTH;
                             MasterReference_ErrorMask loquiMask;
                             TryGet<MasterReference> tryGet = TryGet<MasterReference>.Succeed((MasterReference)MasterReference.Create_OblivionBinary(
                                 reader: r,
@@ -1106,6 +1108,8 @@ namespace Mutagen
                     }
                     break;
                 }
+                default:
+                    throw new ArgumentException($"Unexpected header {nextRecordType.Type} at position {reader.BaseStream.Position}");
             }
         }
 

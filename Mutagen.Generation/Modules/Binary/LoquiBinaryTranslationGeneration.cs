@@ -64,6 +64,7 @@ namespace Mutagen.Generation
                 if (loquiGen.SingletonType == LoquiType.SingletonLevel.Singleton)
                 {
                     if (loquiGen.InterfaceType == LoquiInterfaceType.IGetter) return;
+                    fg.AppendLine($"{readerAccessor}.BaseStream.Position -= Constants.SUBRECORD_LENGTH;");
                     using (var args = new ArgsWrapper(fg,
                         $"var tmp = {loquiGen.TargetObjectGeneration.Name}.Create_{ModNickname}"))
                     {
@@ -127,6 +128,7 @@ namespace Mutagen.Generation
             string doMaskAccessor,
             string maskAccessor)
         {
+            fg.AppendLine($"{readerAccessor}.BaseStream.Position -= Constants.SUBRECORD_LENGTH;");
             var loquiGen = typeGen as LoquiType;
             if (loquiGen.TargetObjectGeneration != null)
             {

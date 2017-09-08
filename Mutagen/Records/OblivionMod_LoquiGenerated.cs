@@ -715,7 +715,7 @@ namespace Mutagen
             bool doMasks,
             Func<OblivionMod_ErrorMask> errorMask)
         {
-            var nextRecordType = HeaderTranslation.GetNextSubRecordType(
+            var nextRecordType = HeaderTranslation.ReadNextSubRecordType(
                 reader: reader,
                 contentLength: out var subLength);
             switch (nextRecordType.Type)
@@ -723,6 +723,7 @@ namespace Mutagen
                 case "TES4":
                 {
                     MaskItem<Exception, TES4_ErrorMask> subMask;
+                    reader.BaseStream.Position -= Constants.SUBRECORD_LENGTH;
                     var tmp = TES4.Create_OblivionBinary(
                         reader: reader,
                         doMasks: doMasks,
@@ -743,6 +744,8 @@ namespace Mutagen
                     }
                     break;
                 }
+                default:
+                    throw new ArgumentException($"Unexpected header {nextRecordType.Type} at position {reader.BaseStream.Position}");
             }
         }
 

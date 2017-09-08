@@ -743,7 +743,7 @@ namespace Mutagen
             bool doMasks,
             Func<MasterReference_ErrorMask> errorMask)
         {
-            var nextRecordType = HeaderTranslation.GetNextSubRecordType(
+            var nextRecordType = HeaderTranslation.ReadNextSubRecordType(
                 reader: reader,
                 contentLength: out var subLength);
             switch (nextRecordType.Type)
@@ -777,6 +777,8 @@ namespace Mutagen
                     }
                     break;
                 }
+                default:
+                    throw new ArgumentException($"Unexpected header {nextRecordType.Type} at position {reader.BaseStream.Position}");
             }
         }
 

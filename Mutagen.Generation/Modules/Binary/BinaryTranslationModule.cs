@@ -253,7 +253,7 @@ namespace Mutagen.Generation
                 using (new BraceWrapper(fg))
                 {
                     using (var args = new ArgsWrapper(fg,
-                        $"var nextRecordType = HeaderTranslation.GetNextSubRecordType"))
+                        $"var nextRecordType = HeaderTranslation.ReadNextSubRecordType"))
                     {
                         args.Add("reader: reader");
                         args.Add("contentLength: out var subLength");
@@ -296,6 +296,11 @@ namespace Mutagen.Generation
                                     fg.AppendLine("break;");
                                 }
                             }
+                        }
+                        fg.AppendLine($"default:");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($"throw new ArgumentException($\"Unexpected header {{nextRecordType.Type}} at position {{reader.BaseStream.Position}}\");");
                         }
                     }
                 }
