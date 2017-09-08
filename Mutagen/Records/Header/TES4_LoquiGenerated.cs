@@ -1059,7 +1059,7 @@ namespace Mutagen
                         reader,
                         doMasks: doMasks,
                         errorMask: out subMask,
-                        header: CNAM_HEADER);
+                        length: subLength);
                     item._Author.SetIfSucceeded(tryGet);
                     if (doMasks && subMask != null)
                     {
@@ -1074,7 +1074,7 @@ namespace Mutagen
                         reader,
                         doMasks: doMasks,
                         errorMask: out subMask,
-                        header: SNAM_HEADER);
+                        length: subLength);
                     item._Description.SetIfSucceeded(tryGet);
                     if (doMasks && subMask != null)
                     {

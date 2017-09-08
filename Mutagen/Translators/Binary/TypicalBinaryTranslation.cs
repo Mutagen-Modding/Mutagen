@@ -18,9 +18,9 @@ namespace Mutagen.Binary
 
         protected abstract T ParseBytes(byte[] bytes);
 
-        protected abstract T ParseValue(BinaryReader reader, long length);
+        protected abstract T ParseValue(BinaryReader reader, int length);
 
-        public TryGet<T> Parse(BinaryReader reader, long length, bool doMasks, out Exception errorMask)
+        public TryGet<T> Parse(BinaryReader reader, int length, bool doMasks, out Exception errorMask)
         {
             try
             {
@@ -48,7 +48,7 @@ namespace Mutagen.Binary
             throw new NotImplementedException();
         }
 
-        TryGet<T> IBinaryTranslation<T, Exception>.Parse(BinaryReader reader, long length, bool doMasks, out Exception errorMask)
+        TryGet<T> IBinaryTranslation<T, Exception>.Parse(BinaryReader reader, int length, bool doMasks, out Exception errorMask)
         {
             return Parse(reader, length: length, doMasks: doMasks, errorMask: out errorMask);
         }

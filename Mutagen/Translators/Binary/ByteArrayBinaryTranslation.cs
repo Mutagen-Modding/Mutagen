@@ -22,9 +22,9 @@ namespace Mutagen.Binary
             base.WriteValue(writer, item);
         }
 
-        protected override Byte[] ParseValue(BinaryReader reader, long length)
+        protected override Byte[] ParseValue(BinaryReader reader, int length)
         {
-            return reader.ReadBytes((int)length);
+            return reader.ReadBytes(length);
         }
 
         protected override byte[] ParseBytes(byte[] bytes)

@@ -12,7 +12,7 @@ namespace Mutagen.Binary
         public static bool TryParse(
             BinaryReader reader,
             RecordType expectedHeader,
-            out long contentLength,
+            out int contentLength,
             int lengthLength)
         {
             var header = reader.ReadChars(Constants.HEADER_LENGTH);
@@ -33,16 +33,13 @@ namespace Mutagen.Binary
                 case 4:
                     contentLength = reader.ReadInt32();
                     break;
-                case 8:
-                    contentLength = reader.ReadInt64();
-                    break;
                 default:
                     throw new NotImplementedException();
             }
             return true;
         }
 
-        public static long Parse(
+        public static int Parse(
             BinaryReader reader,
             RecordType expectedHeader,
             int lengthLength)
@@ -58,7 +55,7 @@ namespace Mutagen.Binary
             return contentLength;
         }
 
-        public static long ParseRecord(
+        public static int ParseRecord(
             BinaryReader reader,
             RecordType expectedHeader)
         {
@@ -73,7 +70,7 @@ namespace Mutagen.Binary
             return contentLength;
         }
 
-        public static long ParseSubrecord(
+        public static int ParseSubrecord(
             BinaryReader reader,
             RecordType expectedHeader)
         {
@@ -91,7 +88,7 @@ namespace Mutagen.Binary
         public static RecordType ReadNextRecordType(
             BinaryReader reader,
             int lengthLength,
-            out long contentLength)
+            out int contentLength)
         {
             var header = reader.ReadChars(Constants.HEADER_LENGTH);
             switch (lengthLength)
@@ -103,10 +100,7 @@ namespace Mutagen.Binary
                     contentLength = reader.ReadUInt16();
                     break;
                 case 4:
-                    contentLength = reader.ReadUInt32();
-                    break;
-                case 8:
-                    contentLength = reader.ReadInt64();
+                    contentLength = (int)reader.ReadUInt32();
                     break;
                 default:
                     throw new NotImplementedException();
@@ -116,7 +110,7 @@ namespace Mutagen.Binary
 
         public static RecordType ReadNextRecordType(
             BinaryReader reader,
-            out long contentLength)
+            out int contentLength)
         {
             return ReadNextRecordType(
                 reader,
@@ -126,7 +120,7 @@ namespace Mutagen.Binary
 
         public static RecordType ReadNextSubRecordType(
             BinaryReader reader,
-            out long contentLength)
+            out int contentLength)
         {
             return ReadNextRecordType(
                 reader,

@@ -755,7 +755,7 @@ namespace Mutagen
                         reader,
                         doMasks: doMasks,
                         errorMask: out subMask,
-                        header: MAST_HEADER);
+                        length: subLength);
                     item._Master.SetIfSucceeded(tryGet);
                     if (doMasks && subMask != null)
                     {

@@ -10,6 +10,6 @@ namespace Mutagen.Binary
     public interface IBinaryTranslation<T, M>
     {
         void Write(BinaryWriter writer, T item, bool doMasks, out M maskObj);
-        TryGet<T> Parse(BinaryReader reader, long length, bool doMasks, out M maskObj);
+        TryGet<T> Parse(BinaryReader reader, int length, bool doMasks, out M maskObj);
     }
 }
