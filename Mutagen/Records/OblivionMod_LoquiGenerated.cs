@@ -31,20 +31,27 @@ namespace Mutagen
         #region Ctor
         public OblivionMod()
         {
-            _TES4 = NotifyingItem.Factory<TES4>(
-                defaultVal: _TES4_Object,
-                markAsSet: true);
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
         #region TES4
-        private TES4 _TES4_Object = new TES4();
-        protected readonly INotifyingItem<TES4> _TES4;
-        public INotifyingItemGetter<TES4> TES4_Property => this._TES4;
+        private readonly INotifyingItem<TES4> _TES4 = new NotifyingItemConvertWrapper<TES4>(
+            defaultVal: new TES4(),
+            incomingConverter: (change) =>
+            {
+                if (change.New == null)
+                {
+                    return TryGet<TES4>.Succeed(new TES4());
+                }
+                return TryGet<TES4>.Succeed(change.New);
+            }
+        );
+        public INotifyingItem<TES4> TES4_Property => this._TES4;
         TES4 IOblivionModGetter.TES4 => this.TES4;
-        public TES4 TES4 { get => _TES4.Item; }
+        public TES4 TES4 { get => _TES4.Item; set => _TES4.Item = value; }
+        INotifyingItem<TES4> IOblivionMod.TES4_Property => this.TES4_Property;
         INotifyingItemGetter<TES4> IOblivionModGetter.TES4_Property => this.TES4_Property;
         #endregion
 
@@ -395,20 +402,37 @@ namespace Mutagen
                 case "TES4":
                     {
                         MaskItem<Exception, TES4_ErrorMask> subMask;
-                        var tmp = TES4.Create_XML(
-                            root: root,
-                            doMasks: doMasks,
-                            errorMask: out TES4_ErrorMask createMask);
-                        TES4Common.CopyFieldsFrom(
-                            item: item._TES4_Object,
-                            rhs: tmp,
-                            def: null,
-                            cmds: null,
-                            copyMask: null,
-                            doErrorMask: doMasks,
-                            errorMask: out TES4_ErrorMask copyMask);
-                        var loquiMask = TES4_ErrorMask.Combine(createMask, copyMask);
+                        TES4_ErrorMask loquiMask;
+                        TryGet<TES4> tryGet;
+                        var typeStr = root.GetAttribute(XmlConstants.TYPE_ATTRIBUTE);
+                        if (typeStr != null
+                            && typeStr.Equals("Mutagen.TES4"))
+                        {
+                            tryGet = TryGet<TES4>.Succeed((TES4)TES4.Create_XML(
+                                root: root,
+                                doMasks: doMasks,
+                                errorMask: out loquiMask));
+                        }
+                        else
+                        {
+                            var register = LoquiRegistration.GetRegisterByFullName(typeStr ?? root.Name.LocalName);
+                            if (register == null)
+                            {
+                                var ex = new ArgumentException($"Unknown Loqui type: {root.Name.LocalName}");
+                                if (!doMasks) throw ex;
+                                subMask = new MaskItem<Exception, TES4_ErrorMask>(
+                                    ex,
+                                    null);
+                                break;
+                            }
+                            tryGet = XmlTranslator.Instance.GetTranslator(register.ClassType).Item.Value.Parse(
+                                root: root,
+                                doMasks: doMasks,
+                                maskObj: out var subErrorMaskObj).Bubble((o) => (TES4)o);
+                            loquiMask = (TES4_ErrorMask)subErrorMaskObj;
+                        }
                         subMask = loquiMask == null ? null : new MaskItem<Exception, TES4_ErrorMask>(null, loquiMask);
+                        item._TES4.SetIfSucceeded(tryGet);
                         if (doMasks && subMask != null)
                         {
                             errorMask().TES4 = subMask;
@@ -724,20 +748,13 @@ namespace Mutagen
                 {
                     MaskItem<Exception, TES4_ErrorMask> subMask;
                     reader.BaseStream.Position -= Constants.SUBRECORD_LENGTH;
-                    var tmp = TES4.Create_OblivionBinary(
+                    TES4_ErrorMask loquiMask;
+                    TryGet<TES4> tryGet = TryGet<TES4>.Succeed((TES4)TES4.Create_OblivionBinary(
                         reader: reader,
                         doMasks: doMasks,
-                        errorMask: out TES4_ErrorMask createMask);
-                    TES4Common.CopyFieldsFrom(
-                        item: item._TES4_Object,
-                        rhs: tmp,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doErrorMask: doMasks,
-                        errorMask: out TES4_ErrorMask copyMask);
-                    var loquiMask = TES4_ErrorMask.Combine(createMask, copyMask);
+                        errorMask: out loquiMask));
                     subMask = loquiMask == null ? null : new MaskItem<Exception, TES4_ErrorMask>(null, loquiMask);
+                    item._TES4.SetIfSucceeded(tryGet);
                     if (doMasks && subMask != null)
                     {
                         errorMask().TES4 = subMask;
@@ -827,7 +844,9 @@ namespace Mutagen
             switch (enu)
             {
                 case OblivionMod_FieldIndex.TES4:
-                    this._TES4_Object.CopyFieldsFrom(rhs: (TES4)obj, cmds: cmds);
+                    this._TES4.Set(
+                        (TES4)obj,
+                        cmds);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -867,7 +886,9 @@ namespace Mutagen
             switch (enu)
             {
                 case OblivionMod_FieldIndex.TES4:
-                    obj._TES4_Object.CopyFieldsFrom(rhs: (TES4)pair.Value, cmds: null);
+                    obj._TES4.Set(
+                        (TES4)pair.Value,
+                        null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -884,6 +905,9 @@ namespace Mutagen
     #region Interface
     public interface IOblivionMod : IOblivionModGetter, ILoquiClass<IOblivionMod, IOblivionModGetter>, ILoquiClass<OblivionMod, IOblivionModGetter>
     {
+        new TES4 TES4 { get; set; }
+        new INotifyingItem<TES4> TES4_Property { get; }
+
     }
 
     public interface IOblivionModGetter : ILoquiObject
@@ -988,7 +1012,7 @@ namespace Mutagen.Internals
             switch (enu)
             {
                 case OblivionMod_FieldIndex.TES4:
-                    return true;
+                    return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1024,7 +1048,7 @@ namespace Mutagen.Internals
             switch (enu)
             {
                 case OblivionMod_FieldIndex.TES4:
-                    return true;
+                    return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1148,27 +1172,50 @@ namespace Mutagen.Internals
             OblivionMod_CopyMask copyMask,
             NotifyingFireParameters? cmds)
         {
-            if (copyMask?.TES4.Overall ?? true)
+            if (copyMask?.TES4.Overall != CopyOption.Skip)
             {
                 try
                 {
-                    TES4Common.CopyFieldsFrom(
-                        item: item.TES4,
-                        rhs: rhs.TES4,
-                        def: def?.TES4,
-                        doErrorMask: doErrorMask,
-                        errorMask: (doErrorMask ? new Func<TES4_ErrorMask>(() =>
+                    item.TES4_Property.SetToWithDefault(
+                        rhs.TES4_Property,
+                        def?.TES4_Property,
+                        cmds,
+                        (r, d) =>
                         {
-                            var baseMask = errorMask();
-                            if (baseMask.TES4.Specific == null)
+                            switch (copyMask?.TES4.Overall ?? CopyOption.Reference)
                             {
-                                baseMask.TES4 = new MaskItem<Exception, TES4_ErrorMask>(null, new TES4_ErrorMask());
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    TES4Common.CopyFieldsFrom(
+                                        item: item.TES4,
+                                        rhs: rhs.TES4,
+                                        def: def?.TES4,
+                                        doErrorMask: doErrorMask,
+                                        errorMask: (doErrorMask ? new Func<TES4_ErrorMask>(() =>
+                                        {
+                                            var baseMask = errorMask();
+                                            if (baseMask.TES4.Specific == null)
+                                            {
+                                                baseMask.TES4 = new MaskItem<Exception, TES4_ErrorMask>(null, new TES4_ErrorMask());
+                                            }
+                                            return baseMask.TES4.Specific;
+                                        }
+                                        ) : null),
+                                        copyMask: copyMask?.TES4.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(TES4);
+                                    return TES4.Copy(
+                                        r,
+                                        copyMask?.TES4.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.TES4.Overall}. Cannot execute copy.");
                             }
-                            return baseMask.TES4.Specific;
                         }
-                        ) : null),
-                        copyMask: copyMask?.TES4.Specific,
-                        cmds: cmds);
+                        );
                 }
                 catch (Exception ex)
                 when (doErrorMask)
@@ -1190,7 +1237,8 @@ namespace Mutagen.Internals
             switch (enu)
             {
                 case OblivionMod_FieldIndex.TES4:
-                    throw new ArgumentException("Tried to set at a readonly index " + index);
+                    obj.TES4_Property.HasBeenSet = on;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1205,7 +1253,8 @@ namespace Mutagen.Internals
             switch (enu)
             {
                 case OblivionMod_FieldIndex.TES4:
-                    throw new ArgumentException("Tried to set at a readonly index " + index);
+                    obj.TES4_Property.Unset(cmds);
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1243,6 +1292,7 @@ namespace Mutagen.Internals
             IOblivionMod item,
             NotifyingUnsetParameters? cmds = null)
         {
+            item.TES4_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static OblivionMod_Mask<bool> GetEqualsMask(
@@ -1611,7 +1661,7 @@ namespace Mutagen.Internals
     public class OblivionMod_CopyMask
     {
         #region Members
-        public MaskItem<bool, TES4_CopyMask> TES4;
+        public MaskItem<CopyOption, TES4_CopyMask> TES4;
         #endregion
 
     }
