@@ -714,9 +714,14 @@ namespace Mutagen
             var ret = new MasterReference();
             try
             {
+                Fill_OblivionBinary(
+                    item: ret,
+                    reader: reader,
+                    doMasks: doMasks,
+                    errorMask: errorMask);
                 while (reader.BaseStream.Position < finalPosition)
                 {
-                    Fill_OblivionBinary_Internal(
+                    Fill_OblivionBinary_RecordTypes(
                         item: ret,
                         reader: reader,
                         doMasks: doMasks,
@@ -736,7 +741,15 @@ namespace Mutagen
             return ret;
         }
 
-        protected static void Fill_OblivionBinary_Internal(
+        protected static void Fill_OblivionBinary(
+            MasterReference item,
+            BinaryReader reader,
+            bool doMasks,
+            Func<MasterReference_ErrorMask> errorMask)
+        {
+        }
+
+        protected static void Fill_OblivionBinary_RecordTypes(
             MasterReference item,
             BinaryReader reader,
             bool doMasks,
@@ -1502,7 +1515,15 @@ namespace Mutagen.Internals
             bool doMasks,
             Func<MasterReference_ErrorMask> errorMask)
         {
-            throw new NotImplementedException();
+            try
+            {
+                throw new NotImplementedException();
+            }
+            catch (Exception ex)
+            when (doMasks)
+            {
+                errorMask().Overall = ex;
+            }
         }
         #endregion
 

@@ -747,42 +747,11 @@ namespace Mutagen
             var ret = new Header();
             try
             {
-                {
-                    Exception subMask;
-                    var tryGet = Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
-                        reader,
-                        doMasks: doMasks,
-                        errorMask: out subMask);
-                    ret._Version.SetIfSucceeded(tryGet);
-                    if (doMasks && subMask != null)
-                    {
-                        errorMask().Version = subMask;
-                    }
-                }
-                {
-                    Exception subMask;
-                    var tryGet = Mutagen.Binary.Int32BinaryTranslation.Instance.Parse(
-                        reader,
-                        doMasks: doMasks,
-                        errorMask: out subMask);
-                    ret._NumRecords.SetIfSucceeded(tryGet);
-                    if (doMasks && subMask != null)
-                    {
-                        errorMask().NumRecords = subMask;
-                    }
-                }
-                {
-                    Exception subMask;
-                    var tryGet = Mutagen.Binary.UInt32BinaryTranslation.Instance.Parse(
-                        reader,
-                        doMasks: doMasks,
-                        errorMask: out subMask);
-                    ret._NextObjectID.SetIfSucceeded(tryGet);
-                    if (doMasks && subMask != null)
-                    {
-                        errorMask().NextObjectID = subMask;
-                    }
-                }
+                Fill_OblivionBinary(
+                    item: ret,
+                    reader: reader,
+                    doMasks: doMasks,
+                    errorMask: errorMask);
                 if (reader.BaseStream.Position != finalPosition)
                 {
                     reader.BaseStream.Position = finalPosition;
@@ -795,6 +764,50 @@ namespace Mutagen
                 errorMask().Overall = ex;
             }
             return ret;
+        }
+
+        protected static void Fill_OblivionBinary(
+            Header item,
+            BinaryReader reader,
+            bool doMasks,
+            Func<Header_ErrorMask> errorMask)
+        {
+            {
+                Exception subMask;
+                var tryGet = Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
+                    reader,
+                    doMasks: doMasks,
+                    errorMask: out subMask);
+                item._Version.SetIfSucceeded(tryGet);
+                if (doMasks && subMask != null)
+                {
+                    errorMask().Version = subMask;
+                }
+            }
+            {
+                Exception subMask;
+                var tryGet = Mutagen.Binary.Int32BinaryTranslation.Instance.Parse(
+                    reader,
+                    doMasks: doMasks,
+                    errorMask: out subMask);
+                item._NumRecords.SetIfSucceeded(tryGet);
+                if (doMasks && subMask != null)
+                {
+                    errorMask().NumRecords = subMask;
+                }
+            }
+            {
+                Exception subMask;
+                var tryGet = Mutagen.Binary.UInt32BinaryTranslation.Instance.Parse(
+                    reader,
+                    doMasks: doMasks,
+                    errorMask: out subMask);
+                item._NextObjectID.SetIfSucceeded(tryGet);
+                if (doMasks && subMask != null)
+                {
+                    errorMask().NextObjectID = subMask;
+                }
+            }
         }
 
         #endregion
@@ -1595,7 +1608,15 @@ namespace Mutagen.Internals
             bool doMasks,
             Func<Header_ErrorMask> errorMask)
         {
-            throw new NotImplementedException();
+            try
+            {
+                throw new NotImplementedException();
+            }
+            catch (Exception ex)
+            when (doMasks)
+            {
+                errorMask().Overall = ex;
+            }
         }
         #endregion
 

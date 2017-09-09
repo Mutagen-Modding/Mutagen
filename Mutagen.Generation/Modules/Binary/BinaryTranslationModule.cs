@@ -133,60 +133,126 @@ namespace Mutagen.Generation
 
         private void GenerateCreateExtras(ObjectGeneration obj, FileGeneration fg)
         {
-            ObjectType objType = obj.GetObjectType();
-            using (var args = new FunctionWrapper(fg,
-                $"private static {obj.ObjectName} Create_{ModuleNickname}_Internal"))
+            if (!obj.Abstract && obj.BaseClassTrail().All((b) => b.Abstract))
             {
-                args.Add("BinaryReader reader");
-                args.Add("bool doMasks");
-                args.Add($"Func<{obj.ErrorMask}> errorMask");
-            }
-            using (new BraceWrapper(fg))
-            {
-                switch (objType)
+                ObjectType objType = obj.GetObjectType();
+                using (var args = new FunctionWrapper(fg,
+                    $"private static {obj.ObjectName} Create_{ModuleNickname}_Internal"))
                 {
-                    case ObjectType.Subrecord:
-                    case ObjectType.Record:
-                        RecordType? mutaData = obj.GetTriggeringRecordType();
-                        using (var args = new ArgsWrapper(fg,
-                            $"var finalPosition = HeaderTranslation.Parse{(objType == ObjectType.Subrecord ? "Subrecord" : "Record")}"))
-                        {
-                            args.Add("reader");
-                            args.Add(mutaData.Value.HeaderName);
-                        }
-                        break;
-                    case ObjectType.Mod:
-                        fg.AppendLine($"var finalPosition = reader.BaseStream.Length;");
-                        break;
-                    case ObjectType.Group:
-                    default:
-                        throw new NotImplementedException();
+                    args.Add("BinaryReader reader");
+                    args.Add("bool doMasks");
+                    args.Add($"Func<{obj.ErrorMask}> errorMask");
                 }
-                using (var args = new ArgsWrapper(fg,
-                    $"return Create_{ModuleNickname}_Internal"))
-                {
-                    args.Add("reader: reader");
-                    args.Add("doMasks: doMasks");
-                    args.Add("finalPosition: finalPosition");
-                    args.Add("errorMask: errorMask");
-                }
-            }
-            fg.AppendLine();
-
-            using (var args = new FunctionWrapper(fg,
-                $"private static {obj.ObjectName} Create_{ModuleNickname}_Internal"))
-            {
-                args.Add("BinaryReader reader");
-                args.Add("bool doMasks");
-                args.Add("long finalPosition");
-                args.Add($"Func<{obj.ErrorMask}> errorMask");
-            }
-            using (new BraceWrapper(fg))
-            {
-                fg.AppendLine($"var ret = new {obj.Name}{obj.GenericTypes}();");
-                fg.AppendLine("try");
                 using (new BraceWrapper(fg))
                 {
+                    switch (objType)
+                    {
+                        case ObjectType.Subrecord:
+                        case ObjectType.Record:
+                            RecordType? mutaData = obj.GetTriggeringRecordType();
+                            using (var args = new ArgsWrapper(fg,
+                                $"var finalPosition = HeaderTranslation.Parse{(objType == ObjectType.Subrecord ? "Subrecord" : "Record")}"))
+                            {
+                                args.Add("reader");
+                                args.Add(mutaData.Value.HeaderName);
+                            }
+                            break;
+                        case ObjectType.Mod:
+                            fg.AppendLine($"var finalPosition = reader.BaseStream.Length;");
+                            break;
+                        case ObjectType.Group:
+                        default:
+                            throw new NotImplementedException();
+                    }
+                    using (var args = new ArgsWrapper(fg,
+                        $"return Create_{ModuleNickname}_Internal"))
+                    {
+                        args.Add("reader: reader");
+                        args.Add("doMasks: doMasks");
+                        args.Add("finalPosition: finalPosition");
+                        args.Add("errorMask: errorMask");
+                    }
+                }
+                fg.AppendLine();
+
+                using (var args = new FunctionWrapper(fg,
+                    $"private static {obj.ObjectName} Create_{ModuleNickname}_Internal"))
+                {
+                    args.Add("BinaryReader reader");
+                    args.Add("bool doMasks");
+                    args.Add("long finalPosition");
+                    args.Add($"Func<{obj.ErrorMask}> errorMask");
+                }
+                using (new BraceWrapper(fg))
+                {
+                    fg.AppendLine($"var ret = new {obj.Name}{obj.GenericTypes}();");
+                    fg.AppendLine("try");
+                    using (new BraceWrapper(fg))
+                    {
+                        using (var args = new ArgsWrapper(fg,
+                            $"Fill_{ModuleNickname}"))
+                        {
+                            args.Add("item: ret");
+                            args.Add("reader: reader");
+                            args.Add("doMasks: doMasks");
+                            args.Add("errorMask: errorMask");
+                        }
+                        if (HasRecordTypeFields(obj))
+                        {
+                            fg.AppendLine($"while (reader.BaseStream.Position < finalPosition)");
+                            using (new BraceWrapper(fg))
+                            {
+                                using (var args = new ArgsWrapper(fg,
+                                    $"Fill_{ModuleNickname}_RecordTypes"))
+                                {
+                                    args.Add("item: ret");
+                                    args.Add("reader: reader");
+                                    args.Add("doMasks: doMasks");
+                                    args.Add("errorMask: errorMask");
+                                }
+                            }
+                        }
+                        fg.AppendLine($"if (reader.BaseStream.Position != finalPosition)");
+                        using (new BraceWrapper(fg))
+                        {
+                            fg.AppendLine("reader.BaseStream.Position = finalPosition;");
+                            fg.AppendLine("throw new ArgumentException(\"Read more bytes than allocated\");");
+                        }
+                    }
+                    fg.AppendLine("catch (Exception ex)");
+                    fg.AppendLine("when (doMasks)");
+                    using (new BraceWrapper(fg))
+                    {
+                        fg.AppendLine("errorMask().Overall = ex;");
+                    }
+                    fg.AppendLine("return ret;");
+                }
+                fg.AppendLine();
+            }
+
+            if (obj.BaseClassTrail().All((b) => b.Abstract) || HasEmbeddedFields(obj))
+            {
+                using (var args = new FunctionWrapper(fg,
+                    $"protected static void Fill_{ModuleNickname}"))
+                {
+                    args.Add($"{obj.ObjectName} item");
+                    args.Add("BinaryReader reader");
+                    args.Add("bool doMasks");
+                    args.Add($"Func<{obj.ErrorMask}> errorMask");
+                }
+                using (new BraceWrapper(fg))
+                {
+                    if (obj.HasBaseObject && obj.BaseClassTrail().Any((b) => HasEmbeddedFields(b)))
+                    {
+                        using (var args = new ArgsWrapper(fg,
+                            $"{obj.BaseClass.Name}.Fill_{ModuleNickname}"))
+                        {
+                            args.Add("item: item");
+                            args.Add("reader: reader");
+                            args.Add("doMasks: doMasks");
+                            args.Add("errorMask: errorMask");
+                        }
+                    }
                     foreach (var field in obj.Fields)
                     {
                         if (field.TryGetFieldData(out var data)
@@ -205,8 +271,8 @@ namespace Mutagen.Generation
                                 readerAccessor: "reader",
                                 itemAccessor: new Accessor()
                                 {
-                                    DirectAccess = $"ret.{field.ProtectedName}",
-                                    PropertyAccess = field.Notifying == NotifyingOption.None ? null : $"ret.{field.ProtectedProperty}"
+                                    DirectAccess = $"item.{field.ProtectedName}",
+                                    PropertyAccess = field.Notifying == NotifyingOption.None ? null : $"item.{field.ProtectedProperty}"
                                 },
                                 doMaskAccessor: "doMasks",
                                 maskAccessor: $"subMask");
@@ -217,42 +283,14 @@ namespace Mutagen.Generation
                             }
                         }
                     }
-                    if (HasRecordTypeFields(obj))
-                    {
-                        fg.AppendLine($"while (reader.BaseStream.Position < finalPosition)");
-                        using (new BraceWrapper(fg))
-                        {
-                            using (var args = new ArgsWrapper(fg,
-                                $"Fill_{ModuleNickname}_Internal"))
-                            {
-                                args.Add("item: ret");
-                                args.Add("reader: reader");
-                                args.Add("doMasks: doMasks");
-                                args.Add("errorMask: errorMask");
-                            }
-                        }
-                    }
-                    fg.AppendLine($"if (reader.BaseStream.Position != finalPosition)");
-                    using (new BraceWrapper(fg))
-                    {
-                        fg.AppendLine("reader.BaseStream.Position = finalPosition;");
-                        fg.AppendLine("throw new ArgumentException(\"Read more bytes than allocated\");");
-                    }
                 }
-                fg.AppendLine("catch (Exception ex)");
-                fg.AppendLine("when (doMasks)");
-                using (new BraceWrapper(fg))
-                {
-                    fg.AppendLine("errorMask().Overall = ex;");
-                }
-                fg.AppendLine("return ret;");
+                fg.AppendLine();
             }
-            fg.AppendLine();
 
             if (HasRecordTypeFields(obj))
             {
                 using (var args = new FunctionWrapper(fg,
-                $"protected static void Fill_{ModuleNickname}_Internal"))
+                    $"protected static void Fill_{ModuleNickname}_RecordTypes"))
                 {
                     args.Add($"{obj.ObjectName} item");
                     args.Add("BinaryReader reader");
@@ -309,7 +347,21 @@ namespace Mutagen.Generation
                         fg.AppendLine($"default:");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine($"throw new ArgumentException($\"Unexpected header {{nextRecordType.Type}} at position {{reader.BaseStream.Position}}\");");
+                            if (obj.HasBaseObject && obj.BaseClassTrail().Any((b) => HasRecordTypeFields(b)))
+                            {
+                                using (var args = new ArgsWrapper(fg,
+                                    $"{obj.BaseClass.Name}.Fill_{ModuleNickname}_Internal"))
+                                {
+                                    args.Add("reader: reader");
+                                    args.Add("doMasks: doMasks");
+                                    args.Add($"errorMask: errorMask");
+                                }
+                                fg.AppendLine("break;");
+                            }
+                            else
+                            {
+                                fg.AppendLine($"throw new ArgumentException($\"Unexpected header {{nextRecordType.Type}} at position {{reader.BaseStream.Position}}\");");
+                            }
                         }
                     }
                 }

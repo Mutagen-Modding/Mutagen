@@ -19,8 +19,7 @@ namespace Mutagen
 
         public static bool TryFactory(string hexString, out FormID id)
         {
-            FormID? idNull;
-            if (TryFactory(hexString, out idNull))
+            if (TryFactory(hexString, out FormID? idNull))
             {
                 id = idNull ?? default(FormID);
                 return true;
@@ -54,12 +53,12 @@ namespace Mutagen
 
         public string ToHex()
         {
-            return ModID + ID.ToString("X8");
+            return $"{ModID}{ID.ToString("X8")}";
         }
 
         public override string ToString()
         {
-            return "(" + ModID + ")" + ID.ToString("X8");
+            return $"({ModID}){ID.ToString("X8")}";
         }
 
         public override bool Equals(object obj)

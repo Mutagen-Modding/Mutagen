@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="TES4" recordType="TES4" objType="Record" GUID="d26d9f2a-53af-4c45-9490-dfdb377b6655" ID="2">
+  <Object name="TES4" recordType="TES4" objType="Record" baseClass="MajorRecord" GUID="d26d9f2a-53af-4c45-9490-dfdb377b6655" ID="2">
     <Fields>
-      <ByteArray name="Fluff" nullable="false" length="12" includeInLength="false" />
       <RefDirect name="Header" refName="Header" singleton="NotNull" />
-      <ByteArray name="TypeOffsets" recordType="OFST"  optional="true" />
+      <ByteArray name="TypeOffsets" recordType="OFST" optional="true" />
       <ByteArray name="Deleted" recordType="DELE" optional="true" />
       <String name="Author" recordType="CNAM" maxLength="512" optional="true" />
       <String name="Description" recordType="SNAM" maxLength="512" optional="true" />

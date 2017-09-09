@@ -97,7 +97,7 @@ namespace Mutagen.Generation
             {
                 data.Length = 4;
             }
-            if (!data.Length.HasValue 
+            if (!data.Length.HasValue
                 && !data.RecordType.HasValue
                 && !(field is PrimitiveType)
                 && !(field is ContainerType))

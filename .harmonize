@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>a2a4135bb5a84f7e6b3ce1ed39822e4aa12d730c</Sha>
+         <Sha>86dfc945c8515fe5af9d7ea11397d3eafa7cf586</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>09-09-2017 01:27:55</CommitDate>
-         <Description>Bugfix for some infinite refrence loops</Description>
+         <CommitDate>09-09-2017 02:30:42</CommitDate>
+         <Description>TestObject_Abstract generation, as well as some abstract fixes</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>
