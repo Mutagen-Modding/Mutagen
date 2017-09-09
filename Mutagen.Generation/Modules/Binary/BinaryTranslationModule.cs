@@ -121,6 +121,16 @@ namespace Mutagen.Generation
             return false;
         }
 
+        private bool HasEmbeddedFields(ObjectGeneration obj)
+        {
+            foreach (var field in obj.Fields)
+            {
+                if (!field.TryGetFieldData(out var data)
+                    || !data.RecordType.HasValue) return true;
+            }
+            return false;
+        }
+
         private void GenerateCreateExtras(ObjectGeneration obj, FileGeneration fg)
         {
             ObjectType objType = obj.GetObjectType();

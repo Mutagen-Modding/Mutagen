@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>e95b23197d765b5ff770940c791df01f9595b39f</Sha>
+         <Sha>b0380b3cbaed8d63a267631485a01b238f1ff44b</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>09-07-2017 19:39:09</CommitDate>
-         <Description>IHasBeenSetItem.SetIfSucceeded()</Description>
+         <CommitDate>09-09-2017 00:45:32</CommitDate>
+         <Description>XmlExt.TransferAttribute</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>eb4a0b680e178e0f493942ef5bbde99320e1a11f</Sha>
+         <Sha>a2a4135bb5a84f7e6b3ce1ed39822e4aa12d730c</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>09-08-2017 18:58:42</CommitDate>
-         <Description>Added overall member printing for error masks</Description>
+         <CommitDate>09-09-2017 01:27:55</CommitDate>
+         <Description>Bugfix for some infinite refrence loops</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>
