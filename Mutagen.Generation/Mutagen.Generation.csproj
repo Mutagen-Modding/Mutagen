@@ -47,8 +47,8 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Extensions\ObjectGenerationExt.cs" />
     <Compile Include="Extensions\TypeGenerationExt.cs" />
+    <Compile Include="Fields\FormIDType.cs" />
     <Compile Include="Fields\MutagenFieldData.cs" />
-    <Compile Include="Fields\UnknownType.cs" />
     <Compile Include="Modules\Binary\BinaryTranslationModule.cs" />
     <Compile Include="Modules\Binary\ByteArrayTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\EnumBinaryTranslationGeneration.cs" />
@@ -59,6 +59,7 @@
     <Compile Include="Modules\Binary\BinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\StringBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\MutagenModule.cs" />
+    <Compile Include="Modules\XML\FormIDXmlTranslationGeneration.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

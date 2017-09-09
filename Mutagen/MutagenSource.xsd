@@ -89,12 +89,14 @@
     <xs:group name="NamedFieldOptions">
       <xs:choice>
         <xs:group ref="NamedFieldOptions"/>
+        <xs:element name="FormID" type="NFormID"/>
       </xs:choice>
     </xs:group>
 
     <xs:group name="FieldOptions">
       <xs:choice>
         <xs:group ref="FieldOptions"/>
+        <xs:element name="FormID" type="FormID"/>
       </xs:choice>
     </xs:group>
   </xs:redefine>
@@ -107,5 +109,20 @@
       <xs:enumeration value="Mod" />
     </xs:restriction>
   </xs:simpleType>
+
+  <xs:complexType name="FormID" >
+    <xs:complexContent>
+      <xs:extension base="Field">
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="NFormID" >
+    <xs:complexContent>
+      <xs:extension base="FormID">
+        <xs:attribute name="name" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
   
 </xs:schema>

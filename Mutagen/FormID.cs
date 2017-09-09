@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -40,8 +41,8 @@ namespace Mutagen
             try
             {
                 id = new FormID(
-                    new ModID(Convert.ToUInt16(hexString.Substring(0, 4), 16)),
-                    Convert.ToUInt32(hexString.Substring(4, 8), 16));
+                    new ModID(Convert.ToByte(hexString.Substring(0, 2), 16)),
+                    Convert.ToUInt32(hexString.Substring(2, 8), 16));
                 return true;
             }
             catch (Exception)
@@ -49,6 +50,16 @@ namespace Mutagen
                 id = null;
                 return false;
             }
+        }
+
+        public static FormID Factory(byte[] bytes)
+        {
+            byte[] arr = new byte[4];
+            Array.Copy(bytes, 0, arr, 0, 3);
+            var i = BitConverter.ToUInt32(arr, 0);
+            return new FormID(
+                new ModID(bytes[3]),
+                i);
         }
 
         public string ToHex()
@@ -73,6 +84,17 @@ namespace Mutagen
         {
             return this.ModID.GetHashCode()
                 .CombineHashCode(this.ID.GetHashCode());
+        }
+
+        public static bool operator ==(FormID a, FormID b)
+        {
+            return a.ModID == b.ModID
+                && a.ID == b.ID;
+        }
+
+        public static bool operator !=(FormID a, FormID b)
+        {
+            return !(a == b);
         }
     }
 }

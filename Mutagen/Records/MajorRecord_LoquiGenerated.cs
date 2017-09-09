@@ -49,17 +49,15 @@ namespace Mutagen
         INotifyingItemGetter<Byte[]> IMajorRecordGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region FormID
-        protected readonly INotifyingItem<Byte[]> _FormID = NotifyingItem.Factory<Byte[]>(
-            markAsSet: false,
-            noNullFallback: () => new byte[4]);
-        public INotifyingItem<Byte[]> FormID_Property => _FormID;
-        public Byte[] FormID
+        protected readonly INotifyingItem<FormID> _FormID = NotifyingItem.Factory<FormID>(markAsSet: false);
+        public INotifyingItem<FormID> FormID_Property => _FormID;
+        public FormID FormID
         {
             get => this._FormID.Item;
             set => this._FormID.Set(value);
         }
-        INotifyingItem<Byte[]> IMajorRecord.FormID_Property => this.FormID_Property;
-        INotifyingItemGetter<Byte[]> IMajorRecordGetter.FormID_Property => this.FormID_Property;
+        INotifyingItem<FormID> IMajorRecord.FormID_Property => this.FormID_Property;
+        INotifyingItemGetter<FormID> IMajorRecordGetter.FormID_Property => this.FormID_Property;
         #endregion
         #region Version
         protected readonly INotifyingItem<Byte[]> _Version = NotifyingItem.Factory<Byte[]>(
@@ -141,7 +139,7 @@ namespace Mutagen
             if (FormID_Property.HasBeenSet != rhs.FormID_Property.HasBeenSet) return false;
             if (FormID_Property.HasBeenSet)
             {
-                if (!FormID.EqualsFast(rhs.FormID)) return false;
+                if (FormID != rhs.FormID) return false;
             }
             if (Version_Property.HasBeenSet != rhs.Version_Property.HasBeenSet) return false;
             if (Version_Property.HasBeenSet)
@@ -331,7 +329,7 @@ namespace Mutagen
                 case "FormID":
                     {
                         Exception subMask;
-                        var tryGet = ByteArrayXmlTranslation.Instance.Parse(
+                        var tryGet = FormIDXmlTranslation.Instance.ParseNonNull(
                             root,
                             doMasks: doMasks,
                             errorMask: out subMask);
@@ -518,11 +516,10 @@ namespace Mutagen
             }
             {
                 Exception subMask;
-                var tryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                var tryGet = Mutagen.Binary.FormIDBinaryTranslation.Instance.Parse(
                     reader,
                     doMasks: doMasks,
-                    errorMask: out subMask,
-                    length: 4);
+                    errorMask: out subMask);
                 item._FormID.SetIfSucceeded(tryGet);
                 if (doMasks && subMask != null)
                 {
@@ -559,7 +556,7 @@ namespace Mutagen
                     break;
                 case MajorRecord_FieldIndex.FormID:
                     this._FormID.Set(
-                        (Byte[])obj,
+                        (FormID)obj,
                         cmds);
                     break;
                 case MajorRecord_FieldIndex.Version:
@@ -601,7 +598,7 @@ namespace Mutagen
                     break;
                 case MajorRecord_FieldIndex.FormID:
                     obj._FormID.Set(
-                        (Byte[])pair.Value,
+                        (FormID)pair.Value,
                         null);
                     break;
                 case MajorRecord_FieldIndex.Version:
@@ -627,8 +624,8 @@ namespace Mutagen
         new Byte[] Flags { get; set; }
         new INotifyingItem<Byte[]> Flags_Property { get; }
 
-        new Byte[] FormID { get; set; }
-        new INotifyingItem<Byte[]> FormID_Property { get; }
+        new FormID FormID { get; set; }
+        new INotifyingItem<FormID> FormID_Property { get; }
 
         new Byte[] Version { get; set; }
         new INotifyingItem<Byte[]> Version_Property { get; }
@@ -643,8 +640,8 @@ namespace Mutagen
 
         #endregion
         #region FormID
-        Byte[] FormID { get; }
-        INotifyingItemGetter<Byte[]> FormID_Property { get; }
+        FormID FormID { get; }
+        INotifyingItemGetter<FormID> FormID_Property { get; }
 
         #endregion
         #region Version
@@ -817,7 +814,7 @@ namespace Mutagen.Internals
                 case MajorRecord_FieldIndex.Flags:
                     return typeof(Byte[]);
                 case MajorRecord_FieldIndex.FormID:
-                    return typeof(Byte[]);
+                    return typeof(FormID);
                 case MajorRecord_FieldIndex.Version:
                     return typeof(Byte[]);
                 default:
@@ -1086,7 +1083,7 @@ namespace Mutagen.Internals
         {
             if (rhs == null) return;
             ret.Flags = item.Flags_Property.Equals(rhs.Flags_Property, (l, r) => l.EqualsFast(r));
-            ret.FormID = item.FormID_Property.Equals(rhs.FormID_Property, (l, r) => l.EqualsFast(r));
+            ret.FormID = item.FormID_Property.Equals(rhs.FormID_Property, (l, r) => l == r);
             ret.Version = item.Version_Property.Equals(rhs.Version_Property, (l, r) => l.EqualsFast(r));
         }
 
@@ -1203,7 +1200,7 @@ namespace Mutagen.Internals
                     if (item.FormID_Property.HasBeenSet)
                     {
                         Exception subMask;
-                        ByteArrayXmlTranslation.Instance.Write(
+                        FormIDXmlTranslation.Instance.Write(
                             writer,
                             nameof(item.FormID),
                             item.FormID,

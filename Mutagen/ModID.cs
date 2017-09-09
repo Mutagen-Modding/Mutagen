@@ -8,9 +8,9 @@ namespace Mutagen
 {
     public struct ModID
     {
-        private readonly ushort ID;
+        public readonly byte ID;
 
-        public ModID(ushort id)
+        public ModID(byte id)
         {
             this.ID = id;
         }
@@ -30,6 +30,16 @@ namespace Mutagen
         public override int GetHashCode()
         {
             return this.ID.GetHashCode();
+        }
+
+        public static bool operator ==(ModID a, ModID b)
+        {
+            return a.ID == b.ID;
+        }
+
+        public static bool operator !=(ModID a, ModID b)
+        {
+            return !(a == b);
         }
     }
 }

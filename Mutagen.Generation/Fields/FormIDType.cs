@@ -7,12 +7,8 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Generation
 {
-    public class UnknownType : LoquiType
+    public class FormIDType : PrimitiveType
     {
-        public UnknownType()
-            : base()
-        {
-            this.RefName = "UnknownData";
-        }
+        public override Type Type => typeof(FormID);
     }
 }
