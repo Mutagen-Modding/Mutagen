@@ -8,6 +8,7 @@ namespace Mutagen
 {
     public enum ObjectType
     {
+        Struct,
         Subrecord,
         Record,
         Group,

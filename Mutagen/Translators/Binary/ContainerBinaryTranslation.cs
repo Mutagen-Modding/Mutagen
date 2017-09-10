@@ -37,7 +37,6 @@ namespace Mutagen.Binary
             {
                 List<M> maskList = null;
                 var ret = new List<T>();
-                throw new NotImplementedException();
                 //foreach (var listElem in root.Elements())
                 //{
                 //    var get = transl(listElem, doMasks, out var subMaskObj);
@@ -72,7 +71,7 @@ namespace Mutagen.Binary
         public TryGet<IEnumerable<T>> ParseRepeatedItem(
             BinaryReader reader,
             bool doMasks,
-            long finalPosition,
+            RecordType triggeringRecord,
             out MaskItem<Exception, IEnumerable<M>> maskObj,
             BinarySubParseDelegate<T, M> transl)
         {
@@ -80,7 +79,7 @@ namespace Mutagen.Binary
             {
                 List<M> maskList = null;
                 var ret = new List<T>();
-                while (reader.BaseStream.Position < finalPosition)
+                while (true)
                 {
                     var get = transl(reader, doMasks, out var subMaskObj);
                     if (get.Succeeded)
@@ -99,6 +98,8 @@ namespace Mutagen.Binary
                         }
                         maskList.Add(subMaskObj);
                     }
+
+                    if (!HeaderTranslation.TryParseSubRecordType(reader, triggeringRecord)) break;
                 }
                 maskObj = maskList == null ? null : new MaskItem<Exception, IEnumerable<M>>(null, maskList);
                 return TryGet<IEnumerable<T>>.Succeed(ret);

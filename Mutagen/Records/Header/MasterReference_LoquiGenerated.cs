@@ -695,22 +695,6 @@ namespace Mutagen
             bool doMasks,
             Func<MasterReference_ErrorMask> errorMask)
         {
-            var finalPosition = HeaderTranslation.ParseSubrecord(
-                reader,
-                MAST_HEADER);
-            return Create_OblivionBinary_Internal(
-                reader: reader,
-                doMasks: doMasks,
-                finalPosition: finalPosition,
-                errorMask: errorMask);
-        }
-
-        private static MasterReference Create_OblivionBinary_Internal(
-            BinaryReader reader,
-            bool doMasks,
-            long finalPosition,
-            Func<MasterReference_ErrorMask> errorMask)
-        {
             var ret = new MasterReference();
             try
             {
@@ -719,18 +703,16 @@ namespace Mutagen
                     reader: reader,
                     doMasks: doMasks,
                     errorMask: errorMask);
-                while (reader.BaseStream.Position < finalPosition)
+                while (true)
                 {
-                    Fill_OblivionBinary_RecordTypes(
+                    if (!Fill_OblivionBinary_RecordTypes(
                         item: ret,
                         reader: reader,
                         doMasks: doMasks,
-                        errorMask: errorMask);
-                }
-                if (reader.BaseStream.Position != finalPosition)
-                {
-                    reader.BaseStream.Position = finalPosition;
-                    throw new ArgumentException("Read more bytes than allocated");
+                        errorMask: errorMask))
+                    {
+                        break;
+                    }
                 }
             }
             catch (Exception ex)
@@ -749,7 +731,7 @@ namespace Mutagen
         {
         }
 
-        protected static void Fill_OblivionBinary_RecordTypes(
+        protected static bool Fill_OblivionBinary_RecordTypes(
             MasterReference item,
             BinaryReader reader,
             bool doMasks,
@@ -773,7 +755,7 @@ namespace Mutagen
                     {
                         errorMask().Master = subMask;
                     }
-                    break;
+                    return true;
                 }
                 case "DATA":
                 {
@@ -787,10 +769,11 @@ namespace Mutagen
                     {
                         errorMask().FileSize = subMask;
                     }
-                    break;
+                    return true;
                 }
                 default:
-                    throw new ArgumentException($"Unexpected header {nextRecordType.Type} at position {reader.BaseStream.Position}");
+                    reader.BaseStream.Position -= Constants.SUBRECORD_LENGTH;
+                    return false;
             }
         }
 

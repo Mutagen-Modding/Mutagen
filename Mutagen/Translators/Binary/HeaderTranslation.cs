@@ -63,7 +63,7 @@ namespace Mutagen.Binary
                 reader,
                 expectedHeader,
                 out var contentLength,
-                4))
+                Constants.RECORD_LENGTHLENGTH))
             {
                 throw new ArgumentException($"Expected header was not read in: {expectedHeader}");
             }
@@ -78,11 +78,37 @@ namespace Mutagen.Binary
                 reader,
                 expectedHeader,
                 out var contentLength,
-                2))
+                Constants.SUBRECORD_LENGTHLENGTH))
             {
                 throw new ArgumentException($"Expected header was not read in: {expectedHeader}");
             }
             return reader.BaseStream.Position + contentLength;
+        }
+
+        public static bool TryParseSubRecordType(
+            BinaryReader reader,
+            RecordType expectedHeader)
+        {
+            if (TryParse(
+                reader,
+                expectedHeader,
+                out var contentLength,
+                Constants.SUBRECORD_LENGTHLENGTH))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public static long GetSubrecord(
+            BinaryReader reader,
+            RecordType expectedHeader)
+        {
+            var ret = ParseSubrecord(
+                reader,
+                expectedHeader);
+            reader.BaseStream.Position -= Constants.SUBRECORD_LENGTH;
+            return ret;
         }
 
         public static RecordType ReadNextRecordType(
@@ -114,7 +140,7 @@ namespace Mutagen.Binary
         {
             return ReadNextRecordType(
                 reader,
-                4,
+                Constants.RECORD_LENGTHLENGTH,
                 out contentLength);
         }
 
@@ -124,8 +150,20 @@ namespace Mutagen.Binary
         {
             return ReadNextRecordType(
                 reader,
-                2,
+                Constants.SUBRECORD_LENGTHLENGTH,
                 out contentLength);
+        }
+
+        public static RecordType GetNextSubRecordType(
+            BinaryReader reader,
+            out int contentLength)
+        {
+            var ret = ReadNextRecordType(
+                reader,
+                Constants.SUBRECORD_LENGTHLENGTH,
+                out contentLength);
+            reader.BaseStream.Position -= Constants.SUBRECORD_LENGTH;
+            return ret;
         }
     }
 }

@@ -137,51 +137,74 @@ namespace Mutagen.Generation
             if (!obj.Abstract && obj.BaseClassTrail().All((b) => b.Abstract))
             {
                 ObjectType objType = obj.GetObjectType();
-                using (var args = new FunctionWrapper(fg,
-                    $"private static {obj.ObjectName} Create_{ModuleNickname}_Internal"))
+                if (objType != ObjectType.Struct)
                 {
-                    args.Add("BinaryReader reader");
-                    args.Add("bool doMasks");
-                    args.Add($"Func<{obj.ErrorMask}> errorMask");
-                }
-                using (new BraceWrapper(fg))
-                {
-                    switch (objType)
+                    using (var args = new FunctionWrapper(fg,
+                        $"private static {obj.ObjectName} Create_{ModuleNickname}_Internal"))
                     {
-                        case ObjectType.Subrecord:
-                        case ObjectType.Record:
-                            RecordType? mutaData = obj.GetTriggeringRecordType();
-                            using (var args = new ArgsWrapper(fg,
-                                $"var finalPosition = HeaderTranslation.Parse{(objType == ObjectType.Subrecord ? "Subrecord" : "Record")}"))
-                            {
-                                args.Add("reader");
-                                args.Add(mutaData.Value.HeaderName);
-                            }
-                            break;
-                        case ObjectType.Mod:
-                            fg.AppendLine($"var finalPosition = reader.BaseStream.Length;");
-                            break;
-                        case ObjectType.Group:
-                        default:
-                            throw new NotImplementedException();
+                        args.Add("BinaryReader reader");
+                        args.Add("bool doMasks");
+                        args.Add($"Func<{obj.ErrorMask}> errorMask");
                     }
-                    using (var args = new ArgsWrapper(fg,
-                        $"return Create_{ModuleNickname}_Internal"))
+                    using (new BraceWrapper(fg))
                     {
-                        args.Add("reader: reader");
-                        args.Add("doMasks: doMasks");
-                        args.Add("finalPosition: finalPosition");
-                        args.Add("errorMask: errorMask");
+                        switch (objType)
+                        {
+                            case ObjectType.Record:
+                            case ObjectType.Subrecord:
+                                RecordType? mutaData = obj.GetTriggeringRecordType();
+                                string funcName;
+                                switch (obj.GetObjectType())
+                                {
+                                    case ObjectType.Struct:
+                                        funcName = "GetSubrecord";
+                                        break;
+                                    case ObjectType.Subrecord:
+                                        funcName = "ParseSubrecord";
+                                        break;
+                                    case ObjectType.Record:
+                                        funcName = "ParseRecord";
+                                        break;
+                                    case ObjectType.Group:
+                                    case ObjectType.Mod:
+                                    default:
+                                        throw new NotImplementedException();
+                                }
+                                using (var args = new ArgsWrapper(fg,
+                                    $"var finalPosition = HeaderTranslation.{funcName}"))
+                                {
+                                    args.Add("reader");
+                                    args.Add(mutaData.Value.HeaderName);
+                                }
+                                break;
+                            case ObjectType.Mod:
+                                fg.AppendLine($"var finalPosition = reader.BaseStream.Length;");
+                                break;
+                            case ObjectType.Group:
+                            default:
+                                throw new NotImplementedException();
+                        }
+                        using (var args = new ArgsWrapper(fg,
+                            $"return Create_{ModuleNickname}_Internal"))
+                        {
+                            args.Add("reader: reader");
+                            args.Add("doMasks: doMasks");
+                            args.Add("finalPosition: finalPosition");
+                            args.Add("errorMask: errorMask");
+                        }
                     }
+                    fg.AppendLine();
                 }
-                fg.AppendLine();
 
                 using (var args = new FunctionWrapper(fg,
                     $"private static {obj.ObjectName} Create_{ModuleNickname}_Internal"))
                 {
                     args.Add("BinaryReader reader");
                     args.Add("bool doMasks");
-                    args.Add("long finalPosition");
+                    if (objType != ObjectType.Struct)
+                    {
+                        args.Add("long finalPosition");
+                    }
                     args.Add($"Func<{obj.ErrorMask}> errorMask");
                 }
                 using (new BraceWrapper(fg))
@@ -200,24 +223,50 @@ namespace Mutagen.Generation
                         }
                         if (HasRecordTypeFields(obj))
                         {
-                            fg.AppendLine($"while (reader.BaseStream.Position < finalPosition)");
+                            if (objType != ObjectType.Struct)
+                            {
+                                fg.AppendLine($"while (reader.BaseStream.Position < finalPosition)");
+                            }
+                            else
+                            {
+                                fg.AppendLine($"while (true)");
+                            }
                             using (new BraceWrapper(fg))
                             {
                                 using (var args = new ArgsWrapper(fg,
-                                    $"Fill_{ModuleNickname}_RecordTypes"))
+                                    $"if (!Fill_{ModuleNickname}_RecordTypes",
+                                    $")")
+                                {
+                                    SemiColon = false
+                                })
                                 {
                                     args.Add("item: ret");
                                     args.Add("reader: reader");
                                     args.Add("doMasks: doMasks");
                                     args.Add("errorMask: errorMask");
                                 }
+                                using (new BraceWrapper(fg))
+                                {
+                                    if (objType == ObjectType.Struct)
+                                    {
+                                        fg.AppendLine("break;");
+                                    }
+                                    else
+                                    {
+                                        fg.AppendLine($"var nextRecordType = HeaderTranslation.GetNextSubRecordType(reader, out var contentLength);");
+                                        fg.AppendLine("throw new ArgumentException($\"Unexpected header {nextRecordType.Type} at position {reader.BaseStream.Position}\");");
+                                    }
+                                }
                             }
                         }
-                        fg.AppendLine($"if (reader.BaseStream.Position != finalPosition)");
-                        using (new BraceWrapper(fg))
+                        if (objType != ObjectType.Struct)
                         {
-                            fg.AppendLine("reader.BaseStream.Position = finalPosition;");
-                            fg.AppendLine("throw new ArgumentException(\"Read more bytes than allocated\");");
+                            fg.AppendLine($"if (reader.BaseStream.Position != finalPosition)");
+                            using (new BraceWrapper(fg))
+                            {
+                                fg.AppendLine("reader.BaseStream.Position = finalPosition;");
+                                fg.AppendLine("throw new ArgumentException(\"Read more bytes than allocated\");");
+                            }
                         }
                     }
                     fg.AppendLine("catch (Exception ex)");
@@ -291,7 +340,7 @@ namespace Mutagen.Generation
             if (HasRecordTypeFields(obj))
             {
                 using (var args = new FunctionWrapper(fg,
-                    $"protected static void Fill_{ModuleNickname}_RecordTypes"))
+                    $"protected static bool Fill_{ModuleNickname}_RecordTypes"))
                 {
                     args.Add($"{obj.ObjectName} item");
                     args.Add("BinaryReader reader");
@@ -341,13 +390,27 @@ namespace Mutagen.Generation
                                     {
                                         fg.AppendLine($"errorMask().{field.Field.Name} = subMask;");
                                     }
-                                    fg.AppendLine("break;");
+                                    fg.AppendLine("return true;");
                                 }
                             }
                         }
                         fg.AppendLine($"default:");
                         using (new DepthWrapper(fg))
                         {
+                            switch (obj.GetObjectType())
+                            {
+                                case ObjectType.Struct:
+                                case ObjectType.Subrecord:
+                                    fg.AppendLine($"reader.BaseStream.Position -= Constants.SUBRECORD_LENGTH;");
+                                    break;
+                                case ObjectType.Record:
+                                    fg.AppendLine($"reader.BaseStream.Position -= Constants.RECORD_LENGTH;");
+                                    break;
+                                case ObjectType.Group:
+                                case ObjectType.Mod:
+                                default:
+                                    break;
+                            }
                             if (obj.HasBaseObject && obj.BaseClassTrail().Any((b) => HasRecordTypeFields(b)))
                             {
                                 using (var args = new ArgsWrapper(fg,
@@ -361,7 +424,7 @@ namespace Mutagen.Generation
                             }
                             else
                             {
-                                fg.AppendLine($"throw new ArgumentException($\"Unexpected header {{nextRecordType.Type}} at position {{reader.BaseStream.Position}}\");");
+                                fg.AppendLine($"return false;");
                             }
                         }
                     }

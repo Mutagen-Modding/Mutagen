@@ -81,15 +81,17 @@ namespace Mutagen.Generation
             string maskAccessor)
         {
             var list = typeGen as ListType;
+            var data = list.GetFieldData();
             if (!this.Module.TryGetTypeGeneration(list.SubTypeGeneration.GetType(), out var subTransl))
             {
                 throw new ArgumentException("Unsupported type generator: " + list.SubTypeGeneration);
             }
             var subMaskStr = subTransl.MaskModule.GetMaskModule(list.SubTypeGeneration.GetType()).GetErrorMaskTypeStr(list.SubTypeGeneration);
             using (var args = new ArgsWrapper(fg,
-                $"{retAccessor}{this.Namespace}ListBinaryTranslation<{list.SubTypeGeneration.TypeName}, {subMaskStr}>.Instance.Parse"))
+                $"{retAccessor}{this.Namespace}ListBinaryTranslation<{list.SubTypeGeneration.TypeName}, {subMaskStr}>.Instance.ParseRepeatedItem"))
             {
                 args.Add($"reader: reader");
+                args.Add($"triggeringRecord: {data.RecordType.Value.HeaderName}");
                 args.Add($"doMasks: {doMaskAccessor}");
                 args.Add($"maskObj: out {maskAccessor}");
                 args.Add((gen) =>

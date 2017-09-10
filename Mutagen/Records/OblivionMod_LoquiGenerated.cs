@@ -718,11 +718,15 @@ namespace Mutagen
                     errorMask: errorMask);
                 while (reader.BaseStream.Position < finalPosition)
                 {
-                    Fill_OblivionBinary_RecordTypes(
+                    if (!Fill_OblivionBinary_RecordTypes(
                         item: ret,
                         reader: reader,
                         doMasks: doMasks,
-                        errorMask: errorMask);
+                        errorMask: errorMask))
+                    {
+                        var nextRecordType = HeaderTranslation.GetNextSubRecordType(reader, out var contentLength);
+                        throw new ArgumentException($"Unexpected header {nextRecordType.Type} at position {reader.BaseStream.Position}");
+                    }
                 }
                 if (reader.BaseStream.Position != finalPosition)
                 {
@@ -746,7 +750,7 @@ namespace Mutagen
         {
         }
 
-        protected static void Fill_OblivionBinary_RecordTypes(
+        protected static bool Fill_OblivionBinary_RecordTypes(
             OblivionMod item,
             BinaryReader reader,
             bool doMasks,
@@ -772,10 +776,10 @@ namespace Mutagen
                     {
                         errorMask().TES4 = subMask;
                     }
-                    break;
+                    return true;
                 }
                 default:
-                    throw new ArgumentException($"Unexpected header {nextRecordType.Type} at position {reader.BaseStream.Position}");
+                    return false;
             }
         }
 

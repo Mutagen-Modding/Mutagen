@@ -103,6 +103,7 @@
 
   <xs:simpleType name="MutagenObjectType" final="restriction" >
     <xs:restriction base="xs:string">
+      <xs:enumeration value="Struct" />
       <xs:enumeration value="Record" />
       <xs:enumeration value="Subrecord" />
       <xs:enumeration value="Group" />
