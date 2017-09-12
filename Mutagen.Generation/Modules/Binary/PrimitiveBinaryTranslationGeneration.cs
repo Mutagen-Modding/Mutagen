@@ -23,12 +23,14 @@ namespace Mutagen.Generation
 
         public override void GenerateWrite(
             FileGeneration fg,
+            ObjectGeneration objGen,
             TypeGeneration typeGen,
             string writerAccessor, 
             string itemAccessor,
             string doMaskAccessor,
             string maskAccessor)
         {
+            var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
             using (var args = new ArgsWrapper(fg,
                 $"{this.Namespace}{this.typeName}BinaryTranslation.Instance.Write"))
             {
@@ -36,11 +38,17 @@ namespace Mutagen.Generation
                 args.Add($"item: {itemAccessor}");
                 args.Add($"doMasks: {doMaskAccessor}");
                 args.Add($"errorMask: out {maskAccessor}");
+                if (data.RecordType.HasValue)
+                {
+                    args.Add($"header: {objGen.Name}.{data.RecordType.Value.HeaderName}");
+                    args.Add($"nullable: {(data.Optional ? "true" : "false")}");
+                }
             }
         }
 
         public override void GenerateCopyIn(
             FileGeneration fg,
+            ObjectGeneration objGen,
             TypeGeneration typeGen,
             string nodeAccessor,
             Accessor itemAccessor,
@@ -70,6 +78,7 @@ namespace Mutagen.Generation
 
         public override void GenerateCopyInRet(
             FileGeneration fg,
+            ObjectGeneration objGen,
             TypeGeneration typeGen,
             string nodeAccessor,
             string retAccessor,

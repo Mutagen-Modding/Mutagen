@@ -13,5 +13,10 @@ namespace Mutagen.Binary
         {
             return FormID.Factory(reader.ReadBytes(ExpectedLength));
         }
+
+        protected override void WriteValue(BinaryWriter writer, FormID item)
+        {
+            writer.Write(item.ToBytes());
+        }
     }
 }

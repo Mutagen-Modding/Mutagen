@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>30744cd58e2129019454a3c3d6d7fc7e7e504719</Sha>
+         <Sha>59e90d853356994a5caa23995632fbd126a72703</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>09-09-2017 22:15:23</CommitDate>
-         <Description>IPrintable, with MaskItem respecting and checking for it</Description>
+         <CommitDate>09-10-2017 18:40:57</CommitDate>
+         <Description>TranslationGeneration base class.  ShouldGenerateWrite check</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

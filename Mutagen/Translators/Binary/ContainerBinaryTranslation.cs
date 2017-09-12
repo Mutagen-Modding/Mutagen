@@ -37,26 +37,7 @@ namespace Mutagen.Binary
             {
                 List<M> maskList = null;
                 var ret = new List<T>();
-                //foreach (var listElem in root.Elements())
-                //{
-                //    var get = transl(listElem, doMasks, out var subMaskObj);
-                //    if (get.Succeeded)
-                //    {
-                //        ret.Add(get.Value);
-                //    }
-                //    else
-                //    {
-                //        if (!doMasks)
-                //        { // This shouldn't actually throw, as subparse is expected to throw if doMasks is off
-                //            throw new ArgumentException("Error parsing list.  Could not parse subitem.");
-                //        }
-                //        if (maskList == null)
-                //        {
-                //            maskList = new List<M>();
-                //        }
-                //        maskList.Add(subMaskObj);
-                //    }
-                //}
+                throw new NotImplementedException();
                 maskObj = maskList == null ? null : new MaskItem<Exception, IEnumerable<M>>(null, maskList);
                 return TryGet<IEnumerable<T>>.Succeed(ret);
             }
@@ -151,22 +132,18 @@ namespace Mutagen.Binary
             try
             {
                 List<M> maskList = null;
-                throw new NotImplementedException();
-                //using (new ElementWrapper(writer, name))
-                //{
-                //    foreach (var listObj in item)
-                //    {
-                //        WriteSingleItem(writer, transl, listObj, doMasks, out M subMaskObj);
-                //        if (subMaskObj != null)
-                //        {
-                //            if (maskList == null)
-                //            {
-                //                maskList = new List<M>();
-                //            }
-                //            maskList.Add(subMaskObj);
-                //        }
-                //    }
-                //}
+                foreach (var i in item)
+                {
+                    this.WriteSingleItem(writer, transl, i, doMasks, out var errObj);
+                    if (errObj != null)
+                    {
+                        if (maskList == null)
+                        {
+                            maskList = new List<M>();
+                        }
+                        maskList.Add(errObj);
+                    }
+                }
                 if (maskList != null)
                 {
                     maskObj = new MaskItem<Exception, IEnumerable<M>>(null, maskList);

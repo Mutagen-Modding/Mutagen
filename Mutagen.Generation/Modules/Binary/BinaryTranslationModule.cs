@@ -112,6 +112,12 @@ namespace Mutagen.Generation
             GenerateCreateExtras(obj, fg);
         }
 
+        public override void GenerateInCommonExt(ObjectGeneration obj, FileGeneration fg)
+        {
+            base.GenerateInCommonExt(obj, fg);
+            GenerateWriteExtras(obj, fg);
+        }
+
         private bool HasRecordTypeFields(ObjectGeneration obj)
         {
             foreach (var field in obj.Fields)
@@ -134,7 +140,7 @@ namespace Mutagen.Generation
 
         private void GenerateCreateExtras(ObjectGeneration obj, FileGeneration fg)
         {
-            if (!obj.Abstract && obj.BaseClassTrail().All((b) => b.Abstract))
+            if (!obj.Abstract)
             {
                 ObjectType objType = obj.GetObjectType();
                 if (objType != ObjectType.Struct)
@@ -280,7 +286,7 @@ namespace Mutagen.Generation
                 fg.AppendLine();
             }
 
-            if (obj.BaseClassTrail().All((b) => b.Abstract) || HasEmbeddedFields(obj))
+            if ((!obj.Abstract && obj.BaseClassTrail().All((b) => b.Abstract)) || HasEmbeddedFields(obj))
             {
                 using (var args = new FunctionWrapper(fg,
                     $"protected static void Fill_{ModuleNickname}"))
@@ -317,6 +323,7 @@ namespace Mutagen.Generation
                             fg.AppendLine($"{maskType} subMask;");
                             generator.GenerateCopyIn(
                                 fg: fg,
+                                objGen: obj,
                                 typeGen: field,
                                 readerAccessor: "reader",
                                 itemAccessor: new Accessor()
@@ -376,6 +383,7 @@ namespace Mutagen.Generation
                                     fg.AppendLine($"{maskType} subMask;");
                                     generator.GenerateCopyIn(
                                         fg: fg,
+                                        objGen: obj,
                                         typeGen: field.Field,
                                         readerAccessor: "reader",
                                         itemAccessor: new Accessor()
@@ -501,7 +509,196 @@ namespace Mutagen.Generation
 
         protected override void GenerateWriteSnippet(ObjectGeneration obj, FileGeneration fg)
         {
-            fg.AppendLine($"throw new NotImplementedException();");
+            var hasRecType = obj.TryGetRecordType(out var recType);
+            if (hasRecType)
+            {
+                using (var args = new ArgsWrapper(fg,
+                    $"using (HeaderExport.ExportHeader",
+                    ")",
+                    semiColon: false))
+                {
+                    args.Add("writer: writer");
+                    args.Add($"record: {obj.Name}.{obj.GetRecordType().HeaderName}");
+                    args.Add($"type: {nameof(ObjectType)}.{obj.GetObjectType()}");
+                }
+            }
+            using (new BraceWrapper(fg, doIt: hasRecType))
+            {
+                if (HasEmbeddedFields(obj))
+                {
+                    using (var args = new ArgsWrapper(fg,
+                        $"Write_{ModuleNickname}_Embedded"))
+                    {
+                        args.Add($"item: item");
+                        args.Add($"writer: writer");
+                        args.Add($"doMasks: doMasks");
+                        args.Add($"errorMask: errorMask");
+                    }
+                }
+                else
+                {
+                    var firstBase = obj.BaseClassTrail().FirstOrDefault((b) => HasEmbeddedFields(b));
+                    if (firstBase != null)
+                    {
+                        using (var args = new ArgsWrapper(fg,
+                            $"{firstBase.ExtCommonName}.Write_{ModuleNickname}_Embedded"))
+                        {
+                            args.Add($"item: item");
+                            args.Add($"writer: writer");
+                            args.Add($"doMasks: doMasks");
+                            args.Add($"errorMask: errorMask");
+                        }
+                    }
+                }
+                if (HasRecordTypeFields(obj))
+                {
+                    using (var args = new ArgsWrapper(fg,
+                        $"Write_{ModuleNickname}_RecordTypes"))
+                    {
+                        args.Add($"item: item");
+                        args.Add($"writer: writer");
+                        args.Add($"doMasks: doMasks");
+                        args.Add($"errorMask: errorMask");
+                    }
+                }
+                else
+                {
+                    var firstBase = obj.BaseClassTrail().FirstOrDefault((b) => HasRecordTypeFields(b));
+                    if (firstBase != null)
+                    {
+                        using (var args = new ArgsWrapper(fg,
+                        $"{firstBase.ExtCommonName}.Write_{ModuleNickname}_RecordTypes"))
+                        {
+                            args.Add($"item: item");
+                            args.Add($"writer: writer");
+                            args.Add($"doMasks: doMasks");
+                            args.Add($"errorMask: errorMask");
+                        }
+                    }
+                }
+            }
+        }
+
+        private void GenerateWriteExtras(ObjectGeneration obj, FileGeneration fg)
+        {
+            if (HasEmbeddedFields(obj))
+            {
+                using (var args = new FunctionWrapper(fg,
+                    $"public static void Write_{ModuleNickname}_Embedded"))
+                {
+                    args.Add($"{obj.Getter_InterfaceStr} item");
+                    args.Add("BinaryWriter writer");
+                    args.Add("bool doMasks");
+                    args.Add($"Func<{obj.ErrorMask}> errorMask");
+                }
+                using (new BraceWrapper(fg))
+                {
+                    if (obj.HasBaseObject)
+                    {
+                        var firstBase = obj.BaseClassTrail().FirstOrDefault((b) => HasEmbeddedFields(b));
+                        if (firstBase != null)
+                        {
+                            using (var args = new ArgsWrapper(fg,
+                                $"{firstBase.ExtCommonName}.Write_{ModuleNickname}_Embedded"))
+                            {
+                                args.Add("item: item");
+                                args.Add("writer: writer");
+                                args.Add("doMasks: doMasks");
+                                args.Add("errorMask: errorMask");
+                            }
+                        }
+                    }
+                    foreach (var field in obj.Fields)
+                    {
+                        if (field.TryGetFieldData(out var data)
+                            && data.RecordType.HasValue) continue;
+                        if (!this.TryGetTypeGeneration(field.GetType(), out var generator))
+                        {
+                            throw new ArgumentException("Unsupported type generator: " + field);
+                        }
+                        using (new BraceWrapper(fg))
+                        {
+                            var maskType = this.Gen.MaskModule.GetMaskModule(field.GetType()).GetErrorMaskTypeStr(field);
+                            fg.AppendLine($"{maskType} subMask;");
+                            generator.GenerateWrite(
+                                fg: fg,
+                                objGen: obj,
+                                typeGen: field,
+                                writerAccessor: "writer",
+                                itemAccessor: $"item.{field.Name}",
+                                doMaskAccessor: "doMasks",
+                                maskAccessor: $"subMask");
+                            fg.AppendLine("if (doMasks && subMask != null)");
+                            using (new BraceWrapper(fg))
+                            {
+                                fg.AppendLine($"errorMask().{field.Name} = subMask;");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine();
+            }
+
+            if (HasRecordTypeFields(obj))
+            {
+                using (var args = new FunctionWrapper(fg,
+                    $"public static void Write_{ModuleNickname}_RecordTypes"))
+                {
+                    args.Add($"{obj.Getter_InterfaceStr} item");
+                    args.Add("BinaryWriter writer");
+                    args.Add("bool doMasks");
+                    args.Add($"Func<{obj.ErrorMask}> errorMask");
+                }
+                using (new BraceWrapper(fg))
+                {
+                    if (obj.HasBaseObject)
+                    {
+                        var firstBase = obj.BaseClassTrail().FirstOrDefault((f) => HasRecordTypeFields(f));
+                        if (firstBase != null)
+                        {
+                            using (var args = new ArgsWrapper(fg,
+                                $"{firstBase.ExtCommonName}.Write_{ModuleNickname}_RecordTypes"))
+                            {
+                                args.Add($"item: item");
+                                args.Add("writer: writer");
+                                args.Add("doMasks: doMasks");
+                                args.Add($"errorMask: errorMask");
+                            }
+                        }
+                    }
+                    foreach (var field in obj.IterateFields())
+                    {
+                        if (!field.Field.TryGetFieldData(out var data)
+                            || !data.RecordType.HasValue) continue;
+                        if (!this.TryGetTypeGeneration(field.Field.GetType(), out var generator))
+                        {
+                            throw new ArgumentException("Unsupported type generator: " + field.Field);
+                        }
+
+                        if (!generator.ShouldGenerateWrite(field.Field)) continue;
+
+                        using (new BraceWrapper(fg))
+                        {
+                            var maskType = this.Gen.MaskModule.GetMaskModule(field.Field.GetType()).GetErrorMaskTypeStr(field.Field);
+                            fg.AppendLine($"{maskType} subMask;");
+                            generator.GenerateWrite(
+                                fg: fg,
+                                objGen: obj,
+                                typeGen: field.Field,
+                                writerAccessor: "writer",
+                                itemAccessor: $"item.{field.Field.Name}",
+                                doMaskAccessor: "doMasks",
+                                maskAccessor: $"subMask");
+                            fg.AppendLine("if (doMasks && subMask != null)");
+                            using (new BraceWrapper(fg))
+                            {
+                                fg.AppendLine($"errorMask().{field.Field.Name} = subMask;");
+                            }
+                        }
+                    }
+                }
+                fg.AppendLine();
+            }
         }
     }
 }

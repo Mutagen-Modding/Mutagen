@@ -13,5 +13,10 @@ namespace Mutagen.Binary
         {
             return reader.ReadInt64();
         }
+
+        protected override void WriteValue(BinaryWriter writer, long item)
+        {
+            writer.Write(item);
+        }
     }
 }

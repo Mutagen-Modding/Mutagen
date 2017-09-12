@@ -1500,7 +1500,11 @@ namespace Mutagen.Internals
         {
             try
             {
-                throw new NotImplementedException();
+                Write_OblivionBinary_RecordTypes(
+                    item: item,
+                    writer: writer,
+                    doMasks: doMasks,
+                    errorMask: errorMask);
             }
             catch (Exception ex)
             when (doMasks)
@@ -1509,6 +1513,42 @@ namespace Mutagen.Internals
             }
         }
         #endregion
+
+        public static void Write_OblivionBinary_RecordTypes(
+            IMasterReferenceGetter item,
+            BinaryWriter writer,
+            bool doMasks,
+            Func<MasterReference_ErrorMask> errorMask)
+        {
+            {
+                Exception subMask;
+                Mutagen.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Master,
+                    doMasks: doMasks,
+                    errorMask: out subMask,
+                    header: MasterReference.MAST_HEADER,
+                    nullable: false);
+                if (doMasks && subMask != null)
+                {
+                    errorMask().Master = subMask;
+                }
+            }
+            {
+                Exception subMask;
+                Mutagen.Binary.UInt64BinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.FileSize,
+                    doMasks: doMasks,
+                    errorMask: out subMask,
+                    header: MasterReference.DATA_HEADER,
+                    nullable: false);
+                if (doMasks && subMask != null)
+                {
+                    errorMask().FileSize = subMask;
+                }
+            }
+        }
 
         #endregion
 

@@ -1610,7 +1610,17 @@ namespace Mutagen.Internals
         {
             try
             {
-                throw new NotImplementedException();
+                using (HeaderExport.ExportHeader(
+                    writer: writer,
+                    record: Header.HEDR_HEADER,
+                    type: ObjectType.Subrecord))
+                {
+                    Write_OblivionBinary_Embedded(
+                        item: item,
+                        writer: writer,
+                        doMasks: doMasks,
+                        errorMask: errorMask);
+                }
             }
             catch (Exception ex)
             when (doMasks)
@@ -1619,6 +1629,50 @@ namespace Mutagen.Internals
             }
         }
         #endregion
+
+        public static void Write_OblivionBinary_Embedded(
+            IHeaderGetter item,
+            BinaryWriter writer,
+            bool doMasks,
+            Func<Header_ErrorMask> errorMask)
+        {
+            {
+                Exception subMask;
+                Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Version,
+                    doMasks: doMasks,
+                    errorMask: out subMask);
+                if (doMasks && subMask != null)
+                {
+                    errorMask().Version = subMask;
+                }
+            }
+            {
+                Exception subMask;
+                Mutagen.Binary.Int32BinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.NumRecords,
+                    doMasks: doMasks,
+                    errorMask: out subMask);
+                if (doMasks && subMask != null)
+                {
+                    errorMask().NumRecords = subMask;
+                }
+            }
+            {
+                Exception subMask;
+                Mutagen.Binary.UInt32BinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.NextObjectID,
+                    doMasks: doMasks,
+                    errorMask: out subMask);
+                if (doMasks && subMask != null)
+                {
+                    errorMask().NextObjectID = subMask;
+                }
+            }
+        }
 
         #endregion
 

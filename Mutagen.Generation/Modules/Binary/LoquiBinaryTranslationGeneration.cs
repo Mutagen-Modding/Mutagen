@@ -19,6 +19,7 @@ namespace Mutagen.Generation
 
         public override void GenerateWrite(
             FileGeneration fg,
+            ObjectGeneration objGen,
             TypeGeneration typeGen,
             string writerAccessor,
             string itemAccessor,
@@ -52,6 +53,7 @@ namespace Mutagen.Generation
 
         public override void GenerateCopyIn(
             FileGeneration fg,
+            ObjectGeneration objGen,
             TypeGeneration typeGen,
             string readerAccessor,
             Accessor itemAccessor,
@@ -88,7 +90,7 @@ namespace Mutagen.Generation
                 }
                 else
                 {
-                    GenerateCopyInRet(fg, typeGen, readerAccessor, null, doMaskAccessor, maskAccessor);
+                    GenerateCopyInRet(fg, objGen, typeGen, readerAccessor, null, doMaskAccessor, maskAccessor);
                     if (itemAccessor.PropertyAccess != null)
                     {
                         fg.AppendLine($"{itemAccessor.PropertyAccess}.{nameof(INotifyingCollectionExt.SetIfSucceeded)}(tryGet);");
@@ -122,6 +124,7 @@ namespace Mutagen.Generation
 
         public override void GenerateCopyInRet(
             FileGeneration fg,
+            ObjectGeneration objGen,
             TypeGeneration typeGen,
             string readerAccessor,
             string retAccessor,

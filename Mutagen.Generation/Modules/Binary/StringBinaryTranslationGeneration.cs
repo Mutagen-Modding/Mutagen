@@ -18,6 +18,7 @@ namespace Mutagen.Generation
 
         public override void GenerateWrite(
             FileGeneration fg,
+            ObjectGeneration objGen,
             TypeGeneration typeGen,
             string writerAccessor,
             string itemAccessor,
@@ -34,7 +35,8 @@ namespace Mutagen.Generation
                 args.Add($"errorMask: out {maskAccessor}");
                 if (data.RecordType.HasValue)
                 {
-                    args.Add($"header: {data.RecordType.Value.HeaderName}");
+                    args.Add($"header: {objGen.Name}.{data.RecordType.Value.HeaderName}");
+                    args.Add($"nullable: {(data.Optional ? "true" : "false")}");
                 }
                 else
                 {
@@ -45,6 +47,7 @@ namespace Mutagen.Generation
 
         public override void GenerateCopyIn(
             FileGeneration fg,
+            ObjectGeneration objGen,
             TypeGeneration typeGen,
             string nodeAccessor,
             Accessor itemAccessor,
@@ -75,6 +78,7 @@ namespace Mutagen.Generation
 
         public override void GenerateCopyInRet(
             FileGeneration fg,
+            ObjectGeneration objGen,
             TypeGeneration typeGen,
             string nodeAccessor,
             string retAccessor,
@@ -95,7 +99,7 @@ namespace Mutagen.Generation
                 args.Add($"errorMask: out {maskAccessor}");
                 if (data.RecordType.HasValue)
                 {
-                    args.Add($"header: {data.RecordType.Value.HeaderName}");
+                    args.Add($"header: {objGen.Name}.{data.RecordType.Value.HeaderName}");
                 }
                 else
                 {

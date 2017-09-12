@@ -62,6 +62,15 @@ namespace Mutagen
                 i);
         }
 
+        public byte[] ToBytes()
+        {
+            byte[] arr = new byte[4];
+            var bytes = BitConverter.GetBytes(this.ID);
+            Array.Copy(bytes, 0, arr, 0, 3);
+            bytes[3] = this.ModID.ID;
+            return bytes;
+        }
+
         public string ToHex()
         {
             return $"{ModID}{ID.ToString("X8")}";

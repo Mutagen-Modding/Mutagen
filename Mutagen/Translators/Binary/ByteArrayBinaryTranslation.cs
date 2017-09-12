@@ -11,15 +11,9 @@ namespace Mutagen.Binary
     {
         public readonly static ByteArrayBinaryTranslation Instance = new ByteArrayBinaryTranslation();
 
-        protected override string GetItemStr(byte[] item)
-        {
-            return item.ToHexString();
-        }
-
         protected override void WriteValue(BinaryWriter writer, byte[] item)
         {
-            if (item == null) return;
-            base.WriteValue(writer, item);
+            writer.Write(item);
         }
 
         protected override Byte[] ParseValue(BinaryReader reader, int length)

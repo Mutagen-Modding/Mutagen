@@ -8,24 +8,23 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Generation
 {
-    public abstract class BinaryTranslationGeneration
+    public abstract class BinaryTranslationGeneration : TranslationGeneration
     {
-        public MaskModule MaskModule;
         public TranslationModule<BinaryTranslationGeneration> Module;
         public string Namespace => Module.Namespace;
 
         public abstract void GenerateWrite(
             FileGeneration fg,
+            ObjectGeneration objGen,
             TypeGeneration typeGen,
             string writerAccessor,
             string itemAccessor,
             string doMaskAccessor,
             string maskAccessor);
 
-        public virtual bool ShouldGenerateCopyIn(TypeGeneration typeGen) => true;
-
         public abstract void GenerateCopyIn(
             FileGeneration fg,
+            ObjectGeneration objGen,
             TypeGeneration typeGen,
             string readerAccessor,
             Accessor itemAccessor,
@@ -34,6 +33,7 @@ namespace Mutagen.Generation
 
         public abstract void GenerateCopyInRet(
             FileGeneration fg,
+            ObjectGeneration objGen,
             TypeGeneration typeGen,
             string readerAccessor,
             string retAccessor,

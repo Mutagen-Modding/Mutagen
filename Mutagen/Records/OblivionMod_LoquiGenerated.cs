@@ -1467,7 +1467,11 @@ namespace Mutagen.Internals
         {
             try
             {
-                throw new NotImplementedException();
+                Write_OblivionBinary_RecordTypes(
+                    item: item,
+                    writer: writer,
+                    doMasks: doMasks,
+                    errorMask: errorMask);
             }
             catch (Exception ex)
             when (doMasks)
@@ -1476,6 +1480,27 @@ namespace Mutagen.Internals
             }
         }
         #endregion
+
+        public static void Write_OblivionBinary_RecordTypes(
+            IOblivionModGetter item,
+            BinaryWriter writer,
+            bool doMasks,
+            Func<OblivionMod_ErrorMask> errorMask)
+        {
+            {
+                MaskItem<Exception, TES4_ErrorMask> subMask;
+                TES4Common.Write_OblivionBinary(
+                    writer: writer,
+                    item: item.TES4,
+                    doMasks: doMasks,
+                    errorMask: out TES4_ErrorMask loquiMask);
+                subMask = loquiMask == null ? null : new MaskItem<Exception, TES4_ErrorMask>(null, loquiMask);
+                if (doMasks && subMask != null)
+                {
+                    errorMask().TES4 = subMask;
+                }
+            }
+        }
 
         #endregion
 

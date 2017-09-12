@@ -14,5 +14,10 @@ namespace Mutagen.Binary
         {
             throw new NotImplementedException();
         }
+
+        protected override void WriteValue(BinaryWriter writer, E item)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -45,10 +45,7 @@ namespace Mutagen.Binary
             return Parse(reader, doMasks, out errorMask);
         }
 
-        protected virtual void WriteValue(Stream stream, string name, T? item)
-        {
-            throw new NotImplementedException();
-        }
+        protected abstract void WriteValue(BinaryWriter writer, T item);
 
         TryGet<T?> IBinaryTranslation<T?, Exception>.Parse(BinaryReader reader, int length, bool doMasks, out Exception maskObj)
         {
@@ -66,10 +63,27 @@ namespace Mutagen.Binary
 
         private Exception Write_Internal(BinaryWriter writer, T? item, bool doMasks, bool nullable)
         {
+            Exception errorMask = null;
+            if (!item.HasValue) return errorMask;
+            try
+            {
+                WriteValue(writer, item.Value);
+            }
+            catch (Exception ex)
+            when (doMasks)
+            {
+                errorMask = ex;
+            }
+
+            return errorMask;
+        }
+
+        private Exception Write_Internal(BinaryWriter writer, T item, bool doMasks, bool nullable)
+        {
             Exception errorMask;
             try
             {
-                throw new NotImplementedException();
+                WriteValue(writer, item);
                 errorMask = null;
             }
             catch (Exception ex)
@@ -84,6 +98,37 @@ namespace Mutagen.Binary
         public void Write(BinaryWriter writer, T item, bool doMasks, out Exception errorMask)
         {
             errorMask = Write_Internal(writer, (T?)item, doMasks, nullable: false);
+        }
+
+        public void Write(
+            BinaryWriter writer,
+            T? item,
+            RecordType header,
+            bool nullable,
+            bool doMasks,
+            out Exception errorMask)
+        {
+            if (item == null)
+            {
+                if (nullable)
+                {
+                    errorMask = null;
+                    return;
+                }
+                throw new ArgumentException("Non optional string was null.");
+            }
+            try
+            {
+                using (HeaderExport.ExportHeader(writer, header, ObjectType.Subrecord))
+                {
+                    this.Write(writer, item, doMasks, out errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (doMasks)
+            {
+                errorMask = ex;
+            }
         }
     }
 }

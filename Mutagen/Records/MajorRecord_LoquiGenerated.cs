@@ -1262,7 +1262,11 @@ namespace Mutagen.Internals
         {
             try
             {
-                throw new NotImplementedException();
+                Write_OblivionBinary_Embedded(
+                    item: item,
+                    writer: writer,
+                    doMasks: doMasks,
+                    errorMask: errorMask);
             }
             catch (Exception ex)
             when (doMasks)
@@ -1271,6 +1275,50 @@ namespace Mutagen.Internals
             }
         }
         #endregion
+
+        public static void Write_OblivionBinary_Embedded(
+            IMajorRecordGetter item,
+            BinaryWriter writer,
+            bool doMasks,
+            Func<MajorRecord_ErrorMask> errorMask)
+        {
+            {
+                Exception subMask;
+                Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Flags,
+                    doMasks: doMasks,
+                    errorMask: out subMask);
+                if (doMasks && subMask != null)
+                {
+                    errorMask().Flags = subMask;
+                }
+            }
+            {
+                Exception subMask;
+                Mutagen.Binary.FormIDBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.FormID,
+                    doMasks: doMasks,
+                    errorMask: out subMask);
+                if (doMasks && subMask != null)
+                {
+                    errorMask().FormID = subMask;
+                }
+            }
+            {
+                Exception subMask;
+                Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Version,
+                    doMasks: doMasks,
+                    errorMask: out subMask);
+                if (doMasks && subMask != null)
+                {
+                    errorMask().Version = subMask;
+                }
+            }
+        }
 
         #endregion
 

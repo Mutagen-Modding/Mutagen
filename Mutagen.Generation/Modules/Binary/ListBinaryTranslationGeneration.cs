@@ -12,6 +12,7 @@ namespace Mutagen.Generation
     {
         public override void GenerateWrite(
             FileGeneration fg,
+            ObjectGeneration objGen,
             TypeGeneration typeGen,
             string writerAccessor,
             string itemAccessor,
@@ -38,7 +39,8 @@ namespace Mutagen.Generation
                     using (new BraceWrapper(gen))
                     {
                         subTransl.GenerateWrite(
-                            fg: gen, 
+                            fg: gen,
+                            objGen: objGen,
                             typeGen: list.SubTypeGeneration, 
                             writerAccessor: "writer", 
                             itemAccessor: $"subItem", 
@@ -51,13 +53,14 @@ namespace Mutagen.Generation
 
         public override void GenerateCopyIn(
             FileGeneration fg,
+            ObjectGeneration objGen,
             TypeGeneration typeGen, 
             string nodeAccessor, 
             Accessor itemAccessor,
             string doMaskAccessor,
             string maskAccessor)
         {
-            GenerateCopyInRet(fg, typeGen, nodeAccessor, "var listTryGet = ", doMaskAccessor, maskAccessor);
+            GenerateCopyInRet(fg, objGen, typeGen, nodeAccessor, "var listTryGet = ", doMaskAccessor, maskAccessor);
             if (itemAccessor.PropertyAccess != null)
             {
                 fg.AppendLine($"{itemAccessor.PropertyAccess}.{nameof(INotifyingCollectionExt.SetIfSucceeded)}(listTryGet);");
@@ -73,7 +76,8 @@ namespace Mutagen.Generation
         }
 
         public override void GenerateCopyInRet(
-            FileGeneration fg, 
+            FileGeneration fg,
+            ObjectGeneration objGen,
             TypeGeneration typeGen,
             string nodeAccessor, 
             string retAccessor,
@@ -91,7 +95,7 @@ namespace Mutagen.Generation
                 $"{retAccessor}{this.Namespace}ListBinaryTranslation<{list.SubTypeGeneration.TypeName}, {subMaskStr}>.Instance.ParseRepeatedItem"))
             {
                 args.Add($"reader: reader");
-                args.Add($"triggeringRecord: {data.RecordType.Value.HeaderName}");
+                args.Add($"triggeringRecord: {objGen.Name}.{data.RecordType.Value.HeaderName}");
                 args.Add($"doMasks: {doMaskAccessor}");
                 args.Add($"maskObj: out {maskAccessor}");
                 args.Add((gen) =>
@@ -100,7 +104,7 @@ namespace Mutagen.Generation
                     using (new BraceWrapper(gen))
                     {
                         var xmlGen = this.Module.GetTypeGeneration(list.SubTypeGeneration.GetType());
-                        xmlGen.GenerateCopyInRet(gen, list.SubTypeGeneration, "r", "return ", "listDoMasks", "listSubMask");
+                        xmlGen.GenerateCopyInRet(gen, objGen, list.SubTypeGeneration, "r", "return ", "listDoMasks", "listSubMask");
                     }
                 });
             }
