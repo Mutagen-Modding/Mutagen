@@ -72,6 +72,17 @@ namespace Mutagen
         INotifyingItem<Byte[]> IMajorRecord.Version_Property => this.Version_Property;
         INotifyingItemGetter<Byte[]> IMajorRecordGetter.Version_Property => this.Version_Property;
         #endregion
+        #region EditorID
+        protected readonly INotifyingItem<String> _EditorID = NotifyingItem.Factory<String>(markAsSet: false);
+        public INotifyingItem<String> EditorID_Property => _EditorID;
+        public String EditorID
+        {
+            get => this._EditorID.Item;
+            set => this._EditorID.Set(value);
+        }
+        INotifyingItem<String> IMajorRecord.EditorID_Property => this.EditorID_Property;
+        INotifyingItemGetter<String> IMajorRecordGetter.EditorID_Property => this.EditorID_Property;
+        #endregion
 
         #region Loqui Getter Interface
 
@@ -146,6 +157,11 @@ namespace Mutagen
             {
                 if (!Version.EqualsFast(rhs.Version)) return false;
             }
+            if (EditorID_Property.HasBeenSet != rhs.EditorID_Property.HasBeenSet) return false;
+            if (EditorID_Property.HasBeenSet)
+            {
+                if (!object.Equals(EditorID, rhs.EditorID)) return false;
+            }
             return true;
         }
 
@@ -163,6 +179,10 @@ namespace Mutagen
             if (Version_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(Version).CombineHashCode(ret);
+            }
+            if (EditorID_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(EditorID).CombineHashCode(ret);
             }
             return ret;
         }
@@ -354,11 +374,29 @@ namespace Mutagen
                         }
                     }
                     break;
+                case "EditorID":
+                    {
+                        Exception subMask;
+                        var tryGet = StringXmlTranslation.Instance.Parse(
+                            root,
+                            doMasks: doMasks,
+                            errorMask: out subMask);
+                        item._EditorID.SetIfSucceeded(tryGet);
+                        if (doMasks && subMask != null)
+                        {
+                            errorMask().EditorID = subMask;
+                        }
+                    }
+                    break;
                 default:
                     break;
             }
         }
 
+        #endregion
+
+        #region Mutagen
+        public static readonly RecordType EDID_HEADER = new RecordType("EDID");
         #endregion
 
         #region OblivionBinary Translation
@@ -541,6 +579,38 @@ namespace Mutagen
             }
         }
 
+        protected static bool Fill_OblivionBinary_RecordTypes(
+            MajorRecord item,
+            BinaryReader reader,
+            bool doMasks,
+            Func<MajorRecord_ErrorMask> errorMask)
+        {
+            var nextRecordType = HeaderTranslation.ReadNextSubRecordType(
+                reader: reader,
+                contentLength: out var subLength);
+            switch (nextRecordType.Type)
+            {
+                case "EDID":
+                {
+                    Exception subMask;
+                    var tryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
+                        reader,
+                        doMasks: doMasks,
+                        errorMask: out subMask,
+                        length: subLength);
+                    item._EditorID.SetIfSucceeded(tryGet);
+                    if (doMasks && subMask != null)
+                    {
+                        errorMask().EditorID = subMask;
+                    }
+                    return true;
+                }
+                default:
+                    reader.BaseStream.Position -= Constants.RECORD_LENGTH;
+                    return false;
+            }
+        }
+
         #endregion
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds) => this.SetNthObject(index, obj, cmds);
@@ -562,6 +632,11 @@ namespace Mutagen
                 case MajorRecord_FieldIndex.Version:
                     this._Version.Set(
                         (Byte[])obj,
+                        cmds);
+                    break;
+                case MajorRecord_FieldIndex.EditorID:
+                    this._EditorID.Set(
+                        (String)obj,
                         cmds);
                     break;
                 default:
@@ -606,6 +681,11 @@ namespace Mutagen
                         (Byte[])pair.Value,
                         null);
                     break;
+                case MajorRecord_FieldIndex.EditorID:
+                    obj._EditorID.Set(
+                        (String)pair.Value,
+                        null);
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -630,6 +710,9 @@ namespace Mutagen
         new Byte[] Version { get; set; }
         new INotifyingItem<Byte[]> Version_Property { get; }
 
+        new String EditorID { get; set; }
+        new INotifyingItem<String> EditorID_Property { get; }
+
     }
 
     public interface IMajorRecordGetter : ILoquiObject
@@ -649,6 +732,11 @@ namespace Mutagen
         INotifyingItemGetter<Byte[]> Version_Property { get; }
 
         #endregion
+        #region EditorID
+        String EditorID { get; }
+        INotifyingItemGetter<String> EditorID_Property { get; }
+
+        #endregion
 
     }
 
@@ -664,6 +752,7 @@ namespace Mutagen.Internals
         Flags = 0,
         FormID = 1,
         Version = 2,
+        EditorID = 3,
     }
     #endregion
 
@@ -681,7 +770,7 @@ namespace Mutagen.Internals
 
         public const string GUID = "c30a3850-c815-4c80-b058-aadd0b17a147";
 
-        public const ushort FieldCount = 3;
+        public const ushort FieldCount = 4;
 
         public static readonly Type MaskType = typeof(MajorRecord_Mask<>);
 
@@ -715,6 +804,8 @@ namespace Mutagen.Internals
                     return (ushort)MajorRecord_FieldIndex.FormID;
                 case "VERSION":
                     return (ushort)MajorRecord_FieldIndex.Version;
+                case "EDITORID":
+                    return (ushort)MajorRecord_FieldIndex.EditorID;
                 default:
                     return null;
             }
@@ -728,6 +819,7 @@ namespace Mutagen.Internals
                 case MajorRecord_FieldIndex.Flags:
                 case MajorRecord_FieldIndex.FormID:
                 case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.EditorID:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -742,6 +834,7 @@ namespace Mutagen.Internals
                 case MajorRecord_FieldIndex.Flags:
                 case MajorRecord_FieldIndex.FormID:
                 case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.EditorID:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -756,6 +849,7 @@ namespace Mutagen.Internals
                 case MajorRecord_FieldIndex.Flags:
                 case MajorRecord_FieldIndex.FormID:
                 case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.EditorID:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -773,6 +867,8 @@ namespace Mutagen.Internals
                     return "FormID";
                 case MajorRecord_FieldIndex.Version:
                     return "Version";
+                case MajorRecord_FieldIndex.EditorID:
+                    return "EditorID";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -786,6 +882,7 @@ namespace Mutagen.Internals
                 case MajorRecord_FieldIndex.Flags:
                 case MajorRecord_FieldIndex.FormID:
                 case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.EditorID:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -800,6 +897,7 @@ namespace Mutagen.Internals
                 case MajorRecord_FieldIndex.Flags:
                 case MajorRecord_FieldIndex.FormID:
                 case MajorRecord_FieldIndex.Version:
+                case MajorRecord_FieldIndex.EditorID:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -817,6 +915,8 @@ namespace Mutagen.Internals
                     return typeof(FormID);
                 case MajorRecord_FieldIndex.Version:
                     return typeof(Byte[]);
+                case MajorRecord_FieldIndex.EditorID:
+                    return typeof(String);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -973,6 +1073,21 @@ namespace Mutagen.Internals
                     errorMask().SetNthException((ushort)MajorRecord_FieldIndex.Version, ex);
                 }
             }
+            if (copyMask?.EditorID ?? true)
+            {
+                try
+                {
+                    item.EditorID_Property.SetToWithDefault(
+                        rhs.EditorID_Property,
+                        def?.EditorID_Property,
+                        cmds);
+                }
+                catch (Exception ex)
+                when (doErrorMask)
+                {
+                    errorMask().SetNthException((ushort)MajorRecord_FieldIndex.EditorID, ex);
+                }
+            }
         }
 
         #endregion
@@ -994,6 +1109,9 @@ namespace Mutagen.Internals
                     break;
                 case MajorRecord_FieldIndex.Version:
                     obj.Version_Property.HasBeenSet = on;
+                    break;
+                case MajorRecord_FieldIndex.EditorID:
+                    obj.EditorID_Property.HasBeenSet = on;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1017,6 +1135,9 @@ namespace Mutagen.Internals
                 case MajorRecord_FieldIndex.Version:
                     obj.Version_Property.Unset(cmds);
                     break;
+                case MajorRecord_FieldIndex.EditorID:
+                    obj.EditorID_Property.Unset(cmds);
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1035,6 +1156,8 @@ namespace Mutagen.Internals
                     return obj.FormID_Property.HasBeenSet;
                 case MajorRecord_FieldIndex.Version:
                     return obj.Version_Property.HasBeenSet;
+                case MajorRecord_FieldIndex.EditorID:
+                    return obj.EditorID_Property.HasBeenSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1053,6 +1176,8 @@ namespace Mutagen.Internals
                     return obj.FormID;
                 case MajorRecord_FieldIndex.Version:
                     return obj.Version;
+                case MajorRecord_FieldIndex.EditorID:
+                    return obj.EditorID;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1065,6 +1190,7 @@ namespace Mutagen.Internals
             item.Flags_Property.Unset(cmds.ToUnsetParams());
             item.FormID_Property.Unset(cmds.ToUnsetParams());
             item.Version_Property.Unset(cmds.ToUnsetParams());
+            item.EditorID_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static MajorRecord_Mask<bool> GetEqualsMask(
@@ -1085,6 +1211,7 @@ namespace Mutagen.Internals
             ret.Flags = item.Flags_Property.Equals(rhs.Flags_Property, (l, r) => l.EqualsFast(r));
             ret.FormID = item.FormID_Property.Equals(rhs.FormID_Property, (l, r) => l == r);
             ret.Version = item.Version_Property.Equals(rhs.Version_Property, (l, r) => l.EqualsFast(r));
+            ret.EditorID = item.EditorID_Property.Equals(rhs.EditorID_Property, (l, r) => object.Equals(l, r));
         }
 
         public static string ToString(
@@ -1126,6 +1253,10 @@ namespace Mutagen.Internals
                 {
                     fg.AppendLine($"Version => {item.Version}");
                 }
+                if (printMask?.EditorID ?? true)
+                {
+                    fg.AppendLine($"EditorID => {item.EditorID}");
+                }
             }
             fg.AppendLine("]");
         }
@@ -1137,6 +1268,7 @@ namespace Mutagen.Internals
             if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_Property.HasBeenSet) return false;
             if (checkMask.FormID.HasValue && checkMask.FormID.Value != item.FormID_Property.HasBeenSet) return false;
             if (checkMask.Version.HasValue && checkMask.Version.Value != item.Version_Property.HasBeenSet) return false;
+            if (checkMask.EditorID.HasValue && checkMask.EditorID.Value != item.EditorID_Property.HasBeenSet) return false;
             return true;
         }
 
@@ -1146,6 +1278,7 @@ namespace Mutagen.Internals
             ret.Flags = item.Flags_Property.HasBeenSet;
             ret.FormID = item.FormID_Property.HasBeenSet;
             ret.Version = item.Version_Property.HasBeenSet;
+            ret.EditorID = item.EditorID_Property.HasBeenSet;
             return ret;
         }
 
@@ -1225,6 +1358,20 @@ namespace Mutagen.Internals
                             errorMask().Version = subMask;
                         }
                     }
+                    if (item.EditorID_Property.HasBeenSet)
+                    {
+                        Exception subMask;
+                        StringXmlTranslation.Instance.Write(
+                            writer,
+                            nameof(item.EditorID),
+                            item.EditorID,
+                            doMasks: doMasks,
+                            errorMask: out subMask);
+                        if (doMasks && subMask != null)
+                        {
+                            errorMask().EditorID = subMask;
+                        }
+                    }
                 }
             }
             catch (Exception ex)
@@ -1263,6 +1410,11 @@ namespace Mutagen.Internals
             try
             {
                 Write_OblivionBinary_Embedded(
+                    item: item,
+                    writer: writer,
+                    doMasks: doMasks,
+                    errorMask: errorMask);
+                Write_OblivionBinary_RecordTypes(
                     item: item,
                     writer: writer,
                     doMasks: doMasks,
@@ -1320,6 +1472,28 @@ namespace Mutagen.Internals
             }
         }
 
+        public static void Write_OblivionBinary_RecordTypes(
+            IMajorRecordGetter item,
+            BinaryWriter writer,
+            bool doMasks,
+            Func<MajorRecord_ErrorMask> errorMask)
+        {
+            {
+                Exception subMask;
+                Mutagen.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.EditorID,
+                    doMasks: doMasks,
+                    errorMask: out subMask,
+                    header: MajorRecord.EDID_HEADER,
+                    nullable: false);
+                if (doMasks && subMask != null)
+                {
+                    errorMask().EditorID = subMask;
+                }
+            }
+        }
+
         #endregion
 
     }
@@ -1340,6 +1514,7 @@ namespace Mutagen.Internals
             this.Flags = initialValue;
             this.FormID = initialValue;
             this.Version = initialValue;
+            this.EditorID = initialValue;
         }
         #endregion
 
@@ -1347,6 +1522,7 @@ namespace Mutagen.Internals
         public T Flags;
         public T FormID;
         public T Version;
+        public T EditorID;
         #endregion
 
         #region Equals
@@ -1362,6 +1538,7 @@ namespace Mutagen.Internals
             if (!object.Equals(this.Flags, rhs.Flags)) return false;
             if (!object.Equals(this.FormID, rhs.FormID)) return false;
             if (!object.Equals(this.Version, rhs.Version)) return false;
+            if (!object.Equals(this.EditorID, rhs.EditorID)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -1370,6 +1547,7 @@ namespace Mutagen.Internals
             ret = ret.CombineHashCode(this.Flags?.GetHashCode());
             ret = ret.CombineHashCode(this.FormID?.GetHashCode());
             ret = ret.CombineHashCode(this.Version?.GetHashCode());
+            ret = ret.CombineHashCode(this.EditorID?.GetHashCode());
             return ret;
         }
 
@@ -1381,6 +1559,7 @@ namespace Mutagen.Internals
             if (!eval(this.Flags)) return false;
             if (!eval(this.FormID)) return false;
             if (!eval(this.Version)) return false;
+            if (!eval(this.EditorID)) return false;
             return true;
         }
         #endregion
@@ -1398,6 +1577,7 @@ namespace Mutagen.Internals
             obj.Flags = eval(this.Flags);
             obj.FormID = eval(this.FormID);
             obj.Version = eval(this.Version);
+            obj.EditorID = eval(this.EditorID);
         }
         #endregion
 
@@ -1438,6 +1618,10 @@ namespace Mutagen.Internals
                 {
                     fg.AppendLine($"Version => {Version.ToStringSafe()}");
                 }
+                if (printMask?.EditorID ?? true)
+                {
+                    fg.AppendLine($"EditorID => {EditorID.ToStringSafe()}");
+                }
             }
             fg.AppendLine("]");
         }
@@ -1464,6 +1648,7 @@ namespace Mutagen.Internals
         public Exception Flags;
         public Exception FormID;
         public Exception Version;
+        public Exception EditorID;
         #endregion
 
         #region IErrorMask
@@ -1480,6 +1665,9 @@ namespace Mutagen.Internals
                     break;
                 case MajorRecord_FieldIndex.Version:
                     this.Version = ex;
+                    break;
+                case MajorRecord_FieldIndex.EditorID:
+                    this.EditorID = ex;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1499,6 +1687,9 @@ namespace Mutagen.Internals
                     break;
                 case MajorRecord_FieldIndex.Version:
                     this.Version = (Exception)obj;
+                    break;
+                case MajorRecord_FieldIndex.EditorID:
+                    this.EditorID = (Exception)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1548,6 +1739,10 @@ namespace Mutagen.Internals
             {
                 fg.AppendLine($"Version => {Version.ToStringSafe()}");
             }
+            if (EditorID != null)
+            {
+                fg.AppendLine($"EditorID => {EditorID.ToStringSafe()}");
+            }
         }
         #endregion
 
@@ -1558,6 +1753,7 @@ namespace Mutagen.Internals
             ret.Flags = this.Flags.Combine(rhs.Flags);
             ret.FormID = this.FormID.Combine(rhs.FormID);
             ret.Version = this.Version.Combine(rhs.Version);
+            ret.EditorID = this.EditorID.Combine(rhs.EditorID);
             return ret;
         }
         public static MajorRecord_ErrorMask Combine(MajorRecord_ErrorMask lhs, MajorRecord_ErrorMask rhs)
@@ -1574,6 +1770,7 @@ namespace Mutagen.Internals
         public bool Flags;
         public bool FormID;
         public bool Version;
+        public bool EditorID;
         #endregion
 
     }

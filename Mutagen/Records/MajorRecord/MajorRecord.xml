@@ -5,6 +5,7 @@
       <ByteArray name="Flags" length="4" nullable="false" />
       <FormID name="FormID" />
       <ByteArray name="Version" length="4" nullable="false" />
+      <String name="EditorID" recordType="EDID" />
     </Fields>
   </Object>
 </Loqui>

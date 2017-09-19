@@ -13,6 +13,10 @@ namespace Loqui
             LoquiRegistration.Register(Mutagen.Internals.OblivionMod_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Internals.MasterReference_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Internals.MajorRecord_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Internals.GameSetting_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Internals.GameSettingInt_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Internals.GameSettingFloat_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Internals.GameSettingString_Registration.Instance);
         }
     }
 }
