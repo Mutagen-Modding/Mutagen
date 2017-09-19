@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>b0380b3cbaed8d63a267631485a01b238f1ff44b</Sha>
+         <Sha>6561905e3f8936e5bd82635192b68e0f99ad0d69</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>09-09-2017 00:45:32</CommitDate>
-         <Description>XmlExt.TransferAttribute</Description>
+         <CommitDate>09-19-2017 08:03:34</CommitDate>
+         <Description>Merge branch 'master' of https://github.com/Noggog/CSharpExt</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>59e90d853356994a5caa23995632fbd126a72703</Sha>
+         <Sha>05a423667ae974cee244c03cfbe9b5274b58aa40</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>09-10-2017 18:40:57</CommitDate>
-         <Description>TranslationGeneration base class.  ShouldGenerateWrite check</Description>
+         <CommitDate>09-17-2017 21:46:02</CommitDate>
+         <Description>Generic loqui list work and test generation</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

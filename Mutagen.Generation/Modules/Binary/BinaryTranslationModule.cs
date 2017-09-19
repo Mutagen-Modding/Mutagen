@@ -422,13 +422,13 @@ namespace Mutagen.Generation
                             if (obj.HasBaseObject && obj.BaseClassTrail().Any((b) => HasRecordTypeFields(b)))
                             {
                                 using (var args = new ArgsWrapper(fg,
-                                    $"{obj.BaseClass.Name}.Fill_{ModuleNickname}_Internal"))
+                                    $"return {obj.BaseClass.Name}.Fill_{ModuleNickname}_RecordTypes"))
                                 {
+                                    args.Add("item: item");
                                     args.Add("reader: reader");
                                     args.Add("doMasks: doMasks");
                                     args.Add($"errorMask: errorMask");
                                 }
-                                fg.AppendLine("break;");
                             }
                             else
                             {
