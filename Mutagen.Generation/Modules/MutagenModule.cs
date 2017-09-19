@@ -63,7 +63,7 @@ namespace Mutagen.Generation
 
         public override void PostFieldLoad(ObjectGeneration obj, TypeGeneration field, XElement node)
         {
-            var data = new MutagenFieldData();
+            var data = field.CustomData.TryCreateValue(Constants.DATA_KEY, () => new MutagenFieldData()) as MutagenFieldData;
             var recordAttr = node.GetAttribute("recordType");
             if (recordAttr != null)
             {
@@ -78,6 +78,14 @@ namespace Mutagen.Generation
             {
                 loqui = loquiList.SubTypeGeneration as LoquiType;
                 if (loqui.RefGen.Obj.TryGetTriggeringRecordType(out recType))
+                {
+                    data.RecordType = recType;
+                }
+            }
+            else if (field is ListType listType
+                && listType.SubTypeGeneration is LoquiType subListLoqui)
+            {
+                if (subListLoqui.RefGen.Obj.TryGetTriggeringRecordType(out recType))
                 {
                     data.RecordType = recType;
                 }
@@ -106,7 +114,6 @@ namespace Mutagen.Generation
             }
             data.IncludeInLength = node.GetAttribute<bool>("includeInLength", true);
             data.Vestigial = node.GetAttribute<bool>("vestigial", false);
-            field.CustomData[Constants.DATA_KEY] = data;
         }
     }
 }
