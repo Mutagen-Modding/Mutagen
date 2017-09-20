@@ -70,6 +70,7 @@ namespace Mutagen.Generation
                 data.RecordType = new RecordType(recordAttr);
             }
             else if (field is LoquiType loqui
+                && loqui.RefGen != null
                 && loqui.RefGen.Obj.TryGetRecordType(out var recType))
             {
                 data.RecordType = recType;

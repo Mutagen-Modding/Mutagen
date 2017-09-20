@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Group" objType="Group" recordType="GRUP" GUID="35a37d0b-4676-4dba-9410-a5972e262f5d" ID="11">
+    <Generic name="T">
+      <Where>MajorRecord</Where>
+    </Generic>
+    <Fields>
+      <DateTime name="LastModified" protected="true" />
+      <!--<List name="Items">
+        <Ref>
+          <Generic>T</Generic>
+        </Ref>
+      </List>-->
+    </Fields>
+  </Object>
+</Loqui>

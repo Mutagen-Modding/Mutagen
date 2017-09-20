@@ -17,6 +17,7 @@ namespace Loqui
             LoquiRegistration.Register(Mutagen.Internals.GameSettingInt_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Internals.GameSettingFloat_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Internals.GameSettingString_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Internals.Group_Registration.Instance);
         }
     }
 }

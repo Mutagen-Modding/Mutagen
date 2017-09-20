@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>05a423667ae974cee244c03cfbe9b5274b58aa40</Sha>
+         <Sha>0a6662d6d033f6fa40de57355910e028ac66b4bc</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>09-17-2017 21:46:02</CommitDate>
-         <Description>Generic loqui list work and test generation</Description>
+         <CommitDate>09-19-2017 23:13:24</CommitDate>
+         <Description>TestGenericSpecification</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

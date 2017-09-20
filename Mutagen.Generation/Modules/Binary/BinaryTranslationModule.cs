@@ -158,6 +158,7 @@ namespace Mutagen.Generation
                         {
                             case ObjectType.Record:
                             case ObjectType.Subrecord:
+                            case ObjectType.Group:
                                 RecordType? mutaData = obj.GetTriggeringRecordType();
                                 string funcName;
                                 switch (obj.GetObjectType())
@@ -168,10 +169,10 @@ namespace Mutagen.Generation
                                     case ObjectType.Subrecord:
                                         funcName = "ParseSubrecord";
                                         break;
+                                    case ObjectType.Group:
                                     case ObjectType.Record:
                                         funcName = "ParseRecord";
                                         break;
-                                    case ObjectType.Group:
                                     case ObjectType.Mod:
                                     default:
                                         throw new NotImplementedException();
@@ -186,7 +187,6 @@ namespace Mutagen.Generation
                             case ObjectType.Mod:
                                 fg.AppendLine($"var finalPosition = reader.BaseStream.Length;");
                                 break;
-                            case ObjectType.Group:
                             default:
                                 throw new NotImplementedException();
                         }
@@ -520,7 +520,7 @@ namespace Mutagen.Generation
                     semiColon: false))
                 {
                     args.Add("writer: writer");
-                    args.Add($"record: {obj.Name}.{obj.GetRecordType().HeaderName}");
+                    args.Add($"record: {obj.Name}{obj.GenericTypes}.{obj.GetRecordType().HeaderName}");
                     args.Add($"type: {nameof(ObjectType)}.{obj.GetObjectType()}");
                 }
             }
@@ -586,7 +586,8 @@ namespace Mutagen.Generation
             if (HasEmbeddedFields(obj))
             {
                 using (var args = new FunctionWrapper(fg,
-                    $"public static void Write_{ModuleNickname}_Embedded"))
+                    $"public static void Write_{ModuleNickname}_Embedded{obj.GenericTypes}",
+                    wheres: obj.GenerateWhereClauses().ToArray()))
                 {
                     args.Add($"{obj.Getter_InterfaceStr} item");
                     args.Add("BinaryWriter writer");
@@ -645,7 +646,8 @@ namespace Mutagen.Generation
             if (HasRecordTypeFields(obj))
             {
                 using (var args = new FunctionWrapper(fg,
-                    $"public static void Write_{ModuleNickname}_RecordTypes"))
+                    $"public static void Write_{ModuleNickname}_RecordTypes{obj.GenericTypes}{obj.GenericTypes}",
+                    wheres: obj.GenerateWhereClauses().ToArray()))
                 {
                     args.Add($"{obj.Getter_InterfaceStr} item");
                     args.Add("BinaryWriter writer");
