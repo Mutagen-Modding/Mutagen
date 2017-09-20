@@ -311,6 +311,7 @@ namespace Mutagen.Generation
                     }
                     foreach (var field in obj.Fields)
                     {
+                        if (field.Derivative) continue;
                         if (field.TryGetFieldData(out var data)
                             && data.RecordType.HasValue) continue;
                         if (!this.TryGetTypeGeneration(field.GetType(), out var generator))
@@ -367,6 +368,7 @@ namespace Mutagen.Generation
                     {
                         foreach (var field in obj.IterateFields())
                         {
+                            if (field.Field.Derivative) continue;
                             if (!field.Field.TryGetFieldData(out var data)
                                 || !data.RecordType.HasValue) continue;
                             if (!this.TryGetTypeGeneration(field.Field.GetType(), out var generator))
@@ -610,6 +612,7 @@ namespace Mutagen.Generation
                     }
                     foreach (var field in obj.Fields)
                     {
+                        if (field.Derivative) continue;
                         if (field.TryGetFieldData(out var data)
                             && data.RecordType.HasValue) continue;
                         if (!this.TryGetTypeGeneration(field.GetType(), out var generator))
@@ -668,6 +671,7 @@ namespace Mutagen.Generation
                     }
                     foreach (var field in obj.IterateFields())
                     {
+                        if (field.Field.Derivative) continue;
                         if (!field.Field.TryGetFieldData(out var data)
                             || !data.RecordType.HasValue) continue;
                         if (!this.TryGetTypeGeneration(field.Field.GetType(), out var generator))

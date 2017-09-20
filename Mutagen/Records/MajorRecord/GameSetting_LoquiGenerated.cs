@@ -35,6 +35,16 @@ namespace Mutagen
         partial void CustomCtor();
         #endregion
 
+        #region GenericData
+        protected readonly INotifyingItem<Object> _GenericData = new NotifyingItemConvertWrapper<Object>(
+            (change) => TryGet<Object>.Succeed(WildcardLink.Validate(change.New)),
+            default(Object),
+            markAsSet: false
+        );
+        public INotifyingItemGetter<Object> GenericData_Property => _GenericData;
+        public Object GenericData { get => _GenericData.Item; protected set => _GenericData.Item = value; }
+        INotifyingItemGetter<Object> IGameSettingGetter.GenericData_Property => this.GenericData_Property;
+        #endregion
 
         #region Loqui Getter Interface
 
@@ -91,12 +101,21 @@ namespace Mutagen
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (GenericData_Property.HasBeenSet != rhs.GenericData_Property.HasBeenSet) return false;
+            if (GenericData_Property.HasBeenSet)
+            {
+                if (!object.Equals(GenericData, rhs.GenericData)) return false;
+            }
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
+            if (GenericData_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(GenericData).CombineHashCode(ret);
+            }
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -248,6 +267,20 @@ namespace Mutagen
         {
             switch (name)
             {
+                case "GenericData":
+                    {
+                        object subMask;
+                        var tryGet = WildcardXmlTranslation.Instance.Parse(
+                            root: root,
+                            doMasks: doMasks,
+                            maskObj: out subMask);
+                        item._GenericData.SetIfSucceeded(tryGet.Bubble<Object>(i => (Object)i));
+                        if (doMasks && subMask != null)
+                        {
+                            errorMask().GenericData = subMask;
+                        }
+                    }
+                    break;
                 default:
                     MajorRecord.Fill_XML_Internal(
                         item: item,
@@ -407,6 +440,19 @@ namespace Mutagen
 
         #endregion
 
+        protected static void Fill_OblivionBinary(
+            GameSetting item,
+            BinaryReader reader,
+            bool doMasks,
+            Func<GameSetting_ErrorMask> errorMask)
+        {
+            MajorRecord.Fill_OblivionBinary(
+                item: item,
+                reader: reader,
+                doMasks: doMasks,
+                errorMask: errorMask);
+        }
+
         #endregion
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds = null)
@@ -414,6 +460,8 @@ namespace Mutagen
             GameSetting_FieldIndex enu = (GameSetting_FieldIndex)index;
             switch (enu)
             {
+                case GameSetting_FieldIndex.GenericData:
+                    throw new ArgumentException($"Tried to set at a derivative index {index}");
                 default:
                     base.SetNthObject(index, obj, cmds);
                     break;
@@ -454,6 +502,11 @@ namespace Mutagen
 
     public interface IGameSettingGetter : IMajorRecordGetter
     {
+        #region GenericData
+        Object GenericData { get; }
+        INotifyingItemGetter<Object> GenericData_Property { get; }
+
+        #endregion
 
     }
 
@@ -466,6 +519,7 @@ namespace Mutagen.Internals
     #region Field Index
     public enum GameSetting_FieldIndex
     {
+        GenericData = 4,
     }
     #endregion
 
@@ -483,7 +537,7 @@ namespace Mutagen.Internals
 
         public const string GUID = "6ce31534-6f55-4575-a914-20e70476f6ad";
 
-        public const ushort FieldCount = 0;
+        public const ushort FieldCount = 1;
 
         public static readonly Type MaskType = typeof(GameSetting_Mask<>);
 
@@ -511,6 +565,8 @@ namespace Mutagen.Internals
         {
             switch (str.Upper)
             {
+                case "GENERICDATA":
+                    return (ushort)GameSetting_FieldIndex.GenericData;
                 default:
                     return null;
             }
@@ -521,6 +577,8 @@ namespace Mutagen.Internals
             GameSetting_FieldIndex enu = (GameSetting_FieldIndex)index;
             switch (enu)
             {
+                case GameSetting_FieldIndex.GenericData:
+                    return false;
                 default:
                     return MajorRecord_Registration.GetNthIsEnumerable(index);
             }
@@ -531,6 +589,8 @@ namespace Mutagen.Internals
             GameSetting_FieldIndex enu = (GameSetting_FieldIndex)index;
             switch (enu)
             {
+                case GameSetting_FieldIndex.GenericData:
+                    return false;
                 default:
                     return MajorRecord_Registration.GetNthIsLoqui(index);
             }
@@ -541,6 +601,8 @@ namespace Mutagen.Internals
             GameSetting_FieldIndex enu = (GameSetting_FieldIndex)index;
             switch (enu)
             {
+                case GameSetting_FieldIndex.GenericData:
+                    return false;
                 default:
                     return MajorRecord_Registration.GetNthIsSingleton(index);
             }
@@ -551,6 +613,8 @@ namespace Mutagen.Internals
             GameSetting_FieldIndex enu = (GameSetting_FieldIndex)index;
             switch (enu)
             {
+                case GameSetting_FieldIndex.GenericData:
+                    return "GenericData";
                 default:
                     return MajorRecord_Registration.GetNthName(index);
             }
@@ -561,6 +625,8 @@ namespace Mutagen.Internals
             GameSetting_FieldIndex enu = (GameSetting_FieldIndex)index;
             switch (enu)
             {
+                case GameSetting_FieldIndex.GenericData:
+                    return true;
                 default:
                     return MajorRecord_Registration.IsNthDerivative(index);
             }
@@ -571,6 +637,8 @@ namespace Mutagen.Internals
             GameSetting_FieldIndex enu = (GameSetting_FieldIndex)index;
             switch (enu)
             {
+                case GameSetting_FieldIndex.GenericData:
+                    return true;
                 default:
                     return MajorRecord_Registration.IsProtected(index);
             }
@@ -581,6 +649,8 @@ namespace Mutagen.Internals
             GameSetting_FieldIndex enu = (GameSetting_FieldIndex)index;
             switch (enu)
             {
+                case GameSetting_FieldIndex.GenericData:
+                    return typeof(Object);
                 default:
                     return MajorRecord_Registration.GetNthType(index);
             }
@@ -713,6 +783,8 @@ namespace Mutagen.Internals
             GameSetting_FieldIndex enu = (GameSetting_FieldIndex)index;
             switch (enu)
             {
+                case GameSetting_FieldIndex.GenericData:
+                    throw new ArgumentException($"Tried to set at a derivative index {index}");
                 default:
                     MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
@@ -727,6 +799,8 @@ namespace Mutagen.Internals
             GameSetting_FieldIndex enu = (GameSetting_FieldIndex)index;
             switch (enu)
             {
+                case GameSetting_FieldIndex.GenericData:
+                    throw new ArgumentException($"Tried to unset at a derivative index {index}");
                 default:
                     MajorRecordCommon.UnsetNthObject(index, obj);
                     break;
@@ -740,6 +814,8 @@ namespace Mutagen.Internals
             GameSetting_FieldIndex enu = (GameSetting_FieldIndex)index;
             switch (enu)
             {
+                case GameSetting_FieldIndex.GenericData:
+                    return obj.GenericData_Property.HasBeenSet;
                 default:
                     return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -752,6 +828,8 @@ namespace Mutagen.Internals
             GameSetting_FieldIndex enu = (GameSetting_FieldIndex)index;
             switch (enu)
             {
+                case GameSetting_FieldIndex.GenericData:
+                    return obj.GenericData;
                 default:
                     return MajorRecordCommon.GetNthObject(index, obj);
             }
@@ -778,6 +856,7 @@ namespace Mutagen.Internals
             GameSetting_Mask<bool> ret)
         {
             if (rhs == null) return;
+            ret.GenericData = item.GenericData_Property.Equals(rhs.GenericData_Property, (l, r) => object.Equals(l, r));
             MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -808,6 +887,10 @@ namespace Mutagen.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
+                if (printMask?.GenericData ?? true)
+                {
+                    fg.AppendLine($"GenericData => {item.GenericData}");
+                }
             }
             fg.AppendLine("]");
         }
@@ -816,12 +899,14 @@ namespace Mutagen.Internals
             this IGameSettingGetter item,
             GameSetting_Mask<bool?> checkMask)
         {
+            if (checkMask.GenericData.HasValue && checkMask.GenericData.Value != item.GenericData_Property.HasBeenSet) return false;
             return true;
         }
 
         public static GameSetting_Mask<bool> GetHasBeenSetMask(IGameSettingGetter item)
         {
             var ret = new GameSetting_Mask<bool>();
+            ret.GenericData = item.GenericData_Property.HasBeenSet;
             return ret;
         }
 
@@ -901,7 +986,7 @@ namespace Mutagen.Internals
                     record: GameSetting.GMST_HEADER,
                     type: ObjectType.Record))
                 {
-                    MajorRecordCommon.Write_OblivionBinary_Embedded(
+                    Write_OblivionBinary_Embedded(
                         item: item,
                         writer: writer,
                         doMasks: doMasks,
@@ -921,6 +1006,19 @@ namespace Mutagen.Internals
         }
         #endregion
 
+        public static void Write_OblivionBinary_Embedded(
+            IGameSettingGetter item,
+            BinaryWriter writer,
+            bool doMasks,
+            Func<GameSetting_ErrorMask> errorMask)
+        {
+            MajorRecordCommon.Write_OblivionBinary_Embedded(
+                item: item,
+                writer: writer,
+                doMasks: doMasks,
+                errorMask: errorMask);
+        }
+
         #endregion
 
     }
@@ -938,7 +1036,12 @@ namespace Mutagen.Internals
 
         public GameSetting_Mask(T initialValue)
         {
+            this.GenericData = initialValue;
         }
+        #endregion
+
+        #region Members
+        public T GenericData;
         #endregion
 
         #region Equals
@@ -952,11 +1055,13 @@ namespace Mutagen.Internals
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!object.Equals(this.GenericData, rhs.GenericData)) return false;
             return true;
         }
         public override int GetHashCode()
         {
             int ret = 0;
+            ret = ret.CombineHashCode(this.GenericData?.GetHashCode());
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -967,6 +1072,7 @@ namespace Mutagen.Internals
         public override bool AllEqual(Func<T, bool> eval)
         {
             if (!base.AllEqual(eval)) return false;
+            if (!eval(this.GenericData)) return false;
             return true;
         }
         #endregion
@@ -982,6 +1088,7 @@ namespace Mutagen.Internals
         protected void Translate_InternalFill<R>(GameSetting_Mask<R> obj, Func<T, R> eval)
         {
             base.Translate_InternalFill(obj, eval);
+            obj.GenericData = eval(this.GenericData);
         }
         #endregion
 
@@ -1011,6 +1118,10 @@ namespace Mutagen.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
+                if (printMask?.GenericData ?? true)
+                {
+                    fg.AppendLine($"GenericData => {GenericData.ToStringSafe()}");
+                }
             }
             fg.AppendLine("]");
         }
@@ -1020,12 +1131,19 @@ namespace Mutagen.Internals
 
     public class GameSetting_ErrorMask : MajorRecord_ErrorMask
     {
+        #region Members
+        public object GenericData;
+        #endregion
+
         #region IErrorMask
         public override void SetNthException(ushort index, Exception ex)
         {
             GameSetting_FieldIndex enu = (GameSetting_FieldIndex)index;
             switch (enu)
             {
+                case GameSetting_FieldIndex.GenericData:
+                    this.GenericData = ex;
+                    break;
                 default:
                     base.SetNthException(index, ex);
                     break;
@@ -1037,6 +1155,9 @@ namespace Mutagen.Internals
             GameSetting_FieldIndex enu = (GameSetting_FieldIndex)index;
             switch (enu)
             {
+                case GameSetting_FieldIndex.GenericData:
+                    this.GenericData = obj;
+                    break;
                 default:
                     base.SetNthMask(index, obj);
                     break;
@@ -1075,6 +1196,10 @@ namespace Mutagen.Internals
         protected override void ToString_FillInternal(FileGeneration fg)
         {
             base.ToString_FillInternal(fg);
+            if (GenericData != null)
+            {
+                fg.AppendLine($"GenericData => {GenericData.ToStringSafe()}");
+            }
         }
         #endregion
 
@@ -1082,6 +1207,7 @@ namespace Mutagen.Internals
         public GameSetting_ErrorMask Combine(GameSetting_ErrorMask rhs)
         {
             var ret = new GameSetting_ErrorMask();
+            ret.GenericData = this.GenericData ?? rhs.GenericData;
             return ret;
         }
         public static GameSetting_ErrorMask Combine(GameSetting_ErrorMask lhs, GameSetting_ErrorMask rhs)
@@ -1094,6 +1220,10 @@ namespace Mutagen.Internals
     }
     public class GameSetting_CopyMask : MajorRecord_CopyMask
     {
+        #region Members
+        public bool GenericData;
+        #endregion
+
     }
     #endregion
 

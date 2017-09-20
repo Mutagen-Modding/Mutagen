@@ -967,7 +967,7 @@ namespace Mutagen.Internals
     #region Field Index
     public enum GameSettingString_FieldIndex
     {
-        Data = 4,
+        Data = 5,
     }
     #endregion
 
@@ -1461,7 +1461,7 @@ namespace Mutagen.Internals
         {
             try
             {
-                MajorRecordCommon.Write_OblivionBinary_Embedded(
+                GameSettingCommon.Write_OblivionBinary_Embedded(
                     item: item,
                     writer: writer,
                     doMasks: doMasks,
