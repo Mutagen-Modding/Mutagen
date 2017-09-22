@@ -279,13 +279,23 @@ namespace Mutagen
             bool doMasks,
             out TES4_ErrorMask errorMask)
         {
+            var ret = Create_XML(
+                root: root,
+                doMasks: doMasks);
+            errorMask = ret.ErrorMask;
+            return ret.Object;
+        }
+
+        public static (TES4 Object, TES4_ErrorMask ErrorMask) Create_XML(
+            XElement root,
+            bool doMasks)
+        {
             TES4_ErrorMask errMaskRet = null;
             var ret = Create_XML_Internal(
                 root: root,
                 doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new TES4_ErrorMask()) : default(Func<TES4_ErrorMask>));
-            errorMask = errMaskRet;
-            return ret;
+            return (ret, errMaskRet);
         }
 
         public static TES4 Create_XML(string path)
@@ -536,36 +546,10 @@ namespace Mutagen
                 case "Header":
                     {
                         MaskItem<Exception, Header_ErrorMask> subMask;
-                        Header_ErrorMask loquiMask;
-                        TryGet<Header> tryGet;
-                        var typeStr = root.GetAttribute(XmlConstants.TYPE_ATTRIBUTE);
-                        if (typeStr != null
-                            && typeStr.Equals("Mutagen.Header"))
-                        {
-                            tryGet = TryGet<Header>.Succeed((Header)Header.Create_XML(
-                                root: root,
-                                doMasks: doMasks,
-                                errorMask: out loquiMask));
-                        }
-                        else
-                        {
-                            var register = LoquiRegistration.GetRegisterByFullName(typeStr ?? root.Name.LocalName);
-                            if (register == null)
-                            {
-                                var ex = new ArgumentException($"Unknown Loqui type: {root.Name.LocalName}");
-                                if (!doMasks) throw ex;
-                                subMask = new MaskItem<Exception, Header_ErrorMask>(
-                                    ex,
-                                    null);
-                                break;
-                            }
-                            tryGet = XmlTranslator.Instance.GetTranslator(register.ClassType).Item.Value.Parse(
-                                root: root,
-                                doMasks: doMasks,
-                                maskObj: out var subErrorMaskObj).Bubble((o) => (Header)o);
-                            loquiMask = (Header_ErrorMask)subErrorMaskObj;
-                        }
-                        subMask = loquiMask == null ? null : new MaskItem<Exception, Header_ErrorMask>(null, loquiMask);
+                        var tryGet = LoquiXmlTranslation<Header, Header_ErrorMask>.Instance.Parse(
+                            root: root,
+                            doMasks: doMasks,
+                            mask: out subMask);
                         item._Header.SetIfSucceeded(tryGet);
                         if (doMasks && subMask != null)
                         {
@@ -638,37 +622,10 @@ namespace Mutagen
                             maskObj: out subMask,
                             transl: (XElement r, bool listDoMasks, out MaskItem<Exception, MasterReference_ErrorMask> listSubMask) =>
                             {
-                                MasterReference_ErrorMask loquiMask;
-                                TryGet<MasterReference> tryGet;
-                                var typeStr = r.GetAttribute(XmlConstants.TYPE_ATTRIBUTE);
-                                if (typeStr != null
-                                    && typeStr.Equals("Mutagen.MasterReference"))
-                                {
-                                    tryGet = TryGet<MasterReference>.Succeed((MasterReference)MasterReference.Create_XML(
-                                        root: r,
-                                        doMasks: listDoMasks,
-                                        errorMask: out loquiMask));
-                                }
-                                else
-                                {
-                                    var register = LoquiRegistration.GetRegisterByFullName(typeStr ?? r.Name.LocalName);
-                                    if (register == null)
-                                    {
-                                        var ex = new ArgumentException($"Unknown Loqui type: {r.Name.LocalName}");
-                                        if (!listDoMasks) throw ex;
-                                        listSubMask = new MaskItem<Exception, MasterReference_ErrorMask>(
-                                            ex,
-                                            null);
-                                        return TryGet<MasterReference>.Fail(null);
-                                    }
-                                    tryGet = XmlTranslator.Instance.GetTranslator(register.ClassType).Item.Value.Parse(
-                                        root: root,
-                                        doMasks: listDoMasks,
-                                        maskObj: out var subErrorMaskObj).Bubble((o) => (MasterReference)o);
-                                    loquiMask = (MasterReference_ErrorMask)subErrorMaskObj;
-                                }
-                                listSubMask = loquiMask == null ? null : new MaskItem<Exception, MasterReference_ErrorMask>(null, loquiMask);
-                                return tryGet;
+                                return LoquiXmlTranslation<MasterReference, MasterReference_ErrorMask>.Instance.Parse(
+                                    root: r,
+                                    doMasks: listDoMasks,
+                                    mask: out listSubMask);
                             }
                             );
                         item._MasterReferences.SetIfSucceeded(listTryGet);
@@ -693,54 +650,65 @@ namespace Mutagen
         public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
         public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
         public static readonly RecordType MAST_HEADER = new RecordType("MAST");
+        public static readonly RecordType TRIGGERING_RECORD_TYPE = TES4_HEADER;
         #endregion
 
-        #region OblivionBinary Translation
-        #region OblivionBinary Create
-        public static TES4 Create_OblivionBinary(BinaryReader reader)
+        #region Binary Translation
+        #region Binary Create
+        public static TES4 Create_Binary(BinaryReader reader)
         {
-            return Create_OblivionBinary(
+            return Create_Binary(
                 reader: reader,
                 doMasks: false,
                 errorMask: out var errorMask);
         }
 
-        public static TES4 Create_OblivionBinary(
+        public static TES4 Create_Binary(
             BinaryReader reader,
             out TES4_ErrorMask errorMask)
         {
-            return Create_OblivionBinary(
+            return Create_Binary(
                 reader: reader,
                 doMasks: true,
                 errorMask: out errorMask);
         }
 
-        public static TES4 Create_OblivionBinary(
+        public static TES4 Create_Binary(
             BinaryReader reader,
             bool doMasks,
             out TES4_ErrorMask errorMask)
         {
+            var ret = Create_Binary(
+                reader: reader,
+                doMasks: doMasks);
+            errorMask = ret.ErrorMask;
+            return ret.Object;
+        }
+
+        public static (TES4 Object, TES4_ErrorMask ErrorMask) Create_Binary(
+            BinaryReader reader,
+            bool doMasks)
+        {
             TES4_ErrorMask errMaskRet = null;
-            var ret = Create_OblivionBinary_Internal(
+            var ret = Create_Binary_Internal(
                 reader: reader,
                 doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new TES4_ErrorMask()) : default(Func<TES4_ErrorMask>));
-            errorMask = errMaskRet;
-            return ret;
+            return (ret, errMaskRet);
         }
 
-        public static TES4 Create_OblivionBinary(string path)
+        public static TES4 Create_Binary(string path)
         {
             using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
             {
                 using (var reader = new BinaryReader(fileStream))
                 {
-                    return Create_OblivionBinary(reader: reader);
+                    return Create_Binary(reader: reader);
                 }
             }
         }
 
-        public static TES4 Create_OblivionBinary(
+        public static TES4 Create_Binary(
             string path,
             out TES4_ErrorMask errorMask)
         {
@@ -748,28 +716,28 @@ namespace Mutagen
             {
                 using (var reader = new BinaryReader(fileStream))
                 {
-                    return Create_OblivionBinary(
+                    return Create_Binary(
                         reader: reader,
                         errorMask: out errorMask);
                 }
             }
         }
 
-        public static TES4 Create_OblivionBinary(Stream stream)
+        public static TES4 Create_Binary(Stream stream)
         {
             using (var reader = new BinaryReader(stream))
             {
-                return Create_OblivionBinary(reader: reader);
+                return Create_Binary(reader: reader);
             }
         }
 
-        public static TES4 Create_OblivionBinary(
+        public static TES4 Create_Binary(
             Stream stream,
             out TES4_ErrorMask errorMask)
         {
             using (var reader = new BinaryReader(stream))
             {
-                return Create_OblivionBinary(
+                return Create_Binary(
                     reader: reader,
                     errorMask: out errorMask);
             }
@@ -777,8 +745,8 @@ namespace Mutagen
 
         #endregion
 
-        #region OblivionBinary Copy In
-        public void CopyIn_OblivionBinary(
+        #region Binary Copy In
+        public void CopyIn_Binary(
             BinaryReader reader,
             NotifyingFireParameters? cmds = null)
         {
@@ -791,7 +759,7 @@ namespace Mutagen
                 cmds: cmds);
         }
 
-        public virtual void CopyIn_OblivionBinary(
+        public virtual void CopyIn_Binary(
             BinaryReader reader,
             out TES4_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
@@ -805,7 +773,7 @@ namespace Mutagen
                 cmds: cmds);
         }
 
-        public void CopyIn_OblivionBinary(
+        public void CopyIn_Binary(
             string path,
             NotifyingFireParameters? cmds = null)
         {
@@ -813,14 +781,14 @@ namespace Mutagen
             {
                 using (var reader = new BinaryReader(fileStream))
                 {
-                    this.CopyIn_OblivionBinary(
+                    this.CopyIn_Binary(
                         reader: reader,
                         cmds: cmds);
                 }
             }
         }
 
-        public void CopyIn_OblivionBinary(
+        public void CopyIn_Binary(
             string path,
             out TES4_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
@@ -829,7 +797,7 @@ namespace Mutagen
             {
                 using (var reader = new BinaryReader(fileStream))
                 {
-                    this.CopyIn_OblivionBinary(
+                    this.CopyIn_Binary(
                         reader: reader,
                         errorMask: out errorMask,
                         cmds: cmds);
@@ -837,26 +805,26 @@ namespace Mutagen
             }
         }
 
-        public void CopyIn_OblivionBinary(
+        public void CopyIn_Binary(
             Stream stream,
             NotifyingFireParameters? cmds = null)
         {
             using (var reader = new BinaryReader(stream))
             {
-                this.CopyIn_OblivionBinary(
+                this.CopyIn_Binary(
                     reader: reader,
                     cmds: cmds);
             }
         }
 
-        public void CopyIn_OblivionBinary(
+        public void CopyIn_Binary(
             Stream stream,
             out TES4_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             using (var reader = new BinaryReader(stream))
             {
-                this.CopyIn_OblivionBinary(
+                this.CopyIn_Binary(
                     reader: reader,
                     errorMask: out errorMask,
                     cmds: cmds);
@@ -865,19 +833,19 @@ namespace Mutagen
 
         #endregion
 
-        #region OblivionBinary Write
-        public virtual void Write_OblivionBinary(
+        #region Binary Write
+        public virtual void Write_Binary(
             BinaryWriter writer,
             out TES4_ErrorMask errorMask)
         {
-            TES4Common.Write_OblivionBinary(
+            TES4Common.Write_Binary(
                 writer: writer,
                 item: this,
                 doMasks: true,
                 errorMask: out errorMask);
         }
 
-        public virtual void Write_OblivionBinary(
+        public virtual void Write_Binary(
             string path,
             out TES4_ErrorMask errorMask)
         {
@@ -885,56 +853,56 @@ namespace Mutagen
             {
                 using (var writer = new BinaryWriter(fileStream))
                 {
-                    Write_OblivionBinary(
+                    Write_Binary(
                         writer: writer,
                         errorMask: out errorMask);
                 }
             }
         }
 
-        public virtual void Write_OblivionBinary(
+        public virtual void Write_Binary(
             Stream stream,
             out TES4_ErrorMask errorMask)
         {
             using (var writer = new BinaryWriter(stream))
             {
-                Write_OblivionBinary(
+                Write_Binary(
                     writer: writer,
                     errorMask: out errorMask);
             }
         }
 
-        public void Write_OblivionBinary(BinaryWriter writer)
+        public void Write_Binary(BinaryWriter writer)
         {
-            TES4Common.Write_OblivionBinary(
+            TES4Common.Write_Binary(
                 writer: writer,
                 item: this,
                 doMasks: false,
                 errorMask: out TES4_ErrorMask errorMask);
         }
 
-        public void Write_OblivionBinary(string path)
+        public void Write_Binary(string path)
         {
             using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
             {
                 using (var writer = new BinaryWriter(fileStream))
                 {
-                    Write_OblivionBinary(writer: writer);
+                    Write_Binary(writer: writer);
                 }
             }
         }
 
-        public void Write_OblivionBinary(Stream stream)
+        public void Write_Binary(Stream stream)
         {
             using (var writer = new BinaryWriter(stream))
             {
-                Write_OblivionBinary(writer: writer);
+                Write_Binary(writer: writer);
             }
         }
 
         #endregion
 
-        private static TES4 Create_OblivionBinary_Internal(
+        private static TES4 Create_Binary_Internal(
             BinaryReader reader,
             bool doMasks,
             Func<TES4_ErrorMask> errorMask)
@@ -942,14 +910,14 @@ namespace Mutagen
             var finalPosition = HeaderTranslation.ParseRecord(
                 reader,
                 TES4_HEADER);
-            return Create_OblivionBinary_Internal(
+            return Create_Binary_Internal(
                 reader: reader,
                 doMasks: doMasks,
                 finalPosition: finalPosition,
                 errorMask: errorMask);
         }
 
-        private static TES4 Create_OblivionBinary_Internal(
+        private static TES4 Create_Binary_Internal(
             BinaryReader reader,
             bool doMasks,
             long finalPosition,
@@ -958,14 +926,14 @@ namespace Mutagen
             var ret = new TES4();
             try
             {
-                Fill_OblivionBinary(
+                Fill_Binary(
                     item: ret,
                     reader: reader,
                     doMasks: doMasks,
                     errorMask: errorMask);
                 while (reader.BaseStream.Position < finalPosition)
                 {
-                    if (!Fill_OblivionBinary_RecordTypes(
+                    if (!Fill_Binary_RecordTypes(
                         item: ret,
                         reader: reader,
                         doMasks: doMasks,
@@ -989,7 +957,7 @@ namespace Mutagen
             return ret;
         }
 
-        protected static void Fill_OblivionBinary(
+        protected static void Fill_Binary(
             TES4 item,
             BinaryReader reader,
             bool doMasks,
@@ -1010,7 +978,7 @@ namespace Mutagen
             }
         }
 
-        protected static bool Fill_OblivionBinary_RecordTypes(
+        protected static bool Fill_Binary_RecordTypes(
             TES4 item,
             BinaryReader reader,
             bool doMasks,
@@ -1025,12 +993,10 @@ namespace Mutagen
                 {
                     MaskItem<Exception, Header_ErrorMask> subMask;
                     reader.BaseStream.Position -= Constants.SUBRECORD_LENGTH;
-                    Header_ErrorMask loquiMask;
-                    TryGet<Header> tryGet = TryGet<Header>.Succeed((Header)Header.Create_OblivionBinary(
+                    var tryGet = LoquiBinaryTranslation<Header, Header_ErrorMask>.Instance.Parse(
                         reader: reader,
                         doMasks: doMasks,
-                        errorMask: out loquiMask));
-                    subMask = loquiMask == null ? null : new MaskItem<Exception, Header_ErrorMask>(null, loquiMask);
+                        mask: out subMask);
                     item._Header.SetIfSucceeded(tryGet);
                     if (doMasks && subMask != null)
                     {
@@ -1109,13 +1075,10 @@ namespace Mutagen
                         transl: (BinaryReader r, bool listDoMasks, out MaskItem<Exception, MasterReference_ErrorMask> listSubMask) =>
                         {
                             r.BaseStream.Position -= Constants.SUBRECORD_LENGTH;
-                            MasterReference_ErrorMask loquiMask;
-                            TryGet<MasterReference> tryGet = TryGet<MasterReference>.Succeed((MasterReference)MasterReference.Create_OblivionBinary(
+                            return LoquiBinaryTranslation<MasterReference, MasterReference_ErrorMask>.Instance.Parse(
                                 reader: r,
                                 doMasks: listDoMasks,
-                                errorMask: out loquiMask));
-                            listSubMask = loquiMask == null ? null : new MaskItem<Exception, MasterReference_ErrorMask>(null, loquiMask);
-                            return tryGet;
+                                mask: out listSubMask);
                         }
                         );
                     item._MasterReferences.SetIfSucceeded(listTryGet);
@@ -2088,7 +2051,7 @@ namespace Mutagen.Internals
                 }
                 if (printMask?.Header?.Overall ?? true)
                 {
-                    item.Header.ToString(fg, "Header");
+                    item.Header?.ToString(fg, "Header");
                 }
                 if (printMask?.TypeOffsets ?? true)
                 {
@@ -2117,7 +2080,7 @@ namespace Mutagen.Internals
                             fg.AppendLine("[");
                             using (new DepthWrapper(fg))
                             {
-                                subItem.ToString(fg, "Item");
+                                subItem?.ToString(fg, "Item");
                             }
                             fg.AppendLine("]");
                         }
@@ -2312,16 +2275,16 @@ namespace Mutagen.Internals
 
         #endregion
 
-        #region OblivionBinary Translation
-        #region OblivionBinary Write
-        public static void Write_OblivionBinary(
+        #region Binary Translation
+        #region Binary Write
+        public static void Write_Binary(
             BinaryWriter writer,
             ITES4Getter item,
             bool doMasks,
             out TES4_ErrorMask errorMask)
         {
             TES4_ErrorMask errMaskRet = null;
-            Write_OblivionBinary_Internal(
+            Write_Binary_Internal(
                 writer: writer,
                 item: item,
                 doMasks: doMasks,
@@ -2329,7 +2292,7 @@ namespace Mutagen.Internals
             errorMask = errMaskRet;
         }
 
-        private static void Write_OblivionBinary_Internal(
+        private static void Write_Binary_Internal(
             BinaryWriter writer,
             ITES4Getter item,
             bool doMasks,
@@ -2342,12 +2305,12 @@ namespace Mutagen.Internals
                     record: TES4.TES4_HEADER,
                     type: ObjectType.Record))
                 {
-                    Write_OblivionBinary_Embedded(
+                    Write_Binary_Embedded(
                         item: item,
                         writer: writer,
                         doMasks: doMasks,
                         errorMask: errorMask);
-                    Write_OblivionBinary_RecordTypes(
+                    Write_Binary_RecordTypes(
                         item: item,
                         writer: writer,
                         doMasks: doMasks,
@@ -2362,7 +2325,7 @@ namespace Mutagen.Internals
         }
         #endregion
 
-        public static void Write_OblivionBinary_Embedded(
+        public static void Write_Binary_Embedded(
             ITES4Getter item,
             BinaryWriter writer,
             bool doMasks,
@@ -2382,7 +2345,7 @@ namespace Mutagen.Internals
             }
         }
 
-        public static void Write_OblivionBinary_RecordTypes(
+        public static void Write_Binary_RecordTypes(
             ITES4Getter item,
             BinaryWriter writer,
             bool doMasks,
@@ -2390,7 +2353,7 @@ namespace Mutagen.Internals
         {
             {
                 MaskItem<Exception, Header_ErrorMask> subMask;
-                HeaderCommon.Write_OblivionBinary(
+                HeaderCommon.Write_Binary(
                     writer: writer,
                     item: item.Header,
                     doMasks: doMasks,
@@ -2466,7 +2429,7 @@ namespace Mutagen.Internals
                     maskObj: out subMask,
                     transl: (MasterReference subItem, bool listDoMasks, out MaskItem<Exception, MasterReference_ErrorMask> listSubMask) =>
                     {
-                        MasterReferenceCommon.Write_OblivionBinary(
+                        MasterReferenceCommon.Write_Binary(
                             writer: writer,
                             item: subItem,
                             doMasks: doMasks,

@@ -6,11 +6,11 @@
     </Generic>
     <Fields>
       <DateTime name="LastModified" protected="true" />
-      <!--<List name="Items">
+      <List name="Items">
         <Ref>
           <Generic>T</Generic>
         </Ref>
-      </List>-->
+      </List>
     </Fields>
   </Object>
 </Loqui>

@@ -1,6 +1,7 @@
 ﻿using Loqui;
 using Noggog;
 using Noggog.Notifying;
+using Noggog.Utility;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,9 +13,12 @@ namespace Mutagen.Binary
 {
     public class LoquiBinaryTranslation<T, M> : IBinaryTranslation<T, M>
         where T : ILoquiObjectGetter
-        where M : IErrorMask, new()
+        where M : class, IErrorMask, new()
     {
         public static readonly LoquiBinaryTranslation<T, M> Instance = new LoquiBinaryTranslation<T, M>();
+        private static readonly ILoquiRegistration Registration = LoquiRegistration.GetRegister(typeof(T));
+        public delegate T CREATE_FUNC(BinaryReader reader, bool doMasks, out M errorMask);
+        private static readonly Lazy<CREATE_FUNC> CREATE = new Lazy<CREATE_FUNC>(GetCreateFunc);
 
         private IEnumerable<KeyValuePair<ushort, object>> EnumerateObjects(
             ILoquiRegistration registration,
@@ -79,46 +83,51 @@ namespace Mutagen.Binary
             mask = maskObj;
         }
 
-        public TryGet<T> Parse(BinaryReader reader, bool doMasks, out M mask)
+        public static CREATE_FUNC GetCreateFunc()
         {
-            var maskObj = default(M);
-            Func<IErrorMask> maskGet;
-            if (doMasks)
+            var f = DelegateBuilder.BuildDelegate<Func<BinaryReader, bool, (T item, M mask)>>(
+                typeof(T).GetMethods()
+                .Where((methodInfo) => methodInfo.Name.Equals("Create_Binary"))
+                .Where((methodInfo) => methodInfo.IsStatic
+                    && methodInfo.IsPublic)
+                .Where((methodInfo) => methodInfo.ReturnType.Equals(typeof(ValueTuple<T, M>)))
+                .First());
+            return (BinaryReader reader, bool doMasks, out M errorMask) =>
             {
-                maskGet = () =>
-                {
-                    if (maskObj == null)
-                    {
-                        maskObj = new M();
-                    }
-                    return maskObj;
-                };
-            }
-            else
-            {
-                maskGet = null;
-            }
+                var ret = f(reader, doMasks);
+                errorMask = ret.mask;
+                return ret.item;
+            };
+        }
+
+        public TryGet<T> Parse(BinaryReader reader, bool doMasks, out MaskItem<Exception, M> mask)
+        {
             try
             {
-                var regis = LoquiRegistration.GetRegister(typeof(T));
-                var fields = EnumerateObjects(
-                    regis,
-                    reader,
-                    skipProtected: false,
+                var ret = TryGet<T>.Succeed(CREATE.Value(
+                    reader: reader,
                     doMasks: doMasks,
-                    mask: maskGet);
-                var create = LoquiRegistration.GetCreateFunc<T>();
-                var ret = create(fields);
-                mask = maskObj;
-                return TryGet<T>.Succeed(ret);
+                    errorMask: out var subMask));
+                mask = subMask == null ? null : new MaskItem<Exception, M>(null, subMask);
+                return ret;
             }
             catch (Exception ex)
             when (doMasks)
             {
-                maskGet().Overall = ex;
-                mask = maskObj;
+                mask = new MaskItem<Exception, M>(ex, default(M));
                 return TryGet<T>.Failure;
             }
+        }
+
+        public TryGet<T> Parse(BinaryReader reader, bool doMasks, out M mask)
+        {
+            var ret = Parse(reader, doMasks, out MaskItem<Exception, M> subMask);
+            if (subMask?.Overall != null)
+            {
+                throw subMask.Overall;
+            }
+            mask = subMask?.Specific;
+            return ret;
         }
 
         public void Write(BinaryWriter writer, T item, bool doMasks, out M mask)

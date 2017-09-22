@@ -6,6 +6,9 @@
       <FormID name="FormID" />
       <ByteArray name="Version" length="4" nullable="false" />
       <String name="EditorID" recordType="EDID" />
+      <UnsafeObject name="RecordType" derivative="true" >
+        <TargetType>RecordType</TargetType>
+      </UnsafeObject>
     </Fields>
   </Object>
 </Loqui>

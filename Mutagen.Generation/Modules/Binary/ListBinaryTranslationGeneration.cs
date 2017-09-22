@@ -95,7 +95,19 @@ namespace Mutagen.Generation
                 $"{retAccessor}{this.Namespace}ListBinaryTranslation<{list.SubTypeGeneration.TypeName}, {subMaskStr}>.Instance.ParseRepeatedItem"))
             {
                 args.Add($"reader: reader");
-                args.Add($"triggeringRecord: {objGen.Name}.{data.RecordType.Value.HeaderName}");
+                if (data.RecordType.HasValue)
+                {
+                    args.Add($"triggeringRecord: {objGen.Name}.{data.RecordType.Value.HeaderName}");
+                }
+                else if (list.SubTypeGeneration is LoquiType loquiType
+                    && loquiType.GenericDef != null)
+                {
+                    args.Add($"triggeringRecord: {loquiType.GenericDef.Name}_RecordType");
+                }
+                else
+                {
+                    throw new ArgumentException();
+                }
                 args.Add($"doMasks: {doMaskAccessor}");
                 args.Add($"maskObj: out {maskAccessor}");
                 args.Add((gen) =>

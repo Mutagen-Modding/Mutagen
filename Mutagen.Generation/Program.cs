@@ -24,7 +24,7 @@ namespace Mutagen.Generation
             gen.XmlTranslation.ShouldGenerateXSD = false;
             gen.XmlTranslation.AddTypeAssociation<FormIDType>(new PrimitiveXmlTranslationGeneration<FormID>());
             gen.GenerationModules.Add(new MutagenModule());
-            gen.Add(new OblivionBinaryTranslationModule(gen));
+            gen.Add(new BinaryTranslationModule(gen));
             gen.AddTypeAssociation<FormIDType>("FormID");
 
             // Add Projects

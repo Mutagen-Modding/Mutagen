@@ -54,7 +54,6 @@
     <Compile Include="Modules\Binary\EnumBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\ListBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\LoquiBinaryTranslationGeneration.cs" />
-    <Compile Include="Modules\Binary\Oblivion Binary\OblivionBinaryTranslationModule.cs" />
     <Compile Include="Modules\Binary\PrimitiveBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\BinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\StringBinaryTranslationGeneration.cs" />

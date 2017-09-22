@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>6561905e3f8936e5bd82635192b68e0f99ad0d69</Sha>
+         <Sha>e32ccf0363977539f88233b65f7c916bad7a5c5f</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>09-19-2017 08:03:34</CommitDate>
-         <Description>Merge branch 'master' of https://github.com/Noggog/CSharpExt</Description>
+         <CommitDate>09-22-2017 13:50:38</CommitDate>
+         <Description>HasBeenSetItem.SetIfSucceeded upgraded to support trygets that are subclasses of target property</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>0a6662d6d033f6fa40de57355910e028ac66b4bc</Sha>
+         <Sha>180157b440e6c0a4c5c7e406e85b446714a35224</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>09-19-2017 23:13:24</CommitDate>
-         <Description>TestGenericSpecification</Description>
+         <CommitDate>09-22-2017 14:33:06</CommitDate>
+         <Description>Added try catch logic to LoquiXmlTranslation systems</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

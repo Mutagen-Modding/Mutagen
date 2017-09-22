@@ -149,13 +149,23 @@ namespace Mutagen
             bool doMasks,
             out GameSettingInt_ErrorMask errorMask)
         {
+            var ret = Create_XML(
+                root: root,
+                doMasks: doMasks);
+            errorMask = ret.ErrorMask;
+            return ret.Object;
+        }
+
+        public static (GameSettingInt Object, GameSettingInt_ErrorMask ErrorMask) Create_XML(
+            XElement root,
+            bool doMasks)
+        {
             GameSettingInt_ErrorMask errMaskRet = null;
             var ret = Create_XML_Internal(
                 root: root,
                 doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new GameSettingInt_ErrorMask()) : default(Func<GameSettingInt_ErrorMask>));
-            errorMask = errMaskRet;
-            return ret;
+            return (ret, errMaskRet);
         }
 
         public static GameSettingInt Create_XML(string path)
@@ -442,54 +452,65 @@ namespace Mutagen
 
         #region Mutagen
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
+        public static readonly RecordType TRIGGERING_RECORD_TYPE = DATA_HEADER;
         #endregion
 
-        #region OblivionBinary Translation
-        #region OblivionBinary Create
-        public new static GameSettingInt Create_OblivionBinary(BinaryReader reader)
+        #region Binary Translation
+        #region Binary Create
+        public new static GameSettingInt Create_Binary(BinaryReader reader)
         {
-            return Create_OblivionBinary(
+            return Create_Binary(
                 reader: reader,
                 doMasks: false,
                 errorMask: out var errorMask);
         }
 
-        public static GameSettingInt Create_OblivionBinary(
+        public static GameSettingInt Create_Binary(
             BinaryReader reader,
             out GameSettingInt_ErrorMask errorMask)
         {
-            return Create_OblivionBinary(
+            return Create_Binary(
                 reader: reader,
                 doMasks: true,
                 errorMask: out errorMask);
         }
 
-        public static GameSettingInt Create_OblivionBinary(
+        public static GameSettingInt Create_Binary(
             BinaryReader reader,
             bool doMasks,
             out GameSettingInt_ErrorMask errorMask)
         {
+            var ret = Create_Binary(
+                reader: reader,
+                doMasks: doMasks);
+            errorMask = ret.ErrorMask;
+            return ret.Object;
+        }
+
+        public static (GameSettingInt Object, GameSettingInt_ErrorMask ErrorMask) Create_Binary(
+            BinaryReader reader,
+            bool doMasks)
+        {
             GameSettingInt_ErrorMask errMaskRet = null;
-            var ret = Create_OblivionBinary_Internal(
+            var ret = Create_Binary_Internal(
                 reader: reader,
                 doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new GameSettingInt_ErrorMask()) : default(Func<GameSettingInt_ErrorMask>));
-            errorMask = errMaskRet;
-            return ret;
+            return (ret, errMaskRet);
         }
 
-        public static GameSettingInt Create_OblivionBinary(string path)
+        public static GameSettingInt Create_Binary(string path)
         {
             using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
             {
                 using (var reader = new BinaryReader(fileStream))
                 {
-                    return Create_OblivionBinary(reader: reader);
+                    return Create_Binary(reader: reader);
                 }
             }
         }
 
-        public static GameSettingInt Create_OblivionBinary(
+        public static GameSettingInt Create_Binary(
             string path,
             out GameSettingInt_ErrorMask errorMask)
         {
@@ -497,28 +518,28 @@ namespace Mutagen
             {
                 using (var reader = new BinaryReader(fileStream))
                 {
-                    return Create_OblivionBinary(
+                    return Create_Binary(
                         reader: reader,
                         errorMask: out errorMask);
                 }
             }
         }
 
-        public static GameSettingInt Create_OblivionBinary(Stream stream)
+        public static GameSettingInt Create_Binary(Stream stream)
         {
             using (var reader = new BinaryReader(stream))
             {
-                return Create_OblivionBinary(reader: reader);
+                return Create_Binary(reader: reader);
             }
         }
 
-        public static GameSettingInt Create_OblivionBinary(
+        public static GameSettingInt Create_Binary(
             Stream stream,
             out GameSettingInt_ErrorMask errorMask)
         {
             using (var reader = new BinaryReader(stream))
             {
-                return Create_OblivionBinary(
+                return Create_Binary(
                     reader: reader,
                     errorMask: out errorMask);
             }
@@ -526,8 +547,8 @@ namespace Mutagen
 
         #endregion
 
-        #region OblivionBinary Copy In
-        public override void CopyIn_OblivionBinary(
+        #region Binary Copy In
+        public override void CopyIn_Binary(
             BinaryReader reader,
             NotifyingFireParameters? cmds = null)
         {
@@ -540,7 +561,7 @@ namespace Mutagen
                 cmds: cmds);
         }
 
-        public virtual void CopyIn_OblivionBinary(
+        public virtual void CopyIn_Binary(
             BinaryReader reader,
             out GameSettingInt_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
@@ -554,7 +575,7 @@ namespace Mutagen
                 cmds: cmds);
         }
 
-        public void CopyIn_OblivionBinary(
+        public void CopyIn_Binary(
             string path,
             NotifyingFireParameters? cmds = null)
         {
@@ -562,14 +583,14 @@ namespace Mutagen
             {
                 using (var reader = new BinaryReader(fileStream))
                 {
-                    this.CopyIn_OblivionBinary(
+                    this.CopyIn_Binary(
                         reader: reader,
                         cmds: cmds);
                 }
             }
         }
 
-        public void CopyIn_OblivionBinary(
+        public void CopyIn_Binary(
             string path,
             out GameSettingInt_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
@@ -578,7 +599,7 @@ namespace Mutagen
             {
                 using (var reader = new BinaryReader(fileStream))
                 {
-                    this.CopyIn_OblivionBinary(
+                    this.CopyIn_Binary(
                         reader: reader,
                         errorMask: out errorMask,
                         cmds: cmds);
@@ -586,50 +607,50 @@ namespace Mutagen
             }
         }
 
-        public void CopyIn_OblivionBinary(
+        public void CopyIn_Binary(
             Stream stream,
             NotifyingFireParameters? cmds = null)
         {
             using (var reader = new BinaryReader(stream))
             {
-                this.CopyIn_OblivionBinary(
+                this.CopyIn_Binary(
                     reader: reader,
                     cmds: cmds);
             }
         }
 
-        public void CopyIn_OblivionBinary(
+        public void CopyIn_Binary(
             Stream stream,
             out GameSettingInt_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             using (var reader = new BinaryReader(stream))
             {
-                this.CopyIn_OblivionBinary(
+                this.CopyIn_Binary(
                     reader: reader,
                     errorMask: out errorMask,
                     cmds: cmds);
             }
         }
 
-        public override void CopyIn_OblivionBinary(
+        public override void CopyIn_Binary(
             BinaryReader reader,
             out GameSetting_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
-            this.CopyIn_OblivionBinary(
+            this.CopyIn_Binary(
                 reader: reader,
                 errorMask: out GameSettingInt_ErrorMask errMask,
                 cmds: cmds);
             errorMask = errMask;
         }
 
-        public override void CopyIn_OblivionBinary(
+        public override void CopyIn_Binary(
             BinaryReader reader,
             out MajorRecord_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
-            this.CopyIn_OblivionBinary(
+            this.CopyIn_Binary(
                 reader: reader,
                 errorMask: out GameSettingInt_ErrorMask errMask,
                 cmds: cmds);
@@ -638,19 +659,19 @@ namespace Mutagen
 
         #endregion
 
-        #region OblivionBinary Write
-        public virtual void Write_OblivionBinary(
+        #region Binary Write
+        public virtual void Write_Binary(
             BinaryWriter writer,
             out GameSettingInt_ErrorMask errorMask)
         {
-            GameSettingIntCommon.Write_OblivionBinary(
+            GameSettingIntCommon.Write_Binary(
                 writer: writer,
                 item: this,
                 doMasks: true,
                 errorMask: out errorMask);
         }
 
-        public virtual void Write_OblivionBinary(
+        public virtual void Write_Binary(
             string path,
             out GameSettingInt_ErrorMask errorMask)
         {
@@ -658,56 +679,56 @@ namespace Mutagen
             {
                 using (var writer = new BinaryWriter(fileStream))
                 {
-                    Write_OblivionBinary(
+                    Write_Binary(
                         writer: writer,
                         errorMask: out errorMask);
                 }
             }
         }
 
-        public virtual void Write_OblivionBinary(
+        public virtual void Write_Binary(
             Stream stream,
             out GameSettingInt_ErrorMask errorMask)
         {
             using (var writer = new BinaryWriter(stream))
             {
-                Write_OblivionBinary(
+                Write_Binary(
                     writer: writer,
                     errorMask: out errorMask);
             }
         }
 
-        public override void Write_OblivionBinary(BinaryWriter writer)
+        public override void Write_Binary(BinaryWriter writer)
         {
-            GameSettingIntCommon.Write_OblivionBinary(
+            GameSettingIntCommon.Write_Binary(
                 writer: writer,
                 item: this,
                 doMasks: false,
                 errorMask: out GameSettingInt_ErrorMask errorMask);
         }
 
-        public override void Write_OblivionBinary(string path)
+        public override void Write_Binary(string path)
         {
             using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
             {
                 using (var writer = new BinaryWriter(fileStream))
                 {
-                    Write_OblivionBinary(writer: writer);
+                    Write_Binary(writer: writer);
                 }
             }
         }
 
-        public override void Write_OblivionBinary(Stream stream)
+        public override void Write_Binary(Stream stream)
         {
             using (var writer = new BinaryWriter(stream))
             {
-                Write_OblivionBinary(writer: writer);
+                Write_Binary(writer: writer);
             }
         }
 
         #endregion
 
-        private static GameSettingInt Create_OblivionBinary_Internal(
+        private static GameSettingInt Create_Binary_Internal(
             BinaryReader reader,
             bool doMasks,
             Func<GameSettingInt_ErrorMask> errorMask)
@@ -715,14 +736,14 @@ namespace Mutagen
             var finalPosition = HeaderTranslation.ParseRecord(
                 reader,
                 DATA_HEADER);
-            return Create_OblivionBinary_Internal(
+            return Create_Binary_Internal(
                 reader: reader,
                 doMasks: doMasks,
                 finalPosition: finalPosition,
                 errorMask: errorMask);
         }
 
-        private static GameSettingInt Create_OblivionBinary_Internal(
+        private static GameSettingInt Create_Binary_Internal(
             BinaryReader reader,
             bool doMasks,
             long finalPosition,
@@ -731,14 +752,14 @@ namespace Mutagen
             var ret = new GameSettingInt();
             try
             {
-                Fill_OblivionBinary(
+                Fill_Binary(
                     item: ret,
                     reader: reader,
                     doMasks: doMasks,
                     errorMask: errorMask);
                 while (reader.BaseStream.Position < finalPosition)
                 {
-                    if (!Fill_OblivionBinary_RecordTypes(
+                    if (!Fill_Binary_RecordTypes(
                         item: ret,
                         reader: reader,
                         doMasks: doMasks,
@@ -762,20 +783,20 @@ namespace Mutagen
             return ret;
         }
 
-        protected static void Fill_OblivionBinary(
+        protected static void Fill_Binary(
             GameSettingInt item,
             BinaryReader reader,
             bool doMasks,
             Func<GameSettingInt_ErrorMask> errorMask)
         {
-            GameSetting.Fill_OblivionBinary(
+            GameSetting.Fill_Binary(
                 item: item,
                 reader: reader,
                 doMasks: doMasks,
                 errorMask: errorMask);
         }
 
-        protected static bool Fill_OblivionBinary_RecordTypes(
+        protected static bool Fill_Binary_RecordTypes(
             GameSettingInt item,
             BinaryReader reader,
             bool doMasks,
@@ -802,7 +823,7 @@ namespace Mutagen
                 }
                 default:
                     reader.BaseStream.Position -= Constants.RECORD_LENGTH;
-                    return GameSetting.Fill_OblivionBinary_RecordTypes(
+                    return GameSetting.Fill_Binary_RecordTypes(
                         item: item,
                         reader: reader,
                         doMasks: doMasks,
@@ -966,7 +987,7 @@ namespace Mutagen.Internals
     #region Field Index
     public enum GameSettingInt_FieldIndex
     {
-        Data = 5,
+        Data = 6,
     }
     #endregion
 
@@ -1435,16 +1456,16 @@ namespace Mutagen.Internals
 
         #endregion
 
-        #region OblivionBinary Translation
-        #region OblivionBinary Write
-        public static void Write_OblivionBinary(
+        #region Binary Translation
+        #region Binary Write
+        public static void Write_Binary(
             BinaryWriter writer,
             IGameSettingIntGetter item,
             bool doMasks,
             out GameSettingInt_ErrorMask errorMask)
         {
             GameSettingInt_ErrorMask errMaskRet = null;
-            Write_OblivionBinary_Internal(
+            Write_Binary_Internal(
                 writer: writer,
                 item: item,
                 doMasks: doMasks,
@@ -1452,7 +1473,7 @@ namespace Mutagen.Internals
             errorMask = errMaskRet;
         }
 
-        private static void Write_OblivionBinary_Internal(
+        private static void Write_Binary_Internal(
             BinaryWriter writer,
             IGameSettingIntGetter item,
             bool doMasks,
@@ -1460,12 +1481,12 @@ namespace Mutagen.Internals
         {
             try
             {
-                GameSettingCommon.Write_OblivionBinary_Embedded(
+                GameSettingCommon.Write_Binary_Embedded(
                     item: item,
                     writer: writer,
                     doMasks: doMasks,
                     errorMask: errorMask);
-                Write_OblivionBinary_RecordTypes(
+                Write_Binary_RecordTypes(
                     item: item,
                     writer: writer,
                     doMasks: doMasks,
@@ -1479,13 +1500,13 @@ namespace Mutagen.Internals
         }
         #endregion
 
-        public static void Write_OblivionBinary_RecordTypes(
+        public static void Write_Binary_RecordTypes(
             IGameSettingIntGetter item,
             BinaryWriter writer,
             bool doMasks,
             Func<GameSettingInt_ErrorMask> errorMask)
         {
-            MajorRecordCommon.Write_OblivionBinary_RecordTypes(
+            MajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
                 writer: writer,
                 doMasks: doMasks,

@@ -15,9 +15,40 @@ namespace Mutagen.Generation
 
         public override void GenerateInClass(ObjectGeneration obj, FileGeneration fg)
         {
+            GenerateKnownRecordTypes(obj, fg);
+            GenerateGenericRecordTypes(obj, fg);
+        }
+
+        private IEnumerable<string> GetGenerics(ObjectGeneration obj, FileGeneration fg)
+        {
+            HashSet<string> genericNames = new HashSet<string>();
+            foreach (var field in obj.Fields)
+            {
+                if (!(field is LoquiType loquiType))
+                {
+                    if ((field is ContainerType container)
+                        && container.SubTypeGeneration is LoquiType contLoquiType)
+                    {
+                        loquiType = contLoquiType;
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+                if (loquiType.GenericDef == null) continue;
+                genericNames.Add(loquiType.GenericDef.Name);
+            }
+            return genericNames;
+        }
+
+        private void GenerateKnownRecordTypes(ObjectGeneration obj, FileGeneration fg)
+        {
             HashSet<RecordType> recordTypes = new HashSet<RecordType>();
+            RecordType? triggeringRecType = null;
             if (obj.TryGetTriggeringRecordType(out var recType))
             {
+                triggeringRecType = recType;
                 recordTypes.Add(recType);
             }
             foreach (var field in obj.Fields)
@@ -29,6 +60,26 @@ namespace Mutagen.Generation
             foreach (var type in recordTypes)
             {
                 fg.AppendLine($"public static readonly {nameof(RecordType)} {type.HeaderName} = new {nameof(RecordType)}(\"{type.Type}\");");
+            }
+            if (triggeringRecType.HasValue)
+            {
+                fg.AppendLine($"public static readonly {nameof(RecordType)} {Mutagen.Constants.TRIGGERING_RECORDTYPE_MEMBER} = {triggeringRecType.Value.HeaderName};");
+            }
+        }
+
+        public override void GenerateInStaticCtor(ObjectGeneration obj, FileGeneration fg)
+        {
+            foreach (var genName in GetGenerics(obj, fg))
+            {
+                fg.AppendLine($"{genName}_RecordType = new {nameof(RecordType)}(\"NULL\");");
+            }
+        }
+
+        private void GenerateGenericRecordTypes(ObjectGeneration obj, FileGeneration fg)
+        {
+            foreach (var genName in GetGenerics(obj, fg))
+            {
+                fg.AppendLine($"public static readonly {nameof(RecordType)} {genName}_RecordType;");
             }
         }
 
@@ -86,7 +137,8 @@ namespace Mutagen.Generation
             else if (field is ListType listType
                 && listType.SubTypeGeneration is LoquiType subListLoqui)
             {
-                if (subListLoqui.RefGen.Obj.TryGetTriggeringRecordType(out recType))
+                if (subListLoqui.RefGen != null
+                    && subListLoqui.RefGen.Obj.TryGetTriggeringRecordType(out recType))
                 {
                     data.RecordType = recType;
                 }

@@ -8,9 +8,11 @@ using Loqui;
 
 namespace Mutagen.Generation
 {
-    public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslationGeneration>
+    public class BinaryTranslationModule : TranslationModule<BinaryTranslationGeneration>
     {
         public override string Namespace => "Mutagen.Binary.";
+
+        public override string ModuleNickname => "Binary";
 
         public BinaryTranslationModule(LoquiGenerator gen)
             : base(gen)
@@ -505,8 +507,7 @@ namespace Mutagen.Generation
                 args.Add("doMasks: doMasks");
                 args.Add($"errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new {obj.ErrorMask}()) : default(Func<{obj.ErrorMask}>)");
             }
-            fg.AppendLine($"errorMask = errMaskRet;");
-            fg.AppendLine($"return ret;");
+            fg.AppendLine($"return (ret, errMaskRet);");
         }
 
         protected override void GenerateWriteSnippet(ObjectGeneration obj, FileGeneration fg)

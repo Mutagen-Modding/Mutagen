@@ -191,13 +191,23 @@ namespace Mutagen
             bool doMasks,
             out Header_ErrorMask errorMask)
         {
+            var ret = Create_XML(
+                root: root,
+                doMasks: doMasks);
+            errorMask = ret.ErrorMask;
+            return ret.Object;
+        }
+
+        public static (Header Object, Header_ErrorMask ErrorMask) Create_XML(
+            XElement root,
+            bool doMasks)
+        {
             Header_ErrorMask errMaskRet = null;
             var ret = Create_XML_Internal(
                 root: root,
                 doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Header_ErrorMask()) : default(Func<Header_ErrorMask>));
-            errorMask = errMaskRet;
-            return ret;
+            return (ret, errMaskRet);
         }
 
         public static Header Create_XML(string path)
@@ -482,54 +492,65 @@ namespace Mutagen
 
         #region Mutagen
         public static readonly RecordType HEDR_HEADER = new RecordType("HEDR");
+        public static readonly RecordType TRIGGERING_RECORD_TYPE = HEDR_HEADER;
         #endregion
 
-        #region OblivionBinary Translation
-        #region OblivionBinary Create
-        public static Header Create_OblivionBinary(BinaryReader reader)
+        #region Binary Translation
+        #region Binary Create
+        public static Header Create_Binary(BinaryReader reader)
         {
-            return Create_OblivionBinary(
+            return Create_Binary(
                 reader: reader,
                 doMasks: false,
                 errorMask: out var errorMask);
         }
 
-        public static Header Create_OblivionBinary(
+        public static Header Create_Binary(
             BinaryReader reader,
             out Header_ErrorMask errorMask)
         {
-            return Create_OblivionBinary(
+            return Create_Binary(
                 reader: reader,
                 doMasks: true,
                 errorMask: out errorMask);
         }
 
-        public static Header Create_OblivionBinary(
+        public static Header Create_Binary(
             BinaryReader reader,
             bool doMasks,
             out Header_ErrorMask errorMask)
         {
+            var ret = Create_Binary(
+                reader: reader,
+                doMasks: doMasks);
+            errorMask = ret.ErrorMask;
+            return ret.Object;
+        }
+
+        public static (Header Object, Header_ErrorMask ErrorMask) Create_Binary(
+            BinaryReader reader,
+            bool doMasks)
+        {
             Header_ErrorMask errMaskRet = null;
-            var ret = Create_OblivionBinary_Internal(
+            var ret = Create_Binary_Internal(
                 reader: reader,
                 doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Header_ErrorMask()) : default(Func<Header_ErrorMask>));
-            errorMask = errMaskRet;
-            return ret;
+            return (ret, errMaskRet);
         }
 
-        public static Header Create_OblivionBinary(string path)
+        public static Header Create_Binary(string path)
         {
             using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
             {
                 using (var reader = new BinaryReader(fileStream))
                 {
-                    return Create_OblivionBinary(reader: reader);
+                    return Create_Binary(reader: reader);
                 }
             }
         }
 
-        public static Header Create_OblivionBinary(
+        public static Header Create_Binary(
             string path,
             out Header_ErrorMask errorMask)
         {
@@ -537,28 +558,28 @@ namespace Mutagen
             {
                 using (var reader = new BinaryReader(fileStream))
                 {
-                    return Create_OblivionBinary(
+                    return Create_Binary(
                         reader: reader,
                         errorMask: out errorMask);
                 }
             }
         }
 
-        public static Header Create_OblivionBinary(Stream stream)
+        public static Header Create_Binary(Stream stream)
         {
             using (var reader = new BinaryReader(stream))
             {
-                return Create_OblivionBinary(reader: reader);
+                return Create_Binary(reader: reader);
             }
         }
 
-        public static Header Create_OblivionBinary(
+        public static Header Create_Binary(
             Stream stream,
             out Header_ErrorMask errorMask)
         {
             using (var reader = new BinaryReader(stream))
             {
-                return Create_OblivionBinary(
+                return Create_Binary(
                     reader: reader,
                     errorMask: out errorMask);
             }
@@ -566,8 +587,8 @@ namespace Mutagen
 
         #endregion
 
-        #region OblivionBinary Copy In
-        public void CopyIn_OblivionBinary(
+        #region Binary Copy In
+        public void CopyIn_Binary(
             BinaryReader reader,
             NotifyingFireParameters? cmds = null)
         {
@@ -580,7 +601,7 @@ namespace Mutagen
                 cmds: cmds);
         }
 
-        public virtual void CopyIn_OblivionBinary(
+        public virtual void CopyIn_Binary(
             BinaryReader reader,
             out Header_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
@@ -594,7 +615,7 @@ namespace Mutagen
                 cmds: cmds);
         }
 
-        public void CopyIn_OblivionBinary(
+        public void CopyIn_Binary(
             string path,
             NotifyingFireParameters? cmds = null)
         {
@@ -602,14 +623,14 @@ namespace Mutagen
             {
                 using (var reader = new BinaryReader(fileStream))
                 {
-                    this.CopyIn_OblivionBinary(
+                    this.CopyIn_Binary(
                         reader: reader,
                         cmds: cmds);
                 }
             }
         }
 
-        public void CopyIn_OblivionBinary(
+        public void CopyIn_Binary(
             string path,
             out Header_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
@@ -618,7 +639,7 @@ namespace Mutagen
             {
                 using (var reader = new BinaryReader(fileStream))
                 {
-                    this.CopyIn_OblivionBinary(
+                    this.CopyIn_Binary(
                         reader: reader,
                         errorMask: out errorMask,
                         cmds: cmds);
@@ -626,26 +647,26 @@ namespace Mutagen
             }
         }
 
-        public void CopyIn_OblivionBinary(
+        public void CopyIn_Binary(
             Stream stream,
             NotifyingFireParameters? cmds = null)
         {
             using (var reader = new BinaryReader(stream))
             {
-                this.CopyIn_OblivionBinary(
+                this.CopyIn_Binary(
                     reader: reader,
                     cmds: cmds);
             }
         }
 
-        public void CopyIn_OblivionBinary(
+        public void CopyIn_Binary(
             Stream stream,
             out Header_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             using (var reader = new BinaryReader(stream))
             {
-                this.CopyIn_OblivionBinary(
+                this.CopyIn_Binary(
                     reader: reader,
                     errorMask: out errorMask,
                     cmds: cmds);
@@ -654,19 +675,19 @@ namespace Mutagen
 
         #endregion
 
-        #region OblivionBinary Write
-        public virtual void Write_OblivionBinary(
+        #region Binary Write
+        public virtual void Write_Binary(
             BinaryWriter writer,
             out Header_ErrorMask errorMask)
         {
-            HeaderCommon.Write_OblivionBinary(
+            HeaderCommon.Write_Binary(
                 writer: writer,
                 item: this,
                 doMasks: true,
                 errorMask: out errorMask);
         }
 
-        public virtual void Write_OblivionBinary(
+        public virtual void Write_Binary(
             string path,
             out Header_ErrorMask errorMask)
         {
@@ -674,56 +695,56 @@ namespace Mutagen
             {
                 using (var writer = new BinaryWriter(fileStream))
                 {
-                    Write_OblivionBinary(
+                    Write_Binary(
                         writer: writer,
                         errorMask: out errorMask);
                 }
             }
         }
 
-        public virtual void Write_OblivionBinary(
+        public virtual void Write_Binary(
             Stream stream,
             out Header_ErrorMask errorMask)
         {
             using (var writer = new BinaryWriter(stream))
             {
-                Write_OblivionBinary(
+                Write_Binary(
                     writer: writer,
                     errorMask: out errorMask);
             }
         }
 
-        public void Write_OblivionBinary(BinaryWriter writer)
+        public void Write_Binary(BinaryWriter writer)
         {
-            HeaderCommon.Write_OblivionBinary(
+            HeaderCommon.Write_Binary(
                 writer: writer,
                 item: this,
                 doMasks: false,
                 errorMask: out Header_ErrorMask errorMask);
         }
 
-        public void Write_OblivionBinary(string path)
+        public void Write_Binary(string path)
         {
             using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
             {
                 using (var writer = new BinaryWriter(fileStream))
                 {
-                    Write_OblivionBinary(writer: writer);
+                    Write_Binary(writer: writer);
                 }
             }
         }
 
-        public void Write_OblivionBinary(Stream stream)
+        public void Write_Binary(Stream stream)
         {
             using (var writer = new BinaryWriter(stream))
             {
-                Write_OblivionBinary(writer: writer);
+                Write_Binary(writer: writer);
             }
         }
 
         #endregion
 
-        private static Header Create_OblivionBinary_Internal(
+        private static Header Create_Binary_Internal(
             BinaryReader reader,
             bool doMasks,
             Func<Header_ErrorMask> errorMask)
@@ -731,14 +752,14 @@ namespace Mutagen
             var finalPosition = HeaderTranslation.ParseSubrecord(
                 reader,
                 HEDR_HEADER);
-            return Create_OblivionBinary_Internal(
+            return Create_Binary_Internal(
                 reader: reader,
                 doMasks: doMasks,
                 finalPosition: finalPosition,
                 errorMask: errorMask);
         }
 
-        private static Header Create_OblivionBinary_Internal(
+        private static Header Create_Binary_Internal(
             BinaryReader reader,
             bool doMasks,
             long finalPosition,
@@ -747,7 +768,7 @@ namespace Mutagen
             var ret = new Header();
             try
             {
-                Fill_OblivionBinary(
+                Fill_Binary(
                     item: ret,
                     reader: reader,
                     doMasks: doMasks,
@@ -766,7 +787,7 @@ namespace Mutagen
             return ret;
         }
 
-        protected static void Fill_OblivionBinary(
+        protected static void Fill_Binary(
             Header item,
             BinaryReader reader,
             bool doMasks,
@@ -1585,16 +1606,16 @@ namespace Mutagen.Internals
 
         #endregion
 
-        #region OblivionBinary Translation
-        #region OblivionBinary Write
-        public static void Write_OblivionBinary(
+        #region Binary Translation
+        #region Binary Write
+        public static void Write_Binary(
             BinaryWriter writer,
             IHeaderGetter item,
             bool doMasks,
             out Header_ErrorMask errorMask)
         {
             Header_ErrorMask errMaskRet = null;
-            Write_OblivionBinary_Internal(
+            Write_Binary_Internal(
                 writer: writer,
                 item: item,
                 doMasks: doMasks,
@@ -1602,7 +1623,7 @@ namespace Mutagen.Internals
             errorMask = errMaskRet;
         }
 
-        private static void Write_OblivionBinary_Internal(
+        private static void Write_Binary_Internal(
             BinaryWriter writer,
             IHeaderGetter item,
             bool doMasks,
@@ -1615,7 +1636,7 @@ namespace Mutagen.Internals
                     record: Header.HEDR_HEADER,
                     type: ObjectType.Subrecord))
                 {
-                    Write_OblivionBinary_Embedded(
+                    Write_Binary_Embedded(
                         item: item,
                         writer: writer,
                         doMasks: doMasks,
@@ -1630,7 +1651,7 @@ namespace Mutagen.Internals
         }
         #endregion
 
-        public static void Write_OblivionBinary_Embedded(
+        public static void Write_Binary_Embedded(
             IHeaderGetter item,
             BinaryWriter writer,
             bool doMasks,

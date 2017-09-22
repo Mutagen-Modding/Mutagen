@@ -23,7 +23,7 @@ namespace Mutagen
 {
     #region Class
     public partial class Group<T> : IGroup<T>, ILoquiObjectSetter, IEquatable<Group<T>>
-        where T : MajorRecord
+        where T : MajorRecord, ILoquiObjectGetter
     {
         ILoquiRegistration ILoquiObject.Registration => Group_Registration.Instance;
         public static Group_Registration Registration => Group_Registration.Instance;
@@ -36,6 +36,12 @@ namespace Mutagen
         partial void CustomCtor();
         #endregion
 
+        static Group()
+        {
+            T_RecordType = new RecordType("NULL");
+            
+        }
+
         #region LastModified
         protected readonly INotifyingItem<DateTime> _LastModified = NotifyingItem.Factory<DateTime>(markAsSet: false);
         public INotifyingItemGetter<DateTime> LastModified_Property => _LastModified;
@@ -45,6 +51,15 @@ namespace Mutagen
             protected set => this._LastModified.Set(value);
         }
         INotifyingItemGetter<DateTime> IGroupGetter<T>.LastModified_Property => this.LastModified_Property;
+        #endregion
+        #region Items
+        private readonly INotifyingList<T> _Items = new NotifyingList<T>();
+        public INotifyingList<T> Items => _Items;
+        #region Interface Members
+        INotifyingList<T> IGroup<T>.Items => _Items;
+        INotifyingListGetter<T> IGroupGetter<T>.Items => _Items;
+        #endregion
+
         #endregion
 
         #region Loqui Getter Interface
@@ -110,6 +125,11 @@ namespace Mutagen
             {
                 if (LastModified != rhs.LastModified) return false;
             }
+            if (Items.HasBeenSet != rhs.Items.HasBeenSet) return false;
+            if (Items.HasBeenSet)
+            {
+                if (!Items.SequenceEqual(rhs.Items)) return false;
+            }
             return true;
         }
 
@@ -119,6 +139,10 @@ namespace Mutagen
             if (LastModified_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(LastModified).CombineHashCode(ret);
+            }
+            if (Items.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Items).CombineHashCode(ret);
             }
             return ret;
         }
@@ -151,13 +175,23 @@ namespace Mutagen
             bool doMasks,
             out Group_ErrorMask errorMask)
         {
+            var ret = Create_XML(
+                root: root,
+                doMasks: doMasks);
+            errorMask = ret.ErrorMask;
+            return ret.Object;
+        }
+
+        public static (Group<T> Object, Group_ErrorMask ErrorMask) Create_XML(
+            XElement root,
+            bool doMasks)
+        {
             Group_ErrorMask errMaskRet = null;
             var ret = Create_XML_Internal(
                 root: root,
                 doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Group_ErrorMask()) : default(Func<Group_ErrorMask>));
-            errorMask = errMaskRet;
-            return ret;
+            return (ret, errMaskRet);
         }
 
         public static Group<T> Create_XML(string path)
@@ -405,6 +439,28 @@ namespace Mutagen
                         }
                     }
                     break;
+                case "Items":
+                    {
+                        MaskItem<Exception, IEnumerable<MaskItem<Exception, MajorRecord_ErrorMask>>> subMask;
+                        var listTryGet = ListXmlTranslation<T, MaskItem<Exception, MajorRecord_ErrorMask>>.Instance.Parse(
+                            root: root,
+                            doMasks: doMasks,
+                            maskObj: out subMask,
+                            transl: (XElement r, bool listDoMasks, out MaskItem<Exception, MajorRecord_ErrorMask> listSubMask) =>
+                            {
+                                return LoquiXmlTranslation<T, MajorRecord_ErrorMask>.Instance.Parse(
+                                    root: r,
+                                    doMasks: listDoMasks,
+                                    mask: out listSubMask);
+                            }
+                            );
+                        item._Items.SetIfSucceeded(listTryGet);
+                        if (doMasks && subMask != null)
+                        {
+                            errorMask().Items = subMask;
+                        }
+                    }
+                    break;
                 default:
                     break;
             }
@@ -414,54 +470,66 @@ namespace Mutagen
 
         #region Mutagen
         public static readonly RecordType GRUP_HEADER = new RecordType("GRUP");
+        public static readonly RecordType TRIGGERING_RECORD_TYPE = GRUP_HEADER;
+        public static readonly RecordType T_RecordType;
         #endregion
 
-        #region OblivionBinary Translation
-        #region OblivionBinary Create
-        public static Group<T> Create_OblivionBinary(BinaryReader reader)
+        #region Binary Translation
+        #region Binary Create
+        public static Group<T> Create_Binary(BinaryReader reader)
         {
-            return Create_OblivionBinary(
+            return Create_Binary(
                 reader: reader,
                 doMasks: false,
                 errorMask: out var errorMask);
         }
 
-        public static Group<T> Create_OblivionBinary(
+        public static Group<T> Create_Binary(
             BinaryReader reader,
             out Group_ErrorMask errorMask)
         {
-            return Create_OblivionBinary(
+            return Create_Binary(
                 reader: reader,
                 doMasks: true,
                 errorMask: out errorMask);
         }
 
-        public static Group<T> Create_OblivionBinary(
+        public static Group<T> Create_Binary(
             BinaryReader reader,
             bool doMasks,
             out Group_ErrorMask errorMask)
         {
+            var ret = Create_Binary(
+                reader: reader,
+                doMasks: doMasks);
+            errorMask = ret.ErrorMask;
+            return ret.Object;
+        }
+
+        public static (Group<T> Object, Group_ErrorMask ErrorMask) Create_Binary(
+            BinaryReader reader,
+            bool doMasks)
+        {
             Group_ErrorMask errMaskRet = null;
-            var ret = Create_OblivionBinary_Internal(
+            var ret = Create_Binary_Internal(
                 reader: reader,
                 doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Group_ErrorMask()) : default(Func<Group_ErrorMask>));
-            errorMask = errMaskRet;
-            return ret;
+            return (ret, errMaskRet);
         }
 
-        public static Group<T> Create_OblivionBinary(string path)
+        public static Group<T> Create_Binary(string path)
         {
             using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
             {
                 using (var reader = new BinaryReader(fileStream))
                 {
-                    return Create_OblivionBinary(reader: reader);
+                    return Create_Binary(reader: reader);
                 }
             }
         }
 
-        public static Group<T> Create_OblivionBinary(
+        public static Group<T> Create_Binary(
             string path,
             out Group_ErrorMask errorMask)
         {
@@ -469,28 +537,28 @@ namespace Mutagen
             {
                 using (var reader = new BinaryReader(fileStream))
                 {
-                    return Create_OblivionBinary(
+                    return Create_Binary(
                         reader: reader,
                         errorMask: out errorMask);
                 }
             }
         }
 
-        public static Group<T> Create_OblivionBinary(Stream stream)
+        public static Group<T> Create_Binary(Stream stream)
         {
             using (var reader = new BinaryReader(stream))
             {
-                return Create_OblivionBinary(reader: reader);
+                return Create_Binary(reader: reader);
             }
         }
 
-        public static Group<T> Create_OblivionBinary(
+        public static Group<T> Create_Binary(
             Stream stream,
             out Group_ErrorMask errorMask)
         {
             using (var reader = new BinaryReader(stream))
             {
-                return Create_OblivionBinary(
+                return Create_Binary(
                     reader: reader,
                     errorMask: out errorMask);
             }
@@ -498,8 +566,8 @@ namespace Mutagen
 
         #endregion
 
-        #region OblivionBinary Copy In
-        public void CopyIn_OblivionBinary(
+        #region Binary Copy In
+        public void CopyIn_Binary(
             BinaryReader reader,
             NotifyingFireParameters? cmds = null)
         {
@@ -512,7 +580,7 @@ namespace Mutagen
                 cmds: cmds);
         }
 
-        public virtual void CopyIn_OblivionBinary(
+        public virtual void CopyIn_Binary(
             BinaryReader reader,
             out Group_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
@@ -526,7 +594,7 @@ namespace Mutagen
                 cmds: cmds);
         }
 
-        public void CopyIn_OblivionBinary(
+        public void CopyIn_Binary(
             string path,
             NotifyingFireParameters? cmds = null)
         {
@@ -534,14 +602,14 @@ namespace Mutagen
             {
                 using (var reader = new BinaryReader(fileStream))
                 {
-                    this.CopyIn_OblivionBinary(
+                    this.CopyIn_Binary(
                         reader: reader,
                         cmds: cmds);
                 }
             }
         }
 
-        public void CopyIn_OblivionBinary(
+        public void CopyIn_Binary(
             string path,
             out Group_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
@@ -550,7 +618,7 @@ namespace Mutagen
             {
                 using (var reader = new BinaryReader(fileStream))
                 {
-                    this.CopyIn_OblivionBinary(
+                    this.CopyIn_Binary(
                         reader: reader,
                         errorMask: out errorMask,
                         cmds: cmds);
@@ -558,26 +626,26 @@ namespace Mutagen
             }
         }
 
-        public void CopyIn_OblivionBinary(
+        public void CopyIn_Binary(
             Stream stream,
             NotifyingFireParameters? cmds = null)
         {
             using (var reader = new BinaryReader(stream))
             {
-                this.CopyIn_OblivionBinary(
+                this.CopyIn_Binary(
                     reader: reader,
                     cmds: cmds);
             }
         }
 
-        public void CopyIn_OblivionBinary(
+        public void CopyIn_Binary(
             Stream stream,
             out Group_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             using (var reader = new BinaryReader(stream))
             {
-                this.CopyIn_OblivionBinary(
+                this.CopyIn_Binary(
                     reader: reader,
                     errorMask: out errorMask,
                     cmds: cmds);
@@ -586,19 +654,19 @@ namespace Mutagen
 
         #endregion
 
-        #region OblivionBinary Write
-        public virtual void Write_OblivionBinary(
+        #region Binary Write
+        public virtual void Write_Binary(
             BinaryWriter writer,
             out Group_ErrorMask errorMask)
         {
-            GroupCommon.Write_OblivionBinary(
+            GroupCommon.Write_Binary(
                 writer: writer,
                 item: this,
                 doMasks: true,
                 errorMask: out errorMask);
         }
 
-        public virtual void Write_OblivionBinary(
+        public virtual void Write_Binary(
             string path,
             out Group_ErrorMask errorMask)
         {
@@ -606,56 +674,56 @@ namespace Mutagen
             {
                 using (var writer = new BinaryWriter(fileStream))
                 {
-                    Write_OblivionBinary(
+                    Write_Binary(
                         writer: writer,
                         errorMask: out errorMask);
                 }
             }
         }
 
-        public virtual void Write_OblivionBinary(
+        public virtual void Write_Binary(
             Stream stream,
             out Group_ErrorMask errorMask)
         {
             using (var writer = new BinaryWriter(stream))
             {
-                Write_OblivionBinary(
+                Write_Binary(
                     writer: writer,
                     errorMask: out errorMask);
             }
         }
 
-        public void Write_OblivionBinary(BinaryWriter writer)
+        public void Write_Binary(BinaryWriter writer)
         {
-            GroupCommon.Write_OblivionBinary(
+            GroupCommon.Write_Binary(
                 writer: writer,
                 item: this,
                 doMasks: false,
                 errorMask: out Group_ErrorMask errorMask);
         }
 
-        public void Write_OblivionBinary(string path)
+        public void Write_Binary(string path)
         {
             using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
             {
                 using (var writer = new BinaryWriter(fileStream))
                 {
-                    Write_OblivionBinary(writer: writer);
+                    Write_Binary(writer: writer);
                 }
             }
         }
 
-        public void Write_OblivionBinary(Stream stream)
+        public void Write_Binary(Stream stream)
         {
             using (var writer = new BinaryWriter(stream))
             {
-                Write_OblivionBinary(writer: writer);
+                Write_Binary(writer: writer);
             }
         }
 
         #endregion
 
-        private static Group<T> Create_OblivionBinary_Internal(
+        private static Group<T> Create_Binary_Internal(
             BinaryReader reader,
             bool doMasks,
             Func<Group_ErrorMask> errorMask)
@@ -663,14 +731,14 @@ namespace Mutagen
             var finalPosition = HeaderTranslation.ParseRecord(
                 reader,
                 GRUP_HEADER);
-            return Create_OblivionBinary_Internal(
+            return Create_Binary_Internal(
                 reader: reader,
                 doMasks: doMasks,
                 finalPosition: finalPosition,
                 errorMask: errorMask);
         }
 
-        private static Group<T> Create_OblivionBinary_Internal(
+        private static Group<T> Create_Binary_Internal(
             BinaryReader reader,
             bool doMasks,
             long finalPosition,
@@ -679,7 +747,7 @@ namespace Mutagen
             var ret = new Group<T>();
             try
             {
-                Fill_OblivionBinary(
+                Fill_Binary(
                     item: ret,
                     reader: reader,
                     doMasks: doMasks,
@@ -698,7 +766,7 @@ namespace Mutagen
             return ret;
         }
 
-        protected static void Fill_OblivionBinary(
+        protected static void Fill_Binary(
             Group<T> item,
             BinaryReader reader,
             bool doMasks,
@@ -714,6 +782,28 @@ namespace Mutagen
                 if (doMasks && subMask != null)
                 {
                     errorMask().LastModified = subMask;
+                }
+            }
+            {
+                MaskItem<Exception, IEnumerable<MaskItem<Exception, MajorRecord_ErrorMask>>> subMask;
+                var listTryGet = Mutagen.Binary.ListBinaryTranslation<T, MaskItem<Exception, MajorRecord_ErrorMask>>.Instance.ParseRepeatedItem(
+                    reader: reader,
+                    triggeringRecord: T_RecordType,
+                    doMasks: doMasks,
+                    maskObj: out subMask,
+                    transl: (BinaryReader r, bool listDoMasks, out MaskItem<Exception, MajorRecord_ErrorMask> listSubMask) =>
+                    {
+                        r.BaseStream.Position -= Constants.SUBRECORD_LENGTH;
+                        return LoquiBinaryTranslation<T, MajorRecord_ErrorMask>.Instance.Parse(
+                            reader: r,
+                            doMasks: listDoMasks,
+                            mask: out listSubMask);
+                    }
+                    );
+                item._Items.SetIfSucceeded(listTryGet);
+                if (doMasks && subMask != null)
+                {
+                    errorMask().Items = subMask;
                 }
             }
         }
@@ -800,6 +890,9 @@ namespace Mutagen
                         (DateTime)obj,
                         cmds);
                     break;
+                case Group_FieldIndex.Items:
+                    this._Items.SetTo((IEnumerable<T>)obj, cmds);
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -842,6 +935,9 @@ namespace Mutagen
                         (DateTime)pair.Value,
                         null);
                     break;
+                case Group_FieldIndex.Items:
+                    obj._Items.SetTo((IEnumerable<T>)pair.Value, null);
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -856,17 +952,21 @@ namespace Mutagen
 
     #region Interface
     public interface IGroup<T> : IGroupGetter<T>, ILoquiClass<IGroup<T>, IGroupGetter<T>>, ILoquiClass<Group<T>, IGroupGetter<T>>
-        where T : MajorRecord
+        where T : MajorRecord, ILoquiObjectGetter
     {
+        new INotifyingList<T> Items { get; }
     }
 
     public interface IGroupGetter<T> : ILoquiObject
-        where T : MajorRecord
+        where T : MajorRecord, ILoquiObjectGetter
     {
         #region LastModified
         DateTime LastModified { get; }
         INotifyingItemGetter<DateTime> LastModified_Property { get; }
 
+        #endregion
+        #region Items
+        INotifyingListGetter<T> Items { get; }
         #endregion
 
     }
@@ -881,6 +981,7 @@ namespace Mutagen.Internals
     public enum Group_FieldIndex
     {
         LastModified = 0,
+        Items = 1,
     }
     #endregion
 
@@ -898,7 +999,7 @@ namespace Mutagen.Internals
 
         public const string GUID = "35a37d0b-4676-4dba-9410-a5972e262f5d";
 
-        public const ushort FieldCount = 1;
+        public const ushort FieldCount = 2;
 
         public static readonly Type MaskType = typeof(Group_Mask<>);
 
@@ -928,6 +1029,8 @@ namespace Mutagen.Internals
             {
                 case "LASTMODIFIED":
                     return (ushort)Group_FieldIndex.LastModified;
+                case "ITEMS":
+                    return (ushort)Group_FieldIndex.Items;
                 default:
                     return null;
             }
@@ -938,6 +1041,8 @@ namespace Mutagen.Internals
             Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
             {
+                case Group_FieldIndex.Items:
+                    return true;
                 case Group_FieldIndex.LastModified:
                     return false;
                 default:
@@ -950,6 +1055,8 @@ namespace Mutagen.Internals
             Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
             {
+                case Group_FieldIndex.Items:
+                    return true;
                 case Group_FieldIndex.LastModified:
                     return false;
                 default:
@@ -963,6 +1070,7 @@ namespace Mutagen.Internals
             switch (enu)
             {
                 case Group_FieldIndex.LastModified:
+                case Group_FieldIndex.Items:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -976,6 +1084,8 @@ namespace Mutagen.Internals
             {
                 case Group_FieldIndex.LastModified:
                     return "LastModified";
+                case Group_FieldIndex.Items:
+                    return "Items";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -987,6 +1097,7 @@ namespace Mutagen.Internals
             switch (enu)
             {
                 case Group_FieldIndex.LastModified:
+                case Group_FieldIndex.Items:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1000,6 +1111,8 @@ namespace Mutagen.Internals
             {
                 case Group_FieldIndex.LastModified:
                     return true;
+                case Group_FieldIndex.Items:
+                    return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1036,7 +1149,7 @@ namespace Mutagen.Internals
     }
 
     public class Group_Registration<T> : Group_Registration
-        where T : MajorRecord
+        where T : MajorRecord, ILoquiObjectGetter
     {
         public static readonly Group_Registration<T> GenericInstance = new Group_Registration<T>();
 
@@ -1047,6 +1160,8 @@ namespace Mutagen.Internals
             {
                 case Group_FieldIndex.LastModified:
                     return typeof(DateTime);
+                case Group_FieldIndex.Items:
+                    return typeof(NotifyingList<T>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1065,7 +1180,7 @@ namespace Mutagen.Internals
             Group_CopyMask copyMask = null,
             IGroupGetter<T> def = null,
             NotifyingFireParameters? cmds = null)
-            where T : MajorRecord
+            where T : MajorRecord, ILoquiObjectGetter
         {
             GroupCommon.CopyFieldsFrom<T>(
                 item: item,
@@ -1084,7 +1199,7 @@ namespace Mutagen.Internals
             Group_CopyMask copyMask = null,
             IGroupGetter<T> def = null,
             NotifyingFireParameters? cmds = null)
-            where T : MajorRecord
+            where T : MajorRecord, ILoquiObjectGetter
         {
             GroupCommon.CopyFieldsFrom<T>(
                 item: item,
@@ -1104,7 +1219,7 @@ namespace Mutagen.Internals
             out Group_ErrorMask errorMask,
             Group_CopyMask copyMask,
             NotifyingFireParameters? cmds)
-            where T : MajorRecord
+            where T : MajorRecord, ILoquiObjectGetter
         {
             Group_ErrorMask retErrorMask = null;
             Func<Group_ErrorMask> maskGetter = () =>
@@ -1134,8 +1249,38 @@ namespace Mutagen.Internals
             Func<Group_ErrorMask> errorMask,
             Group_CopyMask copyMask,
             NotifyingFireParameters? cmds)
-            where T : MajorRecord
+            where T : MajorRecord, ILoquiObjectGetter
         {
+            if (copyMask?.Items.Overall != CopyOption.Skip)
+            {
+                try
+                {
+                    item.Items.SetToWithDefault(
+                        rhs.Items,
+                        def?.Items,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.Items.Overall ?? CopyOption.Reference)
+                            {
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(T);
+                                    var copyFunc = LoquiRegistration.GetCopyFunc<T>();
+                                    return copyFunc(r, null, d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Items.Overall}. Cannot execute copy.");
+                            }
+                        }
+                        );
+                }
+                catch (Exception ex)
+                when (doErrorMask)
+                {
+                    errorMask().SetNthException((ushort)Group_FieldIndex.Items, ex);
+                }
+            }
         }
 
         #endregion
@@ -1145,13 +1290,16 @@ namespace Mutagen.Internals
             bool on,
             IGroup<T> obj,
             NotifyingFireParameters? cmds = null)
-            where T : MajorRecord
+            where T : MajorRecord, ILoquiObjectGetter
         {
             Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
             {
                 case Group_FieldIndex.LastModified:
                     throw new ArgumentException("Tried to set at a readonly index " + index);
+                case Group_FieldIndex.Items:
+                    obj.Items.HasBeenSet = on;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1161,13 +1309,16 @@ namespace Mutagen.Internals
             ushort index,
             IGroup<T> obj,
             NotifyingUnsetParameters? cmds = null)
-            where T : MajorRecord
+            where T : MajorRecord, ILoquiObjectGetter
         {
             Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
             {
                 case Group_FieldIndex.LastModified:
                     throw new ArgumentException("Tried to set at a readonly index " + index);
+                case Group_FieldIndex.Items:
+                    obj.Items.Unset(cmds);
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1176,13 +1327,15 @@ namespace Mutagen.Internals
         public static bool GetNthObjectHasBeenSet<T>(
             ushort index,
             IGroup<T> obj)
-            where T : MajorRecord
+            where T : MajorRecord, ILoquiObjectGetter
         {
             Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
             {
                 case Group_FieldIndex.LastModified:
                     return obj.LastModified_Property.HasBeenSet;
+                case Group_FieldIndex.Items:
+                    return obj.Items.HasBeenSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1191,13 +1344,15 @@ namespace Mutagen.Internals
         public static object GetNthObject<T>(
             ushort index,
             IGroupGetter<T> obj)
-            where T : MajorRecord
+            where T : MajorRecord, ILoquiObjectGetter
         {
             Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
             {
                 case Group_FieldIndex.LastModified:
                     return obj.LastModified;
+                case Group_FieldIndex.Items:
+                    return obj.Items;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1206,14 +1361,15 @@ namespace Mutagen.Internals
         public static void Clear<T>(
             IGroup<T> item,
             NotifyingUnsetParameters? cmds = null)
-            where T : MajorRecord
+            where T : MajorRecord, ILoquiObjectGetter
         {
+            item.Items.Unset(cmds.ToUnsetParams());
         }
 
         public static Group_Mask<bool> GetEqualsMask<T>(
             this IGroupGetter<T> item,
             IGroupGetter<T> rhs)
-            where T : MajorRecord
+            where T : MajorRecord, ILoquiObjectGetter
         {
             var ret = new Group_Mask<bool>();
             FillEqualsMask(item, rhs, ret);
@@ -1224,17 +1380,42 @@ namespace Mutagen.Internals
             IGroupGetter<T> item,
             IGroupGetter<T> rhs,
             Group_Mask<bool> ret)
-            where T : MajorRecord
+            where T : MajorRecord, ILoquiObjectGetter
         {
             if (rhs == null) return;
             ret.LastModified = item.LastModified_Property.Equals(rhs.LastModified_Property, (l, r) => l == r);
+            if (item.Items.HasBeenSet == rhs.Items.HasBeenSet)
+            {
+                if (item.Items.HasBeenSet)
+                {
+                    ret.Items = new MaskItem<bool, IEnumerable<MaskItem<bool, MajorRecord_Mask<bool>>>>();
+                    ret.Items.Specific = item.Items.SelectAgainst<T, MaskItem<bool, MajorRecord_Mask<bool>>>(rhs.Items, ((l, r) =>
+                    {
+                        MaskItem<bool, MajorRecord_Mask<bool>> itemRet;
+                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => MajorRecordCommon.GetEqualsMask(loqLhs, loqRhs));
+                        return itemRet;
+                    }
+                    ), out ret.Items.Overall);
+                    ret.Items.Overall = ret.Items.Overall && ret.Items.Specific.All((b) => b.Overall);
+                }
+                else
+                {
+                    ret.Items = new MaskItem<bool, IEnumerable<MaskItem<bool, MajorRecord_Mask<bool>>>>();
+                    ret.Items.Overall = true;
+                }
+            }
+            else
+            {
+                ret.Items = new MaskItem<bool, IEnumerable<MaskItem<bool, MajorRecord_Mask<bool>>>>();
+                ret.Items.Overall = false;
+            }
         }
 
         public static string ToString<T>(
             this IGroupGetter<T> item,
             string name = null,
             Group_Mask<bool> printMask = null)
-            where T : MajorRecord
+            where T : MajorRecord, ILoquiObjectGetter
         {
             var fg = new FileGeneration();
             item.ToString(fg, name, printMask);
@@ -1246,7 +1427,7 @@ namespace Mutagen.Internals
             FileGeneration fg,
             string name = null,
             Group_Mask<bool> printMask = null)
-            where T : MajorRecord
+            where T : MajorRecord, ILoquiObjectGetter
         {
             if (name == null)
             {
@@ -1263,6 +1444,24 @@ namespace Mutagen.Internals
                 {
                     fg.AppendLine($"LastModified => {item.LastModified}");
                 }
+                if (printMask?.Items?.Overall ?? true)
+                {
+                    fg.AppendLine("Items =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        foreach (var subItem in item.Items)
+                        {
+                            fg.AppendLine("[");
+                            using (new DepthWrapper(fg))
+                            {
+                                subItem?.ToString(fg, "Item");
+                            }
+                            fg.AppendLine("]");
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
             }
             fg.AppendLine("]");
         }
@@ -1270,17 +1469,19 @@ namespace Mutagen.Internals
         public static bool HasBeenSet<T>(
             this IGroupGetter<T> item,
             Group_Mask<bool?> checkMask)
-            where T : MajorRecord
+            where T : MajorRecord, ILoquiObjectGetter
         {
             if (checkMask.LastModified.HasValue && checkMask.LastModified.Value != item.LastModified_Property.HasBeenSet) return false;
+            if (checkMask.Items.Overall.HasValue && checkMask.Items.Overall.Value != item.Items.HasBeenSet) return false;
             return true;
         }
 
         public static Group_Mask<bool> GetHasBeenSetMask<T>(IGroupGetter<T> item)
-            where T : MajorRecord
+            where T : MajorRecord, ILoquiObjectGetter
         {
             var ret = new Group_Mask<bool>();
             ret.LastModified = item.LastModified_Property.HasBeenSet;
+            ret.Items = new MaskItem<bool, IEnumerable<MaskItem<bool, MajorRecord_Mask<bool>>>>(item.Items.HasBeenSet, item.Items.Select((i) => new MaskItem<bool, MajorRecord_Mask<bool>>(true, i.GetHasBeenSetMask())));
             return ret;
         }
 
@@ -1292,7 +1493,7 @@ namespace Mutagen.Internals
             bool doMasks,
             out Group_ErrorMask errorMask,
             string name = null)
-            where T : MajorRecord
+            where T : MajorRecord, ILoquiObjectGetter
         {
             Group_ErrorMask errMaskRet = null;
             Write_XML_Internal(
@@ -1310,7 +1511,7 @@ namespace Mutagen.Internals
             bool doMasks,
             Func<Group_ErrorMask> errorMask,
             string name = null)
-            where T : MajorRecord
+            where T : MajorRecord, ILoquiObjectGetter
         {
             try
             {
@@ -1334,6 +1535,31 @@ namespace Mutagen.Internals
                             errorMask().LastModified = subMask;
                         }
                     }
+                    if (item.Items.HasBeenSet)
+                    {
+                        MaskItem<Exception, IEnumerable<MaskItem<Exception, MajorRecord_ErrorMask>>> subMask;
+                        ListXmlTranslation<T, MaskItem<Exception, MajorRecord_ErrorMask>>.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Items),
+                            item: item.Items,
+                            doMasks: doMasks,
+                            maskObj: out subMask,
+                            transl: (T subItem, bool listDoMasks, out MaskItem<Exception, MajorRecord_ErrorMask> listSubMask) =>
+                            {
+                                MajorRecordCommon.Write_XML(
+                                    writer: writer,
+                                    item: subItem,
+                                    name: "Item",
+                                    doMasks: doMasks,
+                                    errorMask: out MajorRecord_ErrorMask loquiMask);
+                                listSubMask = loquiMask == null ? null : new MaskItem<Exception, MajorRecord_ErrorMask>(null, loquiMask);
+                            }
+                            );
+                        if (doMasks && subMask != null)
+                        {
+                            errorMask().Items = subMask;
+                        }
+                    }
                 }
             }
             catch (Exception ex)
@@ -1346,17 +1572,17 @@ namespace Mutagen.Internals
 
         #endregion
 
-        #region OblivionBinary Translation
-        #region OblivionBinary Write
-        public static void Write_OblivionBinary<T>(
+        #region Binary Translation
+        #region Binary Write
+        public static void Write_Binary<T>(
             BinaryWriter writer,
             IGroupGetter<T> item,
             bool doMasks,
             out Group_ErrorMask errorMask)
-            where T : MajorRecord
+            where T : MajorRecord, ILoquiObjectGetter
         {
             Group_ErrorMask errMaskRet = null;
-            Write_OblivionBinary_Internal(
+            Write_Binary_Internal(
                 writer: writer,
                 item: item,
                 doMasks: doMasks,
@@ -1364,12 +1590,12 @@ namespace Mutagen.Internals
             errorMask = errMaskRet;
         }
 
-        private static void Write_OblivionBinary_Internal<T>(
+        private static void Write_Binary_Internal<T>(
             BinaryWriter writer,
             IGroupGetter<T> item,
             bool doMasks,
             Func<Group_ErrorMask> errorMask)
-            where T : MajorRecord
+            where T : MajorRecord, ILoquiObjectGetter
         {
             try
             {
@@ -1378,7 +1604,7 @@ namespace Mutagen.Internals
                     record: Group<T>.GRUP_HEADER,
                     type: ObjectType.Group))
                 {
-                    Write_OblivionBinary_Embedded(
+                    Write_Binary_Embedded(
                         item: item,
                         writer: writer,
                         doMasks: doMasks,
@@ -1393,12 +1619,12 @@ namespace Mutagen.Internals
         }
         #endregion
 
-        public static void Write_OblivionBinary_Embedded<T>(
+        public static void Write_Binary_Embedded<T>(
             IGroupGetter<T> item,
             BinaryWriter writer,
             bool doMasks,
             Func<Group_ErrorMask> errorMask)
-            where T : MajorRecord
+            where T : MajorRecord, ILoquiObjectGetter
         {
             {
                 Exception subMask;
@@ -1410,6 +1636,28 @@ namespace Mutagen.Internals
                 if (doMasks && subMask != null)
                 {
                     errorMask().LastModified = subMask;
+                }
+            }
+            {
+                MaskItem<Exception, IEnumerable<MaskItem<Exception, MajorRecord_ErrorMask>>> subMask;
+                Mutagen.Binary.ListBinaryTranslation<T, MaskItem<Exception, MajorRecord_ErrorMask>>.Instance.Write(
+                    writer: writer,
+                    item: item.Items,
+                    doMasks: doMasks,
+                    maskObj: out subMask,
+                    transl: (T subItem, bool listDoMasks, out MaskItem<Exception, MajorRecord_ErrorMask> listSubMask) =>
+                    {
+                        MajorRecordCommon.Write_Binary(
+                            writer: writer,
+                            item: subItem,
+                            doMasks: doMasks,
+                            errorMask: out MajorRecord_ErrorMask loquiMask);
+                        listSubMask = loquiMask == null ? null : new MaskItem<Exception, MajorRecord_ErrorMask>(null, loquiMask);
+                    }
+                    );
+                if (doMasks && subMask != null)
+                {
+                    errorMask().Items = subMask;
                 }
             }
         }
@@ -1432,11 +1680,13 @@ namespace Mutagen.Internals
         public Group_Mask(T initialValue)
         {
             this.LastModified = initialValue;
+            this.Items = new MaskItem<T, IEnumerable<MaskItem<T, MajorRecord_Mask<T>>>>(initialValue, null);
         }
         #endregion
 
         #region Members
         public T LastModified;
+        public MaskItem<T, IEnumerable<MaskItem<T, MajorRecord_Mask<T>>>> Items;
         #endregion
 
         #region Equals
@@ -1450,12 +1700,14 @@ namespace Mutagen.Internals
         {
             if (rhs == null) return false;
             if (!object.Equals(this.LastModified, rhs.LastModified)) return false;
+            if (!object.Equals(this.Items, rhs.Items)) return false;
             return true;
         }
         public override int GetHashCode()
         {
             int ret = 0;
             ret = ret.CombineHashCode(this.LastModified?.GetHashCode());
+            ret = ret.CombineHashCode(this.Items?.GetHashCode());
             return ret;
         }
 
@@ -1465,6 +1717,18 @@ namespace Mutagen.Internals
         public bool AllEqual(Func<T, bool> eval)
         {
             if (!eval(this.LastModified)) return false;
+            if (Items != null)
+            {
+                if (!eval(this.Items.Overall)) return false;
+                if (Items.Specific != null)
+                {
+                    foreach (var item in Items.Specific)
+                    {
+                        if (!eval(item.Overall)) return false;
+                        if (!item.Specific?.AllEqual(eval) ?? false) return false;
+                    }
+                }
+            }
             return true;
         }
         #endregion
@@ -1480,12 +1744,37 @@ namespace Mutagen.Internals
         protected void Translate_InternalFill<R>(Group_Mask<R> obj, Func<T, R> eval)
         {
             obj.LastModified = eval(this.LastModified);
+            if (Items != null)
+            {
+                obj.Items = new MaskItem<R, IEnumerable<MaskItem<R, MajorRecord_Mask<R>>>>();
+                obj.Items.Overall = eval(this.Items.Overall);
+                if (Items.Specific != null)
+                {
+                    List<MaskItem<R, MajorRecord_Mask<R>>> l = new List<MaskItem<R, MajorRecord_Mask<R>>>();
+                    obj.Items.Specific = l;
+                    foreach (var item in Items.Specific)
+                    {
+                        MaskItem<R, MajorRecord_Mask<R>> mask = default(MaskItem<R, MajorRecord_Mask<R>>);
+                        if (item != null)
+                        {
+                            mask = new MaskItem<R, MajorRecord_Mask<R>>();
+                            mask.Overall = eval(item.Overall);
+                            if (item.Specific != null)
+                            {
+                                mask.Specific = item.Specific.Translate(eval);
+                            }
+                        }
+                        l.Add(mask);
+                    }
+                }
+            }
         }
         #endregion
 
         #region Clear Enumerables
         public void ClearEnumerables()
         {
+            this.Items.Specific = null;
         }
         #endregion
 
@@ -1512,6 +1801,31 @@ namespace Mutagen.Internals
                 {
                     fg.AppendLine($"LastModified => {LastModified.ToStringSafe()}");
                 }
+                if (printMask?.Items?.Overall ?? true)
+                {
+                    fg.AppendLine("Items =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        if (Items.Overall != null)
+                        {
+                            fg.AppendLine(Items.Overall.ToString());
+                        }
+                        if (Items.Specific != null)
+                        {
+                            foreach (var subItem in Items.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
             }
             fg.AppendLine("]");
         }
@@ -1536,6 +1850,7 @@ namespace Mutagen.Internals
             }
         }
         public Exception LastModified;
+        public MaskItem<Exception, IEnumerable<MaskItem<Exception, MajorRecord_ErrorMask>>> Items;
         #endregion
 
         #region IErrorMask
@@ -1546,6 +1861,9 @@ namespace Mutagen.Internals
             {
                 case Group_FieldIndex.LastModified:
                     this.LastModified = ex;
+                    break;
+                case Group_FieldIndex.Items:
+                    this.Items = new MaskItem<Exception, IEnumerable<MaskItem<Exception, MajorRecord_ErrorMask>>>(ex, null);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1559,6 +1877,9 @@ namespace Mutagen.Internals
             {
                 case Group_FieldIndex.LastModified:
                     this.LastModified = (Exception)obj;
+                    break;
+                case Group_FieldIndex.Items:
+                    this.Items = (MaskItem<Exception, IEnumerable<MaskItem<Exception, MajorRecord_ErrorMask>>>)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1600,6 +1921,31 @@ namespace Mutagen.Internals
             {
                 fg.AppendLine($"LastModified => {LastModified.ToStringSafe()}");
             }
+            if (Items != null)
+            {
+                fg.AppendLine("Items =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (Items.Overall != null)
+                    {
+                        fg.AppendLine(Items.Overall.ToString());
+                    }
+                    if (Items.Specific != null)
+                    {
+                        foreach (var subItem in Items.Specific)
+                        {
+                            fg.AppendLine("[");
+                            using (new DepthWrapper(fg))
+                            {
+                                subItem.ToString(fg);
+                            }
+                            fg.AppendLine("]");
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+            }
         }
         #endregion
 
@@ -1608,6 +1954,7 @@ namespace Mutagen.Internals
         {
             var ret = new Group_ErrorMask();
             ret.LastModified = this.LastModified.Combine(rhs.LastModified);
+            ret.Items = new MaskItem<Exception, IEnumerable<MaskItem<Exception, MajorRecord_ErrorMask>>>(this.Items.Overall.Combine(rhs.Items.Overall), new List<MaskItem<Exception, MajorRecord_ErrorMask>>(this.Items.Specific.And(rhs.Items.Specific)));
             return ret;
         }
         public static Group_ErrorMask Combine(Group_ErrorMask lhs, Group_ErrorMask rhs)
@@ -1622,6 +1969,7 @@ namespace Mutagen.Internals
     {
         #region Members
         public bool LastModified;
+        public MaskItem<CopyOption, MajorRecord_CopyMask> Items;
         #endregion
 
     }

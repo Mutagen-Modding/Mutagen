@@ -296,11 +296,12 @@ namespace Mutagen
 
         #region Mutagen
         public static readonly RecordType GMST_HEADER = new RecordType("GMST");
+        public static readonly RecordType TRIGGERING_RECORD_TYPE = GMST_HEADER;
         #endregion
 
-        #region OblivionBinary Translation
-        #region OblivionBinary Copy In
-        public override void CopyIn_OblivionBinary(
+        #region Binary Translation
+        #region Binary Copy In
+        public override void CopyIn_Binary(
             BinaryReader reader,
             NotifyingFireParameters? cmds = null)
         {
@@ -313,7 +314,7 @@ namespace Mutagen
                 cmds: cmds);
         }
 
-        public virtual void CopyIn_OblivionBinary(
+        public virtual void CopyIn_Binary(
             BinaryReader reader,
             out GameSetting_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
@@ -327,7 +328,7 @@ namespace Mutagen
                 cmds: cmds);
         }
 
-        public void CopyIn_OblivionBinary(
+        public void CopyIn_Binary(
             string path,
             NotifyingFireParameters? cmds = null)
         {
@@ -335,14 +336,14 @@ namespace Mutagen
             {
                 using (var reader = new BinaryReader(fileStream))
                 {
-                    this.CopyIn_OblivionBinary(
+                    this.CopyIn_Binary(
                         reader: reader,
                         cmds: cmds);
                 }
             }
         }
 
-        public void CopyIn_OblivionBinary(
+        public void CopyIn_Binary(
             string path,
             out GameSetting_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
@@ -351,7 +352,7 @@ namespace Mutagen
             {
                 using (var reader = new BinaryReader(fileStream))
                 {
-                    this.CopyIn_OblivionBinary(
+                    this.CopyIn_Binary(
                         reader: reader,
                         errorMask: out errorMask,
                         cmds: cmds);
@@ -359,38 +360,38 @@ namespace Mutagen
             }
         }
 
-        public void CopyIn_OblivionBinary(
+        public void CopyIn_Binary(
             Stream stream,
             NotifyingFireParameters? cmds = null)
         {
             using (var reader = new BinaryReader(stream))
             {
-                this.CopyIn_OblivionBinary(
+                this.CopyIn_Binary(
                     reader: reader,
                     cmds: cmds);
             }
         }
 
-        public void CopyIn_OblivionBinary(
+        public void CopyIn_Binary(
             Stream stream,
             out GameSetting_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             using (var reader = new BinaryReader(stream))
             {
-                this.CopyIn_OblivionBinary(
+                this.CopyIn_Binary(
                     reader: reader,
                     errorMask: out errorMask,
                     cmds: cmds);
             }
         }
 
-        public override void CopyIn_OblivionBinary(
+        public override void CopyIn_Binary(
             BinaryReader reader,
             out MajorRecord_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
-            this.CopyIn_OblivionBinary(
+            this.CopyIn_Binary(
                 reader: reader,
                 errorMask: out GameSetting_ErrorMask errMask,
                 cmds: cmds);
@@ -399,19 +400,19 @@ namespace Mutagen
 
         #endregion
 
-        #region OblivionBinary Write
-        public virtual void Write_OblivionBinary(
+        #region Binary Write
+        public virtual void Write_Binary(
             BinaryWriter writer,
             out GameSetting_ErrorMask errorMask)
         {
-            GameSettingCommon.Write_OblivionBinary(
+            GameSettingCommon.Write_Binary(
                 writer: writer,
                 item: this,
                 doMasks: true,
                 errorMask: out errorMask);
         }
 
-        public virtual void Write_OblivionBinary(
+        public virtual void Write_Binary(
             string path,
             out GameSetting_ErrorMask errorMask)
         {
@@ -419,20 +420,20 @@ namespace Mutagen
             {
                 using (var writer = new BinaryWriter(fileStream))
                 {
-                    Write_OblivionBinary(
+                    Write_Binary(
                         writer: writer,
                         errorMask: out errorMask);
                 }
             }
         }
 
-        public virtual void Write_OblivionBinary(
+        public virtual void Write_Binary(
             Stream stream,
             out GameSetting_ErrorMask errorMask)
         {
             using (var writer = new BinaryWriter(stream))
             {
-                Write_OblivionBinary(
+                Write_Binary(
                     writer: writer,
                     errorMask: out errorMask);
             }
@@ -440,13 +441,13 @@ namespace Mutagen
 
         #endregion
 
-        protected static void Fill_OblivionBinary(
+        protected static void Fill_Binary(
             GameSetting item,
             BinaryReader reader,
             bool doMasks,
             Func<GameSetting_ErrorMask> errorMask)
         {
-            MajorRecord.Fill_OblivionBinary(
+            MajorRecord.Fill_Binary(
                 item: item,
                 reader: reader,
                 doMasks: doMasks,
@@ -519,7 +520,7 @@ namespace Mutagen.Internals
     #region Field Index
     public enum GameSetting_FieldIndex
     {
-        GenericData = 4,
+        GenericData = 5,
     }
     #endregion
 
@@ -956,16 +957,16 @@ namespace Mutagen.Internals
 
         #endregion
 
-        #region OblivionBinary Translation
-        #region OblivionBinary Write
-        public static void Write_OblivionBinary(
+        #region Binary Translation
+        #region Binary Write
+        public static void Write_Binary(
             BinaryWriter writer,
             IGameSettingGetter item,
             bool doMasks,
             out GameSetting_ErrorMask errorMask)
         {
             GameSetting_ErrorMask errMaskRet = null;
-            Write_OblivionBinary_Internal(
+            Write_Binary_Internal(
                 writer: writer,
                 item: item,
                 doMasks: doMasks,
@@ -973,7 +974,7 @@ namespace Mutagen.Internals
             errorMask = errMaskRet;
         }
 
-        private static void Write_OblivionBinary_Internal(
+        private static void Write_Binary_Internal(
             BinaryWriter writer,
             IGameSettingGetter item,
             bool doMasks,
@@ -986,12 +987,12 @@ namespace Mutagen.Internals
                     record: GameSetting.GMST_HEADER,
                     type: ObjectType.Record))
                 {
-                    Write_OblivionBinary_Embedded(
+                    Write_Binary_Embedded(
                         item: item,
                         writer: writer,
                         doMasks: doMasks,
                         errorMask: errorMask);
-                    MajorRecordCommon.Write_OblivionBinary_RecordTypes(
+                    MajorRecordCommon.Write_Binary_RecordTypes(
                         item: item,
                         writer: writer,
                         doMasks: doMasks,
@@ -1006,13 +1007,13 @@ namespace Mutagen.Internals
         }
         #endregion
 
-        public static void Write_OblivionBinary_Embedded(
+        public static void Write_Binary_Embedded(
             IGameSettingGetter item,
             BinaryWriter writer,
             bool doMasks,
             Func<GameSetting_ErrorMask> errorMask)
         {
-            MajorRecordCommon.Write_OblivionBinary_Embedded(
+            MajorRecordCommon.Write_Binary_Embedded(
                 item: item,
                 writer: writer,
                 doMasks: doMasks,

@@ -17,13 +17,13 @@ namespace Mutagen.Tests
         public void OblivionESM()
         {
             OblivionMod_ErrorMask inputErrMask, outputErrMask;
-            var mod = OblivionMod.Create_OblivionBinary(
+            var mod = OblivionMod.Create_Binary(
                 Properties.Settings.Default.OblivionESM,
                 out inputErrMask);
             using (var tmp = new TempFolder())
             {
                 var outputPath = Path.Combine(tmp.Dir.FullName, Path.GetRandomFileName());
-                mod.Write_OblivionBinary(
+                mod.Write_Binary(
                     outputPath,
                     out outputErrMask);
                 AssertFilesEqual(Properties.Settings.Default.OblivionESM, outputPath);
@@ -36,13 +36,13 @@ namespace Mutagen.Tests
         public void KnightsESP()
         {
             OblivionMod_ErrorMask inputErrMask, outputErrMask;
-            var mod = OblivionMod.Create_OblivionBinary(
+            var mod = OblivionMod.Create_Binary(
                 Properties.Settings.Default.KnightsESP,
                 out inputErrMask);
             using (var tmp = new TempFolder())
             {
                 var outputPath = Path.Combine(tmp.Dir.FullName, Path.GetRandomFileName());
-                mod.Write_OblivionBinary(
+                mod.Write_Binary(
                     outputPath,
                     out outputErrMask);
                 AssertFilesEqual(Properties.Settings.Default.KnightsESP, outputPath);

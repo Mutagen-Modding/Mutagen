@@ -90,7 +90,14 @@ namespace Mutagen.Generation
                 }
                 else
                 {
-                    GenerateCopyInRet(fg, objGen, typeGen, readerAccessor, null, doMaskAccessor, maskAccessor);
+                    GenerateCopyInRet(
+                        fg: fg,
+                        objGen: objGen, 
+                        typeGen: typeGen, 
+                        readerAccessor: readerAccessor, 
+                        retAccessor: "var tryGet = ",
+                        doMaskAccessor: doMaskAccessor, 
+                        maskAccessor: maskAccessor);
                     if (itemAccessor.PropertyAccess != null)
                     {
                         fg.AppendLine($"{itemAccessor.PropertyAccess}.{nameof(INotifyingCollectionExt.SetIfSucceeded)}(tryGet);");
@@ -135,18 +142,17 @@ namespace Mutagen.Generation
             var loquiGen = typeGen as LoquiType;
             if (loquiGen.TargetObjectGeneration != null)
             {
-                fg.AppendLine($"{loquiGen.TargetObjectGeneration.ErrorMask} loquiMask;");
+                if (retAccessor == null)
+                {
+                    int wer = 23;
+                    wer++;
+                }
                 using (var args = new ArgsWrapper(fg,
-                    $"TryGet<{typeGen.TypeName}> tryGet = TryGet<{typeGen.TypeName}>.Succeed(({typeGen.TypeName}){loquiGen.TargetObjectGeneration.Name}.Create_{this.ModNickname}"))
+                    $"{retAccessor}LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}, {loquiGen.ErrorMaskItemString}>.Instance.Parse"))
                 {
                     args.Add($"reader: {readerAccessor}");
                     args.Add($"doMasks: {doMaskAccessor}");
-                    args.Add($"errorMask: out loquiMask)");
-                }
-                fg.AppendLine($"{maskAccessor} = loquiMask == null ? null : new MaskItem<Exception, {loquiGen.ErrorMaskItemString}>(null, loquiMask);");
-                if (retAccessor != null)
-                {
-                    fg.AppendLine($"{retAccessor}tryGet;");
+                    args.Add($"mask: out {maskAccessor}");
                 }
             }
             else

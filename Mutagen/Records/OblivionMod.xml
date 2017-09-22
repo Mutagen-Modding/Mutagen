@@ -5,11 +5,11 @@
       <Ref name="TES4" singleton="NotNull">
         <Direct refName="TES4" />
       </Ref>
-      <!--<Ref name="GameSettings">
-        <Direct refName="GRUP">
+      <Ref name="GameSettings">
+        <Direct refName="Group" >
           <GenericSpecification Definition="GameSetting" TypeToSpecify="T" />
         </Direct>
-      </Ref>-->
+      </Ref>
     </Fields>
   </Object>
 </Loqui>
