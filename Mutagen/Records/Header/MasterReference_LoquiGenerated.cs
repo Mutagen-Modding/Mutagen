@@ -456,12 +456,6 @@ namespace Mutagen
 
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType MAST_HEADER = new RecordType("MAST");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = MAST_HEADER;
-        #endregion
-
         #region Binary Translation
         #region Binary Create
         public static MasterReference Create_Binary(BinaryReader reader)
@@ -1128,6 +1122,9 @@ namespace Mutagen.Internals
             }
         }
 
+        public static readonly RecordType MAST_HEADER = new RecordType("MAST");
+        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
+        public static readonly RecordType TRIGGERING_RECORD_TYPE = MAST_HEADER;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1548,7 +1545,7 @@ namespace Mutagen.Internals
                     item: item.Master,
                     doMasks: doMasks,
                     errorMask: out subMask,
-                    header: MasterReference.MAST_HEADER,
+                    header: MasterReference_Registration.MAST_HEADER,
                     nullable: false);
                 if (doMasks && subMask != null)
                 {
@@ -1562,7 +1559,7 @@ namespace Mutagen.Internals
                     item: item.FileSize,
                     doMasks: doMasks,
                     errorMask: out subMask,
-                    header: MasterReference.DATA_HEADER,
+                    header: MasterReference_Registration.DATA_HEADER,
                     nullable: false);
                 if (doMasks && subMask != null)
                 {

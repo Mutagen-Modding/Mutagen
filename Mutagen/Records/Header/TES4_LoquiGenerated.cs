@@ -642,17 +642,6 @@ namespace Mutagen
 
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType TES4_HEADER = new RecordType("TES4");
-        public static readonly RecordType HEDR_HEADER = new RecordType("HEDR");
-        public static readonly RecordType OFST_HEADER = new RecordType("OFST");
-        public static readonly RecordType DELE_HEADER = new RecordType("DELE");
-        public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
-        public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
-        public static readonly RecordType MAST_HEADER = new RecordType("MAST");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = TES4_HEADER;
-        #endregion
-
         #region Binary Translation
         #region Binary Create
         public static TES4 Create_Binary(BinaryReader reader)
@@ -909,7 +898,7 @@ namespace Mutagen
         {
             var finalPosition = HeaderTranslation.ParseRecord(
                 reader,
-                TES4_HEADER);
+                TES4_Registration.TES4_HEADER);
             return Create_Binary_Internal(
                 reader: reader,
                 doMasks: doMasks,
@@ -1069,7 +1058,7 @@ namespace Mutagen
                     MaskItem<Exception, IEnumerable<MaskItem<Exception, MasterReference_ErrorMask>>> subMask;
                     var listTryGet = Mutagen.Binary.ListBinaryTranslation<MasterReference, MaskItem<Exception, MasterReference_ErrorMask>>.Instance.ParseRepeatedItem(
                         reader: reader,
-                        triggeringRecord: TES4.MAST_HEADER,
+                        triggeringRecord: TES4_Registration.MAST_HEADER,
                         doMasks: doMasks,
                         maskObj: out subMask,
                         transl: (BinaryReader r, bool listDoMasks, out MaskItem<Exception, MasterReference_ErrorMask> listSubMask) =>
@@ -1568,6 +1557,14 @@ namespace Mutagen.Internals
             }
         }
 
+        public static readonly RecordType TES4_HEADER = new RecordType("TES4");
+        public static readonly RecordType HEDR_HEADER = new RecordType("HEDR");
+        public static readonly RecordType OFST_HEADER = new RecordType("OFST");
+        public static readonly RecordType DELE_HEADER = new RecordType("DELE");
+        public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
+        public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
+        public static readonly RecordType MAST_HEADER = new RecordType("MAST");
+        public static readonly RecordType TRIGGERING_RECORD_TYPE = TES4_HEADER;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -2302,7 +2299,7 @@ namespace Mutagen.Internals
             {
                 using (HeaderExport.ExportHeader(
                     writer: writer,
-                    record: TES4.TES4_HEADER,
+                    record: TES4_Registration.TES4_HEADER,
                     type: ObjectType.Record))
                 {
                     Write_Binary_Embedded(
@@ -2371,7 +2368,7 @@ namespace Mutagen.Internals
                     item: item.TypeOffsets,
                     doMasks: doMasks,
                     errorMask: out subMask,
-                    header: TES4.OFST_HEADER,
+                    header: TES4_Registration.OFST_HEADER,
                     nullable: true);
                 if (doMasks && subMask != null)
                 {
@@ -2385,7 +2382,7 @@ namespace Mutagen.Internals
                     item: item.Deleted,
                     doMasks: doMasks,
                     errorMask: out subMask,
-                    header: TES4.DELE_HEADER,
+                    header: TES4_Registration.DELE_HEADER,
                     nullable: true);
                 if (doMasks && subMask != null)
                 {
@@ -2399,7 +2396,7 @@ namespace Mutagen.Internals
                     item: item.Author,
                     doMasks: doMasks,
                     errorMask: out subMask,
-                    header: TES4.CNAM_HEADER,
+                    header: TES4_Registration.CNAM_HEADER,
                     nullable: true);
                 if (doMasks && subMask != null)
                 {
@@ -2413,7 +2410,7 @@ namespace Mutagen.Internals
                     item: item.Description,
                     doMasks: doMasks,
                     errorMask: out subMask,
-                    header: TES4.SNAM_HEADER,
+                    header: TES4_Registration.SNAM_HEADER,
                     nullable: true);
                 if (doMasks && subMask != null)
                 {

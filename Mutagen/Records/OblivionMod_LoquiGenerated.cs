@@ -461,11 +461,6 @@ namespace Mutagen
 
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType TES4_HEADER = new RecordType("TES4");
-        public static readonly RecordType GRUP_HEADER = new RecordType("GRUP");
-        #endregion
-
         #region Binary Translation
         #region Binary Create
         public static OblivionMod Create_Binary(BinaryReader reader)
@@ -1152,6 +1147,8 @@ namespace Mutagen.Internals
             }
         }
 
+        public static readonly RecordType TES4_HEADER = new RecordType("TES4");
+        public static readonly RecordType GRUP_HEADER = new RecordType("GRUP");
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;

@@ -450,11 +450,6 @@ namespace Mutagen
 
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = DATA_HEADER;
-        #endregion
-
         #region Binary Translation
         #region Binary Create
         public new static GameSettingInt Create_Binary(BinaryReader reader)
@@ -735,7 +730,7 @@ namespace Mutagen
         {
             var finalPosition = HeaderTranslation.ParseRecord(
                 reader,
-                DATA_HEADER);
+                GameSettingInt_Registration.DATA_HEADER);
             return Create_Binary_Internal(
                 reader: reader,
                 doMasks: doMasks,
@@ -1124,6 +1119,8 @@ namespace Mutagen.Internals
             }
         }
 
+        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
+        public static readonly RecordType TRIGGERING_RECORD_TYPE = DATA_HEADER;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1518,7 +1515,7 @@ namespace Mutagen.Internals
                     item: item.Data,
                     doMasks: doMasks,
                     errorMask: out subMask,
-                    header: GameSettingInt.DATA_HEADER,
+                    header: GameSettingInt_Registration.DATA_HEADER,
                     nullable: false);
                 if (doMasks && subMask != null)
                 {

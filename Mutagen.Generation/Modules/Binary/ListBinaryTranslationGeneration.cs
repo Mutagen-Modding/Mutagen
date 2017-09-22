@@ -97,7 +97,7 @@ namespace Mutagen.Generation
                 args.Add($"reader: reader");
                 if (data.RecordType.HasValue)
                 {
-                    args.Add($"triggeringRecord: {objGen.Name}.{data.RecordType.Value.HeaderName}");
+                    args.Add($"triggeringRecord: {objGen.RegistrationName}.{data.RecordType.Value.HeaderName}");
                 }
                 else if (list.SubTypeGeneration is LoquiType loquiType
                     && loquiType.GenericDef != null)

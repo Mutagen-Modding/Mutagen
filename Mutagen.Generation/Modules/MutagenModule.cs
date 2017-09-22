@@ -15,8 +15,12 @@ namespace Mutagen.Generation
 
         public override void GenerateInClass(ObjectGeneration obj, FileGeneration fg)
         {
-            GenerateKnownRecordTypes(obj, fg);
             GenerateGenericRecordTypes(obj, fg);
+        }
+
+        public override void GenerateInRegistration(ObjectGeneration obj, FileGeneration fg)
+        {
+            GenerateKnownRecordTypes(obj, fg);
         }
 
         private IEnumerable<string> GetGenerics(ObjectGeneration obj, FileGeneration fg)

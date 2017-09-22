@@ -35,7 +35,7 @@ namespace Mutagen.Generation
                 args.Add($"errorMask: out {maskAccessor}");
                 if (data.RecordType.HasValue)
                 {
-                    args.Add($"header: {objGen.Name}.{data.RecordType.Value.HeaderName}");
+                    args.Add($"header: {objGen.RegistrationName}.{data.RecordType.Value.HeaderName}");
                     args.Add($"nullable: {(data.Optional ? "true" : "false")}");
                 }
                 else

@@ -294,11 +294,6 @@ namespace Mutagen
 
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType GMST_HEADER = new RecordType("GMST");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = GMST_HEADER;
-        #endregion
-
         #region Binary Translation
         #region Binary Copy In
         public override void CopyIn_Binary(
@@ -657,6 +652,8 @@ namespace Mutagen.Internals
             }
         }
 
+        public static readonly RecordType GMST_HEADER = new RecordType("GMST");
+        public static readonly RecordType TRIGGERING_RECORD_TYPE = GMST_HEADER;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -984,7 +981,7 @@ namespace Mutagen.Internals
             {
                 using (HeaderExport.ExportHeader(
                     writer: writer,
-                    record: GameSetting.GMST_HEADER,
+                    record: GameSetting_Registration.GMST_HEADER,
                     type: ObjectType.Record))
                 {
                     Write_Binary_Embedded(

@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>180157b440e6c0a4c5c7e406e85b446714a35224</Sha>
+         <Sha>687b489fa73e6140e03fa6c047141ca4d0e465c1</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>09-22-2017 14:33:06</CommitDate>
-         <Description>Added try catch logic to LoquiXmlTranslation systems</Description>
+         <CommitDate>09-22-2017 15:15:25</CommitDate>
+         <Description>GenerationModule.GenerateInRegistration</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

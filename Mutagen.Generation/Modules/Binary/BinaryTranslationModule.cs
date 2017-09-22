@@ -183,7 +183,7 @@ namespace Mutagen.Generation
                                     $"var finalPosition = HeaderTranslation.{funcName}"))
                                 {
                                     args.Add("reader");
-                                    args.Add(mutaData.Value.HeaderName);
+                                    args.Add($"{obj.RegistrationName}.{mutaData.Value.HeaderName}");
                                 }
                                 break;
                             case ObjectType.Mod:
@@ -521,7 +521,7 @@ namespace Mutagen.Generation
                     semiColon: false))
                 {
                     args.Add("writer: writer");
-                    args.Add($"record: {obj.Name}{obj.GenericTypes}.{obj.GetRecordType().HeaderName}");
+                    args.Add($"record: {obj.RegistrationName}.{obj.GetRecordType().HeaderName}");
                     args.Add($"type: {nameof(ObjectType)}.{obj.GetObjectType()}");
                 }
             }

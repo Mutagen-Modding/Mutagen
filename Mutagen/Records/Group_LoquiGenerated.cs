@@ -469,8 +469,6 @@ namespace Mutagen
         #endregion
 
         #region Mutagen
-        public static readonly RecordType GRUP_HEADER = new RecordType("GRUP");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = GRUP_HEADER;
         public static readonly RecordType T_RecordType;
         #endregion
 
@@ -730,7 +728,7 @@ namespace Mutagen
         {
             var finalPosition = HeaderTranslation.ParseRecord(
                 reader,
-                GRUP_HEADER);
+                Group_Registration.GRUP_HEADER);
             return Create_Binary_Internal(
                 reader: reader,
                 doMasks: doMasks,
@@ -1120,6 +1118,8 @@ namespace Mutagen.Internals
 
         public static Type GetNthType(ushort index) => throw new ArgumentException("Cannot get nth type for a generic object here.  Use generic registration instead.");
 
+        public static readonly RecordType GRUP_HEADER = new RecordType("GRUP");
+        public static readonly RecordType TRIGGERING_RECORD_TYPE = GRUP_HEADER;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1601,7 +1601,7 @@ namespace Mutagen.Internals
             {
                 using (HeaderExport.ExportHeader(
                     writer: writer,
-                    record: Group<T>.GRUP_HEADER,
+                    record: Group_Registration.GRUP_HEADER,
                     type: ObjectType.Group))
                 {
                     Write_Binary_Embedded(

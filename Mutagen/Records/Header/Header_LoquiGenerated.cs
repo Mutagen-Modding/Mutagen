@@ -490,11 +490,6 @@ namespace Mutagen
 
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType HEDR_HEADER = new RecordType("HEDR");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = HEDR_HEADER;
-        #endregion
-
         #region Binary Translation
         #region Binary Create
         public static Header Create_Binary(BinaryReader reader)
@@ -751,7 +746,7 @@ namespace Mutagen
         {
             var finalPosition = HeaderTranslation.ParseSubrecord(
                 reader,
-                HEDR_HEADER);
+                Header_Registration.HEDR_HEADER);
             return Create_Binary_Internal(
                 reader: reader,
                 doMasks: doMasks,
@@ -1191,6 +1186,8 @@ namespace Mutagen.Internals
             }
         }
 
+        public static readonly RecordType HEDR_HEADER = new RecordType("HEDR");
+        public static readonly RecordType TRIGGERING_RECORD_TYPE = HEDR_HEADER;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1633,7 +1630,7 @@ namespace Mutagen.Internals
             {
                 using (HeaderExport.ExportHeader(
                     writer: writer,
-                    record: Header.HEDR_HEADER,
+                    record: Header_Registration.HEDR_HEADER,
                     type: ObjectType.Subrecord))
                 {
                     Write_Binary_Embedded(

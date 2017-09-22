@@ -428,10 +428,6 @@ namespace Mutagen
 
         #endregion
 
-        #region Mutagen
-        public static readonly RecordType EDID_HEADER = new RecordType("EDID");
-        #endregion
-
         #region Binary Translation
         #region Binary Copy In
         public virtual void CopyIn_Binary(
@@ -976,6 +972,7 @@ namespace Mutagen.Internals
             }
         }
 
+        public static readonly RecordType EDID_HEADER = new RecordType("EDID");
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1554,7 +1551,7 @@ namespace Mutagen.Internals
                     item: item.EditorID,
                     doMasks: doMasks,
                     errorMask: out subMask,
-                    header: MajorRecord.EDID_HEADER,
+                    header: MajorRecord_Registration.EDID_HEADER,
                     nullable: false);
                 if (doMasks && subMask != null)
                 {
