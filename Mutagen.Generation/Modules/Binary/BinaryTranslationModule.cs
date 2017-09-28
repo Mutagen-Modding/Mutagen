@@ -319,35 +319,14 @@ namespace Mutagen.Generation
                     }
                     foreach (var field in obj.Fields)
                     {
-                        if (field.Derivative) continue;
                         if (field.TryGetFieldData(out var data)
                             && data.TriggeringRecordAccessor != null) continue;
+                        if (field.Derivative && !data.CustomBinary) continue;
                         if (!this.TryGetTypeGeneration(field.GetType(), out var generator))
                         {
                             throw new ArgumentException("Unsupported type generator: " + field);
                         }
-                        using (new BraceWrapper(fg))
-                        {
-                            var maskType = this.Gen.MaskModule.GetMaskModule(field.GetType()).GetErrorMaskTypeStr(field);
-                            fg.AppendLine($"{maskType} subMask;");
-                            generator.GenerateCopyIn(
-                                fg: fg,
-                                objGen: obj,
-                                typeGen: field,
-                                readerAccessor: "reader",
-                                itemAccessor: new Accessor()
-                                {
-                                    DirectAccess = $"item.{field.ProtectedName}",
-                                    PropertyAccess = field.Notifying == NotifyingOption.None ? null : $"item.{field.ProtectedProperty}"
-                                },
-                                doMaskAccessor: "doMasks",
-                                maskAccessor: $"subMask");
-                            fg.AppendLine("if (doMasks && subMask != null)");
-                            using (new BraceWrapper(fg))
-                            {
-                                fg.AppendLine($"errorMask().{field.Name} = subMask;");
-                            }
-                        }
+                        GenerateFillSnippet(obj, fg, field, generator, ret: false);
                     }
                 }
                 fg.AppendLine();
@@ -376,10 +355,10 @@ namespace Mutagen.Generation
                     {
                         foreach (var field in obj.IterateFields())
                         {
-                            if (field.Field.Derivative) continue;
                             if (!field.Field.TryGetFieldData(out var data)
                                 || data.TriggeringRecordAccessor == null
                                 || !data.RecordType.HasValue) continue;
+                            if (field.Field.Derivative && !data.CustomBinary) continue;
                             if (!this.TryGetTypeGeneration(field.Field.GetType(), out var generator))
                             {
                                 throw new ArgumentException("Unsupported type generator: " + field.Field);
@@ -388,29 +367,7 @@ namespace Mutagen.Generation
                             if (generator.ShouldGenerateCopyIn(field.Field))
                             {
                                 fg.AppendLine($"case \"{data.RecordType.Value.Type}\":");
-                                using (new BraceWrapper(fg))
-                                {
-                                    var maskType = this.Gen.MaskModule.GetMaskModule(field.Field.GetType()).GetErrorMaskTypeStr(field.Field);
-                                    fg.AppendLine($"{maskType} subMask;");
-                                    generator.GenerateCopyIn(
-                                        fg: fg,
-                                        objGen: obj,
-                                        typeGen: field.Field,
-                                        readerAccessor: "reader",
-                                        itemAccessor: new Accessor()
-                                        {
-                                            DirectAccess = $"item.{field.Field.ProtectedName}",
-                                            PropertyAccess = field.Field.Notifying == NotifyingOption.None ? null : $"item.{field.Field.ProtectedProperty}"
-                                        },
-                                        doMaskAccessor: "doMasks",
-                                        maskAccessor: $"subMask");
-                                    fg.AppendLine("if (doMasks && subMask != null)");
-                                    using (new BraceWrapper(fg))
-                                    {
-                                        fg.AppendLine($"errorMask().{field.Field.Name} = subMask;");
-                                    }
-                                    fg.AppendLine("return true;");
-                                }
+                                GenerateFillSnippet(obj, fg, field.Field, generator, ret: true);
                             }
                         }
                         fg.AppendLine($"default:");
@@ -420,10 +377,10 @@ namespace Mutagen.Generation
                             // Generic options
                             foreach (var field in obj.IterateFields())
                             {
-                                if (field.Field.Derivative) continue;
                                 if (!field.Field.TryGetFieldData(out var data)
                                     || data.TriggeringRecordAccessor == null
                                     || data.RecordType.HasValue) continue;
+                                if (field.Field.Derivative && !data.CustomBinary) continue;
                                 if (!this.TryGetTypeGeneration(field.Field.GetType(), out var generator))
                                 {
                                     throw new ArgumentException("Unsupported type generator: " + field.Field);
@@ -432,29 +389,7 @@ namespace Mutagen.Generation
                                 if (generator.ShouldGenerateCopyIn(field.Field))
                                 {
                                     fg.AppendLine($"if {(first ? "" : "else")} (nextRecordType.Equals({data.TriggeringRecordAccessor}))");
-                                    using (new BraceWrapper(fg))
-                                    {
-                                        var maskType = this.Gen.MaskModule.GetMaskModule(field.Field.GetType()).GetErrorMaskTypeStr(field.Field);
-                                        fg.AppendLine($"{maskType} subMask;");
-                                        generator.GenerateCopyIn(
-                                            fg: fg,
-                                            objGen: obj,
-                                            typeGen: field.Field,
-                                            readerAccessor: "reader",
-                                            itemAccessor: new Accessor()
-                                            {
-                                                DirectAccess = $"item.{field.Field.ProtectedName}",
-                                                PropertyAccess = field.Field.Notifying == NotifyingOption.None ? null : $"item.{field.Field.ProtectedProperty}"
-                                            },
-                                            doMaskAccessor: "doMasks",
-                                            maskAccessor: $"subMask");
-                                        fg.AppendLine("if (doMasks && subMask != null)");
-                                        using (new BraceWrapper(fg))
-                                        {
-                                            fg.AppendLine($"errorMask().{field.Field.Name} = subMask;");
-                                        }
-                                        fg.AppendLine("return true;");
-                                    }
+                                    GenerateFillSnippet(obj, fg, field.Field, generator, ret: true);
                                 }
                             }
 
@@ -492,6 +427,42 @@ namespace Mutagen.Generation
                     }
                 }
                 fg.AppendLine();
+            }
+        }
+
+        private void GenerateFillSnippet(ObjectGeneration obj, FileGeneration fg, TypeGeneration field, BinaryTranslationGeneration generator, bool ret)
+        {
+            var data = field.GetFieldData();
+            if (data.CustomBinary)
+            {
+                fg.AppendLine($"{(ret ? "return " : string.Empty)}FillBinary{field.Name}(reader, item);");
+                return;
+            }
+            using (new BraceWrapper(fg))
+            {
+                var maskType = this.Gen.MaskModule.GetMaskModule(field.GetType()).GetErrorMaskTypeStr(field);
+                fg.AppendLine($"{maskType} subMask;");
+                generator.GenerateCopyIn(
+                    fg: fg,
+                    objGen: obj,
+                    typeGen: field,
+                    readerAccessor: "reader",
+                    itemAccessor: new Accessor()
+                    {
+                        DirectAccess = $"item.{field.ProtectedName}",
+                        PropertyAccess = field.Notifying == NotifyingOption.None ? null : $"item.{field.ProtectedProperty}"
+                    },
+                    doMaskAccessor: "doMasks",
+                    maskAccessor: $"subMask");
+                fg.AppendLine("if (doMasks && subMask != null)");
+                using (new BraceWrapper(fg))
+                {
+                    fg.AppendLine($"errorMask().{field.Name} = subMask;");
+                }
+                if (ret)
+                {
+                    fg.AppendLine("return true;");
+                }
             }
         }
 

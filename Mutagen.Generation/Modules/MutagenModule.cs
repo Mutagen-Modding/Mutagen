@@ -161,6 +161,7 @@ namespace Mutagen.Generation
             }
             data.IncludeInLength = node.GetAttribute<bool>("includeInLength", true);
             data.Vestigial = node.GetAttribute<bool>("vestigial", false);
+            data.CustomBinary = node.GetAttribute<bool>("customBinary", false);
         }
 
         private void SetRecordTrigger(

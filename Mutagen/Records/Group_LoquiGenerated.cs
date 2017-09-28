@@ -52,6 +52,27 @@ namespace Mutagen
         }
         INotifyingItemGetter<DateTime> IGroupGetter<T>.LastModified_Property => this.LastModified_Property;
         #endregion
+        #region ContainedRecordType
+        protected readonly INotifyingItem<String> _ContainedRecordType = NotifyingItem.Factory<String>(markAsSet: false);
+        public INotifyingItemGetter<String> ContainedRecordType_Property => _ContainedRecordType;
+        public String ContainedRecordType
+        {
+            get => this._ContainedRecordType.Item;
+            protected set => this._ContainedRecordType.Set(value);
+        }
+        INotifyingItemGetter<String> IGroupGetter<T>.ContainedRecordType_Property => this.ContainedRecordType_Property;
+        #endregion
+        #region GroupType
+        protected readonly INotifyingItem<Int32> _GroupType = NotifyingItem.Factory<Int32>(markAsSet: false);
+        public INotifyingItem<Int32> GroupType_Property => _GroupType;
+        public Int32 GroupType
+        {
+            get => this._GroupType.Item;
+            set => this._GroupType.Set(value);
+        }
+        INotifyingItem<Int32> IGroup<T>.GroupType_Property => this.GroupType_Property;
+        INotifyingItemGetter<Int32> IGroupGetter<T>.GroupType_Property => this.GroupType_Property;
+        #endregion
         #region Items
         private readonly INotifyingList<T> _Items = new NotifyingList<T>();
         public INotifyingList<T> Items => _Items;
@@ -125,6 +146,16 @@ namespace Mutagen
             {
                 if (LastModified != rhs.LastModified) return false;
             }
+            if (ContainedRecordType_Property.HasBeenSet != rhs.ContainedRecordType_Property.HasBeenSet) return false;
+            if (ContainedRecordType_Property.HasBeenSet)
+            {
+                if (!object.Equals(ContainedRecordType, rhs.ContainedRecordType)) return false;
+            }
+            if (GroupType_Property.HasBeenSet != rhs.GroupType_Property.HasBeenSet) return false;
+            if (GroupType_Property.HasBeenSet)
+            {
+                if (GroupType != rhs.GroupType) return false;
+            }
             if (Items.HasBeenSet != rhs.Items.HasBeenSet) return false;
             if (Items.HasBeenSet)
             {
@@ -139,6 +170,14 @@ namespace Mutagen
             if (LastModified_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(LastModified).CombineHashCode(ret);
+            }
+            if (ContainedRecordType_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(ContainedRecordType).CombineHashCode(ret);
+            }
+            if (GroupType_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(GroupType).CombineHashCode(ret);
             }
             if (Items.HasBeenSet)
             {
@@ -436,6 +475,34 @@ namespace Mutagen
                         if (doMasks && subMask != null)
                         {
                             errorMask().LastModified = subMask;
+                        }
+                    }
+                    break;
+                case "ContainedRecordType":
+                    {
+                        Exception subMask;
+                        var tryGet = StringXmlTranslation.Instance.Parse(
+                            root,
+                            doMasks: doMasks,
+                            errorMask: out subMask);
+                        item._ContainedRecordType.SetIfSucceeded(tryGet);
+                        if (doMasks && subMask != null)
+                        {
+                            errorMask().ContainedRecordType = subMask;
+                        }
+                    }
+                    break;
+                case "GroupType":
+                    {
+                        Exception subMask;
+                        var tryGet = Int32XmlTranslation.Instance.ParseNonNull(
+                            root,
+                            doMasks: doMasks,
+                            errorMask: out subMask);
+                        item._GroupType.SetIfSucceeded(tryGet);
+                        if (doMasks && subMask != null)
+                        {
+                            errorMask().GroupType = subMask;
                         }
                     }
                     break;
@@ -792,6 +859,19 @@ namespace Mutagen
                     errorMask().LastModified = subMask;
                 }
             }
+            FillBinaryContainedRecordType(reader, item);
+            {
+                Exception subMask;
+                var tryGet = Mutagen.Binary.Int32BinaryTranslation.Instance.Parse(
+                    reader,
+                    doMasks: doMasks,
+                    errorMask: out subMask);
+                item._GroupType.SetIfSucceeded(tryGet);
+                if (doMasks && subMask != null)
+                {
+                    errorMask().GroupType = subMask;
+                }
+            }
         }
 
         protected static bool Fill_Binary_RecordTypes(
@@ -911,9 +991,16 @@ namespace Mutagen
             Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
             {
+                case Group_FieldIndex.ContainedRecordType:
+                    throw new ArgumentException($"Tried to set at a derivative index {index}");
                 case Group_FieldIndex.LastModified:
                     this._LastModified.Set(
                         (DateTime)obj,
+                        cmds);
+                    break;
+                case Group_FieldIndex.GroupType:
+                    this._GroupType.Set(
+                        (Int32)obj,
                         cmds);
                     break;
                 case Group_FieldIndex.Items:
@@ -961,6 +1048,11 @@ namespace Mutagen
                         (DateTime)pair.Value,
                         null);
                     break;
+                case Group_FieldIndex.GroupType:
+                    obj._GroupType.Set(
+                        (Int32)pair.Value,
+                        null);
+                    break;
                 case Group_FieldIndex.Items:
                     obj._Items.SetTo((IEnumerable<T>)pair.Value, null);
                     break;
@@ -980,6 +1072,9 @@ namespace Mutagen
     public interface IGroup<T> : IGroupGetter<T>, ILoquiClass<IGroup<T>, IGroupGetter<T>>, ILoquiClass<Group<T>, IGroupGetter<T>>
         where T : MajorRecord, ILoquiObjectGetter
     {
+        new Int32 GroupType { get; set; }
+        new INotifyingItem<Int32> GroupType_Property { get; }
+
         new INotifyingList<T> Items { get; }
     }
 
@@ -989,6 +1084,16 @@ namespace Mutagen
         #region LastModified
         DateTime LastModified { get; }
         INotifyingItemGetter<DateTime> LastModified_Property { get; }
+
+        #endregion
+        #region ContainedRecordType
+        String ContainedRecordType { get; }
+        INotifyingItemGetter<String> ContainedRecordType_Property { get; }
+
+        #endregion
+        #region GroupType
+        Int32 GroupType { get; }
+        INotifyingItemGetter<Int32> GroupType_Property { get; }
 
         #endregion
         #region Items
@@ -1007,7 +1112,9 @@ namespace Mutagen.Internals
     public enum Group_FieldIndex
     {
         LastModified = 0,
-        Items = 1,
+        ContainedRecordType = 1,
+        GroupType = 2,
+        Items = 3,
     }
     #endregion
 
@@ -1025,7 +1132,7 @@ namespace Mutagen.Internals
 
         public const string GUID = "35a37d0b-4676-4dba-9410-a5972e262f5d";
 
-        public const ushort FieldCount = 2;
+        public const ushort FieldCount = 4;
 
         public static readonly Type MaskType = typeof(Group_Mask<>);
 
@@ -1055,6 +1162,10 @@ namespace Mutagen.Internals
             {
                 case "LASTMODIFIED":
                     return (ushort)Group_FieldIndex.LastModified;
+                case "CONTAINEDRECORDTYPE":
+                    return (ushort)Group_FieldIndex.ContainedRecordType;
+                case "GROUPTYPE":
+                    return (ushort)Group_FieldIndex.GroupType;
                 case "ITEMS":
                     return (ushort)Group_FieldIndex.Items;
                 default:
@@ -1070,6 +1181,8 @@ namespace Mutagen.Internals
                 case Group_FieldIndex.Items:
                     return true;
                 case Group_FieldIndex.LastModified:
+                case Group_FieldIndex.ContainedRecordType:
+                case Group_FieldIndex.GroupType:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1084,6 +1197,8 @@ namespace Mutagen.Internals
                 case Group_FieldIndex.Items:
                     return true;
                 case Group_FieldIndex.LastModified:
+                case Group_FieldIndex.ContainedRecordType:
+                case Group_FieldIndex.GroupType:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1096,6 +1211,8 @@ namespace Mutagen.Internals
             switch (enu)
             {
                 case Group_FieldIndex.LastModified:
+                case Group_FieldIndex.ContainedRecordType:
+                case Group_FieldIndex.GroupType:
                 case Group_FieldIndex.Items:
                     return false;
                 default:
@@ -1110,6 +1227,10 @@ namespace Mutagen.Internals
             {
                 case Group_FieldIndex.LastModified:
                     return "LastModified";
+                case Group_FieldIndex.ContainedRecordType:
+                    return "ContainedRecordType";
+                case Group_FieldIndex.GroupType:
+                    return "GroupType";
                 case Group_FieldIndex.Items:
                     return "Items";
                 default:
@@ -1122,7 +1243,10 @@ namespace Mutagen.Internals
             Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
             {
+                case Group_FieldIndex.ContainedRecordType:
+                    return true;
                 case Group_FieldIndex.LastModified:
+                case Group_FieldIndex.GroupType:
                 case Group_FieldIndex.Items:
                     return false;
                 default:
@@ -1136,7 +1260,9 @@ namespace Mutagen.Internals
             switch (enu)
             {
                 case Group_FieldIndex.LastModified:
+                case Group_FieldIndex.ContainedRecordType:
                     return true;
+                case Group_FieldIndex.GroupType:
                 case Group_FieldIndex.Items:
                     return false;
                 default:
@@ -1187,6 +1313,10 @@ namespace Mutagen.Internals
             {
                 case Group_FieldIndex.LastModified:
                     return typeof(DateTime);
+                case Group_FieldIndex.ContainedRecordType:
+                    return typeof(String);
+                case Group_FieldIndex.GroupType:
+                    return typeof(Int32);
                 case Group_FieldIndex.Items:
                     return typeof(NotifyingList<T>);
                 default:
@@ -1278,6 +1408,21 @@ namespace Mutagen.Internals
             NotifyingFireParameters? cmds)
             where T : MajorRecord, ILoquiObjectGetter
         {
+            if (copyMask?.GroupType ?? true)
+            {
+                try
+                {
+                    item.GroupType_Property.SetToWithDefault(
+                        rhs.GroupType_Property,
+                        def?.GroupType_Property,
+                        cmds);
+                }
+                catch (Exception ex)
+                when (doErrorMask)
+                {
+                    errorMask().SetNthException((ushort)Group_FieldIndex.GroupType, ex);
+                }
+            }
             if (copyMask?.Items.Overall != CopyOption.Skip)
             {
                 try
@@ -1322,8 +1467,13 @@ namespace Mutagen.Internals
             Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
             {
+                case Group_FieldIndex.ContainedRecordType:
+                    throw new ArgumentException($"Tried to set at a derivative index {index}");
                 case Group_FieldIndex.LastModified:
                     throw new ArgumentException("Tried to set at a readonly index " + index);
+                case Group_FieldIndex.GroupType:
+                    obj.GroupType_Property.HasBeenSet = on;
+                    break;
                 case Group_FieldIndex.Items:
                     obj.Items.HasBeenSet = on;
                     break;
@@ -1341,8 +1491,13 @@ namespace Mutagen.Internals
             Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
             {
+                case Group_FieldIndex.ContainedRecordType:
+                    throw new ArgumentException($"Tried to unset at a derivative index {index}");
                 case Group_FieldIndex.LastModified:
                     throw new ArgumentException("Tried to set at a readonly index " + index);
+                case Group_FieldIndex.GroupType:
+                    obj.GroupType_Property.Unset(cmds);
+                    break;
                 case Group_FieldIndex.Items:
                     obj.Items.Unset(cmds);
                     break;
@@ -1361,6 +1516,10 @@ namespace Mutagen.Internals
             {
                 case Group_FieldIndex.LastModified:
                     return obj.LastModified_Property.HasBeenSet;
+                case Group_FieldIndex.ContainedRecordType:
+                    return obj.ContainedRecordType_Property.HasBeenSet;
+                case Group_FieldIndex.GroupType:
+                    return obj.GroupType_Property.HasBeenSet;
                 case Group_FieldIndex.Items:
                     return obj.Items.HasBeenSet;
                 default:
@@ -1378,6 +1537,10 @@ namespace Mutagen.Internals
             {
                 case Group_FieldIndex.LastModified:
                     return obj.LastModified;
+                case Group_FieldIndex.ContainedRecordType:
+                    return obj.ContainedRecordType;
+                case Group_FieldIndex.GroupType:
+                    return obj.GroupType;
                 case Group_FieldIndex.Items:
                     return obj.Items;
                 default:
@@ -1390,6 +1553,7 @@ namespace Mutagen.Internals
             NotifyingUnsetParameters? cmds = null)
             where T : MajorRecord, ILoquiObjectGetter
         {
+            item.GroupType_Property.Unset(cmds.ToUnsetParams());
             item.Items.Unset(cmds.ToUnsetParams());
         }
 
@@ -1411,6 +1575,8 @@ namespace Mutagen.Internals
         {
             if (rhs == null) return;
             ret.LastModified = item.LastModified_Property.Equals(rhs.LastModified_Property, (l, r) => l == r);
+            ret.ContainedRecordType = item.ContainedRecordType_Property.Equals(rhs.ContainedRecordType_Property, (l, r) => object.Equals(l, r));
+            ret.GroupType = item.GroupType_Property.Equals(rhs.GroupType_Property, (l, r) => l == r);
             if (item.Items.HasBeenSet == rhs.Items.HasBeenSet)
             {
                 if (item.Items.HasBeenSet)
@@ -1471,6 +1637,14 @@ namespace Mutagen.Internals
                 {
                     fg.AppendLine($"LastModified => {item.LastModified}");
                 }
+                if (printMask?.ContainedRecordType ?? true)
+                {
+                    fg.AppendLine($"ContainedRecordType => {item.ContainedRecordType}");
+                }
+                if (printMask?.GroupType ?? true)
+                {
+                    fg.AppendLine($"GroupType => {item.GroupType}");
+                }
                 if (printMask?.Items?.Overall ?? true)
                 {
                     fg.AppendLine("Items =>");
@@ -1499,6 +1673,8 @@ namespace Mutagen.Internals
             where T : MajorRecord, ILoquiObjectGetter
         {
             if (checkMask.LastModified.HasValue && checkMask.LastModified.Value != item.LastModified_Property.HasBeenSet) return false;
+            if (checkMask.ContainedRecordType.HasValue && checkMask.ContainedRecordType.Value != item.ContainedRecordType_Property.HasBeenSet) return false;
+            if (checkMask.GroupType.HasValue && checkMask.GroupType.Value != item.GroupType_Property.HasBeenSet) return false;
             if (checkMask.Items.Overall.HasValue && checkMask.Items.Overall.Value != item.Items.HasBeenSet) return false;
             return true;
         }
@@ -1508,6 +1684,8 @@ namespace Mutagen.Internals
         {
             var ret = new Group_Mask<bool>();
             ret.LastModified = item.LastModified_Property.HasBeenSet;
+            ret.ContainedRecordType = item.ContainedRecordType_Property.HasBeenSet;
+            ret.GroupType = item.GroupType_Property.HasBeenSet;
             ret.Items = new MaskItem<bool, IEnumerable<MaskItem<bool, MajorRecord_Mask<bool>>>>(item.Items.HasBeenSet, item.Items.Select((i) => new MaskItem<bool, MajorRecord_Mask<bool>>(true, i.GetHasBeenSetMask())));
             return ret;
         }
@@ -1560,6 +1738,20 @@ namespace Mutagen.Internals
                         if (doMasks && subMask != null)
                         {
                             errorMask().LastModified = subMask;
+                        }
+                    }
+                    if (item.GroupType_Property.HasBeenSet)
+                    {
+                        Exception subMask;
+                        Int32XmlTranslation.Instance.Write(
+                            writer,
+                            nameof(item.GroupType),
+                            item.GroupType,
+                            doMasks: doMasks,
+                            errorMask: out subMask);
+                        if (doMasks && subMask != null)
+                        {
+                            errorMask().GroupType = subMask;
                         }
                     }
                     if (item.Items.HasBeenSet)
@@ -1670,6 +1862,18 @@ namespace Mutagen.Internals
                     errorMask().LastModified = subMask;
                 }
             }
+            {
+                Exception subMask;
+                Mutagen.Binary.Int32BinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.GroupType,
+                    doMasks: doMasks,
+                    errorMask: out subMask);
+                if (doMasks && subMask != null)
+                {
+                    errorMask().GroupType = subMask;
+                }
+            }
         }
 
         public static void Write_Binary_RecordTypes<T>(
@@ -1721,12 +1925,16 @@ namespace Mutagen.Internals
         public Group_Mask(T initialValue)
         {
             this.LastModified = initialValue;
+            this.ContainedRecordType = initialValue;
+            this.GroupType = initialValue;
             this.Items = new MaskItem<T, IEnumerable<MaskItem<T, MajorRecord_Mask<T>>>>(initialValue, null);
         }
         #endregion
 
         #region Members
         public T LastModified;
+        public T ContainedRecordType;
+        public T GroupType;
         public MaskItem<T, IEnumerable<MaskItem<T, MajorRecord_Mask<T>>>> Items;
         #endregion
 
@@ -1741,6 +1949,8 @@ namespace Mutagen.Internals
         {
             if (rhs == null) return false;
             if (!object.Equals(this.LastModified, rhs.LastModified)) return false;
+            if (!object.Equals(this.ContainedRecordType, rhs.ContainedRecordType)) return false;
+            if (!object.Equals(this.GroupType, rhs.GroupType)) return false;
             if (!object.Equals(this.Items, rhs.Items)) return false;
             return true;
         }
@@ -1748,6 +1958,8 @@ namespace Mutagen.Internals
         {
             int ret = 0;
             ret = ret.CombineHashCode(this.LastModified?.GetHashCode());
+            ret = ret.CombineHashCode(this.ContainedRecordType?.GetHashCode());
+            ret = ret.CombineHashCode(this.GroupType?.GetHashCode());
             ret = ret.CombineHashCode(this.Items?.GetHashCode());
             return ret;
         }
@@ -1758,6 +1970,8 @@ namespace Mutagen.Internals
         public bool AllEqual(Func<T, bool> eval)
         {
             if (!eval(this.LastModified)) return false;
+            if (!eval(this.ContainedRecordType)) return false;
+            if (!eval(this.GroupType)) return false;
             if (Items != null)
             {
                 if (!eval(this.Items.Overall)) return false;
@@ -1785,6 +1999,8 @@ namespace Mutagen.Internals
         protected void Translate_InternalFill<R>(Group_Mask<R> obj, Func<T, R> eval)
         {
             obj.LastModified = eval(this.LastModified);
+            obj.ContainedRecordType = eval(this.ContainedRecordType);
+            obj.GroupType = eval(this.GroupType);
             if (Items != null)
             {
                 obj.Items = new MaskItem<R, IEnumerable<MaskItem<R, MajorRecord_Mask<R>>>>();
@@ -1842,6 +2058,14 @@ namespace Mutagen.Internals
                 {
                     fg.AppendLine($"LastModified => {LastModified.ToStringSafe()}");
                 }
+                if (printMask?.ContainedRecordType ?? true)
+                {
+                    fg.AppendLine($"ContainedRecordType => {ContainedRecordType.ToStringSafe()}");
+                }
+                if (printMask?.GroupType ?? true)
+                {
+                    fg.AppendLine($"GroupType => {GroupType.ToStringSafe()}");
+                }
                 if (printMask?.Items?.Overall ?? true)
                 {
                     fg.AppendLine("Items =>");
@@ -1891,6 +2115,8 @@ namespace Mutagen.Internals
             }
         }
         public Exception LastModified;
+        public Exception ContainedRecordType;
+        public Exception GroupType;
         public MaskItem<Exception, IEnumerable<MaskItem<Exception, MajorRecord_ErrorMask>>> Items;
         #endregion
 
@@ -1902,6 +2128,12 @@ namespace Mutagen.Internals
             {
                 case Group_FieldIndex.LastModified:
                     this.LastModified = ex;
+                    break;
+                case Group_FieldIndex.ContainedRecordType:
+                    this.ContainedRecordType = ex;
+                    break;
+                case Group_FieldIndex.GroupType:
+                    this.GroupType = ex;
                     break;
                 case Group_FieldIndex.Items:
                     this.Items = new MaskItem<Exception, IEnumerable<MaskItem<Exception, MajorRecord_ErrorMask>>>(ex, null);
@@ -1918,6 +2150,12 @@ namespace Mutagen.Internals
             {
                 case Group_FieldIndex.LastModified:
                     this.LastModified = (Exception)obj;
+                    break;
+                case Group_FieldIndex.ContainedRecordType:
+                    this.ContainedRecordType = (Exception)obj;
+                    break;
+                case Group_FieldIndex.GroupType:
+                    this.GroupType = (Exception)obj;
                     break;
                 case Group_FieldIndex.Items:
                     this.Items = (MaskItem<Exception, IEnumerable<MaskItem<Exception, MajorRecord_ErrorMask>>>)obj;
@@ -1962,6 +2200,14 @@ namespace Mutagen.Internals
             {
                 fg.AppendLine($"LastModified => {LastModified.ToStringSafe()}");
             }
+            if (ContainedRecordType != null)
+            {
+                fg.AppendLine($"ContainedRecordType => {ContainedRecordType.ToStringSafe()}");
+            }
+            if (GroupType != null)
+            {
+                fg.AppendLine($"GroupType => {GroupType.ToStringSafe()}");
+            }
             if (Items != null)
             {
                 fg.AppendLine("Items =>");
@@ -1995,6 +2241,8 @@ namespace Mutagen.Internals
         {
             var ret = new Group_ErrorMask();
             ret.LastModified = this.LastModified.Combine(rhs.LastModified);
+            ret.ContainedRecordType = this.ContainedRecordType.Combine(rhs.ContainedRecordType);
+            ret.GroupType = this.GroupType.Combine(rhs.GroupType);
             ret.Items = new MaskItem<Exception, IEnumerable<MaskItem<Exception, MajorRecord_ErrorMask>>>(this.Items.Overall.Combine(rhs.Items.Overall), new List<MaskItem<Exception, MajorRecord_ErrorMask>>(this.Items.Specific.And(rhs.Items.Specific)));
             return ret;
         }
@@ -2010,6 +2258,8 @@ namespace Mutagen.Internals
     {
         #region Members
         public bool LastModified;
+        public bool ContainedRecordType;
+        public bool GroupType;
         public MaskItem<CopyOption, MajorRecord_CopyMask> Items;
         #endregion
 

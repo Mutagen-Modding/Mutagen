@@ -14,5 +14,6 @@ namespace Mutagen.Generation
         public long? Length;
         public bool IncludeInLength;
         public bool Vestigial;
+        public bool CustomBinary;
     }
 }
