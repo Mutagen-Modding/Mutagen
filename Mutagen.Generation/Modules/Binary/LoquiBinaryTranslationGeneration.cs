@@ -138,15 +138,26 @@ namespace Mutagen.Generation
             string doMaskAccessor,
             string maskAccessor)
         {
-            fg.AppendLine($"{readerAccessor}.BaseStream.Position -= Constants.SUBRECORD_LENGTH;");
             var loquiGen = typeGen as LoquiType;
+            var objType = loquiGen.TargetObjectGeneration.GetObjectType();
+            switch (objType)
+            {
+                case ObjectType.Struct:
+                case ObjectType.Subrecord:
+                    fg.AppendLine($"{readerAccessor}.BaseStream.Position -= Constants.SUBRECORD_LENGTH;");
+                    break;
+                case ObjectType.Record:
+                    fg.AppendLine($"{readerAccessor}.BaseStream.Position -= Constants.RECORD_LENGTH;");
+                    break;
+                case ObjectType.Group:
+                    fg.AppendLine($"{readerAccessor}.BaseStream.Position -= Constants.GRUP_LENGTH;");
+                    break;
+                case ObjectType.Mod:
+                default:
+                    throw new NotImplementedException();
+            }
             if (loquiGen.TargetObjectGeneration != null)
             {
-                if (retAccessor == null)
-                {
-                    int wer = 23;
-                    wer++;
-                }
                 using (var args = new ArgsWrapper(fg,
                     $"{retAccessor}LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}, {loquiGen.ErrorMaskItemString}>.Instance.Parse"))
                 {

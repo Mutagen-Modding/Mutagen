@@ -922,15 +922,11 @@ namespace Mutagen
                     errorMask: errorMask);
                 while (reader.BaseStream.Position < finalPosition)
                 {
-                    if (!Fill_Binary_RecordTypes(
+                    Fill_Binary_RecordTypes(
                         item: ret,
                         reader: reader,
                         doMasks: doMasks,
-                        errorMask: errorMask))
-                    {
-                        var nextRecordType = HeaderTranslation.GetNextSubRecordType(reader, out var contentLength);
-                        throw new ArgumentException($"Unexpected header {nextRecordType.Type} at position {reader.BaseStream.Position}");
-                    }
+                        errorMask: errorMask);
                 }
                 if (reader.BaseStream.Position != finalPosition)
                 {
@@ -967,7 +963,7 @@ namespace Mutagen
             }
         }
 
-        protected static bool Fill_Binary_RecordTypes(
+        protected static void Fill_Binary_RecordTypes(
             TES4 item,
             BinaryReader reader,
             bool doMasks,
@@ -991,8 +987,8 @@ namespace Mutagen
                     {
                         errorMask().Header = subMask;
                     }
-                    return true;
                 }
+                break;
                 case "OFST":
                 {
                     Exception subMask;
@@ -1006,8 +1002,8 @@ namespace Mutagen
                     {
                         errorMask().TypeOffsets = subMask;
                     }
-                    return true;
                 }
+                break;
                 case "DELE":
                 {
                     Exception subMask;
@@ -1021,8 +1017,8 @@ namespace Mutagen
                     {
                         errorMask().Deleted = subMask;
                     }
-                    return true;
                 }
+                break;
                 case "CNAM":
                 {
                     Exception subMask;
@@ -1036,8 +1032,8 @@ namespace Mutagen
                     {
                         errorMask().Author = subMask;
                     }
-                    return true;
                 }
+                break;
                 case "SNAM":
                 {
                     Exception subMask;
@@ -1051,8 +1047,8 @@ namespace Mutagen
                     {
                         errorMask().Description = subMask;
                     }
-                    return true;
                 }
+                break;
                 case "MAST":
                 {
                     MaskItem<Exception, IEnumerable<MaskItem<Exception, MasterReference_ErrorMask>>> subMask;
@@ -1075,11 +1071,11 @@ namespace Mutagen
                     {
                         errorMask().MasterReferences = subMask;
                     }
-                    return true;
                 }
+                break;
                 default:
                     reader.BaseStream.Position -= Constants.RECORD_LENGTH;
-                    return false;
+                    throw new ArgumentException($"Unexpected header {nextRecordType.Type} at position {reader.BaseStream.Position}");
             }
         }
 

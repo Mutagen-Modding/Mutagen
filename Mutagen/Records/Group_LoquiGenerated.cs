@@ -817,15 +817,11 @@ namespace Mutagen
                     errorMask: errorMask);
                 while (reader.BaseStream.Position < finalPosition)
                 {
-                    if (!Fill_Binary_RecordTypes(
+                    Fill_Binary_RecordTypes(
                         item: ret,
                         reader: reader,
                         doMasks: doMasks,
-                        errorMask: errorMask))
-                    {
-                        var nextRecordType = HeaderTranslation.GetNextSubRecordType(reader, out var contentLength);
-                        throw new ArgumentException($"Unexpected header {nextRecordType.Type} at position {reader.BaseStream.Position}");
-                    }
+                        errorMask: errorMask);
                 }
                 if (reader.BaseStream.Position != finalPosition)
                 {
@@ -874,13 +870,13 @@ namespace Mutagen
             }
         }
 
-        protected static bool Fill_Binary_RecordTypes(
+        protected static void Fill_Binary_RecordTypes(
             Group<T> item,
             BinaryReader reader,
             bool doMasks,
             Func<Group_ErrorMask> errorMask)
         {
-            var nextRecordType = HeaderTranslation.ReadNextSubRecordType(
+            var nextRecordType = HeaderTranslation.ReadNextRecordType(
                 reader: reader,
                 contentLength: out var subLength);
             switch (nextRecordType.Type)
@@ -896,7 +892,7 @@ namespace Mutagen
                             maskObj: out subMask,
                             transl: (BinaryReader r, bool listDoMasks, out MaskItem<Exception, MajorRecord_ErrorMask> listSubMask) =>
                             {
-                                r.BaseStream.Position -= Constants.SUBRECORD_LENGTH;
+                                r.BaseStream.Position -= Constants.RECORD_LENGTH;
                                 return LoquiBinaryTranslation<T, MajorRecord_ErrorMask>.Instance.Parse(
                                     reader: r,
                                     doMasks: listDoMasks,
@@ -908,9 +904,9 @@ namespace Mutagen
                         {
                             errorMask().Items = subMask;
                         }
-                        return true;
                     }
-                    return false;
+                    break;
+                    throw new ArgumentException($"Unexpected header {nextRecordType.Type} at position {reader.BaseStream.Position}");
             }
         }
 

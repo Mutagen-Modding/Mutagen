@@ -754,15 +754,11 @@ namespace Mutagen
                     errorMask: errorMask);
                 while (reader.BaseStream.Position < finalPosition)
                 {
-                    if (!Fill_Binary_RecordTypes(
+                    Fill_Binary_RecordTypes(
                         item: ret,
                         reader: reader,
                         doMasks: doMasks,
-                        errorMask: errorMask))
-                    {
-                        var nextRecordType = HeaderTranslation.GetNextSubRecordType(reader, out var contentLength);
-                        throw new ArgumentException($"Unexpected header {nextRecordType.Type} at position {reader.BaseStream.Position}");
-                    }
+                        errorMask: errorMask);
                 }
                 if (reader.BaseStream.Position != finalPosition)
                 {
@@ -791,7 +787,7 @@ namespace Mutagen
                 errorMask: errorMask);
         }
 
-        protected static bool Fill_Binary_RecordTypes(
+        protected static void Fill_Binary_RecordTypes(
             GameSettingFloat item,
             BinaryReader reader,
             bool doMasks,
@@ -814,11 +810,12 @@ namespace Mutagen
                     {
                         errorMask().Data = subMask;
                     }
-                    return true;
                 }
+                break;
                 default:
                     reader.BaseStream.Position -= Constants.RECORD_LENGTH;
-                    return GameSetting.Fill_Binary_RecordTypes(
+                    break;
+                    GameSetting.Fill_Binary_RecordTypes(
                         item: item,
                         reader: reader,
                         doMasks: doMasks,

@@ -608,7 +608,7 @@ namespace Mutagen
             }
         }
 
-        protected static bool Fill_Binary_RecordTypes(
+        protected static void Fill_Binary_RecordTypes(
             MajorRecord item,
             BinaryReader reader,
             bool doMasks,
@@ -632,11 +632,11 @@ namespace Mutagen
                     {
                         errorMask().EditorID = subMask;
                     }
-                    return true;
                 }
+                break;
                 default:
                     reader.BaseStream.Position -= Constants.RECORD_LENGTH;
-                    return false;
+                    throw new ArgumentException($"Unexpected header {nextRecordType.Type} at position {reader.BaseStream.Position}");
             }
         }
 

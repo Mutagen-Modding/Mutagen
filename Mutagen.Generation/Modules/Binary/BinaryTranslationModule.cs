@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Loqui;
+using Mutagen.Binary;
 
 namespace Mutagen.Generation
 {
@@ -179,7 +180,7 @@ namespace Mutagen.Generation
                                         throw new NotImplementedException();
                                 }
                                 using (var args = new ArgsWrapper(fg,
-                                    $"var finalPosition = HeaderTranslation.{funcName}"))
+                                    $"var finalPosition = {nameof(HeaderTranslation)}.{funcName}"))
                                 {
                                     args.Add("reader");
                                     args.Add($"{obj.RegistrationName}.{mutaData.Value.HeaderName}");
@@ -187,7 +188,7 @@ namespace Mutagen.Generation
                                 break;
                             case ObjectType.Group:
                                 using (var args = new ArgsWrapper(fg,
-                                    $"var finalPosition = HeaderTranslation.ParseGroup"))
+                                    $"var finalPosition = {nameof(HeaderTranslation)}.ParseGroup"))
                                 {
                                     args.Add("reader");
                                 }
@@ -248,28 +249,12 @@ namespace Mutagen.Generation
                             using (new BraceWrapper(fg))
                             {
                                 using (var args = new ArgsWrapper(fg,
-                                    $"if (!Fill_{ModuleNickname}_RecordTypes",
-                                    $")")
-                                {
-                                    SemiColon = false
-                                })
+                                    $"Fill_{ModuleNickname}_RecordTypes"))
                                 {
                                     args.Add("item: ret");
                                     args.Add("reader: reader");
                                     args.Add("doMasks: doMasks");
                                     args.Add("errorMask: errorMask");
-                                }
-                                using (new BraceWrapper(fg))
-                                {
-                                    if (objType == ObjectType.Struct)
-                                    {
-                                        fg.AppendLine("break;");
-                                    }
-                                    else
-                                    {
-                                        fg.AppendLine($"var nextRecordType = HeaderTranslation.GetNextSubRecordType(reader, out var contentLength);");
-                                        fg.AppendLine("throw new ArgumentException($\"Unexpected header {nextRecordType.Type} at position {reader.BaseStream.Position}\");");
-                                    }
                                 }
                             }
                         }
@@ -326,7 +311,7 @@ namespace Mutagen.Generation
                         {
                             throw new ArgumentException("Unsupported type generator: " + field);
                         }
-                        GenerateFillSnippet(obj, fg, field, generator, ret: false);
+                        GenerateFillSnippet(obj, fg, field, generator);
                     }
                 }
                 fg.AppendLine();
@@ -335,7 +320,7 @@ namespace Mutagen.Generation
             if (HasRecordTypeFields(obj))
             {
                 using (var args = new FunctionWrapper(fg,
-                    $"protected static bool Fill_{ModuleNickname}_RecordTypes"))
+                    $"protected static void Fill_{ModuleNickname}_RecordTypes"))
                 {
                     args.Add($"{obj.ObjectName} item");
                     args.Add("BinaryReader reader");
@@ -344,8 +329,26 @@ namespace Mutagen.Generation
                 }
                 using (new BraceWrapper(fg))
                 {
+                    var mutaObjType = obj.GetObjectType();
+                    string funcName;
+                    switch (mutaObjType)
+                    {
+                        case ObjectType.Struct:
+                        case ObjectType.Subrecord:
+                        case ObjectType.Record:
+                            funcName = $"ReadNextSubRecordType";
+                            break;
+                        case ObjectType.Group:
+                            funcName = $"ReadNextRecordType";
+                            break;
+                        case ObjectType.Mod:
+                            funcName = $"ReadNextType";
+                            break;
+                        default:
+                            throw new NotImplementedException();
+                    }
                     using (var args = new ArgsWrapper(fg,
-                        $"var nextRecordType = HeaderTranslation.ReadNextSubRecordType"))
+                        $"var nextRecordType = {nameof(HeaderTranslation)}.{funcName}"))
                     {
                         args.Add("reader: reader");
                         args.Add("contentLength: out var subLength");
@@ -367,7 +370,8 @@ namespace Mutagen.Generation
                             if (generator.ShouldGenerateCopyIn(field.Field))
                             {
                                 fg.AppendLine($"case \"{data.RecordType.Value.Type}\":");
-                                GenerateFillSnippet(obj, fg, field.Field, generator, ret: true);
+                                GenerateFillSnippet(obj, fg, field.Field, generator);
+                                fg.AppendLine("break;");
                             }
                         }
                         fg.AppendLine($"default:");
@@ -389,7 +393,8 @@ namespace Mutagen.Generation
                                 if (generator.ShouldGenerateCopyIn(field.Field))
                                 {
                                     fg.AppendLine($"if {(first ? "" : "else")} (nextRecordType.Equals({data.TriggeringRecordAccessor}))");
-                                    GenerateFillSnippet(obj, fg, field.Field, generator, ret: true);
+                                    GenerateFillSnippet(obj, fg, field.Field, generator);
+                                    fg.AppendLine("break;");
                                 }
                             }
 
@@ -411,17 +416,18 @@ namespace Mutagen.Generation
                             if (obj.HasBaseObject && obj.BaseClassTrail().Any((b) => HasRecordTypeFields(b)))
                             {
                                 using (var args = new ArgsWrapper(fg,
-                                    $"return {obj.BaseClass.Name}.Fill_{ModuleNickname}_RecordTypes"))
+                                    $"{obj.BaseClass.Name}.Fill_{ModuleNickname}_RecordTypes"))
                                 {
                                     args.Add("item: item");
                                     args.Add("reader: reader");
                                     args.Add("doMasks: doMasks");
                                     args.Add($"errorMask: errorMask");
+                                    fg.AppendLine("break;");
                                 }
                             }
                             else
                             {
-                                fg.AppendLine($"return false;");
+                                fg.AppendLine("throw new ArgumentException($\"Unexpected header {nextRecordType.Type} at position {reader.BaseStream.Position}\");");
                             }
                         }
                     }
@@ -430,12 +436,12 @@ namespace Mutagen.Generation
             }
         }
 
-        private void GenerateFillSnippet(ObjectGeneration obj, FileGeneration fg, TypeGeneration field, BinaryTranslationGeneration generator, bool ret)
+        private void GenerateFillSnippet(ObjectGeneration obj, FileGeneration fg, TypeGeneration field, BinaryTranslationGeneration generator)
         {
             var data = field.GetFieldData();
             if (data.CustomBinary)
             {
-                fg.AppendLine($"{(ret ? "return " : string.Empty)}FillBinary{field.Name}(reader, item);");
+                fg.AppendLine($"FillBinary{field.Name}(reader, item);");
                 return;
             }
             using (new BraceWrapper(fg))
@@ -458,10 +464,6 @@ namespace Mutagen.Generation
                 using (new BraceWrapper(fg))
                 {
                     fg.AppendLine($"errorMask().{field.Name} = subMask;");
-                }
-                if (ret)
-                {
-                    fg.AppendLine("return true;");
                 }
             }
         }

@@ -720,14 +720,11 @@ namespace Mutagen
                     errorMask: errorMask);
                 while (true)
                 {
-                    if (!Fill_Binary_RecordTypes(
+                    Fill_Binary_RecordTypes(
                         item: ret,
                         reader: reader,
                         doMasks: doMasks,
-                        errorMask: errorMask))
-                    {
-                        break;
-                    }
+                        errorMask: errorMask);
                 }
             }
             catch (Exception ex)
@@ -746,7 +743,7 @@ namespace Mutagen
         {
         }
 
-        protected static bool Fill_Binary_RecordTypes(
+        protected static void Fill_Binary_RecordTypes(
             MasterReference item,
             BinaryReader reader,
             bool doMasks,
@@ -770,8 +767,8 @@ namespace Mutagen
                     {
                         errorMask().Master = subMask;
                     }
-                    return true;
                 }
+                break;
                 case "DATA":
                 {
                     Exception subMask;
@@ -784,11 +781,11 @@ namespace Mutagen
                     {
                         errorMask().FileSize = subMask;
                     }
-                    return true;
                 }
+                break;
                 default:
                     reader.BaseStream.Position -= Constants.SUBRECORD_LENGTH;
-                    return false;
+                    throw new ArgumentException($"Unexpected header {nextRecordType.Type} at position {reader.BaseStream.Position}");
             }
         }
 

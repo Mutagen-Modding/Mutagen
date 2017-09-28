@@ -739,15 +739,11 @@ namespace Mutagen
                     errorMask: errorMask);
                 while (reader.BaseStream.Position < finalPosition)
                 {
-                    if (!Fill_Binary_RecordTypes(
+                    Fill_Binary_RecordTypes(
                         item: ret,
                         reader: reader,
                         doMasks: doMasks,
-                        errorMask: errorMask))
-                    {
-                        var nextRecordType = HeaderTranslation.GetNextSubRecordType(reader, out var contentLength);
-                        throw new ArgumentException($"Unexpected header {nextRecordType.Type} at position {reader.BaseStream.Position}");
-                    }
+                        errorMask: errorMask);
                 }
                 if (reader.BaseStream.Position != finalPosition)
                 {
@@ -771,13 +767,13 @@ namespace Mutagen
         {
         }
 
-        protected static bool Fill_Binary_RecordTypes(
+        protected static void Fill_Binary_RecordTypes(
             OblivionMod item,
             BinaryReader reader,
             bool doMasks,
             Func<OblivionMod_ErrorMask> errorMask)
         {
-            var nextRecordType = HeaderTranslation.ReadNextSubRecordType(
+            var nextRecordType = HeaderTranslation.ReadNextType(
                 reader: reader,
                 contentLength: out var subLength);
             switch (nextRecordType.Type)
@@ -785,7 +781,7 @@ namespace Mutagen
                 case "TES4":
                 {
                     MaskItem<Exception, TES4_ErrorMask> subMask;
-                    reader.BaseStream.Position -= Constants.SUBRECORD_LENGTH;
+                    reader.BaseStream.Position -= Constants.RECORD_LENGTH;
                     var tryGet = LoquiBinaryTranslation<TES4, TES4_ErrorMask>.Instance.Parse(
                         reader: reader,
                         doMasks: doMasks,
@@ -795,12 +791,12 @@ namespace Mutagen
                     {
                         errorMask().TES4 = subMask;
                     }
-                    return true;
                 }
+                break;
                 case "GRUP":
                 {
                     MaskItem<Exception, Group_ErrorMask> subMask;
-                    reader.BaseStream.Position -= Constants.SUBRECORD_LENGTH;
+                    reader.BaseStream.Position -= Constants.GRUP_LENGTH;
                     var tryGet = LoquiBinaryTranslation<Group<GameSetting>, Group_ErrorMask>.Instance.Parse(
                         reader: reader,
                         doMasks: doMasks,
@@ -810,10 +806,10 @@ namespace Mutagen
                     {
                         errorMask().GameSettings = subMask;
                     }
-                    return true;
                 }
+                break;
                 default:
-                    return false;
+                    throw new ArgumentException($"Unexpected header {nextRecordType.Type} at position {reader.BaseStream.Position}");
             }
         }
 

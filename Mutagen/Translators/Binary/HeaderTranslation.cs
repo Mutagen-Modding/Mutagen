@@ -92,7 +92,7 @@ namespace Mutagen.Binary
                 reader,
                 Mutagen.Internals.Group_Registration.GRUP_HEADER,
                 out var contentLength,
-                Constants.SUBRECORD_LENGTHLENGTH))
+                Constants.RECORD_LENGTHLENGTH))
             {
                 throw new ArgumentException($"Expected header was not read in: {Mutagen.Internals.Group_Registration.GRUP_HEADER}");
             }
@@ -179,12 +179,18 @@ namespace Mutagen.Binary
                 out contentLength);
         }
 
-        //public static RecordType ParseGroupHeader(
-        //    BinaryReader reader,
-        //    out int contentLength)
-        //{
-
-        //}
+        public static RecordType ReadNextType(
+            BinaryReader reader,
+            out int contentLength)
+        {
+            var ret = ReadNextRecordType(reader);
+            contentLength = ReadContentLength(reader, Constants.RECORD_LENGTHLENGTH);
+            if (ret.Equals(Mutagen.Internals.Group_Registration.GRUP_HEADER))
+            {
+                return ReadNextRecordType(reader);
+            }
+            return ret;
+        }
 
         public static RecordType GetNextSubRecordType(
             BinaryReader reader,
