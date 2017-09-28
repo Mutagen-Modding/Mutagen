@@ -38,9 +38,9 @@ namespace Mutagen.Generation
                 args.Add($"item: {itemAccessor}");
                 args.Add($"doMasks: {doMaskAccessor}");
                 args.Add($"errorMask: out {maskAccessor}");
-                if (data.RecordType.HasValue)
+                if (data.TriggeringRecordAccessor != null)
                 {
-                    args.Add($"header: {objGen.RegistrationName}.{data.RecordType.Value.HeaderName}");
+                    args.Add($"header: {data.TriggeringRecordAccessor}");
                     args.Add($"nullable: {(data.Optional ? "true" : "false")}");
                 }
             }

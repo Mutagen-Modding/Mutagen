@@ -84,6 +84,20 @@ namespace Mutagen.Binary
             }
             return reader.BaseStream.Position + contentLength;
         }
+        
+        public static long ParseGroup(
+            BinaryReader reader)
+        {
+            if (!TryParse(
+                reader,
+                Mutagen.Internals.Group_Registration.GRUP_HEADER,
+                out var contentLength,
+                Constants.SUBRECORD_LENGTHLENGTH))
+            {
+                throw new ArgumentException($"Expected header was not read in: {Mutagen.Internals.Group_Registration.GRUP_HEADER}");
+            }
+            return reader.BaseStream.Position + contentLength;
+        }
 
         public static bool TryParseSubRecordType(
             BinaryReader reader,
@@ -112,26 +126,37 @@ namespace Mutagen.Binary
         }
 
         public static RecordType ReadNextRecordType(
+            BinaryReader reader)
+        {
+            var header = reader.ReadChars(Constants.HEADER_LENGTH);
+            return new RecordType(new string(header), validate: false);
+        }
+
+        public static int ReadContentLength(
+            BinaryReader reader,
+            int lengthLength)
+        {
+            switch (lengthLength)
+            {
+                case 1:
+                    return reader.ReadByte();
+                case 2:
+                    return reader.ReadUInt16();
+                case 4:
+                    return (int)reader.ReadUInt32();
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        public static RecordType ReadNextRecordType(
             BinaryReader reader,
             int lengthLength,
             out int contentLength)
         {
-            var header = reader.ReadChars(Constants.HEADER_LENGTH);
-            switch (lengthLength)
-            {
-                case 1:
-                    contentLength = reader.ReadByte();
-                    break;
-                case 2:
-                    contentLength = reader.ReadUInt16();
-                    break;
-                case 4:
-                    contentLength = (int)reader.ReadUInt32();
-                    break;
-                default:
-                    throw new NotImplementedException();
-            }
-            return new RecordType(new string(header));
+            var ret = ReadNextRecordType(reader);
+            contentLength = ReadContentLength(reader, lengthLength);
+            return ret;
         }
 
         public static RecordType ReadNextRecordType(
@@ -153,6 +178,13 @@ namespace Mutagen.Binary
                 Constants.SUBRECORD_LENGTHLENGTH,
                 out contentLength);
         }
+
+        //public static RecordType ParseGroupHeader(
+        //    BinaryReader reader,
+        //    out int contentLength)
+        //{
+
+        //}
 
         public static RecordType GetNextSubRecordType(
             BinaryReader reader,

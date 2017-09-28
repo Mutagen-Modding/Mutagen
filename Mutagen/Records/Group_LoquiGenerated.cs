@@ -726,9 +726,7 @@ namespace Mutagen
             bool doMasks,
             Func<Group_ErrorMask> errorMask)
         {
-            var finalPosition = HeaderTranslation.ParseRecord(
-                reader,
-                Group_Registration.GRUP_HEADER);
+            var finalPosition = HeaderTranslation.ParseGroup(reader);
             return Create_Binary_Internal(
                 reader: reader,
                 doMasks: doMasks,
@@ -750,6 +748,18 @@ namespace Mutagen
                     reader: reader,
                     doMasks: doMasks,
                     errorMask: errorMask);
+                while (reader.BaseStream.Position < finalPosition)
+                {
+                    if (!Fill_Binary_RecordTypes(
+                        item: ret,
+                        reader: reader,
+                        doMasks: doMasks,
+                        errorMask: errorMask))
+                    {
+                        var nextRecordType = HeaderTranslation.GetNextSubRecordType(reader, out var contentLength);
+                        throw new ArgumentException($"Unexpected header {nextRecordType.Type} at position {reader.BaseStream.Position}");
+                    }
+                }
                 if (reader.BaseStream.Position != finalPosition)
                 {
                     reader.BaseStream.Position = finalPosition;
@@ -782,27 +792,45 @@ namespace Mutagen
                     errorMask().LastModified = subMask;
                 }
             }
+        }
+
+        protected static bool Fill_Binary_RecordTypes(
+            Group<T> item,
+            BinaryReader reader,
+            bool doMasks,
+            Func<Group_ErrorMask> errorMask)
+        {
+            var nextRecordType = HeaderTranslation.ReadNextSubRecordType(
+                reader: reader,
+                contentLength: out var subLength);
+            switch (nextRecordType.Type)
             {
-                MaskItem<Exception, IEnumerable<MaskItem<Exception, MajorRecord_ErrorMask>>> subMask;
-                var listTryGet = Mutagen.Binary.ListBinaryTranslation<T, MaskItem<Exception, MajorRecord_ErrorMask>>.Instance.ParseRepeatedItem(
-                    reader: reader,
-                    triggeringRecord: T_RecordType,
-                    doMasks: doMasks,
-                    maskObj: out subMask,
-                    transl: (BinaryReader r, bool listDoMasks, out MaskItem<Exception, MajorRecord_ErrorMask> listSubMask) =>
+                default:
+                    if  (nextRecordType.Equals(Group<T>.T_RecordType))
                     {
-                        r.BaseStream.Position -= Constants.SUBRECORD_LENGTH;
-                        return LoquiBinaryTranslation<T, MajorRecord_ErrorMask>.Instance.Parse(
-                            reader: r,
-                            doMasks: listDoMasks,
-                            mask: out listSubMask);
+                        MaskItem<Exception, IEnumerable<MaskItem<Exception, MajorRecord_ErrorMask>>> subMask;
+                        var listTryGet = Mutagen.Binary.ListBinaryTranslation<T, MaskItem<Exception, MajorRecord_ErrorMask>>.Instance.ParseRepeatedItem(
+                            reader: reader,
+                            triggeringRecord: Group<T>.T_RecordType,
+                            doMasks: doMasks,
+                            maskObj: out subMask,
+                            transl: (BinaryReader r, bool listDoMasks, out MaskItem<Exception, MajorRecord_ErrorMask> listSubMask) =>
+                            {
+                                r.BaseStream.Position -= Constants.SUBRECORD_LENGTH;
+                                return LoquiBinaryTranslation<T, MajorRecord_ErrorMask>.Instance.Parse(
+                                    reader: r,
+                                    doMasks: listDoMasks,
+                                    mask: out listSubMask);
+                            }
+                            );
+                        item._Items.SetIfSucceeded(listTryGet);
+                        if (doMasks && subMask != null)
+                        {
+                            errorMask().Items = subMask;
+                        }
+                        return true;
                     }
-                    );
-                item._Items.SetIfSucceeded(listTryGet);
-                if (doMasks && subMask != null)
-                {
-                    errorMask().Items = subMask;
-                }
+                    return false;
             }
         }
 
@@ -1119,7 +1147,6 @@ namespace Mutagen.Internals
         public static Type GetNthType(ushort index) => throw new ArgumentException("Cannot get nth type for a generic object here.  Use generic registration instead.");
 
         public static readonly RecordType GRUP_HEADER = new RecordType("GRUP");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = GRUP_HEADER;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1609,6 +1636,11 @@ namespace Mutagen.Internals
                         writer: writer,
                         doMasks: doMasks,
                         errorMask: errorMask);
+                    Write_Binary_RecordTypes(
+                        item: item,
+                        writer: writer,
+                        doMasks: doMasks,
+                        errorMask: errorMask);
                 }
             }
             catch (Exception ex)
@@ -1638,6 +1670,15 @@ namespace Mutagen.Internals
                     errorMask().LastModified = subMask;
                 }
             }
+        }
+
+        public static void Write_Binary_RecordTypes<T>(
+            IGroupGetter<T> item,
+            BinaryWriter writer,
+            bool doMasks,
+            Func<Group_ErrorMask> errorMask)
+            where T : MajorRecord, ILoquiObjectGetter
+        {
             {
                 MaskItem<Exception, IEnumerable<MaskItem<Exception, MajorRecord_ErrorMask>>> subMask;
                 Mutagen.Binary.ListBinaryTranslation<T, MaskItem<Exception, MajorRecord_ErrorMask>>.Instance.Write(

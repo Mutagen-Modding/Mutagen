@@ -9,6 +9,7 @@ namespace Mutagen.Generation
     public class MutagenFieldData
     {
         public RecordType? RecordType;
+        public string TriggeringRecordAccessor;
         public bool Optional;
         public long? Length;
         public bool IncludeInLength;

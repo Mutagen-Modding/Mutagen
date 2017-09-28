@@ -125,7 +125,7 @@ namespace Mutagen.Generation
             foreach (var field in obj.Fields)
             {
                 if (field.TryGetFieldData(out var data)
-                    && data.RecordType.HasValue) return true;
+                    && data.TriggeringRecordAccessor != null) return true;
             }
             return false;
         }
@@ -135,7 +135,7 @@ namespace Mutagen.Generation
             foreach (var field in obj.Fields)
             {
                 if (!field.TryGetFieldData(out var data)
-                    || !data.RecordType.HasValue) return true;
+                    || data.TriggeringRecordAccessor == null) return true;
             }
             return false;
         }
@@ -160,7 +160,6 @@ namespace Mutagen.Generation
                         {
                             case ObjectType.Record:
                             case ObjectType.Subrecord:
-                            case ObjectType.Group:
                                 RecordType? mutaData = obj.GetTriggeringRecordType();
                                 string funcName;
                                 switch (obj.GetObjectType())
@@ -171,10 +170,10 @@ namespace Mutagen.Generation
                                     case ObjectType.Subrecord:
                                         funcName = "ParseSubrecord";
                                         break;
-                                    case ObjectType.Group:
                                     case ObjectType.Record:
                                         funcName = "ParseRecord";
                                         break;
+                                    case ObjectType.Group:
                                     case ObjectType.Mod:
                                     default:
                                         throw new NotImplementedException();
@@ -184,6 +183,13 @@ namespace Mutagen.Generation
                                 {
                                     args.Add("reader");
                                     args.Add($"{obj.RegistrationName}.{mutaData.Value.HeaderName}");
+                                }
+                                break;
+                            case ObjectType.Group:
+                                using (var args = new ArgsWrapper(fg,
+                                    $"var finalPosition = HeaderTranslation.ParseGroup"))
+                                {
+                                    args.Add("reader");
                                 }
                                 break;
                             case ObjectType.Mod:
@@ -315,7 +321,7 @@ namespace Mutagen.Generation
                     {
                         if (field.Derivative) continue;
                         if (field.TryGetFieldData(out var data)
-                            && data.RecordType.HasValue) continue;
+                            && data.TriggeringRecordAccessor != null) continue;
                         if (!this.TryGetTypeGeneration(field.GetType(), out var generator))
                         {
                             throw new ArgumentException("Unsupported type generator: " + field);
@@ -372,6 +378,7 @@ namespace Mutagen.Generation
                         {
                             if (field.Field.Derivative) continue;
                             if (!field.Field.TryGetFieldData(out var data)
+                                || data.TriggeringRecordAccessor == null
                                 || !data.RecordType.HasValue) continue;
                             if (!this.TryGetTypeGeneration(field.Field.GetType(), out var generator))
                             {
@@ -409,6 +416,49 @@ namespace Mutagen.Generation
                         fg.AppendLine($"default:");
                         using (new DepthWrapper(fg))
                         {
+                            bool first = true;
+                            // Generic options
+                            foreach (var field in obj.IterateFields())
+                            {
+                                if (field.Field.Derivative) continue;
+                                if (!field.Field.TryGetFieldData(out var data)
+                                    || data.TriggeringRecordAccessor == null
+                                    || data.RecordType.HasValue) continue;
+                                if (!this.TryGetTypeGeneration(field.Field.GetType(), out var generator))
+                                {
+                                    throw new ArgumentException("Unsupported type generator: " + field.Field);
+                                }
+
+                                if (generator.ShouldGenerateCopyIn(field.Field))
+                                {
+                                    fg.AppendLine($"if {(first ? "" : "else")} (nextRecordType.Equals({data.TriggeringRecordAccessor}))");
+                                    using (new BraceWrapper(fg))
+                                    {
+                                        var maskType = this.Gen.MaskModule.GetMaskModule(field.Field.GetType()).GetErrorMaskTypeStr(field.Field);
+                                        fg.AppendLine($"{maskType} subMask;");
+                                        generator.GenerateCopyIn(
+                                            fg: fg,
+                                            objGen: obj,
+                                            typeGen: field.Field,
+                                            readerAccessor: "reader",
+                                            itemAccessor: new Accessor()
+                                            {
+                                                DirectAccess = $"item.{field.Field.ProtectedName}",
+                                                PropertyAccess = field.Field.Notifying == NotifyingOption.None ? null : $"item.{field.Field.ProtectedProperty}"
+                                            },
+                                            doMaskAccessor: "doMasks",
+                                            maskAccessor: $"subMask");
+                                        fg.AppendLine("if (doMasks && subMask != null)");
+                                        using (new BraceWrapper(fg))
+                                        {
+                                            fg.AppendLine($"errorMask().{field.Field.Name} = subMask;");
+                                        }
+                                        fg.AppendLine("return true;");
+                                    }
+                                }
+                            }
+
+                            // Default case
                             switch (obj.GetObjectType())
                             {
                                 case ObjectType.Struct:
@@ -616,7 +666,7 @@ namespace Mutagen.Generation
                     {
                         if (field.Derivative) continue;
                         if (field.TryGetFieldData(out var data)
-                            && data.RecordType.HasValue) continue;
+                            && data.TriggeringRecordAccessor != null) continue;
                         if (!this.TryGetTypeGeneration(field.GetType(), out var generator))
                         {
                             throw new ArgumentException("Unsupported type generator: " + field);
@@ -647,7 +697,7 @@ namespace Mutagen.Generation
             if (HasRecordTypeFields(obj))
             {
                 using (var args = new FunctionWrapper(fg,
-                    $"public static void Write_{ModuleNickname}_RecordTypes{obj.GenericTypes}{obj.GenericTypes}",
+                    $"public static void Write_{ModuleNickname}_RecordTypes{obj.GenericTypes}",
                     wheres: obj.GenerateWhereClauses().ToArray()))
                 {
                     args.Add($"{obj.Getter_InterfaceStr} item");
@@ -676,7 +726,7 @@ namespace Mutagen.Generation
                     {
                         if (field.Field.Derivative) continue;
                         if (!field.Field.TryGetFieldData(out var data)
-                            || !data.RecordType.HasValue) continue;
+                            || data.TriggeringRecordAccessor == null) continue;
                         if (!this.TryGetTypeGeneration(field.Field.GetType(), out var generator))
                         {
                             throw new ArgumentException("Unsupported type generator: " + field.Field);

@@ -50,7 +50,11 @@ namespace Mutagen.Generation
         {
             HashSet<RecordType> recordTypes = new HashSet<RecordType>();
             RecordType? triggeringRecType = null;
-            if (obj.TryGetTriggeringRecordType(out var recType))
+            if (obj.TryGetRecordType(out var recType))
+            {
+                recordTypes.Add(recType);
+            }
+            if (obj.TryGetTriggeringRecordType(out recType))
             {
                 triggeringRecType = recType;
                 recordTypes.Add(recType);
@@ -90,7 +94,8 @@ namespace Mutagen.Generation
         public override void PreLoad(ObjectGeneration obj)
         {
             var record = obj.Node.GetAttribute("recordType");
-            if (record != null)
+            var isGRUP = obj.Name.Equals("Group");
+            if (record != null && !isGRUP)
             {
                 obj.CustomData[Constants.RECORD_TYPE] = new RecordType(record);
                 obj.CustomData[Constants.TRIGGERING_RECORD_TYPE] = new RecordType(record);
@@ -106,6 +111,11 @@ namespace Mutagen.Generation
                         obj.CustomData[Constants.TRIGGERING_RECORD_TYPE] = new RecordType(record);
                     }
                 }
+            }
+
+            if (isGRUP)
+            {
+                obj.CustomData[Constants.RECORD_TYPE] = new RecordType("GRUP");
             }
 
             var objType = obj.Node.GetAttribute("objType");
@@ -124,29 +134,9 @@ namespace Mutagen.Generation
             {
                 data.RecordType = new RecordType(recordAttr);
             }
-            else if (field is LoquiType loqui
-                && loqui.RefGen != null
-                && loqui.RefGen.Obj.TryGetRecordType(out var recType))
-            {
-                data.RecordType = recType;
-            }
-            else if (field is LoquiListType loquiList)
-            {
-                loqui = loquiList.SubTypeGeneration as LoquiType;
-                if (loqui.RefGen.Obj.TryGetTriggeringRecordType(out recType))
-                {
-                    data.RecordType = recType;
-                }
-            }
-            else if (field is ListType listType
-                && listType.SubTypeGeneration is LoquiType subListLoqui)
-            {
-                if (subListLoqui.RefGen != null
-                    && subListLoqui.RefGen.Obj.TryGetTriggeringRecordType(out recType))
-                {
-                    data.RecordType = recType;
-                }
-            }
+            SetRecordTrigger(obj, field, data);
+            ModifyGRUPRecordTrigger(obj, field, data);
+
             data.Optional = node.GetAttribute<bool>("optional", false);
             if (data.Optional && !data.RecordType.HasValue)
             {
@@ -171,6 +161,68 @@ namespace Mutagen.Generation
             }
             data.IncludeInLength = node.GetAttribute<bool>("includeInLength", true);
             data.Vestigial = node.GetAttribute<bool>("vestigial", false);
+        }
+
+        private void SetRecordTrigger(
+            ObjectGeneration obj,
+            TypeGeneration field,
+            MutagenFieldData data)
+        {
+            RecordType recType;
+            if (field is LoquiType loqui)
+            {
+                if (loqui.RefGen != null
+                    && loqui.RefGen.Obj.TryGetRecordType(out recType))
+                {
+                    data.RecordType = recType;
+                }
+                else if (loqui.GenericDef != null)
+                {
+                    data.TriggeringRecordAccessor = $"{loqui.GenericDef.Name}_RecordType";
+                }
+            }
+            else if (field is LoquiListType loquiList)
+            {
+                loqui = loquiList.SubTypeGeneration as LoquiType;
+                if (loqui.RefGen.Obj.TryGetTriggeringRecordType(out recType))
+                {
+                    data.RecordType = recType;
+                }
+                else if (loqui.GenericDef != null)
+                {
+                    data.TriggeringRecordAccessor = $"{loqui.GenericDef.Name}_RecordType";
+                }
+            }
+            else if (field is ListType listType
+                && listType.SubTypeGeneration is LoquiType subListLoqui)
+            {
+                if (subListLoqui.RefGen != null
+                    && subListLoqui.RefGen.Obj.TryGetTriggeringRecordType(out recType))
+                {
+                    data.RecordType = recType;
+                }
+                else if (subListLoqui.GenericDef != null)
+                {
+                    data.TriggeringRecordAccessor = $"{subListLoqui.GenericDef.Name}_RecordType";
+                }
+            }
+
+            if (data.RecordType.HasValue
+                && data.TriggeringRecordAccessor == null)
+            {
+                data.TriggeringRecordAccessor = $"{obj.RegistrationName}.{data.RecordType.Value.HeaderName}";
+            }
+        }
+
+        private void ModifyGRUPRecordTrigger(
+            ObjectGeneration obj,
+            TypeGeneration field,
+            MutagenFieldData data)
+        {
+            if (obj.Name.Equals("Group") && (field.Name?.Equals("Items") ?? false))
+            {
+                data.TriggeringRecordAccessor = $"Group<T>.T_RecordType";
+            }
         }
     }
 }

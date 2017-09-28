@@ -12,14 +12,20 @@ namespace Mutagen
         public const byte HEADER_LENGTH = 4;
         public string HeaderName => $"{Type}_HEADER";
 
-        public RecordType(string type)
+        internal RecordType (string type, bool validate)
         {
             this.Type = type;
+            if (!validate) return;
             if (this.Type == null
                 || this.Type.Length != HEADER_LENGTH)
             {
                 throw new ArgumentException($"Type String not expected length: {HEADER_LENGTH}.");
             }
+        }
+
+        public RecordType(string type)
+            : this(type, validate: true)
+        {
         }
 
         public override bool Equals(object obj)
