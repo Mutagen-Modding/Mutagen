@@ -175,7 +175,18 @@ namespace Mutagen.Generation
                 if (loqui.RefGen != null
                     && loqui.RefGen.Obj.TryGetRecordType(out recType))
                 {
-                    data.RecordType = recType;
+                    if (loqui.RefGen.Name.Equals("Group"))
+                    {
+                        var objName = loqui.GenericSpecification.Specifications["T"];
+                        var grupObj = obj.ProtoGen.ObjectGenerationsByName[objName];
+                        data.RecordType = grupObj.GetRecordType();
+                        data.TriggeringRecordAccessor = $"{grupObj.RegistrationName}.{data.RecordType.Value.HeaderName}";
+                        data.TriggeringRecordType = data.RecordType;
+                    }
+                    else
+                    {
+                        data.RecordType = recType;
+                    }
                 }
                 else if (loqui.GenericDef != null)
                 {
@@ -212,6 +223,7 @@ namespace Mutagen.Generation
                 && data.TriggeringRecordAccessor == null)
             {
                 data.TriggeringRecordAccessor = $"{obj.RegistrationName}.{data.RecordType.Value.HeaderName}";
+                data.TriggeringRecordType = data.RecordType;
             }
         }
 
@@ -222,6 +234,8 @@ namespace Mutagen.Generation
         {
             if (obj.Name.Equals("Group") && (field.Name?.Equals("Items") ?? false))
             {
+                ListType list = field as ListType;
+                LoquiType loqui = list.SubTypeGeneration as LoquiType;
                 data.TriggeringRecordAccessor = $"Group<T>.T_RecordType";
             }
         }

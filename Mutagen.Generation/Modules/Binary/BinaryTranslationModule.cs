@@ -369,7 +369,7 @@ namespace Mutagen.Generation
 
                             if (generator.ShouldGenerateCopyIn(field.Field))
                             {
-                                fg.AppendLine($"case \"{data.RecordType.Value.Type}\":");
+                                fg.AppendLine($"case \"{data.TriggeringRecordType.Value.Type}\":");
                                 GenerateFillSnippet(obj, fg, field.Field, generator);
                                 fg.AppendLine("break;");
                             }

@@ -8,7 +8,8 @@ namespace Mutagen.Generation
 {
     public class MutagenFieldData
     {
-        public RecordType? RecordType;
+        public RecordType? RecordType { get; set; }
+        public RecordType? TriggeringRecordType { get; set; }
         public string TriggeringRecordAccessor;
         public bool Optional;
         public long? Length;

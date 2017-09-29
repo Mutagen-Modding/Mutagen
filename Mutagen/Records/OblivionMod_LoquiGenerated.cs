@@ -793,7 +793,7 @@ namespace Mutagen
                     }
                 }
                 break;
-                case "GRUP":
+                case "GMST":
                 {
                     MaskItem<Exception, Group_ErrorMask> subMask;
                     reader.BaseStream.Position -= Constants.GRUP_LENGTH;
@@ -1144,7 +1144,7 @@ namespace Mutagen.Internals
         }
 
         public static readonly RecordType TES4_HEADER = new RecordType("TES4");
-        public static readonly RecordType GRUP_HEADER = new RecordType("GRUP");
+        public static readonly RecordType GMST_HEADER = new RecordType("GMST");
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
