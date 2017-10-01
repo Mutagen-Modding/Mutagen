@@ -53,6 +53,15 @@
     <Compile Include="Records\Major Records\GameSetting.cs">
       <DependentUpon>GameSetting.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\GameSettingFloat.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GameSettingInt.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GameSettingString.cs">
+      <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\MajorRecord_LoquiGenerated.cs">
       <DependentUpon>MajorRecord.xml</DependentUpon>
     </Compile>
