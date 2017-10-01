@@ -5,9 +5,9 @@
       <Where>MajorRecord</Where>
     </Generic>
     <Fields>
-      <DateTime name="LastModified" protected="true" />
       <String name="ContainedRecordType" derivative="true" customBinary="true" />
       <Int32 name="GroupType" />
+      <DateTime name="LastModified" protected="true" />
       <List name="Items">
         <Ref>
           <Generic>T</Generic>

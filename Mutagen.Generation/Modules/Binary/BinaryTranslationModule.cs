@@ -392,9 +392,12 @@ namespace Mutagen.Generation
 
                                 if (generator.ShouldGenerateCopyIn(field.Field))
                                 {
-                                    fg.AppendLine($"if {(first ? "" : "else")} (nextRecordType.Equals({data.TriggeringRecordAccessor}))");
-                                    GenerateFillSnippet(obj, fg, field.Field, generator);
-                                    fg.AppendLine("break;");
+                                    fg.AppendLine($"if{(first ? "" : " else")} (nextRecordType.Equals({data.TriggeringRecordAccessor}))");
+                                    using (new BraceWrapper(fg))
+                                    {
+                                        GenerateFillSnippet(obj, fg, field.Field, generator, needBrace: false);
+                                        fg.AppendLine("break;");
+                                    }
                                 }
                             }
 
@@ -436,7 +439,7 @@ namespace Mutagen.Generation
             }
         }
 
-        private void GenerateFillSnippet(ObjectGeneration obj, FileGeneration fg, TypeGeneration field, BinaryTranslationGeneration generator)
+        private void GenerateFillSnippet(ObjectGeneration obj, FileGeneration fg, TypeGeneration field, BinaryTranslationGeneration generator, bool needBrace = true)
         {
             var data = field.GetFieldData();
             if (data.CustomBinary)
@@ -444,7 +447,7 @@ namespace Mutagen.Generation
                 fg.AppendLine($"FillBinary{field.Name}(reader, item);");
                 return;
             }
-            using (new BraceWrapper(fg))
+            using (new BraceWrapper(fg, doIt: needBrace))
             {
                 var maskType = this.Gen.MaskModule.GetMaskModule(field.GetType()).GetErrorMaskTypeStr(field);
                 fg.AppendLine($"{maskType} subMask;");

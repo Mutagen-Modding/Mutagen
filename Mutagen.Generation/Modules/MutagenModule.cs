@@ -79,7 +79,7 @@ namespace Mutagen.Generation
         {
             foreach (var genName in GetGenerics(obj, fg))
             {
-                fg.AppendLine($"{genName}_RecordType = new {nameof(RecordType)}(\"NULL\");");
+                fg.AppendLine($"{genName}_RecordType = new {nameof(RecordType)}(\"GMST\");");
             }
         }
 
