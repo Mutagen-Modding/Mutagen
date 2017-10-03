@@ -429,10 +429,11 @@ namespace Mutagen
                             doMasks: doMasks,
                             errorMask: out subMask);
                         item._Master.SetIfSucceeded(tryGet);
-                        if (doMasks && subMask != null)
-                        {
-                            errorMask().Master = subMask;
-                        }
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)MasterReference_FieldIndex.Master,
+                            subMask);
                     }
                     break;
                 case "FileSize":
@@ -443,10 +444,11 @@ namespace Mutagen
                             doMasks: doMasks,
                             errorMask: out subMask);
                         item._FileSize.SetIfSucceeded(tryGet);
-                        if (doMasks && subMask != null)
-                        {
-                            errorMask().FileSize = subMask;
-                        }
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)MasterReference_FieldIndex.FileSize,
+                            subMask);
                     }
                     break;
                 default:
@@ -1240,7 +1242,7 @@ namespace Mutagen.Internals
                 catch (Exception ex)
                 when (doErrorMask)
                 {
-                    errorMask().SetNthException((ushort)MasterReference_FieldIndex.Master, ex);
+                    errorMask().SetNthException((int)MasterReference_FieldIndex.Master, ex);
                 }
             }
             if (copyMask?.FileSize ?? true)
@@ -1255,7 +1257,7 @@ namespace Mutagen.Internals
                 catch (Exception ex)
                 when (doErrorMask)
                 {
-                    errorMask().SetNthException((ushort)MasterReference_FieldIndex.FileSize, ex);
+                    errorMask().SetNthException((int)MasterReference_FieldIndex.FileSize, ex);
                 }
             }
         }
@@ -1459,10 +1461,11 @@ namespace Mutagen.Internals
                             item.Master,
                             doMasks: doMasks,
                             errorMask: out subMask);
-                        if (doMasks && subMask != null)
-                        {
-                            errorMask().Master = subMask;
-                        }
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)MasterReference_FieldIndex.Master,
+                            subMask);
                     }
                     if (item.FileSize_Property.HasBeenSet)
                     {
@@ -1473,10 +1476,11 @@ namespace Mutagen.Internals
                             item.FileSize,
                             doMasks: doMasks,
                             errorMask: out subMask);
-                        if (doMasks && subMask != null)
-                        {
-                            errorMask().FileSize = subMask;
-                        }
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)MasterReference_FieldIndex.FileSize,
+                            subMask);
                     }
                 }
             }
@@ -1701,7 +1705,7 @@ namespace Mutagen.Internals
         #endregion
 
         #region IErrorMask
-        public void SetNthException(ushort index, Exception ex)
+        public void SetNthException(int index, Exception ex)
         {
             MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
             switch (enu)
@@ -1717,7 +1721,7 @@ namespace Mutagen.Internals
             }
         }
 
-        public void SetNthMask(ushort index, object obj)
+        public void SetNthMask(int index, object obj)
         {
             MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
             switch (enu)

@@ -434,24 +434,26 @@ namespace Mutagen
                             doMasks: doMasks,
                             mask: out subMask);
                         item._TES4.SetIfSucceeded(tryGet);
-                        if (doMasks && subMask != null)
-                        {
-                            errorMask().TES4 = subMask;
-                        }
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)OblivionMod_FieldIndex.TES4,
+                            subMask);
                     }
                     break;
                 case "GameSettings":
                     {
-                        MaskItem<Exception, Group_ErrorMask> subMask;
-                        var tryGet = LoquiXmlTranslation<Group<GameSetting>, Group_ErrorMask>.Instance.Parse(
+                        MaskItem<Exception, Group_ErrorMask<GameSetting_ErrorMask>> subMask;
+                        var tryGet = LoquiXmlTranslation<Group<GameSetting>, Group_ErrorMask<GameSetting_ErrorMask>>.Instance.Parse(
                             root: root,
                             doMasks: doMasks,
                             mask: out subMask);
                         item._GameSettings.SetIfSucceeded(tryGet);
-                        if (doMasks && subMask != null)
-                        {
-                            errorMask().GameSettings = subMask;
-                        }
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)OblivionMod_FieldIndex.GameSettings,
+                            subMask);
                     }
                     break;
                 default:
@@ -795,9 +797,9 @@ namespace Mutagen
                 break;
                 case "GMST":
                 {
-                    MaskItem<Exception, Group_ErrorMask> subMask;
+                    MaskItem<Exception, Group_ErrorMask<GameSetting_ErrorMask>> subMask;
                     reader.BaseStream.Position -= Constants.GRUP_LENGTH;
-                    var tryGet = LoquiBinaryTranslation<Group<GameSetting>, Group_ErrorMask>.Instance.Parse(
+                    var tryGet = LoquiBinaryTranslation<Group<GameSetting>, Group_ErrorMask<GameSetting_ErrorMask>>.Instance.Parse(
                         reader: reader,
                         doMasks: doMasks,
                         mask: out subMask);
@@ -1299,7 +1301,7 @@ namespace Mutagen.Internals
                 catch (Exception ex)
                 when (doErrorMask)
                 {
-                    errorMask().SetNthException((ushort)OblivionMod_FieldIndex.TES4, ex);
+                    errorMask().SetNthException((int)OblivionMod_FieldIndex.TES4, ex);
                 }
             }
             if (copyMask?.GameSettings.Overall != CopyOption.Skip)
@@ -1322,12 +1324,12 @@ namespace Mutagen.Internals
                                         rhs: rhs.GameSettings,
                                         def: def?.GameSettings,
                                         doErrorMask: doErrorMask,
-                                        errorMask: (doErrorMask ? new Func<Group_ErrorMask>(() =>
+                                        errorMask: (doErrorMask ? new Func<Group_ErrorMask<GameSetting_ErrorMask>>(() =>
                                         {
                                             var baseMask = errorMask();
                                             if (baseMask.GameSettings.Specific == null)
                                             {
-                                                baseMask.GameSettings = new MaskItem<Exception, Group_ErrorMask>(null, new Group_ErrorMask());
+                                                baseMask.GameSettings = new MaskItem<Exception, Group_ErrorMask<GameSetting_ErrorMask>>(null, new Group_ErrorMask<GameSetting_ErrorMask>());
                                             }
                                             return baseMask.GameSettings.Specific;
                                         }
@@ -1350,7 +1352,7 @@ namespace Mutagen.Internals
                 catch (Exception ex)
                 when (doErrorMask)
                 {
-                    errorMask().SetNthException((ushort)OblivionMod_FieldIndex.GameSettings, ex);
+                    errorMask().SetNthException((int)OblivionMod_FieldIndex.GameSettings, ex);
                 }
             }
         }
@@ -1557,25 +1559,27 @@ namespace Mutagen.Internals
                             doMasks: doMasks,
                             errorMask: out TES4_ErrorMask loquiMask);
                         subMask = loquiMask == null ? null : new MaskItem<Exception, TES4_ErrorMask>(null, loquiMask);
-                        if (doMasks && subMask != null)
-                        {
-                            errorMask().TES4 = subMask;
-                        }
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)OblivionMod_FieldIndex.TES4,
+                            subMask);
                     }
                     if (item.GameSettings_Property.HasBeenSet)
                     {
-                        MaskItem<Exception, Group_ErrorMask> subMask;
+                        MaskItem<Exception, Group_ErrorMask<GameSetting_ErrorMask>> subMask;
                         GroupCommon.Write_XML(
                             writer: writer,
                             item: item.GameSettings,
                             name: nameof(item.GameSettings),
                             doMasks: doMasks,
-                            errorMask: out Group_ErrorMask loquiMask);
-                        subMask = loquiMask == null ? null : new MaskItem<Exception, Group_ErrorMask>(null, loquiMask);
-                        if (doMasks && subMask != null)
-                        {
-                            errorMask().GameSettings = subMask;
-                        }
+                            errorMask: out Group_ErrorMask<GameSetting_ErrorMask> loquiMask);
+                        subMask = loquiMask == null ? null : new MaskItem<Exception, Group_ErrorMask<GameSetting_ErrorMask>>(null, loquiMask);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)OblivionMod_FieldIndex.GameSettings,
+                            subMask);
                     }
                 }
             }
@@ -1648,13 +1652,13 @@ namespace Mutagen.Internals
                 }
             }
             {
-                MaskItem<Exception, Group_ErrorMask> subMask;
+                MaskItem<Exception, Group_ErrorMask<GameSetting_ErrorMask>> subMask;
                 GroupCommon.Write_Binary(
                     writer: writer,
                     item: item.GameSettings,
                     doMasks: doMasks,
-                    errorMask: out Group_ErrorMask loquiMask);
-                subMask = loquiMask == null ? null : new MaskItem<Exception, Group_ErrorMask>(null, loquiMask);
+                    errorMask: out Group_ErrorMask<GameSetting_ErrorMask> loquiMask);
+                subMask = loquiMask == null ? null : new MaskItem<Exception, Group_ErrorMask<GameSetting_ErrorMask>>(null, loquiMask);
                 if (doMasks && subMask != null)
                 {
                     errorMask().GameSettings = subMask;
@@ -1818,11 +1822,11 @@ namespace Mutagen.Internals
             }
         }
         public MaskItem<Exception, TES4_ErrorMask> TES4;
-        public MaskItem<Exception, Group_ErrorMask> GameSettings;
+        public MaskItem<Exception, Group_ErrorMask<GameSetting_ErrorMask>> GameSettings;
         #endregion
 
         #region IErrorMask
-        public void SetNthException(ushort index, Exception ex)
+        public void SetNthException(int index, Exception ex)
         {
             OblivionMod_FieldIndex enu = (OblivionMod_FieldIndex)index;
             switch (enu)
@@ -1831,14 +1835,14 @@ namespace Mutagen.Internals
                     this.TES4 = new MaskItem<Exception, TES4_ErrorMask>(ex, null);
                     break;
                 case OblivionMod_FieldIndex.GameSettings:
-                    this.GameSettings = new MaskItem<Exception, Group_ErrorMask>(ex, null);
+                    this.GameSettings = new MaskItem<Exception, Group_ErrorMask<GameSetting_ErrorMask>>(ex, null);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
-        public void SetNthMask(ushort index, object obj)
+        public void SetNthMask(int index, object obj)
         {
             OblivionMod_FieldIndex enu = (OblivionMod_FieldIndex)index;
             switch (enu)
@@ -1847,7 +1851,7 @@ namespace Mutagen.Internals
                     this.TES4 = (MaskItem<Exception, TES4_ErrorMask>)obj;
                     break;
                 case OblivionMod_FieldIndex.GameSettings:
-                    this.GameSettings = (MaskItem<Exception, Group_ErrorMask>)obj;
+                    this.GameSettings = (MaskItem<Exception, Group_ErrorMask<GameSetting_ErrorMask>>)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1901,7 +1905,7 @@ namespace Mutagen.Internals
         {
             var ret = new OblivionMod_ErrorMask();
             ret.TES4 = new MaskItem<Exception, TES4_ErrorMask>(this.TES4.Overall.Combine(rhs.TES4.Overall), this.TES4.Specific.Combine(rhs.TES4.Specific));
-            ret.GameSettings = new MaskItem<Exception, Group_ErrorMask>(this.GameSettings.Overall.Combine(rhs.GameSettings.Overall), this.GameSettings.Specific.Combine(rhs.GameSettings.Specific));
+            ret.GameSettings = new MaskItem<Exception, Group_ErrorMask<GameSetting_ErrorMask>>(this.GameSettings.Overall.Combine(rhs.GameSettings.Overall), this.GameSettings.Specific.Combine(rhs.GameSettings.Specific));
             return ret;
         }
         public static OblivionMod_ErrorMask Combine(OblivionMod_ErrorMask lhs, OblivionMod_ErrorMask rhs)
@@ -1916,7 +1920,7 @@ namespace Mutagen.Internals
     {
         #region Members
         public MaskItem<CopyOption, TES4_CopyMask> TES4;
-        public MaskItem<CopyOption, Group_CopyMask> GameSettings;
+        public MaskItem<CopyOption, Group_CopyMask<GameSetting_CopyMask>> GameSettings;
         #endregion
 
     }

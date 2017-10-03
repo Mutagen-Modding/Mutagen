@@ -359,10 +359,11 @@ namespace Mutagen
                             doMasks: doMasks,
                             errorMask: out subMask);
                         item._Flags.SetIfSucceeded(tryGet);
-                        if (doMasks && subMask != null)
-                        {
-                            errorMask().Flags = subMask;
-                        }
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)MajorRecord_FieldIndex.Flags,
+                            subMask);
                     }
                     break;
                 case "FormID":
@@ -373,10 +374,11 @@ namespace Mutagen
                             doMasks: doMasks,
                             errorMask: out subMask);
                         item._FormID.SetIfSucceeded(tryGet);
-                        if (doMasks && subMask != null)
-                        {
-                            errorMask().FormID = subMask;
-                        }
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)MajorRecord_FieldIndex.FormID,
+                            subMask);
                     }
                     break;
                 case "Version":
@@ -387,10 +389,11 @@ namespace Mutagen
                             doMasks: doMasks,
                             errorMask: out subMask);
                         item._Version.SetIfSucceeded(tryGet);
-                        if (doMasks && subMask != null)
-                        {
-                            errorMask().Version = subMask;
-                        }
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)MajorRecord_FieldIndex.Version,
+                            subMask);
                     }
                     break;
                 case "EditorID":
@@ -401,10 +404,11 @@ namespace Mutagen
                             doMasks: doMasks,
                             errorMask: out subMask);
                         item._EditorID.SetIfSucceeded(tryGet);
-                        if (doMasks && subMask != null)
-                        {
-                            errorMask().EditorID = subMask;
-                        }
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)MajorRecord_FieldIndex.EditorID,
+                            subMask);
                     }
                     break;
                 case "RecordType":
@@ -415,10 +419,11 @@ namespace Mutagen
                             doMasks: doMasks,
                             maskObj: out subMask);
                         item._RecordType.SetIfSucceeded(tryGet.Bubble<RecordType>(i => (RecordType)i));
-                        if (doMasks && subMask != null)
-                        {
-                            errorMask().RecordType = subMask;
-                        }
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)MajorRecord_FieldIndex.RecordType,
+                            subMask);
                     }
                     break;
                 default:
@@ -1091,7 +1096,7 @@ namespace Mutagen.Internals
                 catch (Exception ex)
                 when (doErrorMask)
                 {
-                    errorMask().SetNthException((ushort)MajorRecord_FieldIndex.Flags, ex);
+                    errorMask().SetNthException((int)MajorRecord_FieldIndex.Flags, ex);
                 }
             }
             if (copyMask?.FormID ?? true)
@@ -1106,7 +1111,7 @@ namespace Mutagen.Internals
                 catch (Exception ex)
                 when (doErrorMask)
                 {
-                    errorMask().SetNthException((ushort)MajorRecord_FieldIndex.FormID, ex);
+                    errorMask().SetNthException((int)MajorRecord_FieldIndex.FormID, ex);
                 }
             }
             if (copyMask?.Version ?? true)
@@ -1121,7 +1126,7 @@ namespace Mutagen.Internals
                 catch (Exception ex)
                 when (doErrorMask)
                 {
-                    errorMask().SetNthException((ushort)MajorRecord_FieldIndex.Version, ex);
+                    errorMask().SetNthException((int)MajorRecord_FieldIndex.Version, ex);
                 }
             }
             if (copyMask?.EditorID ?? true)
@@ -1136,7 +1141,7 @@ namespace Mutagen.Internals
                 catch (Exception ex)
                 when (doErrorMask)
                 {
-                    errorMask().SetNthException((ushort)MajorRecord_FieldIndex.EditorID, ex);
+                    errorMask().SetNthException((int)MajorRecord_FieldIndex.EditorID, ex);
                 }
             }
         }
@@ -1391,10 +1396,11 @@ namespace Mutagen.Internals
                             item.Flags,
                             doMasks: doMasks,
                             errorMask: out subMask);
-                        if (doMasks && subMask != null)
-                        {
-                            errorMask().Flags = subMask;
-                        }
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)MajorRecord_FieldIndex.Flags,
+                            subMask);
                     }
                     if (item.FormID_Property.HasBeenSet)
                     {
@@ -1405,10 +1411,11 @@ namespace Mutagen.Internals
                             item.FormID,
                             doMasks: doMasks,
                             errorMask: out subMask);
-                        if (doMasks && subMask != null)
-                        {
-                            errorMask().FormID = subMask;
-                        }
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)MajorRecord_FieldIndex.FormID,
+                            subMask);
                     }
                     if (item.Version_Property.HasBeenSet)
                     {
@@ -1419,10 +1426,11 @@ namespace Mutagen.Internals
                             item.Version,
                             doMasks: doMasks,
                             errorMask: out subMask);
-                        if (doMasks && subMask != null)
-                        {
-                            errorMask().Version = subMask;
-                        }
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)MajorRecord_FieldIndex.Version,
+                            subMask);
                     }
                     if (item.EditorID_Property.HasBeenSet)
                     {
@@ -1433,10 +1441,11 @@ namespace Mutagen.Internals
                             item.EditorID,
                             doMasks: doMasks,
                             errorMask: out subMask);
-                        if (doMasks && subMask != null)
-                        {
-                            errorMask().EditorID = subMask;
-                        }
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)MajorRecord_FieldIndex.EditorID,
+                            subMask);
                     }
                 }
             }
@@ -1729,7 +1738,7 @@ namespace Mutagen.Internals
         #endregion
 
         #region IErrorMask
-        public virtual void SetNthException(ushort index, Exception ex)
+        public virtual void SetNthException(int index, Exception ex)
         {
             MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
             switch (enu)
@@ -1754,7 +1763,7 @@ namespace Mutagen.Internals
             }
         }
 
-        public virtual void SetNthMask(ushort index, object obj)
+        public virtual void SetNthMask(int index, object obj)
         {
             MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
             switch (enu)

@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>3b660698961fd4782bcafc10afd06846ee781692</Sha>
+         <Sha>6528f0ad5c1749bfdef5ddfc6da5dd36ff182f4b</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>09-30-2017 20:36:29</CommitDate>
-         <Description>NotifyingItem convenience methods for subscribe</Description>
+         <CommitDate>10-03-2017 00:03:47</CommitDate>
+         <Description>TypeExt unit test work</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>687b489fa73e6140e03fa6c047141ca4d0e465c1</Sha>
+         <Sha>71920d92e8519268645a25ad498c58f7145d1638</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>09-22-2017 15:15:25</CommitDate>
-         <Description>GenerationModule.GenerateInRegistration</Description>
+         <CommitDate>10-03-2017 00:04:32</CommitDate>
+         <Description>ErrorMask's item parameter now generic</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

@@ -85,13 +85,21 @@ namespace Mutagen.Binary
 
         public static CREATE_FUNC GetCreateFunc()
         {
-            var f = DelegateBuilder.BuildDelegate<Func<BinaryReader, bool, (T item, M mask)>>(
-                typeof(T).GetMethods()
+            var options = typeof(T).GetMethods()
                 .Where((methodInfo) => methodInfo.Name.Equals("Create_Binary"))
                 .Where((methodInfo) => methodInfo.IsStatic
                     && methodInfo.IsPublic)
-                .Where((methodInfo) => methodInfo.ReturnType.Equals(typeof(ValueTuple<T, M>)))
-                .First());
+                .Where((methodInfo) => methodInfo.ReturnType.InheritsFrom(typeof(ValueTuple<,>)))
+                .Where((methodInfo) => methodInfo.ReturnType.GenericTypeArguments[0].Equals(typeof(T)))
+                .Where((methodInfo) => typeof(M).InheritsFrom(methodInfo.ReturnType.GenericTypeArguments[1]))
+                .ToArray();
+            var method = options.Where((methodInfo) => methodInfo.ReturnType.Equals(typeof(ValueTuple<T, M>)))
+                .FirstOrDefault();
+            if (method == null)
+            {
+                method = options.First();
+            }
+            var f = DelegateBuilder.BuildDelegate<Func<BinaryReader, bool, (T item, M mask)>>(method);
             return (BinaryReader reader, bool doMasks, out M errorMask) =>
             {
                 var ret = f(reader, doMasks);

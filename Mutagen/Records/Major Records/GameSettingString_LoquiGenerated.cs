@@ -431,10 +431,11 @@ namespace Mutagen
                             doMasks: doMasks,
                             errorMask: out subMask);
                         item._Data.SetIfSucceeded(tryGet);
-                        if (doMasks && subMask != null)
-                        {
-                            errorMask().Data = subMask;
-                        }
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)GameSettingString_FieldIndex.Data,
+                            subMask);
                     }
                     break;
                 default:
@@ -1245,7 +1246,7 @@ namespace Mutagen.Internals
                 catch (Exception ex)
                 when (doErrorMask)
                 {
-                    errorMask().SetNthException((ushort)GameSettingString_FieldIndex.Data, ex);
+                    errorMask().SetNthException((int)GameSettingString_FieldIndex.Data, ex);
                 }
             }
         }
@@ -1434,10 +1435,11 @@ namespace Mutagen.Internals
                             item.Data,
                             doMasks: doMasks,
                             errorMask: out subMask);
-                        if (doMasks && subMask != null)
-                        {
-                            errorMask().Data = subMask;
-                        }
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)GameSettingString_FieldIndex.Data,
+                            subMask);
                     }
                 }
             }
@@ -1639,7 +1641,7 @@ namespace Mutagen.Internals
         #endregion
 
         #region IErrorMask
-        public override void SetNthException(ushort index, Exception ex)
+        public override void SetNthException(int index, Exception ex)
         {
             GameSettingString_FieldIndex enu = (GameSettingString_FieldIndex)index;
             switch (enu)
@@ -1653,7 +1655,7 @@ namespace Mutagen.Internals
             }
         }
 
-        public override void SetNthMask(ushort index, object obj)
+        public override void SetNthMask(int index, object obj)
         {
             GameSettingString_FieldIndex enu = (GameSettingString_FieldIndex)index;
             switch (enu)

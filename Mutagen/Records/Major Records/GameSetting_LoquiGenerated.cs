@@ -275,10 +275,11 @@ namespace Mutagen
                             doMasks: doMasks,
                             maskObj: out subMask);
                         item._GenericData.SetIfSucceeded(tryGet.Bubble<Object>(i => (Object)i));
-                        if (doMasks && subMask != null)
-                        {
-                            errorMask().GenericData = subMask;
-                        }
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)GameSetting_FieldIndex.GenericData,
+                            subMask);
                     }
                     break;
                 default:
@@ -1134,7 +1135,7 @@ namespace Mutagen.Internals
         #endregion
 
         #region IErrorMask
-        public override void SetNthException(ushort index, Exception ex)
+        public override void SetNthException(int index, Exception ex)
         {
             GameSetting_FieldIndex enu = (GameSetting_FieldIndex)index;
             switch (enu)
@@ -1148,7 +1149,7 @@ namespace Mutagen.Internals
             }
         }
 
-        public override void SetNthMask(ushort index, object obj)
+        public override void SetNthMask(int index, object obj)
         {
             GameSetting_FieldIndex enu = (GameSetting_FieldIndex)index;
             switch (enu)
