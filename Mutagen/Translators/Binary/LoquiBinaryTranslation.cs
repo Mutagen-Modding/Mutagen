@@ -85,21 +85,32 @@ namespace Mutagen.Binary
 
         public static CREATE_FUNC GetCreateFunc()
         {
-            var options = typeof(T).GetMethods()
+            var tType = typeof(T);
+            var mType = typeof(M);
+            var options = tType.GetMethods()
                 .Where((methodInfo) => methodInfo.Name.Equals("Create_Binary"))
                 .Where((methodInfo) => methodInfo.IsStatic
                     && methodInfo.IsPublic)
                 .Where((methodInfo) => methodInfo.ReturnType.InheritsFrom(typeof(ValueTuple<,>)))
-                .Where((methodInfo) => methodInfo.ReturnType.GenericTypeArguments[0].Equals(typeof(T)))
-                .Where((methodInfo) => typeof(M).InheritsFrom(methodInfo.ReturnType.GenericTypeArguments[1]))
+                .Where((methodInfo) => methodInfo.ReturnType.GenericTypeArguments[0].Equals(tType))
                 .ToArray();
-            var method = options.Where((methodInfo) => methodInfo.ReturnType.Equals(typeof(ValueTuple<T, M>)))
+            var method = options
+                .Where((methodInfo) => mType.InheritsFrom(methodInfo.ReturnType.GenericTypeArguments[1]))
+                .Where((methodInfo) => methodInfo.ReturnType.Equals(typeof(ValueTuple<T, M>)))
                 .FirstOrDefault();
-            if (method == null)
+            if (method != null)
             {
-                method = options.First();
+                var func = DelegateBuilder.BuildDelegate<Func<BinaryReader, bool, (T item, M mask)>>(method);
+                return (BinaryReader reader, bool doMasks, out M errorMask) =>
+                {
+                    var ret = func(reader, doMasks);
+                    errorMask = ret.mask;
+                    return ret.item;
+                };
             }
-            var f = DelegateBuilder.BuildDelegate<Func<BinaryReader, bool, (T item, M mask)>>(method);
+            method = options
+                .Where((methodInfo) => typeof(M).InheritsFrom(methodInfo.ReturnType.GenericTypeArguments[1], couldInherit: true)).First();
+            var f = DelegateBuilder.BuildGenericDelegate<Func<BinaryReader, bool, (T item, M mask)>>(tType, new Type[] { mType.GenericTypeArguments[0] }, method);
             return (BinaryReader reader, bool doMasks, out M errorMask) =>
             {
                 var ret = f(reader, doMasks);

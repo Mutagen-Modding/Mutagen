@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>6528f0ad5c1749bfdef5ddfc6da5dd36ff182f4b</Sha>
+         <Sha>15cfaaff6698f53d861ef2a5cc5b56781c613f4b</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>10-03-2017 00:03:47</CommitDate>
-         <Description>TypeExt unit test work</Description>
+         <CommitDate>10-05-2017 20:12:18</CommitDate>
+         <Description>TypeExt.InheritsFrom couldInherit bool that supports GenericParameter baseTypes.  DelegateBuilder generic build</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
