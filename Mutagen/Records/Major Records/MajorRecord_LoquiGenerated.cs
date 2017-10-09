@@ -220,7 +220,7 @@ namespace Mutagen
                 item: this,
                 skipProtected: true,
                 doMasks: false,
-                mask: out MajorRecord_ErrorMask errorMask,
+                mask: out var errorMask,
                 cmds: cmds);
         }
 
@@ -444,7 +444,7 @@ namespace Mutagen
                 item: this,
                 skipProtected: true,
                 doMasks: false,
-                mask: out MajorRecord_ErrorMask errorMask,
+                mask: out var errorMask,
                 cmds: cmds);
         }
 
@@ -1516,10 +1516,11 @@ namespace Mutagen.Internals
                     item: item.Flags,
                     doMasks: doMasks,
                     errorMask: out subMask);
-                if (doMasks && subMask != null)
-                {
-                    errorMask().Flags = subMask;
-                }
+                ErrorMask.HandleErrorMask(
+                    errorMask,
+                    doMasks,
+                    (int)MajorRecord_FieldIndex.Flags,
+                    subMask);
             }
             {
                 Exception subMask;
@@ -1528,10 +1529,11 @@ namespace Mutagen.Internals
                     item: item.FormID,
                     doMasks: doMasks,
                     errorMask: out subMask);
-                if (doMasks && subMask != null)
-                {
-                    errorMask().FormID = subMask;
-                }
+                ErrorMask.HandleErrorMask(
+                    errorMask,
+                    doMasks,
+                    (int)MajorRecord_FieldIndex.FormID,
+                    subMask);
             }
             {
                 Exception subMask;
@@ -1540,10 +1542,11 @@ namespace Mutagen.Internals
                     item: item.Version,
                     doMasks: doMasks,
                     errorMask: out subMask);
-                if (doMasks && subMask != null)
-                {
-                    errorMask().Version = subMask;
-                }
+                ErrorMask.HandleErrorMask(
+                    errorMask,
+                    doMasks,
+                    (int)MajorRecord_FieldIndex.Version,
+                    subMask);
             }
         }
 
@@ -1562,10 +1565,11 @@ namespace Mutagen.Internals
                     errorMask: out subMask,
                     header: MajorRecord_Registration.EDID_HEADER,
                     nullable: false);
-                if (doMasks && subMask != null)
-                {
-                    errorMask().EditorID = subMask;
-                }
+                ErrorMask.HandleErrorMask(
+                    errorMask,
+                    doMasks,
+                    (int)MajorRecord_FieldIndex.EditorID,
+                    subMask);
             }
         }
 

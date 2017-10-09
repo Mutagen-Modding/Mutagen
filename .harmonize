@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>71920d92e8519268645a25ad498c58f7145d1638</Sha>
+         <Sha>4c9babbb57225504e267f6de5765fd874ecbdc17</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>10-03-2017 00:04:32</CommitDate>
-         <Description>ErrorMask's item parameter now generic</Description>
+         <CommitDate>10-09-2017 16:21:41</CommitDate>
+         <Description>Generic specification mask implementation work</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

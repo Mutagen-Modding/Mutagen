@@ -254,7 +254,7 @@ namespace Mutagen
                 item: this,
                 skipProtected: true,
                 doMasks: false,
-                mask: out Header_ErrorMask errorMask,
+                mask: out var errorMask,
                 cmds: cmds);
         }
 
@@ -595,7 +595,7 @@ namespace Mutagen
                 item: this,
                 skipProtected: true,
                 doMasks: false,
-                mask: out Header_ErrorMask errorMask,
+                mask: out var errorMask,
                 cmds: cmds);
         }
 
@@ -1667,10 +1667,11 @@ namespace Mutagen.Internals
                     item: item.Version,
                     doMasks: doMasks,
                     errorMask: out subMask);
-                if (doMasks && subMask != null)
-                {
-                    errorMask().Version = subMask;
-                }
+                ErrorMask.HandleErrorMask(
+                    errorMask,
+                    doMasks,
+                    (int)Header_FieldIndex.Version,
+                    subMask);
             }
             {
                 Exception subMask;
@@ -1679,10 +1680,11 @@ namespace Mutagen.Internals
                     item: item.NumRecords,
                     doMasks: doMasks,
                     errorMask: out subMask);
-                if (doMasks && subMask != null)
-                {
-                    errorMask().NumRecords = subMask;
-                }
+                ErrorMask.HandleErrorMask(
+                    errorMask,
+                    doMasks,
+                    (int)Header_FieldIndex.NumRecords,
+                    subMask);
             }
             {
                 Exception subMask;
@@ -1691,10 +1693,11 @@ namespace Mutagen.Internals
                     item: item.NextObjectID,
                     doMasks: doMasks,
                     errorMask: out subMask);
-                if (doMasks && subMask != null)
-                {
-                    errorMask().NextObjectID = subMask;
-                }
+                ErrorMask.HandleErrorMask(
+                    errorMask,
+                    doMasks,
+                    (int)Header_FieldIndex.NextObjectID,
+                    subMask);
             }
         }
 

@@ -149,7 +149,8 @@ namespace Mutagen.Generation
                 if (objType != ObjectType.Struct)
                 {
                     using (var args = new FunctionWrapper(fg,
-                        $"private static {obj.ObjectName} Create_{ModuleNickname}_Internal"))
+                        $"private static {obj.ObjectName} Create_{ModuleNickname}_Internal{obj.GenericClause_Nickname(MaskModule.ErrMaskNickname)}",
+                        wheres: obj.GenericTypes_ErrorMaskWheres))
                     {
                         args.Add("BinaryReader reader");
                         args.Add("bool doMasks");
@@ -212,7 +213,8 @@ namespace Mutagen.Generation
                 }
 
                 using (var args = new FunctionWrapper(fg,
-                    $"private static {obj.ObjectName} Create_{ModuleNickname}_Internal"))
+                    $"private static {obj.ObjectName} Create_{ModuleNickname}_Internal{obj.GenericClause_Nickname(MaskModule.ErrMaskNickname)}",
+                    wheres: obj.GenericTypes_ErrorMaskWheres))
                 {
                     args.Add("BinaryReader reader");
                     args.Add("bool doMasks");
@@ -282,7 +284,8 @@ namespace Mutagen.Generation
             if ((!obj.Abstract && obj.BaseClassTrail().All((b) => b.Abstract)) || HasEmbeddedFields(obj))
             {
                 using (var args = new FunctionWrapper(fg,
-                    $"protected static void Fill_{ModuleNickname}"))
+                    $"protected static void Fill_{ModuleNickname}{obj.GenericClause_Nickname(MaskModule.ErrMaskNickname)}",
+                    wheres: obj.GenericTypes_ErrorMaskWheres))
                 {
                     args.Add($"{obj.ObjectName} item");
                     args.Add("BinaryReader reader");
@@ -320,7 +323,8 @@ namespace Mutagen.Generation
             if (HasRecordTypeFields(obj))
             {
                 using (var args = new FunctionWrapper(fg,
-                    $"protected static void Fill_{ModuleNickname}_RecordTypes"))
+                    $"protected static void Fill_{ModuleNickname}_RecordTypes{obj.GenericClause_Nickname(MaskModule.ErrMaskNickname)}",
+                    wheres: obj.GenericTypes_ErrorMaskWheres))
                 {
                     args.Add($"{obj.ObjectName} item");
                     args.Add("BinaryReader reader");
@@ -500,7 +504,7 @@ namespace Mutagen.Generation
         protected override void GenerateCopyInSnippet(ObjectGeneration obj, FileGeneration fg, bool usingErrorMask)
         {
             using (var args = new ArgsWrapper(fg,
-                $"LoquiBinaryTranslation<{obj.ObjectName}, {obj.ErrorMask}>.Instance.CopyIn"))
+                $"LoquiBinaryTranslation<{obj.ObjectName}, {(usingErrorMask ? obj.ErrorMask : obj.ErrorMask_GenericAssumed)}>.Instance.CopyIn"))
             using (new DepthWrapper(fg))
             {
                 foreach (var item in this.MainAPI.ReaderPassArgs)
@@ -517,7 +521,7 @@ namespace Mutagen.Generation
                 else
                 {
                     args.Add($"doMasks: false");
-                    args.Add($"mask: out {obj.ErrorMask} errorMask");
+                    args.Add($"mask: out var errorMask");
                 }
                 args.Add($"cmds: cmds");
             }
@@ -613,8 +617,8 @@ namespace Mutagen.Generation
             if (HasEmbeddedFields(obj))
             {
                 using (var args = new FunctionWrapper(fg,
-                    $"public static void Write_{ModuleNickname}_Embedded{obj.GenericTypes}",
-                    wheres: obj.GenerateWhereClauses().ToArray()))
+                    $"public static void Write_{ModuleNickname}_Embedded{obj.GenericTypes_ErrMask}",
+                    wheres: obj.GenerateWhereClauses().And(obj.GenericTypes_ErrorMaskWheres).ToArray()))
                 {
                     args.Add($"{obj.Getter_InterfaceStr} item");
                     args.Add("BinaryWriter writer");
@@ -659,10 +663,13 @@ namespace Mutagen.Generation
                                 itemAccessor: $"item.{field.Name}",
                                 doMaskAccessor: "doMasks",
                                 maskAccessor: $"subMask");
-                            fg.AppendLine("if (doMasks && subMask != null)");
-                            using (new BraceWrapper(fg))
+                            using (var args = new ArgsWrapper(fg,
+                                $"ErrorMask.HandleErrorMask"))
                             {
-                                fg.AppendLine($"errorMask().{field.Name} = subMask;");
+                                args.Add("errorMask");
+                                args.Add("doMasks");
+                                args.Add($"(int){field.IndexEnumName}");
+                                args.Add("subMask");
                             }
                         }
                     }
@@ -673,8 +680,8 @@ namespace Mutagen.Generation
             if (HasRecordTypeFields(obj))
             {
                 using (var args = new FunctionWrapper(fg,
-                    $"public static void Write_{ModuleNickname}_RecordTypes{obj.GenericTypes}",
-                    wheres: obj.GenerateWhereClauses().ToArray()))
+                    $"public static void Write_{ModuleNickname}_RecordTypes{obj.GenericTypes_ErrMask}",
+                    wheres: obj.GenerateWhereClauses().And(obj.GenericTypes_ErrorMaskWheres).ToArray()))
                 {
                     args.Add($"{obj.Getter_InterfaceStr} item");
                     args.Add("BinaryWriter writer");
@@ -722,10 +729,13 @@ namespace Mutagen.Generation
                                 itemAccessor: $"item.{field.Field.Name}",
                                 doMaskAccessor: "doMasks",
                                 maskAccessor: $"subMask");
-                            fg.AppendLine("if (doMasks && subMask != null)");
-                            using (new BraceWrapper(fg))
+                            using (var args = new ArgsWrapper(fg,
+                                $"ErrorMask.HandleErrorMask"))
                             {
-                                fg.AppendLine($"errorMask().{field.Field.Name} = subMask;");
+                                args.Add("errorMask");
+                                args.Add("doMasks");
+                                args.Add($"(int){field.Field.IndexEnumName}");
+                                args.Add("subMask");
                             }
                         }
                     }

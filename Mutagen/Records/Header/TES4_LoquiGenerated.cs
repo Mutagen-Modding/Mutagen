@@ -342,7 +342,7 @@ namespace Mutagen
                 item: this,
                 skipProtected: true,
                 doMasks: false,
-                mask: out TES4_ErrorMask errorMask,
+                mask: out var errorMask,
                 cmds: cmds);
         }
 
@@ -751,7 +751,7 @@ namespace Mutagen
                 item: this,
                 skipProtected: true,
                 doMasks: false,
-                mask: out TES4_ErrorMask errorMask,
+                mask: out var errorMask,
                 cmds: cmds);
         }
 
@@ -2345,10 +2345,11 @@ namespace Mutagen.Internals
                     item: item.Fluff,
                     doMasks: doMasks,
                     errorMask: out subMask);
-                if (doMasks && subMask != null)
-                {
-                    errorMask().Fluff = subMask;
-                }
+                ErrorMask.HandleErrorMask(
+                    errorMask,
+                    doMasks,
+                    (int)TES4_FieldIndex.Fluff,
+                    subMask);
             }
         }
 
@@ -2366,10 +2367,11 @@ namespace Mutagen.Internals
                     doMasks: doMasks,
                     errorMask: out Header_ErrorMask loquiMask);
                 subMask = loquiMask == null ? null : new MaskItem<Exception, Header_ErrorMask>(null, loquiMask);
-                if (doMasks && subMask != null)
-                {
-                    errorMask().Header = subMask;
-                }
+                ErrorMask.HandleErrorMask(
+                    errorMask,
+                    doMasks,
+                    (int)TES4_FieldIndex.Header,
+                    subMask);
             }
             {
                 Exception subMask;
@@ -2380,10 +2382,11 @@ namespace Mutagen.Internals
                     errorMask: out subMask,
                     header: TES4_Registration.OFST_HEADER,
                     nullable: true);
-                if (doMasks && subMask != null)
-                {
-                    errorMask().TypeOffsets = subMask;
-                }
+                ErrorMask.HandleErrorMask(
+                    errorMask,
+                    doMasks,
+                    (int)TES4_FieldIndex.TypeOffsets,
+                    subMask);
             }
             {
                 Exception subMask;
@@ -2394,10 +2397,11 @@ namespace Mutagen.Internals
                     errorMask: out subMask,
                     header: TES4_Registration.DELE_HEADER,
                     nullable: true);
-                if (doMasks && subMask != null)
-                {
-                    errorMask().Deleted = subMask;
-                }
+                ErrorMask.HandleErrorMask(
+                    errorMask,
+                    doMasks,
+                    (int)TES4_FieldIndex.Deleted,
+                    subMask);
             }
             {
                 Exception subMask;
@@ -2408,10 +2412,11 @@ namespace Mutagen.Internals
                     errorMask: out subMask,
                     header: TES4_Registration.CNAM_HEADER,
                     nullable: true);
-                if (doMasks && subMask != null)
-                {
-                    errorMask().Author = subMask;
-                }
+                ErrorMask.HandleErrorMask(
+                    errorMask,
+                    doMasks,
+                    (int)TES4_FieldIndex.Author,
+                    subMask);
             }
             {
                 Exception subMask;
@@ -2422,10 +2427,11 @@ namespace Mutagen.Internals
                     errorMask: out subMask,
                     header: TES4_Registration.SNAM_HEADER,
                     nullable: true);
-                if (doMasks && subMask != null)
-                {
-                    errorMask().Description = subMask;
-                }
+                ErrorMask.HandleErrorMask(
+                    errorMask,
+                    doMasks,
+                    (int)TES4_FieldIndex.Description,
+                    subMask);
             }
             {
                 MaskItem<Exception, IEnumerable<MaskItem<Exception, MasterReference_ErrorMask>>> subMask;
@@ -2444,10 +2450,11 @@ namespace Mutagen.Internals
                         listSubMask = loquiMask == null ? null : new MaskItem<Exception, MasterReference_ErrorMask>(null, loquiMask);
                     }
                     );
-                if (doMasks && subMask != null)
-                {
-                    errorMask().MasterReferences = subMask;
-                }
+                ErrorMask.HandleErrorMask(
+                    errorMask,
+                    doMasks,
+                    (int)TES4_FieldIndex.MasterReferences,
+                    subMask);
             }
         }
 

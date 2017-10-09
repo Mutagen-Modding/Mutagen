@@ -239,7 +239,7 @@ namespace Mutagen
                 item: this,
                 skipProtected: true,
                 doMasks: false,
-                mask: out OblivionMod_ErrorMask errorMask,
+                mask: out var errorMask,
                 cmds: cmds);
         }
 
@@ -565,7 +565,7 @@ namespace Mutagen
                 item: this,
                 skipProtected: true,
                 doMasks: false,
-                mask: out OblivionMod_ErrorMask errorMask,
+                mask: out var errorMask,
                 cmds: cmds);
         }
 
@@ -1646,10 +1646,11 @@ namespace Mutagen.Internals
                     doMasks: doMasks,
                     errorMask: out TES4_ErrorMask loquiMask);
                 subMask = loquiMask == null ? null : new MaskItem<Exception, TES4_ErrorMask>(null, loquiMask);
-                if (doMasks && subMask != null)
-                {
-                    errorMask().TES4 = subMask;
-                }
+                ErrorMask.HandleErrorMask(
+                    errorMask,
+                    doMasks,
+                    (int)OblivionMod_FieldIndex.TES4,
+                    subMask);
             }
             {
                 MaskItem<Exception, Group_ErrorMask<GameSetting_ErrorMask>> subMask;
@@ -1659,10 +1660,11 @@ namespace Mutagen.Internals
                     doMasks: doMasks,
                     errorMask: out Group_ErrorMask<GameSetting_ErrorMask> loquiMask);
                 subMask = loquiMask == null ? null : new MaskItem<Exception, Group_ErrorMask<GameSetting_ErrorMask>>(null, loquiMask);
-                if (doMasks && subMask != null)
-                {
-                    errorMask().GameSettings = subMask;
-                }
+                ErrorMask.HandleErrorMask(
+                    errorMask,
+                    doMasks,
+                    (int)OblivionMod_FieldIndex.GameSettings,
+                    subMask);
             }
         }
 

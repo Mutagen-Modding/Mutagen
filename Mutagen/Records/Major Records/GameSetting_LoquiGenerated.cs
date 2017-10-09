@@ -134,7 +134,7 @@ namespace Mutagen
                 item: this,
                 skipProtected: true,
                 doMasks: false,
-                mask: out GameSetting_ErrorMask errorMask,
+                mask: out var errorMask,
                 cmds: cmds);
         }
 
@@ -306,7 +306,7 @@ namespace Mutagen
                 item: this,
                 skipProtected: true,
                 doMasks: false,
-                mask: out GameSetting_ErrorMask errorMask,
+                mask: out var errorMask,
                 cmds: cmds);
         }
 

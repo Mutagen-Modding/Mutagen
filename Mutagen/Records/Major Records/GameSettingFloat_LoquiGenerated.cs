@@ -212,7 +212,7 @@ namespace Mutagen
                 item: this,
                 skipProtected: true,
                 doMasks: false,
-                mask: out GameSettingFloat_ErrorMask errorMask,
+                mask: out var errorMask,
                 cmds: cmds);
         }
 
@@ -553,7 +553,7 @@ namespace Mutagen
                 item: this,
                 skipProtected: true,
                 doMasks: false,
-                mask: out GameSettingFloat_ErrorMask errorMask,
+                mask: out var errorMask,
                 cmds: cmds);
         }
 
@@ -1516,10 +1516,11 @@ namespace Mutagen.Internals
                     errorMask: out subMask,
                     header: GameSettingFloat_Registration.DATA_HEADER,
                     nullable: false);
-                if (doMasks && subMask != null)
-                {
-                    errorMask().Data = subMask;
-                }
+                ErrorMask.HandleErrorMask(
+                    errorMask,
+                    doMasks,
+                    (int)GameSettingFloat_FieldIndex.Data,
+                    subMask);
             }
         }
 

@@ -234,7 +234,7 @@ namespace Mutagen
                 item: this,
                 skipProtected: true,
                 doMasks: false,
-                mask: out MasterReference_ErrorMask errorMask,
+                mask: out var errorMask,
                 cmds: cmds);
         }
 
@@ -560,7 +560,7 @@ namespace Mutagen
                 item: this,
                 skipProtected: true,
                 doMasks: false,
-                mask: out MasterReference_ErrorMask errorMask,
+                mask: out var errorMask,
                 cmds: cmds);
         }
 
@@ -1548,10 +1548,11 @@ namespace Mutagen.Internals
                     errorMask: out subMask,
                     header: MasterReference_Registration.MAST_HEADER,
                     nullable: false);
-                if (doMasks && subMask != null)
-                {
-                    errorMask().Master = subMask;
-                }
+                ErrorMask.HandleErrorMask(
+                    errorMask,
+                    doMasks,
+                    (int)MasterReference_FieldIndex.Master,
+                    subMask);
             }
             {
                 Exception subMask;
@@ -1562,10 +1563,11 @@ namespace Mutagen.Internals
                     errorMask: out subMask,
                     header: MasterReference_Registration.DATA_HEADER,
                     nullable: false);
-                if (doMasks && subMask != null)
-                {
-                    errorMask().FileSize = subMask;
-                }
+                ErrorMask.HandleErrorMask(
+                    errorMask,
+                    doMasks,
+                    (int)MasterReference_FieldIndex.FileSize,
+                    subMask);
             }
         }
 
