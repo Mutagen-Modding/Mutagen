@@ -30,12 +30,12 @@ namespace Mutagen.Generation
             if (loquiGen.TargetObjectGeneration != null)
             {
                 using (var args = new ArgsWrapper(fg,
-                    $"{loquiGen.TargetObjectGeneration.ExtCommonName}.Write_{ModNickname}"))
+                    $"LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}, {loquiGen.MaskItemString(MaskType.Error)}>.Instance.Write"))
                 {
                     args.Add($"writer: {writerAccessor}");
                     args.Add($"item: {itemAccessor}");
                     args.Add($"doMasks: {doMaskAccessor}");
-                    args.Add($"errorMask: out {loquiGen.MaskItemString(MaskType.Error)} loquiMask");
+                    args.Add($"mask: out {loquiGen.MaskItemString(MaskType.Error)} loquiMask");
                 }
                 fg.AppendLine($"{maskAccessor} = loquiMask == null ? null : new MaskItem<Exception, {loquiGen.MaskItemString(MaskType.Error)}>(null, loquiMask);");
             }

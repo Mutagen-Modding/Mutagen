@@ -1856,12 +1856,12 @@ namespace Mutagen.Internals
                             maskObj: out subMask,
                             transl: (T subItem, bool listDoMasks, out MaskItem<Exception, T_ErrMask> listSubMask) =>
                             {
-                                MajorRecordCommon.Write_XML(
+                                LoquiXmlTranslation<T, T_ErrMask>.Instance.Write(
                                     writer: writer,
                                     item: subItem,
                                     name: "Item",
                                     doMasks: doMasks,
-                                    errorMask: out T_ErrMask loquiMask);
+                                    mask: out T_ErrMask loquiMask);
                                 listSubMask = loquiMask == null ? null : new MaskItem<Exception, T_ErrMask>(null, loquiMask);
                             }
                             );
@@ -1990,11 +1990,11 @@ namespace Mutagen.Internals
                     maskObj: out subMask,
                     transl: (T subItem, bool listDoMasks, out MaskItem<Exception, T_ErrMask> listSubMask) =>
                     {
-                        MajorRecordCommon.Write_Binary(
+                        LoquiBinaryTranslation<T, T_ErrMask>.Instance.Write(
                             writer: writer,
                             item: subItem,
                             doMasks: doMasks,
-                            errorMask: out T_ErrMask loquiMask);
+                            mask: out T_ErrMask loquiMask);
                         listSubMask = loquiMask == null ? null : new MaskItem<Exception, T_ErrMask>(null, loquiMask);
                     }
                     );
@@ -2343,7 +2343,7 @@ namespace Mutagen.Internals
             ret.ContainedRecordType = this.ContainedRecordType.Combine(rhs.ContainedRecordType);
             ret.GroupType = this.GroupType.Combine(rhs.GroupType);
             ret.LastModified = this.LastModified.Combine(rhs.LastModified);
-            ret.Items = new MaskItem<Exception, IEnumerable<MaskItem<Exception, MajorRecord_ErrorMask>>>(this.Items.Overall.Combine(rhs.Items.Overall), new List<MaskItem<Exception, MajorRecord_ErrorMask>>(this.Items.Specific.And(rhs.Items.Specific)));
+            ret.Items = new MaskItem<Exception, IEnumerable<MaskItem<Exception, T_ErrMask>>>(this.Items.Overall.Combine(rhs.Items.Overall), new List<MaskItem<Exception, T_ErrMask>>(this.Items.Specific.And(rhs.Items.Specific)));
             return ret;
         }
         public static Group_ErrorMask<T_ErrMask> Combine(Group_ErrorMask<T_ErrMask> lhs, Group_ErrorMask<T_ErrMask> rhs)

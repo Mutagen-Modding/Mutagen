@@ -2171,12 +2171,12 @@ namespace Mutagen.Internals
                     if (item.Header_Property.HasBeenSet)
                     {
                         MaskItem<Exception, Header_ErrorMask> subMask;
-                        HeaderCommon.Write_XML(
+                        LoquiXmlTranslation<Header, Header_ErrorMask>.Instance.Write(
                             writer: writer,
                             item: item.Header,
                             name: nameof(item.Header),
                             doMasks: doMasks,
-                            errorMask: out Header_ErrorMask loquiMask);
+                            mask: out Header_ErrorMask loquiMask);
                         subMask = loquiMask == null ? null : new MaskItem<Exception, Header_ErrorMask>(null, loquiMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
@@ -2255,12 +2255,12 @@ namespace Mutagen.Internals
                             maskObj: out subMask,
                             transl: (MasterReference subItem, bool listDoMasks, out MaskItem<Exception, MasterReference_ErrorMask> listSubMask) =>
                             {
-                                MasterReferenceCommon.Write_XML(
+                                LoquiXmlTranslation<MasterReference, MasterReference_ErrorMask>.Instance.Write(
                                     writer: writer,
                                     item: subItem,
                                     name: "Item",
                                     doMasks: doMasks,
-                                    errorMask: out MasterReference_ErrorMask loquiMask);
+                                    mask: out MasterReference_ErrorMask loquiMask);
                                 listSubMask = loquiMask == null ? null : new MaskItem<Exception, MasterReference_ErrorMask>(null, loquiMask);
                             }
                             );
@@ -2361,11 +2361,11 @@ namespace Mutagen.Internals
         {
             {
                 MaskItem<Exception, Header_ErrorMask> subMask;
-                HeaderCommon.Write_Binary(
+                LoquiBinaryTranslation<Header, Header_ErrorMask>.Instance.Write(
                     writer: writer,
                     item: item.Header,
                     doMasks: doMasks,
-                    errorMask: out Header_ErrorMask loquiMask);
+                    mask: out Header_ErrorMask loquiMask);
                 subMask = loquiMask == null ? null : new MaskItem<Exception, Header_ErrorMask>(null, loquiMask);
                 ErrorMask.HandleErrorMask(
                     errorMask,
@@ -2442,11 +2442,11 @@ namespace Mutagen.Internals
                     maskObj: out subMask,
                     transl: (MasterReference subItem, bool listDoMasks, out MaskItem<Exception, MasterReference_ErrorMask> listSubMask) =>
                     {
-                        MasterReferenceCommon.Write_Binary(
+                        LoquiBinaryTranslation<MasterReference, MasterReference_ErrorMask>.Instance.Write(
                             writer: writer,
                             item: subItem,
                             doMasks: doMasks,
-                            errorMask: out MasterReference_ErrorMask loquiMask);
+                            mask: out MasterReference_ErrorMask loquiMask);
                         listSubMask = loquiMask == null ? null : new MaskItem<Exception, MasterReference_ErrorMask>(null, loquiMask);
                     }
                     );

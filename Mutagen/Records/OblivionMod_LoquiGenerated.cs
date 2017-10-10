@@ -1552,12 +1552,12 @@ namespace Mutagen.Internals
                     if (item.TES4_Property.HasBeenSet)
                     {
                         MaskItem<Exception, TES4_ErrorMask> subMask;
-                        TES4Common.Write_XML(
+                        LoquiXmlTranslation<TES4, TES4_ErrorMask>.Instance.Write(
                             writer: writer,
                             item: item.TES4,
                             name: nameof(item.TES4),
                             doMasks: doMasks,
-                            errorMask: out TES4_ErrorMask loquiMask);
+                            mask: out TES4_ErrorMask loquiMask);
                         subMask = loquiMask == null ? null : new MaskItem<Exception, TES4_ErrorMask>(null, loquiMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
@@ -1568,12 +1568,12 @@ namespace Mutagen.Internals
                     if (item.GameSettings_Property.HasBeenSet)
                     {
                         MaskItem<Exception, Group_ErrorMask<GameSetting_ErrorMask>> subMask;
-                        GroupCommon.Write_XML(
+                        LoquiXmlTranslation<Group<GameSetting>, Group_ErrorMask<GameSetting_ErrorMask>>.Instance.Write(
                             writer: writer,
                             item: item.GameSettings,
                             name: nameof(item.GameSettings),
                             doMasks: doMasks,
-                            errorMask: out Group_ErrorMask<GameSetting_ErrorMask> loquiMask);
+                            mask: out Group_ErrorMask<GameSetting_ErrorMask> loquiMask);
                         subMask = loquiMask == null ? null : new MaskItem<Exception, Group_ErrorMask<GameSetting_ErrorMask>>(null, loquiMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
@@ -1640,11 +1640,11 @@ namespace Mutagen.Internals
         {
             {
                 MaskItem<Exception, TES4_ErrorMask> subMask;
-                TES4Common.Write_Binary(
+                LoquiBinaryTranslation<TES4, TES4_ErrorMask>.Instance.Write(
                     writer: writer,
                     item: item.TES4,
                     doMasks: doMasks,
-                    errorMask: out TES4_ErrorMask loquiMask);
+                    mask: out TES4_ErrorMask loquiMask);
                 subMask = loquiMask == null ? null : new MaskItem<Exception, TES4_ErrorMask>(null, loquiMask);
                 ErrorMask.HandleErrorMask(
                     errorMask,
@@ -1654,11 +1654,11 @@ namespace Mutagen.Internals
             }
             {
                 MaskItem<Exception, Group_ErrorMask<GameSetting_ErrorMask>> subMask;
-                GroupCommon.Write_Binary(
+                LoquiBinaryTranslation<Group<GameSetting>, Group_ErrorMask<GameSetting_ErrorMask>>.Instance.Write(
                     writer: writer,
                     item: item.GameSettings,
                     doMasks: doMasks,
-                    errorMask: out Group_ErrorMask<GameSetting_ErrorMask> loquiMask);
+                    mask: out Group_ErrorMask<GameSetting_ErrorMask> loquiMask);
                 subMask = loquiMask == null ? null : new MaskItem<Exception, Group_ErrorMask<GameSetting_ErrorMask>>(null, loquiMask);
                 ErrorMask.HandleErrorMask(
                     errorMask,

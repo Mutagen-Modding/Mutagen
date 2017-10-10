@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>b66e483506911f4b9716861050bf7f9af49b249b</Sha>
+         <Sha>1db8675db226627119c3a24ff6441f41f81ade6c</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>10-09-2017 22:51:17</CommitDate>
-         <Description>Refactoring</Description>
+         <CommitDate>10-10-2017 16:37:42</CommitDate>
+         <Description>LoquiXmlTranslationGeneration writes to use LoquiXmlTranslator.Write call</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

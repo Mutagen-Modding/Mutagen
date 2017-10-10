@@ -37,6 +37,7 @@ namespace Mutagen
             {
                 throw new ArgumentException($"EDID was not located in expected position: {reader.BaseStream.Position}");
             }
+            reader.BaseStream.Position += 6;
             var edid = StringBinaryTranslation.Instance.Parse(
                 reader,
                 contentLength,

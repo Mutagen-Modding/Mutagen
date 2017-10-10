@@ -19,6 +19,8 @@ namespace Mutagen.Binary
         private static readonly ILoquiRegistration Registration = LoquiRegistration.GetRegister(typeof(T));
         public delegate T CREATE_FUNC(BinaryReader reader, bool doMasks, out M errorMask);
         private static readonly Lazy<CREATE_FUNC> CREATE = new Lazy<CREATE_FUNC>(GetCreateFunc);
+        public delegate void WRITE_FUNC(BinaryWriter writer, T item, bool doMasks, out M errorMask);
+        private static readonly Lazy<WRITE_FUNC> WRITE = new Lazy<WRITE_FUNC>(GetWriteFunc);
 
         private IEnumerable<KeyValuePair<ushort, object>> EnumerateObjects(
             ILoquiRegistration registration,
@@ -116,6 +118,21 @@ namespace Mutagen.Binary
                 var ret = f(reader, doMasks);
                 errorMask = ret.mask;
                 return ret.item;
+            };
+        }
+
+        public static WRITE_FUNC GetWriteFunc()
+        {
+            var f = DelegateBuilder.BuildDelegate<Func<BinaryWriter, T, bool, M>>(
+                typeof(T).GetMethods()
+                .Where((methodInfo) => methodInfo.Name.Equals("Write_Binary"))
+                .Where((methodInfo) => methodInfo.IsStatic
+                    && methodInfo.IsPublic)
+                .Where((methodInfo) => methodInfo.ReturnType.Equals(typeof(M)))
+                .First());
+            return (BinaryWriter writer, T item, bool doMasks, out M errorMask) =>
+            {
+                errorMask = f(writer, item, doMasks);
             };
         }
 
