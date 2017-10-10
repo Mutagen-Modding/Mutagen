@@ -35,9 +35,9 @@ namespace Mutagen.Generation
                     args.Add($"writer: {writerAccessor}");
                     args.Add($"item: {itemAccessor}");
                     args.Add($"doMasks: {doMaskAccessor}");
-                    args.Add($"errorMask: out {loquiGen.ErrorMaskItemString} loquiMask");
+                    args.Add($"errorMask: out {loquiGen.MaskItemString(MaskType.Error)} loquiMask");
                 }
-                fg.AppendLine($"{maskAccessor} = loquiMask == null ? null : new MaskItem<Exception, {loquiGen.ErrorMaskItemString}>(null, loquiMask);");
+                fg.AppendLine($"{maskAccessor} = loquiMask == null ? null : new MaskItem<Exception, {loquiGen.MaskItemString(MaskType.Error)}>(null, loquiMask);");
             }
             else
             {
@@ -72,7 +72,7 @@ namespace Mutagen.Generation
                     {
                         args.Add($"reader: {readerAccessor}");
                         args.Add($"doMasks: {doMaskAccessor}");
-                        args.Add($"errorMask: out {loquiGen.ErrorMaskItemString} createMask");
+                        args.Add($"errorMask: out {loquiGen.MaskItemString(MaskType.Error)} createMask");
                     }
                     using (var args = new ArgsWrapper(fg,
                         $"{loquiGen.TargetObjectGeneration.ExtCommonName}.CopyFieldsFrom"))
@@ -83,10 +83,10 @@ namespace Mutagen.Generation
                         args.Add("cmds: null");
                         args.Add("copyMask: null");
                         args.Add($"doErrorMask: {doMaskAccessor}");
-                        args.Add($"errorMask: out {loquiGen.ErrorMaskItemString} copyMask");
+                        args.Add($"errorMask: out {loquiGen.MaskItemString(MaskType.Error)} copyMask");
                     }
-                    fg.AppendLine($"var loquiMask = {loquiGen.ErrorMaskItemString}.Combine(createMask, copyMask);");
-                    fg.AppendLine($"{maskAccessor} = loquiMask == null ? null : new MaskItem<Exception, {loquiGen.ErrorMaskItemString}>(null, loquiMask);");
+                    fg.AppendLine($"var loquiMask = {loquiGen.MaskItemString(MaskType.Error)}.Combine(createMask, copyMask);");
+                    fg.AppendLine($"{maskAccessor} = loquiMask == null ? null : new MaskItem<Exception, {loquiGen.MaskItemString(MaskType.Error)}>(null, loquiMask);");
                 }
                 else
                 {
@@ -116,7 +116,7 @@ namespace Mutagen.Generation
             {
                 UnsafeXmlTranslationGeneration unsafeXml = new UnsafeXmlTranslationGeneration()
                 {
-                    ErrMaskString = $"MaskItem<Exception, {loquiGen.ErrorMaskItemString}>"
+                    ErrMaskString = $"MaskItem<Exception, {loquiGen.MaskItemString(MaskType.Error)}>"
                 };
                 unsafeXml.GenerateCopyIn(
                     fg: fg,
@@ -159,7 +159,7 @@ namespace Mutagen.Generation
             if (loquiGen.TargetObjectGeneration != null)
             {
                 using (var args = new ArgsWrapper(fg,
-                    $"{retAccessor}LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}, {loquiGen.ErrorMaskItemString}>.Instance.Parse"))
+                    $"{retAccessor}LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}, {loquiGen.MaskItemString(MaskType.Error)}>.Instance.Parse"))
                 {
                     args.Add($"reader: {readerAccessor}");
                     args.Add($"doMasks: {doMaskAccessor}");
@@ -170,7 +170,7 @@ namespace Mutagen.Generation
             {
                 UnsafeXmlTranslationGeneration unsafeXml = new UnsafeXmlTranslationGeneration()
                 {
-                    ErrMaskString = $"MaskItem<Exception, {loquiGen.ErrorMaskItemString}>"
+                    ErrMaskString = $"MaskItem<Exception, {loquiGen.MaskItemString(MaskType.Error)}>"
                 };
                 unsafeXml.GenerateCopyInRet(
                     fg: fg,

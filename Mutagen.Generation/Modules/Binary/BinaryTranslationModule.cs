@@ -149,12 +149,12 @@ namespace Mutagen.Generation
                 if (objType != ObjectType.Struct)
                 {
                     using (var args = new FunctionWrapper(fg,
-                        $"private static {obj.ObjectName} Create_{ModuleNickname}_Internal{obj.GenericClause_Nickname(MaskModule.ErrMaskNickname)}",
+                        $"private static {obj.ObjectName} Create_{ModuleNickname}_Internal{obj.Mask_GenericClause(MaskType.Error)}",
                         wheres: obj.GenericTypes_ErrorMaskWheres))
                     {
                         args.Add("BinaryReader reader");
                         args.Add("bool doMasks");
-                        args.Add($"Func<{obj.ErrorMask}> errorMask");
+                        args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
                     }
                     using (new BraceWrapper(fg))
                     {
@@ -213,7 +213,7 @@ namespace Mutagen.Generation
                 }
 
                 using (var args = new FunctionWrapper(fg,
-                    $"private static {obj.ObjectName} Create_{ModuleNickname}_Internal{obj.GenericClause_Nickname(MaskModule.ErrMaskNickname)}",
+                    $"private static {obj.ObjectName} Create_{ModuleNickname}_Internal{obj.Mask_GenericClause(MaskType.Error)}",
                     wheres: obj.GenericTypes_ErrorMaskWheres))
                 {
                     args.Add("BinaryReader reader");
@@ -222,7 +222,7 @@ namespace Mutagen.Generation
                     {
                         args.Add("long finalPosition");
                     }
-                    args.Add($"Func<{obj.ErrorMask}> errorMask");
+                    args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
                 }
                 using (new BraceWrapper(fg))
                 {
@@ -284,13 +284,13 @@ namespace Mutagen.Generation
             if ((!obj.Abstract && obj.BaseClassTrail().All((b) => b.Abstract)) || HasEmbeddedFields(obj))
             {
                 using (var args = new FunctionWrapper(fg,
-                    $"protected static void Fill_{ModuleNickname}{obj.GenericClause_Nickname(MaskModule.ErrMaskNickname)}",
+                    $"protected static void Fill_{ModuleNickname}{obj.Mask_GenericClause(MaskType.Error)}",
                     wheres: obj.GenericTypes_ErrorMaskWheres))
                 {
                     args.Add($"{obj.ObjectName} item");
                     args.Add("BinaryReader reader");
                     args.Add("bool doMasks");
-                    args.Add($"Func<{obj.ErrorMask}> errorMask");
+                    args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
                 }
                 using (new BraceWrapper(fg))
                 {
@@ -323,13 +323,13 @@ namespace Mutagen.Generation
             if (HasRecordTypeFields(obj))
             {
                 using (var args = new FunctionWrapper(fg,
-                    $"protected static void Fill_{ModuleNickname}_RecordTypes{obj.GenericClause_Nickname(MaskModule.ErrMaskNickname)}",
+                    $"protected static void Fill_{ModuleNickname}_RecordTypes{obj.Mask_GenericClause(MaskType.Error)}",
                     wheres: obj.GenericTypes_ErrorMaskWheres))
                 {
                     args.Add($"{obj.ObjectName} item");
                     args.Add("BinaryReader reader");
                     args.Add("bool doMasks");
-                    args.Add($"Func<{obj.ErrorMask}> errorMask");
+                    args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
                 }
                 using (new BraceWrapper(fg))
                 {
@@ -504,7 +504,7 @@ namespace Mutagen.Generation
         protected override void GenerateCopyInSnippet(ObjectGeneration obj, FileGeneration fg, bool usingErrorMask)
         {
             using (var args = new ArgsWrapper(fg,
-                $"LoquiBinaryTranslation<{obj.ObjectName}, {(usingErrorMask ? obj.ErrorMask : obj.ErrorMask_GenericAssumed)}>.Instance.CopyIn"))
+                $"LoquiBinaryTranslation<{obj.ObjectName}, {(usingErrorMask ? obj.Mask(MaskType.Error): obj.Mask_GenericAssumed(MaskType.Error))}>.Instance.CopyIn"))
             using (new DepthWrapper(fg))
             {
                 foreach (var item in this.MainAPI.ReaderPassArgs)
@@ -529,13 +529,13 @@ namespace Mutagen.Generation
 
         protected override void GenerateCreateSnippet(ObjectGeneration obj, FileGeneration fg)
         {
-            fg.AppendLine($"{obj.ErrorMask} errMaskRet = null;");
+            fg.AppendLine($"{obj.Mask(MaskType.Error)} errMaskRet = null;");
             using (var args = new ArgsWrapper(fg,
                 $"var ret = Create_{ModuleNickname}_Internal"))
             {
                 args.Add("reader: reader");
                 args.Add("doMasks: doMasks");
-                args.Add($"errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new {obj.ErrorMask}()) : default(Func<{obj.ErrorMask}>)");
+                args.Add($"errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new {obj.Mask(MaskType.Error)}()) : default(Func<{obj.Mask(MaskType.Error)}>)");
             }
             fg.AppendLine($"return (ret, errMaskRet);");
         }
@@ -623,7 +623,7 @@ namespace Mutagen.Generation
                     args.Add($"{obj.Getter_InterfaceStr} item");
                     args.Add("BinaryWriter writer");
                     args.Add("bool doMasks");
-                    args.Add($"Func<{obj.ErrorMask}> errorMask");
+                    args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
                 }
                 using (new BraceWrapper(fg))
                 {
@@ -686,7 +686,7 @@ namespace Mutagen.Generation
                     args.Add($"{obj.Getter_InterfaceStr} item");
                     args.Add("BinaryWriter writer");
                     args.Add("bool doMasks");
-                    args.Add($"Func<{obj.ErrorMask}> errorMask");
+                    args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
                 }
                 using (new BraceWrapper(fg))
                 {
