@@ -731,7 +731,7 @@ namespace Mutagen
         {
             var finalPosition = HeaderTranslation.ParseRecord(
                 reader,
-                GameSettingString_Registration.DATA_HEADER);
+                GameSettingString_Registration.GMST_HEADER);
             return Create_Binary_Internal(
                 reader: reader,
                 doMasks: doMasks,
@@ -1118,8 +1118,9 @@ namespace Mutagen.Internals
             }
         }
 
+        public static readonly RecordType GMST_HEADER = new RecordType("GMST");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = DATA_HEADER;
+        public static readonly RecordType TRIGGERING_RECORD_TYPE = GMST_HEADER;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1478,16 +1479,22 @@ namespace Mutagen.Internals
         {
             try
             {
-                GameSettingCommon.Write_Binary_Embedded(
-                    item: item,
+                using (HeaderExport.ExportHeader(
                     writer: writer,
-                    doMasks: doMasks,
-                    errorMask: errorMask);
-                Write_Binary_RecordTypes(
-                    item: item,
-                    writer: writer,
-                    doMasks: doMasks,
-                    errorMask: errorMask);
+                    record: GameSettingString_Registration.GMST_HEADER,
+                    type: ObjectType.Record))
+                {
+                    GameSettingCommon.Write_Binary_Embedded(
+                        item: item,
+                        writer: writer,
+                        doMasks: doMasks,
+                        errorMask: errorMask);
+                    Write_Binary_RecordTypes(
+                        item: item,
+                        writer: writer,
+                        doMasks: doMasks,
+                        errorMask: errorMask);
+                }
             }
             catch (Exception ex)
             when (doMasks)
