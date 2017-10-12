@@ -437,13 +437,13 @@ namespace Mutagen
 
         #endregion
 
-        protected static void Fill_Binary(
+        protected static void Fill_Binary_Structs(
             GameSetting item,
             BinaryReader reader,
             bool doMasks,
             Func<GameSetting_ErrorMask> errorMask)
         {
-            MajorRecord.Fill_Binary(
+            MajorRecord.Fill_Binary_Structs(
                 item: item,
                 reader: reader,
                 doMasks: doMasks,

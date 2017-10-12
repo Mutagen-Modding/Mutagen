@@ -231,7 +231,7 @@ namespace Mutagen.Generation
                     using (new BraceWrapper(fg))
                     {
                         using (var args = new ArgsWrapper(fg,
-                            $"Fill_{ModuleNickname}"))
+                            $"Fill_{ModuleNickname}_Structs"))
                         {
                             args.Add("item: ret");
                             args.Add("reader: reader");
@@ -287,7 +287,7 @@ namespace Mutagen.Generation
             if ((!obj.Abstract && obj.BaseClassTrail().All((b) => b.Abstract)) || HasEmbeddedFields(obj))
             {
                 using (var args = new FunctionWrapper(fg,
-                    $"protected static void Fill_{ModuleNickname}{obj.Mask_GenericClause(MaskType.Error)}",
+                    $"protected static void Fill_{ModuleNickname}_Structs{obj.Mask_GenericClause(MaskType.Error)}",
                     wheres: obj.GenericTypes_ErrorMaskWheres))
                 {
                     args.Add($"{obj.ObjectName} item");
@@ -300,7 +300,7 @@ namespace Mutagen.Generation
                     if (obj.HasBaseObject && obj.BaseClassTrail().Any((b) => HasEmbeddedFields(b)))
                     {
                         using (var args = new ArgsWrapper(fg,
-                            $"{obj.BaseClass.Name}.Fill_{ModuleNickname}"))
+                            $"{obj.BaseClass.Name}.Fill_{ModuleNickname}_Structs"))
                         {
                             args.Add("item: item");
                             args.Add("reader: reader");

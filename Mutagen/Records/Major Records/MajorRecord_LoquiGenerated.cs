@@ -567,7 +567,7 @@ namespace Mutagen
 
         #endregion
 
-        protected static void Fill_Binary(
+        protected static void Fill_Binary_Structs(
             MajorRecord item,
             BinaryReader reader,
             bool doMasks,

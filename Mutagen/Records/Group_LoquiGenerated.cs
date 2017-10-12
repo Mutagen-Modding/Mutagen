@@ -888,7 +888,7 @@ namespace Mutagen
             var ret = new Group<T>();
             try
             {
-                Fill_Binary(
+                Fill_Binary_Structs(
                     item: ret,
                     reader: reader,
                     doMasks: doMasks,
@@ -915,7 +915,7 @@ namespace Mutagen
             return ret;
         }
 
-        protected static void Fill_Binary<T_ErrMask>(
+        protected static void Fill_Binary_Structs<T_ErrMask>(
             Group<T> item,
             BinaryReader reader,
             bool doMasks,

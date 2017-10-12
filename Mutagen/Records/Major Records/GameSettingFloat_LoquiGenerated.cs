@@ -748,7 +748,7 @@ namespace Mutagen
             var ret = new GameSettingFloat();
             try
             {
-                Fill_Binary(
+                Fill_Binary_Structs(
                     item: ret,
                     reader: reader,
                     doMasks: doMasks,
@@ -775,13 +775,13 @@ namespace Mutagen
             return ret;
         }
 
-        protected static void Fill_Binary(
+        protected static void Fill_Binary_Structs(
             GameSettingFloat item,
             BinaryReader reader,
             bool doMasks,
             Func<GameSettingFloat_ErrorMask> errorMask)
         {
-            GameSetting.Fill_Binary(
+            GameSetting.Fill_Binary_Structs(
                 item: item,
                 reader: reader,
                 doMasks: doMasks,

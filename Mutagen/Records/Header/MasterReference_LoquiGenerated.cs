@@ -715,7 +715,7 @@ namespace Mutagen
             var ret = new MasterReference();
             try
             {
-                Fill_Binary(
+                Fill_Binary_Structs(
                     item: ret,
                     reader: reader,
                     doMasks: doMasks,
@@ -737,7 +737,7 @@ namespace Mutagen
             return ret;
         }
 
-        protected static void Fill_Binary(
+        protected static void Fill_Binary_Structs(
             MasterReference item,
             BinaryReader reader,
             bool doMasks,
