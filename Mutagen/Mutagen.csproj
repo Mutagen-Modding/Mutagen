@@ -47,6 +47,9 @@
     <Compile Include="ObjectType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProtocolDefinition_mutagen.cs" />
+    <Compile Include="Records\Major Records\Global.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Group.cs">
       <DependentUpon>Group.xml</DependentUpon>
     </Compile>
@@ -61,6 +64,18 @@
     </Compile>
     <Compile Include="Records\Major Records\GameSettingString.cs">
       <DependentUpon>GameSetting.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GlobalFloat.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GlobalInt.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GlobalShort.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MajorRecord.cs">
+      <DependentUpon>MajorRecord.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\MajorRecord_LoquiGenerated.cs">
       <DependentUpon>MajorRecord.xml</DependentUpon>
@@ -122,6 +137,18 @@
       <DependentUpon>Group.xml</DependentUpon>
     </Compile>
     <Compile Include="Utility.cs" />
+    <Compile Include="Records\Major Records\Global_LoquiGenerated.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GlobalInt_LoquiGenerated.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GlobalShort_LoquiGenerated.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\GlobalFloat_LoquiGenerated.cs">
+      <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\CSharpExt\CSharpExt\CSharpExt.csproj">
@@ -140,7 +167,12 @@
     <Content Include="Records\Header\MasterReference.xml">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Records\Major Records\GameSetting.xml" />
+    <Content Include="Records\Major Records\GameSetting.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\Global.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Records\Major Records\MajorRecord.xml">
       <SubType>Designer</SubType>
     </Content>

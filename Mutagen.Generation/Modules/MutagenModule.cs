@@ -21,6 +21,8 @@ namespace Mutagen.Generation
         public override void GenerateInRegistration(ObjectGeneration obj, FileGeneration fg)
         {
             GenerateKnownRecordTypes(obj, fg);
+            fg.AppendLine($"public const int NumStructFields = {obj.Fields.Where((f) => f.GetFieldData().TriggeringRecordAccessor == null).Count()};");
+            fg.AppendLine($"public const int NumTypedFields = {obj.Fields.Where((f) => f.GetFieldData().TriggeringRecordAccessor != null).Count()};");
         }
 
         private IEnumerable<string> GetGenerics(ObjectGeneration obj, FileGeneration fg)

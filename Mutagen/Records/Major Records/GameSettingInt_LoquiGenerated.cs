@@ -981,7 +981,7 @@ namespace Mutagen.Internals
     #region Field Index
     public enum GameSettingInt_FieldIndex
     {
-        Data = 6,
+        Data = 5,
     }
     #endregion
 
@@ -1121,6 +1121,8 @@ namespace Mutagen.Internals
         public static readonly RecordType GMST_HEADER = new RecordType("GMST");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = GMST_HEADER;
+        public const int NumStructFields = 0;
+        public const int NumTypedFields = 1;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1484,7 +1486,7 @@ namespace Mutagen.Internals
                     record: GameSettingInt_Registration.GMST_HEADER,
                     type: ObjectType.Record))
                 {
-                    GameSettingCommon.Write_Binary_Embedded(
+                    MajorRecordCommon.Write_Binary_Embedded(
                         item: item,
                         writer: writer,
                         doMasks: doMasks,

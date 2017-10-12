@@ -1194,6 +1194,8 @@ namespace Mutagen.Internals
 
         public static readonly RecordType HEDR_HEADER = new RecordType("HEDR");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = HEDR_HEADER;
+        public const int NumStructFields = 3;
+        public const int NumTypedFields = 0;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;

@@ -1125,6 +1125,8 @@ namespace Mutagen.Internals
         public static readonly RecordType MAST_HEADER = new RecordType("MAST");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = MAST_HEADER;
+        public const int NumStructFields = 0;
+        public const int NumTypedFields = 2;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;

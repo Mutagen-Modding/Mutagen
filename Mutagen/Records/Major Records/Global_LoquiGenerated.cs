@@ -22,34 +22,45 @@ using Mutagen.Binary;
 namespace Mutagen
 {
     #region Class
-    public abstract partial class GameSetting : MajorRecord, IGameSetting, ILoquiObjectSetter, IEquatable<GameSetting>
+    public abstract partial class Global : MajorRecord, IGlobal, ILoquiObjectSetter, IEquatable<Global>
     {
-        ILoquiRegistration ILoquiObject.Registration => GameSetting_Registration.Instance;
-        public new static GameSetting_Registration Registration => GameSetting_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Global_Registration.Instance;
+        public new static Global_Registration Registration => Global_Registration.Instance;
 
         #region Ctor
-        public GameSetting()
+        public Global()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
+        #region RawFloat
+        protected readonly INotifyingItem<Single> _RawFloat = NotifyingItem.Factory<Single>(markAsSet: false);
+        public INotifyingItem<Single> RawFloat_Property => _RawFloat;
+        public Single RawFloat
+        {
+            get => this._RawFloat.Item;
+            set => this._RawFloat.Set(value);
+        }
+        INotifyingItem<Single> IGlobal.RawFloat_Property => this.RawFloat_Property;
+        INotifyingItemGetter<Single> IGlobalGetter.RawFloat_Property => this.RawFloat_Property;
+        #endregion
 
         #region Loqui Getter Interface
 
-        protected override object GetNthObject(ushort index) => GameSettingCommon.GetNthObject(index, this);
+        protected override object GetNthObject(ushort index) => GlobalCommon.GetNthObject(index, this);
 
-        protected override bool GetNthObjectHasBeenSet(ushort index) => GameSettingCommon.GetNthObjectHasBeenSet(index, this);
+        protected override bool GetNthObjectHasBeenSet(ushort index) => GlobalCommon.GetNthObjectHasBeenSet(index, this);
 
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => GameSettingCommon.UnsetNthObject(index, this, cmds);
+        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => GlobalCommon.UnsetNthObject(index, this, cmds);
 
         #endregion
 
         #region Loqui Interface
         protected override void SetNthObjectHasBeenSet(ushort index, bool on)
         {
-            GameSettingCommon.SetNthObjectHasBeenSet(index, on, this);
+            GlobalCommon.SetNthObjectHasBeenSet(index, on, this);
         }
 
         #endregion
@@ -57,46 +68,55 @@ namespace Mutagen
         #region To String
         public override string ToString()
         {
-            return GameSettingCommon.ToString(this, printMask: null);
+            return GlobalCommon.ToString(this, printMask: null);
         }
 
         public string ToString(
             string name = null,
-            GameSetting_Mask<bool> printMask = null)
+            Global_Mask<bool> printMask = null)
         {
-            return GameSettingCommon.ToString(this, name: name, printMask: printMask);
+            return GlobalCommon.ToString(this, name: name, printMask: printMask);
         }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            GameSettingCommon.ToString(this, fg, name: name, printMask: null);
+            GlobalCommon.ToString(this, fg, name: name, printMask: null);
         }
 
         #endregion
 
-        public new GameSetting_Mask<bool> GetHasBeenSetMask()
+        public new Global_Mask<bool> GetHasBeenSetMask()
         {
-            return GameSettingCommon.GetHasBeenSetMask(this);
+            return GlobalCommon.GetHasBeenSetMask(this);
         }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is GameSetting rhs)) return false;
+            if (!(obj is Global rhs)) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(GameSetting rhs)
+        public bool Equals(Global rhs)
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (RawFloat_Property.HasBeenSet != rhs.RawFloat_Property.HasBeenSet) return false;
+            if (RawFloat_Property.HasBeenSet)
+            {
+                if (RawFloat != rhs.RawFloat) return false;
+            }
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
+            if (RawFloat_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(RawFloat).CombineHashCode(ret);
+            }
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -110,7 +130,7 @@ namespace Mutagen
             XElement root,
             NotifyingFireParameters? cmds = null)
         {
-            LoquiXmlTranslation<GameSetting, GameSetting_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<Global, Global_ErrorMask>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
@@ -121,10 +141,10 @@ namespace Mutagen
 
         public virtual void CopyIn_XML(
             XElement root,
-            out GameSetting_ErrorMask errorMask,
+            out Global_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
-            LoquiXmlTranslation<GameSetting, GameSetting_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<Global, Global_ErrorMask>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
@@ -145,7 +165,7 @@ namespace Mutagen
 
         public void CopyIn_XML(
             string path,
-            out GameSetting_ErrorMask errorMask,
+            out Global_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             var root = XDocument.Load(path).Root;
@@ -167,7 +187,7 @@ namespace Mutagen
 
         public void CopyIn_XML(
             Stream stream,
-            out GameSetting_ErrorMask errorMask,
+            out Global_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             var root = XDocument.Load(stream).Root;
@@ -184,7 +204,7 @@ namespace Mutagen
         {
             this.CopyIn_XML(
                 root: root,
-                errorMask: out GameSetting_ErrorMask errMask,
+                errorMask: out Global_ErrorMask errMask,
                 cmds: cmds);
             errorMask = errMask;
         }
@@ -194,10 +214,10 @@ namespace Mutagen
         #region XML Write
         public virtual void Write_XML(
             XmlWriter writer,
-            out GameSetting_ErrorMask errorMask,
+            out Global_ErrorMask errorMask,
             string name = null)
         {
-            GameSettingCommon.Write_XML(
+            GlobalCommon.Write_XML(
                 writer: writer,
                 name: name,
                 item: this,
@@ -207,7 +227,7 @@ namespace Mutagen
 
         public virtual void Write_XML(
             string path,
-            out GameSetting_ErrorMask errorMask,
+            out Global_ErrorMask errorMask,
             string name = null)
         {
             using (var writer = new XmlTextWriter(path, Encoding.ASCII))
@@ -223,7 +243,7 @@ namespace Mutagen
 
         public virtual void Write_XML(
             Stream stream,
-            out GameSetting_ErrorMask errorMask,
+            out Global_ErrorMask errorMask,
             string name = null)
         {
             using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
@@ -240,14 +260,29 @@ namespace Mutagen
         #endregion
 
         protected static void Fill_XML_Internal(
-            GameSetting item,
+            Global item,
             XElement root,
             string name,
             bool doMasks,
-            Func<GameSetting_ErrorMask> errorMask)
+            Func<Global_ErrorMask> errorMask)
         {
             switch (name)
             {
+                case "RawFloat":
+                    {
+                        Exception subMask;
+                        var tryGet = FloatXmlTranslation.Instance.ParseNonNull(
+                            root,
+                            doMasks: doMasks,
+                            errorMask: out subMask);
+                        item._RawFloat.SetIfSucceeded(tryGet);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)Global_FieldIndex.RawFloat,
+                            subMask);
+                    }
+                    break;
                 default:
                     MajorRecord.Fill_XML_Internal(
                         item: item,
@@ -267,7 +302,7 @@ namespace Mutagen
             BinaryReader reader,
             NotifyingFireParameters? cmds = null)
         {
-            LoquiBinaryTranslation<GameSetting, GameSetting_ErrorMask>.Instance.CopyIn(
+            LoquiBinaryTranslation<Global, Global_ErrorMask>.Instance.CopyIn(
                 reader: reader,
                 item: this,
                 skipProtected: true,
@@ -278,10 +313,10 @@ namespace Mutagen
 
         public virtual void CopyIn_Binary(
             BinaryReader reader,
-            out GameSetting_ErrorMask errorMask,
+            out Global_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
-            LoquiBinaryTranslation<GameSetting, GameSetting_ErrorMask>.Instance.CopyIn(
+            LoquiBinaryTranslation<Global, Global_ErrorMask>.Instance.CopyIn(
                 reader: reader,
                 item: this,
                 skipProtected: true,
@@ -307,7 +342,7 @@ namespace Mutagen
 
         public void CopyIn_Binary(
             string path,
-            out GameSetting_ErrorMask errorMask,
+            out Global_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
@@ -336,7 +371,7 @@ namespace Mutagen
 
         public void CopyIn_Binary(
             Stream stream,
-            out GameSetting_ErrorMask errorMask,
+            out Global_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             using (var reader = new BinaryReader(stream))
@@ -355,7 +390,7 @@ namespace Mutagen
         {
             this.CopyIn_Binary(
                 reader: reader,
-                errorMask: out GameSetting_ErrorMask errMask,
+                errorMask: out Global_ErrorMask errMask,
                 cmds: cmds);
             errorMask = errMask;
         }
@@ -365,9 +400,9 @@ namespace Mutagen
         #region Binary Write
         public virtual void Write_Binary(
             BinaryWriter writer,
-            out GameSetting_ErrorMask errorMask)
+            out Global_ErrorMask errorMask)
         {
-            GameSettingCommon.Write_Binary(
+            GlobalCommon.Write_Binary(
                 writer: writer,
                 item: this,
                 doMasks: true,
@@ -376,7 +411,7 @@ namespace Mutagen
 
         public virtual void Write_Binary(
             string path,
-            out GameSetting_ErrorMask errorMask)
+            out Global_ErrorMask errorMask)
         {
             using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
             {
@@ -391,7 +426,7 @@ namespace Mutagen
 
         public virtual void Write_Binary(
             Stream stream,
-            out GameSetting_ErrorMask errorMask)
+            out Global_ErrorMask errorMask)
         {
             using (var writer = new BinaryWriter(stream))
             {
@@ -403,13 +438,55 @@ namespace Mutagen
 
         #endregion
 
+        protected static void Fill_Binary_RecordTypes(
+            Global item,
+            BinaryReader reader,
+            bool doMasks,
+            Func<Global_ErrorMask> errorMask)
+        {
+            var nextRecordType = HeaderTranslation.ReadNextSubRecordType(
+                reader: reader,
+                contentLength: out var subLength);
+            switch (nextRecordType.Type)
+            {
+                case "FLTV":
+                {
+                    Exception subMask;
+                    var tryGet = Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
+                        reader,
+                        doMasks: doMasks,
+                        errorMask: out subMask);
+                    item._RawFloat.SetIfSucceeded(tryGet);
+                    ErrorMask.HandleErrorMask(
+                        errorMask,
+                        doMasks,
+                        (int)Global_FieldIndex.RawFloat,
+                        subMask);
+                }
+                break;
+                default:
+                    reader.BaseStream.Position -= Constants.SUBRECORD_LENGTH;
+                    MajorRecord.Fill_Binary_RecordTypes(
+                        item: item,
+                        reader: reader,
+                        doMasks: doMasks,
+                        errorMask: errorMask);
+                    break;
+            }
+        }
+
         #endregion
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds = null)
         {
-            GameSetting_FieldIndex enu = (GameSetting_FieldIndex)index;
+            Global_FieldIndex enu = (Global_FieldIndex)index;
             switch (enu)
             {
+                case Global_FieldIndex.RawFloat:
+                    this._RawFloat.Set(
+                        (Single)obj,
+                        cmds);
+                    break;
                 default:
                     base.SetNthObject(index, obj, cmds);
                     break;
@@ -419,23 +496,28 @@ namespace Mutagen
         public override void Clear(NotifyingUnsetParameters? cmds = null)
         {
             CallClearPartial_Internal(cmds);
-            GameSettingCommon.Clear(this, cmds);
+            GlobalCommon.Clear(this, cmds);
         }
 
 
-        protected new static void CopyInInternal_GameSetting(GameSetting obj, KeyValuePair<ushort, object> pair)
+        protected new static void CopyInInternal_Global(Global obj, KeyValuePair<ushort, object> pair)
         {
-            if (!EnumExt.TryParse(pair.Key, out GameSetting_FieldIndex enu))
+            if (!EnumExt.TryParse(pair.Key, out Global_FieldIndex enu))
             {
                 CopyInInternal_MajorRecord(obj, pair);
             }
             switch (enu)
             {
+                case Global_FieldIndex.RawFloat:
+                    obj._RawFloat.Set(
+                        (Single)pair.Value,
+                        null);
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, GameSetting obj)
+        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Global obj)
         {
             ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
         }
@@ -444,12 +526,20 @@ namespace Mutagen
     #endregion
 
     #region Interface
-    public interface IGameSetting : IGameSettingGetter, IMajorRecord, ILoquiClass<IGameSetting, IGameSettingGetter>, ILoquiClass<GameSetting, IGameSettingGetter>
+    public interface IGlobal : IGlobalGetter, IMajorRecord, ILoquiClass<IGlobal, IGlobalGetter>, ILoquiClass<Global, IGlobalGetter>
     {
+        new Single RawFloat { get; set; }
+        new INotifyingItem<Single> RawFloat_Property { get; }
+
     }
 
-    public interface IGameSettingGetter : IMajorRecordGetter
+    public interface IGlobalGetter : IMajorRecordGetter
     {
+        #region RawFloat
+        Single RawFloat { get; }
+        INotifyingItemGetter<Single> RawFloat_Property { get; }
+
+        #endregion
 
     }
 
@@ -460,42 +550,43 @@ namespace Mutagen
 namespace Mutagen.Internals
 {
     #region Field Index
-    public enum GameSetting_FieldIndex
+    public enum Global_FieldIndex
     {
+        RawFloat = 5,
     }
     #endregion
 
     #region Registration
-    public class GameSetting_Registration : ILoquiRegistration
+    public class Global_Registration : ILoquiRegistration
     {
-        public static readonly GameSetting_Registration Instance = new GameSetting_Registration();
+        public static readonly Global_Registration Instance = new Global_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Mutagen.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Mutagen.ProtocolKey,
-            msgID: 7,
+            msgID: 12,
             version: 0);
 
-        public const string GUID = "6ce31534-6f55-4575-a914-20e70476f6ad";
+        public const string GUID = "072ceda7-3182-4314-a4e3-927e68f39c3f";
 
-        public const ushort FieldCount = 0;
+        public const ushort FieldCount = 1;
 
-        public static readonly Type MaskType = typeof(GameSetting_Mask<>);
+        public static readonly Type MaskType = typeof(Global_Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(GameSetting_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Global_ErrorMask);
 
-        public static readonly Type ClassType = typeof(GameSetting);
+        public static readonly Type ClassType = typeof(Global);
 
-        public static readonly Type GetterType = typeof(IGameSettingGetter);
+        public static readonly Type GetterType = typeof(IGlobalGetter);
 
-        public static readonly Type SetterType = typeof(IGameSetting);
+        public static readonly Type SetterType = typeof(IGlobal);
 
-        public static readonly Type CommonType = typeof(GameSettingCommon);
+        public static readonly Type CommonType = typeof(GlobalCommon);
 
-        public const string FullName = "Mutagen.GameSetting";
+        public const string FullName = "Mutagen.Global";
 
-        public const string Name = "GameSetting";
+        public const string Name = "Global";
 
         public const string Namespace = "Mutagen";
 
@@ -507,6 +598,8 @@ namespace Mutagen.Internals
         {
             switch (str.Upper)
             {
+                case "RAWFLOAT":
+                    return (ushort)Global_FieldIndex.RawFloat;
                 default:
                     return null;
             }
@@ -514,9 +607,11 @@ namespace Mutagen.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            GameSetting_FieldIndex enu = (GameSetting_FieldIndex)index;
+            Global_FieldIndex enu = (Global_FieldIndex)index;
             switch (enu)
             {
+                case Global_FieldIndex.RawFloat:
+                    return false;
                 default:
                     return MajorRecord_Registration.GetNthIsEnumerable(index);
             }
@@ -524,9 +619,11 @@ namespace Mutagen.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            GameSetting_FieldIndex enu = (GameSetting_FieldIndex)index;
+            Global_FieldIndex enu = (Global_FieldIndex)index;
             switch (enu)
             {
+                case Global_FieldIndex.RawFloat:
+                    return false;
                 default:
                     return MajorRecord_Registration.GetNthIsLoqui(index);
             }
@@ -534,9 +631,11 @@ namespace Mutagen.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            GameSetting_FieldIndex enu = (GameSetting_FieldIndex)index;
+            Global_FieldIndex enu = (Global_FieldIndex)index;
             switch (enu)
             {
+                case Global_FieldIndex.RawFloat:
+                    return false;
                 default:
                     return MajorRecord_Registration.GetNthIsSingleton(index);
             }
@@ -544,9 +643,11 @@ namespace Mutagen.Internals
 
         public static string GetNthName(ushort index)
         {
-            GameSetting_FieldIndex enu = (GameSetting_FieldIndex)index;
+            Global_FieldIndex enu = (Global_FieldIndex)index;
             switch (enu)
             {
+                case Global_FieldIndex.RawFloat:
+                    return "RawFloat";
                 default:
                     return MajorRecord_Registration.GetNthName(index);
             }
@@ -554,9 +655,11 @@ namespace Mutagen.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            GameSetting_FieldIndex enu = (GameSetting_FieldIndex)index;
+            Global_FieldIndex enu = (Global_FieldIndex)index;
             switch (enu)
             {
+                case Global_FieldIndex.RawFloat:
+                    return false;
                 default:
                     return MajorRecord_Registration.IsNthDerivative(index);
             }
@@ -564,9 +667,11 @@ namespace Mutagen.Internals
 
         public static bool IsProtected(ushort index)
         {
-            GameSetting_FieldIndex enu = (GameSetting_FieldIndex)index;
+            Global_FieldIndex enu = (Global_FieldIndex)index;
             switch (enu)
             {
+                case Global_FieldIndex.RawFloat:
+                    return false;
                 default:
                     return MajorRecord_Registration.IsProtected(index);
             }
@@ -574,18 +679,21 @@ namespace Mutagen.Internals
 
         public static Type GetNthType(ushort index)
         {
-            GameSetting_FieldIndex enu = (GameSetting_FieldIndex)index;
+            Global_FieldIndex enu = (Global_FieldIndex)index;
             switch (enu)
             {
+                case Global_FieldIndex.RawFloat:
+                    return typeof(Single);
                 default:
                     return MajorRecord_Registration.GetNthType(index);
             }
         }
 
-        public static readonly RecordType GMST_HEADER = new RecordType("GMST");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = GMST_HEADER;
+        public static readonly RecordType GLOB_HEADER = new RecordType("GLOB");
+        public static readonly RecordType FLTV_HEADER = new RecordType("FLTV");
+        public static readonly RecordType TRIGGERING_RECORD_TYPE = GLOB_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 0;
+        public const int NumTypedFields = 1;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -616,17 +724,17 @@ namespace Mutagen.Internals
     #endregion
 
     #region Extensions
-    public static class GameSettingCommon
+    public static class GlobalCommon
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IGameSetting item,
-            IGameSettingGetter rhs,
-            GameSetting_CopyMask copyMask = null,
-            IGameSettingGetter def = null,
+            this IGlobal item,
+            IGlobalGetter rhs,
+            Global_CopyMask copyMask = null,
+            IGlobalGetter def = null,
             NotifyingFireParameters? cmds = null)
         {
-            GameSettingCommon.CopyFieldsFrom(
+            GlobalCommon.CopyFieldsFrom(
                 item: item,
                 rhs: rhs,
                 def: def,
@@ -637,14 +745,14 @@ namespace Mutagen.Internals
         }
 
         public static void CopyFieldsFrom(
-            this IGameSetting item,
-            IGameSettingGetter rhs,
-            out GameSetting_ErrorMask errorMask,
-            GameSetting_CopyMask copyMask = null,
-            IGameSettingGetter def = null,
+            this IGlobal item,
+            IGlobalGetter rhs,
+            out Global_ErrorMask errorMask,
+            Global_CopyMask copyMask = null,
+            IGlobalGetter def = null,
             NotifyingFireParameters? cmds = null)
         {
-            GameSettingCommon.CopyFieldsFrom(
+            GlobalCommon.CopyFieldsFrom(
                 item: item,
                 rhs: rhs,
                 def: def,
@@ -655,20 +763,20 @@ namespace Mutagen.Internals
         }
 
         public static void CopyFieldsFrom(
-            this IGameSetting item,
-            IGameSettingGetter rhs,
-            IGameSettingGetter def,
+            this IGlobal item,
+            IGlobalGetter rhs,
+            IGlobalGetter def,
             bool doErrorMask,
-            out GameSetting_ErrorMask errorMask,
-            GameSetting_CopyMask copyMask,
+            out Global_ErrorMask errorMask,
+            Global_CopyMask copyMask,
             NotifyingFireParameters? cmds)
         {
-            GameSetting_ErrorMask retErrorMask = null;
-            Func<GameSetting_ErrorMask> maskGetter = () =>
+            Global_ErrorMask retErrorMask = null;
+            Func<Global_ErrorMask> maskGetter = () =>
             {
                 if (retErrorMask == null)
                 {
-                    retErrorMask = new GameSetting_ErrorMask();
+                    retErrorMask = new Global_ErrorMask();
                 }
                 return retErrorMask;
             };
@@ -684,12 +792,12 @@ namespace Mutagen.Internals
         }
 
         public static void CopyFieldsFrom(
-            this IGameSetting item,
-            IGameSettingGetter rhs,
-            IGameSettingGetter def,
+            this IGlobal item,
+            IGlobalGetter rhs,
+            IGlobalGetter def,
             bool doErrorMask,
-            Func<GameSetting_ErrorMask> errorMask,
-            GameSetting_CopyMask copyMask,
+            Func<Global_ErrorMask> errorMask,
+            Global_CopyMask copyMask,
             NotifyingFireParameters? cmds)
         {
             MajorRecordCommon.CopyFieldsFrom(
@@ -700,6 +808,21 @@ namespace Mutagen.Internals
                 errorMask,
                 copyMask,
                 cmds);
+            if (copyMask?.RawFloat ?? true)
+            {
+                try
+                {
+                    item.RawFloat_Property.SetToWithDefault(
+                        rhs.RawFloat_Property,
+                        def?.RawFloat_Property,
+                        cmds);
+                }
+                catch (Exception ex)
+                when (doErrorMask)
+                {
+                    errorMask().SetNthException((int)Global_FieldIndex.RawFloat, ex);
+                }
+            }
         }
 
         #endregion
@@ -707,12 +830,15 @@ namespace Mutagen.Internals
         public static void SetNthObjectHasBeenSet(
             ushort index,
             bool on,
-            IGameSetting obj,
+            IGlobal obj,
             NotifyingFireParameters? cmds = null)
         {
-            GameSetting_FieldIndex enu = (GameSetting_FieldIndex)index;
+            Global_FieldIndex enu = (Global_FieldIndex)index;
             switch (enu)
             {
+                case Global_FieldIndex.RawFloat:
+                    obj.RawFloat_Property.HasBeenSet = on;
+                    break;
                 default:
                     MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
@@ -721,12 +847,15 @@ namespace Mutagen.Internals
 
         public static void UnsetNthObject(
             ushort index,
-            IGameSetting obj,
+            IGlobal obj,
             NotifyingUnsetParameters? cmds = null)
         {
-            GameSetting_FieldIndex enu = (GameSetting_FieldIndex)index;
+            Global_FieldIndex enu = (Global_FieldIndex)index;
             switch (enu)
             {
+                case Global_FieldIndex.RawFloat:
+                    obj.RawFloat_Property.Unset(cmds);
+                    break;
                 default:
                     MajorRecordCommon.UnsetNthObject(index, obj);
                     break;
@@ -735,11 +864,13 @@ namespace Mutagen.Internals
 
         public static bool GetNthObjectHasBeenSet(
             ushort index,
-            IGameSetting obj)
+            IGlobal obj)
         {
-            GameSetting_FieldIndex enu = (GameSetting_FieldIndex)index;
+            Global_FieldIndex enu = (Global_FieldIndex)index;
             switch (enu)
             {
+                case Global_FieldIndex.RawFloat:
+                    return obj.RawFloat_Property.HasBeenSet;
                 default:
                     return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -747,44 +878,48 @@ namespace Mutagen.Internals
 
         public static object GetNthObject(
             ushort index,
-            IGameSettingGetter obj)
+            IGlobalGetter obj)
         {
-            GameSetting_FieldIndex enu = (GameSetting_FieldIndex)index;
+            Global_FieldIndex enu = (Global_FieldIndex)index;
             switch (enu)
             {
+                case Global_FieldIndex.RawFloat:
+                    return obj.RawFloat;
                 default:
                     return MajorRecordCommon.GetNthObject(index, obj);
             }
         }
 
         public static void Clear(
-            IGameSetting item,
+            IGlobal item,
             NotifyingUnsetParameters? cmds = null)
         {
+            item.RawFloat_Property.Unset(cmds.ToUnsetParams());
         }
 
-        public static GameSetting_Mask<bool> GetEqualsMask(
-            this IGameSettingGetter item,
-            IGameSettingGetter rhs)
+        public static Global_Mask<bool> GetEqualsMask(
+            this IGlobalGetter item,
+            IGlobalGetter rhs)
         {
-            var ret = new GameSetting_Mask<bool>();
+            var ret = new Global_Mask<bool>();
             FillEqualsMask(item, rhs, ret);
             return ret;
         }
 
         public static void FillEqualsMask(
-            IGameSettingGetter item,
-            IGameSettingGetter rhs,
-            GameSetting_Mask<bool> ret)
+            IGlobalGetter item,
+            IGlobalGetter rhs,
+            Global_Mask<bool> ret)
         {
             if (rhs == null) return;
+            ret.RawFloat = item.RawFloat_Property.Equals(rhs.RawFloat_Property, (l, r) => l == r);
             MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
-            this IGameSettingGetter item,
+            this IGlobalGetter item,
             string name = null,
-            GameSetting_Mask<bool> printMask = null)
+            Global_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             item.ToString(fg, name, printMask);
@@ -792,36 +927,42 @@ namespace Mutagen.Internals
         }
 
         public static void ToString(
-            this IGameSettingGetter item,
+            this IGlobalGetter item,
             FileGeneration fg,
             string name = null,
-            GameSetting_Mask<bool> printMask = null)
+            Global_Mask<bool> printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(GameSetting)} =>");
+                fg.AppendLine($"{nameof(Global)} =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(GameSetting)}) =>");
+                fg.AppendLine($"{name} ({nameof(Global)}) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
+                if (printMask?.RawFloat ?? true)
+                {
+                    fg.AppendLine($"RawFloat => {item.RawFloat}");
+                }
             }
             fg.AppendLine("]");
         }
 
         public static bool HasBeenSet(
-            this IGameSettingGetter item,
-            GameSetting_Mask<bool?> checkMask)
+            this IGlobalGetter item,
+            Global_Mask<bool?> checkMask)
         {
+            if (checkMask.RawFloat.HasValue && checkMask.RawFloat.Value != item.RawFloat_Property.HasBeenSet) return false;
             return true;
         }
 
-        public static GameSetting_Mask<bool> GetHasBeenSetMask(IGameSettingGetter item)
+        public static Global_Mask<bool> GetHasBeenSetMask(IGlobalGetter item)
         {
-            var ret = new GameSetting_Mask<bool>();
+            var ret = new Global_Mask<bool>();
+            ret.RawFloat = item.RawFloat_Property.HasBeenSet;
             return ret;
         }
 
@@ -829,35 +970,50 @@ namespace Mutagen.Internals
         #region XML Write
         public static void Write_XML(
             XmlWriter writer,
-            IGameSettingGetter item,
+            IGlobalGetter item,
             bool doMasks,
-            out GameSetting_ErrorMask errorMask,
+            out Global_ErrorMask errorMask,
             string name = null)
         {
-            GameSetting_ErrorMask errMaskRet = null;
+            Global_ErrorMask errMaskRet = null;
             Write_XML_Internal(
                 writer: writer,
                 name: name,
                 item: item,
                 doMasks: doMasks,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new GameSetting_ErrorMask()) : default(Func<GameSetting_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Global_ErrorMask()) : default(Func<Global_ErrorMask>));
             errorMask = errMaskRet;
         }
 
         private static void Write_XML_Internal(
             XmlWriter writer,
-            IGameSettingGetter item,
+            IGlobalGetter item,
             bool doMasks,
-            Func<GameSetting_ErrorMask> errorMask,
+            Func<Global_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.GameSetting"))
+                using (new ElementWrapper(writer, name ?? "Mutagen.Global"))
                 {
                     if (name != null)
                     {
-                        writer.WriteAttributeString("type", "Mutagen.GameSetting");
+                        writer.WriteAttributeString("type", "Mutagen.Global");
+                    }
+                    if (item.RawFloat_Property.HasBeenSet)
+                    {
+                        Exception subMask;
+                        FloatXmlTranslation.Instance.Write(
+                            writer,
+                            nameof(item.RawFloat),
+                            item.RawFloat,
+                            doMasks: doMasks,
+                            errorMask: out subMask);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)Global_FieldIndex.RawFloat,
+                            subMask);
                     }
                 }
             }
@@ -875,30 +1031,30 @@ namespace Mutagen.Internals
         #region Binary Write
         public static void Write_Binary(
             BinaryWriter writer,
-            IGameSettingGetter item,
+            IGlobalGetter item,
             bool doMasks,
-            out GameSetting_ErrorMask errorMask)
+            out Global_ErrorMask errorMask)
         {
-            GameSetting_ErrorMask errMaskRet = null;
+            Global_ErrorMask errMaskRet = null;
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
                 doMasks: doMasks,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new GameSetting_ErrorMask()) : default(Func<GameSetting_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Global_ErrorMask()) : default(Func<Global_ErrorMask>));
             errorMask = errMaskRet;
         }
 
         private static void Write_Binary_Internal(
             BinaryWriter writer,
-            IGameSettingGetter item,
+            IGlobalGetter item,
             bool doMasks,
-            Func<GameSetting_ErrorMask> errorMask)
+            Func<Global_ErrorMask> errorMask)
         {
             try
             {
                 using (HeaderExport.ExportHeader(
                     writer: writer,
-                    record: GameSetting_Registration.GMST_HEADER,
+                    record: Global_Registration.GLOB_HEADER,
                     type: ObjectType.Record))
                 {
                     MajorRecordCommon.Write_Binary_Embedded(
@@ -906,7 +1062,7 @@ namespace Mutagen.Internals
                         writer: writer,
                         doMasks: doMasks,
                         errorMask: errorMask);
-                    MajorRecordCommon.Write_Binary_RecordTypes(
+                    Write_Binary_RecordTypes(
                         item: item,
                         writer: writer,
                         doMasks: doMasks,
@@ -921,6 +1077,34 @@ namespace Mutagen.Internals
         }
         #endregion
 
+        public static void Write_Binary_RecordTypes(
+            IGlobalGetter item,
+            BinaryWriter writer,
+            bool doMasks,
+            Func<Global_ErrorMask> errorMask)
+        {
+            MajorRecordCommon.Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                doMasks: doMasks,
+                errorMask: errorMask);
+            {
+                Exception subMask;
+                Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.RawFloat,
+                    doMasks: doMasks,
+                    errorMask: out subMask,
+                    header: Global_Registration.FLTV_HEADER,
+                    nullable: false);
+                ErrorMask.HandleErrorMask(
+                    errorMask,
+                    doMasks,
+                    (int)Global_FieldIndex.RawFloat,
+                    subMask);
+            }
+        }
+
         #endregion
 
     }
@@ -929,34 +1113,41 @@ namespace Mutagen.Internals
     #region Modules
 
     #region Mask
-    public class GameSetting_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<GameSetting_Mask<T>>
+    public class Global_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<Global_Mask<T>>
     {
         #region Ctors
-        public GameSetting_Mask()
+        public Global_Mask()
         {
         }
 
-        public GameSetting_Mask(T initialValue)
+        public Global_Mask(T initialValue)
         {
+            this.RawFloat = initialValue;
         }
+        #endregion
+
+        #region Members
+        public T RawFloat;
         #endregion
 
         #region Equals
         public override bool Equals(object obj)
         {
-            if (!(obj is GameSetting_Mask<T> rhs)) return false;
+            if (!(obj is Global_Mask<T> rhs)) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(GameSetting_Mask<T> rhs)
+        public bool Equals(Global_Mask<T> rhs)
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!object.Equals(this.RawFloat, rhs.RawFloat)) return false;
             return true;
         }
         public override int GetHashCode()
         {
             int ret = 0;
+            ret = ret.CombineHashCode(this.RawFloat?.GetHashCode());
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -967,21 +1158,23 @@ namespace Mutagen.Internals
         public override bool AllEqual(Func<T, bool> eval)
         {
             if (!base.AllEqual(eval)) return false;
+            if (!eval(this.RawFloat)) return false;
             return true;
         }
         #endregion
 
         #region Translate
-        public new GameSetting_Mask<R> Translate<R>(Func<T, R> eval)
+        public new Global_Mask<R> Translate<R>(Func<T, R> eval)
         {
-            var ret = new GameSetting_Mask<R>();
+            var ret = new Global_Mask<R>();
             this.Translate_InternalFill(ret, eval);
             return ret;
         }
 
-        protected void Translate_InternalFill<R>(GameSetting_Mask<R> obj, Func<T, R> eval)
+        protected void Translate_InternalFill<R>(Global_Mask<R> obj, Func<T, R> eval)
         {
             base.Translate_InternalFill(obj, eval);
+            obj.RawFloat = eval(this.RawFloat);
         }
         #endregion
 
@@ -998,19 +1191,23 @@ namespace Mutagen.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(GameSetting_Mask<bool> printMask = null)
+        public string ToString(Global_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, GameSetting_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, Global_Mask<bool> printMask = null)
         {
-            fg.AppendLine($"{nameof(GameSetting_Mask<T>)} =>");
+            fg.AppendLine($"{nameof(Global_Mask<T>)} =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
+                if (printMask?.RawFloat ?? true)
+                {
+                    fg.AppendLine($"RawFloat => {RawFloat.ToStringSafe()}");
+                }
             }
             fg.AppendLine("]");
         }
@@ -1018,14 +1215,21 @@ namespace Mutagen.Internals
 
     }
 
-    public class GameSetting_ErrorMask : MajorRecord_ErrorMask
+    public class Global_ErrorMask : MajorRecord_ErrorMask
     {
+        #region Members
+        public Exception RawFloat;
+        #endregion
+
         #region IErrorMask
         public override void SetNthException(int index, Exception ex)
         {
-            GameSetting_FieldIndex enu = (GameSetting_FieldIndex)index;
+            Global_FieldIndex enu = (Global_FieldIndex)index;
             switch (enu)
             {
+                case Global_FieldIndex.RawFloat:
+                    this.RawFloat = ex;
+                    break;
                 default:
                     base.SetNthException(index, ex);
                     break;
@@ -1034,9 +1238,12 @@ namespace Mutagen.Internals
 
         public override void SetNthMask(int index, object obj)
         {
-            GameSetting_FieldIndex enu = (GameSetting_FieldIndex)index;
+            Global_FieldIndex enu = (Global_FieldIndex)index;
             switch (enu)
             {
+                case Global_FieldIndex.RawFloat:
+                    this.RawFloat = (Exception)obj;
+                    break;
                 default:
                     base.SetNthMask(index, obj);
                     break;
@@ -1054,7 +1261,7 @@ namespace Mutagen.Internals
 
         public override void ToString(FileGeneration fg)
         {
-            fg.AppendLine("GameSetting_ErrorMask =>");
+            fg.AppendLine("Global_ErrorMask =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
@@ -1075,16 +1282,21 @@ namespace Mutagen.Internals
         protected override void ToString_FillInternal(FileGeneration fg)
         {
             base.ToString_FillInternal(fg);
+            if (RawFloat != null)
+            {
+                fg.AppendLine($"RawFloat => {RawFloat.ToStringSafe()}");
+            }
         }
         #endregion
 
         #region Combine
-        public GameSetting_ErrorMask Combine(GameSetting_ErrorMask rhs)
+        public Global_ErrorMask Combine(Global_ErrorMask rhs)
         {
-            var ret = new GameSetting_ErrorMask();
+            var ret = new Global_ErrorMask();
+            ret.RawFloat = this.RawFloat.Combine(rhs.RawFloat);
             return ret;
         }
-        public static GameSetting_ErrorMask Combine(GameSetting_ErrorMask lhs, GameSetting_ErrorMask rhs)
+        public static Global_ErrorMask Combine(Global_ErrorMask lhs, Global_ErrorMask rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -1092,8 +1304,12 @@ namespace Mutagen.Internals
         #endregion
 
     }
-    public class GameSetting_CopyMask : MajorRecord_CopyMask
+    public class Global_CopyMask : MajorRecord_CopyMask
     {
+        #region Members
+        public bool RawFloat;
+        #endregion
+
     }
     #endregion
 

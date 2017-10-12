@@ -10,6 +10,11 @@
           <GenericSpecification Definition="GameSetting" TypeToSpecify="T" />
         </Direct>
       </Ref>
+      <Ref name="Globals">
+        <Direct refName="Group" >
+          <GenericSpecification Definition="Global" TypeToSpecify="T" />
+        </Direct>
+      </Ref>
     </Fields>
   </Object>
 </Loqui>

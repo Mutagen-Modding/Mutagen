@@ -1576,6 +1576,8 @@ namespace Mutagen.Internals
         public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
         public static readonly RecordType MAST_HEADER = new RecordType("MAST");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = TES4_HEADER;
+        public const int NumStructFields = 1;
+        public const int NumTypedFields = 6;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;

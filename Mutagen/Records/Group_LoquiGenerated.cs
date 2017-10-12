@@ -1357,6 +1357,8 @@ namespace Mutagen.Internals
         public static Type GetNthType(ushort index) => throw new ArgumentException("Cannot get nth type for a generic object here.  Use generic registration instead.");
 
         public static readonly RecordType GRUP_HEADER = new RecordType("GRUP");
+        public const int NumStructFields = 3;
+        public const int NumTypedFields = 1;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;

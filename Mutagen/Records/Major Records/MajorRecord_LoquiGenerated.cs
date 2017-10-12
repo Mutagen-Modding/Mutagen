@@ -982,6 +982,8 @@ namespace Mutagen.Internals
         }
 
         public static readonly RecordType EDID_HEADER = new RecordType("EDID");
+        public const int NumStructFields = 4;
+        public const int NumTypedFields = 1;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
