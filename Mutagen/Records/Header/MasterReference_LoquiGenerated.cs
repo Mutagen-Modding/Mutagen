@@ -786,7 +786,6 @@ namespace Mutagen
                 }
                 break;
                 default:
-                    reader.BaseStream.Position -= Constants.SUBRECORD_LENGTH;
                     throw new ArgumentException($"Unexpected header {nextRecordType.Type} at position {reader.BaseStream.Position}");
             }
         }

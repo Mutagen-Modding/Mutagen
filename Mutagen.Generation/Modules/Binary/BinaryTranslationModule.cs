@@ -411,13 +411,11 @@ namespace Mutagen.Generation
                             // Default case
                             switch (obj.GetObjectType())
                             {
-                                case ObjectType.Struct:
-                                case ObjectType.Subrecord:
+                                case ObjectType.Record:
                                     fg.AppendLine($"reader.BaseStream.Position -= Constants.SUBRECORD_LENGTH;");
                                     break;
-                                case ObjectType.Record:
-                                    fg.AppendLine($"reader.BaseStream.Position -= Constants.RECORD_LENGTH;");
-                                    break;
+                                case ObjectType.Struct:
+                                case ObjectType.Subrecord:
                                 case ObjectType.Group:
                                 case ObjectType.Mod:
                                 default:
@@ -432,8 +430,8 @@ namespace Mutagen.Generation
                                     args.Add("reader: reader");
                                     args.Add("doMasks: doMasks");
                                     args.Add($"errorMask: errorMask");
-                                    fg.AppendLine("break;");
                                 }
+                                fg.AppendLine("break;");
                             }
                             else
                             {

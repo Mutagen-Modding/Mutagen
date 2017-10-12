@@ -815,13 +815,13 @@ namespace Mutagen
                 }
                 break;
                 default:
-                    reader.BaseStream.Position -= Constants.RECORD_LENGTH;
-                    break;
+                    reader.BaseStream.Position -= Constants.SUBRECORD_LENGTH;
                     GameSetting.Fill_Binary_RecordTypes(
                         item: item,
                         reader: reader,
                         doMasks: doMasks,
                         errorMask: errorMask);
+                    break;
             }
         }
 
