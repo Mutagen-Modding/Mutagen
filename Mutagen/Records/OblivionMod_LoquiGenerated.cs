@@ -789,10 +789,11 @@ namespace Mutagen
                         doMasks: doMasks,
                         mask: out subMask);
                     item._TES4.SetIfSucceeded(tryGet);
-                    if (doMasks && subMask != null)
-                    {
-                        errorMask().TES4 = subMask;
-                    }
+                    ErrorMask.HandleErrorMask(
+                        errorMask,
+                        doMasks,
+                        (int)OblivionMod_FieldIndex.TES4,
+                        subMask);
                 }
                 break;
                 case "GMST":
@@ -804,10 +805,11 @@ namespace Mutagen
                         doMasks: doMasks,
                         mask: out subMask);
                     item._GameSettings.SetIfSucceeded(tryGet);
-                    if (doMasks && subMask != null)
-                    {
-                        errorMask().GameSettings = subMask;
-                    }
+                    ErrorMask.HandleErrorMask(
+                        errorMask,
+                        doMasks,
+                        (int)OblivionMod_FieldIndex.GameSettings,
+                        subMask);
                 }
                 break;
                 default:

@@ -468,10 +468,13 @@ namespace Mutagen.Generation
                     },
                     doMaskAccessor: "doMasks",
                     maskAccessor: $"subMask");
-                fg.AppendLine("if (doMasks && subMask != null)");
-                using (new BraceWrapper(fg))
+                using (var args = new ArgsWrapper(fg,
+                    $"ErrorMask.HandleErrorMask"))
                 {
-                    fg.AppendLine($"errorMask().{field.Name} = subMask;");
+                    args.Add("errorMask");
+                    args.Add("doMasks");
+                    args.Add($"(int){field.IndexEnumName}");
+                    args.Add("subMask");
                 }
             }
         }

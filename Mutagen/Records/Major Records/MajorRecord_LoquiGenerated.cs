@@ -581,10 +581,11 @@ namespace Mutagen
                     errorMask: out subMask,
                     length: 4);
                 item._Flags.SetIfSucceeded(tryGet);
-                if (doMasks && subMask != null)
-                {
-                    errorMask().Flags = subMask;
-                }
+                ErrorMask.HandleErrorMask(
+                    errorMask,
+                    doMasks,
+                    (int)MajorRecord_FieldIndex.Flags,
+                    subMask);
             }
             {
                 Exception subMask;
@@ -593,10 +594,11 @@ namespace Mutagen
                     doMasks: doMasks,
                     errorMask: out subMask);
                 item._FormID.SetIfSucceeded(tryGet);
-                if (doMasks && subMask != null)
-                {
-                    errorMask().FormID = subMask;
-                }
+                ErrorMask.HandleErrorMask(
+                    errorMask,
+                    doMasks,
+                    (int)MajorRecord_FieldIndex.FormID,
+                    subMask);
             }
             {
                 Exception subMask;
@@ -606,10 +608,11 @@ namespace Mutagen
                     errorMask: out subMask,
                     length: 4);
                 item._Version.SetIfSucceeded(tryGet);
-                if (doMasks && subMask != null)
-                {
-                    errorMask().Version = subMask;
-                }
+                ErrorMask.HandleErrorMask(
+                    errorMask,
+                    doMasks,
+                    (int)MajorRecord_FieldIndex.Version,
+                    subMask);
             }
         }
 
@@ -633,10 +636,11 @@ namespace Mutagen
                         errorMask: out subMask,
                         length: subLength);
                     item._EditorID.SetIfSucceeded(tryGet);
-                    if (doMasks && subMask != null)
-                    {
-                        errorMask().EditorID = subMask;
-                    }
+                    ErrorMask.HandleErrorMask(
+                        errorMask,
+                        doMasks,
+                        (int)MajorRecord_FieldIndex.EditorID,
+                        subMask);
                 }
                 break;
                 default:

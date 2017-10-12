@@ -807,10 +807,11 @@ namespace Mutagen
                         doMasks: doMasks,
                         errorMask: out subMask);
                     item._Data.SetIfSucceeded(tryGet);
-                    if (doMasks && subMask != null)
-                    {
-                        errorMask().Data = subMask;
-                    }
+                    ErrorMask.HandleErrorMask(
+                        errorMask,
+                        doMasks,
+                        (int)GameSettingFloat_FieldIndex.Data,
+                        subMask);
                 }
                 break;
                 default:

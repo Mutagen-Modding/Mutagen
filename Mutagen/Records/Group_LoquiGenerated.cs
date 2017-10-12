@@ -930,10 +930,11 @@ namespace Mutagen
                     doMasks: doMasks,
                     errorMask: out subMask);
                 item._GroupType.SetIfSucceeded(tryGet);
-                if (doMasks && subMask != null)
-                {
-                    errorMask().GroupType = subMask;
-                }
+                ErrorMask.HandleErrorMask(
+                    errorMask,
+                    doMasks,
+                    (int)Group_FieldIndex.GroupType,
+                    subMask);
             }
             {
                 Exception subMask;
@@ -942,10 +943,11 @@ namespace Mutagen
                     doMasks: doMasks,
                     errorMask: out subMask);
                 item._LastModified.SetIfSucceeded(tryGet);
-                if (doMasks && subMask != null)
-                {
-                    errorMask().LastModified = subMask;
-                }
+                ErrorMask.HandleErrorMask(
+                    errorMask,
+                    doMasks,
+                    (int)Group_FieldIndex.LastModified,
+                    subMask);
             }
         }
 
@@ -981,10 +983,11 @@ namespace Mutagen
                             }
                             );
                         item._Items.SetIfSucceeded(listTryGet);
-                        if (doMasks && subMask != null)
-                        {
-                            errorMask().Items = subMask;
-                        }
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)Group_FieldIndex.Items,
+                            subMask);
                         break;
                     }
                     throw new ArgumentException($"Unexpected header {nextRecordType.Type} at position {reader.BaseStream.Position}");

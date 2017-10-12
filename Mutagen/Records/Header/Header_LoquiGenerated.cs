@@ -798,10 +798,11 @@ namespace Mutagen
                     doMasks: doMasks,
                     errorMask: out subMask);
                 item._Version.SetIfSucceeded(tryGet);
-                if (doMasks && subMask != null)
-                {
-                    errorMask().Version = subMask;
-                }
+                ErrorMask.HandleErrorMask(
+                    errorMask,
+                    doMasks,
+                    (int)Header_FieldIndex.Version,
+                    subMask);
             }
             {
                 Exception subMask;
@@ -810,10 +811,11 @@ namespace Mutagen
                     doMasks: doMasks,
                     errorMask: out subMask);
                 item._NumRecords.SetIfSucceeded(tryGet);
-                if (doMasks && subMask != null)
-                {
-                    errorMask().NumRecords = subMask;
-                }
+                ErrorMask.HandleErrorMask(
+                    errorMask,
+                    doMasks,
+                    (int)Header_FieldIndex.NumRecords,
+                    subMask);
             }
             {
                 Exception subMask;
@@ -822,10 +824,11 @@ namespace Mutagen
                     doMasks: doMasks,
                     errorMask: out subMask);
                 item._NextObjectID.SetIfSucceeded(tryGet);
-                if (doMasks && subMask != null)
-                {
-                    errorMask().NextObjectID = subMask;
-                }
+                ErrorMask.HandleErrorMask(
+                    errorMask,
+                    doMasks,
+                    (int)Header_FieldIndex.NextObjectID,
+                    subMask);
             }
         }
 

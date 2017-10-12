@@ -765,10 +765,11 @@ namespace Mutagen
                         errorMask: out subMask,
                         length: subLength);
                     item._Master.SetIfSucceeded(tryGet);
-                    if (doMasks && subMask != null)
-                    {
-                        errorMask().Master = subMask;
-                    }
+                    ErrorMask.HandleErrorMask(
+                        errorMask,
+                        doMasks,
+                        (int)MasterReference_FieldIndex.Master,
+                        subMask);
                 }
                 break;
                 case "DATA":
@@ -779,10 +780,11 @@ namespace Mutagen
                         doMasks: doMasks,
                         errorMask: out subMask);
                     item._FileSize.SetIfSucceeded(tryGet);
-                    if (doMasks && subMask != null)
-                    {
-                        errorMask().FileSize = subMask;
-                    }
+                    ErrorMask.HandleErrorMask(
+                        errorMask,
+                        doMasks,
+                        (int)MasterReference_FieldIndex.FileSize,
+                        subMask);
                 }
                 break;
                 default:

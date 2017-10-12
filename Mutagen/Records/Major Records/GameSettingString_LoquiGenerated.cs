@@ -808,10 +808,11 @@ namespace Mutagen
                         errorMask: out subMask,
                         length: subLength);
                     item._Data.SetIfSucceeded(tryGet);
-                    if (doMasks && subMask != null)
-                    {
-                        errorMask().Data = subMask;
-                    }
+                    ErrorMask.HandleErrorMask(
+                        errorMask,
+                        doMasks,
+                        (int)GameSettingString_FieldIndex.Data,
+                        subMask);
                 }
                 break;
                 default:

@@ -963,10 +963,11 @@ namespace Mutagen
                     errorMask: out subMask,
                     length: 12);
                 item._Fluff.SetIfSucceeded(tryGet);
-                if (doMasks && subMask != null)
-                {
-                    errorMask().Fluff = subMask;
-                }
+                ErrorMask.HandleErrorMask(
+                    errorMask,
+                    doMasks,
+                    (int)TES4_FieldIndex.Fluff,
+                    subMask);
             }
         }
 
@@ -990,10 +991,11 @@ namespace Mutagen
                         doMasks: doMasks,
                         mask: out subMask);
                     item._Header.SetIfSucceeded(tryGet);
-                    if (doMasks && subMask != null)
-                    {
-                        errorMask().Header = subMask;
-                    }
+                    ErrorMask.HandleErrorMask(
+                        errorMask,
+                        doMasks,
+                        (int)TES4_FieldIndex.Header,
+                        subMask);
                 }
                 break;
                 case "OFST":
@@ -1005,10 +1007,11 @@ namespace Mutagen
                         errorMask: out subMask,
                         length: subLength);
                     item._TypeOffsets.SetIfSucceeded(tryGet);
-                    if (doMasks && subMask != null)
-                    {
-                        errorMask().TypeOffsets = subMask;
-                    }
+                    ErrorMask.HandleErrorMask(
+                        errorMask,
+                        doMasks,
+                        (int)TES4_FieldIndex.TypeOffsets,
+                        subMask);
                 }
                 break;
                 case "DELE":
@@ -1020,10 +1023,11 @@ namespace Mutagen
                         errorMask: out subMask,
                         length: subLength);
                     item._Deleted.SetIfSucceeded(tryGet);
-                    if (doMasks && subMask != null)
-                    {
-                        errorMask().Deleted = subMask;
-                    }
+                    ErrorMask.HandleErrorMask(
+                        errorMask,
+                        doMasks,
+                        (int)TES4_FieldIndex.Deleted,
+                        subMask);
                 }
                 break;
                 case "CNAM":
@@ -1035,10 +1039,11 @@ namespace Mutagen
                         errorMask: out subMask,
                         length: subLength);
                     item._Author.SetIfSucceeded(tryGet);
-                    if (doMasks && subMask != null)
-                    {
-                        errorMask().Author = subMask;
-                    }
+                    ErrorMask.HandleErrorMask(
+                        errorMask,
+                        doMasks,
+                        (int)TES4_FieldIndex.Author,
+                        subMask);
                 }
                 break;
                 case "SNAM":
@@ -1050,10 +1055,11 @@ namespace Mutagen
                         errorMask: out subMask,
                         length: subLength);
                     item._Description.SetIfSucceeded(tryGet);
-                    if (doMasks && subMask != null)
-                    {
-                        errorMask().Description = subMask;
-                    }
+                    ErrorMask.HandleErrorMask(
+                        errorMask,
+                        doMasks,
+                        (int)TES4_FieldIndex.Description,
+                        subMask);
                 }
                 break;
                 case "MAST":
@@ -1075,10 +1081,11 @@ namespace Mutagen
                         }
                         );
                     item._MasterReferences.SetIfSucceeded(listTryGet);
-                    if (doMasks && subMask != null)
-                    {
-                        errorMask().MasterReferences = subMask;
-                    }
+                    ErrorMask.HandleErrorMask(
+                        errorMask,
+                        doMasks,
+                        (int)TES4_FieldIndex.MasterReferences,
+                        subMask);
                 }
                 break;
                 default:
