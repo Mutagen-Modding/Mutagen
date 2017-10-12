@@ -53,6 +53,7 @@ namespace Mutagen.Binary
             BinaryReader reader,
             bool doMasks,
             RecordType triggeringRecord,
+            ObjectType objType,
             out MaskItem<Exception, IEnumerable<M>> maskObj,
             BinarySubParseDelegate<T, M> transl)
         {
@@ -80,7 +81,7 @@ namespace Mutagen.Binary
                         maskList.Add(subMaskObj);
                     }
 
-                    if (!HeaderTranslation.TryParseSubRecordType(reader, triggeringRecord)) break;
+                    if (!HeaderTranslation.TryParseRecordType(reader, objType, triggeringRecord)) break;
                 }
                 maskObj = maskList == null ? null : new MaskItem<Exception, IEnumerable<M>>(null, maskList);
                 return TryGet<IEnumerable<T>>.Succeed(ret);

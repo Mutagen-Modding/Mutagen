@@ -969,6 +969,7 @@ namespace Mutagen
                             reader: reader,
                             triggeringRecord: Group<T>.T_RecordType,
                             doMasks: doMasks,
+                            objType: ObjectType.Record,
                             maskObj: out subMask,
                             transl: (BinaryReader r, bool listDoMasks, out MaskItem<Exception, T_ErrMask> listSubMask) =>
                             {

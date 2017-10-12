@@ -99,15 +99,31 @@ namespace Mutagen.Binary
             return reader.BaseStream.Position + contentLength;
         }
 
-        public static bool TryParseSubRecordType(
+        public static bool TryParseRecordType(
             BinaryReader reader,
+            ObjectType type,
             RecordType expectedHeader)
         {
+            int lengthLength;
+            switch (type)
+            {
+                case ObjectType.Subrecord:
+                    lengthLength = Constants.SUBRECORD_LENGTHLENGTH;
+                    break;
+                case ObjectType.Record:
+                    lengthLength = Constants.RECORD_LENGTHLENGTH;
+                    break;
+                case ObjectType.Struct:
+                case ObjectType.Group:
+                case ObjectType.Mod:
+                default:
+                    throw new ArgumentException();
+            }
             if (TryParse(
                 reader,
                 expectedHeader,
                 out var contentLength,
-                Constants.SUBRECORD_LENGTHLENGTH))
+                lengthLength))
             {
                 return true;
             }

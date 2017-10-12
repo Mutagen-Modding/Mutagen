@@ -104,6 +104,10 @@ namespace Mutagen.Generation
                     throw new ArgumentException();
                 }
                 args.Add($"doMasks: {doMaskAccessor}");
+                if (list.SubTypeGeneration is LoquiType loqui)
+                {
+                    args.Add($"objType: {nameof(ObjectType)}.{loqui.TargetObjectGeneration.GetObjectType()}");
+                }
                 args.Add($"maskObj: out {maskAccessor}");
                 args.Add((gen) =>
                 {

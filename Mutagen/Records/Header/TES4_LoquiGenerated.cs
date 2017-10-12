@@ -1063,6 +1063,7 @@ namespace Mutagen
                         reader: reader,
                         triggeringRecord: TES4_Registration.MAST_HEADER,
                         doMasks: doMasks,
+                        objType: ObjectType.Struct,
                         maskObj: out subMask,
                         transl: (BinaryReader r, bool listDoMasks, out MaskItem<Exception, MasterReference_ErrorMask> listSubMask) =>
                         {
