@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Mutagen
 {
-    public struct RecordType : IEquatable<RecordType>, IEquatable<char[]>
+    public struct RecordType : IEquatable<RecordType>, IEquatable<string>
     {
         public readonly string Type;
         public const byte HEADER_LENGTH = 4;
@@ -39,15 +39,9 @@ namespace Mutagen
             return object.Equals(this.Type, other.Type);
         }
 
-        public bool Equals(char[] other)
+        public bool Equals(string other)
         {
-            if (other == null) return false;
-            if (other.Length != HEADER_LENGTH) return false;
-            for (int i = 0; i < HEADER_LENGTH; i++)
-            {
-                if (this.Type[i] != other[i]) return false;
-            }
-            return true;
+            return string.Equals(other, Type);
         }
 
         public override int GetHashCode()

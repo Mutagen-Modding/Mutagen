@@ -265,7 +265,6 @@ namespace Mutagen.Generation
                             fg.AppendLine($"if (reader.BaseStream.Position != finalPosition)");
                             using (new BraceWrapper(fg))
                             {
-                                fg.AppendLine("reader.BaseStream.Position = finalPosition;");
                                 fg.AppendLine("throw new ArgumentException(\"Read more bytes than allocated\");");
                             }
                         }
@@ -275,6 +274,10 @@ namespace Mutagen.Generation
                     using (new BraceWrapper(fg))
                     {
                         fg.AppendLine("errorMask().Overall = ex;");
+                    }
+                    if (objType != ObjectType.Struct)
+                    {
+                        fg.AppendLine("reader.BaseStream.Position = finalPosition;");
                     }
                     fg.AppendLine("return ret;");
                 }

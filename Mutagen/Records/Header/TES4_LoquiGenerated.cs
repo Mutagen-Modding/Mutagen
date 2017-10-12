@@ -937,7 +937,6 @@ namespace Mutagen
                 }
                 if (reader.BaseStream.Position != finalPosition)
                 {
-                    reader.BaseStream.Position = finalPosition;
                     throw new ArgumentException("Read more bytes than allocated");
                 }
             }
@@ -946,6 +945,7 @@ namespace Mutagen
             {
                 errorMask().Overall = ex;
             }
+            reader.BaseStream.Position = finalPosition;
             return ret;
         }
 

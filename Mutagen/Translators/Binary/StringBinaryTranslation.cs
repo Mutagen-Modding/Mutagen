@@ -1,6 +1,7 @@
 ﻿using Noggog;
 using System;
 using System.IO;
+using System.Text;
 
 namespace Mutagen.Binary
 {
@@ -13,7 +14,7 @@ namespace Mutagen.Binary
             try
             {
                 errorMask = null;
-                var str = new string(reader.ReadChars(length));
+                var str = Encoding.ASCII.GetString(reader.ReadBytes(length));
                 str= str.TrimEnd('\0');
                 return TryGet<string>.Succeed(str);
             }

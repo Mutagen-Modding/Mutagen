@@ -15,7 +15,7 @@ namespace Mutagen.Binary
             out int contentLength,
             int lengthLength)
         {
-            var header = reader.ReadChars(Constants.HEADER_LENGTH);
+            var header = Encoding.ASCII.GetString(reader.ReadBytes(Constants.HEADER_LENGTH));
             if (!expectedHeader.Equals(header))
             {
                 contentLength = 0;
@@ -128,8 +128,8 @@ namespace Mutagen.Binary
         public static RecordType ReadNextRecordType(
             BinaryReader reader)
         {
-            var header = reader.ReadChars(Constants.HEADER_LENGTH);
-            return new RecordType(new string(header), validate: false);
+            var header = Encoding.ASCII.GetString(reader.ReadBytes(Constants.HEADER_LENGTH));
+            return new RecordType(header, validate: false);
         }
 
         public static int ReadContentLength(
