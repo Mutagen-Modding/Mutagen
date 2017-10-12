@@ -96,7 +96,7 @@ namespace Mutagen.Binary
             {
                 throw new ArgumentException($"Expected header was not read in: {Mutagen.Internals.Group_Registration.GRUP_HEADER}");
             }
-            return reader.BaseStream.Position + contentLength;
+            return reader.BaseStream.Position + contentLength - Constants.HEADER_LENGTH - Constants.RECORD_LENGTHLENGTH;
         }
 
         public static bool TryParseRecordType(
