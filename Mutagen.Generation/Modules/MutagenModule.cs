@@ -81,7 +81,8 @@ namespace Mutagen.Generation
         {
             foreach (var genName in GetGenerics(obj, fg))
             {
-                fg.AppendLine($"{genName}_RecordType = new {nameof(RecordType)}(\"GMST\");");
+                fg.AppendLine($"var register = LoquiRegistration.GetRegister(typeof(T));");
+                fg.AppendLine($"{genName}_RecordType = (RecordType)register.GetType().GetField(\"{Mutagen.Constants.TRIGGERING_RECORDTYPE_MEMBER}\").GetValue(null);");
             }
         }
 

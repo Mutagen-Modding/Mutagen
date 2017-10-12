@@ -38,7 +38,8 @@ namespace Mutagen
 
         static Group()
         {
-            T_RecordType = new RecordType("GMST");
+            var register = LoquiRegistration.GetRegister(typeof(T));
+            T_RecordType = (RecordType)register.GetType().GetField("TRIGGERING_RECORD_TYPE").GetValue(null);
             
         }
 
