@@ -9,13 +9,13 @@
   
   <Object name="ClassData" recordType="DATA" objType="Struct" GUID="f9dfb650-f03c-4f98-be15-c69bb99ca417" ID="18">
     <Fields>
-      <!--<List name="PrimaryAttributes" >
+      <List name="PrimaryAttributes" >
         <Enum enumName="ActorValue" />
-      </List>-->
+      </List>
       <Enum name="Specialization" enumName="Specialization" />
-      <!--<List name="SecondaryAttributes" maxLength="7" >
+      <List name="SecondaryAttributes" >
         <Enum enumName="ActorValue" />
-      </List>-->
+      </List>
     </Fields>
   </Object>
 </Loqui>
