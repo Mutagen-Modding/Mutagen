@@ -15,6 +15,11 @@
           <GenericSpecification Definition="Global" TypeToSpecify="T" />
         </Direct>
       </Ref>
+      <Ref name="Classes">
+        <Direct refName="Group" >
+          <GenericSpecification Definition="Class" TypeToSpecify="T" />
+        </Direct>
+      </Ref>
     </Fields>
   </Object>
 </Loqui>

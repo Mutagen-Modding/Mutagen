@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="us-ascii"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -47,6 +47,8 @@
     <Compile Include="ObjectType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProtocolDefinition_mutagen.cs" />
+    <Compile Include="Records\Common Enums\ActorValue.cs" />
+    <Compile Include="Records\Major Records\Class\Specialization.cs" />
     <Compile Include="Records\Major Records\Global.cs">
       <DependentUpon>Global.xml</DependentUpon>
     </Compile>
@@ -149,6 +151,15 @@
     <Compile Include="Records\Major Records\GlobalFloat_LoquiGenerated.cs">
       <DependentUpon>Global.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Class\Class_LoquiGenerated.cs">
+      <DependentUpon>Class.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NamedMajorRecord_LoquiGenerated.cs">
+      <DependentUpon>NamedMajorRecord.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Class\ClassData_LoquiGenerated.cs">
+      <DependentUpon>ClassData.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\CSharpExt\CSharpExt\CSharpExt.csproj">
@@ -167,6 +178,12 @@
     <Content Include="Records\Header\MasterReference.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Records\Major Records\Class\Class.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\Class\ClassData.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Records\Major Records\GameSetting.xml">
       <SubType>Designer</SubType>
     </Content>
@@ -174,6 +191,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\MajorRecord.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\NamedMajorRecord.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\OblivionMod.xml">

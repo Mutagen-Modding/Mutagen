@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="NamedMajorRecord" baseClass="MajorRecord" objType="Record" abstract="true" GUID="1de9f12c-ab00-42cf-aab3-9d778a849361" ID="17">
+    <Fields>
+      <String name="Name" recordType="FULL" />
+    </Fields>
+  </Object>
+</Loqui>
