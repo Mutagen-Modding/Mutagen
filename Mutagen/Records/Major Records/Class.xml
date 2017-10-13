@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Class" recordType="CLAS" baseClass="NamedMajorRecord" objType="Record" GUID="3f2e301a-e8f4-42db-875c-3e760e4eff31" ID="16">
+    <Fields>
+      <String name="Description" recordType="DESC" />
+      <RefDirect name="ClassData" refName="ClassData" singleton="NotNull" />
+    </Fields>
+  </Object>
+  
+  <Object name="ClassData" recordType="DATA" objType="Struct" GUID="f9dfb650-f03c-4f98-be15-c69bb99ca417" ID="18">
+    <Fields>
+      <!--<List name="PrimaryAttributes" >
+        <Enum enumName="ActorValue" />
+      </List>-->
+      <Enum name="Specialization" enumName="Specialization" />
+      <!--<List name="SecondaryAttributes" maxLength="7" >
+        <Enum enumName="ActorValue" />
+      </List>-->
+    </Fields>
+  </Object>
+</Loqui>

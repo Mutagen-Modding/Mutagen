@@ -4,20 +4,21 @@ using System.IO;
 
 namespace Mutagen.Binary
 {
-    public class EnumXmlTranslation<E> : PrimitiveBinaryTranslation<E>
+    public class EnumBinaryTranslation<E> : PrimitiveBinaryTranslation<E>
         where E : struct, IComparable, IConvertible
     {
-        public readonly static EnumXmlTranslation<E> Instance = new EnumXmlTranslation<E>();
-        public override byte ExpectedLength => throw new NotImplementedException();
+        public readonly static EnumBinaryTranslation<E> Instance = new EnumBinaryTranslation<E>();
+        public override byte ExpectedLength => 4;
 
         protected override E ParseValue(BinaryReader reader)
         {
-            throw new NotImplementedException();
+            var i = reader.ReadInt32();
+            return (E)Enum.ToObject(typeof(E), i);
         }
 
         protected override void WriteValue(BinaryWriter writer, E item)
         {
-            throw new NotImplementedException();
+            writer.Write(item.ToInt32(null));
         }
     }
 }

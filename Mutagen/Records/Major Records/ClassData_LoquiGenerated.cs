@@ -35,6 +35,17 @@ namespace Mutagen
         partial void CustomCtor();
         #endregion
 
+        #region Specialization
+        protected readonly INotifyingItem<Specialization> _Specialization = NotifyingItem.Factory<Specialization>(markAsSet: false);
+        public INotifyingItem<Specialization> Specialization_Property => _Specialization;
+        public Specialization Specialization
+        {
+            get => this._Specialization.Item;
+            set => this._Specialization.Set(value);
+        }
+        INotifyingItem<Specialization> IClassData.Specialization_Property => this.Specialization_Property;
+        INotifyingItemGetter<Specialization> IClassDataGetter.Specialization_Property => this.Specialization_Property;
+        #endregion
 
         #region Loqui Getter Interface
 
@@ -94,12 +105,21 @@ namespace Mutagen
         public bool Equals(ClassData rhs)
         {
             if (rhs == null) return false;
+            if (Specialization_Property.HasBeenSet != rhs.Specialization_Property.HasBeenSet) return false;
+            if (Specialization_Property.HasBeenSet)
+            {
+                if (Specialization != rhs.Specialization) return false;
+            }
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
+            if (Specialization_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Specialization).CombineHashCode(ret);
+            }
             return ret;
         }
 
@@ -381,6 +401,22 @@ namespace Mutagen
         {
             switch (name)
             {
+                case "Specialization":
+                    {
+                        Exception subMask;
+                        var tryGet = EnumXmlTranslation<Specialization>.Instance.Parse(
+                            root,
+                            nullable: false,
+                            doMasks: doMasks,
+                            errorMask: out subMask);
+                        item._Specialization.SetIfSucceeded(tryGet.Bubble<Specialization>((i) => i.Value));
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)ClassData_FieldIndex.Specialization,
+                            subMask);
+                    }
+                    break;
                 default:
                     break;
             }
@@ -665,6 +701,19 @@ namespace Mutagen
             bool doMasks,
             Func<ClassData_ErrorMask> errorMask)
         {
+            {
+                Exception subMask;
+                var tryGet = Mutagen.Binary.EnumBinaryTranslation<Specialization>.Instance.Parse(
+                    reader,
+                    doMasks: doMasks,
+                    errorMask: out subMask);
+                item._Specialization.SetIfSucceeded(tryGet);
+                ErrorMask.HandleErrorMask(
+                    errorMask,
+                    doMasks,
+                    (int)ClassData_FieldIndex.Specialization,
+                    subMask);
+            }
         }
 
         #endregion
@@ -744,6 +793,11 @@ namespace Mutagen
             ClassData_FieldIndex enu = (ClassData_FieldIndex)index;
             switch (enu)
             {
+                case ClassData_FieldIndex.Specialization:
+                    this._Specialization.Set(
+                        (Specialization)obj,
+                        cmds);
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -781,6 +835,11 @@ namespace Mutagen
             }
             switch (enu)
             {
+                case ClassData_FieldIndex.Specialization:
+                    obj._Specialization.Set(
+                        (Specialization)pair.Value,
+                        null);
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -796,10 +855,18 @@ namespace Mutagen
     #region Interface
     public interface IClassData : IClassDataGetter, ILoquiClass<IClassData, IClassDataGetter>, ILoquiClass<ClassData, IClassDataGetter>
     {
+        new Specialization Specialization { get; set; }
+        new INotifyingItem<Specialization> Specialization_Property { get; }
+
     }
 
     public interface IClassDataGetter : ILoquiObject
     {
+        #region Specialization
+        Specialization Specialization { get; }
+        INotifyingItemGetter<Specialization> Specialization_Property { get; }
+
+        #endregion
 
     }
 
@@ -812,6 +879,7 @@ namespace Mutagen.Internals
     #region Field Index
     public enum ClassData_FieldIndex
     {
+        Specialization = 0,
     }
     #endregion
 
@@ -829,7 +897,7 @@ namespace Mutagen.Internals
 
         public const string GUID = "f9dfb650-f03c-4f98-be15-c69bb99ca417";
 
-        public const ushort FieldCount = 0;
+        public const ushort FieldCount = 1;
 
         public static readonly Type MaskType = typeof(ClassData_Mask<>);
 
@@ -857,6 +925,8 @@ namespace Mutagen.Internals
         {
             switch (str.Upper)
             {
+                case "SPECIALIZATION":
+                    return (ushort)ClassData_FieldIndex.Specialization;
                 default:
                     return null;
             }
@@ -867,6 +937,8 @@ namespace Mutagen.Internals
             ClassData_FieldIndex enu = (ClassData_FieldIndex)index;
             switch (enu)
             {
+                case ClassData_FieldIndex.Specialization:
+                    return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -877,6 +949,8 @@ namespace Mutagen.Internals
             ClassData_FieldIndex enu = (ClassData_FieldIndex)index;
             switch (enu)
             {
+                case ClassData_FieldIndex.Specialization:
+                    return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -887,6 +961,8 @@ namespace Mutagen.Internals
             ClassData_FieldIndex enu = (ClassData_FieldIndex)index;
             switch (enu)
             {
+                case ClassData_FieldIndex.Specialization:
+                    return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -897,6 +973,8 @@ namespace Mutagen.Internals
             ClassData_FieldIndex enu = (ClassData_FieldIndex)index;
             switch (enu)
             {
+                case ClassData_FieldIndex.Specialization:
+                    return "Specialization";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -907,6 +985,8 @@ namespace Mutagen.Internals
             ClassData_FieldIndex enu = (ClassData_FieldIndex)index;
             switch (enu)
             {
+                case ClassData_FieldIndex.Specialization:
+                    return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -917,6 +997,8 @@ namespace Mutagen.Internals
             ClassData_FieldIndex enu = (ClassData_FieldIndex)index;
             switch (enu)
             {
+                case ClassData_FieldIndex.Specialization:
+                    return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -927,6 +1009,8 @@ namespace Mutagen.Internals
             ClassData_FieldIndex enu = (ClassData_FieldIndex)index;
             switch (enu)
             {
+                case ClassData_FieldIndex.Specialization:
+                    return typeof(Specialization);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -934,7 +1018,7 @@ namespace Mutagen.Internals
 
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = DATA_HEADER;
-        public const int NumStructFields = 0;
+        public const int NumStructFields = 1;
         public const int NumTypedFields = 0;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1042,6 +1126,21 @@ namespace Mutagen.Internals
             ClassData_CopyMask copyMask,
             NotifyingFireParameters? cmds)
         {
+            if (copyMask?.Specialization ?? true)
+            {
+                try
+                {
+                    item.Specialization_Property.SetToWithDefault(
+                        rhs.Specialization_Property,
+                        def?.Specialization_Property,
+                        cmds);
+                }
+                catch (Exception ex)
+                when (doErrorMask)
+                {
+                    errorMask().SetNthException((int)ClassData_FieldIndex.Specialization, ex);
+                }
+            }
         }
 
         #endregion
@@ -1055,6 +1154,9 @@ namespace Mutagen.Internals
             ClassData_FieldIndex enu = (ClassData_FieldIndex)index;
             switch (enu)
             {
+                case ClassData_FieldIndex.Specialization:
+                    obj.Specialization_Property.HasBeenSet = on;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1068,6 +1170,9 @@ namespace Mutagen.Internals
             ClassData_FieldIndex enu = (ClassData_FieldIndex)index;
             switch (enu)
             {
+                case ClassData_FieldIndex.Specialization:
+                    obj.Specialization_Property.Unset(cmds);
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1080,6 +1185,8 @@ namespace Mutagen.Internals
             ClassData_FieldIndex enu = (ClassData_FieldIndex)index;
             switch (enu)
             {
+                case ClassData_FieldIndex.Specialization:
+                    return obj.Specialization_Property.HasBeenSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1092,6 +1199,8 @@ namespace Mutagen.Internals
             ClassData_FieldIndex enu = (ClassData_FieldIndex)index;
             switch (enu)
             {
+                case ClassData_FieldIndex.Specialization:
+                    return obj.Specialization;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1101,6 +1210,7 @@ namespace Mutagen.Internals
             IClassData item,
             NotifyingUnsetParameters? cmds = null)
         {
+            item.Specialization_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static ClassData_Mask<bool> GetEqualsMask(
@@ -1118,6 +1228,7 @@ namespace Mutagen.Internals
             ClassData_Mask<bool> ret)
         {
             if (rhs == null) return;
+            ret.Specialization = item.Specialization_Property.Equals(rhs.Specialization_Property, (l, r) => l == r);
         }
 
         public static string ToString(
@@ -1147,6 +1258,10 @@ namespace Mutagen.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
+                if (printMask?.Specialization ?? true)
+                {
+                    fg.AppendLine($"Specialization => {item.Specialization}");
+                }
             }
             fg.AppendLine("]");
         }
@@ -1155,12 +1270,14 @@ namespace Mutagen.Internals
             this IClassDataGetter item,
             ClassData_Mask<bool?> checkMask)
         {
+            if (checkMask.Specialization.HasValue && checkMask.Specialization.Value != item.Specialization_Property.HasBeenSet) return false;
             return true;
         }
 
         public static ClassData_Mask<bool> GetHasBeenSetMask(IClassDataGetter item)
         {
             var ret = new ClassData_Mask<bool>();
+            ret.Specialization = item.Specialization_Property.HasBeenSet;
             return ret;
         }
 
@@ -1197,6 +1314,21 @@ namespace Mutagen.Internals
                     if (name != null)
                     {
                         writer.WriteAttributeString("type", "Mutagen.ClassData");
+                    }
+                    if (item.Specialization_Property.HasBeenSet)
+                    {
+                        Exception subMask;
+                        EnumXmlTranslation<Specialization>.Instance.Write(
+                            writer,
+                            nameof(item.Specialization),
+                            item.Specialization,
+                            doMasks: doMasks,
+                            errorMask: out subMask);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)ClassData_FieldIndex.Specialization,
+                            subMask);
                     }
                 }
             }
@@ -1240,6 +1372,11 @@ namespace Mutagen.Internals
                     record: ClassData_Registration.DATA_HEADER,
                     type: ObjectType.Struct))
                 {
+                    Write_Binary_Embedded(
+                        item: item,
+                        writer: writer,
+                        doMasks: doMasks,
+                        errorMask: errorMask);
                 }
             }
             catch (Exception ex)
@@ -1249,6 +1386,27 @@ namespace Mutagen.Internals
             }
         }
         #endregion
+
+        public static void Write_Binary_Embedded(
+            IClassDataGetter item,
+            BinaryWriter writer,
+            bool doMasks,
+            Func<ClassData_ErrorMask> errorMask)
+        {
+            {
+                Exception subMask;
+                Mutagen.Binary.EnumBinaryTranslation<Specialization>.Instance.Write(
+                    writer,
+                    item.Specialization,
+                    doMasks: doMasks,
+                    errorMask: out subMask);
+                ErrorMask.HandleErrorMask(
+                    errorMask,
+                    doMasks,
+                    (int)ClassData_FieldIndex.Specialization,
+                    subMask);
+            }
+        }
 
         #endregion
 
@@ -1267,7 +1425,12 @@ namespace Mutagen.Internals
 
         public ClassData_Mask(T initialValue)
         {
+            this.Specialization = initialValue;
         }
+        #endregion
+
+        #region Members
+        public T Specialization;
         #endregion
 
         #region Equals
@@ -1280,11 +1443,13 @@ namespace Mutagen.Internals
         public bool Equals(ClassData_Mask<T> rhs)
         {
             if (rhs == null) return false;
+            if (!object.Equals(this.Specialization, rhs.Specialization)) return false;
             return true;
         }
         public override int GetHashCode()
         {
             int ret = 0;
+            ret = ret.CombineHashCode(this.Specialization?.GetHashCode());
             return ret;
         }
 
@@ -1293,6 +1458,7 @@ namespace Mutagen.Internals
         #region All Equal
         public bool AllEqual(Func<T, bool> eval)
         {
+            if (!eval(this.Specialization)) return false;
             return true;
         }
         #endregion
@@ -1307,6 +1473,7 @@ namespace Mutagen.Internals
 
         protected void Translate_InternalFill<R>(ClassData_Mask<R> obj, Func<T, R> eval)
         {
+            obj.Specialization = eval(this.Specialization);
         }
         #endregion
 
@@ -1335,6 +1502,10 @@ namespace Mutagen.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
+                if (printMask?.Specialization ?? true)
+                {
+                    fg.AppendLine($"Specialization => {Specialization.ToStringSafe()}");
+                }
             }
             fg.AppendLine("]");
         }
@@ -1358,6 +1529,7 @@ namespace Mutagen.Internals
                 return _warnings;
             }
         }
+        public Exception Specialization;
         #endregion
 
         #region IErrorMask
@@ -1366,6 +1538,9 @@ namespace Mutagen.Internals
             ClassData_FieldIndex enu = (ClassData_FieldIndex)index;
             switch (enu)
             {
+                case ClassData_FieldIndex.Specialization:
+                    this.Specialization = ex;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1376,6 +1551,9 @@ namespace Mutagen.Internals
             ClassData_FieldIndex enu = (ClassData_FieldIndex)index;
             switch (enu)
             {
+                case ClassData_FieldIndex.Specialization:
+                    this.Specialization = (Exception)obj;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1412,6 +1590,10 @@ namespace Mutagen.Internals
         }
         protected void ToString_FillInternal(FileGeneration fg)
         {
+            if (Specialization != null)
+            {
+                fg.AppendLine($"Specialization => {Specialization.ToStringSafe()}");
+            }
         }
         #endregion
 
@@ -1419,6 +1601,7 @@ namespace Mutagen.Internals
         public ClassData_ErrorMask Combine(ClassData_ErrorMask rhs)
         {
             var ret = new ClassData_ErrorMask();
+            ret.Specialization = this.Specialization.Combine(rhs.Specialization);
             return ret;
         }
         public static ClassData_ErrorMask Combine(ClassData_ErrorMask lhs, ClassData_ErrorMask rhs)
@@ -1431,6 +1614,10 @@ namespace Mutagen.Internals
     }
     public class ClassData_CopyMask
     {
+        #region Members
+        public bool Specialization;
+        #endregion
+
     }
     #endregion
 
