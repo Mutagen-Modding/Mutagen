@@ -8,8 +8,8 @@ namespace Mutagen
 {
     public partial class GlobalFloat
     {
-        protected override byte TriggerByte => TRIGGER_BYTE;
-        public const byte TRIGGER_BYTE = 0x66;
+        protected override char TriggerChar => TRIGGER_CHAR;
+        public const char TRIGGER_CHAR = 'f';
 
         partial void CustomCtor()
         {

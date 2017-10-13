@@ -8,8 +8,8 @@ namespace Mutagen
 {
     public partial class GlobalInt
     {
-        protected override byte TriggerByte => TRIGGER_BYTE;
-        public const byte TRIGGER_BYTE = 0x6C;
+        protected override char TriggerChar => TRIGGER_CHAR;
+        public const char TRIGGER_CHAR = 'l';
 
         partial void CustomCtor()
         {
