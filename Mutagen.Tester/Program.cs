@@ -12,7 +12,7 @@ namespace Mutagen.Tester
         static void Main(string[] args)
         {
             var tests = new Passthrough_Tests();
-            tests.OblivionESM();
+            tests.OblivionESM_Binary();
         }
     }
 }

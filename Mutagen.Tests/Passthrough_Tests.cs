@@ -14,7 +14,7 @@ namespace Mutagen.Tests
     public class Passthrough_Tests
     {
         [Fact]
-        public void OblivionESM()
+        public void OblivionESM_Binary()
         {
             OblivionMod_ErrorMask inputErrMask, outputErrMask;
             var mod = OblivionMod.Create_Binary(
@@ -22,18 +22,18 @@ namespace Mutagen.Tests
                 out inputErrMask);
             using (var tmp = new TempFolder())
             {
-                //var outputPath = Path.Combine(tmp.Dir.FullName, Path.GetRandomFileName());
-                //mod.Write_Binary(
-                //    outputPath,
-                //    out outputErrMask);
-                //AssertFilesEqual(Properties.Settings.Default.OblivionESM, outputPath);
+                var outputPath = Path.Combine(tmp.Dir.FullName, Path.GetRandomFileName());
+                mod.Write_Binary(
+                    outputPath,
+                    out outputErrMask);
+                AssertFilesEqual(Properties.Settings.Default.OblivionESM, outputPath);
                 Assert.Null(inputErrMask);
-                //Assert.Null(outputErrMask);
+                Assert.Null(outputErrMask);
             }
         }
 
         [Fact]
-        public void KnightsESP()
+        public void KnightsESP_Binary()
         {
             OblivionMod_ErrorMask inputErrMask, outputErrMask;
             var mod = OblivionMod.Create_Binary(
@@ -41,13 +41,56 @@ namespace Mutagen.Tests
                 out inputErrMask);
             using (var tmp = new TempFolder())
             {
-                //var outputPath = Path.Combine(tmp.Dir.FullName, Path.GetRandomFileName());
-                //mod.Write_Binary(
-                //    outputPath,
-                //    out outputErrMask);
-                //AssertFilesEqual(Properties.Settings.Default.KnightsESP, outputPath);
+                var outputPath = Path.Combine(tmp.Dir.FullName, Path.GetRandomFileName());
+                mod.Write_Binary(
+                    outputPath,
+                    out outputErrMask);
+                AssertFilesEqual(Properties.Settings.Default.KnightsESP, outputPath);
                 Assert.Null(inputErrMask);
-                //Assert.Null(outputErrMask);
+                Assert.Null(outputErrMask);
+            }
+        }
+        [Fact]
+        public void OblivionESM_XML()
+        {
+            var modFromBinary = OblivionMod.Create_Binary(
+                Properties.Settings.Default.OblivionESM,
+                out var binInputErrMask);
+            Assert.Null(binInputErrMask);
+            using (var tmp = new TempFolder())
+            {
+                var outputPath = Path.Combine(tmp.Dir.FullName, Path.GetRandomFileName());
+                modFromBinary.Write_XML(
+                    outputPath,
+                    out var outputErrMask);
+                var modFromXML = OblivionMod.Create_XML(
+                    outputPath,
+                    out var xmlInputErrMask);
+                Assert.Equal(modFromBinary, modFromXML);
+                Assert.Null(xmlInputErrMask);
+                Assert.Null(outputErrMask);
+            }
+        }
+
+        [Fact]
+        public void KnightsESP_XML()
+        {
+            var modFromBinary = OblivionMod.Create_Binary(
+                Properties.Settings.Default.KnightsESP,
+                out var binInputErrMask);
+            Assert.Null(binInputErrMask);
+            using (var tmp = new TempFolder())
+            {
+                var outputPath = Path.Combine(tmp.Dir.FullName, Path.GetRandomFileName());
+                modFromBinary.Write_XML(
+                    outputPath,
+                    out var outputErrMask);
+                var modFromXML = OblivionMod.Create_XML(
+                    outputPath,
+                    out var xmlInputErrMask);
+                Assert.Equal(modFromBinary, modFromXML);
+                Assert.Null(xmlInputErrMask);
+                Assert.Null(outputErrMask);
             }
         }
 
