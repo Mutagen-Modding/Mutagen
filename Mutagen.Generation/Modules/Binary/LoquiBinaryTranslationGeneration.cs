@@ -35,9 +35,8 @@ namespace Mutagen.Generation
                     args.Add($"writer: {writerAccessor}");
                     args.Add($"item: {itemAccessor}");
                     args.Add($"doMasks: {doMaskAccessor}");
-                    args.Add($"mask: out {loquiGen.MaskItemString(MaskType.Error)} loquiMask");
+                    args.Add($"mask: out {maskAccessor}");
                 }
-                fg.AppendLine($"{maskAccessor} = loquiMask == null ? null : new MaskItem<Exception, {loquiGen.MaskItemString(MaskType.Error)}>(null, loquiMask);");
             }
             else
             {

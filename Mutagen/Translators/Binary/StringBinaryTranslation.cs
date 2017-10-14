@@ -74,5 +74,20 @@ namespace Mutagen.Binary
                 errorMask = ex;
             }
         }
+
+        void IBinaryTranslation<string, Exception>.Write(BinaryWriter writer, string item, int length, bool doMasks, out Exception maskObj)
+        {
+            if (length != item.Length)
+            {
+                var ex = new ArgumentException($"Expected length was {item.Length}, but was passed {length}.");
+                if (doMasks)
+                {
+                    maskObj = ex;
+                    return;
+                }
+                throw ex;
+            }
+            Write(writer, item, doMasks, out maskObj);
+        }
     }
 }

@@ -95,7 +95,11 @@ namespace Mutagen.Generation
                 $"{retAccessor}{this.Namespace}ListBinaryTranslation<{list.SubTypeGeneration.TypeName}, {subMaskStr}>.Instance.ParseRepeatedItem"))
             {
                 args.Add($"reader: reader");
-                if (!string.IsNullOrWhiteSpace(data.TriggeringRecordAccessor))
+                if (list.MaxValue.HasValue)
+                {
+                    args.Add($"amount: {list.MaxValue.Value}");
+                }
+                else if (!string.IsNullOrWhiteSpace(data.TriggeringRecordAccessor))
                 {
                     args.Add($"triggeringRecord: {data.TriggeringRecordAccessor}");
                 }

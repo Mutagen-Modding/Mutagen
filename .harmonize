@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>de97880ee24d7f9ed75e6bbb0c5818cf5f92ddd1</Sha>
+         <Sha>40bbce6b5de5e14df5e74ec4c75b09f814d761fd</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>10-13-2017 18:21:22</CommitDate>
-         <Description>transfer</Description>
+         <CommitDate>10-13-2017 22:21:27</CommitDate>
+         <Description>NotifyingListBounded</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>1db8675db226627119c3a24ff6441f41f81ade6c</Sha>
+         <Sha>698e1616f9d019719f64b01be10d05dc2302a9d9</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>10-10-2017 16:37:42</CommitDate>
-         <Description>LoquiXmlTranslationGeneration writes to use LoquiXmlTranslator.Write call</Description>
+         <CommitDate>10-13-2017 22:35:41</CommitDate>
+         <Description>EnumXml fixes</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

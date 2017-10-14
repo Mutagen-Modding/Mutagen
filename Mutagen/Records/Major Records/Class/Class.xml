@@ -9,13 +9,16 @@
   
   <Object name="ClassData" recordType="DATA" objType="Struct" GUID="f9dfb650-f03c-4f98-be15-c69bb99ca417" ID="18">
     <Fields>
-      <List name="PrimaryAttributes" >
+      <List name="PrimaryAttributes" maxSize="2" >
         <Enum enumName="ActorValue" />
       </List>
       <Enum name="Specialization" enumName="Specialization" />
-      <List name="SecondaryAttributes" >
+      <List name="SecondaryAttributes" maxSize="7" >
         <Enum enumName="ActorValue" />
       </List>
+      <Enum name="Flags" enumName="ClassFlag" />
+      <Enum name="ClassServices" enumName="ClassService" />
+      <Enum name="TrainedSkill" enumName="Skill" byteLength="1" />
     </Fields>
   </Object>
 </Loqui>

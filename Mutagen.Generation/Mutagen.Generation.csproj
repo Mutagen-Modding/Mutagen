@@ -47,6 +47,7 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Extensions\ObjectGenerationExt.cs" />
     <Compile Include="Extensions\TypeGenerationExt.cs" />
+    <Compile Include="Fields\EnumType.cs" />
     <Compile Include="Fields\FormIDType.cs" />
     <Compile Include="Fields\MutagenFieldData.cs" />
     <Compile Include="Modules\Binary\BinaryTranslationModule.cs" />

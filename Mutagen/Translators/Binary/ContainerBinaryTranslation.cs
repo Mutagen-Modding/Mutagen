@@ -94,7 +94,54 @@ namespace Mutagen.Binary
             }
         }
 
+        public TryGet<IEnumerable<T>> ParseRepeatedItem(
+            BinaryReader reader,
+            bool doMasks,
+            int amount,
+            out MaskItem<Exception, IEnumerable<M>> maskObj,
+            BinarySubParseDelegate<T, M> transl)
+        {
+            try
+            {
+                List<M> maskList = null;
+                var ret = new List<T>();
+                for (int i = 0; i < amount; i++)
+                {
+                    var get = transl(reader, doMasks, out var subMaskObj);
+                    if (get.Succeeded)
+                    {
+                        ret.Add(get.Value);
+                    }
+                    else
+                    {
+                        if (!doMasks)
+                        { // This shouldn't actually throw, as subparse is expected to throw if doMasks is off
+                            throw new ArgumentException("Error parsing list.  Could not parse subitem.");
+                        }
+                        if (maskList == null)
+                        {
+                            maskList = new List<M>();
+                        }
+                        maskList.Add(subMaskObj);
+                    }
+                }
+                maskObj = maskList == null ? null : new MaskItem<Exception, IEnumerable<M>>(null, maskList);
+                return TryGet<IEnumerable<T>>.Succeed(ret);
+            }
+            catch (Exception ex)
+            when (doMasks)
+            {
+                maskObj = new MaskItem<Exception, IEnumerable<M>>(ex, null);
+                return TryGet<IEnumerable<T>>.Failure;
+            }
+        }
+
         public abstract TryGet<T> ParseSingleItem(BinaryReader root, BinarySubParseDelegate<T, M> transl, bool doMasks, out M maskObj);
+        
+        void IBinaryTranslation<IEnumerable<T>, MaskItem<Exception, IEnumerable<M>>>.Write(BinaryWriter writer, IEnumerable<T> item, int length, bool doMasks, out MaskItem<Exception, IEnumerable<M>> maskObj)
+        {
+            Write(writer, item, doMasks, out maskObj);
+        }
 
         public void Write(
             BinaryWriter writer,
@@ -114,7 +161,7 @@ namespace Mutagen.Binary
                     item: item,
                     doMasks: doMasks,
                     maskObj: out maskObj,
-                    transl: (T item1, bool internalDoMasks, out M obj) => transl.Item.Value.Write(writer: writer, item: item1, doMasks: internalDoMasks, maskObj: out obj));
+                    transl: (T item1, bool internalDoMasks, out M obj) => transl.Item.Value.Write(writer: writer, item: item1, length: -1, doMasks: internalDoMasks, maskObj: out obj));
             }
             catch (Exception ex)
             when (doMasks)

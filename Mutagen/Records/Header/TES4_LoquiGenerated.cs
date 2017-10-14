@@ -2375,8 +2375,7 @@ namespace Mutagen.Internals
                     writer: writer,
                     item: item.Header,
                     doMasks: doMasks,
-                    mask: out Header_ErrorMask loquiMask);
-                subMask = loquiMask == null ? null : new MaskItem<Exception, Header_ErrorMask>(null, loquiMask);
+                    mask: out subMask);
                 ErrorMask.HandleErrorMask(
                     errorMask,
                     doMasks,
@@ -2456,8 +2455,7 @@ namespace Mutagen.Internals
                             writer: writer,
                             item: subItem,
                             doMasks: doMasks,
-                            mask: out MasterReference_ErrorMask loquiMask);
-                        listSubMask = loquiMask == null ? null : new MaskItem<Exception, MasterReference_ErrorMask>(null, loquiMask);
+                            mask: out listSubMask);
                     }
                     );
                 ErrorMask.HandleErrorMask(

@@ -1978,8 +1978,7 @@ namespace Mutagen.Internals
                     writer: writer,
                     item: item.TES4,
                     doMasks: doMasks,
-                    mask: out TES4_ErrorMask loquiMask);
-                subMask = loquiMask == null ? null : new MaskItem<Exception, TES4_ErrorMask>(null, loquiMask);
+                    mask: out subMask);
                 ErrorMask.HandleErrorMask(
                     errorMask,
                     doMasks,
@@ -1992,8 +1991,7 @@ namespace Mutagen.Internals
                     writer: writer,
                     item: item.GameSettings,
                     doMasks: doMasks,
-                    mask: out Group_ErrorMask<GameSetting_ErrorMask> loquiMask);
-                subMask = loquiMask == null ? null : new MaskItem<Exception, Group_ErrorMask<GameSetting_ErrorMask>>(null, loquiMask);
+                    mask: out subMask);
                 ErrorMask.HandleErrorMask(
                     errorMask,
                     doMasks,
@@ -2006,8 +2004,7 @@ namespace Mutagen.Internals
                     writer: writer,
                     item: item.Globals,
                     doMasks: doMasks,
-                    mask: out Group_ErrorMask<Global_ErrorMask> loquiMask);
-                subMask = loquiMask == null ? null : new MaskItem<Exception, Group_ErrorMask<Global_ErrorMask>>(null, loquiMask);
+                    mask: out subMask);
                 ErrorMask.HandleErrorMask(
                     errorMask,
                     doMasks,
@@ -2020,8 +2017,7 @@ namespace Mutagen.Internals
                     writer: writer,
                     item: item.Classes,
                     doMasks: doMasks,
-                    mask: out Group_ErrorMask<Class_ErrorMask> loquiMask);
-                subMask = loquiMask == null ? null : new MaskItem<Exception, Group_ErrorMask<Class_ErrorMask>>(null, loquiMask);
+                    mask: out subMask);
                 ErrorMask.HandleErrorMask(
                     errorMask,
                     doMasks,

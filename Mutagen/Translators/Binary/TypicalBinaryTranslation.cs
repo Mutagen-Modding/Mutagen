@@ -59,6 +59,11 @@ namespace Mutagen.Binary
             }
         }
 
+        void IBinaryTranslation<T, Exception>.Write(BinaryWriter writer, T item, int length, bool doMasks, out Exception maskObj)
+        {
+            Write(writer, item, doMasks, out maskObj);
+        }
+
         public void Write(
             BinaryWriter writer,
             T item,

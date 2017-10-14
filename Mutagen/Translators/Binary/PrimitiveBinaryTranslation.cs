@@ -7,7 +7,7 @@ namespace Mutagen.Binary
     public abstract class PrimitiveBinaryTranslation<T> : IBinaryTranslation<T, Exception>, IBinaryTranslation<T?, Exception>
         where T : struct
     {
-        public abstract byte ExpectedLength { get; }
+        public abstract byte? ExpectedLength { get; }
 
         protected abstract T ParseValue(BinaryReader reader);
 
@@ -32,7 +32,7 @@ namespace Mutagen.Binary
 
         public TryGet<T> Parse(BinaryReader reader, int length, bool doMasks, out Exception errorMask)
         {
-            if (length != this.ExpectedLength)
+            if (this.ExpectedLength.HasValue && length != this.ExpectedLength)
             {
                 var ex = new ArgumentException($"Expected length was {this.ExpectedLength}, but was passed {length}.");
                 if (doMasks)
@@ -56,12 +56,27 @@ namespace Mutagen.Binary
                 out maskObj).Bubble<T?>((t) => t);
         }
 
-        public void Write(BinaryWriter writer, T? item, bool doMasks, out Exception errorMask)
+        void IBinaryTranslation<T?, Exception>.Write(BinaryWriter writer, T? item, int length, bool doMasks, out Exception errorMask)
         {
-            errorMask = Write_Internal(writer, item, doMasks, nullable: true);
+            if (this.ExpectedLength.HasValue && length != this.ExpectedLength)
+            {
+                var ex = new ArgumentException($"Expected length was {this.ExpectedLength}, but was passed {length}.");
+                if (doMasks)
+                {
+                    errorMask = ex;
+                    return;
+                }
+                throw ex;
+            }
+            errorMask = Write_Internal(writer, item, doMasks);
         }
 
-        private Exception Write_Internal(BinaryWriter writer, T? item, bool doMasks, bool nullable)
+        public void Write(BinaryWriter writer, T? item, bool doMasks, out Exception errorMask)
+        {
+            errorMask = Write_Internal(writer, item, doMasks);
+        }
+
+        private Exception Write_Internal(BinaryWriter writer, T? item, bool doMasks)
         {
             Exception errorMask = null;
             if (!item.HasValue) return errorMask;
@@ -78,7 +93,7 @@ namespace Mutagen.Binary
             return errorMask;
         }
 
-        private Exception Write_Internal(BinaryWriter writer, T item, bool doMasks, bool nullable)
+        private Exception Write_Internal(BinaryWriter writer, T item, bool doMasks)
         {
             Exception errorMask;
             try
@@ -95,9 +110,19 @@ namespace Mutagen.Binary
             return errorMask;
         }
 
-        public void Write(BinaryWriter writer, T item, bool doMasks, out Exception errorMask)
+        void IBinaryTranslation<T, Exception>.Write(BinaryWriter writer, T item, int length, bool doMasks, out Exception errorMask)
         {
-            errorMask = Write_Internal(writer, (T?)item, doMasks, nullable: false);
+            if (this.ExpectedLength.HasValue && length != this.ExpectedLength)
+            {
+                var ex = new ArgumentException($"Expected length was {this.ExpectedLength}, but was passed {length}.");
+                if (doMasks)
+                {
+                    errorMask = ex;
+                    return;
+                }
+                throw ex;
+            }
+            errorMask = Write_Internal(writer, (T?)item, doMasks);
         }
 
         public void Write(
@@ -121,7 +146,7 @@ namespace Mutagen.Binary
             {
                 using (HeaderExport.ExportHeader(writer, header, ObjectType.Subrecord))
                 {
-                    this.Write(writer, item, doMasks, out errorMask);
+                    errorMask = this.Write_Internal(writer, item, doMasks);
                 }
             }
             catch (Exception ex)

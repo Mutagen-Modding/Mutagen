@@ -1716,8 +1716,7 @@ namespace Mutagen.Internals
                     writer: writer,
                     item: item.ClassData,
                     doMasks: doMasks,
-                    mask: out ClassData_ErrorMask loquiMask);
-                subMask = loquiMask == null ? null : new MaskItem<Exception, ClassData_ErrorMask>(null, loquiMask);
+                    mask: out subMask);
                 ErrorMask.HandleErrorMask(
                     errorMask,
                     doMasks,

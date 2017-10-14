@@ -72,6 +72,14 @@
       </xs:complexContent>
     </xs:complexType>
 
+    <xs:complexType name="Enum">
+      <xs:complexContent>
+        <xs:extension base="Enum">
+          <xs:attribute name="byteLength" type="xs:byte" />
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+
     <xs:group name="NamedFieldOptions">
       <xs:choice>
         <xs:group ref="NamedFieldOptions"/>

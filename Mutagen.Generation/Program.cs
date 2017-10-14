@@ -26,6 +26,7 @@ namespace Mutagen.Generation
             gen.GenerationModules.Add(new MutagenModule());
             gen.Add(new BinaryTranslationModule(gen));
             gen.AddTypeAssociation<FormIDType>("FormID");
+            gen.ReplaceTypeAssociation<Loqui.Generation.EnumType, Mutagen.Generation.EnumType>();
 
             // Add Projects
             gen.AddProjectToModify(

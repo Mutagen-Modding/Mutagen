@@ -2001,8 +2001,7 @@ namespace Mutagen.Internals
                             writer: writer,
                             item: subItem,
                             doMasks: doMasks,
-                            mask: out T_ErrMask loquiMask);
-                        listSubMask = loquiMask == null ? null : new MaskItem<Exception, T_ErrMask>(null, loquiMask);
+                            mask: out listSubMask);
                     }
                     );
                 ErrorMask.HandleErrorMask(

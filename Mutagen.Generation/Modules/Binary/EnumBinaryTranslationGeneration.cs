@@ -27,6 +27,7 @@ namespace Mutagen.Generation
                 args.Add(writerAccessor);
                 args.Add($"{itemAccessor}");
                 args.Add($"doMasks: {doMaskAccessor}");
+                args.Add($"length: {eType.ByteLength}");
                 args.Add($"errorMask: out {maskAccessor}");
                 if (data.TriggeringRecordAccessor != null)
                 {
@@ -52,6 +53,7 @@ namespace Mutagen.Generation
                 args.Add(nodeAccessor);
                 args.Add($"doMasks: {doMaskAccessor}");
                 args.Add($"errorMask: out {maskAccessor}");
+                args.Add($"length: {eType.ByteLength}");
             }
             if (itemAccessor.PropertyAccess != null)
             {
@@ -78,13 +80,12 @@ namespace Mutagen.Generation
         {
             var eType = typeGen as EnumType;
             using (var args = new ArgsWrapper(fg,
-                $"{retAccessor}{this.Namespace}EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance.Parse",
-                (eType.Nullable ? string.Empty : $".Bubble((o) => o.Value)")))
+                $"{retAccessor}{this.Namespace}EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance.Parse"))
             {
                 args.Add(nodeAccessor);
-                args.Add($"nullable: {eType.Nullable.ToString().ToLower()}");
                 args.Add($"doMasks: {doMaskAccessor}");
                 args.Add($"errorMask: out {maskAccessor}");
+                args.Add($"length: {eType.ByteLength}");
             }
         }
     }

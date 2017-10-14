@@ -4,21 +4,99 @@ using System.IO;
 
 namespace Mutagen.Binary
 {
-    public class EnumBinaryTranslation<E> : PrimitiveBinaryTranslation<E>
+    public class EnumBinaryTranslation<E> : IBinaryTranslation<E, Exception>, IBinaryTranslation<E?, Exception>
         where E : struct, IComparable, IConvertible
     {
         public readonly static EnumBinaryTranslation<E> Instance = new EnumBinaryTranslation<E>();
-        public override byte ExpectedLength => 4;
 
-        protected override E ParseValue(BinaryReader reader)
+        public TryGet<E> Parse(BinaryReader reader, int length, bool doMasks, out Exception errorMask)
         {
-            var i = reader.ReadInt32();
+            try
+            {
+                var parse = ParseValue(reader, length);
+                errorMask = null;
+                return TryGet<E>.Succeed(parse);
+            }
+            catch (Exception ex)
+            {
+                if (doMasks)
+                {
+                    errorMask = ex;
+                    return TryGet<E>.Failure;
+                }
+                throw;
+            }
+        }
+
+        public void Write(BinaryWriter writer, E item, int length, bool doMasks, out Exception errorMask)
+        {
+            Write(writer, (E?)item, length, doMasks, out errorMask);
+        }
+
+        public void Write(BinaryWriter writer, E? item, int length, bool doMasks, out Exception errorMask)
+        {
+            if (!item.HasValue)
+            {
+                errorMask = null;
+                return;
+            }
+            try
+            {
+                WriteValue(writer, item.Value, length);
+                errorMask = null;
+            }
+            catch (Exception ex)
+            when (doMasks)
+            {
+                errorMask = ex;
+            }
+        }
+
+        protected E ParseValue(BinaryReader reader, int length)
+        {
+            int i;
+            switch (length)
+            {
+                case 1:
+                    i = reader.ReadByte();
+                    break;
+                case 2:
+                    i = reader.ReadInt16();
+                    break;
+                case 4:
+                    i = reader.ReadInt32();
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
             return (E)Enum.ToObject(typeof(E), i);
         }
 
-        protected override void WriteValue(BinaryWriter writer, E item)
+        protected void WriteValue(BinaryWriter writer, E item, int length)
         {
-            writer.Write(item.ToInt32(null));
+            switch (length)
+            {
+                case 1:
+                    writer.Write(item.ToByte(null));
+                    break;
+                case 2:
+                    writer.Write(item.ToInt16(null));
+                    break;
+                case 4:
+                    writer.Write(item.ToInt32(null));
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        TryGet<E?> IBinaryTranslation<E?, Exception>.Parse(BinaryReader reader, int length, bool doMasks, out Exception maskObj)
+        {
+            return Parse(
+                reader,
+                length,
+                doMasks,
+                out maskObj).Bubble<E?>((t) => t);
         }
     }
 }

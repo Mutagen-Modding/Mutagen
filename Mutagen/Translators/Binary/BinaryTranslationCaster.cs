@@ -13,9 +13,9 @@ namespace Mutagen.Binary
             this.Source = src;
         }
 
-        void IBinaryTranslation<object, object>.Write(BinaryWriter writer, object item, bool doMasks, out object maskObj)
+        void IBinaryTranslation<object, object>.Write(BinaryWriter writer, object item, int length, bool doMasks, out object maskObj)
         {
-            Source.Write(writer, (T)item, doMasks, out var subMaskObj);
+            Source.Write(writer, (T)item, length, doMasks, out var subMaskObj);
             maskObj = subMaskObj;
         }
 

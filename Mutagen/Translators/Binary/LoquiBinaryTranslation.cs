@@ -166,9 +166,27 @@ namespace Mutagen.Binary
             return ret;
         }
 
-        public void Write(BinaryWriter writer, T item, bool doMasks, out M mask)
+        void IBinaryTranslation<T, M>.Write(BinaryWriter writer, T item, int length, bool doMasks, out M mask)
         {
             throw new NotImplementedException();
+        }
+
+        public void Write(BinaryWriter writer, T item, bool doMasks, out MaskItem<Exception, M> mask)
+        {
+            try
+            {
+                WRITE.Value(
+                    writer: writer,
+                    item: item,
+                    doMasks: doMasks,
+                    errorMask: out var subMask);
+                mask = subMask == null ? null : new MaskItem<Exception, M>(null, subMask);
+            }
+            catch (Exception ex)
+            when (doMasks)
+            {
+                mask = new MaskItem<Exception, M>(ex, default(M));
+            }
         }
 
         public TryGet<T> Parse(BinaryReader reader, int length, bool doMasks, out M maskObj)
