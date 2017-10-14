@@ -197,12 +197,10 @@ namespace Mutagen
             out GameSetting_ErrorMask errorMask,
             string name = null)
         {
-            GameSettingCommon.Write_XML(
+            errorMask = (GameSetting_ErrorMask)this.Write_XML_Internal(
                 writer: writer,
                 name: name,
-                item: this,
-                doMasks: true,
-                errorMask: out errorMask);
+                doMasks: true);
         }
 
         public virtual void Write_XML(
@@ -237,6 +235,18 @@ namespace Mutagen
             }
         }
 
+        protected override object Write_XML_Internal(
+            XmlWriter writer,
+            bool doMasks,
+            string name = null)
+        {
+            GameSettingCommon.Write_XML(
+                writer: writer,
+                item: this,
+                doMasks: doMasks,
+                errorMask: out var errorMask);
+            return errorMask;
+        }
         #endregion
 
         protected static void Fill_XML_Internal(
@@ -367,11 +377,9 @@ namespace Mutagen
             BinaryWriter writer,
             out GameSetting_ErrorMask errorMask)
         {
-            GameSettingCommon.Write_Binary(
+            errorMask = (GameSetting_ErrorMask)this.Write_Binary_Internal(
                 writer: writer,
-                item: this,
-                doMasks: true,
-                errorMask: out errorMask);
+                doMasks: true);
         }
 
         public virtual void Write_Binary(
@@ -401,6 +409,17 @@ namespace Mutagen
             }
         }
 
+        protected override object Write_Binary_Internal(
+            BinaryWriter writer,
+            bool doMasks)
+        {
+            GameSettingCommon.Write_Binary(
+                writer: writer,
+                item: this,
+                doMasks: doMasks,
+                errorMask: out var errorMask);
+            return errorMask;
+        }
         #endregion
 
         #endregion

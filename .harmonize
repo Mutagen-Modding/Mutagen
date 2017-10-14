@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>40bbce6b5de5e14df5e74ec4c75b09f814d761fd</Sha>
+         <Sha>4397573a77d9e4a67ee9b6e42462a45ecf05e6ec</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>10-13-2017 22:21:27</CommitDate>
-         <Description>NotifyingListBounded</Description>
+         <CommitDate>10-15-2017 14:14:27</CommitDate>
+         <Description>Delegate builder for generic non statics</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>698e1616f9d019719f64b01be10d05dc2302a9d9</Sha>
+         <Sha>4a99ff176eddd4a6db79f6672f2ad6c2e00050e5</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>10-13-2017 22:35:41</CommitDate>
-         <Description>EnumXml fixes</Description>
+         <CommitDate>10-15-2017 14:14:32</CommitDate>
+         <Description>TranslationModule writes now properly call sub classes' write, even if called as a base class.  FunctionOverride refactoring</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

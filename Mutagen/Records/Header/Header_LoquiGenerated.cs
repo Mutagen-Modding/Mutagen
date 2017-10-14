@@ -324,12 +324,10 @@ namespace Mutagen
             out Header_ErrorMask errorMask,
             string name = null)
         {
-            HeaderCommon.Write_XML(
+            errorMask = (Header_ErrorMask)this.Write_XML_Internal(
                 writer: writer,
                 name: name,
-                item: this,
-                doMasks: true,
-                errorMask: out errorMask);
+                doMasks: true);
         }
 
         public virtual void Write_XML(
@@ -368,12 +366,10 @@ namespace Mutagen
             XmlWriter writer,
             string name = null)
         {
-            HeaderCommon.Write_XML(
+            this.Write_XML_Internal(
                 writer: writer,
                 name: name,
-                item: this,
-                doMasks: false,
-                errorMask: out Header_ErrorMask errorMask);
+                doMasks: false);
         }
 
         public void Write_XML(
@@ -404,6 +400,18 @@ namespace Mutagen
             }
         }
 
+        protected object Write_XML_Internal(
+            XmlWriter writer,
+            bool doMasks,
+            string name = null)
+        {
+            HeaderCommon.Write_XML(
+                writer: writer,
+                item: this,
+                doMasks: doMasks,
+                errorMask: out var errorMask);
+            return errorMask;
+        }
         #endregion
 
         private static Header Create_XML_Internal(
@@ -678,11 +686,9 @@ namespace Mutagen
             BinaryWriter writer,
             out Header_ErrorMask errorMask)
         {
-            HeaderCommon.Write_Binary(
+            errorMask = (Header_ErrorMask)this.Write_Binary_Internal(
                 writer: writer,
-                item: this,
-                doMasks: true,
-                errorMask: out errorMask);
+                doMasks: true);
         }
 
         public virtual void Write_Binary(
@@ -714,11 +720,9 @@ namespace Mutagen
 
         public void Write_Binary(BinaryWriter writer)
         {
-            HeaderCommon.Write_Binary(
+            this.Write_Binary_Internal(
                 writer: writer,
-                item: this,
-                doMasks: false,
-                errorMask: out Header_ErrorMask errorMask);
+                doMasks: false);
         }
 
         public void Write_Binary(string path)
@@ -740,6 +744,17 @@ namespace Mutagen
             }
         }
 
+        protected object Write_Binary_Internal(
+            BinaryWriter writer,
+            bool doMasks)
+        {
+            HeaderCommon.Write_Binary(
+                writer: writer,
+                item: this,
+                doMasks: doMasks,
+                errorMask: out var errorMask);
+            return errorMask;
+        }
         #endregion
 
         private static Header Create_Binary_Internal(

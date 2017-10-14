@@ -334,12 +334,10 @@ namespace Mutagen
             out Class_ErrorMask errorMask,
             string name = null)
         {
-            ClassCommon.Write_XML(
+            errorMask = (Class_ErrorMask)this.Write_XML_Internal(
                 writer: writer,
                 name: name,
-                item: this,
-                doMasks: true,
-                errorMask: out errorMask);
+                doMasks: true);
         }
 
         public virtual void Write_XML(
@@ -378,12 +376,10 @@ namespace Mutagen
             XmlWriter writer,
             string name = null)
         {
-            ClassCommon.Write_XML(
+            this.Write_XML_Internal(
                 writer: writer,
                 name: name,
-                item: this,
-                doMasks: false,
-                errorMask: out Class_ErrorMask errorMask);
+                doMasks: false);
         }
 
         public override void Write_XML(
@@ -414,6 +410,18 @@ namespace Mutagen
             }
         }
 
+        protected override object Write_XML_Internal(
+            XmlWriter writer,
+            bool doMasks,
+            string name = null)
+        {
+            ClassCommon.Write_XML(
+                writer: writer,
+                item: this,
+                doMasks: doMasks,
+                errorMask: out var errorMask);
+            return errorMask;
+        }
         #endregion
 
         private static Class Create_XML_Internal(
@@ -703,11 +711,9 @@ namespace Mutagen
             BinaryWriter writer,
             out Class_ErrorMask errorMask)
         {
-            ClassCommon.Write_Binary(
+            errorMask = (Class_ErrorMask)this.Write_Binary_Internal(
                 writer: writer,
-                item: this,
-                doMasks: true,
-                errorMask: out errorMask);
+                doMasks: true);
         }
 
         public virtual void Write_Binary(
@@ -739,11 +745,9 @@ namespace Mutagen
 
         public override void Write_Binary(BinaryWriter writer)
         {
-            ClassCommon.Write_Binary(
+            this.Write_Binary_Internal(
                 writer: writer,
-                item: this,
-                doMasks: false,
-                errorMask: out Class_ErrorMask errorMask);
+                doMasks: false);
         }
 
         public override void Write_Binary(string path)
@@ -765,6 +769,17 @@ namespace Mutagen
             }
         }
 
+        protected override object Write_Binary_Internal(
+            BinaryWriter writer,
+            bool doMasks)
+        {
+            ClassCommon.Write_Binary(
+                writer: writer,
+                item: this,
+                doMasks: doMasks,
+                errorMask: out var errorMask);
+            return errorMask;
+        }
         #endregion
 
         private static Class Create_Binary_Internal(

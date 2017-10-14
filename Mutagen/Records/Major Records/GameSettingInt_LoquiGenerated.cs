@@ -306,12 +306,10 @@ namespace Mutagen
             out GameSettingInt_ErrorMask errorMask,
             string name = null)
         {
-            GameSettingIntCommon.Write_XML(
+            errorMask = (GameSettingInt_ErrorMask)this.Write_XML_Internal(
                 writer: writer,
                 name: name,
-                item: this,
-                doMasks: true,
-                errorMask: out errorMask);
+                doMasks: true);
         }
 
         public virtual void Write_XML(
@@ -350,12 +348,10 @@ namespace Mutagen
             XmlWriter writer,
             string name = null)
         {
-            GameSettingIntCommon.Write_XML(
+            this.Write_XML_Internal(
                 writer: writer,
                 name: name,
-                item: this,
-                doMasks: false,
-                errorMask: out GameSettingInt_ErrorMask errorMask);
+                doMasks: false);
         }
 
         public override void Write_XML(
@@ -386,6 +382,18 @@ namespace Mutagen
             }
         }
 
+        protected override object Write_XML_Internal(
+            XmlWriter writer,
+            bool doMasks,
+            string name = null)
+        {
+            GameSettingIntCommon.Write_XML(
+                writer: writer,
+                item: this,
+                doMasks: doMasks,
+                errorMask: out var errorMask);
+            return errorMask;
+        }
         #endregion
 
         private static GameSettingInt Create_XML_Internal(
@@ -660,11 +668,9 @@ namespace Mutagen
             BinaryWriter writer,
             out GameSettingInt_ErrorMask errorMask)
         {
-            GameSettingIntCommon.Write_Binary(
+            errorMask = (GameSettingInt_ErrorMask)this.Write_Binary_Internal(
                 writer: writer,
-                item: this,
-                doMasks: true,
-                errorMask: out errorMask);
+                doMasks: true);
         }
 
         public virtual void Write_Binary(
@@ -696,11 +702,9 @@ namespace Mutagen
 
         public override void Write_Binary(BinaryWriter writer)
         {
-            GameSettingIntCommon.Write_Binary(
+            this.Write_Binary_Internal(
                 writer: writer,
-                item: this,
-                doMasks: false,
-                errorMask: out GameSettingInt_ErrorMask errorMask);
+                doMasks: false);
         }
 
         public override void Write_Binary(string path)
@@ -722,6 +726,17 @@ namespace Mutagen
             }
         }
 
+        protected override object Write_Binary_Internal(
+            BinaryWriter writer,
+            bool doMasks)
+        {
+            GameSettingIntCommon.Write_Binary(
+                writer: writer,
+                item: this,
+                doMasks: doMasks,
+                errorMask: out var errorMask);
+            return errorMask;
+        }
         #endregion
 
         private static GameSettingInt Create_Binary_Internal(

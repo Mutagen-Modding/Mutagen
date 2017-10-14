@@ -305,12 +305,10 @@ namespace Mutagen
             out GlobalFloat_ErrorMask errorMask,
             string name = null)
         {
-            GlobalFloatCommon.Write_XML(
+            errorMask = (GlobalFloat_ErrorMask)this.Write_XML_Internal(
                 writer: writer,
                 name: name,
-                item: this,
-                doMasks: true,
-                errorMask: out errorMask);
+                doMasks: true);
         }
 
         public virtual void Write_XML(
@@ -349,12 +347,10 @@ namespace Mutagen
             XmlWriter writer,
             string name = null)
         {
-            GlobalFloatCommon.Write_XML(
+            this.Write_XML_Internal(
                 writer: writer,
                 name: name,
-                item: this,
-                doMasks: false,
-                errorMask: out GlobalFloat_ErrorMask errorMask);
+                doMasks: false);
         }
 
         public override void Write_XML(
@@ -385,6 +381,18 @@ namespace Mutagen
             }
         }
 
+        protected override object Write_XML_Internal(
+            XmlWriter writer,
+            bool doMasks,
+            string name = null)
+        {
+            GlobalFloatCommon.Write_XML(
+                writer: writer,
+                item: this,
+                doMasks: doMasks,
+                errorMask: out var errorMask);
+            return errorMask;
+        }
         #endregion
 
         private static GlobalFloat Create_XML_Internal(
@@ -659,11 +667,9 @@ namespace Mutagen
             BinaryWriter writer,
             out GlobalFloat_ErrorMask errorMask)
         {
-            GlobalFloatCommon.Write_Binary(
+            errorMask = (GlobalFloat_ErrorMask)this.Write_Binary_Internal(
                 writer: writer,
-                item: this,
-                doMasks: true,
-                errorMask: out errorMask);
+                doMasks: true);
         }
 
         public virtual void Write_Binary(
@@ -695,11 +701,9 @@ namespace Mutagen
 
         public override void Write_Binary(BinaryWriter writer)
         {
-            GlobalFloatCommon.Write_Binary(
+            this.Write_Binary_Internal(
                 writer: writer,
-                item: this,
-                doMasks: false,
-                errorMask: out GlobalFloat_ErrorMask errorMask);
+                doMasks: false);
         }
 
         public override void Write_Binary(string path)
@@ -721,6 +725,17 @@ namespace Mutagen
             }
         }
 
+        protected override object Write_Binary_Internal(
+            BinaryWriter writer,
+            bool doMasks)
+        {
+            GlobalFloatCommon.Write_Binary(
+                writer: writer,
+                item: this,
+                doMasks: doMasks,
+                errorMask: out var errorMask);
+            return errorMask;
+        }
         #endregion
 
         private static GlobalFloat Create_Binary_Internal(

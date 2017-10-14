@@ -217,12 +217,10 @@ namespace Mutagen
             out Global_ErrorMask errorMask,
             string name = null)
         {
-            GlobalCommon.Write_XML(
+            errorMask = (Global_ErrorMask)this.Write_XML_Internal(
                 writer: writer,
                 name: name,
-                item: this,
-                doMasks: true,
-                errorMask: out errorMask);
+                doMasks: true);
         }
 
         public virtual void Write_XML(
@@ -257,6 +255,18 @@ namespace Mutagen
             }
         }
 
+        protected override object Write_XML_Internal(
+            XmlWriter writer,
+            bool doMasks,
+            string name = null)
+        {
+            GlobalCommon.Write_XML(
+                writer: writer,
+                item: this,
+                doMasks: doMasks,
+                errorMask: out var errorMask);
+            return errorMask;
+        }
         #endregion
 
         protected static void Fill_XML_Internal(
@@ -402,11 +412,9 @@ namespace Mutagen
             BinaryWriter writer,
             out Global_ErrorMask errorMask)
         {
-            GlobalCommon.Write_Binary(
+            errorMask = (Global_ErrorMask)this.Write_Binary_Internal(
                 writer: writer,
-                item: this,
-                doMasks: true,
-                errorMask: out errorMask);
+                doMasks: true);
         }
 
         public virtual void Write_Binary(
@@ -436,6 +444,17 @@ namespace Mutagen
             }
         }
 
+        protected override object Write_Binary_Internal(
+            BinaryWriter writer,
+            bool doMasks)
+        {
+            GlobalCommon.Write_Binary(
+                writer: writer,
+                item: this,
+                doMasks: doMasks,
+                errorMask: out var errorMask);
+            return errorMask;
+        }
         #endregion
 
         protected static void Fill_Binary_RecordTypes(

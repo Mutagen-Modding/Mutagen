@@ -357,12 +357,10 @@ namespace Mutagen
             string name = null)
             where T_ErrMask : MajorRecord_ErrorMask, new()
         {
-            GroupCommon.Write_XML(
+            errorMask = (Group_ErrorMask<T_ErrMask>)this.Write_XML_Internal<T_ErrMask>(
                 writer: writer,
                 name: name,
-                item: this,
-                doMasks: true,
-                errorMask: out errorMask);
+                doMasks: true);
         }
 
         public virtual void Write_XML<T_ErrMask>(
@@ -413,12 +411,10 @@ namespace Mutagen
             string name = null)
             where T_ErrMask : MajorRecord_ErrorMask, new()
         {
-            GroupCommon.Write_XML(
+            this.Write_XML_Internal<T_ErrMask>(
                 writer: writer,
                 name: name,
-                item: this,
-                doMasks: false,
-                errorMask: out Group_ErrorMask<T_ErrMask> errorMask);
+                doMasks: false);
         }
 
         public void Write_XML(
@@ -469,6 +465,19 @@ namespace Mutagen
             }
         }
 
+        protected object Write_XML_Internal<T_ErrMask>(
+            XmlWriter writer,
+            bool doMasks,
+            string name = null)
+            where T_ErrMask : MajorRecord_ErrorMask, new()
+        {
+            GroupCommon.Write_XML<T, T_ErrMask>(
+                writer: writer,
+                item: this,
+                doMasks: doMasks,
+                errorMask: out var errorMask);
+            return errorMask;
+        }
         #endregion
 
         private static Group<T> Create_XML_Internal<T_ErrMask>(
@@ -781,11 +790,9 @@ namespace Mutagen
             out Group_ErrorMask<T_ErrMask> errorMask)
             where T_ErrMask : MajorRecord_ErrorMask, new()
         {
-            GroupCommon.Write_Binary(
+            errorMask = (Group_ErrorMask<T_ErrMask>)this.Write_Binary_Internal<T_ErrMask>(
                 writer: writer,
-                item: this,
-                doMasks: true,
-                errorMask: out errorMask);
+                doMasks: true);
         }
 
         public virtual void Write_Binary<T_ErrMask>(
@@ -825,11 +832,9 @@ namespace Mutagen
         public void Write_Binary<T_ErrMask>(BinaryWriter writer)
             where T_ErrMask : MajorRecord_ErrorMask, new()
         {
-            GroupCommon.Write_Binary(
+            this.Write_Binary_Internal<T_ErrMask>(
                 writer: writer,
-                item: this,
-                doMasks: false,
-                errorMask: out Group_ErrorMask<T_ErrMask> errorMask);
+                doMasks: false);
         }
 
         public void Write_Binary(string path)
@@ -863,6 +868,18 @@ namespace Mutagen
             }
         }
 
+        protected object Write_Binary_Internal<T_ErrMask>(
+            BinaryWriter writer,
+            bool doMasks)
+            where T_ErrMask : MajorRecord_ErrorMask, new()
+        {
+            GroupCommon.Write_Binary<T, T_ErrMask>(
+                writer: writer,
+                item: this,
+                doMasks: doMasks,
+                errorMask: out var errorMask);
+            return errorMask;
+        }
         #endregion
 
         private static Group<T> Create_Binary_Internal<T_ErrMask>(

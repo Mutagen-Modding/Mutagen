@@ -290,12 +290,10 @@ namespace Mutagen
             out MajorRecord_ErrorMask errorMask,
             string name = null)
         {
-            MajorRecordCommon.Write_XML(
+            errorMask = (MajorRecord_ErrorMask)this.Write_XML_Internal(
                 writer: writer,
                 name: name,
-                item: this,
-                doMasks: true,
-                errorMask: out errorMask);
+                doMasks: true);
         }
 
         public virtual void Write_XML(
@@ -340,6 +338,18 @@ namespace Mutagen
             Stream stream,
             string name = null);
 
+        protected virtual object Write_XML_Internal(
+            XmlWriter writer,
+            bool doMasks,
+            string name = null)
+        {
+            MajorRecordCommon.Write_XML(
+                writer: writer,
+                item: this,
+                doMasks: doMasks,
+                errorMask: out var errorMask);
+            return errorMask;
+        }
         #endregion
 
         protected static void Fill_XML_Internal(
@@ -527,11 +537,9 @@ namespace Mutagen
             BinaryWriter writer,
             out MajorRecord_ErrorMask errorMask)
         {
-            MajorRecordCommon.Write_Binary(
+            errorMask = (MajorRecord_ErrorMask)this.Write_Binary_Internal(
                 writer: writer,
-                item: this,
-                doMasks: true,
-                errorMask: out errorMask);
+                doMasks: true);
         }
 
         public virtual void Write_Binary(
@@ -565,6 +573,17 @@ namespace Mutagen
         public abstract void Write_Binary(string path);
         public abstract void Write_Binary(Stream stream);
 
+        protected virtual object Write_Binary_Internal(
+            BinaryWriter writer,
+            bool doMasks)
+        {
+            MajorRecordCommon.Write_Binary(
+                writer: writer,
+                item: this,
+                doMasks: doMasks,
+                errorMask: out var errorMask);
+            return errorMask;
+        }
         #endregion
 
         protected static void Fill_Binary_Structs(

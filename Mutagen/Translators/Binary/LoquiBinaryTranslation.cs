@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -123,17 +124,25 @@ namespace Mutagen.Binary
 
         public static WRITE_FUNC GetWriteFunc()
         {
-            var f = DelegateBuilder.BuildDelegate<Func<BinaryWriter, T, bool, M>>(
-                typeof(T).GetMethods()
-                .Where((methodInfo) => methodInfo.Name.Equals("Write_Binary"))
-                .Where((methodInfo) => methodInfo.IsStatic
-                    && methodInfo.IsPublic)
-                .Where((methodInfo) => methodInfo.ReturnType.Equals(typeof(M)))
-                .First());
-            return (BinaryWriter writer, T item, bool doMasks, out M errorMask) =>
+            var method = typeof(T).GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
+                .Where((methodInfo) => methodInfo.Name.Equals("Write_Binary_Internal"))
+                .First();
+            if (!method.IsGenericMethod)
             {
-                errorMask = f(writer, item, doMasks);
-            };
+                var f = DelegateBuilder.BuildDelegate<Func<T, BinaryWriter, bool, object>>(method);
+                return (BinaryWriter writer, T item, bool doMasks, out M errorMask) =>
+                {
+                    errorMask = (M)f(item, writer, doMasks);
+                };
+            }
+            else
+            {
+                var f = DelegateBuilder.BuildGenericDelegate<Func<T, BinaryWriter, bool, object>>(typeof(T), new Type[] { typeof(M).GenericTypeArguments[0] }, method);
+                return (BinaryWriter writer, T item, bool doMasks, out M errorMask) =>
+                {
+                    errorMask = (M)f(item, writer, doMasks);
+                };
+            }
         }
 
         public TryGet<T> Parse(BinaryReader reader, bool doMasks, out MaskItem<Exception, M> mask)
