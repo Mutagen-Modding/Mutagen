@@ -20,9 +20,9 @@ namespace Mutagen.Tests
             var mod = OblivionMod.Create_Binary(
                 Properties.Settings.Default.OblivionESM,
                 out inputErrMask);
-            using (var tmp = new TempFolder())
+            using (var tmp = new TempFolder(new DirectoryInfo(Path.Combine(Path.GetTempPath(), "Mutagen_Oblivion_Binary"))))
             {
-                var outputPath = Path.Combine(tmp.Dir.FullName, Path.GetRandomFileName());
+                var outputPath = Path.Combine(tmp.Dir.FullName, Constants.OBLIVION_ESM);
                 mod.Write_Binary(
                     outputPath,
                     out outputErrMask);
@@ -39,9 +39,9 @@ namespace Mutagen.Tests
             var mod = OblivionMod.Create_Binary(
                 Properties.Settings.Default.KnightsESP,
                 out inputErrMask);
-            using (var tmp = new TempFolder())
+            using (var tmp = new TempFolder(new DirectoryInfo(Path.Combine(Path.GetTempPath(), "Mutagen_Knights_Binary"))))
             {
-                var outputPath = Path.Combine(tmp.Dir.FullName, Path.GetRandomFileName());
+                var outputPath = Path.Combine(tmp.Dir.FullName, Constants.KNIGHTS_ESP);
                 mod.Write_Binary(
                     outputPath,
                     out outputErrMask);
@@ -57,7 +57,7 @@ namespace Mutagen.Tests
                 Properties.Settings.Default.OblivionESM,
                 out var binInputErrMask);
             Assert.Null(binInputErrMask);
-            using (var tmp = new TempFolder())
+            using (var tmp = new TempFolder(new DirectoryInfo(Path.Combine(Path.GetTempPath(), "Mutagen_Oblivion_XML"))))
             {
                 var outputPath = Path.Combine(tmp.Dir.FullName, Path.GetRandomFileName());
                 modFromBinary.Write_XML(
@@ -79,7 +79,7 @@ namespace Mutagen.Tests
                 Properties.Settings.Default.KnightsESP,
                 out var binInputErrMask);
             Assert.Null(binInputErrMask);
-            using (var tmp = new TempFolder())
+            using (var tmp = new TempFolder(new DirectoryInfo(Path.Combine(Path.GetTempPath(), "Mutagen_Knights_XML"))))
             {
                 var outputPath = Path.Combine(tmp.Dir.FullName, Path.GetRandomFileName());
                 modFromBinary.Write_XML(

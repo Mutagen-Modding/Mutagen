@@ -940,7 +940,19 @@ namespace Mutagen
             Func<Group_ErrorMask<T_ErrMask>> errorMask)
             where T_ErrMask : MajorRecord_ErrorMask, new()
         {
-            FillBinaryContainedRecordType(reader, item);
+            {
+                Exception subMask;
+                FillBinary_ContainedRecordType(
+                    reader: reader,
+                    item: item,
+                    doMasks: doMasks,
+                    errorMask: out subMask);
+                ErrorMask.HandleErrorMask(
+                    errorMask,
+                    doMasks,
+                    (int)Group_FieldIndex.ContainedRecordType,
+                    subMask);
+            }
             {
                 Exception subMask;
                 var tryGet = Mutagen.Binary.Int32BinaryTranslation.Instance.Parse(
@@ -1969,6 +1981,19 @@ namespace Mutagen.Internals
             where T : MajorRecord, ILoquiObjectGetter
             where T_ErrMask : MajorRecord_ErrorMask, new()
         {
+            {
+                Exception subMask;
+                Group<T>.WriteBinary_ContainedRecordType(
+                    writer: writer,
+                    item: item,
+                    doMasks: doMasks,
+                    errorMask: out subMask);
+                ErrorMask.HandleErrorMask(
+                    errorMask,
+                    doMasks,
+                    (int)Group_FieldIndex.ContainedRecordType,
+                    subMask);
+            }
             {
                 Exception subMask;
                 Mutagen.Binary.Int32BinaryTranslation.Instance.Write(

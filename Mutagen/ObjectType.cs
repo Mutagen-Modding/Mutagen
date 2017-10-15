@@ -32,6 +32,7 @@ namespace System
                 case ObjectType.Record:
                     return Constants.RECORD_LENGTHLENGTH;
                 case ObjectType.Group:
+                    return Constants.GRUP_LENGTHLENGTH;
                 case ObjectType.Mod:
                 default:
                     throw new NotImplementedException();
@@ -49,6 +50,7 @@ namespace System
                 case ObjectType.Record:
                     return Constants.RECORD_HEADER_SKIP;
                 case ObjectType.Group:
+                    return Constants.GRUP_HEADER_SKIP;
                 case ObjectType.Mod:
                 default:
                     throw new NotImplementedException();

@@ -447,14 +447,33 @@ namespace Mutagen.Generation
         private void GenerateFillSnippet(ObjectGeneration obj, FileGeneration fg, TypeGeneration field, BinaryTranslationGeneration generator, bool needBrace = true)
         {
             var data = field.GetFieldData();
+            var maskType = this.Gen.MaskModule.GetMaskModule(field.GetType()).GetErrorMaskTypeStr(field);
             if (data.CustomBinary)
             {
-                fg.AppendLine($"FillBinary{field.Name}(reader, item);");
+                using (new BraceWrapper(fg))
+                {
+                    fg.AppendLine($"{maskType} subMask;");
+                    using (var args = new ArgsWrapper(fg,
+                        $"FillBinary_{field.Name}"))
+                    {
+                        args.Add("reader: reader");
+                        args.Add("item: item");
+                        args.Add("doMasks: doMasks");
+                        args.Add("errorMask: out subMask");
+                    }
+                    using (var args = new ArgsWrapper(fg,
+                        $"ErrorMask.HandleErrorMask"))
+                    {
+                        args.Add("errorMask");
+                        args.Add("doMasks");
+                        args.Add($"(int){field.IndexEnumName}");
+                        args.Add("subMask");
+                    }
+                }
                 return;
             }
             using (new BraceWrapper(fg, doIt: needBrace))
             {
-                var maskType = this.Gen.MaskModule.GetMaskModule(field.GetType()).GetErrorMaskTypeStr(field);
                 fg.AppendLine($"{maskType} subMask;");
                 generator.GenerateCopyIn(
                     fg: fg,
@@ -648,16 +667,40 @@ namespace Mutagen.Generation
                     }
                     foreach (var field in obj.Fields)
                     {
-                        if (field.Derivative) continue;
                         if (field.TryGetFieldData(out var data)
                             && data.TriggeringRecordAccessor != null) continue;
+                        if (field.Derivative && !data.CustomBinary) continue;
+                        var maskType = this.Gen.MaskModule.GetMaskModule(field.GetType()).GetErrorMaskTypeStr(field);
+                        if (data.CustomBinary)
+                        {
+                            using (new BraceWrapper(fg))
+                            {
+                                fg.AppendLine($"{maskType} subMask;");
+                                using (var args = new ArgsWrapper(fg,
+                                    $"{obj.ObjectName}.WriteBinary_{field.Name}"))
+                                {
+                                    args.Add("writer: writer");
+                                    args.Add("item: item");
+                                    args.Add("doMasks: doMasks");
+                                    args.Add("errorMask: out subMask");
+                                }
+                                using (var args = new ArgsWrapper(fg,
+                                    $"ErrorMask.HandleErrorMask"))
+                                {
+                                    args.Add("errorMask");
+                                    args.Add("doMasks");
+                                    args.Add($"(int){field.IndexEnumName}");
+                                    args.Add("subMask");
+                                }
+                            }
+                            continue;
+                        }
                         if (!this.TryGetTypeGeneration(field.GetType(), out var generator))
                         {
                             throw new ArgumentException("Unsupported type generator: " + field);
                         }
                         using (new BraceWrapper(fg))
                         {
-                            var maskType = this.Gen.MaskModule.GetMaskModule(field.GetType()).GetErrorMaskTypeStr(field);
                             fg.AppendLine($"{maskType} subMask;");
                             generator.GenerateWrite(
                                 fg: fg,
@@ -709,28 +752,52 @@ namespace Mutagen.Generation
                             }
                         }
                     }
-                    foreach (var field in obj.IterateFields())
+                    foreach (var field in obj.Fields)
                     {
-                        if (field.Field.Derivative) continue;
-                        if (!field.Field.TryGetFieldData(out var data)
+                        if (!field.TryGetFieldData(out var data)
                             || data.TriggeringRecordAccessor == null) continue;
-                        if (!this.TryGetTypeGeneration(field.Field.GetType(), out var generator))
+                        if (field.Derivative && !data.CustomBinary) continue;
+                        var maskType = this.Gen.MaskModule.GetMaskModule(field.GetType()).GetErrorMaskTypeStr(field);
+                        if (data.CustomBinary)
                         {
-                            throw new ArgumentException("Unsupported type generator: " + field.Field);
+                            using (new BraceWrapper(fg))
+                            {
+                                fg.AppendLine($"{maskType} subMask;");
+                                using (var args = new ArgsWrapper(fg,
+                                    $"{obj.ObjectName}.WriteBinary_{field.Name}"))
+                                {
+                                    args.Add("writer: writer");
+                                    args.Add("item: item");
+                                    args.Add("doMasks: doMasks");
+                                    args.Add("errorMask: out subMask");
+                                }
+                                using (var args = new ArgsWrapper(fg,
+                                    $"ErrorMask.HandleErrorMask"))
+                                {
+                                    args.Add("errorMask");
+                                    args.Add("doMasks");
+                                    args.Add($"(int){field.IndexEnumName}");
+                                    args.Add("subMask");
+                                }
+                            }
+                            continue;
+                        }
+                        if (!this.TryGetTypeGeneration(field.GetType(), out var generator))
+                        {
+                            throw new ArgumentException("Unsupported type generator: " + field);
                         }
 
-                        if (!generator.ShouldGenerateWrite(field.Field)) continue;
+                        if (!generator.ShouldGenerateWrite(field)) continue;
 
                         using (new BraceWrapper(fg))
                         {
-                            var maskType = this.Gen.MaskModule.GetMaskModule(field.Field.GetType()).GetErrorMaskTypeStr(field.Field);
                             fg.AppendLine($"{maskType} subMask;");
                             generator.GenerateWrite(
                                 fg: fg,
                                 objGen: obj,
-                                typeGen: field.Field,
+                                typeGen: field,
                                 writerAccessor: "writer",
-                                itemAccessor: $"item.{field.Field.Name}",
+                                itemAccessor: $"item.{field.Name}",
                                 doMaskAccessor: "doMasks",
                                 maskAccessor: $"subMask");
                             using (var args = new ArgsWrapper(fg,
@@ -738,7 +805,7 @@ namespace Mutagen.Generation
                             {
                                 args.Add("errorMask");
                                 args.Add("doMasks");
-                                args.Add($"(int){field.Field.IndexEnumName}");
+                                args.Add($"(int){field.IndexEnumName}");
                                 args.Add("subMask");
                             }
                         }

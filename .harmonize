@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>4397573a77d9e4a67ee9b6e42462a45ecf05e6ec</Sha>
+         <Sha>0587925f3e4d7688993a278143272750053710d3</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>10-15-2017 14:14:27</CommitDate>
-         <Description>Delegate builder for generic non statics</Description>
+         <CommitDate>10-15-2017 14:59:04</CommitDate>
+         <Description>Temp folder with explicit ctor</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
