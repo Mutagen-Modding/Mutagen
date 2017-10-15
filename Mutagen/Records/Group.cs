@@ -22,8 +22,9 @@ namespace Mutagen
             Mutagen.Binary.StringBinaryTranslation.Instance.Write(
                 writer,
                 T_RecordType.Type,
-                doMasks,
-                out errorMask);
+                doMasks: doMasks,
+                nullTerminate: false,
+                errorMask: out errorMask);
         }
     }
 }

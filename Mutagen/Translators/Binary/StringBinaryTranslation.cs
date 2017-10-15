@@ -29,12 +29,15 @@ namespace Mutagen.Binary
             }
         }
 
-        public void Write(BinaryWriter writer, string item, bool doMasks, out Exception errorMask)
+        public void Write(BinaryWriter writer, string item, bool nullTerminate, bool doMasks, out Exception errorMask)
         {
             try
             {
                 writer.Write(item.ToCharArray());
-                writer.Write((byte)0);
+                if (nullTerminate)
+                {
+                    writer.Write((byte)0);
+                }
                 errorMask = null;
             }
             catch (Exception ex)
@@ -42,6 +45,11 @@ namespace Mutagen.Binary
             {
                 errorMask = ex;
             }
+        }
+
+        public void Write(BinaryWriter writer, string item, bool doMasks, out Exception errorMask)
+        {
+            Write(writer, item, doMasks: doMasks, nullTerminate: true, errorMask: out errorMask);
         }
 
         public void Write(

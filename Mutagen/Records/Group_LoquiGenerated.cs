@@ -65,14 +65,16 @@ namespace Mutagen
         INotifyingItemGetter<Int32> IGroupGetter<T>.GroupType_Property => this.GroupType_Property;
         #endregion
         #region LastModified
-        protected readonly INotifyingItem<DateTime> _LastModified = NotifyingItem.Factory<DateTime>(markAsSet: false);
-        public INotifyingItemGetter<DateTime> LastModified_Property => _LastModified;
-        public DateTime LastModified
+        protected readonly INotifyingItem<Byte[]> _LastModified = NotifyingItem.Factory<Byte[]>(
+            markAsSet: false,
+            noNullFallback: () => new byte[4]);
+        public INotifyingItemGetter<Byte[]> LastModified_Property => _LastModified;
+        public Byte[] LastModified
         {
             get => this._LastModified.Item;
             protected set => this._LastModified.Set(value);
         }
-        INotifyingItemGetter<DateTime> IGroupGetter<T>.LastModified_Property => this.LastModified_Property;
+        INotifyingItemGetter<Byte[]> IGroupGetter<T>.LastModified_Property => this.LastModified_Property;
         #endregion
         #region Items
         private readonly INotifyingList<T> _Items = new NotifyingList<T>();
@@ -155,7 +157,7 @@ namespace Mutagen
             if (LastModified_Property.HasBeenSet != rhs.LastModified_Property.HasBeenSet) return false;
             if (LastModified_Property.HasBeenSet)
             {
-                if (LastModified != rhs.LastModified) return false;
+                if (!LastModified.EqualsFast(rhs.LastModified)) return false;
             }
             if (Items.HasBeenSet != rhs.Items.HasBeenSet) return false;
             if (Items.HasBeenSet)
@@ -550,7 +552,7 @@ namespace Mutagen
                 case "LastModified":
                     {
                         Exception subMask;
-                        var tryGet = DateTimeXmlTranslation.Instance.ParseNonNull(
+                        var tryGet = ByteArrayXmlTranslation.Instance.Parse(
                             root,
                             doMasks: doMasks,
                             errorMask: out subMask);
@@ -968,10 +970,11 @@ namespace Mutagen
             }
             {
                 Exception subMask;
-                var tryGet = Mutagen.Binary.DateTimeBinaryTranslation.Instance.Parse(
+                var tryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                     reader,
                     doMasks: doMasks,
-                    errorMask: out subMask);
+                    errorMask: out subMask,
+                    length: 4);
                 item._LastModified.SetIfSucceeded(tryGet);
                 ErrorMask.HandleErrorMask(
                     errorMask,
@@ -1114,7 +1117,7 @@ namespace Mutagen
                     break;
                 case Group_FieldIndex.LastModified:
                     this._LastModified.Set(
-                        (DateTime)obj,
+                        (Byte[])obj,
                         cmds);
                     break;
                 case Group_FieldIndex.Items:
@@ -1164,7 +1167,7 @@ namespace Mutagen
                     break;
                 case Group_FieldIndex.LastModified:
                     obj._LastModified.Set(
-                        (DateTime)pair.Value,
+                        (Byte[])pair.Value,
                         null);
                     break;
                 case Group_FieldIndex.Items:
@@ -1206,8 +1209,8 @@ namespace Mutagen
 
         #endregion
         #region LastModified
-        DateTime LastModified { get; }
-        INotifyingItemGetter<DateTime> LastModified_Property { get; }
+        Byte[] LastModified { get; }
+        INotifyingItemGetter<Byte[]> LastModified_Property { get; }
 
         #endregion
         #region Items
@@ -1432,7 +1435,7 @@ namespace Mutagen.Internals
                 case Group_FieldIndex.GroupType:
                     return typeof(Int32);
                 case Group_FieldIndex.LastModified:
-                    return typeof(DateTime);
+                    return typeof(Byte[]);
                 case Group_FieldIndex.Items:
                     return typeof(NotifyingList<T>);
                 default:
@@ -1699,7 +1702,7 @@ namespace Mutagen.Internals
             if (rhs == null) return;
             ret.ContainedRecordType = item.ContainedRecordType_Property.Equals(rhs.ContainedRecordType_Property, (l, r) => object.Equals(l, r));
             ret.GroupType = item.GroupType_Property.Equals(rhs.GroupType_Property, (l, r) => l == r);
-            ret.LastModified = item.LastModified_Property.Equals(rhs.LastModified_Property, (l, r) => l == r);
+            ret.LastModified = item.LastModified_Property.Equals(rhs.LastModified_Property, (l, r) => l.EqualsFast(r));
             if (item.Items.HasBeenSet == rhs.Items.HasBeenSet)
             {
                 if (item.Items.HasBeenSet)
@@ -1869,7 +1872,7 @@ namespace Mutagen.Internals
                     if (item.LastModified_Property.HasBeenSet)
                     {
                         Exception subMask;
-                        DateTimeXmlTranslation.Instance.Write(
+                        ByteArrayXmlTranslation.Instance.Write(
                             writer,
                             nameof(item.LastModified),
                             item.LastModified,
@@ -2009,7 +2012,7 @@ namespace Mutagen.Internals
             }
             {
                 Exception subMask;
-                Mutagen.Binary.DateTimeBinaryTranslation.Instance.Write(
+                Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.LastModified,
                     doMasks: doMasks,
