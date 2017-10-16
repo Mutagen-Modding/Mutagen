@@ -8,6 +8,7 @@ using Mutagen;
 using Noggog.Utility;
 using Xunit;
 using Mutagen.Internals;
+using Noggog;
 
 namespace Mutagen.Tests
 {
@@ -96,19 +97,17 @@ namespace Mutagen.Tests
 
         private void AssertFilesEqual(string path1, string path2)
         {
+            List<RangeInt32> errorRanges = new List<RangeInt32>();
             using (var reader1 = new FileStream(path1, FileMode.Open, FileAccess.Read))
             {
                 using (var reader2 = new FileStream(path2, FileMode.Open, FileAccess.Read))
                 {
-                    while (reader1.Position < reader1.Length
-                        && reader2.Position < reader2.Length)
+                    var errs = RangeInt64.ConstructRanges(
+                        GetDifferences(reader1, reader2),
+                        b => !b).First(5).ToArray();
+                    if (errs.Length > 0)
                     {
-                        var b1 = reader1.ReadByte();
-                        var b2 = reader2.ReadByte();
-                        if (b1 != b2)
-                        {
-                            throw new ArgumentException($"Bytes did not match at position: {reader1.Position - 1}");
-                        }
+                        throw new ArgumentException($"Bytes did not match at positions: {string.Join(" ", errs)}");
                     }
                     if (reader1.Position != reader1.Length)
                     {
@@ -119,6 +118,19 @@ namespace Mutagen.Tests
                         throw new ArgumentException($"Stream {path2} had more data past position {reader2.Position} than {path1}");
                     }
                 }
+            }
+        }
+
+        private IEnumerable<KeyValuePair<long, bool>> GetDifferences(FileStream reader1, FileStream reader2)
+        {
+            while (reader1.Position < reader1.Length
+                && reader2.Position < reader2.Length)
+            {
+                var b1 = reader1.ReadByte();
+                var b2 = reader2.ReadByte();
+                yield return new KeyValuePair<long, bool>(
+                    reader1.Position - 1, 
+                    b1 == b2);
             }
         }
     }

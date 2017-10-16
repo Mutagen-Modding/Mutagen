@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>0587925f3e4d7688993a278143272750053710d3</Sha>
+         <Sha>64925efef2e10c3be2bafc5b91c8c2bd5d279d12</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>10-15-2017 14:59:04</CommitDate>
-         <Description>Temp folder with explicit ctor</Description>
+         <CommitDate>10-16-2017 08:12:24</CommitDate>
+         <Description>RangeInt64.ConstructRanges</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
