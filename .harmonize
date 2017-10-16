@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>64925efef2e10c3be2bafc5b91c8c2bd5d279d12</Sha>
+         <Sha>31d80f0373693549d1cd7a118b718a7fcac7ffdd</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>10-16-2017 08:12:24</CommitDate>
-         <Description>RangeInt64.ConstructRanges</Description>
+         <CommitDate>10-16-2017 16:44:10</CommitDate>
+         <Description>Range ctor added.  Width member on whole number ranges</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
