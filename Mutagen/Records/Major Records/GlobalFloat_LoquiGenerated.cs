@@ -939,7 +939,7 @@ namespace Mutagen.Internals
     #region Field Index
     public enum GlobalFloat_FieldIndex
     {
-        Data = 6,
+        Data = 7,
     }
     #endregion
 

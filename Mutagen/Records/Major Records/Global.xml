@@ -2,6 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Global" recordType="GLOB" baseClass="MajorRecord" objType="Record" abstract="true" GUID="072ceda7-3182-4314-a4e3-927e68f39c3f" ID="12">
     <Fields>
+      <Char name="TypeChar" recordType="FNAM" derivative="true" customBinary="true" />
       <Float name="RawFloat" recordType="FLTV" />
     </Fields>
   </Object>

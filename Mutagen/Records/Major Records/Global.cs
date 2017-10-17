@@ -11,7 +11,6 @@ namespace Mutagen
 {
     public partial class Global
     {
-        protected abstract char TriggerChar { get; }
         protected static readonly RecordType FNAM = new RecordType("FNAM");
         
         public static (Global Object, Global_ErrorMask ErrorMask) Create_Binary(
@@ -99,6 +98,22 @@ namespace Mutagen
                 errMask = null;
             }
             return (g, errMask);
+        }
+
+        private static void FillBinary_TypeChar(BinaryReader reader, Global item, bool doMasks, out Exception errorMask)
+        {
+            errorMask = null;
+        }
+
+        internal static void WriteBinary_TypeChar(BinaryWriter writer, IGlobalGetter item, bool doMasks, out Exception errorMask)
+        {
+            Mutagen.Binary.CharBinaryTranslation.Instance.Write(
+                writer,
+                item.TypeChar,
+                header: Global_Registration.FNAM_HEADER,
+                nullable: false,
+                doMasks: doMasks,
+                errorMask: out errorMask);
         }
     }
 }

@@ -8,11 +8,11 @@ namespace Mutagen
 {
     public partial class GlobalFloat
     {
-        protected override char TriggerChar => TRIGGER_CHAR;
         public const char TRIGGER_CHAR = 'f';
 
         partial void CustomCtor()
         {
+            this.TypeChar = TRIGGER_CHAR;
             this.RawFloat_Property.Subscribe((change) => this.Data = change.New);
             this.Data_Property.Subscribe((change) => this.RawFloat = change.New, fireInitial: false);
         }

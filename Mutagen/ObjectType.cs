@@ -39,18 +39,18 @@ namespace System
             }
         }
 
-        public static byte GetFluffLength(this ObjectType objType)
+        public static short GetOffset(this ObjectType objType)
         {
             switch (objType)
             {
                 case ObjectType.Struct:
                     return 0;
                 case ObjectType.Subrecord:
-                    return 0;
+                    return Constants.SUBRECORD_HEADER_OFFSET;
                 case ObjectType.Record:
-                    return Constants.RECORD_HEADER_SKIP;
+                    return Constants.RECORD_HEADER_OFFSET;
                 case ObjectType.Group:
-                    return Constants.GRUP_HEADER_SKIP;
+                    return Constants.GRUP_HEADER_OFFSET;
                 case ObjectType.Mod:
                 default:
                     throw new NotImplementedException();

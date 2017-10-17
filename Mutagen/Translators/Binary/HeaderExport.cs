@@ -56,7 +56,9 @@ namespace Mutagen.Binary
             var endPos = this.Writer.BaseStream.Position;
             this.Writer.BaseStream.Position = this.SizePosition;
             var lengthLength = this.Type.GetLengthLength();
-            var totalLength = endPos - this.Writer.BaseStream.Position - this.Type.GetFluffLength() - lengthLength;
+            var offset = this.Type.GetOffset();
+            var diff = endPos - this.Writer.BaseStream.Position;
+            var totalLength = diff - offset - lengthLength;
             switch (lengthLength)
             {
                 case 2:

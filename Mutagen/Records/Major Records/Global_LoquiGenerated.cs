@@ -35,6 +35,16 @@ namespace Mutagen
         partial void CustomCtor();
         #endregion
 
+        #region TypeChar
+        protected readonly INotifyingItem<Char> _TypeChar = NotifyingItem.Factory<Char>(markAsSet: false);
+        public INotifyingItemGetter<Char> TypeChar_Property => _TypeChar;
+        public Char TypeChar
+        {
+            get => this._TypeChar.Item;
+            protected set => this._TypeChar.Set(value);
+        }
+        INotifyingItemGetter<Char> IGlobalGetter.TypeChar_Property => this.TypeChar_Property;
+        #endregion
         #region RawFloat
         protected readonly INotifyingItem<Single> _RawFloat = NotifyingItem.Factory<Single>(markAsSet: false);
         public INotifyingItem<Single> RawFloat_Property => _RawFloat;
@@ -102,6 +112,11 @@ namespace Mutagen
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (TypeChar_Property.HasBeenSet != rhs.TypeChar_Property.HasBeenSet) return false;
+            if (TypeChar_Property.HasBeenSet)
+            {
+                if (TypeChar != rhs.TypeChar) return false;
+            }
             if (RawFloat_Property.HasBeenSet != rhs.RawFloat_Property.HasBeenSet) return false;
             if (RawFloat_Property.HasBeenSet)
             {
@@ -113,6 +128,10 @@ namespace Mutagen
         public override int GetHashCode()
         {
             int ret = 0;
+            if (TypeChar_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(TypeChar).CombineHashCode(ret);
+            }
             if (RawFloat_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(RawFloat).CombineHashCode(ret);
@@ -278,6 +297,21 @@ namespace Mutagen
         {
             switch (name)
             {
+                case "TypeChar":
+                    {
+                        Exception subMask;
+                        var tryGet = CharXmlTranslation.Instance.ParseNonNull(
+                            root,
+                            doMasks: doMasks,
+                            errorMask: out subMask);
+                        item._TypeChar.SetIfSucceeded(tryGet);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)Global_FieldIndex.TypeChar,
+                            subMask);
+                    }
+                    break;
                 case "RawFloat":
                     {
                         Exception subMask;
@@ -468,6 +502,21 @@ namespace Mutagen
                 contentLength: out var subLength);
             switch (nextRecordType.Type)
             {
+                case "FNAM":
+                {
+                    Exception subMask;
+                    FillBinary_TypeChar(
+                        reader: reader,
+                        item: item,
+                        doMasks: doMasks,
+                        errorMask: out subMask);
+                    ErrorMask.HandleErrorMask(
+                        errorMask,
+                        doMasks,
+                        (int)Global_FieldIndex.TypeChar,
+                        subMask);
+                }
+                break;
                 case "FLTV":
                 {
                     Exception subMask;
@@ -501,6 +550,8 @@ namespace Mutagen
             Global_FieldIndex enu = (Global_FieldIndex)index;
             switch (enu)
             {
+                case Global_FieldIndex.TypeChar:
+                    throw new ArgumentException($"Tried to set at a derivative index {index}");
                 case Global_FieldIndex.RawFloat:
                     this._RawFloat.Set(
                         (Single)obj,
@@ -554,6 +605,11 @@ namespace Mutagen
 
     public interface IGlobalGetter : IMajorRecordGetter
     {
+        #region TypeChar
+        Char TypeChar { get; }
+        INotifyingItemGetter<Char> TypeChar_Property { get; }
+
+        #endregion
         #region RawFloat
         Single RawFloat { get; }
         INotifyingItemGetter<Single> RawFloat_Property { get; }
@@ -571,7 +627,8 @@ namespace Mutagen.Internals
     #region Field Index
     public enum Global_FieldIndex
     {
-        RawFloat = 5,
+        TypeChar = 5,
+        RawFloat = 6,
     }
     #endregion
 
@@ -589,7 +646,7 @@ namespace Mutagen.Internals
 
         public const string GUID = "072ceda7-3182-4314-a4e3-927e68f39c3f";
 
-        public const ushort FieldCount = 1;
+        public const ushort FieldCount = 2;
 
         public static readonly Type MaskType = typeof(Global_Mask<>);
 
@@ -617,6 +674,8 @@ namespace Mutagen.Internals
         {
             switch (str.Upper)
             {
+                case "TYPECHAR":
+                    return (ushort)Global_FieldIndex.TypeChar;
                 case "RAWFLOAT":
                     return (ushort)Global_FieldIndex.RawFloat;
                 default:
@@ -629,6 +688,7 @@ namespace Mutagen.Internals
             Global_FieldIndex enu = (Global_FieldIndex)index;
             switch (enu)
             {
+                case Global_FieldIndex.TypeChar:
                 case Global_FieldIndex.RawFloat:
                     return false;
                 default:
@@ -641,6 +701,7 @@ namespace Mutagen.Internals
             Global_FieldIndex enu = (Global_FieldIndex)index;
             switch (enu)
             {
+                case Global_FieldIndex.TypeChar:
                 case Global_FieldIndex.RawFloat:
                     return false;
                 default:
@@ -653,6 +714,7 @@ namespace Mutagen.Internals
             Global_FieldIndex enu = (Global_FieldIndex)index;
             switch (enu)
             {
+                case Global_FieldIndex.TypeChar:
                 case Global_FieldIndex.RawFloat:
                     return false;
                 default:
@@ -665,6 +727,8 @@ namespace Mutagen.Internals
             Global_FieldIndex enu = (Global_FieldIndex)index;
             switch (enu)
             {
+                case Global_FieldIndex.TypeChar:
+                    return "TypeChar";
                 case Global_FieldIndex.RawFloat:
                     return "RawFloat";
                 default:
@@ -677,6 +741,8 @@ namespace Mutagen.Internals
             Global_FieldIndex enu = (Global_FieldIndex)index;
             switch (enu)
             {
+                case Global_FieldIndex.TypeChar:
+                    return true;
                 case Global_FieldIndex.RawFloat:
                     return false;
                 default:
@@ -689,6 +755,8 @@ namespace Mutagen.Internals
             Global_FieldIndex enu = (Global_FieldIndex)index;
             switch (enu)
             {
+                case Global_FieldIndex.TypeChar:
+                    return true;
                 case Global_FieldIndex.RawFloat:
                     return false;
                 default:
@@ -701,6 +769,8 @@ namespace Mutagen.Internals
             Global_FieldIndex enu = (Global_FieldIndex)index;
             switch (enu)
             {
+                case Global_FieldIndex.TypeChar:
+                    return typeof(Char);
                 case Global_FieldIndex.RawFloat:
                     return typeof(Single);
                 default:
@@ -709,10 +779,11 @@ namespace Mutagen.Internals
         }
 
         public static readonly RecordType GLOB_HEADER = new RecordType("GLOB");
+        public static readonly RecordType FNAM_HEADER = new RecordType("FNAM");
         public static readonly RecordType FLTV_HEADER = new RecordType("FLTV");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = GLOB_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 1;
+        public const int NumTypedFields = 2;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -855,6 +926,8 @@ namespace Mutagen.Internals
             Global_FieldIndex enu = (Global_FieldIndex)index;
             switch (enu)
             {
+                case Global_FieldIndex.TypeChar:
+                    throw new ArgumentException($"Tried to set at a derivative index {index}");
                 case Global_FieldIndex.RawFloat:
                     obj.RawFloat_Property.HasBeenSet = on;
                     break;
@@ -872,6 +945,8 @@ namespace Mutagen.Internals
             Global_FieldIndex enu = (Global_FieldIndex)index;
             switch (enu)
             {
+                case Global_FieldIndex.TypeChar:
+                    throw new ArgumentException($"Tried to unset at a derivative index {index}");
                 case Global_FieldIndex.RawFloat:
                     obj.RawFloat_Property.Unset(cmds);
                     break;
@@ -888,6 +963,8 @@ namespace Mutagen.Internals
             Global_FieldIndex enu = (Global_FieldIndex)index;
             switch (enu)
             {
+                case Global_FieldIndex.TypeChar:
+                    return obj.TypeChar_Property.HasBeenSet;
                 case Global_FieldIndex.RawFloat:
                     return obj.RawFloat_Property.HasBeenSet;
                 default:
@@ -902,6 +979,8 @@ namespace Mutagen.Internals
             Global_FieldIndex enu = (Global_FieldIndex)index;
             switch (enu)
             {
+                case Global_FieldIndex.TypeChar:
+                    return obj.TypeChar;
                 case Global_FieldIndex.RawFloat:
                     return obj.RawFloat;
                 default:
@@ -931,6 +1010,7 @@ namespace Mutagen.Internals
             Global_Mask<bool> ret)
         {
             if (rhs == null) return;
+            ret.TypeChar = item.TypeChar_Property.Equals(rhs.TypeChar_Property, (l, r) => l == r);
             ret.RawFloat = item.RawFloat_Property.Equals(rhs.RawFloat_Property, (l, r) => l == r);
             MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
@@ -962,6 +1042,10 @@ namespace Mutagen.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
+                if (printMask?.TypeChar ?? true)
+                {
+                    fg.AppendLine($"TypeChar => {item.TypeChar}");
+                }
                 if (printMask?.RawFloat ?? true)
                 {
                     fg.AppendLine($"RawFloat => {item.RawFloat}");
@@ -974,6 +1058,7 @@ namespace Mutagen.Internals
             this IGlobalGetter item,
             Global_Mask<bool?> checkMask)
         {
+            if (checkMask.TypeChar.HasValue && checkMask.TypeChar.Value != item.TypeChar_Property.HasBeenSet) return false;
             if (checkMask.RawFloat.HasValue && checkMask.RawFloat.Value != item.RawFloat_Property.HasBeenSet) return false;
             return true;
         }
@@ -981,6 +1066,7 @@ namespace Mutagen.Internals
         public static Global_Mask<bool> GetHasBeenSetMask(IGlobalGetter item)
         {
             var ret = new Global_Mask<bool>();
+            ret.TypeChar = item.TypeChar_Property.HasBeenSet;
             ret.RawFloat = item.RawFloat_Property.HasBeenSet;
             return ret;
         }
@@ -1109,6 +1195,19 @@ namespace Mutagen.Internals
                 errorMask: errorMask);
             {
                 Exception subMask;
+                Global.WriteBinary_TypeChar(
+                    writer: writer,
+                    item: item,
+                    doMasks: doMasks,
+                    errorMask: out subMask);
+                ErrorMask.HandleErrorMask(
+                    errorMask,
+                    doMasks,
+                    (int)Global_FieldIndex.TypeChar,
+                    subMask);
+            }
+            {
+                Exception subMask;
                 Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.RawFloat,
@@ -1141,11 +1240,13 @@ namespace Mutagen.Internals
 
         public Global_Mask(T initialValue)
         {
+            this.TypeChar = initialValue;
             this.RawFloat = initialValue;
         }
         #endregion
 
         #region Members
+        public T TypeChar;
         public T RawFloat;
         #endregion
 
@@ -1160,12 +1261,14 @@ namespace Mutagen.Internals
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!object.Equals(this.TypeChar, rhs.TypeChar)) return false;
             if (!object.Equals(this.RawFloat, rhs.RawFloat)) return false;
             return true;
         }
         public override int GetHashCode()
         {
             int ret = 0;
+            ret = ret.CombineHashCode(this.TypeChar?.GetHashCode());
             ret = ret.CombineHashCode(this.RawFloat?.GetHashCode());
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
@@ -1177,6 +1280,7 @@ namespace Mutagen.Internals
         public override bool AllEqual(Func<T, bool> eval)
         {
             if (!base.AllEqual(eval)) return false;
+            if (!eval(this.TypeChar)) return false;
             if (!eval(this.RawFloat)) return false;
             return true;
         }
@@ -1193,6 +1297,7 @@ namespace Mutagen.Internals
         protected void Translate_InternalFill<R>(Global_Mask<R> obj, Func<T, R> eval)
         {
             base.Translate_InternalFill(obj, eval);
+            obj.TypeChar = eval(this.TypeChar);
             obj.RawFloat = eval(this.RawFloat);
         }
         #endregion
@@ -1223,6 +1328,10 @@ namespace Mutagen.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
+                if (printMask?.TypeChar ?? true)
+                {
+                    fg.AppendLine($"TypeChar => {TypeChar.ToStringSafe()}");
+                }
                 if (printMask?.RawFloat ?? true)
                 {
                     fg.AppendLine($"RawFloat => {RawFloat.ToStringSafe()}");
@@ -1237,6 +1346,7 @@ namespace Mutagen.Internals
     public class Global_ErrorMask : MajorRecord_ErrorMask
     {
         #region Members
+        public Exception TypeChar;
         public Exception RawFloat;
         #endregion
 
@@ -1246,6 +1356,9 @@ namespace Mutagen.Internals
             Global_FieldIndex enu = (Global_FieldIndex)index;
             switch (enu)
             {
+                case Global_FieldIndex.TypeChar:
+                    this.TypeChar = ex;
+                    break;
                 case Global_FieldIndex.RawFloat:
                     this.RawFloat = ex;
                     break;
@@ -1260,6 +1373,9 @@ namespace Mutagen.Internals
             Global_FieldIndex enu = (Global_FieldIndex)index;
             switch (enu)
             {
+                case Global_FieldIndex.TypeChar:
+                    this.TypeChar = (Exception)obj;
+                    break;
                 case Global_FieldIndex.RawFloat:
                     this.RawFloat = (Exception)obj;
                     break;
@@ -1301,6 +1417,10 @@ namespace Mutagen.Internals
         protected override void ToString_FillInternal(FileGeneration fg)
         {
             base.ToString_FillInternal(fg);
+            if (TypeChar != null)
+            {
+                fg.AppendLine($"TypeChar => {TypeChar.ToStringSafe()}");
+            }
             if (RawFloat != null)
             {
                 fg.AppendLine($"RawFloat => {RawFloat.ToStringSafe()}");
@@ -1312,6 +1432,7 @@ namespace Mutagen.Internals
         public Global_ErrorMask Combine(Global_ErrorMask rhs)
         {
             var ret = new Global_ErrorMask();
+            ret.TypeChar = this.TypeChar.Combine(rhs.TypeChar);
             ret.RawFloat = this.RawFloat.Combine(rhs.RawFloat);
             return ret;
         }
@@ -1326,6 +1447,7 @@ namespace Mutagen.Internals
     public class Global_CopyMask : MajorRecord_CopyMask
     {
         #region Members
+        public bool TypeChar;
         public bool RawFloat;
         #endregion
 
