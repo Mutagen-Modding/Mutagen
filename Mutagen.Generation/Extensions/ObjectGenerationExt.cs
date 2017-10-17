@@ -29,11 +29,11 @@ namespace Mutagen.Generation
             return false;
         }
 
-        public static RecordType GetTriggeringRecordType(this ObjectGeneration objGen)
+        public static RecordType? GetTriggeringRecordType(this ObjectGeneration objGen)
         {
             if (!TryGetTriggeringRecordType(objGen, out var data))
             {
-                throw new ArgumentException($"Object {objGen.Name} did not have a triggering record type.");
+                return null;
             }
             return data;
         }
