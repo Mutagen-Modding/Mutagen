@@ -128,7 +128,7 @@ namespace Mutagen.Tests
                         reader2).First(5).ToArray();
                     if (errs.Length > 0)
                     {
-                        throw new ArgumentException($"Bytes did not match at positions: {string.Join(" ", errs)}");
+                        throw new ArgumentException($"Bytes did not match at positions: {string.Join(" ", errs.Select((r) => r.ToString("X")))}");
                     }
                     if (prototypeReader.Position != prototypeReader.Length)
                     {

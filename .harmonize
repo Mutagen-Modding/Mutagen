@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>bd18f36137ec1224e94844848dc99444d1748a09</Sha>
+         <Sha>2cdcd4039b0c7e244ab81c21a4d67a75006de4cd</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>10-17-2017 16:46:16</CommitDate>
-         <Description>FilePath now has original path exposed as RelativePath member</Description>
+         <CommitDate>10-17-2017 17:37:33</CommitDate>
+         <Description>Range classes ToString(string format)</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
