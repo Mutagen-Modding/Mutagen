@@ -47,6 +47,17 @@ namespace Mutagen
         INotifyingItem<String> IClass.Description_Property => this.Description_Property;
         INotifyingItemGetter<String> IClassGetter.Description_Property => this.Description_Property;
         #endregion
+        #region Icon
+        protected readonly INotifyingItem<FilePath> _Icon = NotifyingItem.Factory<FilePath>(markAsSet: false);
+        public INotifyingItem<FilePath> Icon_Property => _Icon;
+        public FilePath Icon
+        {
+            get => this._Icon.Item;
+            set => this._Icon.Set(value);
+        }
+        INotifyingItem<FilePath> IClass.Icon_Property => this.Icon_Property;
+        INotifyingItemGetter<FilePath> IClassGetter.Icon_Property => this.Icon_Property;
+        #endregion
         #region ClassData
         private readonly INotifyingItem<ClassData> _ClassData = new NotifyingItemConvertWrapper<ClassData>(
             defaultVal: new ClassData(),
@@ -126,6 +137,11 @@ namespace Mutagen
             {
                 if (!object.Equals(Description, rhs.Description)) return false;
             }
+            if (Icon_Property.HasBeenSet != rhs.Icon_Property.HasBeenSet) return false;
+            if (Icon_Property.HasBeenSet)
+            {
+                if (!object.Equals(Icon, rhs.Icon)) return false;
+            }
             if (ClassData_Property.HasBeenSet != rhs.ClassData_Property.HasBeenSet) return false;
             if (ClassData_Property.HasBeenSet)
             {
@@ -140,6 +156,10 @@ namespace Mutagen
             if (Description_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(Description).CombineHashCode(ret);
+            }
+            if (Icon_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Icon).CombineHashCode(ret);
             }
             if (ClassData_Property.HasBeenSet)
             {
@@ -471,6 +491,21 @@ namespace Mutagen
                             errorMask,
                             doMasks,
                             (int)Class_FieldIndex.Description,
+                            subMask);
+                    }
+                    break;
+                case "Icon":
+                    {
+                        Exception subMask;
+                        var tryGet = FilePathXmlTranslation.Instance.ParseNonNull(
+                            root,
+                            doMasks: doMasks,
+                            errorMask: out subMask);
+                        item._Icon.SetIfSucceeded(tryGet);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)Class_FieldIndex.Icon,
                             subMask);
                     }
                     break;
@@ -873,6 +908,22 @@ namespace Mutagen
                         subMask);
                 }
                 break;
+                case "ICON":
+                {
+                    Exception subMask;
+                    var tryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
+                        reader,
+                        doMasks: doMasks,
+                        errorMask: out subMask,
+                        length: subLength);
+                    item._Icon.SetIfSucceeded(tryGet.Bubble<FilePath>((s) => new FilePath(s)));
+                    ErrorMask.HandleErrorMask(
+                        errorMask,
+                        doMasks,
+                        (int)Class_FieldIndex.Icon,
+                        subMask);
+                }
+                break;
                 case "DATA":
                 {
                     MaskItem<Exception, ClassData_ErrorMask> subMask;
@@ -981,6 +1032,11 @@ namespace Mutagen
                         (String)obj,
                         cmds);
                     break;
+                case Class_FieldIndex.Icon:
+                    this._Icon.Set(
+                        (FilePath)obj,
+                        cmds);
+                    break;
                 case Class_FieldIndex.ClassData:
                     this._ClassData.Set(
                         (ClassData)obj,
@@ -1022,6 +1078,11 @@ namespace Mutagen
                         (String)pair.Value,
                         null);
                     break;
+                case Class_FieldIndex.Icon:
+                    obj._Icon.Set(
+                        (FilePath)pair.Value,
+                        null);
+                    break;
                 case Class_FieldIndex.ClassData:
                     obj._ClassData.Set(
                         (ClassData)pair.Value,
@@ -1045,6 +1106,9 @@ namespace Mutagen
         new String Description { get; set; }
         new INotifyingItem<String> Description_Property { get; }
 
+        new FilePath Icon { get; set; }
+        new INotifyingItem<FilePath> Icon_Property { get; }
+
         new ClassData ClassData { get; set; }
         new INotifyingItem<ClassData> ClassData_Property { get; }
 
@@ -1055,6 +1119,11 @@ namespace Mutagen
         #region Description
         String Description { get; }
         INotifyingItemGetter<String> Description_Property { get; }
+
+        #endregion
+        #region Icon
+        FilePath Icon { get; }
+        INotifyingItemGetter<FilePath> Icon_Property { get; }
 
         #endregion
         #region ClassData
@@ -1075,7 +1144,8 @@ namespace Mutagen.Internals
     public enum Class_FieldIndex
     {
         Description = 6,
-        ClassData = 7,
+        Icon = 7,
+        ClassData = 8,
     }
     #endregion
 
@@ -1093,7 +1163,7 @@ namespace Mutagen.Internals
 
         public const string GUID = "3f2e301a-e8f4-42db-875c-3e760e4eff31";
 
-        public const ushort FieldCount = 2;
+        public const ushort FieldCount = 3;
 
         public static readonly Type MaskType = typeof(Class_Mask<>);
 
@@ -1123,6 +1193,8 @@ namespace Mutagen.Internals
             {
                 case "DESCRIPTION":
                     return (ushort)Class_FieldIndex.Description;
+                case "ICON":
+                    return (ushort)Class_FieldIndex.Icon;
                 case "CLASSDATA":
                     return (ushort)Class_FieldIndex.ClassData;
                 default:
@@ -1136,6 +1208,7 @@ namespace Mutagen.Internals
             switch (enu)
             {
                 case Class_FieldIndex.Description:
+                case Class_FieldIndex.Icon:
                 case Class_FieldIndex.ClassData:
                     return false;
                 default:
@@ -1151,6 +1224,7 @@ namespace Mutagen.Internals
                 case Class_FieldIndex.ClassData:
                     return true;
                 case Class_FieldIndex.Description:
+                case Class_FieldIndex.Icon:
                     return false;
                 default:
                     return NamedMajorRecord_Registration.GetNthIsLoqui(index);
@@ -1163,6 +1237,7 @@ namespace Mutagen.Internals
             switch (enu)
             {
                 case Class_FieldIndex.Description:
+                case Class_FieldIndex.Icon:
                 case Class_FieldIndex.ClassData:
                     return false;
                 default:
@@ -1177,6 +1252,8 @@ namespace Mutagen.Internals
             {
                 case Class_FieldIndex.Description:
                     return "Description";
+                case Class_FieldIndex.Icon:
+                    return "Icon";
                 case Class_FieldIndex.ClassData:
                     return "ClassData";
                 default:
@@ -1190,6 +1267,7 @@ namespace Mutagen.Internals
             switch (enu)
             {
                 case Class_FieldIndex.Description:
+                case Class_FieldIndex.Icon:
                 case Class_FieldIndex.ClassData:
                     return false;
                 default:
@@ -1203,6 +1281,7 @@ namespace Mutagen.Internals
             switch (enu)
             {
                 case Class_FieldIndex.Description:
+                case Class_FieldIndex.Icon:
                 case Class_FieldIndex.ClassData:
                     return false;
                 default:
@@ -1217,6 +1296,8 @@ namespace Mutagen.Internals
             {
                 case Class_FieldIndex.Description:
                     return typeof(String);
+                case Class_FieldIndex.Icon:
+                    return typeof(FilePath);
                 case Class_FieldIndex.ClassData:
                     return typeof(ClassData);
                 default:
@@ -1226,10 +1307,11 @@ namespace Mutagen.Internals
 
         public static readonly RecordType CLAS_HEADER = new RecordType("CLAS");
         public static readonly RecordType DESC_HEADER = new RecordType("DESC");
+        public static readonly RecordType ICON_HEADER = new RecordType("ICON");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = CLAS_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 2;
+        public const int NumTypedFields = 3;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1359,6 +1441,21 @@ namespace Mutagen.Internals
                     errorMask().SetNthException((int)Class_FieldIndex.Description, ex);
                 }
             }
+            if (copyMask?.Icon ?? true)
+            {
+                try
+                {
+                    item.Icon_Property.SetToWithDefault(
+                        rhs.Icon_Property,
+                        def?.Icon_Property,
+                        cmds);
+                }
+                catch (Exception ex)
+                when (doErrorMask)
+                {
+                    errorMask().SetNthException((int)Class_FieldIndex.Icon, ex);
+                }
+            }
             if (copyMask?.ClassData.Overall != CopyOption.Skip)
             {
                 try
@@ -1426,6 +1523,9 @@ namespace Mutagen.Internals
                 case Class_FieldIndex.Description:
                     obj.Description_Property.HasBeenSet = on;
                     break;
+                case Class_FieldIndex.Icon:
+                    obj.Icon_Property.HasBeenSet = on;
+                    break;
                 case Class_FieldIndex.ClassData:
                     obj.ClassData_Property.HasBeenSet = on;
                     break;
@@ -1446,6 +1546,9 @@ namespace Mutagen.Internals
                 case Class_FieldIndex.Description:
                     obj.Description_Property.Unset(cmds);
                     break;
+                case Class_FieldIndex.Icon:
+                    obj.Icon_Property.Unset(cmds);
+                    break;
                 case Class_FieldIndex.ClassData:
                     obj.ClassData_Property.Unset(cmds);
                     break;
@@ -1464,6 +1567,8 @@ namespace Mutagen.Internals
             {
                 case Class_FieldIndex.Description:
                     return obj.Description_Property.HasBeenSet;
+                case Class_FieldIndex.Icon:
+                    return obj.Icon_Property.HasBeenSet;
                 case Class_FieldIndex.ClassData:
                     return obj.ClassData_Property.HasBeenSet;
                 default:
@@ -1480,6 +1585,8 @@ namespace Mutagen.Internals
             {
                 case Class_FieldIndex.Description:
                     return obj.Description;
+                case Class_FieldIndex.Icon:
+                    return obj.Icon;
                 case Class_FieldIndex.ClassData:
                     return obj.ClassData;
                 default:
@@ -1492,6 +1599,7 @@ namespace Mutagen.Internals
             NotifyingUnsetParameters? cmds = null)
         {
             item.Description_Property.Unset(cmds.ToUnsetParams());
+            item.Icon_Property.Unset(cmds.ToUnsetParams());
             item.ClassData_Property.Unset(cmds.ToUnsetParams());
         }
 
@@ -1511,6 +1619,7 @@ namespace Mutagen.Internals
         {
             if (rhs == null) return;
             ret.Description = item.Description_Property.Equals(rhs.Description_Property, (l, r) => object.Equals(l, r));
+            ret.Icon = item.Icon_Property.Equals(rhs.Icon_Property, (l, r) => object.Equals(l, r));
             ret.ClassData = item.ClassData_Property.LoquiEqualsHelper(rhs.ClassData_Property, (loqLhs, loqRhs) => ClassDataCommon.GetEqualsMask(loqLhs, loqRhs));
             NamedMajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
@@ -1546,6 +1655,10 @@ namespace Mutagen.Internals
                 {
                     fg.AppendLine($"Description => {item.Description}");
                 }
+                if (printMask?.Icon ?? true)
+                {
+                    fg.AppendLine($"Icon => {item.Icon}");
+                }
                 if (printMask?.ClassData?.Overall ?? true)
                 {
                     item.ClassData?.ToString(fg, "ClassData");
@@ -1559,6 +1672,7 @@ namespace Mutagen.Internals
             Class_Mask<bool?> checkMask)
         {
             if (checkMask.Description.HasValue && checkMask.Description.Value != item.Description_Property.HasBeenSet) return false;
+            if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_Property.HasBeenSet) return false;
             if (checkMask.ClassData.Overall.HasValue && checkMask.ClassData.Overall.Value != item.ClassData_Property.HasBeenSet) return false;
             if (checkMask.ClassData.Specific != null && (item.ClassData_Property.Item == null || !item.ClassData_Property.Item.HasBeenSet(checkMask.ClassData.Specific))) return false;
             return true;
@@ -1568,6 +1682,7 @@ namespace Mutagen.Internals
         {
             var ret = new Class_Mask<bool>();
             ret.Description = item.Description_Property.HasBeenSet;
+            ret.Icon = item.Icon_Property.HasBeenSet;
             ret.ClassData = new MaskItem<bool, ClassData_Mask<bool>>(item.ClassData_Property.HasBeenSet, ClassDataCommon.GetHasBeenSetMask(item.ClassData_Property.Item));
             return ret;
         }
@@ -1619,6 +1734,21 @@ namespace Mutagen.Internals
                             errorMask,
                             doMasks,
                             (int)Class_FieldIndex.Description,
+                            subMask);
+                    }
+                    if (item.Icon_Property.HasBeenSet)
+                    {
+                        Exception subMask;
+                        FilePathXmlTranslation.Instance.Write(
+                            writer,
+                            nameof(item.Icon),
+                            item.Icon,
+                            doMasks: doMasks,
+                            errorMask: out subMask);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)Class_FieldIndex.Icon,
                             subMask);
                     }
                     if (item.ClassData_Property.HasBeenSet)
@@ -1726,6 +1856,21 @@ namespace Mutagen.Internals
                     subMask);
             }
             {
+                Exception subMask;
+                Mutagen.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Icon.RelativePath,
+                    doMasks: doMasks,
+                    errorMask: out subMask,
+                    header: Class_Registration.ICON_HEADER,
+                    nullable: false);
+                ErrorMask.HandleErrorMask(
+                    errorMask,
+                    doMasks,
+                    (int)Class_FieldIndex.Icon,
+                    subMask);
+            }
+            {
                 MaskItem<Exception, ClassData_ErrorMask> subMask;
                 LoquiBinaryTranslation<ClassData, ClassData_ErrorMask>.Instance.Write(
                     writer: writer,
@@ -1758,12 +1903,14 @@ namespace Mutagen.Internals
         public Class_Mask(T initialValue)
         {
             this.Description = initialValue;
+            this.Icon = initialValue;
             this.ClassData = new MaskItem<T, ClassData_Mask<T>>(initialValue, new ClassData_Mask<T>(initialValue));
         }
         #endregion
 
         #region Members
         public T Description;
+        public T Icon;
         public MaskItem<T, ClassData_Mask<T>> ClassData { get; set; }
         #endregion
 
@@ -1779,6 +1926,7 @@ namespace Mutagen.Internals
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
             if (!object.Equals(this.Description, rhs.Description)) return false;
+            if (!object.Equals(this.Icon, rhs.Icon)) return false;
             if (!object.Equals(this.ClassData, rhs.ClassData)) return false;
             return true;
         }
@@ -1786,6 +1934,7 @@ namespace Mutagen.Internals
         {
             int ret = 0;
             ret = ret.CombineHashCode(this.Description?.GetHashCode());
+            ret = ret.CombineHashCode(this.Icon?.GetHashCode());
             ret = ret.CombineHashCode(this.ClassData?.GetHashCode());
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
@@ -1798,6 +1947,7 @@ namespace Mutagen.Internals
         {
             if (!base.AllEqual(eval)) return false;
             if (!eval(this.Description)) return false;
+            if (!eval(this.Icon)) return false;
             if (ClassData != null)
             {
                 if (!eval(this.ClassData.Overall)) return false;
@@ -1819,6 +1969,7 @@ namespace Mutagen.Internals
         {
             base.Translate_InternalFill(obj, eval);
             obj.Description = eval(this.Description);
+            obj.Icon = eval(this.Icon);
             if (this.ClassData != null)
             {
                 obj.ClassData = new MaskItem<R, ClassData_Mask<R>>();
@@ -1861,6 +2012,10 @@ namespace Mutagen.Internals
                 {
                     fg.AppendLine($"Description => {Description.ToStringSafe()}");
                 }
+                if (printMask?.Icon ?? true)
+                {
+                    fg.AppendLine($"Icon => {Icon.ToStringSafe()}");
+                }
                 if (printMask?.ClassData?.Overall ?? true)
                 {
                     ClassData.ToString(fg);
@@ -1876,6 +2031,7 @@ namespace Mutagen.Internals
     {
         #region Members
         public Exception Description;
+        public Exception Icon;
         public MaskItem<Exception, ClassData_ErrorMask> ClassData;
         #endregion
 
@@ -1887,6 +2043,9 @@ namespace Mutagen.Internals
             {
                 case Class_FieldIndex.Description:
                     this.Description = ex;
+                    break;
+                case Class_FieldIndex.Icon:
+                    this.Icon = ex;
                     break;
                 case Class_FieldIndex.ClassData:
                     this.ClassData = new MaskItem<Exception, ClassData_ErrorMask>(ex, null);
@@ -1904,6 +2063,9 @@ namespace Mutagen.Internals
             {
                 case Class_FieldIndex.Description:
                     this.Description = (Exception)obj;
+                    break;
+                case Class_FieldIndex.Icon:
+                    this.Icon = (Exception)obj;
                     break;
                 case Class_FieldIndex.ClassData:
                     this.ClassData = (MaskItem<Exception, ClassData_ErrorMask>)obj;
@@ -1950,6 +2112,10 @@ namespace Mutagen.Internals
             {
                 fg.AppendLine($"Description => {Description.ToStringSafe()}");
             }
+            if (Icon != null)
+            {
+                fg.AppendLine($"Icon => {Icon.ToStringSafe()}");
+            }
             if (ClassData != null)
             {
                 ClassData.ToString(fg);
@@ -1962,6 +2128,7 @@ namespace Mutagen.Internals
         {
             var ret = new Class_ErrorMask();
             ret.Description = this.Description.Combine(rhs.Description);
+            ret.Icon = this.Icon.Combine(rhs.Icon);
             ret.ClassData = new MaskItem<Exception, ClassData_ErrorMask>(this.ClassData.Overall.Combine(rhs.ClassData.Overall), this.ClassData.Specific.Combine(rhs.ClassData.Specific));
             return ret;
         }
@@ -1977,6 +2144,7 @@ namespace Mutagen.Internals
     {
         #region Members
         public bool Description;
+        public bool Icon;
         public MaskItem<CopyOption, ClassData_CopyMask> ClassData;
         #endregion
 

@@ -60,17 +60,17 @@ namespace Mutagen.Binary
             bool doMasks,
             out Exception errorMask)
         {
-            if (item == null)
-            {
-                if (nullable)
-                {
-                    errorMask = null;
-                    return;
-                }
-                throw new ArgumentException("Non optional string was null.");
-            }
             try
             {
+                if (item == null)
+                {
+                    if (nullable)
+                    {
+                        errorMask = null;
+                        return;
+                    }
+                    throw new ArgumentException("Non optional string was null.");
+                }
                 using (HeaderExport.ExportHeader(writer, header, ObjectType.Subrecord))
                 {
                     this.Write(writer, item, doMasks, out errorMask);

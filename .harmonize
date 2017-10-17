@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>31d80f0373693549d1cd7a118b718a7fcac7ffdd</Sha>
+         <Sha>bd18f36137ec1224e94844848dc99444d1748a09</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>10-16-2017 16:44:10</CommitDate>
-         <Description>Range ctor added.  Width member on whole number ranges</Description>
+         <CommitDate>10-17-2017 16:46:16</CommitDate>
+         <Description>FilePath now has original path exposed as RelativePath member</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

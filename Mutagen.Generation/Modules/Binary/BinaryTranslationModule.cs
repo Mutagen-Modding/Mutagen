@@ -40,6 +40,7 @@ namespace Mutagen.Generation
             this._typeGenerations[typeof(Int64NullType)] = new PrimitiveBinaryTranslationGeneration<long?>();
             this._typeGenerations[typeof(Int64Type)] = new PrimitiveBinaryTranslationGeneration<long>();
             this._typeGenerations[typeof(StringType)] = new StringBinaryTranslationGeneration();
+            this._typeGenerations[typeof(FilePathType)] = new FilePathBinaryTranslation();
             this._typeGenerations[typeof(UInt8NullType)] = new PrimitiveBinaryTranslationGeneration<byte?>();
             this._typeGenerations[typeof(UInt8Type)] = new PrimitiveBinaryTranslationGeneration<byte>();
             this._typeGenerations[typeof(UInt16NullType)] = new PrimitiveBinaryTranslationGeneration<ushort?>();

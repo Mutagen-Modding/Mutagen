@@ -53,6 +53,7 @@
     <Compile Include="Modules\Binary\BinaryTranslationModule.cs" />
     <Compile Include="Modules\Binary\ByteArrayTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\EnumBinaryTranslationGeneration.cs" />
+    <Compile Include="Modules\Binary\FilePathBinaryTranslation.cs" />
     <Compile Include="Modules\Binary\ListBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\LoquiBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\PrimitiveBinaryTranslationGeneration.cs" />
