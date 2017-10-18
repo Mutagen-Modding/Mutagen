@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Mutagen.Internals;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,8 +13,8 @@ namespace Mutagen.Binary
         public static bool TryParse(
             BinaryReader reader,
             RecordType expectedHeader,
-            out int contentLength,
-            int lengthLength)
+            out ContentLength contentLength,
+            ContentLength lengthLength)
         {
             var header = Encoding.ASCII.GetString(reader.ReadBytes(Constants.HEADER_LENGTH));
             if (!expectedHeader.Equals(header))
@@ -39,10 +40,10 @@ namespace Mutagen.Binary
             return true;
         }
 
-        public static int Parse(
+        public static ContentLength Parse(
             BinaryReader reader,
             RecordType expectedHeader,
-            int lengthLength)
+            ContentLength lengthLength)
         {
             if (!TryParse(
                 reader,
@@ -55,7 +56,7 @@ namespace Mutagen.Binary
             return contentLength;
         }
 
-        public static long ParseRecord(
+        public static FileLocation ParseRecord(
             BinaryReader reader,
             RecordType expectedHeader)
         {
@@ -70,7 +71,7 @@ namespace Mutagen.Binary
             return reader.BaseStream.Position + contentLength + Constants.RECORD_HEADER_SKIP;
         }
 
-        public static long ParseSubrecord(
+        public static FileLocation ParseSubrecord(
             BinaryReader reader,
             RecordType expectedHeader)
         {
@@ -85,7 +86,7 @@ namespace Mutagen.Binary
             return reader.BaseStream.Position + contentLength;
         }
         
-        public static long ParseGroup(
+        public static FileLocation ParseGroup(
             BinaryReader reader)
         {
             if (!TryParse(
@@ -130,7 +131,7 @@ namespace Mutagen.Binary
             return false;
         }
 
-        public static long GetSubrecord(
+        public static FileLocation GetSubrecord(
             BinaryReader reader,
             RecordType expectedHeader)
         {
@@ -148,9 +149,9 @@ namespace Mutagen.Binary
             return new RecordType(header, validate: false);
         }
 
-        public static int ReadContentLength(
+        public static ContentLength ReadContentLength(
             BinaryReader reader,
-            int lengthLength)
+            ContentLength lengthLength)
         {
             switch (lengthLength)
             {
@@ -167,8 +168,8 @@ namespace Mutagen.Binary
 
         public static RecordType ReadNextRecordType(
             BinaryReader reader,
-            int lengthLength,
-            out int contentLength)
+            ContentLength lengthLength,
+            out ContentLength contentLength)
         {
             var ret = ReadNextRecordType(reader);
             contentLength = ReadContentLength(reader, lengthLength);
@@ -177,7 +178,7 @@ namespace Mutagen.Binary
 
         public static RecordType ReadNextRecordType(
             BinaryReader reader,
-            out int contentLength)
+            out ContentLength contentLength)
         {
             return ReadNextRecordType(
                 reader,
@@ -187,7 +188,7 @@ namespace Mutagen.Binary
 
         public static RecordType ReadNextSubRecordType(
             BinaryReader reader,
-            out int contentLength)
+            out ContentLength contentLength)
         {
             return ReadNextRecordType(
                 reader,
@@ -197,7 +198,7 @@ namespace Mutagen.Binary
 
         public static RecordType ReadNextType(
             BinaryReader reader,
-            out int contentLength)
+            out ContentLength contentLength)
         {
             var ret = ReadNextRecordType(reader);
             contentLength = ReadContentLength(reader, Constants.RECORD_LENGTHLENGTH);
@@ -210,7 +211,7 @@ namespace Mutagen.Binary
 
         public static RecordType GetNextSubRecordType(
             BinaryReader reader,
-            out int contentLength)
+            out ContentLength contentLength)
         {
             var ret = ReadNextRecordType(
                 reader,

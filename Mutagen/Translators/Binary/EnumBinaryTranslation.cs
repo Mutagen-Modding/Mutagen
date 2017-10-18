@@ -9,7 +9,7 @@ namespace Mutagen.Binary
     {
         public readonly static EnumBinaryTranslation<E> Instance = new EnumBinaryTranslation<E>();
 
-        public TryGet<E> Parse(BinaryReader reader, int length, bool doMasks, out Exception errorMask)
+        public TryGet<E> Parse(BinaryReader reader, ContentLength length, bool doMasks, out Exception errorMask)
         {
             try
             {
@@ -28,12 +28,12 @@ namespace Mutagen.Binary
             }
         }
 
-        public void Write(BinaryWriter writer, E item, int length, bool doMasks, out Exception errorMask)
+        public void Write(BinaryWriter writer, E item, ContentLength length, bool doMasks, out Exception errorMask)
         {
             Write(writer, (E?)item, length, doMasks, out errorMask);
         }
 
-        public void Write(BinaryWriter writer, E? item, int length, bool doMasks, out Exception errorMask)
+        public void Write(BinaryWriter writer, E? item, ContentLength length, bool doMasks, out Exception errorMask)
         {
             if (!item.HasValue)
             {
@@ -52,7 +52,7 @@ namespace Mutagen.Binary
             }
         }
 
-        protected E ParseValue(BinaryReader reader, int length)
+        protected E ParseValue(BinaryReader reader, ContentLength length)
         {
             int i;
             switch (length)
@@ -72,7 +72,7 @@ namespace Mutagen.Binary
             return (E)Enum.ToObject(typeof(E), i);
         }
 
-        protected void WriteValue(BinaryWriter writer, E item, int length)
+        protected void WriteValue(BinaryWriter writer, E item, ContentLength length)
         {
             switch (length)
             {
@@ -90,7 +90,7 @@ namespace Mutagen.Binary
             }
         }
 
-        TryGet<E?> IBinaryTranslation<E?, Exception>.Parse(BinaryReader reader, int length, bool doMasks, out Exception maskObj)
+        TryGet<E?> IBinaryTranslation<E?, Exception>.Parse(BinaryReader reader, ContentLength length, bool doMasks, out Exception maskObj)
         {
             return Parse(
                 reader,

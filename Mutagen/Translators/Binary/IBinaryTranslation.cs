@@ -9,7 +9,7 @@ namespace Mutagen.Binary
 
     public interface IBinaryTranslation<T, M>
     {
-        void Write(BinaryWriter writer, T item, int length, bool doMasks, out M maskObj);
-        TryGet<T> Parse(BinaryReader reader, int length, bool doMasks, out M maskObj);
+        void Write(BinaryWriter writer, T item, ContentLength length, bool doMasks, out M maskObj);
+        TryGet<T> Parse(BinaryReader reader, ContentLength length, bool doMasks, out M maskObj);
     }
 }

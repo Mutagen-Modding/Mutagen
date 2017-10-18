@@ -175,7 +175,7 @@ namespace Mutagen.Binary
             return ret;
         }
 
-        void IBinaryTranslation<T, M>.Write(BinaryWriter writer, T item, int length, bool doMasks, out M mask)
+        void IBinaryTranslation<T, M>.Write(BinaryWriter writer, T item, ContentLength length, bool doMasks, out M mask)
         {
             throw new NotImplementedException();
         }
@@ -198,12 +198,12 @@ namespace Mutagen.Binary
             }
         }
 
-        public TryGet<T> Parse(BinaryReader reader, int length, bool doMasks, out M maskObj)
+        public TryGet<T> Parse(BinaryReader reader, ContentLength length, bool doMasks, out M maskObj)
         {
             throw new NotImplementedException();
         }
 
-        public TryGet<T> Parse(BinaryReader reader, RecordType header, byte lengthLength, bool doMasks, out M maskObj)
+        public TryGet<T> Parse(BinaryReader reader, RecordType header, ContentLength lengthLength, bool doMasks, out M maskObj)
         {
             throw new NotImplementedException();
         }

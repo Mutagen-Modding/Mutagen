@@ -30,7 +30,7 @@ namespace Mutagen.Binary
             }
         }
 
-        public TryGet<T> Parse(BinaryReader reader, int length, bool doMasks, out Exception errorMask)
+        public TryGet<T> Parse(BinaryReader reader, ContentLength length, bool doMasks, out Exception errorMask)
         {
             if (this.ExpectedLength.HasValue && length != this.ExpectedLength)
             {
@@ -47,7 +47,7 @@ namespace Mutagen.Binary
 
         protected abstract void WriteValue(BinaryWriter writer, T item);
 
-        TryGet<T?> IBinaryTranslation<T?, Exception>.Parse(BinaryReader reader, int length, bool doMasks, out Exception maskObj)
+        TryGet<T?> IBinaryTranslation<T?, Exception>.Parse(BinaryReader reader, ContentLength length, bool doMasks, out Exception maskObj)
         {
             return Parse(
                 reader,
@@ -56,7 +56,7 @@ namespace Mutagen.Binary
                 out maskObj).Bubble<T?>((t) => t);
         }
 
-        void IBinaryTranslation<T?, Exception>.Write(BinaryWriter writer, T? item, int length, bool doMasks, out Exception errorMask)
+        void IBinaryTranslation<T?, Exception>.Write(BinaryWriter writer, T? item, ContentLength length, bool doMasks, out Exception errorMask)
         {
             if (this.ExpectedLength.HasValue && length != this.ExpectedLength)
             {
@@ -110,7 +110,7 @@ namespace Mutagen.Binary
             return errorMask;
         }
 
-        void IBinaryTranslation<T, Exception>.Write(BinaryWriter writer, T item, int length, bool doMasks, out Exception errorMask)
+        void IBinaryTranslation<T, Exception>.Write(BinaryWriter writer, T item, ContentLength length, bool doMasks, out Exception errorMask)
         {
             if (this.ExpectedLength.HasValue && length != this.ExpectedLength)
             {

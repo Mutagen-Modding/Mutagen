@@ -13,7 +13,7 @@ namespace Mutagen.Binary
 {
     public abstract class ContainerBinaryTranslation<T, M> : IBinaryTranslation<IEnumerable<T>, MaskItem<Exception, IEnumerable<M>>>
     {
-        public TryGet<IEnumerable<T>> Parse(BinaryReader reader, int length, bool doMasks, out MaskItem<Exception, IEnumerable<M>> maskObj)
+        public TryGet<IEnumerable<T>> Parse(BinaryReader reader, ContentLength length, bool doMasks, out MaskItem<Exception, IEnumerable<M>> maskObj)
         {
             var transl = BinaryTranslator<T, M>.Translator;
             if (transl.Item.Failed)
@@ -138,7 +138,7 @@ namespace Mutagen.Binary
 
         public abstract TryGet<T> ParseSingleItem(BinaryReader root, BinarySubParseDelegate<T, M> transl, bool doMasks, out M maskObj);
         
-        void IBinaryTranslation<IEnumerable<T>, MaskItem<Exception, IEnumerable<M>>>.Write(BinaryWriter writer, IEnumerable<T> item, int length, bool doMasks, out MaskItem<Exception, IEnumerable<M>> maskObj)
+        void IBinaryTranslation<IEnumerable<T>, MaskItem<Exception, IEnumerable<M>>>.Write(BinaryWriter writer, IEnumerable<T> item, ContentLength length, bool doMasks, out MaskItem<Exception, IEnumerable<M>> maskObj)
         {
             Write(writer, item, doMasks, out maskObj);
         }
