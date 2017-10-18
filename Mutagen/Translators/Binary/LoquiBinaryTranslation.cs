@@ -18,14 +18,14 @@ namespace Mutagen.Binary
     {
         public static readonly LoquiBinaryTranslation<T, M> Instance = new LoquiBinaryTranslation<T, M>();
         private static readonly ILoquiRegistration Registration = LoquiRegistration.GetRegister(typeof(T));
-        public delegate T CREATE_FUNC(BinaryReader reader, bool doMasks, out M errorMask);
+        public delegate T CREATE_FUNC(MutagenReader reader, bool doMasks, out M errorMask);
         private static readonly Lazy<CREATE_FUNC> CREATE = new Lazy<CREATE_FUNC>(GetCreateFunc);
-        public delegate void WRITE_FUNC(BinaryWriter writer, T item, bool doMasks, out M errorMask);
+        public delegate void WRITE_FUNC(MutagenWriter writer, T item, bool doMasks, out M errorMask);
         private static readonly Lazy<WRITE_FUNC> WRITE = new Lazy<WRITE_FUNC>(GetWriteFunc);
 
         private IEnumerable<KeyValuePair<ushort, object>> EnumerateObjects(
             ILoquiRegistration registration,
-            BinaryReader reader,
+            MutagenReader reader,
             bool skipProtected,
             bool doMasks,
             Func<IErrorMask> mask)
@@ -50,7 +50,7 @@ namespace Mutagen.Binary
         }
 
         public void CopyIn<C>(
-            BinaryReader reader,
+            MutagenReader reader,
             C item,
             bool skipProtected,
             bool doMasks,
@@ -103,8 +103,8 @@ namespace Mutagen.Binary
                 .FirstOrDefault();
             if (method != null)
             {
-                var func = DelegateBuilder.BuildDelegate<Func<BinaryReader, bool, (T item, M mask)>>(method);
-                return (BinaryReader reader, bool doMasks, out M errorMask) =>
+                var func = DelegateBuilder.BuildDelegate<Func<MutagenReader, bool, (T item, M mask)>>(method);
+                return (MutagenReader reader, bool doMasks, out M errorMask) =>
                 {
                     var ret = func(reader, doMasks);
                     errorMask = ret.mask;
@@ -113,8 +113,8 @@ namespace Mutagen.Binary
             }
             method = options
                 .Where((methodInfo) => typeof(M).InheritsFrom(methodInfo.ReturnType.GenericTypeArguments[1], couldInherit: true)).First();
-            var f = DelegateBuilder.BuildGenericDelegate<Func<BinaryReader, bool, (T item, M mask)>>(tType, new Type[] { mType.GenericTypeArguments[0] }, method);
-            return (BinaryReader reader, bool doMasks, out M errorMask) =>
+            var f = DelegateBuilder.BuildGenericDelegate<Func<MutagenReader, bool, (T item, M mask)>>(tType, new Type[] { mType.GenericTypeArguments[0] }, method);
+            return (MutagenReader reader, bool doMasks, out M errorMask) =>
             {
                 var ret = f(reader, doMasks);
                 errorMask = ret.mask;
@@ -129,23 +129,23 @@ namespace Mutagen.Binary
                 .First();
             if (!method.IsGenericMethod)
             {
-                var f = DelegateBuilder.BuildDelegate<Func<T, BinaryWriter, bool, object>>(method);
-                return (BinaryWriter writer, T item, bool doMasks, out M errorMask) =>
+                var f = DelegateBuilder.BuildDelegate<Func<T, MutagenWriter, bool, object>>(method);
+                return (MutagenWriter writer, T item, bool doMasks, out M errorMask) =>
                 {
                     errorMask = (M)f(item, writer, doMasks);
                 };
             }
             else
             {
-                var f = DelegateBuilder.BuildGenericDelegate<Func<T, BinaryWriter, bool, object>>(typeof(T), new Type[] { typeof(M).GenericTypeArguments[0] }, method);
-                return (BinaryWriter writer, T item, bool doMasks, out M errorMask) =>
+                var f = DelegateBuilder.BuildGenericDelegate<Func<T, MutagenWriter, bool, object>>(typeof(T), new Type[] { typeof(M).GenericTypeArguments[0] }, method);
+                return (MutagenWriter writer, T item, bool doMasks, out M errorMask) =>
                 {
                     errorMask = (M)f(item, writer, doMasks);
                 };
             }
         }
 
-        public TryGet<T> Parse(BinaryReader reader, bool doMasks, out MaskItem<Exception, M> mask)
+        public TryGet<T> Parse(MutagenReader reader, bool doMasks, out MaskItem<Exception, M> mask)
         {
             try
             {
@@ -164,7 +164,7 @@ namespace Mutagen.Binary
             }
         }
 
-        public TryGet<T> Parse(BinaryReader reader, bool doMasks, out M mask)
+        public TryGet<T> Parse(MutagenReader reader, bool doMasks, out M mask)
         {
             var ret = Parse(reader, doMasks, out MaskItem<Exception, M> subMask);
             if (subMask?.Overall != null)
@@ -175,12 +175,12 @@ namespace Mutagen.Binary
             return ret;
         }
 
-        void IBinaryTranslation<T, M>.Write(BinaryWriter writer, T item, ContentLength length, bool doMasks, out M mask)
+        void IBinaryTranslation<T, M>.Write(MutagenWriter writer, T item, ContentLength length, bool doMasks, out M mask)
         {
             throw new NotImplementedException();
         }
 
-        public void Write(BinaryWriter writer, T item, bool doMasks, out MaskItem<Exception, M> mask)
+        public void Write(MutagenWriter writer, T item, bool doMasks, out MaskItem<Exception, M> mask)
         {
             try
             {
@@ -198,12 +198,12 @@ namespace Mutagen.Binary
             }
         }
 
-        public TryGet<T> Parse(BinaryReader reader, ContentLength length, bool doMasks, out M maskObj)
+        public TryGet<T> Parse(MutagenReader reader, ContentLength length, bool doMasks, out M maskObj)
         {
             throw new NotImplementedException();
         }
 
-        public TryGet<T> Parse(BinaryReader reader, RecordType header, ContentLength lengthLength, bool doMasks, out M maskObj)
+        public TryGet<T> Parse(MutagenReader reader, RecordType header, ContentLength lengthLength, bool doMasks, out M maskObj)
         {
             throw new NotImplementedException();
         }

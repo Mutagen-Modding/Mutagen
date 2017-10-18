@@ -65,7 +65,7 @@ namespace Mutagen.Generation
                 if (loquiGen.SingletonType == LoquiType.SingletonLevel.Singleton)
                 {
                     if (loquiGen.InterfaceType == LoquiInterfaceType.IGetter) return;
-                    fg.AppendLine($"{readerAccessor}.BaseStream.Position -= Constants.SUBRECORD_LENGTH;");
+                    fg.AppendLine($"{readerAccessor}.Position -= Constants.SUBRECORD_LENGTH;");
                     using (var args = new ArgsWrapper(fg,
                         $"var tmp = {loquiGen.TargetObjectGeneration.Name}.Create_{ModNickname}"))
                     {
@@ -143,13 +143,13 @@ namespace Mutagen.Generation
             {
                 case ObjectType.Struct:
                 case ObjectType.Subrecord:
-                    fg.AppendLine($"{readerAccessor}.BaseStream.Position -= Constants.SUBRECORD_LENGTH;");
+                    fg.AppendLine($"{readerAccessor}.Position -= Constants.SUBRECORD_LENGTH;");
                     break;
                 case ObjectType.Record:
-                    fg.AppendLine($"{readerAccessor}.BaseStream.Position -= Constants.RECORD_LENGTH;");
+                    fg.AppendLine($"{readerAccessor}.Position -= Constants.RECORD_LENGTH;");
                     break;
                 case ObjectType.Group:
-                    fg.AppendLine($"{readerAccessor}.BaseStream.Position -= Constants.GRUP_LENGTH;");
+                    fg.AppendLine($"{readerAccessor}.Position -= Constants.GRUP_LENGTH;");
                     break;
                 case ObjectType.Mod:
                 default:

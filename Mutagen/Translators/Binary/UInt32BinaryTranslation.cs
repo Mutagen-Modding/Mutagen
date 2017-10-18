@@ -9,12 +9,12 @@ namespace Mutagen.Binary
         public readonly static UInt32BinaryTranslation Instance = new UInt32BinaryTranslation();
         public override byte? ExpectedLength => 4;
         
-        protected override uint ParseValue(BinaryReader reader)
+        protected override uint ParseValue(MutagenReader reader)
         {
             return reader.ReadUInt32();
         }
 
-        protected override void WriteValue(BinaryWriter writer, uint item)
+        protected override void WriteValue(MutagenWriter writer, uint item)
         {
             writer.Write(item);
         }

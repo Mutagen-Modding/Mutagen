@@ -1,4 +1,5 @@
-﻿using Mutagen.Internals;
+﻿using Mutagen.Binary;
+using Mutagen.Internals;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,7 +12,7 @@ namespace Mutagen
     public partial class MajorRecord
     {
         internal static void Fill_Binary(
-            BinaryReader reader,
+            MutagenReader reader,
             MajorRecord record,
             bool doMasks,
             out MajorRecord_ErrorMask errorMask)

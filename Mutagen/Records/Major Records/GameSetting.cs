@@ -28,16 +28,16 @@ namespace Mutagen
         }
 
         public static (GameSetting Object, GameSetting_ErrorMask ErrorMask) Create_Binary(
-            BinaryReader reader,
+            MutagenReader reader,
             bool doMasks)
         {
-            var initialPos = reader.BaseStream.Position;
-            reader.BaseStream.Position += 20;
+            var initialPos = reader.Position;
+            reader.Position += 20;
             if (!MajorRecord_Registration.EDID_HEADER.Equals(HeaderTranslation.GetNextSubRecordType(reader, out var contentLength)))
             {
-                throw new ArgumentException($"EDID was not located in expected position: {reader.BaseStream.Position}");
+                throw new ArgumentException($"EDID was not located in expected position: {reader.Position}");
             }
-            reader.BaseStream.Position += 6;
+            reader.Position += 6;
             var edid = StringBinaryTranslation.Instance.Parse(
                 reader,
                 contentLength,
@@ -51,7 +51,7 @@ namespace Mutagen
             {
                 throw new ArgumentException("No EDID parsed.");
             }
-            reader.BaseStream.Position = initialPos;
+            reader.Position = initialPos;
             switch (edid.Value[0])
             {
                 case GameSettingInt.TRIGGER_CHAR:

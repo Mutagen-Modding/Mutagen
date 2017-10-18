@@ -9,7 +9,7 @@ namespace Mutagen.Binary
     {
         public readonly static StringBinaryTranslation Instance = new StringBinaryTranslation();
 
-        public TryGet<string> Parse(BinaryReader reader, ContentLength length, bool doMasks, out Exception errorMask)
+        public TryGet<string> Parse(MutagenReader reader, ContentLength length, bool doMasks, out Exception errorMask)
         {
             try
             {
@@ -29,7 +29,7 @@ namespace Mutagen.Binary
             }
         }
 
-        public void Write(BinaryWriter writer, string item, bool nullTerminate, bool doMasks, out Exception errorMask)
+        public void Write(MutagenWriter writer, string item, bool nullTerminate, bool doMasks, out Exception errorMask)
         {
             try
             {
@@ -47,13 +47,13 @@ namespace Mutagen.Binary
             }
         }
 
-        public void Write(BinaryWriter writer, string item, bool doMasks, out Exception errorMask)
+        public void Write(MutagenWriter writer, string item, bool doMasks, out Exception errorMask)
         {
             Write(writer, item, doMasks: doMasks, nullTerminate: true, errorMask: out errorMask);
         }
 
         public void Write(
-            BinaryWriter writer, 
+            MutagenWriter writer, 
             string item, 
             RecordType header,
             bool nullable,
@@ -83,7 +83,7 @@ namespace Mutagen.Binary
             }
         }
 
-        void IBinaryTranslation<string, Exception>.Write(BinaryWriter writer, string item, ContentLength length, bool doMasks, out Exception maskObj)
+        void IBinaryTranslation<string, Exception>.Write(MutagenWriter writer, string item, ContentLength length, bool doMasks, out Exception maskObj)
         {
             if (length != item.Length)
             {

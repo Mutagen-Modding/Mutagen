@@ -115,7 +115,7 @@ namespace Mutagen.Generation
                 args.Add($"maskObj: out {maskAccessor}");
                 args.Add((gen) =>
                 {
-                    gen.AppendLine($"transl: (BinaryReader r, bool listDoMasks, out {typeGen.ProtoGen.Gen.MaskModule.GetMaskModule(list.SubTypeGeneration.GetType()).GetErrorMaskTypeStr(list.SubTypeGeneration)} listSubMask) =>");
+                    gen.AppendLine($"transl: (MutagenReader r, bool listDoMasks, out {typeGen.ProtoGen.Gen.MaskModule.GetMaskModule(list.SubTypeGeneration.GetType()).GetErrorMaskTypeStr(list.SubTypeGeneration)} listSubMask) =>");
                     using (new BraceWrapper(gen))
                     {
                         var xmlGen = this.Module.GetTypeGeneration(list.SubTypeGeneration.GetType());

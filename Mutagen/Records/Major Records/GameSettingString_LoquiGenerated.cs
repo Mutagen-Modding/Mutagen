@@ -461,7 +461,7 @@ namespace Mutagen
 
         #region Binary Translation
         #region Binary Create
-        public new static GameSettingString Create_Binary(BinaryReader reader)
+        public new static GameSettingString Create_Binary(MutagenReader reader)
         {
             return Create_Binary(
                 reader: reader,
@@ -470,7 +470,7 @@ namespace Mutagen
         }
 
         public static GameSettingString Create_Binary(
-            BinaryReader reader,
+            MutagenReader reader,
             out GameSettingString_ErrorMask errorMask)
         {
             return Create_Binary(
@@ -480,7 +480,7 @@ namespace Mutagen
         }
 
         public static GameSettingString Create_Binary(
-            BinaryReader reader,
+            MutagenReader reader,
             bool doMasks,
             out GameSettingString_ErrorMask errorMask)
         {
@@ -492,7 +492,7 @@ namespace Mutagen
         }
 
         public static (GameSettingString Object, GameSettingString_ErrorMask ErrorMask) Create_Binary(
-            BinaryReader reader,
+            MutagenReader reader,
             bool doMasks)
         {
             GameSettingString_ErrorMask errMaskRet = null;
@@ -505,12 +505,9 @@ namespace Mutagen
 
         public static GameSettingString Create_Binary(string path)
         {
-            using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+            using (var reader = new MutagenReader(path))
             {
-                using (var reader = new BinaryReader(fileStream))
-                {
-                    return Create_Binary(reader: reader);
-                }
+                return Create_Binary(reader: reader);
             }
         }
 
@@ -518,20 +515,17 @@ namespace Mutagen
             string path,
             out GameSettingString_ErrorMask errorMask)
         {
-            using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+            using (var reader = new MutagenReader(path))
             {
-                using (var reader = new BinaryReader(fileStream))
-                {
-                    return Create_Binary(
-                        reader: reader,
-                        errorMask: out errorMask);
-                }
+                return Create_Binary(
+                    reader: reader,
+                    errorMask: out errorMask);
             }
         }
 
         public static GameSettingString Create_Binary(Stream stream)
         {
-            using (var reader = new BinaryReader(stream))
+            using (var reader = new MutagenReader(stream))
             {
                 return Create_Binary(reader: reader);
             }
@@ -541,7 +535,7 @@ namespace Mutagen
             Stream stream,
             out GameSettingString_ErrorMask errorMask)
         {
-            using (var reader = new BinaryReader(stream))
+            using (var reader = new MutagenReader(stream))
             {
                 return Create_Binary(
                     reader: reader,
@@ -553,7 +547,7 @@ namespace Mutagen
 
         #region Binary Copy In
         public override void CopyIn_Binary(
-            BinaryReader reader,
+            MutagenReader reader,
             NotifyingFireParameters? cmds = null)
         {
             LoquiBinaryTranslation<GameSettingString, GameSettingString_ErrorMask>.Instance.CopyIn(
@@ -566,7 +560,7 @@ namespace Mutagen
         }
 
         public virtual void CopyIn_Binary(
-            BinaryReader reader,
+            MutagenReader reader,
             out GameSettingString_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
@@ -583,14 +577,11 @@ namespace Mutagen
             string path,
             NotifyingFireParameters? cmds = null)
         {
-            using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+            using (var reader = new MutagenReader(path))
             {
-                using (var reader = new BinaryReader(fileStream))
-                {
-                    this.CopyIn_Binary(
-                        reader: reader,
-                        cmds: cmds);
-                }
+                this.CopyIn_Binary(
+                    reader: reader,
+                    cmds: cmds);
             }
         }
 
@@ -599,15 +590,12 @@ namespace Mutagen
             out GameSettingString_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
-            using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+            using (var reader = new MutagenReader(path))
             {
-                using (var reader = new BinaryReader(fileStream))
-                {
-                    this.CopyIn_Binary(
-                        reader: reader,
-                        errorMask: out errorMask,
-                        cmds: cmds);
-                }
+                this.CopyIn_Binary(
+                    reader: reader,
+                    errorMask: out errorMask,
+                    cmds: cmds);
             }
         }
 
@@ -615,7 +603,7 @@ namespace Mutagen
             Stream stream,
             NotifyingFireParameters? cmds = null)
         {
-            using (var reader = new BinaryReader(stream))
+            using (var reader = new MutagenReader(stream))
             {
                 this.CopyIn_Binary(
                     reader: reader,
@@ -628,7 +616,7 @@ namespace Mutagen
             out GameSettingString_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
-            using (var reader = new BinaryReader(stream))
+            using (var reader = new MutagenReader(stream))
             {
                 this.CopyIn_Binary(
                     reader: reader,
@@ -638,7 +626,7 @@ namespace Mutagen
         }
 
         public override void CopyIn_Binary(
-            BinaryReader reader,
+            MutagenReader reader,
             out GameSetting_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
@@ -650,7 +638,7 @@ namespace Mutagen
         }
 
         public override void CopyIn_Binary(
-            BinaryReader reader,
+            MutagenReader reader,
             out MajorRecord_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
@@ -665,7 +653,7 @@ namespace Mutagen
 
         #region Binary Write
         public virtual void Write_Binary(
-            BinaryWriter writer,
+            MutagenWriter writer,
             out GameSettingString_ErrorMask errorMask)
         {
             errorMask = (GameSettingString_ErrorMask)this.Write_Binary_Internal(
@@ -677,22 +665,7 @@ namespace Mutagen
             string path,
             out GameSettingString_ErrorMask errorMask)
         {
-            using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
-            {
-                using (var writer = new BinaryWriter(fileStream))
-                {
-                    Write_Binary(
-                        writer: writer,
-                        errorMask: out errorMask);
-                }
-            }
-        }
-
-        public virtual void Write_Binary(
-            Stream stream,
-            out GameSettingString_ErrorMask errorMask)
-        {
-            using (var writer = new BinaryWriter(stream))
+            using (var writer = new MutagenWriter(path))
             {
                 Write_Binary(
                     writer: writer,
@@ -700,7 +673,19 @@ namespace Mutagen
             }
         }
 
-        public override void Write_Binary(BinaryWriter writer)
+        public virtual void Write_Binary(
+            Stream stream,
+            out GameSettingString_ErrorMask errorMask)
+        {
+            using (var writer = new MutagenWriter(stream))
+            {
+                Write_Binary(
+                    writer: writer,
+                    errorMask: out errorMask);
+            }
+        }
+
+        public override void Write_Binary(MutagenWriter writer)
         {
             this.Write_Binary_Internal(
                 writer: writer,
@@ -709,25 +694,22 @@ namespace Mutagen
 
         public override void Write_Binary(string path)
         {
-            using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
+            using (var writer = new MutagenWriter(path))
             {
-                using (var writer = new BinaryWriter(fileStream))
-                {
-                    Write_Binary(writer: writer);
-                }
+                Write_Binary(writer: writer);
             }
         }
 
         public override void Write_Binary(Stream stream)
         {
-            using (var writer = new BinaryWriter(stream))
+            using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary(writer: writer);
             }
         }
 
         protected override object Write_Binary_Internal(
-            BinaryWriter writer,
+            MutagenWriter writer,
             bool doMasks)
         {
             GameSettingStringCommon.Write_Binary(
@@ -740,7 +722,7 @@ namespace Mutagen
         #endregion
 
         private static GameSettingString Create_Binary_Internal(
-            BinaryReader reader,
+            MutagenReader reader,
             bool doMasks,
             Func<GameSettingString_ErrorMask> errorMask)
         {
@@ -755,7 +737,7 @@ namespace Mutagen
         }
 
         private static GameSettingString Create_Binary_Internal(
-            BinaryReader reader,
+            MutagenReader reader,
             bool doMasks,
             long finalPosition,
             Func<GameSettingString_ErrorMask> errorMask)
@@ -768,7 +750,7 @@ namespace Mutagen
                     reader: reader,
                     doMasks: doMasks,
                     errorMask: errorMask);
-                while (reader.BaseStream.Position < finalPosition)
+                while (reader.Position < finalPosition)
                 {
                     Fill_Binary_RecordTypes(
                         item: ret,
@@ -776,7 +758,7 @@ namespace Mutagen
                         doMasks: doMasks,
                         errorMask: errorMask);
                 }
-                if (reader.BaseStream.Position != finalPosition)
+                if (reader.Position != finalPosition)
                 {
                     throw new ArgumentException("Read more bytes than allocated");
                 }
@@ -786,13 +768,13 @@ namespace Mutagen
             {
                 errorMask().Overall = ex;
             }
-            reader.BaseStream.Position = finalPosition;
+            reader.Position = finalPosition;
             return ret;
         }
 
         protected static void Fill_Binary_Structs(
             GameSettingString item,
-            BinaryReader reader,
+            MutagenReader reader,
             bool doMasks,
             Func<GameSettingString_ErrorMask> errorMask)
         {
@@ -805,7 +787,7 @@ namespace Mutagen
 
         protected static void Fill_Binary_RecordTypes(
             GameSettingString item,
-            BinaryReader reader,
+            MutagenReader reader,
             bool doMasks,
             Func<GameSettingString_ErrorMask> errorMask)
         {
@@ -831,7 +813,7 @@ namespace Mutagen
                 }
                 break;
                 default:
-                    reader.BaseStream.Position -= Constants.SUBRECORD_LENGTH;
+                    reader.Position -= Constants.SUBRECORD_LENGTH;
                     GameSetting.Fill_Binary_RecordTypes(
                         item: item,
                         reader: reader,
@@ -1475,7 +1457,7 @@ namespace Mutagen.Internals
         #region Binary Translation
         #region Binary Write
         public static void Write_Binary(
-            BinaryWriter writer,
+            MutagenWriter writer,
             IGameSettingStringGetter item,
             bool doMasks,
             out GameSettingString_ErrorMask errorMask)
@@ -1490,7 +1472,7 @@ namespace Mutagen.Internals
         }
 
         private static void Write_Binary_Internal(
-            BinaryWriter writer,
+            MutagenWriter writer,
             IGameSettingStringGetter item,
             bool doMasks,
             Func<GameSettingString_ErrorMask> errorMask)
@@ -1524,7 +1506,7 @@ namespace Mutagen.Internals
 
         public static void Write_Binary_RecordTypes(
             IGameSettingStringGetter item,
-            BinaryWriter writer,
+            MutagenWriter writer,
             bool doMasks,
             Func<GameSettingString_ErrorMask> errorMask)
         {

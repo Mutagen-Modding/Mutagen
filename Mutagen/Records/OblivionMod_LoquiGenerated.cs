@@ -537,7 +537,7 @@ namespace Mutagen
 
         #region Binary Translation
         #region Binary Create
-        public static OblivionMod Create_Binary(BinaryReader reader)
+        public static OblivionMod Create_Binary(MutagenReader reader)
         {
             return Create_Binary(
                 reader: reader,
@@ -546,7 +546,7 @@ namespace Mutagen
         }
 
         public static OblivionMod Create_Binary(
-            BinaryReader reader,
+            MutagenReader reader,
             out OblivionMod_ErrorMask errorMask)
         {
             return Create_Binary(
@@ -556,7 +556,7 @@ namespace Mutagen
         }
 
         public static OblivionMod Create_Binary(
-            BinaryReader reader,
+            MutagenReader reader,
             bool doMasks,
             out OblivionMod_ErrorMask errorMask)
         {
@@ -568,7 +568,7 @@ namespace Mutagen
         }
 
         public static (OblivionMod Object, OblivionMod_ErrorMask ErrorMask) Create_Binary(
-            BinaryReader reader,
+            MutagenReader reader,
             bool doMasks)
         {
             OblivionMod_ErrorMask errMaskRet = null;
@@ -581,12 +581,9 @@ namespace Mutagen
 
         public static OblivionMod Create_Binary(string path)
         {
-            using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+            using (var reader = new MutagenReader(path))
             {
-                using (var reader = new BinaryReader(fileStream))
-                {
-                    return Create_Binary(reader: reader);
-                }
+                return Create_Binary(reader: reader);
             }
         }
 
@@ -594,20 +591,17 @@ namespace Mutagen
             string path,
             out OblivionMod_ErrorMask errorMask)
         {
-            using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+            using (var reader = new MutagenReader(path))
             {
-                using (var reader = new BinaryReader(fileStream))
-                {
-                    return Create_Binary(
-                        reader: reader,
-                        errorMask: out errorMask);
-                }
+                return Create_Binary(
+                    reader: reader,
+                    errorMask: out errorMask);
             }
         }
 
         public static OblivionMod Create_Binary(Stream stream)
         {
-            using (var reader = new BinaryReader(stream))
+            using (var reader = new MutagenReader(stream))
             {
                 return Create_Binary(reader: reader);
             }
@@ -617,7 +611,7 @@ namespace Mutagen
             Stream stream,
             out OblivionMod_ErrorMask errorMask)
         {
-            using (var reader = new BinaryReader(stream))
+            using (var reader = new MutagenReader(stream))
             {
                 return Create_Binary(
                     reader: reader,
@@ -629,7 +623,7 @@ namespace Mutagen
 
         #region Binary Copy In
         public void CopyIn_Binary(
-            BinaryReader reader,
+            MutagenReader reader,
             NotifyingFireParameters? cmds = null)
         {
             LoquiBinaryTranslation<OblivionMod, OblivionMod_ErrorMask>.Instance.CopyIn(
@@ -642,7 +636,7 @@ namespace Mutagen
         }
 
         public virtual void CopyIn_Binary(
-            BinaryReader reader,
+            MutagenReader reader,
             out OblivionMod_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
@@ -659,14 +653,11 @@ namespace Mutagen
             string path,
             NotifyingFireParameters? cmds = null)
         {
-            using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+            using (var reader = new MutagenReader(path))
             {
-                using (var reader = new BinaryReader(fileStream))
-                {
-                    this.CopyIn_Binary(
-                        reader: reader,
-                        cmds: cmds);
-                }
+                this.CopyIn_Binary(
+                    reader: reader,
+                    cmds: cmds);
             }
         }
 
@@ -675,15 +666,12 @@ namespace Mutagen
             out OblivionMod_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
-            using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+            using (var reader = new MutagenReader(path))
             {
-                using (var reader = new BinaryReader(fileStream))
-                {
-                    this.CopyIn_Binary(
-                        reader: reader,
-                        errorMask: out errorMask,
-                        cmds: cmds);
-                }
+                this.CopyIn_Binary(
+                    reader: reader,
+                    errorMask: out errorMask,
+                    cmds: cmds);
             }
         }
 
@@ -691,7 +679,7 @@ namespace Mutagen
             Stream stream,
             NotifyingFireParameters? cmds = null)
         {
-            using (var reader = new BinaryReader(stream))
+            using (var reader = new MutagenReader(stream))
             {
                 this.CopyIn_Binary(
                     reader: reader,
@@ -704,7 +692,7 @@ namespace Mutagen
             out OblivionMod_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
-            using (var reader = new BinaryReader(stream))
+            using (var reader = new MutagenReader(stream))
             {
                 this.CopyIn_Binary(
                     reader: reader,
@@ -717,7 +705,7 @@ namespace Mutagen
 
         #region Binary Write
         public virtual void Write_Binary(
-            BinaryWriter writer,
+            MutagenWriter writer,
             out OblivionMod_ErrorMask errorMask)
         {
             errorMask = (OblivionMod_ErrorMask)this.Write_Binary_Internal(
@@ -729,22 +717,7 @@ namespace Mutagen
             string path,
             out OblivionMod_ErrorMask errorMask)
         {
-            using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
-            {
-                using (var writer = new BinaryWriter(fileStream))
-                {
-                    Write_Binary(
-                        writer: writer,
-                        errorMask: out errorMask);
-                }
-            }
-        }
-
-        public virtual void Write_Binary(
-            Stream stream,
-            out OblivionMod_ErrorMask errorMask)
-        {
-            using (var writer = new BinaryWriter(stream))
+            using (var writer = new MutagenWriter(path))
             {
                 Write_Binary(
                     writer: writer,
@@ -752,7 +725,19 @@ namespace Mutagen
             }
         }
 
-        public void Write_Binary(BinaryWriter writer)
+        public virtual void Write_Binary(
+            Stream stream,
+            out OblivionMod_ErrorMask errorMask)
+        {
+            using (var writer = new MutagenWriter(stream))
+            {
+                Write_Binary(
+                    writer: writer,
+                    errorMask: out errorMask);
+            }
+        }
+
+        public void Write_Binary(MutagenWriter writer)
         {
             this.Write_Binary_Internal(
                 writer: writer,
@@ -761,25 +746,22 @@ namespace Mutagen
 
         public void Write_Binary(string path)
         {
-            using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
+            using (var writer = new MutagenWriter(path))
             {
-                using (var writer = new BinaryWriter(fileStream))
-                {
-                    Write_Binary(writer: writer);
-                }
+                Write_Binary(writer: writer);
             }
         }
 
         public void Write_Binary(Stream stream)
         {
-            using (var writer = new BinaryWriter(stream))
+            using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary(writer: writer);
             }
         }
 
         protected object Write_Binary_Internal(
-            BinaryWriter writer,
+            MutagenWriter writer,
             bool doMasks)
         {
             OblivionModCommon.Write_Binary(
@@ -792,11 +774,11 @@ namespace Mutagen
         #endregion
 
         private static OblivionMod Create_Binary_Internal(
-            BinaryReader reader,
+            MutagenReader reader,
             bool doMasks,
             Func<OblivionMod_ErrorMask> errorMask)
         {
-            var finalPosition = reader.BaseStream.Length;
+            var finalPosition = reader.Length;
             return Create_Binary_Internal(
                 reader: reader,
                 doMasks: doMasks,
@@ -805,7 +787,7 @@ namespace Mutagen
         }
 
         private static OblivionMod Create_Binary_Internal(
-            BinaryReader reader,
+            MutagenReader reader,
             bool doMasks,
             long finalPosition,
             Func<OblivionMod_ErrorMask> errorMask)
@@ -818,7 +800,7 @@ namespace Mutagen
                     reader: reader,
                     doMasks: doMasks,
                     errorMask: errorMask);
-                while (reader.BaseStream.Position < finalPosition)
+                while (reader.Position < finalPosition)
                 {
                     Fill_Binary_RecordTypes(
                         item: ret,
@@ -826,7 +808,7 @@ namespace Mutagen
                         doMasks: doMasks,
                         errorMask: errorMask);
                 }
-                if (reader.BaseStream.Position != finalPosition)
+                if (reader.Position != finalPosition)
                 {
                     throw new ArgumentException("Read more bytes than allocated");
                 }
@@ -836,13 +818,13 @@ namespace Mutagen
             {
                 errorMask().Overall = ex;
             }
-            reader.BaseStream.Position = finalPosition;
+            reader.Position = finalPosition;
             return ret;
         }
 
         protected static void Fill_Binary_Structs(
             OblivionMod item,
-            BinaryReader reader,
+            MutagenReader reader,
             bool doMasks,
             Func<OblivionMod_ErrorMask> errorMask)
         {
@@ -850,7 +832,7 @@ namespace Mutagen
 
         protected static void Fill_Binary_RecordTypes(
             OblivionMod item,
-            BinaryReader reader,
+            MutagenReader reader,
             bool doMasks,
             Func<OblivionMod_ErrorMask> errorMask)
         {
@@ -862,7 +844,7 @@ namespace Mutagen
                 case "TES4":
                 {
                     MaskItem<Exception, TES4_ErrorMask> subMask;
-                    reader.BaseStream.Position -= Constants.RECORD_LENGTH;
+                    reader.Position -= Constants.RECORD_LENGTH;
                     var tryGet = LoquiBinaryTranslation<TES4, TES4_ErrorMask>.Instance.Parse(
                         reader: reader,
                         doMasks: doMasks,
@@ -878,7 +860,7 @@ namespace Mutagen
                 case "GMST":
                 {
                     MaskItem<Exception, Group_ErrorMask<GameSetting_ErrorMask>> subMask;
-                    reader.BaseStream.Position -= Constants.GRUP_LENGTH;
+                    reader.Position -= Constants.GRUP_LENGTH;
                     var tryGet = LoquiBinaryTranslation<Group<GameSetting>, Group_ErrorMask<GameSetting_ErrorMask>>.Instance.Parse(
                         reader: reader,
                         doMasks: doMasks,
@@ -894,7 +876,7 @@ namespace Mutagen
                 case "GLOB":
                 {
                     MaskItem<Exception, Group_ErrorMask<Global_ErrorMask>> subMask;
-                    reader.BaseStream.Position -= Constants.GRUP_LENGTH;
+                    reader.Position -= Constants.GRUP_LENGTH;
                     var tryGet = LoquiBinaryTranslation<Group<Global>, Group_ErrorMask<Global_ErrorMask>>.Instance.Parse(
                         reader: reader,
                         doMasks: doMasks,
@@ -910,7 +892,7 @@ namespace Mutagen
                 case "CLAS":
                 {
                     MaskItem<Exception, Group_ErrorMask<Class_ErrorMask>> subMask;
-                    reader.BaseStream.Position -= Constants.GRUP_LENGTH;
+                    reader.Position -= Constants.GRUP_LENGTH;
                     var tryGet = LoquiBinaryTranslation<Group<Class>, Group_ErrorMask<Class_ErrorMask>>.Instance.Parse(
                         reader: reader,
                         doMasks: doMasks,
@@ -924,7 +906,7 @@ namespace Mutagen
                 }
                 break;
                 default:
-                    throw new ArgumentException($"Unexpected header {nextRecordType.Type} at position {reader.BaseStream.Position}");
+                    throw new ArgumentException($"Unexpected header {nextRecordType.Type} at position {reader.Position}");
             }
         }
 
@@ -1945,7 +1927,7 @@ namespace Mutagen.Internals
         #region Binary Translation
         #region Binary Write
         public static void Write_Binary(
-            BinaryWriter writer,
+            MutagenWriter writer,
             IOblivionModGetter item,
             bool doMasks,
             out OblivionMod_ErrorMask errorMask)
@@ -1960,7 +1942,7 @@ namespace Mutagen.Internals
         }
 
         private static void Write_Binary_Internal(
-            BinaryWriter writer,
+            MutagenWriter writer,
             IOblivionModGetter item,
             bool doMasks,
             Func<OblivionMod_ErrorMask> errorMask)
@@ -1983,7 +1965,7 @@ namespace Mutagen.Internals
 
         public static void Write_Binary_RecordTypes(
             IOblivionModGetter item,
-            BinaryWriter writer,
+            MutagenWriter writer,
             bool doMasks,
             Func<OblivionMod_ErrorMask> errorMask)
         {

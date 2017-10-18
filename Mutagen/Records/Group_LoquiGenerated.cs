@@ -600,7 +600,7 @@ namespace Mutagen
 
         #region Binary Translation
         #region Binary Create
-        public static Group<T> Create_Binary(BinaryReader reader)
+        public static Group<T> Create_Binary(MutagenReader reader)
         {
             return Create_Binary<MajorRecord_ErrorMask>(
                 reader: reader,
@@ -609,7 +609,7 @@ namespace Mutagen
         }
 
         public static Group<T> Create_Binary<T_ErrMask>(
-            BinaryReader reader,
+            MutagenReader reader,
             out Group_ErrorMask<T_ErrMask> errorMask)
             where T_ErrMask : MajorRecord_ErrorMask, new()
         {
@@ -620,7 +620,7 @@ namespace Mutagen
         }
 
         public static Group<T> Create_Binary<T_ErrMask>(
-            BinaryReader reader,
+            MutagenReader reader,
             bool doMasks,
             out Group_ErrorMask<T_ErrMask> errorMask)
             where T_ErrMask : MajorRecord_ErrorMask, new()
@@ -633,7 +633,7 @@ namespace Mutagen
         }
 
         public static (Group<T> Object, Group_ErrorMask<T_ErrMask> ErrorMask) Create_Binary<T_ErrMask>(
-            BinaryReader reader,
+            MutagenReader reader,
             bool doMasks)
             where T_ErrMask : MajorRecord_ErrorMask, new()
         {
@@ -647,12 +647,9 @@ namespace Mutagen
 
         public static Group<T> Create_Binary(string path)
         {
-            using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+            using (var reader = new MutagenReader(path))
             {
-                using (var reader = new BinaryReader(fileStream))
-                {
-                    return Create_Binary(reader: reader);
-                }
+                return Create_Binary(reader: reader);
             }
         }
 
@@ -661,20 +658,17 @@ namespace Mutagen
             out Group_ErrorMask<T_ErrMask> errorMask)
             where T_ErrMask : MajorRecord_ErrorMask, new()
         {
-            using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+            using (var reader = new MutagenReader(path))
             {
-                using (var reader = new BinaryReader(fileStream))
-                {
-                    return Create_Binary(
-                        reader: reader,
-                        errorMask: out errorMask);
-                }
+                return Create_Binary(
+                    reader: reader,
+                    errorMask: out errorMask);
             }
         }
 
         public static Group<T> Create_Binary(Stream stream)
         {
-            using (var reader = new BinaryReader(stream))
+            using (var reader = new MutagenReader(stream))
             {
                 return Create_Binary(reader: reader);
             }
@@ -685,7 +679,7 @@ namespace Mutagen
             out Group_ErrorMask<T_ErrMask> errorMask)
             where T_ErrMask : MajorRecord_ErrorMask, new()
         {
-            using (var reader = new BinaryReader(stream))
+            using (var reader = new MutagenReader(stream))
             {
                 return Create_Binary(
                     reader: reader,
@@ -697,7 +691,7 @@ namespace Mutagen
 
         #region Binary Copy In
         public void CopyIn_Binary(
-            BinaryReader reader,
+            MutagenReader reader,
             NotifyingFireParameters? cmds = null)
         {
             LoquiBinaryTranslation<Group<T>, Group_ErrorMask<MajorRecord_ErrorMask>>.Instance.CopyIn(
@@ -710,7 +704,7 @@ namespace Mutagen
         }
 
         public virtual void CopyIn_Binary<T_ErrMask>(
-            BinaryReader reader,
+            MutagenReader reader,
             out Group_ErrorMask<T_ErrMask> errorMask,
             NotifyingFireParameters? cmds = null)
             where T_ErrMask : MajorRecord_ErrorMask, new()
@@ -728,14 +722,11 @@ namespace Mutagen
             string path,
             NotifyingFireParameters? cmds = null)
         {
-            using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+            using (var reader = new MutagenReader(path))
             {
-                using (var reader = new BinaryReader(fileStream))
-                {
-                    this.CopyIn_Binary(
-                        reader: reader,
-                        cmds: cmds);
-                }
+                this.CopyIn_Binary(
+                    reader: reader,
+                    cmds: cmds);
             }
         }
 
@@ -745,15 +736,12 @@ namespace Mutagen
             NotifyingFireParameters? cmds = null)
             where T_ErrMask : MajorRecord_ErrorMask, new()
         {
-            using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+            using (var reader = new MutagenReader(path))
             {
-                using (var reader = new BinaryReader(fileStream))
-                {
-                    this.CopyIn_Binary(
-                        reader: reader,
-                        errorMask: out errorMask,
-                        cmds: cmds);
-                }
+                this.CopyIn_Binary(
+                    reader: reader,
+                    errorMask: out errorMask,
+                    cmds: cmds);
             }
         }
 
@@ -761,7 +749,7 @@ namespace Mutagen
             Stream stream,
             NotifyingFireParameters? cmds = null)
         {
-            using (var reader = new BinaryReader(stream))
+            using (var reader = new MutagenReader(stream))
             {
                 this.CopyIn_Binary(
                     reader: reader,
@@ -775,7 +763,7 @@ namespace Mutagen
             NotifyingFireParameters? cmds = null)
             where T_ErrMask : MajorRecord_ErrorMask, new()
         {
-            using (var reader = new BinaryReader(stream))
+            using (var reader = new MutagenReader(stream))
             {
                 this.CopyIn_Binary(
                     reader: reader,
@@ -788,7 +776,7 @@ namespace Mutagen
 
         #region Binary Write
         public virtual void Write_Binary<T_ErrMask>(
-            BinaryWriter writer,
+            MutagenWriter writer,
             out Group_ErrorMask<T_ErrMask> errorMask)
             where T_ErrMask : MajorRecord_ErrorMask, new()
         {
@@ -802,14 +790,11 @@ namespace Mutagen
             out Group_ErrorMask<T_ErrMask> errorMask)
             where T_ErrMask : MajorRecord_ErrorMask, new()
         {
-            using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
+            using (var writer = new MutagenWriter(path))
             {
-                using (var writer = new BinaryWriter(fileStream))
-                {
-                    Write_Binary(
-                        writer: writer,
-                        errorMask: out errorMask);
-                }
+                Write_Binary(
+                    writer: writer,
+                    errorMask: out errorMask);
             }
         }
 
@@ -818,7 +803,7 @@ namespace Mutagen
             out Group_ErrorMask<T_ErrMask> errorMask)
             where T_ErrMask : MajorRecord_ErrorMask, new()
         {
-            using (var writer = new BinaryWriter(stream))
+            using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary(
                     writer: writer,
@@ -826,12 +811,12 @@ namespace Mutagen
             }
         }
 
-        public void Write_Binary(BinaryWriter writer)
+        public void Write_Binary(MutagenWriter writer)
         {
             Write_Binary<MajorRecord_ErrorMask>(writer: writer);
         }
 
-        public void Write_Binary<T_ErrMask>(BinaryWriter writer)
+        public void Write_Binary<T_ErrMask>(MutagenWriter writer)
             where T_ErrMask : MajorRecord_ErrorMask, new()
         {
             this.Write_Binary_Internal<T_ErrMask>(
@@ -847,12 +832,9 @@ namespace Mutagen
         public void Write_Binary<T_ErrMask>(string path)
             where T_ErrMask : MajorRecord_ErrorMask, new()
         {
-            using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
+            using (var writer = new MutagenWriter(path))
             {
-                using (var writer = new BinaryWriter(fileStream))
-                {
-                    Write_Binary(writer: writer);
-                }
+                Write_Binary(writer: writer);
             }
         }
 
@@ -864,14 +846,14 @@ namespace Mutagen
         public void Write_Binary<T_ErrMask>(Stream stream)
             where T_ErrMask : MajorRecord_ErrorMask, new()
         {
-            using (var writer = new BinaryWriter(stream))
+            using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary(writer: writer);
             }
         }
 
         protected object Write_Binary_Internal<T_ErrMask>(
-            BinaryWriter writer,
+            MutagenWriter writer,
             bool doMasks)
             where T_ErrMask : MajorRecord_ErrorMask, new()
         {
@@ -885,7 +867,7 @@ namespace Mutagen
         #endregion
 
         private static Group<T> Create_Binary_Internal<T_ErrMask>(
-            BinaryReader reader,
+            MutagenReader reader,
             bool doMasks,
             Func<Group_ErrorMask<T_ErrMask>> errorMask)
             where T_ErrMask : MajorRecord_ErrorMask, new()
@@ -899,7 +881,7 @@ namespace Mutagen
         }
 
         private static Group<T> Create_Binary_Internal<T_ErrMask>(
-            BinaryReader reader,
+            MutagenReader reader,
             bool doMasks,
             long finalPosition,
             Func<Group_ErrorMask<T_ErrMask>> errorMask)
@@ -913,7 +895,7 @@ namespace Mutagen
                     reader: reader,
                     doMasks: doMasks,
                     errorMask: errorMask);
-                while (reader.BaseStream.Position < finalPosition)
+                while (reader.Position < finalPosition)
                 {
                     Fill_Binary_RecordTypes(
                         item: ret,
@@ -921,7 +903,7 @@ namespace Mutagen
                         doMasks: doMasks,
                         errorMask: errorMask);
                 }
-                if (reader.BaseStream.Position != finalPosition)
+                if (reader.Position != finalPosition)
                 {
                     throw new ArgumentException("Read more bytes than allocated");
                 }
@@ -931,13 +913,13 @@ namespace Mutagen
             {
                 errorMask().Overall = ex;
             }
-            reader.BaseStream.Position = finalPosition;
+            reader.Position = finalPosition;
             return ret;
         }
 
         protected static void Fill_Binary_Structs<T_ErrMask>(
             Group<T> item,
-            BinaryReader reader,
+            MutagenReader reader,
             bool doMasks,
             Func<Group_ErrorMask<T_ErrMask>> errorMask)
             where T_ErrMask : MajorRecord_ErrorMask, new()
@@ -986,7 +968,7 @@ namespace Mutagen
 
         protected static void Fill_Binary_RecordTypes<T_ErrMask>(
             Group<T> item,
-            BinaryReader reader,
+            MutagenReader reader,
             bool doMasks,
             Func<Group_ErrorMask<T_ErrMask>> errorMask)
             where T_ErrMask : MajorRecord_ErrorMask, new()
@@ -1006,9 +988,9 @@ namespace Mutagen
                             doMasks: doMasks,
                             objType: ObjectType.Record,
                             maskObj: out subMask,
-                            transl: (BinaryReader r, bool listDoMasks, out MaskItem<Exception, T_ErrMask> listSubMask) =>
+                            transl: (MutagenReader r, bool listDoMasks, out MaskItem<Exception, T_ErrMask> listSubMask) =>
                             {
-                                r.BaseStream.Position -= Constants.RECORD_LENGTH;
+                                r.Position -= Constants.RECORD_LENGTH;
                                 return LoquiBinaryTranslation<T, T_ErrMask>.Instance.Parse(
                                     reader: r,
                                     doMasks: listDoMasks,
@@ -1023,7 +1005,7 @@ namespace Mutagen
                             subMask);
                         break;
                     }
-                    throw new ArgumentException($"Unexpected header {nextRecordType.Type} at position {reader.BaseStream.Position}");
+                    throw new ArgumentException($"Unexpected header {nextRecordType.Type} at position {reader.Position}");
             }
         }
 
@@ -1925,7 +1907,7 @@ namespace Mutagen.Internals
         #region Binary Translation
         #region Binary Write
         public static void Write_Binary<T, T_ErrMask>(
-            BinaryWriter writer,
+            MutagenWriter writer,
             IGroupGetter<T> item,
             bool doMasks,
             out Group_ErrorMask<T_ErrMask> errorMask)
@@ -1942,7 +1924,7 @@ namespace Mutagen.Internals
         }
 
         private static void Write_Binary_Internal<T, T_ErrMask>(
-            BinaryWriter writer,
+            MutagenWriter writer,
             IGroupGetter<T> item,
             bool doMasks,
             Func<Group_ErrorMask<T_ErrMask>> errorMask)
@@ -1978,7 +1960,7 @@ namespace Mutagen.Internals
 
         public static void Write_Binary_Embedded<T, T_ErrMask>(
             IGroupGetter<T> item,
-            BinaryWriter writer,
+            MutagenWriter writer,
             bool doMasks,
             Func<Group_ErrorMask<T_ErrMask>> errorMask)
             where T : MajorRecord, ILoquiObjectGetter
@@ -2027,7 +2009,7 @@ namespace Mutagen.Internals
 
         public static void Write_Binary_RecordTypes<T, T_ErrMask>(
             IGroupGetter<T> item,
-            BinaryWriter writer,
+            MutagenWriter writer,
             bool doMasks,
             Func<Group_ErrorMask<T_ErrMask>> errorMask)
             where T : MajorRecord, ILoquiObjectGetter

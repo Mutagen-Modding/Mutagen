@@ -659,7 +659,7 @@ namespace Mutagen
 
         #region Binary Translation
         #region Binary Create
-        public static TES4 Create_Binary(BinaryReader reader)
+        public static TES4 Create_Binary(MutagenReader reader)
         {
             return Create_Binary(
                 reader: reader,
@@ -668,7 +668,7 @@ namespace Mutagen
         }
 
         public static TES4 Create_Binary(
-            BinaryReader reader,
+            MutagenReader reader,
             out TES4_ErrorMask errorMask)
         {
             return Create_Binary(
@@ -678,7 +678,7 @@ namespace Mutagen
         }
 
         public static TES4 Create_Binary(
-            BinaryReader reader,
+            MutagenReader reader,
             bool doMasks,
             out TES4_ErrorMask errorMask)
         {
@@ -690,7 +690,7 @@ namespace Mutagen
         }
 
         public static (TES4 Object, TES4_ErrorMask ErrorMask) Create_Binary(
-            BinaryReader reader,
+            MutagenReader reader,
             bool doMasks)
         {
             TES4_ErrorMask errMaskRet = null;
@@ -703,12 +703,9 @@ namespace Mutagen
 
         public static TES4 Create_Binary(string path)
         {
-            using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+            using (var reader = new MutagenReader(path))
             {
-                using (var reader = new BinaryReader(fileStream))
-                {
-                    return Create_Binary(reader: reader);
-                }
+                return Create_Binary(reader: reader);
             }
         }
 
@@ -716,20 +713,17 @@ namespace Mutagen
             string path,
             out TES4_ErrorMask errorMask)
         {
-            using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+            using (var reader = new MutagenReader(path))
             {
-                using (var reader = new BinaryReader(fileStream))
-                {
-                    return Create_Binary(
-                        reader: reader,
-                        errorMask: out errorMask);
-                }
+                return Create_Binary(
+                    reader: reader,
+                    errorMask: out errorMask);
             }
         }
 
         public static TES4 Create_Binary(Stream stream)
         {
-            using (var reader = new BinaryReader(stream))
+            using (var reader = new MutagenReader(stream))
             {
                 return Create_Binary(reader: reader);
             }
@@ -739,7 +733,7 @@ namespace Mutagen
             Stream stream,
             out TES4_ErrorMask errorMask)
         {
-            using (var reader = new BinaryReader(stream))
+            using (var reader = new MutagenReader(stream))
             {
                 return Create_Binary(
                     reader: reader,
@@ -751,7 +745,7 @@ namespace Mutagen
 
         #region Binary Copy In
         public void CopyIn_Binary(
-            BinaryReader reader,
+            MutagenReader reader,
             NotifyingFireParameters? cmds = null)
         {
             LoquiBinaryTranslation<TES4, TES4_ErrorMask>.Instance.CopyIn(
@@ -764,7 +758,7 @@ namespace Mutagen
         }
 
         public virtual void CopyIn_Binary(
-            BinaryReader reader,
+            MutagenReader reader,
             out TES4_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
@@ -781,14 +775,11 @@ namespace Mutagen
             string path,
             NotifyingFireParameters? cmds = null)
         {
-            using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+            using (var reader = new MutagenReader(path))
             {
-                using (var reader = new BinaryReader(fileStream))
-                {
-                    this.CopyIn_Binary(
-                        reader: reader,
-                        cmds: cmds);
-                }
+                this.CopyIn_Binary(
+                    reader: reader,
+                    cmds: cmds);
             }
         }
 
@@ -797,15 +788,12 @@ namespace Mutagen
             out TES4_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
-            using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+            using (var reader = new MutagenReader(path))
             {
-                using (var reader = new BinaryReader(fileStream))
-                {
-                    this.CopyIn_Binary(
-                        reader: reader,
-                        errorMask: out errorMask,
-                        cmds: cmds);
-                }
+                this.CopyIn_Binary(
+                    reader: reader,
+                    errorMask: out errorMask,
+                    cmds: cmds);
             }
         }
 
@@ -813,7 +801,7 @@ namespace Mutagen
             Stream stream,
             NotifyingFireParameters? cmds = null)
         {
-            using (var reader = new BinaryReader(stream))
+            using (var reader = new MutagenReader(stream))
             {
                 this.CopyIn_Binary(
                     reader: reader,
@@ -826,7 +814,7 @@ namespace Mutagen
             out TES4_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
-            using (var reader = new BinaryReader(stream))
+            using (var reader = new MutagenReader(stream))
             {
                 this.CopyIn_Binary(
                     reader: reader,
@@ -839,7 +827,7 @@ namespace Mutagen
 
         #region Binary Write
         public virtual void Write_Binary(
-            BinaryWriter writer,
+            MutagenWriter writer,
             out TES4_ErrorMask errorMask)
         {
             errorMask = (TES4_ErrorMask)this.Write_Binary_Internal(
@@ -851,22 +839,7 @@ namespace Mutagen
             string path,
             out TES4_ErrorMask errorMask)
         {
-            using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
-            {
-                using (var writer = new BinaryWriter(fileStream))
-                {
-                    Write_Binary(
-                        writer: writer,
-                        errorMask: out errorMask);
-                }
-            }
-        }
-
-        public virtual void Write_Binary(
-            Stream stream,
-            out TES4_ErrorMask errorMask)
-        {
-            using (var writer = new BinaryWriter(stream))
+            using (var writer = new MutagenWriter(path))
             {
                 Write_Binary(
                     writer: writer,
@@ -874,7 +847,19 @@ namespace Mutagen
             }
         }
 
-        public void Write_Binary(BinaryWriter writer)
+        public virtual void Write_Binary(
+            Stream stream,
+            out TES4_ErrorMask errorMask)
+        {
+            using (var writer = new MutagenWriter(stream))
+            {
+                Write_Binary(
+                    writer: writer,
+                    errorMask: out errorMask);
+            }
+        }
+
+        public void Write_Binary(MutagenWriter writer)
         {
             this.Write_Binary_Internal(
                 writer: writer,
@@ -883,25 +868,22 @@ namespace Mutagen
 
         public void Write_Binary(string path)
         {
-            using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
+            using (var writer = new MutagenWriter(path))
             {
-                using (var writer = new BinaryWriter(fileStream))
-                {
-                    Write_Binary(writer: writer);
-                }
+                Write_Binary(writer: writer);
             }
         }
 
         public void Write_Binary(Stream stream)
         {
-            using (var writer = new BinaryWriter(stream))
+            using (var writer = new MutagenWriter(stream))
             {
                 Write_Binary(writer: writer);
             }
         }
 
         protected object Write_Binary_Internal(
-            BinaryWriter writer,
+            MutagenWriter writer,
             bool doMasks)
         {
             TES4Common.Write_Binary(
@@ -914,7 +896,7 @@ namespace Mutagen
         #endregion
 
         private static TES4 Create_Binary_Internal(
-            BinaryReader reader,
+            MutagenReader reader,
             bool doMasks,
             Func<TES4_ErrorMask> errorMask)
         {
@@ -929,7 +911,7 @@ namespace Mutagen
         }
 
         private static TES4 Create_Binary_Internal(
-            BinaryReader reader,
+            MutagenReader reader,
             bool doMasks,
             long finalPosition,
             Func<TES4_ErrorMask> errorMask)
@@ -942,7 +924,7 @@ namespace Mutagen
                     reader: reader,
                     doMasks: doMasks,
                     errorMask: errorMask);
-                while (reader.BaseStream.Position < finalPosition)
+                while (reader.Position < finalPosition)
                 {
                     Fill_Binary_RecordTypes(
                         item: ret,
@@ -950,7 +932,7 @@ namespace Mutagen
                         doMasks: doMasks,
                         errorMask: errorMask);
                 }
-                if (reader.BaseStream.Position != finalPosition)
+                if (reader.Position != finalPosition)
                 {
                     throw new ArgumentException("Read more bytes than allocated");
                 }
@@ -960,13 +942,13 @@ namespace Mutagen
             {
                 errorMask().Overall = ex;
             }
-            reader.BaseStream.Position = finalPosition;
+            reader.Position = finalPosition;
             return ret;
         }
 
         protected static void Fill_Binary_Structs(
             TES4 item,
-            BinaryReader reader,
+            MutagenReader reader,
             bool doMasks,
             Func<TES4_ErrorMask> errorMask)
         {
@@ -988,7 +970,7 @@ namespace Mutagen
 
         protected static void Fill_Binary_RecordTypes(
             TES4 item,
-            BinaryReader reader,
+            MutagenReader reader,
             bool doMasks,
             Func<TES4_ErrorMask> errorMask)
         {
@@ -1000,7 +982,7 @@ namespace Mutagen
                 case "HEDR":
                 {
                     MaskItem<Exception, Header_ErrorMask> subMask;
-                    reader.BaseStream.Position -= Constants.SUBRECORD_LENGTH;
+                    reader.Position -= Constants.SUBRECORD_LENGTH;
                     var tryGet = LoquiBinaryTranslation<Header, Header_ErrorMask>.Instance.Parse(
                         reader: reader,
                         doMasks: doMasks,
@@ -1086,9 +1068,9 @@ namespace Mutagen
                         doMasks: doMasks,
                         objType: ObjectType.Struct,
                         maskObj: out subMask,
-                        transl: (BinaryReader r, bool listDoMasks, out MaskItem<Exception, MasterReference_ErrorMask> listSubMask) =>
+                        transl: (MutagenReader r, bool listDoMasks, out MaskItem<Exception, MasterReference_ErrorMask> listSubMask) =>
                         {
-                            r.BaseStream.Position -= Constants.SUBRECORD_LENGTH;
+                            r.Position -= Constants.SUBRECORD_LENGTH;
                             return LoquiBinaryTranslation<MasterReference, MasterReference_ErrorMask>.Instance.Parse(
                                 reader: r,
                                 doMasks: listDoMasks,
@@ -1104,8 +1086,8 @@ namespace Mutagen
                 }
                 break;
                 default:
-                    reader.BaseStream.Position -= Constants.SUBRECORD_LENGTH;
-                    throw new ArgumentException($"Unexpected header {nextRecordType.Type} at position {reader.BaseStream.Position}");
+                    reader.Position -= Constants.SUBRECORD_LENGTH;
+                    throw new ArgumentException($"Unexpected header {nextRecordType.Type} at position {reader.Position}");
             }
         }
 
@@ -2310,7 +2292,7 @@ namespace Mutagen.Internals
         #region Binary Translation
         #region Binary Write
         public static void Write_Binary(
-            BinaryWriter writer,
+            MutagenWriter writer,
             ITES4Getter item,
             bool doMasks,
             out TES4_ErrorMask errorMask)
@@ -2325,7 +2307,7 @@ namespace Mutagen.Internals
         }
 
         private static void Write_Binary_Internal(
-            BinaryWriter writer,
+            MutagenWriter writer,
             ITES4Getter item,
             bool doMasks,
             Func<TES4_ErrorMask> errorMask)
@@ -2359,7 +2341,7 @@ namespace Mutagen.Internals
 
         public static void Write_Binary_Embedded(
             ITES4Getter item,
-            BinaryWriter writer,
+            MutagenWriter writer,
             bool doMasks,
             Func<TES4_ErrorMask> errorMask)
         {
@@ -2380,7 +2362,7 @@ namespace Mutagen.Internals
 
         public static void Write_Binary_RecordTypes(
             ITES4Getter item,
-            BinaryWriter writer,
+            MutagenWriter writer,
             bool doMasks,
             Func<TES4_ErrorMask> errorMask)
         {

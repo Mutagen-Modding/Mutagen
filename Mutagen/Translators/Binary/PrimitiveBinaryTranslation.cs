@@ -9,9 +9,9 @@ namespace Mutagen.Binary
     {
         public abstract byte? ExpectedLength { get; }
 
-        protected abstract T ParseValue(BinaryReader reader);
+        protected abstract T ParseValue(MutagenReader reader);
 
-        public TryGet<T> Parse(BinaryReader reader, bool doMasks, out Exception errorMask)
+        public TryGet<T> Parse(MutagenReader reader, bool doMasks, out Exception errorMask)
         {
             try
             {
@@ -30,7 +30,7 @@ namespace Mutagen.Binary
             }
         }
 
-        public TryGet<T> Parse(BinaryReader reader, ContentLength length, bool doMasks, out Exception errorMask)
+        public TryGet<T> Parse(MutagenReader reader, ContentLength length, bool doMasks, out Exception errorMask)
         {
             if (this.ExpectedLength.HasValue && length != this.ExpectedLength)
             {
@@ -45,9 +45,9 @@ namespace Mutagen.Binary
             return Parse(reader, doMasks, out errorMask);
         }
 
-        protected abstract void WriteValue(BinaryWriter writer, T item);
+        protected abstract void WriteValue(MutagenWriter writer, T item);
 
-        TryGet<T?> IBinaryTranslation<T?, Exception>.Parse(BinaryReader reader, ContentLength length, bool doMasks, out Exception maskObj)
+        TryGet<T?> IBinaryTranslation<T?, Exception>.Parse(MutagenReader reader, ContentLength length, bool doMasks, out Exception maskObj)
         {
             return Parse(
                 reader,
@@ -56,7 +56,7 @@ namespace Mutagen.Binary
                 out maskObj).Bubble<T?>((t) => t);
         }
 
-        void IBinaryTranslation<T?, Exception>.Write(BinaryWriter writer, T? item, ContentLength length, bool doMasks, out Exception errorMask)
+        void IBinaryTranslation<T?, Exception>.Write(MutagenWriter writer, T? item, ContentLength length, bool doMasks, out Exception errorMask)
         {
             if (this.ExpectedLength.HasValue && length != this.ExpectedLength)
             {
@@ -71,12 +71,12 @@ namespace Mutagen.Binary
             errorMask = Write_Internal(writer, item, doMasks);
         }
 
-        public void Write(BinaryWriter writer, T? item, bool doMasks, out Exception errorMask)
+        public void Write(MutagenWriter writer, T? item, bool doMasks, out Exception errorMask)
         {
             errorMask = Write_Internal(writer, item, doMasks);
         }
 
-        private Exception Write_Internal(BinaryWriter writer, T? item, bool doMasks)
+        private Exception Write_Internal(MutagenWriter writer, T? item, bool doMasks)
         {
             Exception errorMask = null;
             if (!item.HasValue) return errorMask;
@@ -93,7 +93,7 @@ namespace Mutagen.Binary
             return errorMask;
         }
 
-        private Exception Write_Internal(BinaryWriter writer, T item, bool doMasks)
+        private Exception Write_Internal(MutagenWriter writer, T item, bool doMasks)
         {
             Exception errorMask;
             try
@@ -110,7 +110,7 @@ namespace Mutagen.Binary
             return errorMask;
         }
 
-        void IBinaryTranslation<T, Exception>.Write(BinaryWriter writer, T item, ContentLength length, bool doMasks, out Exception errorMask)
+        void IBinaryTranslation<T, Exception>.Write(MutagenWriter writer, T item, ContentLength length, bool doMasks, out Exception errorMask)
         {
             if (this.ExpectedLength.HasValue && length != this.ExpectedLength)
             {
@@ -126,7 +126,7 @@ namespace Mutagen.Binary
         }
 
         public void Write(
-            BinaryWriter writer,
+            MutagenWriter writer,
             T? item,
             RecordType header,
             bool nullable,

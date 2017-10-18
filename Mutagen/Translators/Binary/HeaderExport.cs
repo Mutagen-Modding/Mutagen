@@ -9,20 +9,20 @@ namespace Mutagen.Binary
 {
     public struct HeaderExport : IDisposable
     {
-        public readonly BinaryWriter Writer;
+        public readonly MutagenWriter Writer;
         public readonly long SizePosition;
         public readonly ObjectType Type;
         private const byte ZeroByte = 0;
 
         private HeaderExport(
-            BinaryWriter writer,
+            MutagenWriter writer,
             RecordType record,
             ObjectType type)
         {
             this.Writer = writer;
             this.Type = type;
             writer.Write(record.Type.ToCharArray());
-            this.SizePosition = writer.BaseStream.Position;
+            this.SizePosition = writer.Position;
             for (int i = 0; i < this.Type.GetLengthLength(); i++)
             {
                 writer.Write(ZeroByte);
@@ -30,7 +30,7 @@ namespace Mutagen.Binary
         }
 
         public static HeaderExport ExportHeader(
-            BinaryWriter writer,
+            MutagenWriter writer,
             RecordType record,
             ObjectType type)
         {
@@ -38,14 +38,14 @@ namespace Mutagen.Binary
         }
 
         public static HeaderExport ExportRecordHeader(
-            BinaryWriter writer,
+            MutagenWriter writer,
             RecordType record)
         {
             return new HeaderExport(writer, record, ObjectType.Record);
         }
 
         public static HeaderExport ExportSubRecordHeader(
-            BinaryWriter writer,
+            MutagenWriter writer,
             RecordType record)
         {
             return new HeaderExport(writer, record, ObjectType.Subrecord);
@@ -53,11 +53,11 @@ namespace Mutagen.Binary
 
         public void Dispose()
         {
-            var endPos = this.Writer.BaseStream.Position;
-            this.Writer.BaseStream.Position = this.SizePosition;
+            var endPos = this.Writer.Position;
+            this.Writer.Position = this.SizePosition;
             var lengthLength = this.Type.GetLengthLength();
             var offset = this.Type.GetOffset();
-            var diff = endPos - this.Writer.BaseStream.Position;
+            var diff = endPos - this.Writer.Position;
             var totalLength = diff - offset - lengthLength;
             switch (lengthLength)
             {
@@ -70,7 +70,7 @@ namespace Mutagen.Binary
                 default:
                     throw new NotImplementedException();
             }
-            this.Writer.BaseStream.Position = endPos;
+            this.Writer.Position = endPos;
         }
     }
 }

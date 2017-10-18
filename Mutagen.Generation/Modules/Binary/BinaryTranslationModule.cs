@@ -53,8 +53,8 @@ namespace Mutagen.Generation
             this._typeGenerations[typeof(ListType)] = new ListBinaryTranslationGeneration();
             this._typeGenerations[typeof(ByteArrayType)] = new ByteArrayTranslationGeneration();
             this.MainAPI = new TranslationModuleAPI(
-                writerAPI: new MethodAPI("BinaryWriter writer"),
-                readerAPI: new MethodAPI("BinaryReader reader"));
+                writerAPI: new MethodAPI("MutagenWriter writer"),
+                readerAPI: new MethodAPI("MutagenReader reader"));
             this.MinorAPIs.Add(
                 new TranslationModuleAPI(new MethodAPI("string path"))
                 {
@@ -94,7 +94,7 @@ namespace Mutagen.Generation
 
         private void ConvertFromStreamOut(FileGeneration fg, InternalTranslation internalToDo)
         {
-            fg.AppendLine("using (var writer = new BinaryWriter(stream))");
+            fg.AppendLine("using (var writer = new MutagenWriter(stream))");
             using (new BraceWrapper(fg))
             {
                 internalToDo("writer");
@@ -103,7 +103,7 @@ namespace Mutagen.Generation
 
         private void ConvertFromStreamIn(FileGeneration fg, InternalTranslation internalToDo)
         {
-            fg.AppendLine("using (var reader = new BinaryReader(stream))");
+            fg.AppendLine("using (var reader = new MutagenReader(stream))");
             using (new BraceWrapper(fg))
             {
                 internalToDo("reader");
@@ -153,7 +153,7 @@ namespace Mutagen.Generation
                         $"private static {obj.ObjectName} Create_{ModuleNickname}_Internal{obj.Mask_GenericClause(MaskType.Error)}",
                         wheres: obj.GenericTypes_ErrorMaskWheres))
                     {
-                        args.Add("BinaryReader reader");
+                        args.Add("MutagenReader reader");
                         args.Add("bool doMasks");
                         args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
                     }
@@ -196,7 +196,7 @@ namespace Mutagen.Generation
                                 }
                                 break;
                             case ObjectType.Mod:
-                                fg.AppendLine($"var finalPosition = reader.BaseStream.Length;");
+                                fg.AppendLine($"var finalPosition = reader.Length;");
                                 break;
                             default:
                                 throw new NotImplementedException();
@@ -217,7 +217,7 @@ namespace Mutagen.Generation
                     $"private static {obj.ObjectName} Create_{ModuleNickname}_Internal{obj.Mask_GenericClause(MaskType.Error)}",
                     wheres: obj.GenericTypes_ErrorMaskWheres))
                 {
-                    args.Add("BinaryReader reader");
+                    args.Add("MutagenReader reader");
                     args.Add("bool doMasks");
                     if (objType != ObjectType.Struct)
                     {
@@ -243,7 +243,7 @@ namespace Mutagen.Generation
                         {
                             if (objType != ObjectType.Struct)
                             {
-                                fg.AppendLine($"while (reader.BaseStream.Position < finalPosition)");
+                                fg.AppendLine($"while (reader.Position < finalPosition)");
                             }
                             else
                             {
@@ -263,7 +263,7 @@ namespace Mutagen.Generation
                         }
                         if (objType != ObjectType.Struct)
                         {
-                            fg.AppendLine($"if (reader.BaseStream.Position != finalPosition)");
+                            fg.AppendLine($"if (reader.Position != finalPosition)");
                             using (new BraceWrapper(fg))
                             {
                                 fg.AppendLine("throw new ArgumentException(\"Read more bytes than allocated\");");
@@ -278,7 +278,7 @@ namespace Mutagen.Generation
                     }
                     if (objType != ObjectType.Struct)
                     {
-                        fg.AppendLine("reader.BaseStream.Position = finalPosition;");
+                        fg.AppendLine("reader.Position = finalPosition;");
                     }
                     fg.AppendLine("return ret;");
                 }
@@ -292,7 +292,7 @@ namespace Mutagen.Generation
                     wheres: obj.GenericTypes_ErrorMaskWheres))
                 {
                     args.Add($"{obj.ObjectName} item");
-                    args.Add("BinaryReader reader");
+                    args.Add("MutagenReader reader");
                     args.Add("bool doMasks");
                     args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
                 }
@@ -331,7 +331,7 @@ namespace Mutagen.Generation
                     wheres: obj.GenericTypes_ErrorMaskWheres))
                 {
                     args.Add($"{obj.ObjectName} item");
-                    args.Add("BinaryReader reader");
+                    args.Add("MutagenReader reader");
                     args.Add("bool doMasks");
                     args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
                 }
@@ -413,7 +413,7 @@ namespace Mutagen.Generation
                             switch (obj.GetObjectType())
                             {
                                 case ObjectType.Record:
-                                    fg.AppendLine($"reader.BaseStream.Position -= Constants.SUBRECORD_LENGTH;");
+                                    fg.AppendLine($"reader.Position -= Constants.SUBRECORD_LENGTH;");
                                     break;
                                 case ObjectType.Struct:
                                 case ObjectType.Subrecord:
@@ -436,7 +436,7 @@ namespace Mutagen.Generation
                             }
                             else
                             {
-                                fg.AppendLine("throw new ArgumentException($\"Unexpected header {nextRecordType.Type} at position {reader.BaseStream.Position}\");");
+                                fg.AppendLine("throw new ArgumentException($\"Unexpected header {nextRecordType.Type} at position {reader.Position}\");");
                             }
                         }
                     }
@@ -501,27 +501,19 @@ namespace Mutagen.Generation
 
         private void ConvertFromPathOut(FileGeneration fg, InternalTranslation internalToDo)
         {
-            fg.AppendLine($"using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))");
+            fg.AppendLine("using (var writer = new MutagenWriter(path))");
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine("using (var writer = new BinaryWriter(fileStream))");
-                using (new BraceWrapper(fg))
-                {
-                    internalToDo("writer");
-                }
+                internalToDo("writer");
             }
         }
 
         private void ConvertFromPathIn(FileGeneration fg, InternalTranslation internalToDo)
         {
-            fg.AppendLine($"using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))");
+            fg.AppendLine("using (var reader = new MutagenReader(path))");
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine("using (var reader = new BinaryReader(fileStream))");
-                using (new BraceWrapper(fg))
-                {
-                    internalToDo("reader");
-                }
+                internalToDo("reader");
             }
         }
 
@@ -645,7 +637,7 @@ namespace Mutagen.Generation
                     wheres: obj.GenerateWhereClauses().And(obj.GenericTypes_ErrorMaskWheres).ToArray()))
                 {
                     args.Add($"{obj.Getter_InterfaceStr} item");
-                    args.Add("BinaryWriter writer");
+                    args.Add("MutagenWriter writer");
                     args.Add("bool doMasks");
                     args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
                 }
@@ -732,7 +724,7 @@ namespace Mutagen.Generation
                     wheres: obj.GenerateWhereClauses().And(obj.GenericTypes_ErrorMaskWheres).ToArray()))
                 {
                     args.Add($"{obj.Getter_InterfaceStr} item");
-                    args.Add("BinaryWriter writer");
+                    args.Add("MutagenWriter writer");
                     args.Add("bool doMasks");
                     args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
                 }

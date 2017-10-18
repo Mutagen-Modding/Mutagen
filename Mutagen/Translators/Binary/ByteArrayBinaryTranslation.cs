@@ -11,12 +11,12 @@ namespace Mutagen.Binary
     {
         public readonly static ByteArrayBinaryTranslation Instance = new ByteArrayBinaryTranslation();
 
-        protected override void WriteValue(BinaryWriter writer, byte[] item)
+        protected override void WriteValue(MutagenWriter writer, byte[] item)
         {
             writer.Write(item);
         }
 
-        protected override Byte[] ParseValue(BinaryReader reader, ContentLength length)
+        protected override Byte[] ParseValue(MutagenReader reader, ContentLength length)
         {
             return reader.ReadBytes(length);
         }

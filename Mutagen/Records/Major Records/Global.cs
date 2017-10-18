@@ -14,20 +14,20 @@ namespace Mutagen
         protected static readonly RecordType FNAM = new RecordType("FNAM");
         
         public static (Global Object, Global_ErrorMask ErrorMask) Create_Binary(
-            BinaryReader reader,
+            MutagenReader reader,
             bool doMasks)
         {
             // Skip to FNAM
-            var initialPos = reader.BaseStream.Position;
-            reader.BaseStream.Position += 24;
+            var initialPos = reader.Position;
+            reader.Position += 24;
             var edidLength = reader.ReadInt16();
-            reader.BaseStream.Position += edidLength;
+            reader.Position += edidLength;
 
             // Confirm FNAM
             var type = HeaderTranslation.ReadNextSubRecordType(reader, out var len);
             if (!type.Equals(FNAM))
             {
-                var ex = new ArgumentException($"Could not find FNAM in its expected location: {reader.BaseStream.Position}");
+                var ex = new ArgumentException($"Could not find FNAM in its expected location: {reader.Position}");
                 if (!doMasks) throw ex;
                 return (null, new Global_ErrorMask()
                 {
@@ -68,7 +68,7 @@ namespace Mutagen
             }
 
             // Fill with major record fields
-            reader.BaseStream.Position = initialPos + 8;
+            reader.Position = initialPos + 8;
             MajorRecord.Fill_Binary(
                 reader,
                 g,
@@ -76,7 +76,7 @@ namespace Mutagen
                 out var majorErrMask);
 
             // Skip to and read data
-            reader.BaseStream.Position += 13;
+            reader.Position += 13;
             var floatParse = Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
                 reader,
                 doMasks,
@@ -100,12 +100,12 @@ namespace Mutagen
             return (g, errMask);
         }
 
-        private static void FillBinary_TypeChar(BinaryReader reader, Global item, bool doMasks, out Exception errorMask)
+        private static void FillBinary_TypeChar(MutagenReader reader, Global item, bool doMasks, out Exception errorMask)
         {
             errorMask = null;
         }
 
-        internal static void WriteBinary_TypeChar(BinaryWriter writer, IGlobalGetter item, bool doMasks, out Exception errorMask)
+        internal static void WriteBinary_TypeChar(MutagenWriter writer, IGlobalGetter item, bool doMasks, out Exception errorMask)
         {
             Mutagen.Binary.CharBinaryTranslation.Instance.Write(
                 writer,

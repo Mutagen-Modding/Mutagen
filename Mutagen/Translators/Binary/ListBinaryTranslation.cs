@@ -14,12 +14,12 @@ namespace Mutagen.Binary
     {
         public static readonly ListBinaryTranslation<T, M> Instance = new ListBinaryTranslation<T, M>();
 
-        public override void WriteSingleItem<ErrMask>(BinaryWriter writer, BinarySubWriteDelegate<T, ErrMask> transl, T item, bool doMasks, out ErrMask maskObj)
+        public override void WriteSingleItem<ErrMask>(MutagenWriter writer, BinarySubWriteDelegate<T, ErrMask> transl, T item, bool doMasks, out ErrMask maskObj)
         {
             transl(item, doMasks, out maskObj);
         }
 
-        public override TryGet<T> ParseSingleItem(BinaryReader reader, BinarySubParseDelegate<T, M> transl, bool doMasks, out M maskObj)
+        public override TryGet<T> ParseSingleItem(MutagenReader reader, BinarySubParseDelegate<T, M> transl, bool doMasks, out M maskObj)
         {
             return transl(reader, doMasks, out maskObj);
         }

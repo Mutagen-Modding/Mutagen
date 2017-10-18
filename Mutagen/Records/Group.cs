@@ -1,4 +1,5 @@
 ﻿using Loqui;
+using Mutagen.Binary;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,13 +12,13 @@ namespace Mutagen
     public partial class Group<T>
         where T : MajorRecord, ILoquiObjectGetter
     {
-        private static void FillBinary_ContainedRecordType(BinaryReader reader, Group<T> item, bool doMasks, out Exception errorMask)
+        private static void FillBinary_ContainedRecordType(MutagenReader reader, Group<T> item, bool doMasks, out Exception errorMask)
         {
-            reader.BaseStream.Position += 4;
+            reader.Position += 4;
             errorMask = null;
         }
 
-        internal static void WriteBinary_ContainedRecordType(BinaryWriter writer, IGroupGetter<T> item, bool doMasks, out Exception errorMask)
+        internal static void WriteBinary_ContainedRecordType(MutagenWriter writer, IGroupGetter<T> item, bool doMasks, out Exception errorMask)
         {
             Mutagen.Binary.StringBinaryTranslation.Instance.Write(
                 writer,

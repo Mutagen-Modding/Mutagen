@@ -13,7 +13,7 @@ namespace Mutagen.Binary
 {
     public abstract class ContainerBinaryTranslation<T, M> : IBinaryTranslation<IEnumerable<T>, MaskItem<Exception, IEnumerable<M>>>
     {
-        public TryGet<IEnumerable<T>> Parse(BinaryReader reader, ContentLength length, bool doMasks, out MaskItem<Exception, IEnumerable<M>> maskObj)
+        public TryGet<IEnumerable<T>> Parse(MutagenReader reader, ContentLength length, bool doMasks, out MaskItem<Exception, IEnumerable<M>> maskObj)
         {
             var transl = BinaryTranslator<T, M>.Translator;
             if (transl.Item.Failed)
@@ -24,11 +24,11 @@ namespace Mutagen.Binary
                 reader,
                 doMasks,
                 out maskObj,
-                transl: (BinaryReader r, bool internalDoMasks, out M obj) => transl.Item.Value.Parse(reader: r, length: length, doMasks: internalDoMasks, maskObj: out obj));
+                transl: (MutagenReader r, bool internalDoMasks, out M obj) => transl.Item.Value.Parse(reader: r, length: length, doMasks: internalDoMasks, maskObj: out obj));
         }
 
         public TryGet<IEnumerable<T>> Parse(
-            BinaryReader reader,
+            MutagenReader reader,
             bool doMasks,
             out MaskItem<Exception, IEnumerable<M>> maskObj,
             BinarySubParseDelegate<T, M> transl)
@@ -50,7 +50,7 @@ namespace Mutagen.Binary
         }
 
         public TryGet<IEnumerable<T>> ParseRepeatedItem(
-            BinaryReader reader,
+            MutagenReader reader,
             bool doMasks,
             RecordType triggeringRecord,
             ObjectType objType,
@@ -95,7 +95,7 @@ namespace Mutagen.Binary
         }
 
         public TryGet<IEnumerable<T>> ParseRepeatedItem(
-            BinaryReader reader,
+            MutagenReader reader,
             bool doMasks,
             int amount,
             out MaskItem<Exception, IEnumerable<M>> maskObj,
@@ -136,15 +136,15 @@ namespace Mutagen.Binary
             }
         }
 
-        public abstract TryGet<T> ParseSingleItem(BinaryReader root, BinarySubParseDelegate<T, M> transl, bool doMasks, out M maskObj);
+        public abstract TryGet<T> ParseSingleItem(MutagenReader root, BinarySubParseDelegate<T, M> transl, bool doMasks, out M maskObj);
         
-        void IBinaryTranslation<IEnumerable<T>, MaskItem<Exception, IEnumerable<M>>>.Write(BinaryWriter writer, IEnumerable<T> item, ContentLength length, bool doMasks, out MaskItem<Exception, IEnumerable<M>> maskObj)
+        void IBinaryTranslation<IEnumerable<T>, MaskItem<Exception, IEnumerable<M>>>.Write(MutagenWriter writer, IEnumerable<T> item, ContentLength length, bool doMasks, out MaskItem<Exception, IEnumerable<M>> maskObj)
         {
             Write(writer, item, doMasks, out maskObj);
         }
 
         public void Write(
-            BinaryWriter writer,
+            MutagenWriter writer,
             IEnumerable<T> item,
             bool doMasks,
             out MaskItem<Exception, IEnumerable<M>> maskObj)
@@ -171,7 +171,7 @@ namespace Mutagen.Binary
         }
 
         public void Write(
-            BinaryWriter writer,
+            MutagenWriter writer,
             IEnumerable<T> item,
             bool doMasks,
             out MaskItem<Exception, IEnumerable<M>> maskObj,
@@ -208,6 +208,6 @@ namespace Mutagen.Binary
             }
         }
 
-        public abstract void WriteSingleItem<ErrMask>(BinaryWriter writer, BinarySubWriteDelegate<T, ErrMask> transl, T item, bool doMasks, out ErrMask maskObj);
+        public abstract void WriteSingleItem<ErrMask>(MutagenWriter writer, BinarySubWriteDelegate<T, ErrMask> transl, T item, bool doMasks, out ErrMask maskObj);
     }
 }
