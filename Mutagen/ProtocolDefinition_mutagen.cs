@@ -25,6 +25,7 @@ namespace Loqui
             LoquiRegistration.Register(Mutagen.Internals.Class_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Internals.NamedMajorRecord_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Internals.ClassData_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Internals.ClassTraining_Registration.Instance);
         }
     }
 }

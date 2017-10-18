@@ -12,6 +12,7 @@ using Loqui;
 using Noggog;
 using Noggog.Notifying;
 using Mutagen.Internals;
+using Mutagen;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -86,41 +87,13 @@ namespace Mutagen
         INotifyingItem<ClassService> IClassData.ClassServices_Property => this.ClassServices_Property;
         INotifyingItemGetter<ClassService> IClassDataGetter.ClassServices_Property => this.ClassServices_Property;
         #endregion
-        #region TrainedSkill
-        protected readonly INotifyingItem<Skill> _TrainedSkill = NotifyingItem.Factory<Skill>(markAsSet: false);
-        public INotifyingItem<Skill> TrainedSkill_Property => _TrainedSkill;
-        public Skill TrainedSkill
-        {
-            get => this._TrainedSkill.Item;
-            set => this._TrainedSkill.Set(value);
-        }
-        INotifyingItem<Skill> IClassData.TrainedSkill_Property => this.TrainedSkill_Property;
-        INotifyingItemGetter<Skill> IClassDataGetter.TrainedSkill_Property => this.TrainedSkill_Property;
-        #endregion
-        #region MaximumTrainingLevel
-        protected readonly INotifyingItem<Byte> _MaximumTrainingLevel = NotifyingItem.Factory<Byte>(markAsSet: false);
-        public INotifyingItem<Byte> MaximumTrainingLevel_Property => _MaximumTrainingLevel;
-        public Byte MaximumTrainingLevel
-        {
-            get => this._MaximumTrainingLevel.Item;
-            set => this._MaximumTrainingLevel.Set(value.PutInRange(MaximumTrainingLevel_Range.Min, MaximumTrainingLevel_Range.Max));
-        }
-        INotifyingItem<Byte> IClassData.MaximumTrainingLevel_Property => this.MaximumTrainingLevel_Property;
-        INotifyingItemGetter<Byte> IClassDataGetter.MaximumTrainingLevel_Property => this.MaximumTrainingLevel_Property;
-        public static RangeUInt8 MaximumTrainingLevel_Range = new RangeUInt8(0, 100);
-        #endregion
-        #region Fluff
-        protected readonly INotifyingItem<Byte[]> _Fluff = NotifyingItem.Factory<Byte[]>(
-            markAsSet: false,
-            noNullFallback: () => new byte[2]);
-        public INotifyingItem<Byte[]> Fluff_Property => _Fluff;
-        public Byte[] Fluff
-        {
-            get => this._Fluff.Item;
-            set => this._Fluff.Set(value);
-        }
-        INotifyingItem<Byte[]> IClassData.Fluff_Property => this.Fluff_Property;
-        INotifyingItemGetter<Byte[]> IClassDataGetter.Fluff_Property => this.Fluff_Property;
+        #region Training
+        private readonly INotifyingItem<ClassTraining> _Training = new NotifyingItem<ClassTraining>();
+        public INotifyingItem<ClassTraining> Training_Property => this._Training;
+        ClassTraining IClassDataGetter.Training => this.Training;
+        public ClassTraining Training { get => _Training.Item; set => _Training.Item = value; }
+        INotifyingItem<ClassTraining> IClassData.Training_Property => this.Training_Property;
+        INotifyingItemGetter<ClassTraining> IClassDataGetter.Training_Property => this.Training_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -206,20 +179,10 @@ namespace Mutagen
             {
                 if (ClassServices != rhs.ClassServices) return false;
             }
-            if (TrainedSkill_Property.HasBeenSet != rhs.TrainedSkill_Property.HasBeenSet) return false;
-            if (TrainedSkill_Property.HasBeenSet)
+            if (Training_Property.HasBeenSet != rhs.Training_Property.HasBeenSet) return false;
+            if (Training_Property.HasBeenSet)
             {
-                if (TrainedSkill != rhs.TrainedSkill) return false;
-            }
-            if (MaximumTrainingLevel_Property.HasBeenSet != rhs.MaximumTrainingLevel_Property.HasBeenSet) return false;
-            if (MaximumTrainingLevel_Property.HasBeenSet)
-            {
-                if (MaximumTrainingLevel != rhs.MaximumTrainingLevel) return false;
-            }
-            if (Fluff_Property.HasBeenSet != rhs.Fluff_Property.HasBeenSet) return false;
-            if (Fluff_Property.HasBeenSet)
-            {
-                if (!Fluff.EqualsFast(rhs.Fluff)) return false;
+                if (!object.Equals(Training, rhs.Training)) return false;
             }
             return true;
         }
@@ -247,17 +210,9 @@ namespace Mutagen
             {
                 ret = HashHelper.GetHashCode(ClassServices).CombineHashCode(ret);
             }
-            if (TrainedSkill_Property.HasBeenSet)
+            if (Training_Property.HasBeenSet)
             {
-                ret = HashHelper.GetHashCode(TrainedSkill).CombineHashCode(ret);
-            }
-            if (MaximumTrainingLevel_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(MaximumTrainingLevel).CombineHashCode(ret);
-            }
-            if (Fluff_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Fluff).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(Training).CombineHashCode(ret);
             }
             return ret;
         }
@@ -644,49 +599,18 @@ namespace Mutagen
                             subMask);
                     }
                     break;
-                case "TrainedSkill":
+                case "Training":
                     {
-                        Exception subMask;
-                        var tryGet = EnumXmlTranslation<Skill>.Instance.Parse(
-                            root,
-                            nullable: false,
+                        MaskItem<Exception, ClassTraining_ErrorMask> subMask;
+                        var tryGet = LoquiXmlTranslation<ClassTraining, ClassTraining_ErrorMask>.Instance.Parse(
+                            root: root,
                             doMasks: doMasks,
-                            errorMask: out subMask).Bubble((o) => o.Value);
-                        item._TrainedSkill.SetIfSucceeded(tryGet);
+                            mask: out subMask);
+                        item._Training.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
                             doMasks,
-                            (int)ClassData_FieldIndex.TrainedSkill,
-                            subMask);
-                    }
-                    break;
-                case "MaximumTrainingLevel":
-                    {
-                        Exception subMask;
-                        var tryGet = ByteXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: doMasks,
-                            errorMask: out subMask);
-                        item._MaximumTrainingLevel.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            doMasks,
-                            (int)ClassData_FieldIndex.MaximumTrainingLevel,
-                            subMask);
-                    }
-                    break;
-                case "Fluff":
-                    {
-                        Exception subMask;
-                        var tryGet = ByteArrayXmlTranslation.Instance.Parse(
-                            root,
-                            doMasks: doMasks,
-                            errorMask: out subMask);
-                        item._Fluff.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            doMasks,
-                            (int)ClassData_FieldIndex.Fluff,
+                            (int)ClassData_FieldIndex.Training,
                             subMask);
                     }
                     break;
@@ -1073,44 +997,17 @@ namespace Mutagen
                     subMask);
             }
             {
-                Exception subMask;
-                var tryGet = Mutagen.Binary.EnumBinaryTranslation<Skill>.Instance.Parse(
-                    reader,
+                MaskItem<Exception, ClassTraining_ErrorMask> subMask;
+                reader.Position -= Constants.SUBRECORD_LENGTH;
+                var tryGet = LoquiBinaryTranslation<ClassTraining, ClassTraining_ErrorMask>.Instance.Parse(
+                    reader: reader,
                     doMasks: doMasks,
-                    errorMask: out subMask,
-                    length: 1);
-                item._TrainedSkill.SetIfSucceeded(tryGet);
+                    mask: out subMask);
+                item._Training.SetIfSucceeded(tryGet);
                 ErrorMask.HandleErrorMask(
                     errorMask,
                     doMasks,
-                    (int)ClassData_FieldIndex.TrainedSkill,
-                    subMask);
-            }
-            {
-                Exception subMask;
-                var tryGet = Mutagen.Binary.ByteBinaryTranslation.Instance.Parse(
-                    reader,
-                    doMasks: doMasks,
-                    errorMask: out subMask);
-                item._MaximumTrainingLevel.SetIfSucceeded(tryGet);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)ClassData_FieldIndex.MaximumTrainingLevel,
-                    subMask);
-            }
-            {
-                Exception subMask;
-                var tryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                    reader,
-                    doMasks: doMasks,
-                    errorMask: out subMask,
-                    length: 2);
-                item._Fluff.SetIfSucceeded(tryGet);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)ClassData_FieldIndex.Fluff,
+                    (int)ClassData_FieldIndex.Training,
                     subMask);
             }
         }
@@ -1213,19 +1110,9 @@ namespace Mutagen
                         (ClassService)obj,
                         cmds);
                     break;
-                case ClassData_FieldIndex.TrainedSkill:
-                    this._TrainedSkill.Set(
-                        (Skill)obj,
-                        cmds);
-                    break;
-                case ClassData_FieldIndex.MaximumTrainingLevel:
-                    this._MaximumTrainingLevel.Set(
-                        (Byte)obj,
-                        cmds);
-                    break;
-                case ClassData_FieldIndex.Fluff:
-                    this._Fluff.Set(
-                        (Byte[])obj,
+                case ClassData_FieldIndex.Training:
+                    this._Training.Set(
+                        (ClassTraining)obj,
                         cmds);
                     break;
                 default:
@@ -1286,19 +1173,9 @@ namespace Mutagen
                         (ClassService)pair.Value,
                         null);
                     break;
-                case ClassData_FieldIndex.TrainedSkill:
-                    obj._TrainedSkill.Set(
-                        (Skill)pair.Value,
-                        null);
-                    break;
-                case ClassData_FieldIndex.MaximumTrainingLevel:
-                    obj._MaximumTrainingLevel.Set(
-                        (Byte)pair.Value,
-                        null);
-                    break;
-                case ClassData_FieldIndex.Fluff:
-                    obj._Fluff.Set(
-                        (Byte[])pair.Value,
+                case ClassData_FieldIndex.Training:
+                    obj._Training.Set(
+                        (ClassTraining)pair.Value,
                         null);
                     break;
                 default:
@@ -1327,14 +1204,8 @@ namespace Mutagen
         new ClassService ClassServices { get; set; }
         new INotifyingItem<ClassService> ClassServices_Property { get; }
 
-        new Skill TrainedSkill { get; set; }
-        new INotifyingItem<Skill> TrainedSkill_Property { get; }
-
-        new Byte MaximumTrainingLevel { get; set; }
-        new INotifyingItem<Byte> MaximumTrainingLevel_Property { get; }
-
-        new Byte[] Fluff { get; set; }
-        new INotifyingItem<Byte[]> Fluff_Property { get; }
+        new ClassTraining Training { get; set; }
+        new INotifyingItem<ClassTraining> Training_Property { get; }
 
     }
 
@@ -1361,19 +1232,9 @@ namespace Mutagen
         INotifyingItemGetter<ClassService> ClassServices_Property { get; }
 
         #endregion
-        #region TrainedSkill
-        Skill TrainedSkill { get; }
-        INotifyingItemGetter<Skill> TrainedSkill_Property { get; }
-
-        #endregion
-        #region MaximumTrainingLevel
-        Byte MaximumTrainingLevel { get; }
-        INotifyingItemGetter<Byte> MaximumTrainingLevel_Property { get; }
-
-        #endregion
-        #region Fluff
-        Byte[] Fluff { get; }
-        INotifyingItemGetter<Byte[]> Fluff_Property { get; }
+        #region Training
+        ClassTraining Training { get; }
+        INotifyingItemGetter<ClassTraining> Training_Property { get; }
 
         #endregion
 
@@ -1393,9 +1254,7 @@ namespace Mutagen.Internals
         SecondaryAttributes = 2,
         Flags = 3,
         ClassServices = 4,
-        TrainedSkill = 5,
-        MaximumTrainingLevel = 6,
-        Fluff = 7,
+        Training = 5,
     }
     #endregion
 
@@ -1413,7 +1272,7 @@ namespace Mutagen.Internals
 
         public const string GUID = "f9dfb650-f03c-4f98-be15-c69bb99ca417";
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 6;
 
         public static readonly Type MaskType = typeof(ClassData_Mask<>);
 
@@ -1451,12 +1310,8 @@ namespace Mutagen.Internals
                     return (ushort)ClassData_FieldIndex.Flags;
                 case "CLASSSERVICES":
                     return (ushort)ClassData_FieldIndex.ClassServices;
-                case "TRAINEDSKILL":
-                    return (ushort)ClassData_FieldIndex.TrainedSkill;
-                case "MAXIMUMTRAININGLEVEL":
-                    return (ushort)ClassData_FieldIndex.MaximumTrainingLevel;
-                case "FLUFF":
-                    return (ushort)ClassData_FieldIndex.Fluff;
+                case "TRAINING":
+                    return (ushort)ClassData_FieldIndex.Training;
                 default:
                     return null;
             }
@@ -1473,9 +1328,7 @@ namespace Mutagen.Internals
                 case ClassData_FieldIndex.Specialization:
                 case ClassData_FieldIndex.Flags:
                 case ClassData_FieldIndex.ClassServices:
-                case ClassData_FieldIndex.TrainedSkill:
-                case ClassData_FieldIndex.MaximumTrainingLevel:
-                case ClassData_FieldIndex.Fluff:
+                case ClassData_FieldIndex.Training:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1487,14 +1340,13 @@ namespace Mutagen.Internals
             ClassData_FieldIndex enu = (ClassData_FieldIndex)index;
             switch (enu)
             {
+                case ClassData_FieldIndex.Training:
+                    return true;
                 case ClassData_FieldIndex.PrimaryAttributes:
                 case ClassData_FieldIndex.Specialization:
                 case ClassData_FieldIndex.SecondaryAttributes:
                 case ClassData_FieldIndex.Flags:
                 case ClassData_FieldIndex.ClassServices:
-                case ClassData_FieldIndex.TrainedSkill:
-                case ClassData_FieldIndex.MaximumTrainingLevel:
-                case ClassData_FieldIndex.Fluff:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1511,9 +1363,7 @@ namespace Mutagen.Internals
                 case ClassData_FieldIndex.SecondaryAttributes:
                 case ClassData_FieldIndex.Flags:
                 case ClassData_FieldIndex.ClassServices:
-                case ClassData_FieldIndex.TrainedSkill:
-                case ClassData_FieldIndex.MaximumTrainingLevel:
-                case ClassData_FieldIndex.Fluff:
+                case ClassData_FieldIndex.Training:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1535,12 +1385,8 @@ namespace Mutagen.Internals
                     return "Flags";
                 case ClassData_FieldIndex.ClassServices:
                     return "ClassServices";
-                case ClassData_FieldIndex.TrainedSkill:
-                    return "TrainedSkill";
-                case ClassData_FieldIndex.MaximumTrainingLevel:
-                    return "MaximumTrainingLevel";
-                case ClassData_FieldIndex.Fluff:
-                    return "Fluff";
+                case ClassData_FieldIndex.Training:
+                    return "Training";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1556,9 +1402,7 @@ namespace Mutagen.Internals
                 case ClassData_FieldIndex.SecondaryAttributes:
                 case ClassData_FieldIndex.Flags:
                 case ClassData_FieldIndex.ClassServices:
-                case ClassData_FieldIndex.TrainedSkill:
-                case ClassData_FieldIndex.MaximumTrainingLevel:
-                case ClassData_FieldIndex.Fluff:
+                case ClassData_FieldIndex.Training:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1575,9 +1419,7 @@ namespace Mutagen.Internals
                 case ClassData_FieldIndex.SecondaryAttributes:
                 case ClassData_FieldIndex.Flags:
                 case ClassData_FieldIndex.ClassServices:
-                case ClassData_FieldIndex.TrainedSkill:
-                case ClassData_FieldIndex.MaximumTrainingLevel:
-                case ClassData_FieldIndex.Fluff:
+                case ClassData_FieldIndex.Training:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1599,12 +1441,8 @@ namespace Mutagen.Internals
                     return typeof(ClassFlag);
                 case ClassData_FieldIndex.ClassServices:
                     return typeof(ClassService);
-                case ClassData_FieldIndex.TrainedSkill:
-                    return typeof(Skill);
-                case ClassData_FieldIndex.MaximumTrainingLevel:
-                    return typeof(Byte);
-                case ClassData_FieldIndex.Fluff:
-                    return typeof(Byte[]);
+                case ClassData_FieldIndex.Training:
+                    return typeof(ClassTraining);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1612,7 +1450,7 @@ namespace Mutagen.Internals
 
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = DATA_HEADER;
-        public const int NumStructFields = 8;
+        public const int NumStructFields = 6;
         public const int NumTypedFields = 0;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1795,49 +1633,55 @@ namespace Mutagen.Internals
                     errorMask().SetNthException((int)ClassData_FieldIndex.ClassServices, ex);
                 }
             }
-            if (copyMask?.TrainedSkill ?? true)
+            if (copyMask?.Training.Overall != CopyOption.Skip)
             {
                 try
                 {
-                    item.TrainedSkill_Property.SetToWithDefault(
-                        rhs.TrainedSkill_Property,
-                        def?.TrainedSkill_Property,
-                        cmds);
+                    item.Training_Property.SetToWithDefault(
+                        rhs.Training_Property,
+                        def?.Training_Property,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.Training.Overall ?? CopyOption.Reference)
+                            {
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    ClassTrainingCommon.CopyFieldsFrom(
+                                        item: item.Training,
+                                        rhs: rhs.Training,
+                                        def: def?.Training,
+                                        doErrorMask: doErrorMask,
+                                        errorMask: (doErrorMask ? new Func<ClassTraining_ErrorMask>(() =>
+                                        {
+                                            var baseMask = errorMask();
+                                            if (baseMask.Training.Specific == null)
+                                            {
+                                                baseMask.Training = new MaskItem<Exception, ClassTraining_ErrorMask>(null, new ClassTraining_ErrorMask());
+                                            }
+                                            return baseMask.Training.Specific;
+                                        }
+                                        ) : null),
+                                        copyMask: copyMask?.Training.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(ClassTraining);
+                                    return ClassTraining.Copy(
+                                        r,
+                                        copyMask?.Training.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Training.Overall}. Cannot execute copy.");
+                            }
+                        }
+                        );
                 }
                 catch (Exception ex)
                 when (doErrorMask)
                 {
-                    errorMask().SetNthException((int)ClassData_FieldIndex.TrainedSkill, ex);
-                }
-            }
-            if (copyMask?.MaximumTrainingLevel ?? true)
-            {
-                try
-                {
-                    item.MaximumTrainingLevel_Property.SetToWithDefault(
-                        rhs.MaximumTrainingLevel_Property,
-                        def?.MaximumTrainingLevel_Property,
-                        cmds);
-                }
-                catch (Exception ex)
-                when (doErrorMask)
-                {
-                    errorMask().SetNthException((int)ClassData_FieldIndex.MaximumTrainingLevel, ex);
-                }
-            }
-            if (copyMask?.Fluff ?? true)
-            {
-                try
-                {
-                    item.Fluff_Property.SetToWithDefault(
-                        rhs.Fluff_Property,
-                        def?.Fluff_Property,
-                        cmds);
-                }
-                catch (Exception ex)
-                when (doErrorMask)
-                {
-                    errorMask().SetNthException((int)ClassData_FieldIndex.Fluff, ex);
+                    errorMask().SetNthException((int)ClassData_FieldIndex.Training, ex);
                 }
             }
         }
@@ -1868,14 +1712,8 @@ namespace Mutagen.Internals
                 case ClassData_FieldIndex.ClassServices:
                     obj.ClassServices_Property.HasBeenSet = on;
                     break;
-                case ClassData_FieldIndex.TrainedSkill:
-                    obj.TrainedSkill_Property.HasBeenSet = on;
-                    break;
-                case ClassData_FieldIndex.MaximumTrainingLevel:
-                    obj.MaximumTrainingLevel_Property.HasBeenSet = on;
-                    break;
-                case ClassData_FieldIndex.Fluff:
-                    obj.Fluff_Property.HasBeenSet = on;
+                case ClassData_FieldIndex.Training:
+                    obj.Training_Property.HasBeenSet = on;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1905,14 +1743,8 @@ namespace Mutagen.Internals
                 case ClassData_FieldIndex.ClassServices:
                     obj.ClassServices_Property.Unset(cmds);
                     break;
-                case ClassData_FieldIndex.TrainedSkill:
-                    obj.TrainedSkill_Property.Unset(cmds);
-                    break;
-                case ClassData_FieldIndex.MaximumTrainingLevel:
-                    obj.MaximumTrainingLevel_Property.Unset(cmds);
-                    break;
-                case ClassData_FieldIndex.Fluff:
-                    obj.Fluff_Property.Unset(cmds);
+                case ClassData_FieldIndex.Training:
+                    obj.Training_Property.Unset(cmds);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1936,12 +1768,8 @@ namespace Mutagen.Internals
                     return obj.Flags_Property.HasBeenSet;
                 case ClassData_FieldIndex.ClassServices:
                     return obj.ClassServices_Property.HasBeenSet;
-                case ClassData_FieldIndex.TrainedSkill:
-                    return obj.TrainedSkill_Property.HasBeenSet;
-                case ClassData_FieldIndex.MaximumTrainingLevel:
-                    return obj.MaximumTrainingLevel_Property.HasBeenSet;
-                case ClassData_FieldIndex.Fluff:
-                    return obj.Fluff_Property.HasBeenSet;
+                case ClassData_FieldIndex.Training:
+                    return obj.Training_Property.HasBeenSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1964,12 +1792,8 @@ namespace Mutagen.Internals
                     return obj.Flags;
                 case ClassData_FieldIndex.ClassServices:
                     return obj.ClassServices;
-                case ClassData_FieldIndex.TrainedSkill:
-                    return obj.TrainedSkill;
-                case ClassData_FieldIndex.MaximumTrainingLevel:
-                    return obj.MaximumTrainingLevel;
-                case ClassData_FieldIndex.Fluff:
-                    return obj.Fluff;
+                case ClassData_FieldIndex.Training:
+                    return obj.Training;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1984,9 +1808,7 @@ namespace Mutagen.Internals
             item.SecondaryAttributes.Unset(cmds.ToUnsetParams());
             item.Flags_Property.Unset(cmds.ToUnsetParams());
             item.ClassServices_Property.Unset(cmds.ToUnsetParams());
-            item.TrainedSkill_Property.Unset(cmds.ToUnsetParams());
-            item.MaximumTrainingLevel_Property.Unset(cmds.ToUnsetParams());
-            item.Fluff_Property.Unset(cmds.ToUnsetParams());
+            item.Training_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static ClassData_Mask<bool> GetEqualsMask(
@@ -2045,9 +1867,7 @@ namespace Mutagen.Internals
             }
             ret.Flags = item.Flags_Property.Equals(rhs.Flags_Property, (l, r) => l == r);
             ret.ClassServices = item.ClassServices_Property.Equals(rhs.ClassServices_Property, (l, r) => l == r);
-            ret.TrainedSkill = item.TrainedSkill_Property.Equals(rhs.TrainedSkill_Property, (l, r) => l == r);
-            ret.MaximumTrainingLevel = item.MaximumTrainingLevel_Property.Equals(rhs.MaximumTrainingLevel_Property, (l, r) => l == r);
-            ret.Fluff = item.Fluff_Property.Equals(rhs.Fluff_Property, (l, r) => l.EqualsFast(r));
+            ret.Training = item.Training_Property.LoquiEqualsHelper(rhs.Training_Property, (loqLhs, loqRhs) => ClassTrainingCommon.GetEqualsMask(loqLhs, loqRhs));
         }
 
         public static string ToString(
@@ -2125,17 +1945,9 @@ namespace Mutagen.Internals
                 {
                     fg.AppendLine($"ClassServices => {item.ClassServices}");
                 }
-                if (printMask?.TrainedSkill ?? true)
+                if (printMask?.Training?.Overall ?? true)
                 {
-                    fg.AppendLine($"TrainedSkill => {item.TrainedSkill}");
-                }
-                if (printMask?.MaximumTrainingLevel ?? true)
-                {
-                    fg.AppendLine($"MaximumTrainingLevel => {item.MaximumTrainingLevel}");
-                }
-                if (printMask?.Fluff ?? true)
-                {
-                    fg.AppendLine($"Fluff => {item.Fluff}");
+                    item.Training?.ToString(fg, "Training");
                 }
             }
             fg.AppendLine("]");
@@ -2150,9 +1962,8 @@ namespace Mutagen.Internals
             if (checkMask.SecondaryAttributes.Overall.HasValue && checkMask.SecondaryAttributes.Overall.Value != item.SecondaryAttributes.HasBeenSet) return false;
             if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_Property.HasBeenSet) return false;
             if (checkMask.ClassServices.HasValue && checkMask.ClassServices.Value != item.ClassServices_Property.HasBeenSet) return false;
-            if (checkMask.TrainedSkill.HasValue && checkMask.TrainedSkill.Value != item.TrainedSkill_Property.HasBeenSet) return false;
-            if (checkMask.MaximumTrainingLevel.HasValue && checkMask.MaximumTrainingLevel.Value != item.MaximumTrainingLevel_Property.HasBeenSet) return false;
-            if (checkMask.Fluff.HasValue && checkMask.Fluff.Value != item.Fluff_Property.HasBeenSet) return false;
+            if (checkMask.Training.Overall.HasValue && checkMask.Training.Overall.Value != item.Training_Property.HasBeenSet) return false;
+            if (checkMask.Training.Specific != null && (item.Training_Property.Item == null || !item.Training_Property.Item.HasBeenSet(checkMask.Training.Specific))) return false;
             return true;
         }
 
@@ -2164,9 +1975,7 @@ namespace Mutagen.Internals
             ret.SecondaryAttributes = new MaskItem<bool, IEnumerable<bool>>(item.SecondaryAttributes.HasBeenSet, null);
             ret.Flags = item.Flags_Property.HasBeenSet;
             ret.ClassServices = item.ClassServices_Property.HasBeenSet;
-            ret.TrainedSkill = item.TrainedSkill_Property.HasBeenSet;
-            ret.MaximumTrainingLevel = item.MaximumTrainingLevel_Property.HasBeenSet;
-            ret.Fluff = item.Fluff_Property.HasBeenSet;
+            ret.Training = new MaskItem<bool, ClassTraining_Mask<bool>>(item.Training_Property.HasBeenSet, ClassTrainingCommon.GetHasBeenSetMask(item.Training_Property.Item));
             return ret;
         }
 
@@ -2299,49 +2108,20 @@ namespace Mutagen.Internals
                             (int)ClassData_FieldIndex.ClassServices,
                             subMask);
                     }
-                    if (item.TrainedSkill_Property.HasBeenSet)
+                    if (item.Training_Property.HasBeenSet)
                     {
-                        Exception subMask;
-                        EnumXmlTranslation<Skill>.Instance.Write(
-                            writer,
-                            nameof(item.TrainedSkill),
-                            item.TrainedSkill,
+                        MaskItem<Exception, ClassTraining_ErrorMask> subMask;
+                        LoquiXmlTranslation<ClassTraining, ClassTraining_ErrorMask>.Instance.Write(
+                            writer: writer,
+                            item: item.Training,
+                            name: nameof(item.Training),
                             doMasks: doMasks,
-                            errorMask: out subMask);
+                            mask: out ClassTraining_ErrorMask loquiMask);
+                        subMask = loquiMask == null ? null : new MaskItem<Exception, ClassTraining_ErrorMask>(null, loquiMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
                             doMasks,
-                            (int)ClassData_FieldIndex.TrainedSkill,
-                            subMask);
-                    }
-                    if (item.MaximumTrainingLevel_Property.HasBeenSet)
-                    {
-                        Exception subMask;
-                        ByteXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.MaximumTrainingLevel),
-                            item.MaximumTrainingLevel,
-                            doMasks: doMasks,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            doMasks,
-                            (int)ClassData_FieldIndex.MaximumTrainingLevel,
-                            subMask);
-                    }
-                    if (item.Fluff_Property.HasBeenSet)
-                    {
-                        Exception subMask;
-                        ByteArrayXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.Fluff),
-                            item.Fluff,
-                            doMasks: doMasks,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            doMasks,
-                            (int)ClassData_FieldIndex.Fluff,
+                            (int)ClassData_FieldIndex.Training,
                             subMask);
                     }
                 }
@@ -2496,43 +2276,16 @@ namespace Mutagen.Internals
                     subMask);
             }
             {
-                Exception subMask;
-                Mutagen.Binary.EnumBinaryTranslation<Skill>.Instance.Write(
-                    writer,
-                    item.TrainedSkill,
-                    doMasks: doMasks,
-                    length: 1,
-                    errorMask: out subMask);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)ClassData_FieldIndex.TrainedSkill,
-                    subMask);
-            }
-            {
-                Exception subMask;
-                Mutagen.Binary.ByteBinaryTranslation.Instance.Write(
+                MaskItem<Exception, ClassTraining_ErrorMask> subMask;
+                LoquiBinaryTranslation<ClassTraining, ClassTraining_ErrorMask>.Instance.Write(
                     writer: writer,
-                    item: item.MaximumTrainingLevel,
+                    item: item.Training,
                     doMasks: doMasks,
-                    errorMask: out subMask);
+                    mask: out subMask);
                 ErrorMask.HandleErrorMask(
                     errorMask,
                     doMasks,
-                    (int)ClassData_FieldIndex.MaximumTrainingLevel,
-                    subMask);
-            }
-            {
-                Exception subMask;
-                Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Fluff,
-                    doMasks: doMasks,
-                    errorMask: out subMask);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)ClassData_FieldIndex.Fluff,
+                    (int)ClassData_FieldIndex.Training,
                     subMask);
             }
         }
@@ -2559,9 +2312,7 @@ namespace Mutagen.Internals
             this.SecondaryAttributes = new MaskItem<T, IEnumerable<T>>(initialValue, null);
             this.Flags = initialValue;
             this.ClassServices = initialValue;
-            this.TrainedSkill = initialValue;
-            this.MaximumTrainingLevel = initialValue;
-            this.Fluff = initialValue;
+            this.Training = new MaskItem<T, ClassTraining_Mask<T>>(initialValue, new ClassTraining_Mask<T>(initialValue));
         }
         #endregion
 
@@ -2571,9 +2322,7 @@ namespace Mutagen.Internals
         public MaskItem<T, IEnumerable<T>> SecondaryAttributes;
         public T Flags;
         public T ClassServices;
-        public T TrainedSkill;
-        public T MaximumTrainingLevel;
-        public T Fluff;
+        public MaskItem<T, ClassTraining_Mask<T>> Training { get; set; }
         #endregion
 
         #region Equals
@@ -2591,9 +2340,7 @@ namespace Mutagen.Internals
             if (!object.Equals(this.SecondaryAttributes, rhs.SecondaryAttributes)) return false;
             if (!object.Equals(this.Flags, rhs.Flags)) return false;
             if (!object.Equals(this.ClassServices, rhs.ClassServices)) return false;
-            if (!object.Equals(this.TrainedSkill, rhs.TrainedSkill)) return false;
-            if (!object.Equals(this.MaximumTrainingLevel, rhs.MaximumTrainingLevel)) return false;
-            if (!object.Equals(this.Fluff, rhs.Fluff)) return false;
+            if (!object.Equals(this.Training, rhs.Training)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -2604,9 +2351,7 @@ namespace Mutagen.Internals
             ret = ret.CombineHashCode(this.SecondaryAttributes?.GetHashCode());
             ret = ret.CombineHashCode(this.Flags?.GetHashCode());
             ret = ret.CombineHashCode(this.ClassServices?.GetHashCode());
-            ret = ret.CombineHashCode(this.TrainedSkill?.GetHashCode());
-            ret = ret.CombineHashCode(this.MaximumTrainingLevel?.GetHashCode());
-            ret = ret.CombineHashCode(this.Fluff?.GetHashCode());
+            ret = ret.CombineHashCode(this.Training?.GetHashCode());
             return ret;
         }
 
@@ -2640,9 +2385,11 @@ namespace Mutagen.Internals
             }
             if (!eval(this.Flags)) return false;
             if (!eval(this.ClassServices)) return false;
-            if (!eval(this.TrainedSkill)) return false;
-            if (!eval(this.MaximumTrainingLevel)) return false;
-            if (!eval(this.Fluff)) return false;
+            if (Training != null)
+            {
+                if (!eval(this.Training.Overall)) return false;
+                if (Training.Specific != null && !Training.Specific.AllEqual(eval)) return false;
+            }
             return true;
         }
         #endregion
@@ -2692,9 +2439,15 @@ namespace Mutagen.Internals
             }
             obj.Flags = eval(this.Flags);
             obj.ClassServices = eval(this.ClassServices);
-            obj.TrainedSkill = eval(this.TrainedSkill);
-            obj.MaximumTrainingLevel = eval(this.MaximumTrainingLevel);
-            obj.Fluff = eval(this.Fluff);
+            if (this.Training != null)
+            {
+                obj.Training = new MaskItem<R, ClassTraining_Mask<R>>();
+                obj.Training.Overall = eval(this.Training.Overall);
+                if (this.Training.Specific != null)
+                {
+                    obj.Training.Specific = this.Training.Specific.Translate(eval);
+                }
+            }
         }
         #endregion
 
@@ -2787,17 +2540,9 @@ namespace Mutagen.Internals
                 {
                     fg.AppendLine($"ClassServices => {ClassServices.ToStringSafe()}");
                 }
-                if (printMask?.TrainedSkill ?? true)
+                if (printMask?.Training?.Overall ?? true)
                 {
-                    fg.AppendLine($"TrainedSkill => {TrainedSkill.ToStringSafe()}");
-                }
-                if (printMask?.MaximumTrainingLevel ?? true)
-                {
-                    fg.AppendLine($"MaximumTrainingLevel => {MaximumTrainingLevel.ToStringSafe()}");
-                }
-                if (printMask?.Fluff ?? true)
-                {
-                    fg.AppendLine($"Fluff => {Fluff.ToStringSafe()}");
+                    Training.ToString(fg);
                 }
             }
             fg.AppendLine("]");
@@ -2827,9 +2572,7 @@ namespace Mutagen.Internals
         public MaskItem<Exception, IEnumerable<Exception>> SecondaryAttributes;
         public Exception Flags;
         public Exception ClassServices;
-        public Exception TrainedSkill;
-        public Exception MaximumTrainingLevel;
-        public Exception Fluff;
+        public MaskItem<Exception, ClassTraining_ErrorMask> Training;
         #endregion
 
         #region IErrorMask
@@ -2853,14 +2596,8 @@ namespace Mutagen.Internals
                 case ClassData_FieldIndex.ClassServices:
                     this.ClassServices = ex;
                     break;
-                case ClassData_FieldIndex.TrainedSkill:
-                    this.TrainedSkill = ex;
-                    break;
-                case ClassData_FieldIndex.MaximumTrainingLevel:
-                    this.MaximumTrainingLevel = ex;
-                    break;
-                case ClassData_FieldIndex.Fluff:
-                    this.Fluff = ex;
+                case ClassData_FieldIndex.Training:
+                    this.Training = new MaskItem<Exception, ClassTraining_ErrorMask>(ex, null);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2887,14 +2624,8 @@ namespace Mutagen.Internals
                 case ClassData_FieldIndex.ClassServices:
                     this.ClassServices = (Exception)obj;
                     break;
-                case ClassData_FieldIndex.TrainedSkill:
-                    this.TrainedSkill = (Exception)obj;
-                    break;
-                case ClassData_FieldIndex.MaximumTrainingLevel:
-                    this.MaximumTrainingLevel = (Exception)obj;
-                    break;
-                case ClassData_FieldIndex.Fluff:
-                    this.Fluff = (Exception)obj;
+                case ClassData_FieldIndex.Training:
+                    this.Training = (MaskItem<Exception, ClassTraining_ErrorMask>)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2994,17 +2725,9 @@ namespace Mutagen.Internals
             {
                 fg.AppendLine($"ClassServices => {ClassServices.ToStringSafe()}");
             }
-            if (TrainedSkill != null)
+            if (Training != null)
             {
-                fg.AppendLine($"TrainedSkill => {TrainedSkill.ToStringSafe()}");
-            }
-            if (MaximumTrainingLevel != null)
-            {
-                fg.AppendLine($"MaximumTrainingLevel => {MaximumTrainingLevel.ToStringSafe()}");
-            }
-            if (Fluff != null)
-            {
-                fg.AppendLine($"Fluff => {Fluff.ToStringSafe()}");
+                Training.ToString(fg);
             }
         }
         #endregion
@@ -3018,9 +2741,7 @@ namespace Mutagen.Internals
             ret.SecondaryAttributes = new MaskItem<Exception, IEnumerable<Exception>>(this.SecondaryAttributes.Overall.Combine(rhs.SecondaryAttributes.Overall), new List<Exception>(this.SecondaryAttributes.Specific.And(rhs.SecondaryAttributes.Specific)));
             ret.Flags = this.Flags.Combine(rhs.Flags);
             ret.ClassServices = this.ClassServices.Combine(rhs.ClassServices);
-            ret.TrainedSkill = this.TrainedSkill.Combine(rhs.TrainedSkill);
-            ret.MaximumTrainingLevel = this.MaximumTrainingLevel.Combine(rhs.MaximumTrainingLevel);
-            ret.Fluff = this.Fluff.Combine(rhs.Fluff);
+            ret.Training = new MaskItem<Exception, ClassTraining_ErrorMask>(this.Training.Overall.Combine(rhs.Training.Overall), this.Training.Specific.Combine(rhs.Training.Specific));
             return ret;
         }
         public static ClassData_ErrorMask Combine(ClassData_ErrorMask lhs, ClassData_ErrorMask rhs)
@@ -3039,9 +2760,7 @@ namespace Mutagen.Internals
         public CopyOption SecondaryAttributes;
         public bool Flags;
         public bool ClassServices;
-        public bool TrainedSkill;
-        public bool MaximumTrainingLevel;
-        public bool Fluff;
+        public MaskItem<CopyOption, ClassTraining_CopyMask> Training;
         #endregion
 
     }

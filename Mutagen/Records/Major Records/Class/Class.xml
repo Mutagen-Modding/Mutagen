@@ -7,18 +7,22 @@
       <RefDirect name="ClassData" refName="ClassData" singleton="NotNull" />
     </Fields>
   </Object>
-  
   <Object name="ClassData" recordType="DATA" objType="Subrecord" GUID="f9dfb650-f03c-4f98-be15-c69bb99ca417" ID="18">
     <Fields>
-      <List name="PrimaryAttributes" maxSize="2" >
+      <List name="PrimaryAttributes" maxSize="2">
         <Enum enumName="ActorValue" />
       </List>
       <Enum name="Specialization" enumName="Specialization" />
-      <List name="SecondaryAttributes" maxSize="7" >
+      <List name="SecondaryAttributes" maxSize="7">
         <Enum enumName="ActorValue" />
       </List>
       <Enum name="Flags" enumName="ClassFlag" />
       <Enum name="ClassServices" enumName="ClassService" />
+      <RefDirect name="Training" refName="ClassTraining" singleton="None" />
+    </Fields>
+  </Object>
+  <Object name="ClassTraining" objType="Struct" GUID="db3e6d59-8545-4d81-8531-4eb0b56c4a47" ID="19">
+    <Fields>
       <Enum name="TrainedSkill" enumName="Skill" byteLength="1" />
       <UInt8 name="MaximumTrainingLevel" max="100" min="0" />
       <ByteArray name="Fluff" length="2" nullable="false" />
