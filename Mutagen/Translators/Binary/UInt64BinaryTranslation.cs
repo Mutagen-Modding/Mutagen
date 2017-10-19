@@ -9,9 +9,9 @@ namespace Mutagen.Binary
         public readonly static UInt64BinaryTranslation Instance = new UInt64BinaryTranslation();
         public override byte? ExpectedLength => 8;
 
-        protected override ulong ParseValue(MutagenReader reader)
+        protected override ulong ParseValue(MutagenFrame reader)
         {
-            return reader.ReadUInt64();
+            return reader.Reader.ReadUInt64();
         }
 
         protected override void WriteValue(MutagenWriter writer, ulong item)

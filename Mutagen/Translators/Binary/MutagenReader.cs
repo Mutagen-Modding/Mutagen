@@ -18,10 +18,8 @@ namespace Mutagen.Binary
             set => this.reader.BaseStream.Position = value;
         }
 
-        public FileLocation Length
-        {
-            get => this.reader.BaseStream.Length;
-        }
+        public FileLocation Length => this.reader.BaseStream.Length;
+        public bool Complete => this.Position < this.Length;
 
         public MutagenReader(string path)
         {

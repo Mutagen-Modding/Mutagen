@@ -9,9 +9,9 @@ namespace Mutagen.Binary
         public readonly static DateTimeBinaryTranslation Instance = new DateTimeBinaryTranslation();
         public override byte? ExpectedLength => 4;
 
-        protected override DateTime ParseValue(MutagenReader reader)
+        protected override DateTime ParseValue(MutagenFrame reader)
         {
-            reader.ReadBytes(4);
+            reader.Reader.ReadBytes(4);
             return DateTime.Now;
         }
 

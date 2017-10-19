@@ -12,9 +12,9 @@ namespace Mutagen
     public partial class Group<T>
         where T : MajorRecord, ILoquiObjectGetter
     {
-        private static void FillBinary_ContainedRecordType(MutagenReader reader, Group<T> item, bool doMasks, out Exception errorMask)
+        private static void FillBinary_ContainedRecordType(MutagenFrame frame, Group<T> item, bool doMasks, out Exception errorMask)
         {
-            reader.Position += 4;
+            frame.Reader.Position += 4;
             errorMask = null;
         }
 

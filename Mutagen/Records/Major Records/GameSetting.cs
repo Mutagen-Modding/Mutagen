@@ -28,18 +28,18 @@ namespace Mutagen
         }
 
         public static (GameSetting Object, GameSetting_ErrorMask ErrorMask) Create_Binary(
-            MutagenReader reader,
+            MutagenFrame frame,
             bool doMasks)
         {
-            var initialPos = reader.Position;
-            reader.Position += 20;
-            if (!MajorRecord_Registration.EDID_HEADER.Equals(HeaderTranslation.GetNextSubRecordType(reader, out var contentLength)))
+            var initialPos = frame.Position;
+            frame.Position += 20;
+            if (!MajorRecord_Registration.EDID_HEADER.Equals(HeaderTranslation.GetNextSubRecordType(frame, out var contentLength)))
             {
-                throw new ArgumentException($"EDID was not located in expected position: {reader.Position}");
+                throw new ArgumentException($"EDID was not located in expected position: {frame.Position}");
             }
-            reader.Position += 6;
+            frame.Position += 6;
             var edid = StringBinaryTranslation.Instance.Parse(
-                reader,
+                frame,
                 contentLength,
                 doMasks,
                 out var err);
@@ -51,15 +51,15 @@ namespace Mutagen
             {
                 throw new ArgumentException("No EDID parsed.");
             }
-            reader.Position = initialPos;
+            frame.Position = initialPos;
             switch (edid.Value[0])
             {
                 case GameSettingInt.TRIGGER_CHAR:
-                    return GameSettingInt.Create_Binary(reader, doMasks);
+                    return GameSettingInt.Create_Binary(frame, doMasks);
                 case GameSettingString.TRIGGER_CHAR:
-                    return GameSettingString.Create_Binary(reader, doMasks);
+                    return GameSettingString.Create_Binary(frame, doMasks);
                 case GameSettingFloat.TRIGGER_CHAR:
-                    return GameSettingFloat.Create_Binary(reader, doMasks);
+                    return GameSettingFloat.Create_Binary(frame, doMasks);
                 default:
                     throw new ArgumentException($"Unknown game setting type: {edid.Value[0]}");
             }

@@ -143,13 +143,13 @@ namespace Mutagen.Generation
             {
                 case ObjectType.Struct:
                 case ObjectType.Subrecord:
-                    fg.AppendLine($"{readerAccessor}.Position -= Constants.SUBRECORD_LENGTH;");
+                    fg.AppendLine($"{readerAccessor}.Reader.Position -= Constants.SUBRECORD_LENGTH;");
                     break;
                 case ObjectType.Record:
-                    fg.AppendLine($"{readerAccessor}.Position -= Constants.RECORD_LENGTH;");
+                    fg.AppendLine($"{readerAccessor}.Reader.Position -= Constants.RECORD_LENGTH;");
                     break;
                 case ObjectType.Group:
-                    fg.AppendLine($"{readerAccessor}.Position -= Constants.GRUP_LENGTH;");
+                    fg.AppendLine($"{readerAccessor}.Reader.Position -= Constants.GRUP_LENGTH;");
                     break;
                 case ObjectType.Mod:
                 default:

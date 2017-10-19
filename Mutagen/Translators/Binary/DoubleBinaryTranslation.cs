@@ -9,9 +9,9 @@ namespace Mutagen.Binary
         public readonly static DoubleBinaryTranslation Instance = new DoubleBinaryTranslation();
         public override byte? ExpectedLength => 4;
 
-        protected override double ParseValue(MutagenReader reader)
+        protected override double ParseValue(MutagenFrame reader)
         {
-            return reader.ReadDouble();
+            return reader.Reader.ReadDouble();
         }
 
         protected override void WriteValue(MutagenWriter writer, double item)

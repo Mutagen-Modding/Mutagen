@@ -19,7 +19,7 @@ namespace Mutagen.Binary
             maskObj = subMaskObj;
         }
 
-        TryGet<object> IBinaryTranslation<object, object>.Parse(MutagenReader reader, ContentLength length, bool doMasks, out object maskObj)
+        TryGet<object> IBinaryTranslation<object, object>.Parse(MutagenFrame reader, ContentLength length, bool doMasks, out object maskObj)
         {
             var ret = Source.Parse(reader, length, doMasks, out var subMaskObj).Bubble<object>((i) => i);
             maskObj = subMaskObj;

@@ -274,11 +274,11 @@ namespace Mutagen
         #region Binary Translation
         #region Binary Copy In
         public override void CopyIn_Binary(
-            MutagenReader reader,
+            MutagenFrame frame,
             NotifyingFireParameters? cmds = null)
         {
             LoquiBinaryTranslation<GameSetting, GameSetting_ErrorMask>.Instance.CopyIn(
-                reader: reader,
+                frame: frame,
                 item: this,
                 skipProtected: true,
                 doMasks: false,
@@ -287,12 +287,12 @@ namespace Mutagen
         }
 
         public virtual void CopyIn_Binary(
-            MutagenReader reader,
+            MutagenFrame frame,
             out GameSetting_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             LoquiBinaryTranslation<GameSetting, GameSetting_ErrorMask>.Instance.CopyIn(
-                reader: reader,
+                frame: frame,
                 item: this,
                 skipProtected: true,
                 doMasks: true,
@@ -306,8 +306,9 @@ namespace Mutagen
         {
             using (var reader = new MutagenReader(path))
             {
+                var frame = new MutagenFrame(reader);
                 this.CopyIn_Binary(
-                    reader: reader,
+                    frame: frame,
                     cmds: cmds);
             }
         }
@@ -319,8 +320,9 @@ namespace Mutagen
         {
             using (var reader = new MutagenReader(path))
             {
+                var frame = new MutagenFrame(reader);
                 this.CopyIn_Binary(
-                    reader: reader,
+                    frame: frame,
                     errorMask: out errorMask,
                     cmds: cmds);
             }
@@ -332,8 +334,9 @@ namespace Mutagen
         {
             using (var reader = new MutagenReader(stream))
             {
+                var frame = new MutagenFrame(reader);
                 this.CopyIn_Binary(
-                    reader: reader,
+                    frame: frame,
                     cmds: cmds);
             }
         }
@@ -345,20 +348,21 @@ namespace Mutagen
         {
             using (var reader = new MutagenReader(stream))
             {
+                var frame = new MutagenFrame(reader);
                 this.CopyIn_Binary(
-                    reader: reader,
+                    frame: frame,
                     errorMask: out errorMask,
                     cmds: cmds);
             }
         }
 
         public override void CopyIn_Binary(
-            MutagenReader reader,
+            MutagenFrame frame,
             out MajorRecord_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             this.CopyIn_Binary(
-                reader: reader,
+                frame: frame,
                 errorMask: out GameSetting_ErrorMask errMask,
                 cmds: cmds);
             errorMask = errMask;

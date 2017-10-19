@@ -9,9 +9,9 @@ namespace Mutagen.Binary
     {
         public abstract byte? ExpectedLength { get; }
 
-        protected abstract T ParseValue(MutagenReader reader);
+        protected abstract T ParseValue(MutagenFrame reader);
 
-        public TryGet<T> Parse(MutagenReader reader, bool doMasks, out Exception errorMask)
+        public TryGet<T> Parse(MutagenFrame reader, bool doMasks, out Exception errorMask)
         {
             try
             {
@@ -30,7 +30,7 @@ namespace Mutagen.Binary
             }
         }
 
-        public TryGet<T> Parse(MutagenReader reader, ContentLength length, bool doMasks, out Exception errorMask)
+        public TryGet<T> Parse(MutagenFrame reader, ContentLength length, bool doMasks, out Exception errorMask)
         {
             if (this.ExpectedLength.HasValue && length != this.ExpectedLength)
             {
@@ -47,7 +47,7 @@ namespace Mutagen.Binary
 
         protected abstract void WriteValue(MutagenWriter writer, T item);
 
-        TryGet<T?> IBinaryTranslation<T?, Exception>.Parse(MutagenReader reader, ContentLength length, bool doMasks, out Exception maskObj)
+        TryGet<T?> IBinaryTranslation<T?, Exception>.Parse(MutagenFrame reader, ContentLength length, bool doMasks, out Exception maskObj)
         {
             return Parse(
                 reader,

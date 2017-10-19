@@ -94,7 +94,7 @@ namespace Mutagen.Generation
             using (var args = new ArgsWrapper(fg,
                 $"{retAccessor}{this.Namespace}ListBinaryTranslation<{list.SubTypeGeneration.TypeName}, {subMaskStr}>.Instance.ParseRepeatedItem"))
             {
-                args.Add($"reader: reader");
+                args.Add($"frame: frame");
                 if (list.MaxValue.HasValue)
                 {
                     args.Add($"amount: {list.MaxValue.Value}");
@@ -115,7 +115,7 @@ namespace Mutagen.Generation
                 args.Add($"maskObj: out {maskAccessor}");
                 args.Add((gen) =>
                 {
-                    gen.AppendLine($"transl: (MutagenReader r, bool listDoMasks, out {typeGen.ProtoGen.Gen.MaskModule.GetMaskModule(list.SubTypeGeneration.GetType()).GetErrorMaskTypeStr(list.SubTypeGeneration)} listSubMask) =>");
+                    gen.AppendLine($"transl: (MutagenFrame r, bool listDoMasks, out {typeGen.ProtoGen.Gen.MaskModule.GetMaskModule(list.SubTypeGeneration.GetType()).GetErrorMaskTypeStr(list.SubTypeGeneration)} listSubMask) =>");
                     using (new BraceWrapper(gen))
                     {
                         var xmlGen = this.Module.GetTypeGeneration(list.SubTypeGeneration.GetType());

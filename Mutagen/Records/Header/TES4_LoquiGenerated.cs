@@ -659,43 +659,43 @@ namespace Mutagen
 
         #region Binary Translation
         #region Binary Create
-        public static TES4 Create_Binary(MutagenReader reader)
+        public static TES4 Create_Binary(MutagenFrame frame)
         {
             return Create_Binary(
-                reader: reader,
+                frame: frame,
                 doMasks: false,
                 errorMask: out var errorMask);
         }
 
         public static TES4 Create_Binary(
-            MutagenReader reader,
+            MutagenFrame frame,
             out TES4_ErrorMask errorMask)
         {
             return Create_Binary(
-                reader: reader,
+                frame: frame,
                 doMasks: true,
                 errorMask: out errorMask);
         }
 
         public static TES4 Create_Binary(
-            MutagenReader reader,
+            MutagenFrame frame,
             bool doMasks,
             out TES4_ErrorMask errorMask)
         {
             var ret = Create_Binary(
-                reader: reader,
+                frame: frame,
                 doMasks: doMasks);
             errorMask = ret.ErrorMask;
             return ret.Object;
         }
 
         public static (TES4 Object, TES4_ErrorMask ErrorMask) Create_Binary(
-            MutagenReader reader,
+            MutagenFrame frame,
             bool doMasks)
         {
             TES4_ErrorMask errMaskRet = null;
             var ret = Create_Binary_Internal(
-                reader: reader,
+                frame: frame,
                 doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new TES4_ErrorMask()) : default(Func<TES4_ErrorMask>));
             return (ret, errMaskRet);
@@ -705,7 +705,8 @@ namespace Mutagen
         {
             using (var reader = new MutagenReader(path))
             {
-                return Create_Binary(reader: reader);
+                var frame = new MutagenFrame(reader);
+                return Create_Binary(frame: frame);
             }
         }
 
@@ -715,8 +716,9 @@ namespace Mutagen
         {
             using (var reader = new MutagenReader(path))
             {
+                var frame = new MutagenFrame(reader);
                 return Create_Binary(
-                    reader: reader,
+                    frame: frame,
                     errorMask: out errorMask);
             }
         }
@@ -725,7 +727,8 @@ namespace Mutagen
         {
             using (var reader = new MutagenReader(stream))
             {
-                return Create_Binary(reader: reader);
+                var frame = new MutagenFrame(reader);
+                return Create_Binary(frame: frame);
             }
         }
 
@@ -735,8 +738,9 @@ namespace Mutagen
         {
             using (var reader = new MutagenReader(stream))
             {
+                var frame = new MutagenFrame(reader);
                 return Create_Binary(
-                    reader: reader,
+                    frame: frame,
                     errorMask: out errorMask);
             }
         }
@@ -745,11 +749,11 @@ namespace Mutagen
 
         #region Binary Copy In
         public void CopyIn_Binary(
-            MutagenReader reader,
+            MutagenFrame frame,
             NotifyingFireParameters? cmds = null)
         {
             LoquiBinaryTranslation<TES4, TES4_ErrorMask>.Instance.CopyIn(
-                reader: reader,
+                frame: frame,
                 item: this,
                 skipProtected: true,
                 doMasks: false,
@@ -758,12 +762,12 @@ namespace Mutagen
         }
 
         public virtual void CopyIn_Binary(
-            MutagenReader reader,
+            MutagenFrame frame,
             out TES4_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             LoquiBinaryTranslation<TES4, TES4_ErrorMask>.Instance.CopyIn(
-                reader: reader,
+                frame: frame,
                 item: this,
                 skipProtected: true,
                 doMasks: true,
@@ -777,8 +781,9 @@ namespace Mutagen
         {
             using (var reader = new MutagenReader(path))
             {
+                var frame = new MutagenFrame(reader);
                 this.CopyIn_Binary(
-                    reader: reader,
+                    frame: frame,
                     cmds: cmds);
             }
         }
@@ -790,8 +795,9 @@ namespace Mutagen
         {
             using (var reader = new MutagenReader(path))
             {
+                var frame = new MutagenFrame(reader);
                 this.CopyIn_Binary(
-                    reader: reader,
+                    frame: frame,
                     errorMask: out errorMask,
                     cmds: cmds);
             }
@@ -803,8 +809,9 @@ namespace Mutagen
         {
             using (var reader = new MutagenReader(stream))
             {
+                var frame = new MutagenFrame(reader);
                 this.CopyIn_Binary(
-                    reader: reader,
+                    frame: frame,
                     cmds: cmds);
             }
         }
@@ -816,8 +823,9 @@ namespace Mutagen
         {
             using (var reader = new MutagenReader(stream))
             {
+                var frame = new MutagenFrame(reader);
                 this.CopyIn_Binary(
-                    reader: reader,
+                    frame: frame,
                     errorMask: out errorMask,
                     cmds: cmds);
             }
@@ -896,45 +904,31 @@ namespace Mutagen
         #endregion
 
         private static TES4 Create_Binary_Internal(
-            MutagenReader reader,
+            MutagenFrame frame,
             bool doMasks,
-            Func<TES4_ErrorMask> errorMask)
-        {
-            var finalPosition = HeaderTranslation.ParseRecord(
-                reader,
-                TES4_Registration.TES4_HEADER);
-            return Create_Binary_Internal(
-                reader: reader,
-                doMasks: doMasks,
-                finalPosition: finalPosition,
-                errorMask: errorMask);
-        }
-
-        private static TES4 Create_Binary_Internal(
-            MutagenReader reader,
-            bool doMasks,
-            long finalPosition,
             Func<TES4_ErrorMask> errorMask)
         {
             var ret = new TES4();
             try
             {
-                Fill_Binary_Structs(
-                    item: ret,
-                    reader: reader,
-                    doMasks: doMasks,
-                    errorMask: errorMask);
-                while (reader.Position < finalPosition)
+                frame = HeaderTranslation.ParseRecord(
+                    frame,
+                    TES4_Registration.TES4_HEADER);
+                using (frame)
                 {
-                    Fill_Binary_RecordTypes(
+                    Fill_Binary_Structs(
                         item: ret,
-                        reader: reader,
+                        frame: frame,
                         doMasks: doMasks,
                         errorMask: errorMask);
-                }
-                if (reader.Position != finalPosition)
-                {
-                    throw new ArgumentException("Read more bytes than allocated");
+                    while (!frame.Complete)
+                    {
+                        Fill_Binary_RecordTypes(
+                            item: ret,
+                            frame: frame,
+                            doMasks: doMasks,
+                            errorMask: errorMask);
+                    }
                 }
             }
             catch (Exception ex)
@@ -942,20 +936,20 @@ namespace Mutagen
             {
                 errorMask().Overall = ex;
             }
-            reader.Position = finalPosition;
             return ret;
         }
 
         protected static void Fill_Binary_Structs(
             TES4 item,
-            MutagenReader reader,
+            MutagenFrame frame,
             bool doMasks,
             Func<TES4_ErrorMask> errorMask)
         {
+            if (frame.Complete) return;
             {
                 Exception subMask;
                 var tryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                    reader,
+                    frame,
                     doMasks: doMasks,
                     errorMask: out subMask,
                     length: 12);
@@ -970,21 +964,22 @@ namespace Mutagen
 
         protected static void Fill_Binary_RecordTypes(
             TES4 item,
-            MutagenReader reader,
+            MutagenFrame frame,
             bool doMasks,
             Func<TES4_ErrorMask> errorMask)
         {
             var nextRecordType = HeaderTranslation.ReadNextSubRecordType(
-                reader: reader,
+                frame: frame,
                 contentLength: out var subLength);
             switch (nextRecordType.Type)
             {
                 case "HEDR":
+                if (frame.Complete) return;
                 {
                     MaskItem<Exception, Header_ErrorMask> subMask;
-                    reader.Position -= Constants.SUBRECORD_LENGTH;
+                    frame.Reader.Position -= Constants.SUBRECORD_LENGTH;
                     var tryGet = LoquiBinaryTranslation<Header, Header_ErrorMask>.Instance.Parse(
-                        reader: reader,
+                        reader: frame,
                         doMasks: doMasks,
                         mask: out subMask);
                     item._Header.SetIfSucceeded(tryGet);
@@ -996,10 +991,11 @@ namespace Mutagen
                 }
                 break;
                 case "OFST":
+                if (frame.Complete) return;
                 {
                     Exception subMask;
                     var tryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        reader,
+                        frame,
                         doMasks: doMasks,
                         errorMask: out subMask,
                         length: subLength);
@@ -1012,10 +1008,11 @@ namespace Mutagen
                 }
                 break;
                 case "DELE":
+                if (frame.Complete) return;
                 {
                     Exception subMask;
                     var tryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        reader,
+                        frame,
                         doMasks: doMasks,
                         errorMask: out subMask,
                         length: subLength);
@@ -1028,10 +1025,11 @@ namespace Mutagen
                 }
                 break;
                 case "CNAM":
+                if (frame.Complete) return;
                 {
                     Exception subMask;
                     var tryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
-                        reader,
+                        frame,
                         doMasks: doMasks,
                         errorMask: out subMask,
                         length: subLength);
@@ -1044,10 +1042,11 @@ namespace Mutagen
                 }
                 break;
                 case "SNAM":
+                if (frame.Complete) return;
                 {
                     Exception subMask;
                     var tryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
-                        reader,
+                        frame,
                         doMasks: doMasks,
                         errorMask: out subMask,
                         length: subLength);
@@ -1060,17 +1059,18 @@ namespace Mutagen
                 }
                 break;
                 case "MAST":
+                if (frame.Complete) return;
                 {
                     MaskItem<Exception, IEnumerable<MaskItem<Exception, MasterReference_ErrorMask>>> subMask;
                     var listTryGet = Mutagen.Binary.ListBinaryTranslation<MasterReference, MaskItem<Exception, MasterReference_ErrorMask>>.Instance.ParseRepeatedItem(
-                        reader: reader,
+                        frame: frame,
                         triggeringRecord: TES4_Registration.MAST_HEADER,
                         doMasks: doMasks,
                         objType: ObjectType.Struct,
                         maskObj: out subMask,
-                        transl: (MutagenReader r, bool listDoMasks, out MaskItem<Exception, MasterReference_ErrorMask> listSubMask) =>
+                        transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, MasterReference_ErrorMask> listSubMask) =>
                         {
-                            r.Position -= Constants.SUBRECORD_LENGTH;
+                            r.Reader.Position -= Constants.SUBRECORD_LENGTH;
                             return LoquiBinaryTranslation<MasterReference, MasterReference_ErrorMask>.Instance.Parse(
                                 reader: r,
                                 doMasks: listDoMasks,
@@ -1086,8 +1086,8 @@ namespace Mutagen
                 }
                 break;
                 default:
-                    reader.Position -= Constants.SUBRECORD_LENGTH;
-                    throw new ArgumentException($"Unexpected header {nextRecordType.Type} at position {reader.Position}");
+                    frame.Reader.Position -= Constants.SUBRECORD_LENGTH;
+                    throw new ArgumentException($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
             }
         }
 

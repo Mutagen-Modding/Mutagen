@@ -19,7 +19,7 @@ namespace Mutagen.Binary
             transl(item, doMasks, out maskObj);
         }
 
-        public override TryGet<T> ParseSingleItem(MutagenReader reader, BinarySubParseDelegate<T, M> transl, bool doMasks, out M maskObj)
+        public override TryGet<T> ParseSingleItem(MutagenFrame reader, BinarySubParseDelegate<T, M> transl, bool doMasks, out M maskObj)
         {
             return transl(reader, doMasks, out maskObj);
         }

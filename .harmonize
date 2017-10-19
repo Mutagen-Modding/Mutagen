@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>4a99ff176eddd4a6db79f6672f2ad6c2e00050e5</Sha>
+         <Sha>b1874137e08bebe6c5bdabf74a9dce79a6c7a4c8</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>10-15-2017 14:14:32</CommitDate>
-         <Description>TranslationModule writes now properly call sub classes' write, even if called as a base class.  FunctionOverride refactoring</Description>
+         <CommitDate>10-17-2017 23:39:43</CommitDate>
+         <Description>static ErrorMask.HandleException</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

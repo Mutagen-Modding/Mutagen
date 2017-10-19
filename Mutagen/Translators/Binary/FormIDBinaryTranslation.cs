@@ -9,9 +9,9 @@ namespace Mutagen.Binary
         public readonly static FormIDBinaryTranslation Instance = new FormIDBinaryTranslation();
         public override byte? ExpectedLength => 4;
 
-        protected override FormID ParseValue(MutagenReader reader)
+        protected override FormID ParseValue(MutagenFrame reader)
         {
-            return FormID.Factory(reader.ReadBytes(ExpectedLength.Value));
+            return FormID.Factory(reader.Reader.ReadBytes(ExpectedLength.Value));
         }
 
         protected override void WriteValue(MutagenWriter writer, FormID item)

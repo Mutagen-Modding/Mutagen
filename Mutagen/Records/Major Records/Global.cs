@@ -14,20 +14,21 @@ namespace Mutagen
         protected static readonly RecordType FNAM = new RecordType("FNAM");
         
         public static (Global Object, Global_ErrorMask ErrorMask) Create_Binary(
-            MutagenReader reader,
+            MutagenFrame frame,
             bool doMasks)
         {
             // Skip to FNAM
-            var initialPos = reader.Position;
-            reader.Position += 24;
-            var edidLength = reader.ReadInt16();
-            reader.Position += edidLength;
+            var initialPos = frame.Reader.Position;
+            frame.CheckUpcomingRead(26);
+            frame.Reader.Position += 24;
+            var edidLength = frame.Reader.ReadInt16();
+            frame.Reader.Position += edidLength;
 
             // Confirm FNAM
-            var type = HeaderTranslation.ReadNextSubRecordType(reader, out var len);
+            var type = HeaderTranslation.ReadNextSubRecordType(frame, out var len);
             if (!type.Equals(FNAM))
             {
-                var ex = new ArgumentException($"Could not find FNAM in its expected location: {reader.Position}");
+                var ex = new ArgumentException($"Could not find FNAM in its expected location: {frame.Reader.Position}");
                 if (!doMasks) throw ex;
                 return (null, new Global_ErrorMask()
                 {
@@ -45,7 +46,7 @@ namespace Mutagen
             }
 
             // Create proper Global subclass
-            var triggerChar = (char)reader.ReadByte();
+            var triggerChar = (char)frame.Reader.ReadByte();
             Global g;
             switch (triggerChar)
             {
@@ -68,17 +69,17 @@ namespace Mutagen
             }
 
             // Fill with major record fields
-            reader.Position = initialPos + 8;
+            frame.Reader.Position = initialPos + 8;
             MajorRecord.Fill_Binary(
-                reader,
+                frame,
                 g,
                 doMasks,
                 out var majorErrMask);
 
             // Skip to and read data
-            reader.Position += 13;
+            frame.Reader.Position += 13;
             var floatParse = Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
-                reader,
+                frame,
                 doMasks,
                 out var floatMask);
             if (floatParse.Succeeded)
@@ -100,7 +101,7 @@ namespace Mutagen
             return (g, errMask);
         }
 
-        private static void FillBinary_TypeChar(MutagenReader reader, Global item, bool doMasks, out Exception errorMask)
+        private static void FillBinary_TypeChar(MutagenFrame frame, Global item, bool doMasks, out Exception errorMask)
         {
             errorMask = null;
         }

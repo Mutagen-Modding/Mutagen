@@ -9,9 +9,9 @@ namespace Mutagen.Binary
         public readonly static Int32BinaryTranslation Instance = new Int32BinaryTranslation();
         public override byte? ExpectedLength => 4;
 
-        protected override int ParseValue(MutagenReader reader)
+        protected override int ParseValue(MutagenFrame reader)
         {
-            return reader.ReadInt32();
+            return reader.Reader.ReadInt32();
         }
 
         protected override void WriteValue(MutagenWriter writer, int item)

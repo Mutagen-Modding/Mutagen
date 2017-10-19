@@ -9,7 +9,7 @@ namespace Mutagen.Binary
     {
         public readonly static EnumBinaryTranslation<E> Instance = new EnumBinaryTranslation<E>();
 
-        public TryGet<E> Parse(MutagenReader reader, ContentLength length, bool doMasks, out Exception errorMask)
+        public TryGet<E> Parse(MutagenFrame reader, ContentLength length, bool doMasks, out Exception errorMask)
         {
             try
             {
@@ -52,19 +52,19 @@ namespace Mutagen.Binary
             }
         }
 
-        protected E ParseValue(MutagenReader reader, ContentLength length)
+        protected E ParseValue(MutagenFrame reader, ContentLength length)
         {
             int i;
             switch (length)
             {
                 case 1:
-                    i = reader.ReadByte();
+                    i = reader.Reader.ReadByte();
                     break;
                 case 2:
-                    i = reader.ReadInt16();
+                    i = reader.Reader.ReadInt16();
                     break;
                 case 4:
-                    i = reader.ReadInt32();
+                    i = reader.Reader.ReadInt32();
                     break;
                 default:
                     throw new NotImplementedException();
@@ -90,7 +90,7 @@ namespace Mutagen.Binary
             }
         }
 
-        TryGet<E?> IBinaryTranslation<E?, Exception>.Parse(MutagenReader reader, ContentLength length, bool doMasks, out Exception maskObj)
+        TryGet<E?> IBinaryTranslation<E?, Exception>.Parse(MutagenFrame reader, ContentLength length, bool doMasks, out Exception maskObj)
         {
             return Parse(
                 reader,

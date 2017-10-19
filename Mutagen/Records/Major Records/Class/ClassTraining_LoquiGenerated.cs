@@ -507,43 +507,43 @@ namespace Mutagen
 
         #region Binary Translation
         #region Binary Create
-        public static ClassTraining Create_Binary(MutagenReader reader)
+        public static ClassTraining Create_Binary(MutagenFrame frame)
         {
             return Create_Binary(
-                reader: reader,
+                frame: frame,
                 doMasks: false,
                 errorMask: out var errorMask);
         }
 
         public static ClassTraining Create_Binary(
-            MutagenReader reader,
+            MutagenFrame frame,
             out ClassTraining_ErrorMask errorMask)
         {
             return Create_Binary(
-                reader: reader,
+                frame: frame,
                 doMasks: true,
                 errorMask: out errorMask);
         }
 
         public static ClassTraining Create_Binary(
-            MutagenReader reader,
+            MutagenFrame frame,
             bool doMasks,
             out ClassTraining_ErrorMask errorMask)
         {
             var ret = Create_Binary(
-                reader: reader,
+                frame: frame,
                 doMasks: doMasks);
             errorMask = ret.ErrorMask;
             return ret.Object;
         }
 
         public static (ClassTraining Object, ClassTraining_ErrorMask ErrorMask) Create_Binary(
-            MutagenReader reader,
+            MutagenFrame frame,
             bool doMasks)
         {
             ClassTraining_ErrorMask errMaskRet = null;
             var ret = Create_Binary_Internal(
-                reader: reader,
+                frame: frame,
                 doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new ClassTraining_ErrorMask()) : default(Func<ClassTraining_ErrorMask>));
             return (ret, errMaskRet);
@@ -553,7 +553,8 @@ namespace Mutagen
         {
             using (var reader = new MutagenReader(path))
             {
-                return Create_Binary(reader: reader);
+                var frame = new MutagenFrame(reader);
+                return Create_Binary(frame: frame);
             }
         }
 
@@ -563,8 +564,9 @@ namespace Mutagen
         {
             using (var reader = new MutagenReader(path))
             {
+                var frame = new MutagenFrame(reader);
                 return Create_Binary(
-                    reader: reader,
+                    frame: frame,
                     errorMask: out errorMask);
             }
         }
@@ -573,7 +575,8 @@ namespace Mutagen
         {
             using (var reader = new MutagenReader(stream))
             {
-                return Create_Binary(reader: reader);
+                var frame = new MutagenFrame(reader);
+                return Create_Binary(frame: frame);
             }
         }
 
@@ -583,8 +586,9 @@ namespace Mutagen
         {
             using (var reader = new MutagenReader(stream))
             {
+                var frame = new MutagenFrame(reader);
                 return Create_Binary(
-                    reader: reader,
+                    frame: frame,
                     errorMask: out errorMask);
             }
         }
@@ -593,11 +597,11 @@ namespace Mutagen
 
         #region Binary Copy In
         public void CopyIn_Binary(
-            MutagenReader reader,
+            MutagenFrame frame,
             NotifyingFireParameters? cmds = null)
         {
             LoquiBinaryTranslation<ClassTraining, ClassTraining_ErrorMask>.Instance.CopyIn(
-                reader: reader,
+                frame: frame,
                 item: this,
                 skipProtected: true,
                 doMasks: false,
@@ -606,12 +610,12 @@ namespace Mutagen
         }
 
         public virtual void CopyIn_Binary(
-            MutagenReader reader,
+            MutagenFrame frame,
             out ClassTraining_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             LoquiBinaryTranslation<ClassTraining, ClassTraining_ErrorMask>.Instance.CopyIn(
-                reader: reader,
+                frame: frame,
                 item: this,
                 skipProtected: true,
                 doMasks: true,
@@ -625,8 +629,9 @@ namespace Mutagen
         {
             using (var reader = new MutagenReader(path))
             {
+                var frame = new MutagenFrame(reader);
                 this.CopyIn_Binary(
-                    reader: reader,
+                    frame: frame,
                     cmds: cmds);
             }
         }
@@ -638,8 +643,9 @@ namespace Mutagen
         {
             using (var reader = new MutagenReader(path))
             {
+                var frame = new MutagenFrame(reader);
                 this.CopyIn_Binary(
-                    reader: reader,
+                    frame: frame,
                     errorMask: out errorMask,
                     cmds: cmds);
             }
@@ -651,8 +657,9 @@ namespace Mutagen
         {
             using (var reader = new MutagenReader(stream))
             {
+                var frame = new MutagenFrame(reader);
                 this.CopyIn_Binary(
-                    reader: reader,
+                    frame: frame,
                     cmds: cmds);
             }
         }
@@ -664,8 +671,9 @@ namespace Mutagen
         {
             using (var reader = new MutagenReader(stream))
             {
+                var frame = new MutagenFrame(reader);
                 this.CopyIn_Binary(
-                    reader: reader,
+                    frame: frame,
                     errorMask: out errorMask,
                     cmds: cmds);
             }
@@ -744,16 +752,17 @@ namespace Mutagen
         #endregion
 
         private static ClassTraining Create_Binary_Internal(
-            MutagenReader reader,
+            MutagenFrame frame,
             bool doMasks,
             Func<ClassTraining_ErrorMask> errorMask)
         {
             var ret = new ClassTraining();
             try
             {
+                using (frame)
                 Fill_Binary_Structs(
                     item: ret,
-                    reader: reader,
+                    frame: frame,
                     doMasks: doMasks,
                     errorMask: errorMask);
             }
@@ -767,14 +776,15 @@ namespace Mutagen
 
         protected static void Fill_Binary_Structs(
             ClassTraining item,
-            MutagenReader reader,
+            MutagenFrame frame,
             bool doMasks,
             Func<ClassTraining_ErrorMask> errorMask)
         {
+            if (frame.Complete) return;
             {
                 Exception subMask;
                 var tryGet = Mutagen.Binary.EnumBinaryTranslation<Skill>.Instance.Parse(
-                    reader,
+                    frame,
                     doMasks: doMasks,
                     errorMask: out subMask,
                     length: 1);
@@ -785,10 +795,11 @@ namespace Mutagen
                     (int)ClassTraining_FieldIndex.TrainedSkill,
                     subMask);
             }
+            if (frame.Complete) return;
             {
                 Exception subMask;
                 var tryGet = Mutagen.Binary.ByteBinaryTranslation.Instance.Parse(
-                    reader,
+                    frame,
                     doMasks: doMasks,
                     errorMask: out subMask);
                 item._MaximumTrainingLevel.SetIfSucceeded(tryGet);
@@ -798,10 +809,11 @@ namespace Mutagen
                     (int)ClassTraining_FieldIndex.MaximumTrainingLevel,
                     subMask);
             }
+            if (frame.Complete) return;
             {
                 Exception subMask;
                 var tryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                    reader,
+                    frame,
                     doMasks: doMasks,
                     errorMask: out subMask,
                     length: 2);

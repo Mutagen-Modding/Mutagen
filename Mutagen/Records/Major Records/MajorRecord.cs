@@ -12,7 +12,7 @@ namespace Mutagen
     public partial class MajorRecord
     {
         internal static void Fill_Binary(
-            MutagenReader reader,
+            MutagenFrame reader,
             MajorRecord record,
             bool doMasks,
             out MajorRecord_ErrorMask errorMask)

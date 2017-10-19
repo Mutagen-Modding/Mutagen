@@ -309,11 +309,11 @@ namespace Mutagen
         #region Binary Translation
         #region Binary Copy In
         public override void CopyIn_Binary(
-            MutagenReader reader,
+            MutagenFrame frame,
             NotifyingFireParameters? cmds = null)
         {
             LoquiBinaryTranslation<NamedMajorRecord, NamedMajorRecord_ErrorMask>.Instance.CopyIn(
-                reader: reader,
+                frame: frame,
                 item: this,
                 skipProtected: true,
                 doMasks: false,
@@ -322,12 +322,12 @@ namespace Mutagen
         }
 
         public virtual void CopyIn_Binary(
-            MutagenReader reader,
+            MutagenFrame frame,
             out NamedMajorRecord_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             LoquiBinaryTranslation<NamedMajorRecord, NamedMajorRecord_ErrorMask>.Instance.CopyIn(
-                reader: reader,
+                frame: frame,
                 item: this,
                 skipProtected: true,
                 doMasks: true,
@@ -341,8 +341,9 @@ namespace Mutagen
         {
             using (var reader = new MutagenReader(path))
             {
+                var frame = new MutagenFrame(reader);
                 this.CopyIn_Binary(
-                    reader: reader,
+                    frame: frame,
                     cmds: cmds);
             }
         }
@@ -354,8 +355,9 @@ namespace Mutagen
         {
             using (var reader = new MutagenReader(path))
             {
+                var frame = new MutagenFrame(reader);
                 this.CopyIn_Binary(
-                    reader: reader,
+                    frame: frame,
                     errorMask: out errorMask,
                     cmds: cmds);
             }
@@ -367,8 +369,9 @@ namespace Mutagen
         {
             using (var reader = new MutagenReader(stream))
             {
+                var frame = new MutagenFrame(reader);
                 this.CopyIn_Binary(
-                    reader: reader,
+                    frame: frame,
                     cmds: cmds);
             }
         }
@@ -380,20 +383,21 @@ namespace Mutagen
         {
             using (var reader = new MutagenReader(stream))
             {
+                var frame = new MutagenFrame(reader);
                 this.CopyIn_Binary(
-                    reader: reader,
+                    frame: frame,
                     errorMask: out errorMask,
                     cmds: cmds);
             }
         }
 
         public override void CopyIn_Binary(
-            MutagenReader reader,
+            MutagenFrame frame,
             out MajorRecord_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             this.CopyIn_Binary(
-                reader: reader,
+                frame: frame,
                 errorMask: out NamedMajorRecord_ErrorMask errMask,
                 cmds: cmds);
             errorMask = errMask;
@@ -450,20 +454,21 @@ namespace Mutagen
 
         protected static void Fill_Binary_RecordTypes(
             NamedMajorRecord item,
-            MutagenReader reader,
+            MutagenFrame frame,
             bool doMasks,
             Func<NamedMajorRecord_ErrorMask> errorMask)
         {
             var nextRecordType = HeaderTranslation.ReadNextSubRecordType(
-                reader: reader,
+                frame: frame,
                 contentLength: out var subLength);
             switch (nextRecordType.Type)
             {
                 case "FULL":
+                if (frame.Complete) return;
                 {
                     Exception subMask;
                     var tryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
-                        reader,
+                        frame,
                         doMasks: doMasks,
                         errorMask: out subMask,
                         length: subLength);
@@ -476,10 +481,10 @@ namespace Mutagen
                 }
                 break;
                 default:
-                    reader.Position -= Constants.SUBRECORD_LENGTH;
+                    frame.Reader.Position -= Constants.SUBRECORD_LENGTH;
                     MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
-                        reader: reader,
+                        frame: frame,
                         doMasks: doMasks,
                         errorMask: errorMask);
                     break;

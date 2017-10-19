@@ -13,7 +13,7 @@ namespace Mutagen.Binary
 {
     public abstract class ContainerBinaryTranslation<T, M> : IBinaryTranslation<IEnumerable<T>, MaskItem<Exception, IEnumerable<M>>>
     {
-        public TryGet<IEnumerable<T>> Parse(MutagenReader reader, ContentLength length, bool doMasks, out MaskItem<Exception, IEnumerable<M>> maskObj)
+        public TryGet<IEnumerable<T>> Parse(MutagenFrame reader, ContentLength length, bool doMasks, out MaskItem<Exception, IEnumerable<M>> maskObj)
         {
             var transl = BinaryTranslator<T, M>.Translator;
             if (transl.Item.Failed)
@@ -24,11 +24,11 @@ namespace Mutagen.Binary
                 reader,
                 doMasks,
                 out maskObj,
-                transl: (MutagenReader r, bool internalDoMasks, out M obj) => transl.Item.Value.Parse(reader: r, length: length, doMasks: internalDoMasks, maskObj: out obj));
+                transl: (MutagenFrame r, bool internalDoMasks, out M obj) => transl.Item.Value.Parse(reader: r, length: length, doMasks: internalDoMasks, maskObj: out obj));
         }
 
         public TryGet<IEnumerable<T>> Parse(
-            MutagenReader reader,
+            MutagenFrame reader,
             bool doMasks,
             out MaskItem<Exception, IEnumerable<M>> maskObj,
             BinarySubParseDelegate<T, M> transl)
@@ -50,7 +50,7 @@ namespace Mutagen.Binary
         }
 
         public TryGet<IEnumerable<T>> ParseRepeatedItem(
-            MutagenReader reader,
+            MutagenFrame frame,
             bool doMasks,
             RecordType triggeringRecord,
             ObjectType objType,
@@ -63,7 +63,7 @@ namespace Mutagen.Binary
                 var ret = new List<T>();
                 while (true)
                 {
-                    var get = transl(reader, doMasks, out var subMaskObj);
+                    var get = transl(frame, doMasks, out var subMaskObj);
                     if (get.Succeeded)
                     {
                         ret.Add(get.Value);
@@ -81,7 +81,7 @@ namespace Mutagen.Binary
                         maskList.Add(subMaskObj);
                     }
 
-                    if (!HeaderTranslation.TryParseRecordType(reader, objType, triggeringRecord)) break;
+                    if (!HeaderTranslation.TryParseRecordType(frame, objType, triggeringRecord)) break;
                 }
                 maskObj = maskList == null ? null : new MaskItem<Exception, IEnumerable<M>>(null, maskList);
                 return TryGet<IEnumerable<T>>.Succeed(ret);
@@ -95,7 +95,7 @@ namespace Mutagen.Binary
         }
 
         public TryGet<IEnumerable<T>> ParseRepeatedItem(
-            MutagenReader reader,
+            MutagenFrame frame,
             bool doMasks,
             int amount,
             out MaskItem<Exception, IEnumerable<M>> maskObj,
@@ -107,7 +107,7 @@ namespace Mutagen.Binary
                 var ret = new List<T>();
                 for (int i = 0; i < amount; i++)
                 {
-                    var get = transl(reader, doMasks, out var subMaskObj);
+                    var get = transl(frame, doMasks, out var subMaskObj);
                     if (get.Succeeded)
                     {
                         ret.Add(get.Value);
@@ -136,7 +136,7 @@ namespace Mutagen.Binary
             }
         }
 
-        public abstract TryGet<T> ParseSingleItem(MutagenReader root, BinarySubParseDelegate<T, M> transl, bool doMasks, out M maskObj);
+        public abstract TryGet<T> ParseSingleItem(MutagenFrame frame, BinarySubParseDelegate<T, M> transl, bool doMasks, out M maskObj);
         
         void IBinaryTranslation<IEnumerable<T>, MaskItem<Exception, IEnumerable<M>>>.Write(MutagenWriter writer, IEnumerable<T> item, ContentLength length, bool doMasks, out MaskItem<Exception, IEnumerable<M>> maskObj)
         {

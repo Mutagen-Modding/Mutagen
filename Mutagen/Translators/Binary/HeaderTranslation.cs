@@ -11,28 +11,33 @@ namespace Mutagen.Binary
     public class HeaderTranslation
     {
         public static bool TryParse(
-            MutagenReader reader,
+            MutagenFrame frame,
             RecordType expectedHeader,
             out ContentLength contentLength,
             ContentLength lengthLength)
         {
-            var header = Encoding.ASCII.GetString(reader.ReadBytes(Constants.HEADER_LENGTH));
+            if (frame.TryCheckUpcomingRead(Constants.HEADER_LENGTH))
+            {
+                contentLength = -1;
+                return false;
+            }
+            var header = Encoding.ASCII.GetString(frame.Reader.ReadBytes(Constants.HEADER_LENGTH));
             if (!expectedHeader.Equals(header))
             {
-                contentLength = 0;
-                reader.Position -= Constants.HEADER_LENGTH;
+                contentLength = -1;
+                frame.Reader.Position -= Constants.HEADER_LENGTH;
                 return false;
             }
             switch (lengthLength)
             {
                 case 1:
-                    contentLength = reader.ReadByte();
+                    contentLength = frame.Reader.ReadByte();
                     break;
                 case 2:
-                    contentLength = reader.ReadInt16();
+                    contentLength = frame.Reader.ReadInt16();
                     break;
                 case 4:
-                    contentLength = reader.ReadInt32();
+                    contentLength = frame.Reader.ReadInt32();
                     break;
                 default:
                     throw new NotImplementedException();
@@ -41,12 +46,12 @@ namespace Mutagen.Binary
         }
 
         public static ContentLength Parse(
-            MutagenReader reader,
+            MutagenFrame frame,
             RecordType expectedHeader,
             ContentLength lengthLength)
         {
             if (!TryParse(
-                reader,
+                frame,
                 expectedHeader,
                 out var contentLength,
                 lengthLength))
@@ -56,52 +61,52 @@ namespace Mutagen.Binary
             return contentLength;
         }
 
-        public static FileLocation ParseRecord(
-            MutagenReader reader,
+        public static MutagenFrame ParseRecord(
+            MutagenFrame frame,
             RecordType expectedHeader)
         {
             if (!TryParse(
-                reader,
+                frame,
                 expectedHeader,
                 out var contentLength,
                 Constants.RECORD_LENGTHLENGTH))
             {
                 throw new ArgumentException($"Expected header was not read in: {expectedHeader}");
             }
-            return reader.Position + contentLength + Constants.RECORD_HEADER_SKIP;
+            return frame.Spawn(frame.Reader.Position + contentLength + Constants.RECORD_HEADER_SKIP);
         }
 
-        public static FileLocation ParseSubrecord(
-            MutagenReader reader,
+        public static MutagenFrame ParseSubrecord(
+            MutagenFrame frame,
             RecordType expectedHeader)
         {
             if (!TryParse(
-                reader,
+                frame,
                 expectedHeader,
                 out var contentLength,
                 Constants.SUBRECORD_LENGTHLENGTH))
             {
                 throw new ArgumentException($"Expected header was not read in: {expectedHeader}");
             }
-            return reader.Position + contentLength;
+            return frame.Spawn(frame.Reader.Position + contentLength);
         }
         
-        public static FileLocation ParseGroup(
-            MutagenReader reader)
+        public static MutagenFrame ParseGroup(
+            MutagenFrame frame)
         {
             if (!TryParse(
-                reader,
+                frame,
                 Mutagen.Internals.Group_Registration.GRUP_HEADER,
                 out var contentLength,
                 Constants.RECORD_LENGTHLENGTH))
             {
                 throw new ArgumentException($"Expected header was not read in: {Mutagen.Internals.Group_Registration.GRUP_HEADER}");
             }
-            return reader.Position + contentLength - Constants.HEADER_LENGTH - Constants.RECORD_LENGTHLENGTH;
+            return frame.Spawn(frame.Reader.Position + contentLength - Constants.HEADER_LENGTH - Constants.RECORD_LENGTHLENGTH);
         }
 
         public static bool TryParseRecordType(
-            MutagenReader reader,
+            MutagenFrame frame,
             ObjectType type,
             RecordType expectedHeader)
         {
@@ -121,7 +126,7 @@ namespace Mutagen.Binary
                     throw new ArgumentException();
             }
             if (TryParse(
-                reader,
+                frame,
                 expectedHeader,
                 out var contentLength,
                 lengthLength))
@@ -131,25 +136,25 @@ namespace Mutagen.Binary
             return false;
         }
 
-        public static FileLocation GetSubrecord(
-            MutagenReader reader,
+        public static MutagenFrame GetSubrecord(
+            MutagenFrame frame,
             RecordType expectedHeader)
         {
             var ret = ParseSubrecord(
-                reader,
+                frame,
                 expectedHeader);
-            reader.Position -= Constants.SUBRECORD_LENGTH;
+            frame.Reader.Position -= Constants.SUBRECORD_LENGTH;
             return ret;
         }
 
-        public static RecordType ReadNextRecordType(
+        protected static RecordType ReadNextRecordType(
             MutagenReader reader)
         {
             var header = Encoding.ASCII.GetString(reader.ReadBytes(Constants.HEADER_LENGTH));
             return new RecordType(header, validate: false);
         }
 
-        public static ContentLength ReadContentLength(
+        protected static ContentLength ReadContentLength(
             MutagenReader reader,
             ContentLength lengthLength)
         {
@@ -167,57 +172,59 @@ namespace Mutagen.Binary
         }
 
         public static RecordType ReadNextRecordType(
-            MutagenReader reader,
+            MutagenFrame frame,
             ContentLength lengthLength,
             out ContentLength contentLength)
         {
-            var ret = ReadNextRecordType(reader);
-            contentLength = ReadContentLength(reader, lengthLength);
+            frame.CheckUpcomingRead(Constants.HEADER_LENGTH + lengthLength);
+            var ret = ReadNextRecordType(frame.Reader);
+            contentLength = ReadContentLength(frame.Reader, lengthLength);
             return ret;
         }
 
         public static RecordType ReadNextRecordType(
-            MutagenReader reader,
+            MutagenFrame frame,
             out ContentLength contentLength)
         {
             return ReadNextRecordType(
-                reader,
+                frame,
                 Constants.RECORD_LENGTHLENGTH,
                 out contentLength);
         }
 
         public static RecordType ReadNextSubRecordType(
-            MutagenReader reader,
+            MutagenFrame frame,
             out ContentLength contentLength)
         {
             return ReadNextRecordType(
-                reader,
+                frame,
                 Constants.SUBRECORD_LENGTHLENGTH,
                 out contentLength);
         }
 
         public static RecordType ReadNextType(
-            MutagenReader reader,
+            MutagenFrame frame,
             out ContentLength contentLength)
         {
-            var ret = ReadNextRecordType(reader);
-            contentLength = ReadContentLength(reader, Constants.RECORD_LENGTHLENGTH);
+            frame.CheckUpcomingRead(Constants.HEADER_LENGTH + Constants.RECORD_LENGTHLENGTH);
+            var ret = ReadNextRecordType(frame.Reader);
+            contentLength = ReadContentLength(frame.Reader, Constants.RECORD_LENGTHLENGTH);
             if (ret.Equals(Mutagen.Internals.Group_Registration.GRUP_HEADER))
             {
-                return ReadNextRecordType(reader);
+                return ReadNextRecordType(frame.Reader);
             }
             return ret;
         }
 
         public static RecordType GetNextSubRecordType(
-            MutagenReader reader,
+            MutagenFrame frame,
             out ContentLength contentLength)
         {
             var ret = ReadNextRecordType(
-                reader,
+                frame,
                 Constants.SUBRECORD_LENGTHLENGTH,
                 out contentLength);
-            reader.Position -= Constants.SUBRECORD_LENGTH;
+            frame.Reader.Position -= Constants.SUBRECORD_LENGTH;
             return ret;
         }
     }

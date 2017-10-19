@@ -600,46 +600,46 @@ namespace Mutagen
 
         #region Binary Translation
         #region Binary Create
-        public static Group<T> Create_Binary(MutagenReader reader)
+        public static Group<T> Create_Binary(MutagenFrame frame)
         {
             return Create_Binary<MajorRecord_ErrorMask>(
-                reader: reader,
+                frame: frame,
                 doMasks: false,
                 errorMask: out var errorMask);
         }
 
         public static Group<T> Create_Binary<T_ErrMask>(
-            MutagenReader reader,
+            MutagenFrame frame,
             out Group_ErrorMask<T_ErrMask> errorMask)
             where T_ErrMask : MajorRecord_ErrorMask, new()
         {
             return Create_Binary(
-                reader: reader,
+                frame: frame,
                 doMasks: true,
                 errorMask: out errorMask);
         }
 
         public static Group<T> Create_Binary<T_ErrMask>(
-            MutagenReader reader,
+            MutagenFrame frame,
             bool doMasks,
             out Group_ErrorMask<T_ErrMask> errorMask)
             where T_ErrMask : MajorRecord_ErrorMask, new()
         {
             var ret = Create_Binary<T_ErrMask>(
-                reader: reader,
+                frame: frame,
                 doMasks: doMasks);
             errorMask = ret.ErrorMask;
             return ret.Object;
         }
 
         public static (Group<T> Object, Group_ErrorMask<T_ErrMask> ErrorMask) Create_Binary<T_ErrMask>(
-            MutagenReader reader,
+            MutagenFrame frame,
             bool doMasks)
             where T_ErrMask : MajorRecord_ErrorMask, new()
         {
             Group_ErrorMask<T_ErrMask> errMaskRet = null;
             var ret = Create_Binary_Internal(
-                reader: reader,
+                frame: frame,
                 doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Group_ErrorMask<T_ErrMask>()) : default(Func<Group_ErrorMask<T_ErrMask>>));
             return (ret, errMaskRet);
@@ -649,7 +649,8 @@ namespace Mutagen
         {
             using (var reader = new MutagenReader(path))
             {
-                return Create_Binary(reader: reader);
+                var frame = new MutagenFrame(reader);
+                return Create_Binary(frame: frame);
             }
         }
 
@@ -660,8 +661,9 @@ namespace Mutagen
         {
             using (var reader = new MutagenReader(path))
             {
+                var frame = new MutagenFrame(reader);
                 return Create_Binary(
-                    reader: reader,
+                    frame: frame,
                     errorMask: out errorMask);
             }
         }
@@ -670,7 +672,8 @@ namespace Mutagen
         {
             using (var reader = new MutagenReader(stream))
             {
-                return Create_Binary(reader: reader);
+                var frame = new MutagenFrame(reader);
+                return Create_Binary(frame: frame);
             }
         }
 
@@ -681,8 +684,9 @@ namespace Mutagen
         {
             using (var reader = new MutagenReader(stream))
             {
+                var frame = new MutagenFrame(reader);
                 return Create_Binary(
-                    reader: reader,
+                    frame: frame,
                     errorMask: out errorMask);
             }
         }
@@ -691,11 +695,11 @@ namespace Mutagen
 
         #region Binary Copy In
         public void CopyIn_Binary(
-            MutagenReader reader,
+            MutagenFrame frame,
             NotifyingFireParameters? cmds = null)
         {
             LoquiBinaryTranslation<Group<T>, Group_ErrorMask<MajorRecord_ErrorMask>>.Instance.CopyIn(
-                reader: reader,
+                frame: frame,
                 item: this,
                 skipProtected: true,
                 doMasks: false,
@@ -704,13 +708,13 @@ namespace Mutagen
         }
 
         public virtual void CopyIn_Binary<T_ErrMask>(
-            MutagenReader reader,
+            MutagenFrame frame,
             out Group_ErrorMask<T_ErrMask> errorMask,
             NotifyingFireParameters? cmds = null)
             where T_ErrMask : MajorRecord_ErrorMask, new()
         {
             LoquiBinaryTranslation<Group<T>, Group_ErrorMask<T_ErrMask>>.Instance.CopyIn(
-                reader: reader,
+                frame: frame,
                 item: this,
                 skipProtected: true,
                 doMasks: true,
@@ -724,8 +728,9 @@ namespace Mutagen
         {
             using (var reader = new MutagenReader(path))
             {
+                var frame = new MutagenFrame(reader);
                 this.CopyIn_Binary(
-                    reader: reader,
+                    frame: frame,
                     cmds: cmds);
             }
         }
@@ -738,8 +743,9 @@ namespace Mutagen
         {
             using (var reader = new MutagenReader(path))
             {
+                var frame = new MutagenFrame(reader);
                 this.CopyIn_Binary(
-                    reader: reader,
+                    frame: frame,
                     errorMask: out errorMask,
                     cmds: cmds);
             }
@@ -751,8 +757,9 @@ namespace Mutagen
         {
             using (var reader = new MutagenReader(stream))
             {
+                var frame = new MutagenFrame(reader);
                 this.CopyIn_Binary(
-                    reader: reader,
+                    frame: frame,
                     cmds: cmds);
             }
         }
@@ -765,8 +772,9 @@ namespace Mutagen
         {
             using (var reader = new MutagenReader(stream))
             {
+                var frame = new MutagenFrame(reader);
                 this.CopyIn_Binary(
-                    reader: reader,
+                    frame: frame,
                     errorMask: out errorMask,
                     cmds: cmds);
             }
@@ -867,45 +875,30 @@ namespace Mutagen
         #endregion
 
         private static Group<T> Create_Binary_Internal<T_ErrMask>(
-            MutagenReader reader,
+            MutagenFrame frame,
             bool doMasks,
-            Func<Group_ErrorMask<T_ErrMask>> errorMask)
-            where T_ErrMask : MajorRecord_ErrorMask, new()
-        {
-            var finalPosition = HeaderTranslation.ParseGroup(reader);
-            return Create_Binary_Internal(
-                reader: reader,
-                doMasks: doMasks,
-                finalPosition: finalPosition,
-                errorMask: errorMask);
-        }
-
-        private static Group<T> Create_Binary_Internal<T_ErrMask>(
-            MutagenReader reader,
-            bool doMasks,
-            long finalPosition,
             Func<Group_ErrorMask<T_ErrMask>> errorMask)
             where T_ErrMask : MajorRecord_ErrorMask, new()
         {
             var ret = new Group<T>();
             try
             {
-                Fill_Binary_Structs(
-                    item: ret,
-                    reader: reader,
-                    doMasks: doMasks,
-                    errorMask: errorMask);
-                while (reader.Position < finalPosition)
+                frame = HeaderTranslation.ParseGroup(frame);
+                using (frame)
                 {
-                    Fill_Binary_RecordTypes(
+                    Fill_Binary_Structs(
                         item: ret,
-                        reader: reader,
+                        frame: frame,
                         doMasks: doMasks,
                         errorMask: errorMask);
-                }
-                if (reader.Position != finalPosition)
-                {
-                    throw new ArgumentException("Read more bytes than allocated");
+                    while (!frame.Complete)
+                    {
+                        Fill_Binary_RecordTypes(
+                            item: ret,
+                            frame: frame,
+                            doMasks: doMasks,
+                            errorMask: errorMask);
+                    }
                 }
             }
             catch (Exception ex)
@@ -913,13 +906,12 @@ namespace Mutagen
             {
                 errorMask().Overall = ex;
             }
-            reader.Position = finalPosition;
             return ret;
         }
 
         protected static void Fill_Binary_Structs<T_ErrMask>(
             Group<T> item,
-            MutagenReader reader,
+            MutagenFrame frame,
             bool doMasks,
             Func<Group_ErrorMask<T_ErrMask>> errorMask)
             where T_ErrMask : MajorRecord_ErrorMask, new()
@@ -927,7 +919,7 @@ namespace Mutagen
             {
                 Exception subMask;
                 FillBinary_ContainedRecordType(
-                    reader: reader,
+                    frame: frame,
                     item: item,
                     doMasks: doMasks,
                     errorMask: out subMask);
@@ -937,10 +929,11 @@ namespace Mutagen
                     (int)Group_FieldIndex.ContainedRecordType,
                     subMask);
             }
+            if (frame.Complete) return;
             {
                 Exception subMask;
                 var tryGet = Mutagen.Binary.Int32BinaryTranslation.Instance.Parse(
-                    reader,
+                    frame,
                     doMasks: doMasks,
                     errorMask: out subMask);
                 item._GroupType.SetIfSucceeded(tryGet);
@@ -950,10 +943,11 @@ namespace Mutagen
                     (int)Group_FieldIndex.GroupType,
                     subMask);
             }
+            if (frame.Complete) return;
             {
                 Exception subMask;
                 var tryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                    reader,
+                    frame,
                     doMasks: doMasks,
                     errorMask: out subMask,
                     length: 4);
@@ -968,29 +962,30 @@ namespace Mutagen
 
         protected static void Fill_Binary_RecordTypes<T_ErrMask>(
             Group<T> item,
-            MutagenReader reader,
+            MutagenFrame frame,
             bool doMasks,
             Func<Group_ErrorMask<T_ErrMask>> errorMask)
             where T_ErrMask : MajorRecord_ErrorMask, new()
         {
             var nextRecordType = HeaderTranslation.ReadNextRecordType(
-                reader: reader,
+                frame: frame,
                 contentLength: out var subLength);
             switch (nextRecordType.Type)
             {
                 default:
                     if (nextRecordType.Equals(Group<T>.T_RecordType))
                     {
+                        if (frame.Complete) return;
                         MaskItem<Exception, IEnumerable<MaskItem<Exception, T_ErrMask>>> subMask;
                         var listTryGet = Mutagen.Binary.ListBinaryTranslation<T, MaskItem<Exception, T_ErrMask>>.Instance.ParseRepeatedItem(
-                            reader: reader,
+                            frame: frame,
                             triggeringRecord: Group<T>.T_RecordType,
                             doMasks: doMasks,
                             objType: ObjectType.Record,
                             maskObj: out subMask,
-                            transl: (MutagenReader r, bool listDoMasks, out MaskItem<Exception, T_ErrMask> listSubMask) =>
+                            transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, T_ErrMask> listSubMask) =>
                             {
-                                r.Position -= Constants.RECORD_LENGTH;
+                                r.Reader.Position -= Constants.RECORD_LENGTH;
                                 return LoquiBinaryTranslation<T, T_ErrMask>.Instance.Parse(
                                     reader: r,
                                     doMasks: listDoMasks,
@@ -1005,7 +1000,7 @@ namespace Mutagen
                             subMask);
                         break;
                     }
-                    throw new ArgumentException($"Unexpected header {nextRecordType.Type} at position {reader.Position}");
+                    throw new ArgumentException($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
             }
         }
 
