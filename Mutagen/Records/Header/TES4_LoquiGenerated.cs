@@ -1079,7 +1079,6 @@ namespace Mutagen
                         maskObj: out subMask,
                         transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, MasterReference_ErrorMask> listSubMask) =>
                         {
-                            r.Reader.Position -= Constants.SUBRECORD_LENGTH;
                             return LoquiBinaryTranslation<MasterReference, MasterReference_ErrorMask>.Instance.Parse(
                                 reader: r,
                                 doMasks: listDoMasks,

@@ -1006,7 +1006,6 @@ namespace Mutagen
             if (frame.Complete) return;
             {
                 MaskItem<Exception, ClassTraining_ErrorMask> subMask;
-                frame.Reader.Position -= Constants.SUBRECORD_LENGTH;
                 var tryGet = LoquiBinaryTranslation<ClassTraining, ClassTraining_ErrorMask>.Instance.Parse(
                     reader: frame,
                     doMasks: doMasks,

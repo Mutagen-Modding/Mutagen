@@ -142,6 +142,7 @@ namespace Mutagen.Generation
             switch (objType)
             {
                 case ObjectType.Struct:
+                    break;
                 case ObjectType.Subrecord:
                     fg.AppendLine($"{readerAccessor}.Reader.Position -= Constants.SUBRECORD_LENGTH;");
                     break;
