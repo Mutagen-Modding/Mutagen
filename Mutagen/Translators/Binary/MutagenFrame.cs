@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Binary
 {
-    [DebuggerDisplay("Test}")]
     public struct MutagenFrame : IDisposable
     {
         public readonly MutagenReader Reader;
@@ -60,7 +59,7 @@ namespace Mutagen.Binary
 
         public override string ToString()
         {
-            return $"{this.Position} - {this.FinalPosition} ({this.Length})";
+            return $"{this.Position} - {this.FinalPosition - 1} ({this.Length})";
         }
 
         public MutagenFrame Spawn(FileLocation finalPosition)
