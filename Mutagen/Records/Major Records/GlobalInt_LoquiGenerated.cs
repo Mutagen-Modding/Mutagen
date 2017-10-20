@@ -17,6 +17,7 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
+using System.Diagnostics;
 using Mutagen.Binary;
 
 namespace Mutagen
@@ -125,6 +126,7 @@ namespace Mutagen
 
         #region XML Translation
         #region XML Create
+        [DebuggerStepThrough]
         public new static GlobalInt Create_XML(XElement root)
         {
             return Create_XML(
@@ -133,6 +135,7 @@ namespace Mutagen
                 errorMask: out var errorMask);
         }
 
+        [DebuggerStepThrough]
         public static GlobalInt Create_XML(
             XElement root,
             out GlobalInt_ErrorMask errorMask)
@@ -143,6 +146,7 @@ namespace Mutagen
                 errorMask: out errorMask);
         }
 
+        [DebuggerStepThrough]
         public static GlobalInt Create_XML(
             XElement root,
             bool doMasks,
@@ -155,6 +159,7 @@ namespace Mutagen
             return ret.Object;
         }
 
+        [DebuggerStepThrough]
         public static (GlobalInt Object, GlobalInt_ErrorMask ErrorMask) Create_XML(
             XElement root,
             bool doMasks)
@@ -460,6 +465,7 @@ namespace Mutagen
 
         #region Binary Translation
         #region Binary Create
+        [DebuggerStepThrough]
         public new static GlobalInt Create_Binary(MutagenFrame frame)
         {
             return Create_Binary(
@@ -468,6 +474,7 @@ namespace Mutagen
                 errorMask: out var errorMask);
         }
 
+        [DebuggerStepThrough]
         public static GlobalInt Create_Binary(
             MutagenFrame frame,
             out GlobalInt_ErrorMask errorMask)
@@ -478,6 +485,7 @@ namespace Mutagen
                 errorMask: out errorMask);
         }
 
+        [DebuggerStepThrough]
         public static GlobalInt Create_Binary(
             MutagenFrame frame,
             bool doMasks,
@@ -490,6 +498,7 @@ namespace Mutagen
             return ret.Object;
         }
 
+        [DebuggerStepThrough]
         public static (GlobalInt Object, GlobalInt_ErrorMask ErrorMask) Create_Binary(
             MutagenFrame frame,
             bool doMasks)

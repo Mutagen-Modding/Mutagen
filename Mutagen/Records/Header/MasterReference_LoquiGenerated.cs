@@ -17,6 +17,7 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
+using System.Diagnostics;
 using Mutagen.Binary;
 
 namespace Mutagen
@@ -148,6 +149,7 @@ namespace Mutagen
 
         #region XML Translation
         #region XML Create
+        [DebuggerStepThrough]
         public static MasterReference Create_XML(XElement root)
         {
             return Create_XML(
@@ -156,6 +158,7 @@ namespace Mutagen
                 errorMask: out var errorMask);
         }
 
+        [DebuggerStepThrough]
         public static MasterReference Create_XML(
             XElement root,
             out MasterReference_ErrorMask errorMask)
@@ -166,6 +169,7 @@ namespace Mutagen
                 errorMask: out errorMask);
         }
 
+        [DebuggerStepThrough]
         public static MasterReference Create_XML(
             XElement root,
             bool doMasks,
@@ -178,6 +182,7 @@ namespace Mutagen
             return ret.Object;
         }
 
+        [DebuggerStepThrough]
         public static (MasterReference Object, MasterReference_ErrorMask ErrorMask) Create_XML(
             XElement root,
             bool doMasks)
@@ -468,6 +473,7 @@ namespace Mutagen
 
         #region Binary Translation
         #region Binary Create
+        [DebuggerStepThrough]
         public static MasterReference Create_Binary(MutagenFrame frame)
         {
             return Create_Binary(
@@ -476,6 +482,7 @@ namespace Mutagen
                 errorMask: out var errorMask);
         }
 
+        [DebuggerStepThrough]
         public static MasterReference Create_Binary(
             MutagenFrame frame,
             out MasterReference_ErrorMask errorMask)
@@ -486,6 +493,7 @@ namespace Mutagen
                 errorMask: out errorMask);
         }
 
+        [DebuggerStepThrough]
         public static MasterReference Create_Binary(
             MutagenFrame frame,
             bool doMasks,
@@ -498,6 +506,7 @@ namespace Mutagen
             return ret.Object;
         }
 
+        [DebuggerStepThrough]
         public static (MasterReference Object, MasterReference_ErrorMask ErrorMask) Create_Binary(
             MutagenFrame frame,
             bool doMasks)
@@ -721,18 +730,20 @@ namespace Mutagen
             try
             {
                 using (frame)
-                Fill_Binary_Structs(
-                    item: ret,
-                    frame: frame,
-                    doMasks: doMasks,
-                    errorMask: errorMask);
-                while (true)
                 {
-                    Fill_Binary_RecordTypes(
+                    Fill_Binary_Structs(
                         item: ret,
                         frame: frame,
                         doMasks: doMasks,
                         errorMask: errorMask);
+                    while (true)
+                    {
+                        Fill_Binary_RecordTypes(
+                            item: ret,
+                            frame: frame,
+                            doMasks: doMasks,
+                            errorMask: errorMask);
+                    }
                 }
             }
             catch (Exception ex)

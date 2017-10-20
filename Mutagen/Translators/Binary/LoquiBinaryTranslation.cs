@@ -4,6 +4,7 @@ using Noggog.Notifying;
 using Noggog.Utility;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -86,6 +87,7 @@ namespace Mutagen.Binary
             mask = maskObj;
         }
 
+        [DebuggerStepThrough]
         public static CREATE_FUNC GetCreateFunc()
         {
             var tType = typeof(T);
@@ -122,6 +124,7 @@ namespace Mutagen.Binary
             };
         }
 
+        [DebuggerStepThrough]
         public static WRITE_FUNC GetWriteFunc()
         {
             var method = typeof(T).GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
@@ -145,6 +148,7 @@ namespace Mutagen.Binary
             }
         }
 
+        [DebuggerStepThrough]
         public TryGet<T> Parse(MutagenFrame reader, bool doMasks, out MaskItem<Exception, M> mask)
         {
             try

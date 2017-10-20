@@ -84,7 +84,7 @@ namespace Mutagen.Generation
 
         public override IEnumerable<string> RequiredUsingStatements()
         {
-            yield return "Mutagen.Binary";
+            return base.RequiredUsingStatements().And("Mutagen.Binary");
         }
 
         public override IEnumerable<string> Interfaces(ObjectGeneration obj)
@@ -209,7 +209,7 @@ namespace Mutagen.Generation
                             }
                         }
                         fg.AppendLine("using (frame)");
-                        using (new BraceWrapper(fg, doIt: objType != ObjectType.Struct))
+                        using (new BraceWrapper(fg))
                         {
                             using (var args = new ArgsWrapper(fg,
                                 $"Fill_{ModuleNickname}_Structs"))

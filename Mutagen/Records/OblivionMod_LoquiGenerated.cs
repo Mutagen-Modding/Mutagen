@@ -18,6 +18,7 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
+using System.Diagnostics;
 using Mutagen.Binary;
 
 namespace Mutagen
@@ -187,6 +188,7 @@ namespace Mutagen
 
         #region XML Translation
         #region XML Create
+        [DebuggerStepThrough]
         public static OblivionMod Create_XML(XElement root)
         {
             return Create_XML(
@@ -195,6 +197,7 @@ namespace Mutagen
                 errorMask: out var errorMask);
         }
 
+        [DebuggerStepThrough]
         public static OblivionMod Create_XML(
             XElement root,
             out OblivionMod_ErrorMask errorMask)
@@ -205,6 +208,7 @@ namespace Mutagen
                 errorMask: out errorMask);
         }
 
+        [DebuggerStepThrough]
         public static OblivionMod Create_XML(
             XElement root,
             bool doMasks,
@@ -217,6 +221,7 @@ namespace Mutagen
             return ret.Object;
         }
 
+        [DebuggerStepThrough]
         public static (OblivionMod Object, OblivionMod_ErrorMask ErrorMask) Create_XML(
             XElement root,
             bool doMasks)
@@ -537,6 +542,7 @@ namespace Mutagen
 
         #region Binary Translation
         #region Binary Create
+        [DebuggerStepThrough]
         public static OblivionMod Create_Binary(MutagenFrame frame)
         {
             return Create_Binary(
@@ -545,6 +551,7 @@ namespace Mutagen
                 errorMask: out var errorMask);
         }
 
+        [DebuggerStepThrough]
         public static OblivionMod Create_Binary(
             MutagenFrame frame,
             out OblivionMod_ErrorMask errorMask)
@@ -555,6 +562,7 @@ namespace Mutagen
                 errorMask: out errorMask);
         }
 
+        [DebuggerStepThrough]
         public static OblivionMod Create_Binary(
             MutagenFrame frame,
             bool doMasks,
@@ -567,6 +575,7 @@ namespace Mutagen
             return ret.Object;
         }
 
+        [DebuggerStepThrough]
         public static (OblivionMod Object, OblivionMod_ErrorMask ErrorMask) Create_Binary(
             MutagenFrame frame,
             bool doMasks)

@@ -48,7 +48,7 @@ namespace Mutagen.Binary
                 return TryGet<IEnumerable<T>>.Failure;
             }
         }
-
+        
         public TryGet<IEnumerable<T>> ParseRepeatedItem(
             MutagenFrame frame,
             bool doMasks,

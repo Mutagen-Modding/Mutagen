@@ -17,6 +17,7 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
+using System.Diagnostics;
 using Mutagen.Binary;
 
 namespace Mutagen
@@ -126,6 +127,7 @@ namespace Mutagen
 
         #region XML Translation
         #region XML Create
+        [DebuggerStepThrough]
         public new static GameSettingInt Create_XML(XElement root)
         {
             return Create_XML(
@@ -134,6 +136,7 @@ namespace Mutagen
                 errorMask: out var errorMask);
         }
 
+        [DebuggerStepThrough]
         public static GameSettingInt Create_XML(
             XElement root,
             out GameSettingInt_ErrorMask errorMask)
@@ -144,6 +147,7 @@ namespace Mutagen
                 errorMask: out errorMask);
         }
 
+        [DebuggerStepThrough]
         public static GameSettingInt Create_XML(
             XElement root,
             bool doMasks,
@@ -156,6 +160,7 @@ namespace Mutagen
             return ret.Object;
         }
 
+        [DebuggerStepThrough]
         public static (GameSettingInt Object, GameSettingInt_ErrorMask ErrorMask) Create_XML(
             XElement root,
             bool doMasks)
@@ -461,6 +466,7 @@ namespace Mutagen
 
         #region Binary Translation
         #region Binary Create
+        [DebuggerStepThrough]
         public new static GameSettingInt Create_Binary(MutagenFrame frame)
         {
             return Create_Binary(
@@ -469,6 +475,7 @@ namespace Mutagen
                 errorMask: out var errorMask);
         }
 
+        [DebuggerStepThrough]
         public static GameSettingInt Create_Binary(
             MutagenFrame frame,
             out GameSettingInt_ErrorMask errorMask)
@@ -479,6 +486,7 @@ namespace Mutagen
                 errorMask: out errorMask);
         }
 
+        [DebuggerStepThrough]
         public static GameSettingInt Create_Binary(
             MutagenFrame frame,
             bool doMasks,
@@ -491,6 +499,7 @@ namespace Mutagen
             return ret.Object;
         }
 
+        [DebuggerStepThrough]
         public static (GameSettingInt Object, GameSettingInt_ErrorMask ErrorMask) Create_Binary(
             MutagenFrame frame,
             bool doMasks)

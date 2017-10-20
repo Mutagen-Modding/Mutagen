@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>b1874137e08bebe6c5bdabf74a9dce79a6c7a4c8</Sha>
+         <Sha>d59818df83d0c2114b8fe4c055e94575b02c283b</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>10-17-2017 23:39:43</CommitDate>
-         <Description>static ErrorMask.HandleException</Description>
+         <CommitDate>10-19-2017 23:54:35</CommitDate>
+         <Description>DebuggerStepThroughs added</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

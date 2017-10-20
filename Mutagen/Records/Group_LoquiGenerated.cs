@@ -17,6 +17,7 @@ using System.Xml.Linq;
 using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
+using System.Diagnostics;
 using Mutagen.Binary;
 
 namespace Mutagen
@@ -194,6 +195,7 @@ namespace Mutagen
 
         #region XML Translation
         #region XML Create
+        [DebuggerStepThrough]
         public static Group<T> Create_XML(XElement root)
         {
             return Create_XML<MajorRecord_ErrorMask>(
@@ -202,6 +204,7 @@ namespace Mutagen
                 errorMask: out var errorMask);
         }
 
+        [DebuggerStepThrough]
         public static Group<T> Create_XML<T_ErrMask>(
             XElement root,
             out Group_ErrorMask<T_ErrMask> errorMask)
@@ -213,6 +216,7 @@ namespace Mutagen
                 errorMask: out errorMask);
         }
 
+        [DebuggerStepThrough]
         public static Group<T> Create_XML<T_ErrMask>(
             XElement root,
             bool doMasks,
@@ -226,6 +230,7 @@ namespace Mutagen
             return ret.Object;
         }
 
+        [DebuggerStepThrough]
         public static (Group<T> Object, Group_ErrorMask<T_ErrMask> ErrorMask) Create_XML<T_ErrMask>(
             XElement root,
             bool doMasks)
@@ -600,6 +605,7 @@ namespace Mutagen
 
         #region Binary Translation
         #region Binary Create
+        [DebuggerStepThrough]
         public static Group<T> Create_Binary(MutagenFrame frame)
         {
             return Create_Binary<MajorRecord_ErrorMask>(
@@ -608,6 +614,7 @@ namespace Mutagen
                 errorMask: out var errorMask);
         }
 
+        [DebuggerStepThrough]
         public static Group<T> Create_Binary<T_ErrMask>(
             MutagenFrame frame,
             out Group_ErrorMask<T_ErrMask> errorMask)
@@ -619,6 +626,7 @@ namespace Mutagen
                 errorMask: out errorMask);
         }
 
+        [DebuggerStepThrough]
         public static Group<T> Create_Binary<T_ErrMask>(
             MutagenFrame frame,
             bool doMasks,
@@ -632,6 +640,7 @@ namespace Mutagen
             return ret.Object;
         }
 
+        [DebuggerStepThrough]
         public static (Group<T> Object, Group_ErrorMask<T_ErrMask> ErrorMask) Create_Binary<T_ErrMask>(
             MutagenFrame frame,
             bool doMasks)
