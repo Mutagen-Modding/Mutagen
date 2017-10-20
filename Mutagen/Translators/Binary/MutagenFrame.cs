@@ -1,22 +1,25 @@
 ﻿using Mutagen.Internals;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Mutagen.Binary
 {
+    [DebuggerDisplay("Test}")]
     public struct MutagenFrame : IDisposable
     {
         public readonly MutagenReader Reader;
         public readonly FileLocation FinalPosition;
-        public bool Complete => this.Position < this.FinalPosition;
+        public bool Complete => this.Position >= this.FinalPosition;
         public FileLocation Position
         {
             get => this.Reader.Position;
             set => this.Reader.Position = value;
         }
+        public ContentLength Length => this.FinalPosition - this.Position;
 
         public MutagenFrame(MutagenReader reader)
         {
@@ -53,6 +56,11 @@ namespace Mutagen.Binary
                 this.Reader.Position = this.FinalPosition;
                 throw new ArgumentException(err);
             }
+        }
+
+        public override string ToString()
+        {
+            return $"{this.Position} - {this.FinalPosition} ({this.Length})";
         }
 
         public MutagenFrame Spawn(FileLocation finalPosition)

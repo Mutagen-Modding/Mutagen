@@ -16,7 +16,7 @@ namespace Mutagen.Binary
             out ContentLength contentLength,
             ContentLength lengthLength)
         {
-            if (frame.TryCheckUpcomingRead(Constants.HEADER_LENGTH))
+            if (!frame.TryCheckUpcomingRead(Constants.HEADER_LENGTH))
             {
                 contentLength = -1;
                 return false;
@@ -28,7 +28,7 @@ namespace Mutagen.Binary
                 frame.Reader.Position -= Constants.HEADER_LENGTH;
                 return false;
             }
-            switch (lengthLength)
+            switch (lengthLength.Length)
             {
                 case 1:
                     contentLength = frame.Reader.ReadByte();
@@ -158,7 +158,7 @@ namespace Mutagen.Binary
             MutagenReader reader,
             ContentLength lengthLength)
         {
-            switch (lengthLength)
+            switch (lengthLength.Length)
             {
                 case 1:
                     return reader.ReadByte();

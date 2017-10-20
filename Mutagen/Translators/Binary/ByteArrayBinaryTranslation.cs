@@ -18,7 +18,7 @@ namespace Mutagen.Binary
 
         protected override Byte[] ParseValue(MutagenFrame reader, ContentLength length)
         {
-            return reader.Reader.ReadBytes(length);
+            return reader.Reader.ReadBytes(length.Length);
         }
 
         protected override byte[] ParseBytes(byte[] bytes)

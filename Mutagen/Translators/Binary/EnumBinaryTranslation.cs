@@ -55,7 +55,7 @@ namespace Mutagen.Binary
         protected E ParseValue(MutagenFrame reader, ContentLength length)
         {
             int i;
-            switch (length)
+            switch (length.Length)
             {
                 case 1:
                     i = reader.Reader.ReadByte();
@@ -74,7 +74,7 @@ namespace Mutagen.Binary
 
         protected void WriteValue(MutagenWriter writer, E item, ContentLength length)
         {
-            switch (length)
+            switch (length.Length)
             {
                 case 1:
                     writer.Write(item.ToByte(null));

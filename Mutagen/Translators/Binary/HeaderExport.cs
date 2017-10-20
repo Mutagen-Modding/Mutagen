@@ -62,10 +62,10 @@ namespace Mutagen.Binary
             switch (lengthLength)
             {
                 case 2:
-                    this.Writer.Write((Int16)totalLength);
+                    this.Writer.Write((Int16)totalLength.Length);
                     break;
                 case 4:
-                    this.Writer.Write((Int32)totalLength);
+                    this.Writer.Write((Int32)totalLength.Length);
                     break;
                 default:
                     throw new NotImplementedException();
