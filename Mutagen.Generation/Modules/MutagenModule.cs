@@ -115,6 +115,7 @@ namespace Mutagen.Generation
                     }
                 }
             }
+            obj.CustomData[Constants.FAIL_ON_UNKNOWN] = obj.Node.GetAttribute<bool>("failOnUnknownType", defaultVal: true);
 
             if (isGRUP)
             {

@@ -903,7 +903,9 @@ namespace Mutagen
                 }
                 break;
                 default:
-                    throw new ArgumentException($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
+                    errorMask().Warnings.Add($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
+                    frame.Position += contentLength;
+                    break;
             }
         }
 

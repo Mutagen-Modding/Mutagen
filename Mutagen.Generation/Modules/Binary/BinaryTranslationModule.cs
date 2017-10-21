@@ -396,7 +396,36 @@ namespace Mutagen.Generation
                             }
                             else
                             {
-                                fg.AppendLine("throw new ArgumentException($\"Unexpected header {nextRecordType.Type} at position {frame.Position}\");");
+                                var failOnUnknown = (bool)obj.CustomData[Constants.FAIL_ON_UNKNOWN];
+                                if (failOnUnknown)
+                                {
+                                    fg.AppendLine("throw new ArgumentException($\"Unexpected header {nextRecordType.Type} at position {frame.Position}\");");
+                                }
+                                else
+                                {
+                                    fg.AppendLine($"errorMask().Warnings.Add($\"Unexpected header {{nextRecordType.Type}} at position {{frame.Position}}\");");
+                                    string minusString;
+                                    switch (obj.GetObjectType())
+                                    {
+                                        case ObjectType.Struct:
+                                        case ObjectType.Mod:
+                                            minusString = null;
+                                            break;
+                                        case ObjectType.Subrecord:
+                                            minusString = " - Constants.SUBRECORD_LENGTH";
+                                            break;
+                                        case ObjectType.Record:
+                                            minusString = " - Constants.RECORD_LENGTH";
+                                            break;
+                                        case ObjectType.Group:
+                                            minusString = " - Constants.GRUP_LENGTH";
+                                            break;
+                                        default:
+                                            throw new NotImplementedException();
+                                    }
+                                    fg.AppendLine($"frame.Position += contentLength{minusString};");
+                                    fg.AppendLine($"break;");
+                                }
                             }
                         }
                     }

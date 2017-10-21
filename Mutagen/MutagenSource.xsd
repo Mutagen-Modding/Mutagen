@@ -25,6 +25,13 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
+          <xs:attribute name="failOnUnknownType" type="xs:boolean" >
+            <xs:annotation>
+              <xs:documentation>
+                Whether an unknown type encountered should be considered an error or warning.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>
