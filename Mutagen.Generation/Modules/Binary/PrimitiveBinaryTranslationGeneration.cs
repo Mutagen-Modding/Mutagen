@@ -55,10 +55,18 @@ namespace Mutagen.Generation
             string doMaskAccessor,
             string maskAccessor)
         {
+            var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
             using (var args = new ArgsWrapper(fg,
                 $"var tryGet = {this.Namespace}{this.typeName}BinaryTranslation.Instance.Parse"))
             {
-                args.Add(nodeAccessor);
+                if (data.TriggeringRecordAccessor != null)
+                {
+                    args.Add($"frame: {nodeAccessor}.Spawn(contentLength)");
+                }
+                else
+                {
+                    args.Add($"frame: {nodeAccessor}");
+                }
                 args.Add($"doMasks: {doMaskAccessor}");
                 args.Add($"errorMask: out {maskAccessor}");
             }

@@ -19,7 +19,7 @@ namespace Mutagen
         {
             // Skip to FNAM
             var initialPos = frame.Reader.Position;
-            frame.CheckUpcomingRead(26);
+            frame.CheckUpcomingRead(new ContentLength(26));
             frame.Reader.Position += 24;
             var edidLength = frame.Reader.ReadInt16();
             frame.Reader.Position += edidLength;
@@ -35,7 +35,7 @@ namespace Mutagen
                     Overall = ex
                 });
             }
-            if (len != 1)
+            if (len.Value != 1)
             {
                 var ex = new ArgumentException($"FNAM had non 1 length: {len}");
                 if (!doMasks) throw ex;

@@ -190,7 +190,8 @@ namespace Mutagen.Generation
                                             throw new NotImplementedException();
                                     }
                                     using (var args = new ArgsWrapper(fg,
-                                        $"frame = {nameof(HeaderTranslation)}.{funcName}"))
+                                        $"frame = frame.Spawn({nameof(HeaderTranslation)}.{funcName}",
+                                        suffixLine: ")"))
                                     {
                                         args.Add("frame");
                                         args.Add($"{obj.RegistrationName}.{mutaData.Value.HeaderName}");
@@ -198,7 +199,8 @@ namespace Mutagen.Generation
                                     break;
                                 case ObjectType.Group:
                                     using (var args = new ArgsWrapper(fg,
-                                        $"frame = {nameof(HeaderTranslation)}.ParseGroup"))
+                                        $"frame = frame.Spawn({nameof(HeaderTranslation)}.ParseGroup",
+                                        suffixLine: ")"))
                                     {
                                         args.Add("frame");
                                     }
@@ -287,6 +289,7 @@ namespace Mutagen.Generation
                         {
                             throw new ArgumentException("Unsupported type generator: " + field);
                         }
+                        fg.AppendLine($"if (frame.Complete) return;");
                         GenerateFillSnippet(obj, fg, field, generator);
                     }
                 }
@@ -328,7 +331,7 @@ namespace Mutagen.Generation
                         $"var nextRecordType = {nameof(HeaderTranslation)}.{funcName}"))
                     {
                         args.Add("frame: frame");
-                        args.Add("contentLength: out var subLength");
+                        args.Add("contentLength: out var contentLength");
                     }
                     fg.AppendLine("switch (nextRecordType.Type)");
                     using (new BraceWrapper(fg))
@@ -442,7 +445,6 @@ namespace Mutagen.Generation
                 }
                 return;
             }
-            fg.AppendLine($"if (frame.Complete) return;");
             using (new BraceWrapper(fg, doIt: needBrace))
             {
                 fg.AppendLine($"{maskType} subMask;");

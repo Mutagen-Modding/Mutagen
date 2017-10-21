@@ -839,11 +839,10 @@ namespace Mutagen
         {
             var nextRecordType = HeaderTranslation.ReadNextType(
                 frame: frame,
-                contentLength: out var subLength);
+                contentLength: out var contentLength);
             switch (nextRecordType.Type)
             {
                 case "TES4":
-                if (frame.Complete) return;
                 {
                     MaskItem<Exception, TES4_ErrorMask> subMask;
                     frame.Reader.Position -= Constants.RECORD_LENGTH;
@@ -860,7 +859,6 @@ namespace Mutagen
                 }
                 break;
                 case "GMST":
-                if (frame.Complete) return;
                 {
                     MaskItem<Exception, Group_ErrorMask<GameSetting_ErrorMask>> subMask;
                     frame.Reader.Position -= Constants.GRUP_LENGTH;
@@ -877,7 +875,6 @@ namespace Mutagen
                 }
                 break;
                 case "GLOB":
-                if (frame.Complete) return;
                 {
                     MaskItem<Exception, Group_ErrorMask<Global_ErrorMask>> subMask;
                     frame.Reader.Position -= Constants.GRUP_LENGTH;
@@ -894,7 +891,6 @@ namespace Mutagen
                 }
                 break;
                 case "CLAS":
-                if (frame.Complete) return;
                 {
                     MaskItem<Exception, Group_ErrorMask<Class_ErrorMask>> subMask;
                     frame.Reader.Position -= Constants.GRUP_LENGTH;

@@ -795,10 +795,9 @@ namespace Mutagen
             {
                 Exception subMask;
                 var tryGet = Mutagen.Binary.EnumBinaryTranslation<Skill>.Instance.Parse(
-                    frame,
+                    frame: frame.Spawn(new ContentLength(1)),
                     doMasks: doMasks,
-                    errorMask: out subMask,
-                    length: 1);
+                    errorMask: out subMask);
                 item._TrainedSkill.SetIfSucceeded(tryGet);
                 ErrorMask.HandleErrorMask(
                     errorMask,
@@ -810,7 +809,7 @@ namespace Mutagen
             {
                 Exception subMask;
                 var tryGet = Mutagen.Binary.ByteBinaryTranslation.Instance.Parse(
-                    frame,
+                    frame: frame,
                     doMasks: doMasks,
                     errorMask: out subMask);
                 item._MaximumTrainingLevel.SetIfSucceeded(tryGet);
@@ -824,10 +823,9 @@ namespace Mutagen
             {
                 Exception subMask;
                 var tryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                    frame,
+                    frame: frame.Spawn(new ContentLength(2)),
                     doMasks: doMasks,
-                    errorMask: out subMask,
-                    length: 2);
+                    errorMask: out subMask);
                 item._Fluff.SetIfSucceeded(tryGet);
                 ErrorMask.HandleErrorMask(
                     errorMask,
@@ -1668,7 +1666,7 @@ namespace Mutagen.Internals
                     writer,
                     item.TrainedSkill,
                     doMasks: doMasks,
-                    length: 1,
+                    length: new ContentLength(1),
                     errorMask: out subMask);
                 ErrorMask.HandleErrorMask(
                     errorMask,

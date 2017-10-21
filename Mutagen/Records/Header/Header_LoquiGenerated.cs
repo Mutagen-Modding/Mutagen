@@ -764,9 +764,9 @@ namespace Mutagen
             var ret = new Header();
             try
             {
-                frame = HeaderTranslation.ParseSubrecord(
+                frame = frame.Spawn(HeaderTranslation.ParseSubrecord(
                     frame,
-                    Header_Registration.HEDR_HEADER);
+                    Header_Registration.HEDR_HEADER));
                 using (frame)
                 {
                     Fill_Binary_Structs(
@@ -794,7 +794,7 @@ namespace Mutagen
             {
                 Exception subMask;
                 var tryGet = Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame,
+                    frame: frame,
                     doMasks: doMasks,
                     errorMask: out subMask);
                 item._Version.SetIfSucceeded(tryGet);
@@ -808,7 +808,7 @@ namespace Mutagen
             {
                 Exception subMask;
                 var tryGet = Mutagen.Binary.Int32BinaryTranslation.Instance.Parse(
-                    frame,
+                    frame: frame,
                     doMasks: doMasks,
                     errorMask: out subMask);
                 item._NumRecords.SetIfSucceeded(tryGet);
@@ -822,7 +822,7 @@ namespace Mutagen
             {
                 Exception subMask;
                 var tryGet = Mutagen.Binary.UInt32BinaryTranslation.Instance.Parse(
-                    frame,
+                    frame: frame,
                     doMasks: doMasks,
                     errorMask: out subMask);
                 item._NextObjectID.SetIfSucceeded(tryGet);

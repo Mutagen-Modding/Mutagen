@@ -9,12 +9,12 @@ namespace Mutagen.Binary
     {
         public readonly static StringBinaryTranslation Instance = new StringBinaryTranslation();
 
-        public TryGet<string> Parse(MutagenFrame reader, ContentLength length, bool doMasks, out Exception errorMask)
+        public virtual TryGet<string> Parse(MutagenFrame frame, bool doMasks, out Exception errorMask)
         {
             try
             {
                 errorMask = null;
-                var str = Encoding.ASCII.GetString(reader.Reader.ReadBytes(length.Length));
+                var str = Encoding.ASCII.GetString(frame.Reader.ReadBytes(frame.Length.Value));
                 str= str.TrimEnd('\0');
                 return TryGet<string>.Succeed(str);
             }

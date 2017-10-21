@@ -27,10 +27,10 @@ namespace Mutagen.Generation
         {
             var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
             using (var args = new ArgsWrapper(fg,
-                $"{this.Namespace}StringBinaryTranslation.Instance.Write"))
+                $"{this.Namespace}FilePathBinaryTranslation.Instance.Write"))
             {
                 args.Add($"writer: {writerAccessor}");
-                args.Add($"item: {itemAccessor}.RelativePath");
+                args.Add($"item: {itemAccessor}");
                 args.Add($"doMasks: {doMaskAccessor}");
                 args.Add($"errorMask: out {maskAccessor}");
                 if (data.TriggeringRecordAccessor != null)
@@ -54,17 +54,24 @@ namespace Mutagen.Generation
             string doMaskAccessor,
             string maskAccessor)
         {
+            var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
             using (var args = new ArgsWrapper(fg,
-                $"var tryGet = {this.Namespace}StringBinaryTranslation.Instance.Parse"))
+                $"var tryGet = {this.Namespace}FilePathBinaryTranslation.Instance.Parse"))
             {
-                args.Add(nodeAccessor);
+                if (data.TriggeringRecordAccessor != null)
+                {
+                    args.Add($"frame: {nodeAccessor}.Spawn(contentLength)");
+                }
+                else
+                {
+                    args.Add($"frame: {nodeAccessor}");
+                }
                 args.Add($"doMasks: {doMaskAccessor}");
                 args.Add($"errorMask: out {maskAccessor}");
-                args.Add($"length: subLength");
             }
             if (itemAccessor.PropertyAccess != null)
             {
-                fg.AppendLine($"{itemAccessor.PropertyAccess}.{nameof(INotifyingCollectionExt.SetIfSucceeded)}(tryGet.Bubble<FilePath>((s) => new FilePath(s)));");
+                fg.AppendLine($"{itemAccessor.PropertyAccess}.{nameof(INotifyingCollectionExt.SetIfSucceeded)}(tryGet);");
             }
             else
             {
@@ -87,8 +94,7 @@ namespace Mutagen.Generation
         {
             var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
             using (var args = new ArgsWrapper(fg,
-                $"{retAccessor}{this.Namespace}StringBinaryTranslation.Instance.Parse",
-                (this.Nullable ? string.Empty : $".Bubble((o) => o.Value)")))
+                $"{retAccessor}{this.Namespace}FilePathBinaryTranslation.Instance.Parse"))
             {
                 args.Add(nodeAccessor);
                 if (CanBeNotNullable)

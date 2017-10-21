@@ -746,9 +746,9 @@ namespace Mutagen
             var ret = new GameSettingFloat();
             try
             {
-                frame = HeaderTranslation.ParseRecord(
+                frame = frame.Spawn(HeaderTranslation.ParseRecord(
                     frame,
-                    GameSettingFloat_Registration.GMST_HEADER);
+                    GameSettingFloat_Registration.GMST_HEADER));
                 using (frame)
                 {
                     Fill_Binary_Structs(
@@ -795,15 +795,14 @@ namespace Mutagen
         {
             var nextRecordType = HeaderTranslation.ReadNextSubRecordType(
                 frame: frame,
-                contentLength: out var subLength);
+                contentLength: out var contentLength);
             switch (nextRecordType.Type)
             {
                 case "DATA":
-                if (frame.Complete) return;
                 {
                     Exception subMask;
                     var tryGet = Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame,
+                        frame: frame.Spawn(contentLength),
                         doMasks: doMasks,
                         errorMask: out subMask);
                     item._Data.SetIfSucceeded(tryGet);

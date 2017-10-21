@@ -892,7 +892,7 @@ namespace Mutagen
             var ret = new Group<T>();
             try
             {
-                frame = HeaderTranslation.ParseGroup(frame);
+                frame = frame.Spawn(HeaderTranslation.ParseGroup(frame));
                 using (frame)
                 {
                     Fill_Binary_Structs(
@@ -925,6 +925,7 @@ namespace Mutagen
             Func<Group_ErrorMask<T_ErrMask>> errorMask)
             where T_ErrMask : MajorRecord_ErrorMask, new()
         {
+            if (frame.Complete) return;
             {
                 Exception subMask;
                 FillBinary_ContainedRecordType(
@@ -942,7 +943,7 @@ namespace Mutagen
             {
                 Exception subMask;
                 var tryGet = Mutagen.Binary.Int32BinaryTranslation.Instance.Parse(
-                    frame,
+                    frame: frame,
                     doMasks: doMasks,
                     errorMask: out subMask);
                 item._GroupType.SetIfSucceeded(tryGet);
@@ -956,10 +957,9 @@ namespace Mutagen
             {
                 Exception subMask;
                 var tryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                    frame,
+                    frame: frame.Spawn(new ContentLength(4)),
                     doMasks: doMasks,
-                    errorMask: out subMask,
-                    length: 4);
+                    errorMask: out subMask);
                 item._LastModified.SetIfSucceeded(tryGet);
                 ErrorMask.HandleErrorMask(
                     errorMask,
@@ -978,13 +978,12 @@ namespace Mutagen
         {
             var nextRecordType = HeaderTranslation.ReadNextRecordType(
                 frame: frame,
-                contentLength: out var subLength);
+                contentLength: out var contentLength);
             switch (nextRecordType.Type)
             {
                 default:
                     if (nextRecordType.Equals(Group<T>.T_RecordType))
                     {
-                        if (frame.Complete) return;
                         MaskItem<Exception, IEnumerable<MaskItem<Exception, T_ErrMask>>> subMask;
                         var listTryGet = Mutagen.Binary.ListBinaryTranslation<T, MaskItem<Exception, T_ErrMask>>.Instance.ParseRepeatedItem(
                             frame: frame,

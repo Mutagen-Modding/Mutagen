@@ -12,7 +12,7 @@ namespace Mutagen
     public partial class MajorRecord
     {
         internal static void Fill_Binary(
-            MutagenFrame reader,
+            MutagenFrame frame,
             MajorRecord record,
             bool doMasks,
             out MajorRecord_ErrorMask errorMask)
@@ -28,14 +28,14 @@ namespace Mutagen
             };
             Fill_Binary_Structs(
                 record,
-                reader,
+                frame,
                 doMasks,
                 errorMaskCreator);
             for (int i = 0; i < MajorRecord_Registration.NumTypedFields; i++)
             {
                 Fill_Binary_RecordTypes(
                     record,
-                    reader,
+                    frame,
                     doMasks,
                     errorMaskCreator);
             }

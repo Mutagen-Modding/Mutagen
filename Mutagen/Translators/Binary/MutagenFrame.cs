@@ -10,6 +10,7 @@ namespace Mutagen.Binary
 {
     public struct MutagenFrame : IDisposable
     {
+        public static bool ErrorOnFinalPosition;
         public readonly MutagenReader Reader;
         public readonly FileLocation FinalPosition;
         public bool Complete => this.Position >= this.FinalPosition;
@@ -20,6 +21,7 @@ namespace Mutagen.Binary
         }
         public ContentLength Length => this.FinalPosition - this.Position;
 
+        [DebuggerStepThrough]
         public MutagenFrame(MutagenReader reader)
         {
             this.Reader = reader;
@@ -51,9 +53,16 @@ namespace Mutagen.Binary
         {
             if (this.Reader.Position != FinalPosition)
             {
-                var err = $"Did not read expected amount of bytes. Position: {this.Reader.Position}, Expected: {this.FinalPosition}";
-                this.Reader.Position = this.FinalPosition;
-                throw new ArgumentException(err);
+                if (ErrorOnFinalPosition)
+                {
+                    var err = $"Did not read expected amount of bytes. Position: {this.Reader.Position}, Expected: {this.FinalPosition}";
+                    this.Reader.Position = this.FinalPosition;
+                    throw new ArgumentException(err);
+                }
+                else
+                {
+                    this.Reader.Position = this.FinalPosition;
+                }
             }
         }
 
@@ -67,6 +76,14 @@ namespace Mutagen.Binary
             return new MutagenFrame(
                 this.Reader,
                 finalPosition);
+        }
+
+        [DebuggerStepThrough]
+        public MutagenFrame Spawn(ContentLength length)
+        {
+            return new MutagenFrame(
+                this.Reader,
+                this.Reader.Position + length);
         }
     }
 }

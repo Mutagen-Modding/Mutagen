@@ -824,9 +824,9 @@ namespace Mutagen
             var ret = new Class();
             try
             {
-                frame = HeaderTranslation.ParseRecord(
+                frame = frame.Spawn(HeaderTranslation.ParseRecord(
                     frame,
-                    Class_Registration.CLAS_HEADER);
+                    Class_Registration.CLAS_HEADER));
                 using (frame)
                 {
                     Fill_Binary_Structs(
@@ -873,18 +873,16 @@ namespace Mutagen
         {
             var nextRecordType = HeaderTranslation.ReadNextSubRecordType(
                 frame: frame,
-                contentLength: out var subLength);
+                contentLength: out var contentLength);
             switch (nextRecordType.Type)
             {
                 case "DESC":
-                if (frame.Complete) return;
                 {
                     Exception subMask;
                     var tryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame,
+                        frame: frame.Spawn(contentLength),
                         doMasks: doMasks,
-                        errorMask: out subMask,
-                        length: subLength);
+                        errorMask: out subMask);
                     item._Description.SetIfSucceeded(tryGet);
                     ErrorMask.HandleErrorMask(
                         errorMask,
@@ -894,15 +892,13 @@ namespace Mutagen
                 }
                 break;
                 case "ICON":
-                if (frame.Complete) return;
                 {
                     Exception subMask;
-                    var tryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame,
+                    var tryGet = Mutagen.Binary.FilePathBinaryTranslation.Instance.Parse(
+                        frame: frame.Spawn(contentLength),
                         doMasks: doMasks,
-                        errorMask: out subMask,
-                        length: subLength);
-                    item._Icon.SetIfSucceeded(tryGet.Bubble<FilePath>((s) => new FilePath(s)));
+                        errorMask: out subMask);
+                    item._Icon.SetIfSucceeded(tryGet);
                     ErrorMask.HandleErrorMask(
                         errorMask,
                         doMasks,
@@ -911,7 +907,6 @@ namespace Mutagen
                 }
                 break;
                 case "DATA":
-                if (frame.Complete) return;
                 {
                     MaskItem<Exception, ClassData_ErrorMask> subMask;
                     frame.Reader.Position -= Constants.SUBRECORD_LENGTH;
@@ -1844,9 +1839,9 @@ namespace Mutagen.Internals
             }
             {
                 Exception subMask;
-                Mutagen.Binary.StringBinaryTranslation.Instance.Write(
+                Mutagen.Binary.FilePathBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.Icon.RelativePath,
+                    item: item.Icon,
                     doMasks: doMasks,
                     errorMask: out subMask,
                     header: Class_Registration.ICON_HEADER,

@@ -27,7 +27,7 @@ namespace Mutagen.Generation
                 args.Add(writerAccessor);
                 args.Add($"{itemAccessor}");
                 args.Add($"doMasks: {doMaskAccessor}");
-                args.Add($"length: {eType.ByteLength}");
+                args.Add($"length: new ContentLength({eType.ByteLength})");
                 args.Add($"errorMask: out {maskAccessor}");
                 if (data.TriggeringRecordAccessor != null)
                 {
@@ -46,14 +46,21 @@ namespace Mutagen.Generation
             string doMaskAccessor,
             string maskAccessor)
         {
+            var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
             var eType = typeGen as EnumType;
             using (var args = new ArgsWrapper(fg,
                 $"var tryGet = {this.Namespace}EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance.Parse"))
             {
-                args.Add(nodeAccessor);
+                if (data.TriggeringRecordAccessor != null)
+                {
+                    args.Add($"{nodeAccessor}.Spawn(contentLength)");
+                }
+                else
+                {
+                    args.Add($"frame: {nodeAccessor}.Spawn(new ContentLength({eType.ByteLength}))");
+                }
                 args.Add($"doMasks: {doMaskAccessor}");
                 args.Add($"errorMask: out {maskAccessor}");
-                args.Add($"length: {eType.ByteLength}");
             }
             if (itemAccessor.PropertyAccess != null)
             {
@@ -82,10 +89,9 @@ namespace Mutagen.Generation
             using (var args = new ArgsWrapper(fg,
                 $"{retAccessor}{this.Namespace}EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance.Parse"))
             {
-                args.Add(nodeAccessor);
+                args.Add($"frame: {nodeAccessor}.Spawn(new ContentLength({eType.ByteLength}))");
                 args.Add($"doMasks: {doMaskAccessor}");
                 args.Add($"errorMask: out {maskAccessor}");
-                args.Add($"length: {eType.ByteLength}");
             }
         }
     }

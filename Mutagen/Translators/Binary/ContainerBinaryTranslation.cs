@@ -13,7 +13,7 @@ namespace Mutagen.Binary
 {
     public abstract class ContainerBinaryTranslation<T, M> : IBinaryTranslation<IEnumerable<T>, MaskItem<Exception, IEnumerable<M>>>
     {
-        public TryGet<IEnumerable<T>> Parse(MutagenFrame reader, ContentLength length, bool doMasks, out MaskItem<Exception, IEnumerable<M>> maskObj)
+        public TryGet<IEnumerable<T>> Parse(MutagenFrame reader, bool doMasks, out MaskItem<Exception, IEnumerable<M>> maskObj)
         {
             var transl = BinaryTranslator<T, M>.Translator;
             if (transl.Item.Failed)
@@ -24,7 +24,7 @@ namespace Mutagen.Binary
                 reader,
                 doMasks,
                 out maskObj,
-                transl: (MutagenFrame r, bool internalDoMasks, out M obj) => transl.Item.Value.Parse(reader: r, length: length, doMasks: internalDoMasks, maskObj: out obj));
+                transl: (MutagenFrame r, bool internalDoMasks, out M obj) => transl.Item.Value.Parse(reader: r, doMasks: internalDoMasks, maskObj: out obj));
         }
 
         public TryGet<IEnumerable<T>> Parse(
@@ -68,7 +68,7 @@ namespace Mutagen.Binary
                     {
                         ret.Add(get.Value);
                     }
-                    else
+                    if (subMaskObj != null)
                     {
                         if (!doMasks)
                         { // This shouldn't actually throw, as subparse is expected to throw if doMasks is off
@@ -161,7 +161,7 @@ namespace Mutagen.Binary
                     item: item,
                     doMasks: doMasks,
                     maskObj: out maskObj,
-                    transl: (T item1, bool internalDoMasks, out M obj) => transl.Item.Value.Write(writer: writer, item: item1, length: -1, doMasks: internalDoMasks, maskObj: out obj));
+                    transl: (T item1, bool internalDoMasks, out M obj) => transl.Item.Value.Write(writer: writer, item: item1, length: ContentLength.Invalid, doMasks: internalDoMasks, maskObj: out obj));
             }
             catch (Exception ex)
             when (doMasks)

@@ -495,7 +495,7 @@ namespace Mutagen
         {
             var nextRecordType = HeaderTranslation.ReadNextSubRecordType(
                 frame: frame,
-                contentLength: out var subLength);
+                contentLength: out var contentLength);
             switch (nextRecordType.Type)
             {
                 case "FNAM":
@@ -514,11 +514,10 @@ namespace Mutagen
                 }
                 break;
                 case "FLTV":
-                if (frame.Complete) return;
                 {
                     Exception subMask;
                     var tryGet = Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame,
+                        frame: frame.Spawn(contentLength),
                         doMasks: doMasks,
                         errorMask: out subMask);
                     item._RawFloat.SetIfSucceeded(tryGet);

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Mutagen.Internals;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace Mutagen.Binary
     public struct HeaderExport : IDisposable
     {
         public readonly MutagenWriter Writer;
-        public readonly long SizePosition;
+        public readonly FileLocation SizePosition;
         public readonly ObjectType Type;
         private const byte ZeroByte = 0;
 
@@ -23,7 +24,7 @@ namespace Mutagen.Binary
             this.Type = type;
             writer.Write(record.Type.ToCharArray());
             this.SizePosition = writer.Position;
-            for (int i = 0; i < this.Type.GetLengthLength(); i++)
+            for (int i = 0; i < this.Type.GetLengthLength().Value; i++)
             {
                 writer.Write(ZeroByte);
             }
@@ -59,13 +60,13 @@ namespace Mutagen.Binary
             var offset = this.Type.GetOffset();
             var diff = endPos - this.Writer.Position;
             var totalLength = diff - offset - lengthLength;
-            switch (lengthLength)
+            switch (lengthLength.Value)
             {
                 case 2:
-                    this.Writer.Write((Int16)totalLength.Length);
+                    this.Writer.Write((Int16)totalLength.Value);
                     break;
                 case 4:
-                    this.Writer.Write((Int32)totalLength.Length);
+                    this.Writer.Write((Int32)totalLength.Value);
                     break;
                 default:
                     throw new NotImplementedException();

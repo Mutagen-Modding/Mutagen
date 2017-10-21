@@ -91,6 +91,7 @@
     <Compile Include="Records\Major Records\MajorRecord_LoquiGenerated.cs">
       <DependentUpon>MajorRecord.xml</DependentUpon>
     </Compile>
+    <Compile Include="Translators\Binary\FilePathBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\MutagenFrame.cs" />
     <Compile Include="Translators\Binary\MutagenReader.cs" />
     <Compile Include="Translators\Binary\BinaryTranslator.cs" />

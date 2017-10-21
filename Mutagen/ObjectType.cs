@@ -21,12 +21,12 @@ namespace System
 {
     public static class ObjectTypeExt
     {
-        public static byte GetLengthLength(this ObjectType objType)
+        public static ContentLength GetLengthLength(this ObjectType objType)
         {
             switch (objType)
             {
                 case ObjectType.Struct:
-                    return 0;
+                    return ContentLength.Zero;
                 case ObjectType.Subrecord:
                     return Constants.SUBRECORD_LENGTHLENGTH;
                 case ObjectType.Record:
@@ -39,12 +39,12 @@ namespace System
             }
         }
 
-        public static short GetOffset(this ObjectType objType)
+        public static ContentLength GetOffset(this ObjectType objType)
         {
             switch (objType)
             {
                 case ObjectType.Struct:
-                    return 0;
+                    return ContentLength.Zero;
                 case ObjectType.Subrecord:
                     return Constants.SUBRECORD_HEADER_OFFSET;
                 case ObjectType.Record:

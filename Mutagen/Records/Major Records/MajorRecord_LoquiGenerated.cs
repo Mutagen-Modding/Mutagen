@@ -592,10 +592,9 @@ namespace Mutagen
             {
                 Exception subMask;
                 var tryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                    frame,
+                    frame: frame.Spawn(new ContentLength(4)),
                     doMasks: doMasks,
-                    errorMask: out subMask,
-                    length: 4);
+                    errorMask: out subMask);
                 item._Flags.SetIfSucceeded(tryGet);
                 ErrorMask.HandleErrorMask(
                     errorMask,
@@ -607,7 +606,7 @@ namespace Mutagen
             {
                 Exception subMask;
                 var tryGet = Mutagen.Binary.FormIDBinaryTranslation.Instance.Parse(
-                    frame,
+                    frame: frame,
                     doMasks: doMasks,
                     errorMask: out subMask);
                 item._FormID.SetIfSucceeded(tryGet);
@@ -621,10 +620,9 @@ namespace Mutagen
             {
                 Exception subMask;
                 var tryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                    frame,
+                    frame: frame.Spawn(new ContentLength(4)),
                     doMasks: doMasks,
-                    errorMask: out subMask,
-                    length: 4);
+                    errorMask: out subMask);
                 item._Version.SetIfSucceeded(tryGet);
                 ErrorMask.HandleErrorMask(
                     errorMask,
@@ -642,18 +640,16 @@ namespace Mutagen
         {
             var nextRecordType = HeaderTranslation.ReadNextSubRecordType(
                 frame: frame,
-                contentLength: out var subLength);
+                contentLength: out var contentLength);
             switch (nextRecordType.Type)
             {
                 case "EDID":
-                if (frame.Complete) return;
                 {
                     Exception subMask;
                     var tryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame,
+                        frame: frame.Spawn(contentLength),
                         doMasks: doMasks,
-                        errorMask: out subMask,
-                        length: subLength);
+                        errorMask: out subMask);
                     item._EditorID.SetIfSucceeded(tryGet);
                     ErrorMask.HandleErrorMask(
                         errorMask,

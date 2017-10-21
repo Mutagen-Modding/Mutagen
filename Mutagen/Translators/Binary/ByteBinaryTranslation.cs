@@ -7,8 +7,8 @@ namespace Mutagen.Binary
     public class ByteBinaryTranslation : PrimitiveBinaryTranslation<byte>
     {
         public readonly static ByteBinaryTranslation Instance = new ByteBinaryTranslation();
-        public override byte? ExpectedLength => 1;
-        
+        public override ContentLength? ExpectedLength => new ContentLength(1);
+
         protected override byte ParseValue(MutagenFrame reader)
         {
             return reader.Reader.ReadByte();

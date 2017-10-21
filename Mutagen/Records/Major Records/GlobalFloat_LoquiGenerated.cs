@@ -745,9 +745,9 @@ namespace Mutagen
             var ret = new GlobalFloat();
             try
             {
-                frame = HeaderTranslation.ParseRecord(
+                frame = frame.Spawn(HeaderTranslation.ParseRecord(
                     frame,
-                    GlobalFloat_Registration.GLOB_HEADER);
+                    GlobalFloat_Registration.GLOB_HEADER));
                 using (frame)
                 {
                     Fill_Binary_Structs(

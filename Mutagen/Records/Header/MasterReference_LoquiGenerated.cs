@@ -770,18 +770,16 @@ namespace Mutagen
         {
             var nextRecordType = HeaderTranslation.ReadNextSubRecordType(
                 frame: frame,
-                contentLength: out var subLength);
+                contentLength: out var contentLength);
             switch (nextRecordType.Type)
             {
                 case "MAST":
-                if (frame.Complete) return;
                 {
                     Exception subMask;
                     var tryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame,
+                        frame: frame.Spawn(contentLength),
                         doMasks: doMasks,
-                        errorMask: out subMask,
-                        length: subLength);
+                        errorMask: out subMask);
                     item._Master.SetIfSucceeded(tryGet);
                     ErrorMask.HandleErrorMask(
                         errorMask,
@@ -791,11 +789,10 @@ namespace Mutagen
                 }
                 break;
                 case "DATA":
-                if (frame.Complete) return;
                 {
                     Exception subMask;
                     var tryGet = Mutagen.Binary.UInt64BinaryTranslation.Instance.Parse(
-                        frame,
+                        frame: frame.Spawn(contentLength),
                         doMasks: doMasks,
                         errorMask: out subMask);
                     item._FileSize.SetIfSucceeded(tryGet);

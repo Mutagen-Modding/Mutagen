@@ -14,13 +14,13 @@ namespace Mutagen.Binary
 
         public FileLocation Position
         {
-            get => this.writer.BaseStream.Position;
+            get => new FileLocation(this.writer.BaseStream.Position);
             set => this.writer.BaseStream.Position = value;
         }
 
         public FileLocation Length
         {
-            get => this.writer.BaseStream.Length;
+            get => new FileLocation(this.writer.BaseStream.Length);
         }
 
         public MutagenWriter(string path)

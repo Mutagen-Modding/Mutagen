@@ -884,9 +884,9 @@ namespace Mutagen
             var ret = new ClassData();
             try
             {
-                frame = HeaderTranslation.ParseSubrecord(
+                frame = frame.Spawn(HeaderTranslation.ParseSubrecord(
                     frame,
-                    ClassData_Registration.DATA_HEADER);
+                    ClassData_Registration.DATA_HEADER));
                 using (frame)
                 {
                     Fill_Binary_Structs(
@@ -921,10 +921,9 @@ namespace Mutagen
                     transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
                     {
                         return Mutagen.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
-                            r,
+                            frame: r.Spawn(new ContentLength(4)),
                             doMasks: listDoMasks,
-                            errorMask: out listSubMask,
-                            length: 4);
+                            errorMask: out listSubMask);
                     }
                     );
                 item._PrimaryAttributes.SetIfSucceeded(listTryGet);
@@ -938,10 +937,9 @@ namespace Mutagen
             {
                 Exception subMask;
                 var tryGet = Mutagen.Binary.EnumBinaryTranslation<Specialization>.Instance.Parse(
-                    frame,
+                    frame: frame.Spawn(new ContentLength(4)),
                     doMasks: doMasks,
-                    errorMask: out subMask,
-                    length: 4);
+                    errorMask: out subMask);
                 item._Specialization.SetIfSucceeded(tryGet);
                 ErrorMask.HandleErrorMask(
                     errorMask,
@@ -960,10 +958,9 @@ namespace Mutagen
                     transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
                     {
                         return Mutagen.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
-                            r,
+                            frame: r.Spawn(new ContentLength(4)),
                             doMasks: listDoMasks,
-                            errorMask: out listSubMask,
-                            length: 4);
+                            errorMask: out listSubMask);
                     }
                     );
                 item._SecondaryAttributes.SetIfSucceeded(listTryGet);
@@ -977,10 +974,9 @@ namespace Mutagen
             {
                 Exception subMask;
                 var tryGet = Mutagen.Binary.EnumBinaryTranslation<ClassFlag>.Instance.Parse(
-                    frame,
+                    frame: frame.Spawn(new ContentLength(4)),
                     doMasks: doMasks,
-                    errorMask: out subMask,
-                    length: 4);
+                    errorMask: out subMask);
                 item._Flags.SetIfSucceeded(tryGet);
                 ErrorMask.HandleErrorMask(
                     errorMask,
@@ -992,10 +988,9 @@ namespace Mutagen
             {
                 Exception subMask;
                 var tryGet = Mutagen.Binary.EnumBinaryTranslation<ClassService>.Instance.Parse(
-                    frame,
+                    frame: frame.Spawn(new ContentLength(4)),
                     doMasks: doMasks,
-                    errorMask: out subMask,
-                    length: 4);
+                    errorMask: out subMask);
                 item._ClassServices.SetIfSucceeded(tryGet);
                 ErrorMask.HandleErrorMask(
                     errorMask,
@@ -2207,7 +2202,7 @@ namespace Mutagen.Internals
                             writer,
                             subItem,
                             doMasks: doMasks,
-                            length: 4,
+                            length: new ContentLength(4),
                             errorMask: out listSubMask);
                     }
                     );
@@ -2223,7 +2218,7 @@ namespace Mutagen.Internals
                     writer,
                     item.Specialization,
                     doMasks: doMasks,
-                    length: 4,
+                    length: new ContentLength(4),
                     errorMask: out subMask);
                 ErrorMask.HandleErrorMask(
                     errorMask,
@@ -2244,7 +2239,7 @@ namespace Mutagen.Internals
                             writer,
                             subItem,
                             doMasks: doMasks,
-                            length: 4,
+                            length: new ContentLength(4),
                             errorMask: out listSubMask);
                     }
                     );
@@ -2260,7 +2255,7 @@ namespace Mutagen.Internals
                     writer,
                     item.Flags,
                     doMasks: doMasks,
-                    length: 4,
+                    length: new ContentLength(4),
                     errorMask: out subMask);
                 ErrorMask.HandleErrorMask(
                     errorMask,
@@ -2274,7 +2269,7 @@ namespace Mutagen.Internals
                     writer,
                     item.ClassServices,
                     doMasks: doMasks,
-                    length: 4,
+                    length: new ContentLength(4),
                     errorMask: out subMask);
                 ErrorMask.HandleErrorMask(
                     errorMask,

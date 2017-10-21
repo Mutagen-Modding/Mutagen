@@ -13,13 +13,13 @@ namespace Mutagen.Binary
     {
         protected abstract T ParseBytes(byte[] bytes);
 
-        protected abstract T ParseValue(MutagenFrame reader, ContentLength length);
+        protected abstract T ParseValue(MutagenFrame reader);
 
-        public TryGet<T> Parse(MutagenFrame reader, ContentLength length, bool doMasks, out Exception errorMask)
+        public TryGet<T> Parse(MutagenFrame frame, bool doMasks, out Exception errorMask)
         {
             try
             {
-                var parse = ParseValue(reader, length);
+                var parse = ParseValue(frame);
                 if (parse == null)
                 {
                     throw new ArgumentException("Value was unexpectedly null.");
@@ -40,9 +40,9 @@ namespace Mutagen.Binary
 
         protected abstract void WriteValue(MutagenWriter writer, T item);
 
-        TryGet<T> IBinaryTranslation<T, Exception>.Parse(MutagenFrame reader, ContentLength length, bool doMasks, out Exception errorMask)
+        TryGet<T> IBinaryTranslation<T, Exception>.Parse(MutagenFrame reader, bool doMasks, out Exception errorMask)
         {
-            return Parse(reader, length: length, doMasks: doMasks, errorMask: out errorMask);
+            return Parse(reader, doMasks: doMasks, errorMask: out errorMask);
         }
 
         public void Write(MutagenWriter writer, T item, bool doMasks, out Exception errorMask)

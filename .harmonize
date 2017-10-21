@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>d59818df83d0c2114b8fe4c055e94575b02c283b</Sha>
+         <Sha>16acf22996d68d1de504068b22061561d7948bbf</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>10-19-2017 23:54:35</CommitDate>
-         <Description>DebuggerStepThroughs added</Description>
+         <CommitDate>10-21-2017 17:20:45</CommitDate>
+         <Description>ContainerXMLTranslation bugfix for when error masks spawned without failing</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

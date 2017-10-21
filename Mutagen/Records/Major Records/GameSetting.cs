@@ -33,14 +33,13 @@ namespace Mutagen
         {
             var initialPos = frame.Position;
             frame.Position += 20;
-            if (!MajorRecord_Registration.EDID_HEADER.Equals(HeaderTranslation.GetNextSubRecordType(frame, out var contentLength)))
+            if (!MajorRecord_Registration.EDID_HEADER.Equals(HeaderTranslation.GetNextSubRecordType(frame, out var edidLength)))
             {
                 throw new ArgumentException($"EDID was not located in expected position: {frame.Position}");
             }
             frame.Position += 6;
             var edid = StringBinaryTranslation.Instance.Parse(
-                frame,
-                contentLength,
+                frame.Spawn(edidLength),
                 doMasks,
                 out var err);
             if (err != null)

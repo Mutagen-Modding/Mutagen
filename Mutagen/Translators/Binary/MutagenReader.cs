@@ -14,11 +14,11 @@ namespace Mutagen.Binary
 
         public FileLocation Position
         {
-            get => this.reader.BaseStream.Position;
+            get => new FileLocation(this.reader.BaseStream.Position);
             set => this.reader.BaseStream.Position = value;
         }
 
-        public FileLocation Length => this.reader.BaseStream.Length;
+        public FileLocation Length => new FileLocation(this.reader.BaseStream.Length);
         public bool Complete => this.Position < this.Length;
 
         public MutagenReader(string path)

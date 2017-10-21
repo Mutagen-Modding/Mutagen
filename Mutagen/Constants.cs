@@ -8,18 +8,18 @@ namespace Mutagen
 {
     public static class Constants
     {
-        public const byte HEADER_LENGTH = 4;
-        public const byte RECORD_LENGTHLENGTH = 4;
-        public const byte RECORD_LENGTH = HEADER_LENGTH + RECORD_LENGTHLENGTH;
-        public const byte SUBRECORD_LENGTHLENGTH = 2;
-        public const byte SUBRECORD_LENGTH = HEADER_LENGTH + SUBRECORD_LENGTHLENGTH;
-        public const byte SUBRECORD_HEADER_OFFSET = 0;
-        public const byte RECORD_HEADER_LENGTH = 16;
-        public const byte RECORD_HEADER_SKIP = RECORD_HEADER_LENGTH - RECORD_LENGTHLENGTH;
-        public const byte RECORD_HEADER_OFFSET = 12;
-        public const byte GRUP_LENGTHLENGTH = RECORD_LENGTHLENGTH;
-        public const byte GRUP_LENGTH = HEADER_LENGTH + GRUP_LENGTHLENGTH + HEADER_LENGTH;
-        public const sbyte GRUP_HEADER_OFFSET = -8;
+        public static readonly ContentLength HEADER_LENGTH = new ContentLength(4);
+        public static readonly ContentLength RECORD_LENGTHLENGTH = new ContentLength(4);
+        public static readonly ContentLength RECORD_LENGTH = HEADER_LENGTH + RECORD_LENGTHLENGTH;
+        public static readonly ContentLength SUBRECORD_LENGTHLENGTH = new ContentLength(2);
+        public static readonly ContentLength SUBRECORD_LENGTH = HEADER_LENGTH + SUBRECORD_LENGTHLENGTH;
+        public static readonly ContentLength SUBRECORD_HEADER_OFFSET = new ContentLength(0);
+        public static readonly ContentLength RECORD_HEADER_LENGTH = new ContentLength(16);
+        public static readonly ContentLength RECORD_HEADER_SKIP = RECORD_HEADER_LENGTH - RECORD_LENGTHLENGTH;
+        public static readonly ContentLength RECORD_HEADER_OFFSET = new ContentLength(12);
+        public static readonly ContentLength GRUP_LENGTHLENGTH = RECORD_LENGTHLENGTH;
+        public static readonly ContentLength GRUP_LENGTH = HEADER_LENGTH + GRUP_LENGTHLENGTH + HEADER_LENGTH;
+        public static readonly ContentLength GRUP_HEADER_OFFSET = new ContentLength(-8);
         public const string TRIGGERING_RECORDTYPE_MEMBER = "TRIGGERING_RECORD_TYPE";
 
         public const string OBLIVION_ESM = "Oblivion.esm";

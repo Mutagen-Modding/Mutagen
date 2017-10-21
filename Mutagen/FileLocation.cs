@@ -40,12 +40,7 @@ namespace Mutagen.Internals
         {
             return loc.Offset;
         }
-
-        public static implicit operator FileLocation(long loc)
-        {
-            return new FileLocation(loc);
-        }
-
+        
         public static bool operator ==(FileLocation c1, FileLocation c2)
         {
             return c1.Offset == c2.Offset;
@@ -88,32 +83,32 @@ namespace Mutagen.Internals
 
         public static FileLocation operator +(FileLocation c1, int c2)
         {
-            return c1.Offset + c2;
+            return new FileLocation(c1.Offset + c2);
         }
 
         public static FileLocation operator -(FileLocation c1, int c2)
         {
-            return c1.Offset - c2;
+            return new FileLocation(c1.Offset - c2);
         }
 
         public static FileLocation operator +(FileLocation c1, byte c2)
         {
-            return c1.Offset + c2;
+            return new FileLocation(c1.Offset + c2);
         }
 
         public static FileLocation operator -(FileLocation c1, byte c2)
         {
-            return c1.Offset - c2;
+            return new FileLocation(c1.Offset - c2);
         }
 
         public static FileLocation operator +(FileLocation c1, ContentLength c2)
         {
-            return c1.Offset + c2.Length;
+            return new FileLocation(c1.Offset + c2.Value);
         }
 
         public static FileLocation operator -(FileLocation c1, ContentLength c2)
         {
-            return c1.Offset - c2.Length;
+            return new FileLocation(c1.Offset - c2.Value);
         }
     }
 }

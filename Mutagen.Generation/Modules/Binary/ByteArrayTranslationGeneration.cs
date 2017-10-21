@@ -54,17 +54,16 @@ namespace Mutagen.Generation
             using (var args = new ArgsWrapper(fg,
                 $"var tryGet = {this.Namespace}ByteArrayBinaryTranslation.Instance.Parse"))
             {
-                args.Add(nodeAccessor);
-                args.Add($"doMasks: {doMaskAccessor}");
-                args.Add($"errorMask: out {maskAccessor}");
                 if (data.TriggeringRecordAccessor != null)
                 {
-                    args.Add($"length: subLength");
+                    args.Add($"{nodeAccessor}.Spawn(contentLength)");
                 }
                 else
                 {
-                    args.Add($"length: {data.Length.Value}");
+                    args.Add($"frame: {nodeAccessor}.Spawn(new ContentLength({data.Length.Value}))");
                 }
+                args.Add($"doMasks: {doMaskAccessor}");
+                args.Add($"errorMask: out {maskAccessor}");
             }
             if (itemAccessor.PropertyAccess != null)
             {
