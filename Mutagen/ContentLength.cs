@@ -11,9 +11,9 @@ namespace Mutagen
     {
         public static readonly ContentLength Zero = new ContentLength(0);
         public static readonly ContentLength Invalid = new ContentLength(-1);
-        public readonly int Value;
+        public readonly long Value;
 
-        public ContentLength(int length)
+        public ContentLength(long length)
         {
             this.Value = length;
         }
@@ -41,7 +41,7 @@ namespace Mutagen
 
         public static implicit operator int(ContentLength len)
         {
-            return len.Value;
+            return (int)len.Value;
         }
 
         public static bool operator ==(ContentLength c1, ContentLength c2)

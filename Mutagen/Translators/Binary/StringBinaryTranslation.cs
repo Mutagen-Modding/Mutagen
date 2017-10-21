@@ -14,7 +14,7 @@ namespace Mutagen.Binary
             try
             {
                 errorMask = null;
-                var str = Encoding.ASCII.GetString(frame.Reader.ReadBytes(frame.Length.Value));
+                var str = Encoding.ASCII.GetString(frame.Reader.ReadBytes(frame.Length));
                 str= str.TrimEnd('\0');
                 return TryGet<string>.Succeed(str);
             }

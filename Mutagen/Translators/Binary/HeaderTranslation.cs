@@ -21,7 +21,7 @@ namespace Mutagen.Binary
                 contentLength = ContentLength.Invalid;
                 return false;
             }
-            var header = Encoding.ASCII.GetString(frame.Reader.ReadBytes(Constants.HEADER_LENGTH.Value));
+            var header = Encoding.ASCII.GetString(frame.Reader.ReadBytes(Constants.HEADER_LENGTH));
             if (!expectedHeader.Equals(header))
             {
                 contentLength = ContentLength.Invalid;
@@ -150,7 +150,7 @@ namespace Mutagen.Binary
         protected static RecordType ReadNextRecordType(
             MutagenReader reader)
         {
-            var header = Encoding.ASCII.GetString(reader.ReadBytes(Constants.HEADER_LENGTH.Value));
+            var header = Encoding.ASCII.GetString(reader.ReadBytes(Constants.HEADER_LENGTH));
             return new RecordType(header, validate: false);
         }
 
