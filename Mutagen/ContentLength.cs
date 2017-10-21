@@ -20,7 +20,14 @@ namespace Mutagen
 
         public override string ToString()
         {
-            return $"0x{this.Value.ToString("X")}";
+            if (this.Value >= 0)
+            {
+                return $"0x{this.Value.ToString("X")}";
+            }
+            else
+            {
+                return $"-0x{(this.Value * -1).ToString("X")}";
+            }
         }
         
         public override bool Equals(object obj)

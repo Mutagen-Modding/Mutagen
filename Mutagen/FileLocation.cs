@@ -17,7 +17,14 @@ namespace Mutagen.Internals
 
         public override string ToString()
         {
-            return $"0x{this.Offset.ToString("X")}";
+            if (this.Offset >= 0)
+            {
+                return $"0x{this.Offset.ToString("X")}";
+            }
+            else
+            {
+                return $"-0x{(this.Offset * -1).ToString("X")}";
+            }
         }
 
         public override bool Equals(object obj)

@@ -45,7 +45,14 @@ namespace Mutagen.Binary
         {
             if (!TryCheckUpcomingRead(length))
             {
-                throw new ArgumentException($"Frame did not have enough remaining bytes to parse. At {this.Position}. Desired {length} more bytes.  Only {this.FinalPosition - this.Position} left before final position {this.FinalPosition}.");
+                if (Complete)
+                {
+                    throw new ArgumentException($"Frame was complete, so did not have any remaining bytes to parse. At {this.Position}. Desired {length} more bytes. {this.Length} past the final position {this.FinalPosition}.");
+                }
+                else
+                {
+                    throw new ArgumentException($"Frame did not have enough remaining bytes to parse. At {this.Position}. Desired {length} more bytes.  Only {this.Length} left before final position {this.FinalPosition}.");
+                }
             }
         }
 
