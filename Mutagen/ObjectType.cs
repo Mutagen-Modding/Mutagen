@@ -26,7 +26,6 @@ namespace System
             switch (objType)
             {
                 case ObjectType.Struct:
-                    return ContentLength.Zero;
                 case ObjectType.Subrecord:
                     return Constants.SUBRECORD_LENGTHLENGTH;
                 case ObjectType.Record:

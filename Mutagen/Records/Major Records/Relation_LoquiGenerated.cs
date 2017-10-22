@@ -23,51 +23,51 @@ using Mutagen.Binary;
 namespace Mutagen
 {
     #region Class
-    public partial class MasterReference : IMasterReference, ILoquiObjectSetter, IEquatable<MasterReference>
+    public partial class Relation : IRelation, ILoquiObjectSetter, IEquatable<Relation>
     {
-        ILoquiRegistration ILoquiObject.Registration => MasterReference_Registration.Instance;
-        public static MasterReference_Registration Registration => MasterReference_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Relation_Registration.Instance;
+        public static Relation_Registration Registration => Relation_Registration.Instance;
 
         #region Ctor
-        public MasterReference()
+        public Relation()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Master
-        protected readonly INotifyingItem<String> _Master = NotifyingItem.Factory<String>(markAsSet: false);
-        public INotifyingItem<String> Master_Property => _Master;
-        public String Master
+        #region Faction
+        protected readonly INotifyingItem<FormID> _Faction = NotifyingItem.Factory<FormID>(markAsSet: false);
+        public INotifyingItem<FormID> Faction_Property => _Faction;
+        public FormID Faction
         {
-            get => this._Master.Item;
-            set => this._Master.Set(value);
+            get => this._Faction.Item;
+            set => this._Faction.Set(value);
         }
-        INotifyingItem<String> IMasterReference.Master_Property => this.Master_Property;
-        INotifyingItemGetter<String> IMasterReferenceGetter.Master_Property => this.Master_Property;
+        INotifyingItem<FormID> IRelation.Faction_Property => this.Faction_Property;
+        INotifyingItemGetter<FormID> IRelationGetter.Faction_Property => this.Faction_Property;
         #endregion
-        #region FileSize
-        protected readonly INotifyingItem<UInt64> _FileSize = NotifyingItem.Factory<UInt64>(markAsSet: false);
-        public INotifyingItem<UInt64> FileSize_Property => _FileSize;
-        public UInt64 FileSize
+        #region Modifier
+        protected readonly INotifyingItem<Int32> _Modifier = NotifyingItem.Factory<Int32>(markAsSet: false);
+        public INotifyingItem<Int32> Modifier_Property => _Modifier;
+        public Int32 Modifier
         {
-            get => this._FileSize.Item;
-            set => this._FileSize.Set(value);
+            get => this._Modifier.Item;
+            set => this._Modifier.Set(value);
         }
-        INotifyingItem<UInt64> IMasterReference.FileSize_Property => this.FileSize_Property;
-        INotifyingItemGetter<UInt64> IMasterReferenceGetter.FileSize_Property => this.FileSize_Property;
+        INotifyingItem<Int32> IRelation.Modifier_Property => this.Modifier_Property;
+        INotifyingItemGetter<Int32> IRelationGetter.Modifier_Property => this.Modifier_Property;
         #endregion
 
         #region Loqui Getter Interface
 
-        protected object GetNthObject(ushort index) => MasterReferenceCommon.GetNthObject(index, this);
+        protected object GetNthObject(ushort index) => RelationCommon.GetNthObject(index, this);
         object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
 
-        protected bool GetNthObjectHasBeenSet(ushort index) => MasterReferenceCommon.GetNthObjectHasBeenSet(index, this);
+        protected bool GetNthObjectHasBeenSet(ushort index) => RelationCommon.GetNthObjectHasBeenSet(index, this);
         bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
 
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => MasterReferenceCommon.UnsetNthObject(index, this, cmds);
+        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => RelationCommon.UnsetNthObject(index, this, cmds);
         void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => this.UnsetNthObject(index, cmds);
 
         #endregion
@@ -75,7 +75,7 @@ namespace Mutagen
         #region Loqui Interface
         protected void SetNthObjectHasBeenSet(ushort index, bool on)
         {
-            MasterReferenceCommon.SetNthObjectHasBeenSet(index, on, this);
+            RelationCommon.SetNthObjectHasBeenSet(index, on, this);
         }
         void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
 
@@ -84,48 +84,48 @@ namespace Mutagen
         #region To String
         public override string ToString()
         {
-            return MasterReferenceCommon.ToString(this, printMask: null);
+            return RelationCommon.ToString(this, printMask: null);
         }
 
         public string ToString(
             string name = null,
-            MasterReference_Mask<bool> printMask = null)
+            Relation_Mask<bool> printMask = null)
         {
-            return MasterReferenceCommon.ToString(this, name: name, printMask: printMask);
+            return RelationCommon.ToString(this, name: name, printMask: printMask);
         }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            MasterReferenceCommon.ToString(this, fg, name: name, printMask: null);
+            RelationCommon.ToString(this, fg, name: name, printMask: null);
         }
 
         #endregion
 
-        public MasterReference_Mask<bool> GetHasBeenSetMask()
+        public Relation_Mask<bool> GetHasBeenSetMask()
         {
-            return MasterReferenceCommon.GetHasBeenSetMask(this);
+            return RelationCommon.GetHasBeenSetMask(this);
         }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is MasterReference rhs)) return false;
+            if (!(obj is Relation rhs)) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(MasterReference rhs)
+        public bool Equals(Relation rhs)
         {
             if (rhs == null) return false;
-            if (Master_Property.HasBeenSet != rhs.Master_Property.HasBeenSet) return false;
-            if (Master_Property.HasBeenSet)
+            if (Faction_Property.HasBeenSet != rhs.Faction_Property.HasBeenSet) return false;
+            if (Faction_Property.HasBeenSet)
             {
-                if (!object.Equals(Master, rhs.Master)) return false;
+                if (Faction != rhs.Faction) return false;
             }
-            if (FileSize_Property.HasBeenSet != rhs.FileSize_Property.HasBeenSet) return false;
-            if (FileSize_Property.HasBeenSet)
+            if (Modifier_Property.HasBeenSet != rhs.Modifier_Property.HasBeenSet) return false;
+            if (Modifier_Property.HasBeenSet)
             {
-                if (FileSize != rhs.FileSize) return false;
+                if (Modifier != rhs.Modifier) return false;
             }
             return true;
         }
@@ -133,13 +133,13 @@ namespace Mutagen
         public override int GetHashCode()
         {
             int ret = 0;
-            if (Master_Property.HasBeenSet)
+            if (Faction_Property.HasBeenSet)
             {
-                ret = HashHelper.GetHashCode(Master).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(Faction).CombineHashCode(ret);
             }
-            if (FileSize_Property.HasBeenSet)
+            if (Modifier_Property.HasBeenSet)
             {
-                ret = HashHelper.GetHashCode(FileSize).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(Modifier).CombineHashCode(ret);
             }
             return ret;
         }
@@ -150,7 +150,7 @@ namespace Mutagen
         #region XML Translation
         #region XML Create
         [DebuggerStepThrough]
-        public static MasterReference Create_XML(XElement root)
+        public static Relation Create_XML(XElement root)
         {
             return Create_XML(
                 root: root,
@@ -159,9 +159,9 @@ namespace Mutagen
         }
 
         [DebuggerStepThrough]
-        public static MasterReference Create_XML(
+        public static Relation Create_XML(
             XElement root,
-            out MasterReference_ErrorMask errorMask)
+            out Relation_ErrorMask errorMask)
         {
             return Create_XML(
                 root: root,
@@ -170,10 +170,10 @@ namespace Mutagen
         }
 
         [DebuggerStepThrough]
-        public static MasterReference Create_XML(
+        public static Relation Create_XML(
             XElement root,
             bool doMasks,
-            out MasterReference_ErrorMask errorMask)
+            out Relation_ErrorMask errorMask)
         {
             var ret = Create_XML(
                 root: root,
@@ -183,27 +183,27 @@ namespace Mutagen
         }
 
         [DebuggerStepThrough]
-        public static (MasterReference Object, MasterReference_ErrorMask ErrorMask) Create_XML(
+        public static (Relation Object, Relation_ErrorMask ErrorMask) Create_XML(
             XElement root,
             bool doMasks)
         {
-            MasterReference_ErrorMask errMaskRet = null;
+            Relation_ErrorMask errMaskRet = null;
             var ret = Create_XML_Internal(
                 root: root,
                 doMasks: doMasks,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new MasterReference_ErrorMask()) : default(Func<MasterReference_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Relation_ErrorMask()) : default(Func<Relation_ErrorMask>));
             return (ret, errMaskRet);
         }
 
-        public static MasterReference Create_XML(string path)
+        public static Relation Create_XML(string path)
         {
             var root = XDocument.Load(path).Root;
             return Create_XML(root: root);
         }
 
-        public static MasterReference Create_XML(
+        public static Relation Create_XML(
             string path,
-            out MasterReference_ErrorMask errorMask)
+            out Relation_ErrorMask errorMask)
         {
             var root = XDocument.Load(path).Root;
             return Create_XML(
@@ -211,15 +211,15 @@ namespace Mutagen
                 errorMask: out errorMask);
         }
 
-        public static MasterReference Create_XML(Stream stream)
+        public static Relation Create_XML(Stream stream)
         {
             var root = XDocument.Load(stream).Root;
             return Create_XML(root: root);
         }
 
-        public static MasterReference Create_XML(
+        public static Relation Create_XML(
             Stream stream,
-            out MasterReference_ErrorMask errorMask)
+            out Relation_ErrorMask errorMask)
         {
             var root = XDocument.Load(stream).Root;
             return Create_XML(
@@ -234,7 +234,7 @@ namespace Mutagen
             XElement root,
             NotifyingFireParameters? cmds = null)
         {
-            LoquiXmlTranslation<MasterReference, MasterReference_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<Relation, Relation_ErrorMask>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
@@ -245,10 +245,10 @@ namespace Mutagen
 
         public virtual void CopyIn_XML(
             XElement root,
-            out MasterReference_ErrorMask errorMask,
+            out Relation_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
-            LoquiXmlTranslation<MasterReference, MasterReference_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<Relation, Relation_ErrorMask>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
@@ -269,7 +269,7 @@ namespace Mutagen
 
         public void CopyIn_XML(
             string path,
-            out MasterReference_ErrorMask errorMask,
+            out Relation_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             var root = XDocument.Load(path).Root;
@@ -291,7 +291,7 @@ namespace Mutagen
 
         public void CopyIn_XML(
             Stream stream,
-            out MasterReference_ErrorMask errorMask,
+            out Relation_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             var root = XDocument.Load(stream).Root;
@@ -306,10 +306,10 @@ namespace Mutagen
         #region XML Write
         public virtual void Write_XML(
             XmlWriter writer,
-            out MasterReference_ErrorMask errorMask,
+            out Relation_ErrorMask errorMask,
             string name = null)
         {
-            errorMask = (MasterReference_ErrorMask)this.Write_XML_Internal(
+            errorMask = (Relation_ErrorMask)this.Write_XML_Internal(
                 writer: writer,
                 name: name,
                 doMasks: true);
@@ -317,7 +317,7 @@ namespace Mutagen
 
         public virtual void Write_XML(
             string path,
-            out MasterReference_ErrorMask errorMask,
+            out Relation_ErrorMask errorMask,
             string name = null)
         {
             using (var writer = new XmlTextWriter(path, Encoding.ASCII))
@@ -333,7 +333,7 @@ namespace Mutagen
 
         public virtual void Write_XML(
             Stream stream,
-            out MasterReference_ErrorMask errorMask,
+            out Relation_ErrorMask errorMask,
             string name = null)
         {
             using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
@@ -390,7 +390,7 @@ namespace Mutagen
             bool doMasks,
             string name = null)
         {
-            MasterReferenceCommon.Write_XML(
+            RelationCommon.Write_XML(
                 writer: writer,
                 item: this,
                 doMasks: doMasks,
@@ -399,12 +399,12 @@ namespace Mutagen
         }
         #endregion
 
-        private static MasterReference Create_XML_Internal(
+        private static Relation Create_XML_Internal(
             XElement root,
             bool doMasks,
-            Func<MasterReference_ErrorMask> errorMask)
+            Func<Relation_ErrorMask> errorMask)
         {
-            var ret = new MasterReference();
+            var ret = new Relation();
             try
             {
                 foreach (var elem in root.Elements())
@@ -426,41 +426,41 @@ namespace Mutagen
         }
 
         protected static void Fill_XML_Internal(
-            MasterReference item,
+            Relation item,
             XElement root,
             string name,
             bool doMasks,
-            Func<MasterReference_ErrorMask> errorMask)
+            Func<Relation_ErrorMask> errorMask)
         {
             switch (name)
             {
-                case "Master":
+                case "Faction":
                     {
                         Exception subMask;
-                        var tryGet = StringXmlTranslation.Instance.Parse(
+                        var tryGet = FormIDXmlTranslation.Instance.ParseNonNull(
                             root,
                             doMasks: doMasks,
                             errorMask: out subMask);
-                        item._Master.SetIfSucceeded(tryGet);
+                        item._Faction.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
                             doMasks,
-                            (int)MasterReference_FieldIndex.Master,
+                            (int)Relation_FieldIndex.Faction,
                             subMask);
                     }
                     break;
-                case "FileSize":
+                case "Modifier":
                     {
                         Exception subMask;
-                        var tryGet = UInt64XmlTranslation.Instance.ParseNonNull(
+                        var tryGet = Int32XmlTranslation.Instance.ParseNonNull(
                             root,
                             doMasks: doMasks,
                             errorMask: out subMask);
-                        item._FileSize.SetIfSucceeded(tryGet);
+                        item._Modifier.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
                             doMasks,
-                            (int)MasterReference_FieldIndex.FileSize,
+                            (int)Relation_FieldIndex.Modifier,
                             subMask);
                     }
                     break;
@@ -474,7 +474,7 @@ namespace Mutagen
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public static MasterReference Create_Binary(MutagenFrame frame)
+        public static Relation Create_Binary(MutagenFrame frame)
         {
             return Create_Binary(
                 frame: frame,
@@ -483,9 +483,9 @@ namespace Mutagen
         }
 
         [DebuggerStepThrough]
-        public static MasterReference Create_Binary(
+        public static Relation Create_Binary(
             MutagenFrame frame,
-            out MasterReference_ErrorMask errorMask)
+            out Relation_ErrorMask errorMask)
         {
             return Create_Binary(
                 frame: frame,
@@ -494,10 +494,10 @@ namespace Mutagen
         }
 
         [DebuggerStepThrough]
-        public static MasterReference Create_Binary(
+        public static Relation Create_Binary(
             MutagenFrame frame,
             bool doMasks,
-            out MasterReference_ErrorMask errorMask)
+            out Relation_ErrorMask errorMask)
         {
             var ret = Create_Binary(
                 frame: frame,
@@ -507,19 +507,19 @@ namespace Mutagen
         }
 
         [DebuggerStepThrough]
-        public static (MasterReference Object, MasterReference_ErrorMask ErrorMask) Create_Binary(
+        public static (Relation Object, Relation_ErrorMask ErrorMask) Create_Binary(
             MutagenFrame frame,
             bool doMasks)
         {
-            MasterReference_ErrorMask errMaskRet = null;
+            Relation_ErrorMask errMaskRet = null;
             var ret = Create_Binary_Internal(
                 frame: frame,
                 doMasks: doMasks,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new MasterReference_ErrorMask()) : default(Func<MasterReference_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Relation_ErrorMask()) : default(Func<Relation_ErrorMask>));
             return (ret, errMaskRet);
         }
 
-        public static MasterReference Create_Binary(string path)
+        public static Relation Create_Binary(string path)
         {
             using (var reader = new MutagenReader(path))
             {
@@ -528,9 +528,9 @@ namespace Mutagen
             }
         }
 
-        public static MasterReference Create_Binary(
+        public static Relation Create_Binary(
             string path,
-            out MasterReference_ErrorMask errorMask)
+            out Relation_ErrorMask errorMask)
         {
             using (var reader = new MutagenReader(path))
             {
@@ -541,7 +541,7 @@ namespace Mutagen
             }
         }
 
-        public static MasterReference Create_Binary(Stream stream)
+        public static Relation Create_Binary(Stream stream)
         {
             using (var reader = new MutagenReader(stream))
             {
@@ -550,9 +550,9 @@ namespace Mutagen
             }
         }
 
-        public static MasterReference Create_Binary(
+        public static Relation Create_Binary(
             Stream stream,
-            out MasterReference_ErrorMask errorMask)
+            out Relation_ErrorMask errorMask)
         {
             using (var reader = new MutagenReader(stream))
             {
@@ -570,7 +570,7 @@ namespace Mutagen
             MutagenFrame frame,
             NotifyingFireParameters? cmds = null)
         {
-            LoquiBinaryTranslation<MasterReference, MasterReference_ErrorMask>.Instance.CopyIn(
+            LoquiBinaryTranslation<Relation, Relation_ErrorMask>.Instance.CopyIn(
                 frame: frame,
                 item: this,
                 skipProtected: true,
@@ -581,10 +581,10 @@ namespace Mutagen
 
         public virtual void CopyIn_Binary(
             MutagenFrame frame,
-            out MasterReference_ErrorMask errorMask,
+            out Relation_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
-            LoquiBinaryTranslation<MasterReference, MasterReference_ErrorMask>.Instance.CopyIn(
+            LoquiBinaryTranslation<Relation, Relation_ErrorMask>.Instance.CopyIn(
                 frame: frame,
                 item: this,
                 skipProtected: true,
@@ -608,7 +608,7 @@ namespace Mutagen
 
         public void CopyIn_Binary(
             string path,
-            out MasterReference_ErrorMask errorMask,
+            out Relation_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             using (var reader = new MutagenReader(path))
@@ -636,7 +636,7 @@ namespace Mutagen
 
         public void CopyIn_Binary(
             Stream stream,
-            out MasterReference_ErrorMask errorMask,
+            out Relation_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             using (var reader = new MutagenReader(stream))
@@ -654,16 +654,16 @@ namespace Mutagen
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
-            out MasterReference_ErrorMask errorMask)
+            out Relation_ErrorMask errorMask)
         {
-            errorMask = (MasterReference_ErrorMask)this.Write_Binary_Internal(
+            errorMask = (Relation_ErrorMask)this.Write_Binary_Internal(
                 writer: writer,
                 doMasks: true);
         }
 
         public virtual void Write_Binary(
             string path,
-            out MasterReference_ErrorMask errorMask)
+            out Relation_ErrorMask errorMask)
         {
             using (var writer = new MutagenWriter(path))
             {
@@ -675,7 +675,7 @@ namespace Mutagen
 
         public virtual void Write_Binary(
             Stream stream,
-            out MasterReference_ErrorMask errorMask)
+            out Relation_ErrorMask errorMask)
         {
             using (var writer = new MutagenWriter(stream))
             {
@@ -712,7 +712,7 @@ namespace Mutagen
             MutagenWriter writer,
             bool doMasks)
         {
-            MasterReferenceCommon.Write_Binary(
+            RelationCommon.Write_Binary(
                 writer: writer,
                 item: this,
                 doMasks: doMasks,
@@ -721,14 +721,17 @@ namespace Mutagen
         }
         #endregion
 
-        private static MasterReference Create_Binary_Internal(
+        private static Relation Create_Binary_Internal(
             MutagenFrame frame,
             bool doMasks,
-            Func<MasterReference_ErrorMask> errorMask)
+            Func<Relation_ErrorMask> errorMask)
         {
-            var ret = new MasterReference();
+            var ret = new Relation();
             try
             {
+                frame = frame.Spawn(HeaderTranslation.ParseSubrecord(
+                    frame,
+                    Relation_Registration.XNAM_HEADER));
                 using (frame)
                 {
                     Fill_Binary_Structs(
@@ -736,14 +739,6 @@ namespace Mutagen
                         frame: frame,
                         doMasks: doMasks,
                         errorMask: errorMask);
-                    while (!frame.Complete)
-                    {
-                        Fill_Binary_RecordTypes(
-                            item: ret,
-                            frame: frame,
-                            doMasks: doMasks,
-                            errorMask: errorMask);
-                    }
                 }
             }
             catch (Exception ex)
@@ -755,86 +750,66 @@ namespace Mutagen
         }
 
         protected static void Fill_Binary_Structs(
-            MasterReference item,
+            Relation item,
             MutagenFrame frame,
             bool doMasks,
-            Func<MasterReference_ErrorMask> errorMask)
+            Func<Relation_ErrorMask> errorMask)
         {
-        }
-
-        protected static void Fill_Binary_RecordTypes(
-            MasterReference item,
-            MutagenFrame frame,
-            bool doMasks,
-            Func<MasterReference_ErrorMask> errorMask)
-        {
-            var nextRecordType = HeaderTranslation.GetNextSubRecordType(
-                frame: frame,
-                contentLength: out var contentLength);
-            switch (nextRecordType.Type)
+            if (frame.Complete) return;
             {
-                case "MAST":
-                {
-                    Exception subMask;
-                    frame.Position += Constants.SUBRECORD_LENGTH;
-                    var tryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
-                        doMasks: doMasks,
-                        errorMask: out subMask);
-                    item._Master.SetIfSucceeded(tryGet);
-                    ErrorMask.HandleErrorMask(
-                        errorMask,
-                        doMasks,
-                        (int)MasterReference_FieldIndex.Master,
-                        subMask);
-                }
-                break;
-                case "DATA":
-                {
-                    Exception subMask;
-                    frame.Position += Constants.SUBRECORD_LENGTH;
-                    var tryGet = Mutagen.Binary.UInt64BinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
-                        doMasks: doMasks,
-                        errorMask: out subMask);
-                    item._FileSize.SetIfSucceeded(tryGet);
-                    ErrorMask.HandleErrorMask(
-                        errorMask,
-                        doMasks,
-                        (int)MasterReference_FieldIndex.FileSize,
-                        subMask);
-                }
-                break;
-                default:
-                    throw new ArgumentException($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
+                Exception subMask;
+                var tryGet = Mutagen.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    doMasks: doMasks,
+                    errorMask: out subMask);
+                item._Faction.SetIfSucceeded(tryGet);
+                ErrorMask.HandleErrorMask(
+                    errorMask,
+                    doMasks,
+                    (int)Relation_FieldIndex.Faction,
+                    subMask);
+            }
+            if (frame.Complete) return;
+            {
+                Exception subMask;
+                var tryGet = Mutagen.Binary.Int32BinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    doMasks: doMasks,
+                    errorMask: out subMask);
+                item._Modifier.SetIfSucceeded(tryGet);
+                ErrorMask.HandleErrorMask(
+                    errorMask,
+                    doMasks,
+                    (int)Relation_FieldIndex.Modifier,
+                    subMask);
             }
         }
 
         #endregion
 
-        public MasterReference Copy(
-            MasterReference_CopyMask copyMask = null,
-            IMasterReferenceGetter def = null)
+        public Relation Copy(
+            Relation_CopyMask copyMask = null,
+            IRelationGetter def = null)
         {
-            return MasterReference.Copy(
+            return Relation.Copy(
                 this,
                 copyMask: copyMask,
                 def: def);
         }
 
-        public static MasterReference Copy(
-            IMasterReference item,
-            MasterReference_CopyMask copyMask = null,
-            IMasterReferenceGetter def = null)
+        public static Relation Copy(
+            IRelation item,
+            Relation_CopyMask copyMask = null,
+            IRelationGetter def = null)
         {
-            MasterReference ret;
-            if (item.GetType().Equals(typeof(MasterReference)))
+            Relation ret;
+            if (item.GetType().Equals(typeof(Relation)))
             {
-                ret = new MasterReference();
+                ret = new Relation();
             }
             else
             {
-                ret = (MasterReference)Activator.CreateInstance(item.GetType());
+                ret = (Relation)Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom(
                 item,
@@ -845,14 +820,14 @@ namespace Mutagen
 
         public static CopyType CopyGeneric<CopyType>(
             CopyType item,
-            MasterReference_CopyMask copyMask = null,
-            IMasterReferenceGetter def = null)
-            where CopyType : class, IMasterReference
+            Relation_CopyMask copyMask = null,
+            IRelationGetter def = null)
+            where CopyType : class, IRelation
         {
             CopyType ret;
-            if (item.GetType().Equals(typeof(MasterReference)))
+            if (item.GetType().Equals(typeof(Relation)))
             {
-                ret = new MasterReference() as CopyType;
+                ret = new Relation() as CopyType;
             }
             else
             {
@@ -868,12 +843,12 @@ namespace Mutagen
             return ret;
         }
 
-        public static MasterReference Copy_ToLoqui(
-            IMasterReferenceGetter item,
-            MasterReference_CopyMask copyMask = null,
-            IMasterReferenceGetter def = null)
+        public static Relation Copy_ToLoqui(
+            IRelationGetter item,
+            Relation_CopyMask copyMask = null,
+            IRelationGetter def = null)
         {
-            var ret = new MasterReference();
+            var ret = new Relation();
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
@@ -884,17 +859,17 @@ namespace Mutagen
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds = null)
         {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
+            Relation_FieldIndex enu = (Relation_FieldIndex)index;
             switch (enu)
             {
-                case MasterReference_FieldIndex.Master:
-                    this._Master.Set(
-                        (String)obj,
+                case Relation_FieldIndex.Faction:
+                    this._Faction.Set(
+                        (FormID)obj,
                         cmds);
                     break;
-                case MasterReference_FieldIndex.FileSize:
-                    this._FileSize.Set(
-                        (UInt64)obj,
+                case Relation_FieldIndex.Modifier:
+                    this._Modifier.Set(
+                        (Int32)obj,
                         cmds);
                     break;
                 default:
@@ -912,43 +887,43 @@ namespace Mutagen
         public void Clear(NotifyingUnsetParameters? cmds = null)
         {
             CallClearPartial_Internal(cmds);
-            MasterReferenceCommon.Clear(this, cmds);
+            RelationCommon.Clear(this, cmds);
         }
 
 
-        public static MasterReference Create(IEnumerable<KeyValuePair<ushort, object>> fields)
+        public static Relation Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
-            var ret = new MasterReference();
+            var ret = new Relation();
             foreach (var pair in fields)
             {
-                CopyInInternal_MasterReference(ret, pair);
+                CopyInInternal_Relation(ret, pair);
             }
             return ret;
         }
 
-        protected static void CopyInInternal_MasterReference(MasterReference obj, KeyValuePair<ushort, object> pair)
+        protected static void CopyInInternal_Relation(Relation obj, KeyValuePair<ushort, object> pair)
         {
-            if (!EnumExt.TryParse(pair.Key, out MasterReference_FieldIndex enu))
+            if (!EnumExt.TryParse(pair.Key, out Relation_FieldIndex enu))
             {
                 throw new ArgumentException($"Unknown index: {pair.Key}");
             }
             switch (enu)
             {
-                case MasterReference_FieldIndex.Master:
-                    obj._Master.Set(
-                        (String)pair.Value,
+                case Relation_FieldIndex.Faction:
+                    obj._Faction.Set(
+                        (FormID)pair.Value,
                         null);
                     break;
-                case MasterReference_FieldIndex.FileSize:
-                    obj._FileSize.Set(
-                        (UInt64)pair.Value,
+                case Relation_FieldIndex.Modifier:
+                    obj._Modifier.Set(
+                        (Int32)pair.Value,
                         null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, MasterReference obj)
+        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Relation obj)
         {
             ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
         }
@@ -957,26 +932,26 @@ namespace Mutagen
     #endregion
 
     #region Interface
-    public interface IMasterReference : IMasterReferenceGetter, ILoquiClass<IMasterReference, IMasterReferenceGetter>, ILoquiClass<MasterReference, IMasterReferenceGetter>
+    public interface IRelation : IRelationGetter, ILoquiClass<IRelation, IRelationGetter>, ILoquiClass<Relation, IRelationGetter>
     {
-        new String Master { get; set; }
-        new INotifyingItem<String> Master_Property { get; }
+        new FormID Faction { get; set; }
+        new INotifyingItem<FormID> Faction_Property { get; }
 
-        new UInt64 FileSize { get; set; }
-        new INotifyingItem<UInt64> FileSize_Property { get; }
+        new Int32 Modifier { get; set; }
+        new INotifyingItem<Int32> Modifier_Property { get; }
 
     }
 
-    public interface IMasterReferenceGetter : ILoquiObject
+    public interface IRelationGetter : ILoquiObject
     {
-        #region Master
-        String Master { get; }
-        INotifyingItemGetter<String> Master_Property { get; }
+        #region Faction
+        FormID Faction { get; }
+        INotifyingItemGetter<FormID> Faction_Property { get; }
 
         #endregion
-        #region FileSize
-        UInt64 FileSize { get; }
-        INotifyingItemGetter<UInt64> FileSize_Property { get; }
+        #region Modifier
+        Int32 Modifier { get; }
+        INotifyingItemGetter<Int32> Modifier_Property { get; }
 
         #endregion
 
@@ -989,44 +964,44 @@ namespace Mutagen
 namespace Mutagen.Internals
 {
     #region Field Index
-    public enum MasterReference_FieldIndex
+    public enum Relation_FieldIndex
     {
-        Master = 0,
-        FileSize = 1,
+        Faction = 0,
+        Modifier = 1,
     }
     #endregion
 
     #region Registration
-    public class MasterReference_Registration : ILoquiRegistration
+    public class Relation_Registration : ILoquiRegistration
     {
-        public static readonly MasterReference_Registration Instance = new MasterReference_Registration();
+        public static readonly Relation_Registration Instance = new Relation_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Mutagen.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Mutagen.ProtocolKey,
-            msgID: 5,
+            msgID: 23,
             version: 0);
 
-        public const string GUID = "8f2ed19a-5edb-4f8f-9d29-43dc638aade9";
+        public const string GUID = "1a14276a-e5c3-4feb-8bf0-1d16878e7eb9";
 
         public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(MasterReference_Mask<>);
+        public static readonly Type MaskType = typeof(Relation_Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(MasterReference_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Relation_ErrorMask);
 
-        public static readonly Type ClassType = typeof(MasterReference);
+        public static readonly Type ClassType = typeof(Relation);
 
-        public static readonly Type GetterType = typeof(IMasterReferenceGetter);
+        public static readonly Type GetterType = typeof(IRelationGetter);
 
-        public static readonly Type SetterType = typeof(IMasterReference);
+        public static readonly Type SetterType = typeof(IRelation);
 
-        public static readonly Type CommonType = typeof(MasterReferenceCommon);
+        public static readonly Type CommonType = typeof(RelationCommon);
 
-        public const string FullName = "Mutagen.MasterReference";
+        public const string FullName = "Mutagen.Relation";
 
-        public const string Name = "MasterReference";
+        public const string Name = "Relation";
 
         public const string Namespace = "Mutagen";
 
@@ -1038,10 +1013,10 @@ namespace Mutagen.Internals
         {
             switch (str.Upper)
             {
-                case "MASTER":
-                    return (ushort)MasterReference_FieldIndex.Master;
-                case "FILESIZE":
-                    return (ushort)MasterReference_FieldIndex.FileSize;
+                case "FACTION":
+                    return (ushort)Relation_FieldIndex.Faction;
+                case "MODIFIER":
+                    return (ushort)Relation_FieldIndex.Modifier;
                 default:
                     return null;
             }
@@ -1049,11 +1024,11 @@ namespace Mutagen.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
+            Relation_FieldIndex enu = (Relation_FieldIndex)index;
             switch (enu)
             {
-                case MasterReference_FieldIndex.Master:
-                case MasterReference_FieldIndex.FileSize:
+                case Relation_FieldIndex.Faction:
+                case Relation_FieldIndex.Modifier:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1062,11 +1037,11 @@ namespace Mutagen.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
+            Relation_FieldIndex enu = (Relation_FieldIndex)index;
             switch (enu)
             {
-                case MasterReference_FieldIndex.Master:
-                case MasterReference_FieldIndex.FileSize:
+                case Relation_FieldIndex.Faction:
+                case Relation_FieldIndex.Modifier:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1075,11 +1050,11 @@ namespace Mutagen.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
+            Relation_FieldIndex enu = (Relation_FieldIndex)index;
             switch (enu)
             {
-                case MasterReference_FieldIndex.Master:
-                case MasterReference_FieldIndex.FileSize:
+                case Relation_FieldIndex.Faction:
+                case Relation_FieldIndex.Modifier:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1088,13 +1063,13 @@ namespace Mutagen.Internals
 
         public static string GetNthName(ushort index)
         {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
+            Relation_FieldIndex enu = (Relation_FieldIndex)index;
             switch (enu)
             {
-                case MasterReference_FieldIndex.Master:
-                    return "Master";
-                case MasterReference_FieldIndex.FileSize:
-                    return "FileSize";
+                case Relation_FieldIndex.Faction:
+                    return "Faction";
+                case Relation_FieldIndex.Modifier:
+                    return "Modifier";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1102,11 +1077,11 @@ namespace Mutagen.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
+            Relation_FieldIndex enu = (Relation_FieldIndex)index;
             switch (enu)
             {
-                case MasterReference_FieldIndex.Master:
-                case MasterReference_FieldIndex.FileSize:
+                case Relation_FieldIndex.Faction:
+                case Relation_FieldIndex.Modifier:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1115,11 +1090,11 @@ namespace Mutagen.Internals
 
         public static bool IsProtected(ushort index)
         {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
+            Relation_FieldIndex enu = (Relation_FieldIndex)index;
             switch (enu)
             {
-                case MasterReference_FieldIndex.Master:
-                case MasterReference_FieldIndex.FileSize:
+                case Relation_FieldIndex.Faction:
+                case Relation_FieldIndex.Modifier:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1128,23 +1103,22 @@ namespace Mutagen.Internals
 
         public static Type GetNthType(ushort index)
         {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
+            Relation_FieldIndex enu = (Relation_FieldIndex)index;
             switch (enu)
             {
-                case MasterReference_FieldIndex.Master:
-                    return typeof(String);
-                case MasterReference_FieldIndex.FileSize:
-                    return typeof(UInt64);
+                case Relation_FieldIndex.Faction:
+                    return typeof(FormID);
+                case Relation_FieldIndex.Modifier:
+                    return typeof(Int32);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
-        public static readonly RecordType MAST_HEADER = new RecordType("MAST");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = MAST_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 2;
+        public static readonly RecordType XNAM_HEADER = new RecordType("XNAM");
+        public static readonly RecordType TRIGGERING_RECORD_TYPE = XNAM_HEADER;
+        public const int NumStructFields = 2;
+        public const int NumTypedFields = 0;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1175,17 +1149,17 @@ namespace Mutagen.Internals
     #endregion
 
     #region Extensions
-    public static class MasterReferenceCommon
+    public static class RelationCommon
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IMasterReference item,
-            IMasterReferenceGetter rhs,
-            MasterReference_CopyMask copyMask = null,
-            IMasterReferenceGetter def = null,
+            this IRelation item,
+            IRelationGetter rhs,
+            Relation_CopyMask copyMask = null,
+            IRelationGetter def = null,
             NotifyingFireParameters? cmds = null)
         {
-            MasterReferenceCommon.CopyFieldsFrom(
+            RelationCommon.CopyFieldsFrom(
                 item: item,
                 rhs: rhs,
                 def: def,
@@ -1196,14 +1170,14 @@ namespace Mutagen.Internals
         }
 
         public static void CopyFieldsFrom(
-            this IMasterReference item,
-            IMasterReferenceGetter rhs,
-            out MasterReference_ErrorMask errorMask,
-            MasterReference_CopyMask copyMask = null,
-            IMasterReferenceGetter def = null,
+            this IRelation item,
+            IRelationGetter rhs,
+            out Relation_ErrorMask errorMask,
+            Relation_CopyMask copyMask = null,
+            IRelationGetter def = null,
             NotifyingFireParameters? cmds = null)
         {
-            MasterReferenceCommon.CopyFieldsFrom(
+            RelationCommon.CopyFieldsFrom(
                 item: item,
                 rhs: rhs,
                 def: def,
@@ -1214,20 +1188,20 @@ namespace Mutagen.Internals
         }
 
         public static void CopyFieldsFrom(
-            this IMasterReference item,
-            IMasterReferenceGetter rhs,
-            IMasterReferenceGetter def,
+            this IRelation item,
+            IRelationGetter rhs,
+            IRelationGetter def,
             bool doErrorMask,
-            out MasterReference_ErrorMask errorMask,
-            MasterReference_CopyMask copyMask,
+            out Relation_ErrorMask errorMask,
+            Relation_CopyMask copyMask,
             NotifyingFireParameters? cmds)
         {
-            MasterReference_ErrorMask retErrorMask = null;
-            Func<MasterReference_ErrorMask> maskGetter = () =>
+            Relation_ErrorMask retErrorMask = null;
+            Func<Relation_ErrorMask> maskGetter = () =>
             {
                 if (retErrorMask == null)
                 {
-                    retErrorMask = new MasterReference_ErrorMask();
+                    retErrorMask = new Relation_ErrorMask();
                 }
                 return retErrorMask;
             };
@@ -1243,42 +1217,42 @@ namespace Mutagen.Internals
         }
 
         public static void CopyFieldsFrom(
-            this IMasterReference item,
-            IMasterReferenceGetter rhs,
-            IMasterReferenceGetter def,
+            this IRelation item,
+            IRelationGetter rhs,
+            IRelationGetter def,
             bool doErrorMask,
-            Func<MasterReference_ErrorMask> errorMask,
-            MasterReference_CopyMask copyMask,
+            Func<Relation_ErrorMask> errorMask,
+            Relation_CopyMask copyMask,
             NotifyingFireParameters? cmds)
         {
-            if (copyMask?.Master ?? true)
+            if (copyMask?.Faction ?? true)
             {
                 try
                 {
-                    item.Master_Property.SetToWithDefault(
-                        rhs.Master_Property,
-                        def?.Master_Property,
+                    item.Faction_Property.SetToWithDefault(
+                        rhs.Faction_Property,
+                        def?.Faction_Property,
                         cmds);
                 }
                 catch (Exception ex)
                 when (doErrorMask)
                 {
-                    errorMask().SetNthException((int)MasterReference_FieldIndex.Master, ex);
+                    errorMask().SetNthException((int)Relation_FieldIndex.Faction, ex);
                 }
             }
-            if (copyMask?.FileSize ?? true)
+            if (copyMask?.Modifier ?? true)
             {
                 try
                 {
-                    item.FileSize_Property.SetToWithDefault(
-                        rhs.FileSize_Property,
-                        def?.FileSize_Property,
+                    item.Modifier_Property.SetToWithDefault(
+                        rhs.Modifier_Property,
+                        def?.Modifier_Property,
                         cmds);
                 }
                 catch (Exception ex)
                 when (doErrorMask)
                 {
-                    errorMask().SetNthException((int)MasterReference_FieldIndex.FileSize, ex);
+                    errorMask().SetNthException((int)Relation_FieldIndex.Modifier, ex);
                 }
             }
         }
@@ -1288,17 +1262,17 @@ namespace Mutagen.Internals
         public static void SetNthObjectHasBeenSet(
             ushort index,
             bool on,
-            IMasterReference obj,
+            IRelation obj,
             NotifyingFireParameters? cmds = null)
         {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
+            Relation_FieldIndex enu = (Relation_FieldIndex)index;
             switch (enu)
             {
-                case MasterReference_FieldIndex.Master:
-                    obj.Master_Property.HasBeenSet = on;
+                case Relation_FieldIndex.Faction:
+                    obj.Faction_Property.HasBeenSet = on;
                     break;
-                case MasterReference_FieldIndex.FileSize:
-                    obj.FileSize_Property.HasBeenSet = on;
+                case Relation_FieldIndex.Modifier:
+                    obj.Modifier_Property.HasBeenSet = on;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1307,17 +1281,17 @@ namespace Mutagen.Internals
 
         public static void UnsetNthObject(
             ushort index,
-            IMasterReference obj,
+            IRelation obj,
             NotifyingUnsetParameters? cmds = null)
         {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
+            Relation_FieldIndex enu = (Relation_FieldIndex)index;
             switch (enu)
             {
-                case MasterReference_FieldIndex.Master:
-                    obj.Master_Property.Unset(cmds);
+                case Relation_FieldIndex.Faction:
+                    obj.Faction_Property.Unset(cmds);
                     break;
-                case MasterReference_FieldIndex.FileSize:
-                    obj.FileSize_Property.Unset(cmds);
+                case Relation_FieldIndex.Modifier:
+                    obj.Modifier_Property.Unset(cmds);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1326,15 +1300,15 @@ namespace Mutagen.Internals
 
         public static bool GetNthObjectHasBeenSet(
             ushort index,
-            IMasterReference obj)
+            IRelation obj)
         {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
+            Relation_FieldIndex enu = (Relation_FieldIndex)index;
             switch (enu)
             {
-                case MasterReference_FieldIndex.Master:
-                    return obj.Master_Property.HasBeenSet;
-                case MasterReference_FieldIndex.FileSize:
-                    return obj.FileSize_Property.HasBeenSet;
+                case Relation_FieldIndex.Faction:
+                    return obj.Faction_Property.HasBeenSet;
+                case Relation_FieldIndex.Modifier:
+                    return obj.Modifier_Property.HasBeenSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1342,51 +1316,51 @@ namespace Mutagen.Internals
 
         public static object GetNthObject(
             ushort index,
-            IMasterReferenceGetter obj)
+            IRelationGetter obj)
         {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
+            Relation_FieldIndex enu = (Relation_FieldIndex)index;
             switch (enu)
             {
-                case MasterReference_FieldIndex.Master:
-                    return obj.Master;
-                case MasterReference_FieldIndex.FileSize:
-                    return obj.FileSize;
+                case Relation_FieldIndex.Faction:
+                    return obj.Faction;
+                case Relation_FieldIndex.Modifier:
+                    return obj.Modifier;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
         public static void Clear(
-            IMasterReference item,
+            IRelation item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.Master_Property.Unset(cmds.ToUnsetParams());
-            item.FileSize_Property.Unset(cmds.ToUnsetParams());
+            item.Faction_Property.Unset(cmds.ToUnsetParams());
+            item.Modifier_Property.Unset(cmds.ToUnsetParams());
         }
 
-        public static MasterReference_Mask<bool> GetEqualsMask(
-            this IMasterReferenceGetter item,
-            IMasterReferenceGetter rhs)
+        public static Relation_Mask<bool> GetEqualsMask(
+            this IRelationGetter item,
+            IRelationGetter rhs)
         {
-            var ret = new MasterReference_Mask<bool>();
+            var ret = new Relation_Mask<bool>();
             FillEqualsMask(item, rhs, ret);
             return ret;
         }
 
         public static void FillEqualsMask(
-            IMasterReferenceGetter item,
-            IMasterReferenceGetter rhs,
-            MasterReference_Mask<bool> ret)
+            IRelationGetter item,
+            IRelationGetter rhs,
+            Relation_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Master = item.Master_Property.Equals(rhs.Master_Property, (l, r) => object.Equals(l, r));
-            ret.FileSize = item.FileSize_Property.Equals(rhs.FileSize_Property, (l, r) => l == r);
+            ret.Faction = item.Faction_Property.Equals(rhs.Faction_Property, (l, r) => l == r);
+            ret.Modifier = item.Modifier_Property.Equals(rhs.Modifier_Property, (l, r) => l == r);
         }
 
         public static string ToString(
-            this IMasterReferenceGetter item,
+            this IRelationGetter item,
             string name = null,
-            MasterReference_Mask<bool> printMask = null)
+            Relation_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             item.ToString(fg, name, printMask);
@@ -1394,48 +1368,48 @@ namespace Mutagen.Internals
         }
 
         public static void ToString(
-            this IMasterReferenceGetter item,
+            this IRelationGetter item,
             FileGeneration fg,
             string name = null,
-            MasterReference_Mask<bool> printMask = null)
+            Relation_Mask<bool> printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(MasterReference)} =>");
+                fg.AppendLine($"{nameof(Relation)} =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(MasterReference)}) =>");
+                fg.AppendLine($"{name} ({nameof(Relation)}) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Master ?? true)
+                if (printMask?.Faction ?? true)
                 {
-                    fg.AppendLine($"Master => {item.Master}");
+                    fg.AppendLine($"Faction => {item.Faction}");
                 }
-                if (printMask?.FileSize ?? true)
+                if (printMask?.Modifier ?? true)
                 {
-                    fg.AppendLine($"FileSize => {item.FileSize}");
+                    fg.AppendLine($"Modifier => {item.Modifier}");
                 }
             }
             fg.AppendLine("]");
         }
 
         public static bool HasBeenSet(
-            this IMasterReferenceGetter item,
-            MasterReference_Mask<bool?> checkMask)
+            this IRelationGetter item,
+            Relation_Mask<bool?> checkMask)
         {
-            if (checkMask.Master.HasValue && checkMask.Master.Value != item.Master_Property.HasBeenSet) return false;
-            if (checkMask.FileSize.HasValue && checkMask.FileSize.Value != item.FileSize_Property.HasBeenSet) return false;
+            if (checkMask.Faction.HasValue && checkMask.Faction.Value != item.Faction_Property.HasBeenSet) return false;
+            if (checkMask.Modifier.HasValue && checkMask.Modifier.Value != item.Modifier_Property.HasBeenSet) return false;
             return true;
         }
 
-        public static MasterReference_Mask<bool> GetHasBeenSetMask(IMasterReferenceGetter item)
+        public static Relation_Mask<bool> GetHasBeenSetMask(IRelationGetter item)
         {
-            var ret = new MasterReference_Mask<bool>();
-            ret.Master = item.Master_Property.HasBeenSet;
-            ret.FileSize = item.FileSize_Property.HasBeenSet;
+            var ret = new Relation_Mask<bool>();
+            ret.Faction = item.Faction_Property.HasBeenSet;
+            ret.Modifier = item.Modifier_Property.HasBeenSet;
             return ret;
         }
 
@@ -1443,64 +1417,64 @@ namespace Mutagen.Internals
         #region XML Write
         public static void Write_XML(
             XmlWriter writer,
-            IMasterReferenceGetter item,
+            IRelationGetter item,
             bool doMasks,
-            out MasterReference_ErrorMask errorMask,
+            out Relation_ErrorMask errorMask,
             string name = null)
         {
-            MasterReference_ErrorMask errMaskRet = null;
+            Relation_ErrorMask errMaskRet = null;
             Write_XML_Internal(
                 writer: writer,
                 name: name,
                 item: item,
                 doMasks: doMasks,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new MasterReference_ErrorMask()) : default(Func<MasterReference_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Relation_ErrorMask()) : default(Func<Relation_ErrorMask>));
             errorMask = errMaskRet;
         }
 
         private static void Write_XML_Internal(
             XmlWriter writer,
-            IMasterReferenceGetter item,
+            IRelationGetter item,
             bool doMasks,
-            Func<MasterReference_ErrorMask> errorMask,
+            Func<Relation_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.MasterReference"))
+                using (new ElementWrapper(writer, name ?? "Mutagen.Relation"))
                 {
                     if (name != null)
                     {
-                        writer.WriteAttributeString("type", "Mutagen.MasterReference");
+                        writer.WriteAttributeString("type", "Mutagen.Relation");
                     }
-                    if (item.Master_Property.HasBeenSet)
+                    if (item.Faction_Property.HasBeenSet)
                     {
                         Exception subMask;
-                        StringXmlTranslation.Instance.Write(
+                        FormIDXmlTranslation.Instance.Write(
                             writer,
-                            nameof(item.Master),
-                            item.Master,
+                            nameof(item.Faction),
+                            item.Faction,
                             doMasks: doMasks,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
                             doMasks,
-                            (int)MasterReference_FieldIndex.Master,
+                            (int)Relation_FieldIndex.Faction,
                             subMask);
                     }
-                    if (item.FileSize_Property.HasBeenSet)
+                    if (item.Modifier_Property.HasBeenSet)
                     {
                         Exception subMask;
-                        UInt64XmlTranslation.Instance.Write(
+                        Int32XmlTranslation.Instance.Write(
                             writer,
-                            nameof(item.FileSize),
-                            item.FileSize,
+                            nameof(item.Modifier),
+                            item.Modifier,
                             doMasks: doMasks,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
                             doMasks,
-                            (int)MasterReference_FieldIndex.FileSize,
+                            (int)Relation_FieldIndex.Modifier,
                             subMask);
                     }
                 }
@@ -1519,32 +1493,38 @@ namespace Mutagen.Internals
         #region Binary Write
         public static void Write_Binary(
             MutagenWriter writer,
-            IMasterReferenceGetter item,
+            IRelationGetter item,
             bool doMasks,
-            out MasterReference_ErrorMask errorMask)
+            out Relation_ErrorMask errorMask)
         {
-            MasterReference_ErrorMask errMaskRet = null;
+            Relation_ErrorMask errMaskRet = null;
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
                 doMasks: doMasks,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new MasterReference_ErrorMask()) : default(Func<MasterReference_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Relation_ErrorMask()) : default(Func<Relation_ErrorMask>));
             errorMask = errMaskRet;
         }
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
-            IMasterReferenceGetter item,
+            IRelationGetter item,
             bool doMasks,
-            Func<MasterReference_ErrorMask> errorMask)
+            Func<Relation_ErrorMask> errorMask)
         {
             try
             {
-                Write_Binary_RecordTypes(
-                    item: item,
+                using (HeaderExport.ExportHeader(
                     writer: writer,
-                    doMasks: doMasks,
-                    errorMask: errorMask);
+                    record: Relation_Registration.XNAM_HEADER,
+                    type: ObjectType.Struct))
+                {
+                    Write_Binary_Embedded(
+                        item: item,
+                        writer: writer,
+                        doMasks: doMasks,
+                        errorMask: errorMask);
+                }
             }
             catch (Exception ex)
             when (doMasks)
@@ -1554,40 +1534,36 @@ namespace Mutagen.Internals
         }
         #endregion
 
-        public static void Write_Binary_RecordTypes(
-            IMasterReferenceGetter item,
+        public static void Write_Binary_Embedded(
+            IRelationGetter item,
             MutagenWriter writer,
             bool doMasks,
-            Func<MasterReference_ErrorMask> errorMask)
+            Func<Relation_ErrorMask> errorMask)
         {
             {
                 Exception subMask;
-                Mutagen.Binary.StringBinaryTranslation.Instance.Write(
+                Mutagen.Binary.FormIDBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.Master,
+                    item: item.Faction,
                     doMasks: doMasks,
-                    errorMask: out subMask,
-                    header: MasterReference_Registration.MAST_HEADER,
-                    nullable: false);
+                    errorMask: out subMask);
                 ErrorMask.HandleErrorMask(
                     errorMask,
                     doMasks,
-                    (int)MasterReference_FieldIndex.Master,
+                    (int)Relation_FieldIndex.Faction,
                     subMask);
             }
             {
                 Exception subMask;
-                Mutagen.Binary.UInt64BinaryTranslation.Instance.Write(
+                Mutagen.Binary.Int32BinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.FileSize,
+                    item: item.Modifier,
                     doMasks: doMasks,
-                    errorMask: out subMask,
-                    header: MasterReference_Registration.DATA_HEADER,
-                    nullable: false);
+                    errorMask: out subMask);
                 ErrorMask.HandleErrorMask(
                     errorMask,
                     doMasks,
-                    (int)MasterReference_FieldIndex.FileSize,
+                    (int)Relation_FieldIndex.Modifier,
                     subMask);
             }
         }
@@ -1600,44 +1576,44 @@ namespace Mutagen.Internals
     #region Modules
 
     #region Mask
-    public class MasterReference_Mask<T> : IMask<T>, IEquatable<MasterReference_Mask<T>>
+    public class Relation_Mask<T> : IMask<T>, IEquatable<Relation_Mask<T>>
     {
         #region Ctors
-        public MasterReference_Mask()
+        public Relation_Mask()
         {
         }
 
-        public MasterReference_Mask(T initialValue)
+        public Relation_Mask(T initialValue)
         {
-            this.Master = initialValue;
-            this.FileSize = initialValue;
+            this.Faction = initialValue;
+            this.Modifier = initialValue;
         }
         #endregion
 
         #region Members
-        public T Master;
-        public T FileSize;
+        public T Faction;
+        public T Modifier;
         #endregion
 
         #region Equals
         public override bool Equals(object obj)
         {
-            if (!(obj is MasterReference_Mask<T> rhs)) return false;
+            if (!(obj is Relation_Mask<T> rhs)) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(MasterReference_Mask<T> rhs)
+        public bool Equals(Relation_Mask<T> rhs)
         {
             if (rhs == null) return false;
-            if (!object.Equals(this.Master, rhs.Master)) return false;
-            if (!object.Equals(this.FileSize, rhs.FileSize)) return false;
+            if (!object.Equals(this.Faction, rhs.Faction)) return false;
+            if (!object.Equals(this.Modifier, rhs.Modifier)) return false;
             return true;
         }
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = ret.CombineHashCode(this.Master?.GetHashCode());
-            ret = ret.CombineHashCode(this.FileSize?.GetHashCode());
+            ret = ret.CombineHashCode(this.Faction?.GetHashCode());
+            ret = ret.CombineHashCode(this.Modifier?.GetHashCode());
             return ret;
         }
 
@@ -1646,24 +1622,24 @@ namespace Mutagen.Internals
         #region All Equal
         public bool AllEqual(Func<T, bool> eval)
         {
-            if (!eval(this.Master)) return false;
-            if (!eval(this.FileSize)) return false;
+            if (!eval(this.Faction)) return false;
+            if (!eval(this.Modifier)) return false;
             return true;
         }
         #endregion
 
         #region Translate
-        public MasterReference_Mask<R> Translate<R>(Func<T, R> eval)
+        public Relation_Mask<R> Translate<R>(Func<T, R> eval)
         {
-            var ret = new MasterReference_Mask<R>();
+            var ret = new Relation_Mask<R>();
             this.Translate_InternalFill(ret, eval);
             return ret;
         }
 
-        protected void Translate_InternalFill<R>(MasterReference_Mask<R> obj, Func<T, R> eval)
+        protected void Translate_InternalFill<R>(Relation_Mask<R> obj, Func<T, R> eval)
         {
-            obj.Master = eval(this.Master);
-            obj.FileSize = eval(this.FileSize);
+            obj.Faction = eval(this.Faction);
+            obj.Modifier = eval(this.Modifier);
         }
         #endregion
 
@@ -1679,26 +1655,26 @@ namespace Mutagen.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(MasterReference_Mask<bool> printMask = null)
+        public string ToString(Relation_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, MasterReference_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, Relation_Mask<bool> printMask = null)
         {
-            fg.AppendLine($"{nameof(MasterReference_Mask<T>)} =>");
+            fg.AppendLine($"{nameof(Relation_Mask<T>)} =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Master ?? true)
+                if (printMask?.Faction ?? true)
                 {
-                    fg.AppendLine($"Master => {Master.ToStringSafe()}");
+                    fg.AppendLine($"Faction => {Faction.ToStringSafe()}");
                 }
-                if (printMask?.FileSize ?? true)
+                if (printMask?.Modifier ?? true)
                 {
-                    fg.AppendLine($"FileSize => {FileSize.ToStringSafe()}");
+                    fg.AppendLine($"Modifier => {Modifier.ToStringSafe()}");
                 }
             }
             fg.AppendLine("]");
@@ -1707,7 +1683,7 @@ namespace Mutagen.Internals
 
     }
 
-    public class MasterReference_ErrorMask : IErrorMask
+    public class Relation_ErrorMask : IErrorMask
     {
         #region Members
         public Exception Overall { get; set; }
@@ -1723,21 +1699,21 @@ namespace Mutagen.Internals
                 return _warnings;
             }
         }
-        public Exception Master;
-        public Exception FileSize;
+        public Exception Faction;
+        public Exception Modifier;
         #endregion
 
         #region IErrorMask
         public void SetNthException(int index, Exception ex)
         {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
+            Relation_FieldIndex enu = (Relation_FieldIndex)index;
             switch (enu)
             {
-                case MasterReference_FieldIndex.Master:
-                    this.Master = ex;
+                case Relation_FieldIndex.Faction:
+                    this.Faction = ex;
                     break;
-                case MasterReference_FieldIndex.FileSize:
-                    this.FileSize = ex;
+                case Relation_FieldIndex.Modifier:
+                    this.Modifier = ex;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1746,14 +1722,14 @@ namespace Mutagen.Internals
 
         public void SetNthMask(int index, object obj)
         {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
+            Relation_FieldIndex enu = (Relation_FieldIndex)index;
             switch (enu)
             {
-                case MasterReference_FieldIndex.Master:
-                    this.Master = (Exception)obj;
+                case Relation_FieldIndex.Faction:
+                    this.Faction = (Exception)obj;
                     break;
-                case MasterReference_FieldIndex.FileSize:
-                    this.FileSize = (Exception)obj;
+                case Relation_FieldIndex.Modifier:
+                    this.Modifier = (Exception)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1771,7 +1747,7 @@ namespace Mutagen.Internals
 
         public void ToString(FileGeneration fg)
         {
-            fg.AppendLine("MasterReference_ErrorMask =>");
+            fg.AppendLine("Relation_ErrorMask =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
@@ -1791,26 +1767,26 @@ namespace Mutagen.Internals
         }
         protected void ToString_FillInternal(FileGeneration fg)
         {
-            if (Master != null)
+            if (Faction != null)
             {
-                fg.AppendLine($"Master => {Master.ToStringSafe()}");
+                fg.AppendLine($"Faction => {Faction.ToStringSafe()}");
             }
-            if (FileSize != null)
+            if (Modifier != null)
             {
-                fg.AppendLine($"FileSize => {FileSize.ToStringSafe()}");
+                fg.AppendLine($"Modifier => {Modifier.ToStringSafe()}");
             }
         }
         #endregion
 
         #region Combine
-        public MasterReference_ErrorMask Combine(MasterReference_ErrorMask rhs)
+        public Relation_ErrorMask Combine(Relation_ErrorMask rhs)
         {
-            var ret = new MasterReference_ErrorMask();
-            ret.Master = this.Master.Combine(rhs.Master);
-            ret.FileSize = this.FileSize.Combine(rhs.FileSize);
+            var ret = new Relation_ErrorMask();
+            ret.Faction = this.Faction.Combine(rhs.Faction);
+            ret.Modifier = this.Modifier.Combine(rhs.Modifier);
             return ret;
         }
-        public static MasterReference_ErrorMask Combine(MasterReference_ErrorMask lhs, MasterReference_ErrorMask rhs)
+        public static Relation_ErrorMask Combine(Relation_ErrorMask lhs, Relation_ErrorMask rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -1818,11 +1794,11 @@ namespace Mutagen.Internals
         #endregion
 
     }
-    public class MasterReference_CopyMask
+    public class Relation_CopyMask
     {
         #region Members
-        public bool Master;
-        public bool FileSize;
+        public bool Faction;
+        public bool Modifier;
         #endregion
 
     }

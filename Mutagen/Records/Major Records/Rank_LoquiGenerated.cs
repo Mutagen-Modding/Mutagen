@@ -23,51 +23,73 @@ using Mutagen.Binary;
 namespace Mutagen
 {
     #region Class
-    public partial class MasterReference : IMasterReference, ILoquiObjectSetter, IEquatable<MasterReference>
+    public partial class Rank : IRank, ILoquiObjectSetter, IEquatable<Rank>
     {
-        ILoquiRegistration ILoquiObject.Registration => MasterReference_Registration.Instance;
-        public static MasterReference_Registration Registration => MasterReference_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Rank_Registration.Instance;
+        public static Rank_Registration Registration => Rank_Registration.Instance;
 
         #region Ctor
-        public MasterReference()
+        public Rank()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Master
-        protected readonly INotifyingItem<String> _Master = NotifyingItem.Factory<String>(markAsSet: false);
-        public INotifyingItem<String> Master_Property => _Master;
-        public String Master
+        #region RankNumber
+        protected readonly INotifyingItem<Int32> _RankNumber = NotifyingItem.Factory<Int32>(markAsSet: false);
+        public INotifyingItem<Int32> RankNumber_Property => _RankNumber;
+        public Int32 RankNumber
         {
-            get => this._Master.Item;
-            set => this._Master.Set(value);
+            get => this._RankNumber.Item;
+            set => this._RankNumber.Set(value);
         }
-        INotifyingItem<String> IMasterReference.Master_Property => this.Master_Property;
-        INotifyingItemGetter<String> IMasterReferenceGetter.Master_Property => this.Master_Property;
+        INotifyingItem<Int32> IRank.RankNumber_Property => this.RankNumber_Property;
+        INotifyingItemGetter<Int32> IRankGetter.RankNumber_Property => this.RankNumber_Property;
         #endregion
-        #region FileSize
-        protected readonly INotifyingItem<UInt64> _FileSize = NotifyingItem.Factory<UInt64>(markAsSet: false);
-        public INotifyingItem<UInt64> FileSize_Property => _FileSize;
-        public UInt64 FileSize
+        #region MaleName
+        protected readonly INotifyingItem<String> _MaleName = NotifyingItem.Factory<String>(markAsSet: false);
+        public INotifyingItem<String> MaleName_Property => _MaleName;
+        public String MaleName
         {
-            get => this._FileSize.Item;
-            set => this._FileSize.Set(value);
+            get => this._MaleName.Item;
+            set => this._MaleName.Set(value);
         }
-        INotifyingItem<UInt64> IMasterReference.FileSize_Property => this.FileSize_Property;
-        INotifyingItemGetter<UInt64> IMasterReferenceGetter.FileSize_Property => this.FileSize_Property;
+        INotifyingItem<String> IRank.MaleName_Property => this.MaleName_Property;
+        INotifyingItemGetter<String> IRankGetter.MaleName_Property => this.MaleName_Property;
+        #endregion
+        #region FemaleName
+        protected readonly INotifyingItem<String> _FemaleName = NotifyingItem.Factory<String>(markAsSet: false);
+        public INotifyingItem<String> FemaleName_Property => _FemaleName;
+        public String FemaleName
+        {
+            get => this._FemaleName.Item;
+            set => this._FemaleName.Set(value);
+        }
+        INotifyingItem<String> IRank.FemaleName_Property => this.FemaleName_Property;
+        INotifyingItemGetter<String> IRankGetter.FemaleName_Property => this.FemaleName_Property;
+        #endregion
+        #region Insignia
+        protected readonly INotifyingItem<FilePath> _Insignia = NotifyingItem.Factory<FilePath>(markAsSet: false);
+        public INotifyingItem<FilePath> Insignia_Property => _Insignia;
+        public FilePath Insignia
+        {
+            get => this._Insignia.Item;
+            set => this._Insignia.Set(value);
+        }
+        INotifyingItem<FilePath> IRank.Insignia_Property => this.Insignia_Property;
+        INotifyingItemGetter<FilePath> IRankGetter.Insignia_Property => this.Insignia_Property;
         #endregion
 
         #region Loqui Getter Interface
 
-        protected object GetNthObject(ushort index) => MasterReferenceCommon.GetNthObject(index, this);
+        protected object GetNthObject(ushort index) => RankCommon.GetNthObject(index, this);
         object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
 
-        protected bool GetNthObjectHasBeenSet(ushort index) => MasterReferenceCommon.GetNthObjectHasBeenSet(index, this);
+        protected bool GetNthObjectHasBeenSet(ushort index) => RankCommon.GetNthObjectHasBeenSet(index, this);
         bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
 
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => MasterReferenceCommon.UnsetNthObject(index, this, cmds);
+        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => RankCommon.UnsetNthObject(index, this, cmds);
         void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => this.UnsetNthObject(index, cmds);
 
         #endregion
@@ -75,7 +97,7 @@ namespace Mutagen
         #region Loqui Interface
         protected void SetNthObjectHasBeenSet(ushort index, bool on)
         {
-            MasterReferenceCommon.SetNthObjectHasBeenSet(index, on, this);
+            RankCommon.SetNthObjectHasBeenSet(index, on, this);
         }
         void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
 
@@ -84,48 +106,58 @@ namespace Mutagen
         #region To String
         public override string ToString()
         {
-            return MasterReferenceCommon.ToString(this, printMask: null);
+            return RankCommon.ToString(this, printMask: null);
         }
 
         public string ToString(
             string name = null,
-            MasterReference_Mask<bool> printMask = null)
+            Rank_Mask<bool> printMask = null)
         {
-            return MasterReferenceCommon.ToString(this, name: name, printMask: printMask);
+            return RankCommon.ToString(this, name: name, printMask: printMask);
         }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            MasterReferenceCommon.ToString(this, fg, name: name, printMask: null);
+            RankCommon.ToString(this, fg, name: name, printMask: null);
         }
 
         #endregion
 
-        public MasterReference_Mask<bool> GetHasBeenSetMask()
+        public Rank_Mask<bool> GetHasBeenSetMask()
         {
-            return MasterReferenceCommon.GetHasBeenSetMask(this);
+            return RankCommon.GetHasBeenSetMask(this);
         }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is MasterReference rhs)) return false;
+            if (!(obj is Rank rhs)) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(MasterReference rhs)
+        public bool Equals(Rank rhs)
         {
             if (rhs == null) return false;
-            if (Master_Property.HasBeenSet != rhs.Master_Property.HasBeenSet) return false;
-            if (Master_Property.HasBeenSet)
+            if (RankNumber_Property.HasBeenSet != rhs.RankNumber_Property.HasBeenSet) return false;
+            if (RankNumber_Property.HasBeenSet)
             {
-                if (!object.Equals(Master, rhs.Master)) return false;
+                if (RankNumber != rhs.RankNumber) return false;
             }
-            if (FileSize_Property.HasBeenSet != rhs.FileSize_Property.HasBeenSet) return false;
-            if (FileSize_Property.HasBeenSet)
+            if (MaleName_Property.HasBeenSet != rhs.MaleName_Property.HasBeenSet) return false;
+            if (MaleName_Property.HasBeenSet)
             {
-                if (FileSize != rhs.FileSize) return false;
+                if (!object.Equals(MaleName, rhs.MaleName)) return false;
+            }
+            if (FemaleName_Property.HasBeenSet != rhs.FemaleName_Property.HasBeenSet) return false;
+            if (FemaleName_Property.HasBeenSet)
+            {
+                if (!object.Equals(FemaleName, rhs.FemaleName)) return false;
+            }
+            if (Insignia_Property.HasBeenSet != rhs.Insignia_Property.HasBeenSet) return false;
+            if (Insignia_Property.HasBeenSet)
+            {
+                if (!object.Equals(Insignia, rhs.Insignia)) return false;
             }
             return true;
         }
@@ -133,13 +165,21 @@ namespace Mutagen
         public override int GetHashCode()
         {
             int ret = 0;
-            if (Master_Property.HasBeenSet)
+            if (RankNumber_Property.HasBeenSet)
             {
-                ret = HashHelper.GetHashCode(Master).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(RankNumber).CombineHashCode(ret);
             }
-            if (FileSize_Property.HasBeenSet)
+            if (MaleName_Property.HasBeenSet)
             {
-                ret = HashHelper.GetHashCode(FileSize).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(MaleName).CombineHashCode(ret);
+            }
+            if (FemaleName_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(FemaleName).CombineHashCode(ret);
+            }
+            if (Insignia_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Insignia).CombineHashCode(ret);
             }
             return ret;
         }
@@ -150,7 +190,7 @@ namespace Mutagen
         #region XML Translation
         #region XML Create
         [DebuggerStepThrough]
-        public static MasterReference Create_XML(XElement root)
+        public static Rank Create_XML(XElement root)
         {
             return Create_XML(
                 root: root,
@@ -159,9 +199,9 @@ namespace Mutagen
         }
 
         [DebuggerStepThrough]
-        public static MasterReference Create_XML(
+        public static Rank Create_XML(
             XElement root,
-            out MasterReference_ErrorMask errorMask)
+            out Rank_ErrorMask errorMask)
         {
             return Create_XML(
                 root: root,
@@ -170,10 +210,10 @@ namespace Mutagen
         }
 
         [DebuggerStepThrough]
-        public static MasterReference Create_XML(
+        public static Rank Create_XML(
             XElement root,
             bool doMasks,
-            out MasterReference_ErrorMask errorMask)
+            out Rank_ErrorMask errorMask)
         {
             var ret = Create_XML(
                 root: root,
@@ -183,27 +223,27 @@ namespace Mutagen
         }
 
         [DebuggerStepThrough]
-        public static (MasterReference Object, MasterReference_ErrorMask ErrorMask) Create_XML(
+        public static (Rank Object, Rank_ErrorMask ErrorMask) Create_XML(
             XElement root,
             bool doMasks)
         {
-            MasterReference_ErrorMask errMaskRet = null;
+            Rank_ErrorMask errMaskRet = null;
             var ret = Create_XML_Internal(
                 root: root,
                 doMasks: doMasks,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new MasterReference_ErrorMask()) : default(Func<MasterReference_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Rank_ErrorMask()) : default(Func<Rank_ErrorMask>));
             return (ret, errMaskRet);
         }
 
-        public static MasterReference Create_XML(string path)
+        public static Rank Create_XML(string path)
         {
             var root = XDocument.Load(path).Root;
             return Create_XML(root: root);
         }
 
-        public static MasterReference Create_XML(
+        public static Rank Create_XML(
             string path,
-            out MasterReference_ErrorMask errorMask)
+            out Rank_ErrorMask errorMask)
         {
             var root = XDocument.Load(path).Root;
             return Create_XML(
@@ -211,15 +251,15 @@ namespace Mutagen
                 errorMask: out errorMask);
         }
 
-        public static MasterReference Create_XML(Stream stream)
+        public static Rank Create_XML(Stream stream)
         {
             var root = XDocument.Load(stream).Root;
             return Create_XML(root: root);
         }
 
-        public static MasterReference Create_XML(
+        public static Rank Create_XML(
             Stream stream,
-            out MasterReference_ErrorMask errorMask)
+            out Rank_ErrorMask errorMask)
         {
             var root = XDocument.Load(stream).Root;
             return Create_XML(
@@ -234,7 +274,7 @@ namespace Mutagen
             XElement root,
             NotifyingFireParameters? cmds = null)
         {
-            LoquiXmlTranslation<MasterReference, MasterReference_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<Rank, Rank_ErrorMask>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
@@ -245,10 +285,10 @@ namespace Mutagen
 
         public virtual void CopyIn_XML(
             XElement root,
-            out MasterReference_ErrorMask errorMask,
+            out Rank_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
-            LoquiXmlTranslation<MasterReference, MasterReference_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<Rank, Rank_ErrorMask>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
@@ -269,7 +309,7 @@ namespace Mutagen
 
         public void CopyIn_XML(
             string path,
-            out MasterReference_ErrorMask errorMask,
+            out Rank_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             var root = XDocument.Load(path).Root;
@@ -291,7 +331,7 @@ namespace Mutagen
 
         public void CopyIn_XML(
             Stream stream,
-            out MasterReference_ErrorMask errorMask,
+            out Rank_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             var root = XDocument.Load(stream).Root;
@@ -306,10 +346,10 @@ namespace Mutagen
         #region XML Write
         public virtual void Write_XML(
             XmlWriter writer,
-            out MasterReference_ErrorMask errorMask,
+            out Rank_ErrorMask errorMask,
             string name = null)
         {
-            errorMask = (MasterReference_ErrorMask)this.Write_XML_Internal(
+            errorMask = (Rank_ErrorMask)this.Write_XML_Internal(
                 writer: writer,
                 name: name,
                 doMasks: true);
@@ -317,7 +357,7 @@ namespace Mutagen
 
         public virtual void Write_XML(
             string path,
-            out MasterReference_ErrorMask errorMask,
+            out Rank_ErrorMask errorMask,
             string name = null)
         {
             using (var writer = new XmlTextWriter(path, Encoding.ASCII))
@@ -333,7 +373,7 @@ namespace Mutagen
 
         public virtual void Write_XML(
             Stream stream,
-            out MasterReference_ErrorMask errorMask,
+            out Rank_ErrorMask errorMask,
             string name = null)
         {
             using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
@@ -390,7 +430,7 @@ namespace Mutagen
             bool doMasks,
             string name = null)
         {
-            MasterReferenceCommon.Write_XML(
+            RankCommon.Write_XML(
                 writer: writer,
                 item: this,
                 doMasks: doMasks,
@@ -399,12 +439,12 @@ namespace Mutagen
         }
         #endregion
 
-        private static MasterReference Create_XML_Internal(
+        private static Rank Create_XML_Internal(
             XElement root,
             bool doMasks,
-            Func<MasterReference_ErrorMask> errorMask)
+            Func<Rank_ErrorMask> errorMask)
         {
-            var ret = new MasterReference();
+            var ret = new Rank();
             try
             {
                 foreach (var elem in root.Elements())
@@ -426,41 +466,71 @@ namespace Mutagen
         }
 
         protected static void Fill_XML_Internal(
-            MasterReference item,
+            Rank item,
             XElement root,
             string name,
             bool doMasks,
-            Func<MasterReference_ErrorMask> errorMask)
+            Func<Rank_ErrorMask> errorMask)
         {
             switch (name)
             {
-                case "Master":
+                case "RankNumber":
+                    {
+                        Exception subMask;
+                        var tryGet = Int32XmlTranslation.Instance.ParseNonNull(
+                            root,
+                            doMasks: doMasks,
+                            errorMask: out subMask);
+                        item._RankNumber.SetIfSucceeded(tryGet);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)Rank_FieldIndex.RankNumber,
+                            subMask);
+                    }
+                    break;
+                case "MaleName":
                     {
                         Exception subMask;
                         var tryGet = StringXmlTranslation.Instance.Parse(
                             root,
                             doMasks: doMasks,
                             errorMask: out subMask);
-                        item._Master.SetIfSucceeded(tryGet);
+                        item._MaleName.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
                             doMasks,
-                            (int)MasterReference_FieldIndex.Master,
+                            (int)Rank_FieldIndex.MaleName,
                             subMask);
                     }
                     break;
-                case "FileSize":
+                case "FemaleName":
                     {
                         Exception subMask;
-                        var tryGet = UInt64XmlTranslation.Instance.ParseNonNull(
+                        var tryGet = StringXmlTranslation.Instance.Parse(
                             root,
                             doMasks: doMasks,
                             errorMask: out subMask);
-                        item._FileSize.SetIfSucceeded(tryGet);
+                        item._FemaleName.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
                             doMasks,
-                            (int)MasterReference_FieldIndex.FileSize,
+                            (int)Rank_FieldIndex.FemaleName,
+                            subMask);
+                    }
+                    break;
+                case "Insignia":
+                    {
+                        Exception subMask;
+                        var tryGet = FilePathXmlTranslation.Instance.ParseNonNull(
+                            root,
+                            doMasks: doMasks,
+                            errorMask: out subMask);
+                        item._Insignia.SetIfSucceeded(tryGet);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)Rank_FieldIndex.Insignia,
                             subMask);
                     }
                     break;
@@ -474,7 +544,7 @@ namespace Mutagen
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public static MasterReference Create_Binary(MutagenFrame frame)
+        public static Rank Create_Binary(MutagenFrame frame)
         {
             return Create_Binary(
                 frame: frame,
@@ -483,9 +553,9 @@ namespace Mutagen
         }
 
         [DebuggerStepThrough]
-        public static MasterReference Create_Binary(
+        public static Rank Create_Binary(
             MutagenFrame frame,
-            out MasterReference_ErrorMask errorMask)
+            out Rank_ErrorMask errorMask)
         {
             return Create_Binary(
                 frame: frame,
@@ -494,10 +564,10 @@ namespace Mutagen
         }
 
         [DebuggerStepThrough]
-        public static MasterReference Create_Binary(
+        public static Rank Create_Binary(
             MutagenFrame frame,
             bool doMasks,
-            out MasterReference_ErrorMask errorMask)
+            out Rank_ErrorMask errorMask)
         {
             var ret = Create_Binary(
                 frame: frame,
@@ -507,19 +577,19 @@ namespace Mutagen
         }
 
         [DebuggerStepThrough]
-        public static (MasterReference Object, MasterReference_ErrorMask ErrorMask) Create_Binary(
+        public static (Rank Object, Rank_ErrorMask ErrorMask) Create_Binary(
             MutagenFrame frame,
             bool doMasks)
         {
-            MasterReference_ErrorMask errMaskRet = null;
+            Rank_ErrorMask errMaskRet = null;
             var ret = Create_Binary_Internal(
                 frame: frame,
                 doMasks: doMasks,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new MasterReference_ErrorMask()) : default(Func<MasterReference_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Rank_ErrorMask()) : default(Func<Rank_ErrorMask>));
             return (ret, errMaskRet);
         }
 
-        public static MasterReference Create_Binary(string path)
+        public static Rank Create_Binary(string path)
         {
             using (var reader = new MutagenReader(path))
             {
@@ -528,9 +598,9 @@ namespace Mutagen
             }
         }
 
-        public static MasterReference Create_Binary(
+        public static Rank Create_Binary(
             string path,
-            out MasterReference_ErrorMask errorMask)
+            out Rank_ErrorMask errorMask)
         {
             using (var reader = new MutagenReader(path))
             {
@@ -541,7 +611,7 @@ namespace Mutagen
             }
         }
 
-        public static MasterReference Create_Binary(Stream stream)
+        public static Rank Create_Binary(Stream stream)
         {
             using (var reader = new MutagenReader(stream))
             {
@@ -550,9 +620,9 @@ namespace Mutagen
             }
         }
 
-        public static MasterReference Create_Binary(
+        public static Rank Create_Binary(
             Stream stream,
-            out MasterReference_ErrorMask errorMask)
+            out Rank_ErrorMask errorMask)
         {
             using (var reader = new MutagenReader(stream))
             {
@@ -570,7 +640,7 @@ namespace Mutagen
             MutagenFrame frame,
             NotifyingFireParameters? cmds = null)
         {
-            LoquiBinaryTranslation<MasterReference, MasterReference_ErrorMask>.Instance.CopyIn(
+            LoquiBinaryTranslation<Rank, Rank_ErrorMask>.Instance.CopyIn(
                 frame: frame,
                 item: this,
                 skipProtected: true,
@@ -581,10 +651,10 @@ namespace Mutagen
 
         public virtual void CopyIn_Binary(
             MutagenFrame frame,
-            out MasterReference_ErrorMask errorMask,
+            out Rank_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
-            LoquiBinaryTranslation<MasterReference, MasterReference_ErrorMask>.Instance.CopyIn(
+            LoquiBinaryTranslation<Rank, Rank_ErrorMask>.Instance.CopyIn(
                 frame: frame,
                 item: this,
                 skipProtected: true,
@@ -608,7 +678,7 @@ namespace Mutagen
 
         public void CopyIn_Binary(
             string path,
-            out MasterReference_ErrorMask errorMask,
+            out Rank_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             using (var reader = new MutagenReader(path))
@@ -636,7 +706,7 @@ namespace Mutagen
 
         public void CopyIn_Binary(
             Stream stream,
-            out MasterReference_ErrorMask errorMask,
+            out Rank_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             using (var reader = new MutagenReader(stream))
@@ -654,16 +724,16 @@ namespace Mutagen
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
-            out MasterReference_ErrorMask errorMask)
+            out Rank_ErrorMask errorMask)
         {
-            errorMask = (MasterReference_ErrorMask)this.Write_Binary_Internal(
+            errorMask = (Rank_ErrorMask)this.Write_Binary_Internal(
                 writer: writer,
                 doMasks: true);
         }
 
         public virtual void Write_Binary(
             string path,
-            out MasterReference_ErrorMask errorMask)
+            out Rank_ErrorMask errorMask)
         {
             using (var writer = new MutagenWriter(path))
             {
@@ -675,7 +745,7 @@ namespace Mutagen
 
         public virtual void Write_Binary(
             Stream stream,
-            out MasterReference_ErrorMask errorMask)
+            out Rank_ErrorMask errorMask)
         {
             using (var writer = new MutagenWriter(stream))
             {
@@ -712,7 +782,7 @@ namespace Mutagen
             MutagenWriter writer,
             bool doMasks)
         {
-            MasterReferenceCommon.Write_Binary(
+            RankCommon.Write_Binary(
                 writer: writer,
                 item: this,
                 doMasks: doMasks,
@@ -721,12 +791,12 @@ namespace Mutagen
         }
         #endregion
 
-        private static MasterReference Create_Binary_Internal(
+        private static Rank Create_Binary_Internal(
             MutagenFrame frame,
             bool doMasks,
-            Func<MasterReference_ErrorMask> errorMask)
+            Func<Rank_ErrorMask> errorMask)
         {
-            var ret = new MasterReference();
+            var ret = new Rank();
             try
             {
                 using (frame)
@@ -755,25 +825,41 @@ namespace Mutagen
         }
 
         protected static void Fill_Binary_Structs(
-            MasterReference item,
+            Rank item,
             MutagenFrame frame,
             bool doMasks,
-            Func<MasterReference_ErrorMask> errorMask)
+            Func<Rank_ErrorMask> errorMask)
         {
         }
 
         protected static void Fill_Binary_RecordTypes(
-            MasterReference item,
+            Rank item,
             MutagenFrame frame,
             bool doMasks,
-            Func<MasterReference_ErrorMask> errorMask)
+            Func<Rank_ErrorMask> errorMask)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
                 frame: frame,
                 contentLength: out var contentLength);
             switch (nextRecordType.Type)
             {
-                case "MAST":
+                case "RNAM":
+                {
+                    Exception subMask;
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    var tryGet = Mutagen.Binary.Int32BinaryTranslation.Instance.Parse(
+                        frame: frame.Spawn(contentLength),
+                        doMasks: doMasks,
+                        errorMask: out subMask);
+                    item._RankNumber.SetIfSucceeded(tryGet);
+                    ErrorMask.HandleErrorMask(
+                        errorMask,
+                        doMasks,
+                        (int)Rank_FieldIndex.RankNumber,
+                        subMask);
+                }
+                break;
+                case "MNAM":
                 {
                     Exception subMask;
                     frame.Position += Constants.SUBRECORD_LENGTH;
@@ -781,27 +867,43 @@ namespace Mutagen
                         frame: frame.Spawn(contentLength),
                         doMasks: doMasks,
                         errorMask: out subMask);
-                    item._Master.SetIfSucceeded(tryGet);
+                    item._MaleName.SetIfSucceeded(tryGet);
                     ErrorMask.HandleErrorMask(
                         errorMask,
                         doMasks,
-                        (int)MasterReference_FieldIndex.Master,
+                        (int)Rank_FieldIndex.MaleName,
                         subMask);
                 }
                 break;
-                case "DATA":
+                case "FNAM":
                 {
                     Exception subMask;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var tryGet = Mutagen.Binary.UInt64BinaryTranslation.Instance.Parse(
+                    var tryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         doMasks: doMasks,
                         errorMask: out subMask);
-                    item._FileSize.SetIfSucceeded(tryGet);
+                    item._FemaleName.SetIfSucceeded(tryGet);
                     ErrorMask.HandleErrorMask(
                         errorMask,
                         doMasks,
-                        (int)MasterReference_FieldIndex.FileSize,
+                        (int)Rank_FieldIndex.FemaleName,
+                        subMask);
+                }
+                break;
+                case "INAM":
+                {
+                    Exception subMask;
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    var tryGet = Mutagen.Binary.FilePathBinaryTranslation.Instance.Parse(
+                        frame: frame.Spawn(contentLength),
+                        doMasks: doMasks,
+                        errorMask: out subMask);
+                    item._Insignia.SetIfSucceeded(tryGet);
+                    ErrorMask.HandleErrorMask(
+                        errorMask,
+                        doMasks,
+                        (int)Rank_FieldIndex.Insignia,
                         subMask);
                 }
                 break;
@@ -812,29 +914,29 @@ namespace Mutagen
 
         #endregion
 
-        public MasterReference Copy(
-            MasterReference_CopyMask copyMask = null,
-            IMasterReferenceGetter def = null)
+        public Rank Copy(
+            Rank_CopyMask copyMask = null,
+            IRankGetter def = null)
         {
-            return MasterReference.Copy(
+            return Rank.Copy(
                 this,
                 copyMask: copyMask,
                 def: def);
         }
 
-        public static MasterReference Copy(
-            IMasterReference item,
-            MasterReference_CopyMask copyMask = null,
-            IMasterReferenceGetter def = null)
+        public static Rank Copy(
+            IRank item,
+            Rank_CopyMask copyMask = null,
+            IRankGetter def = null)
         {
-            MasterReference ret;
-            if (item.GetType().Equals(typeof(MasterReference)))
+            Rank ret;
+            if (item.GetType().Equals(typeof(Rank)))
             {
-                ret = new MasterReference();
+                ret = new Rank();
             }
             else
             {
-                ret = (MasterReference)Activator.CreateInstance(item.GetType());
+                ret = (Rank)Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom(
                 item,
@@ -845,14 +947,14 @@ namespace Mutagen
 
         public static CopyType CopyGeneric<CopyType>(
             CopyType item,
-            MasterReference_CopyMask copyMask = null,
-            IMasterReferenceGetter def = null)
-            where CopyType : class, IMasterReference
+            Rank_CopyMask copyMask = null,
+            IRankGetter def = null)
+            where CopyType : class, IRank
         {
             CopyType ret;
-            if (item.GetType().Equals(typeof(MasterReference)))
+            if (item.GetType().Equals(typeof(Rank)))
             {
-                ret = new MasterReference() as CopyType;
+                ret = new Rank() as CopyType;
             }
             else
             {
@@ -868,12 +970,12 @@ namespace Mutagen
             return ret;
         }
 
-        public static MasterReference Copy_ToLoqui(
-            IMasterReferenceGetter item,
-            MasterReference_CopyMask copyMask = null,
-            IMasterReferenceGetter def = null)
+        public static Rank Copy_ToLoqui(
+            IRankGetter item,
+            Rank_CopyMask copyMask = null,
+            IRankGetter def = null)
         {
-            var ret = new MasterReference();
+            var ret = new Rank();
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
@@ -884,17 +986,27 @@ namespace Mutagen
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds = null)
         {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
+            Rank_FieldIndex enu = (Rank_FieldIndex)index;
             switch (enu)
             {
-                case MasterReference_FieldIndex.Master:
-                    this._Master.Set(
+                case Rank_FieldIndex.RankNumber:
+                    this._RankNumber.Set(
+                        (Int32)obj,
+                        cmds);
+                    break;
+                case Rank_FieldIndex.MaleName:
+                    this._MaleName.Set(
                         (String)obj,
                         cmds);
                     break;
-                case MasterReference_FieldIndex.FileSize:
-                    this._FileSize.Set(
-                        (UInt64)obj,
+                case Rank_FieldIndex.FemaleName:
+                    this._FemaleName.Set(
+                        (String)obj,
+                        cmds);
+                    break;
+                case Rank_FieldIndex.Insignia:
+                    this._Insignia.Set(
+                        (FilePath)obj,
                         cmds);
                     break;
                 default:
@@ -912,43 +1024,53 @@ namespace Mutagen
         public void Clear(NotifyingUnsetParameters? cmds = null)
         {
             CallClearPartial_Internal(cmds);
-            MasterReferenceCommon.Clear(this, cmds);
+            RankCommon.Clear(this, cmds);
         }
 
 
-        public static MasterReference Create(IEnumerable<KeyValuePair<ushort, object>> fields)
+        public static Rank Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
-            var ret = new MasterReference();
+            var ret = new Rank();
             foreach (var pair in fields)
             {
-                CopyInInternal_MasterReference(ret, pair);
+                CopyInInternal_Rank(ret, pair);
             }
             return ret;
         }
 
-        protected static void CopyInInternal_MasterReference(MasterReference obj, KeyValuePair<ushort, object> pair)
+        protected static void CopyInInternal_Rank(Rank obj, KeyValuePair<ushort, object> pair)
         {
-            if (!EnumExt.TryParse(pair.Key, out MasterReference_FieldIndex enu))
+            if (!EnumExt.TryParse(pair.Key, out Rank_FieldIndex enu))
             {
                 throw new ArgumentException($"Unknown index: {pair.Key}");
             }
             switch (enu)
             {
-                case MasterReference_FieldIndex.Master:
-                    obj._Master.Set(
+                case Rank_FieldIndex.RankNumber:
+                    obj._RankNumber.Set(
+                        (Int32)pair.Value,
+                        null);
+                    break;
+                case Rank_FieldIndex.MaleName:
+                    obj._MaleName.Set(
                         (String)pair.Value,
                         null);
                     break;
-                case MasterReference_FieldIndex.FileSize:
-                    obj._FileSize.Set(
-                        (UInt64)pair.Value,
+                case Rank_FieldIndex.FemaleName:
+                    obj._FemaleName.Set(
+                        (String)pair.Value,
+                        null);
+                    break;
+                case Rank_FieldIndex.Insignia:
+                    obj._Insignia.Set(
+                        (FilePath)pair.Value,
                         null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, MasterReference obj)
+        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Rank obj)
         {
             ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
         }
@@ -957,26 +1079,42 @@ namespace Mutagen
     #endregion
 
     #region Interface
-    public interface IMasterReference : IMasterReferenceGetter, ILoquiClass<IMasterReference, IMasterReferenceGetter>, ILoquiClass<MasterReference, IMasterReferenceGetter>
+    public interface IRank : IRankGetter, ILoquiClass<IRank, IRankGetter>, ILoquiClass<Rank, IRankGetter>
     {
-        new String Master { get; set; }
-        new INotifyingItem<String> Master_Property { get; }
+        new Int32 RankNumber { get; set; }
+        new INotifyingItem<Int32> RankNumber_Property { get; }
 
-        new UInt64 FileSize { get; set; }
-        new INotifyingItem<UInt64> FileSize_Property { get; }
+        new String MaleName { get; set; }
+        new INotifyingItem<String> MaleName_Property { get; }
+
+        new String FemaleName { get; set; }
+        new INotifyingItem<String> FemaleName_Property { get; }
+
+        new FilePath Insignia { get; set; }
+        new INotifyingItem<FilePath> Insignia_Property { get; }
 
     }
 
-    public interface IMasterReferenceGetter : ILoquiObject
+    public interface IRankGetter : ILoquiObject
     {
-        #region Master
-        String Master { get; }
-        INotifyingItemGetter<String> Master_Property { get; }
+        #region RankNumber
+        Int32 RankNumber { get; }
+        INotifyingItemGetter<Int32> RankNumber_Property { get; }
 
         #endregion
-        #region FileSize
-        UInt64 FileSize { get; }
-        INotifyingItemGetter<UInt64> FileSize_Property { get; }
+        #region MaleName
+        String MaleName { get; }
+        INotifyingItemGetter<String> MaleName_Property { get; }
+
+        #endregion
+        #region FemaleName
+        String FemaleName { get; }
+        INotifyingItemGetter<String> FemaleName_Property { get; }
+
+        #endregion
+        #region Insignia
+        FilePath Insignia { get; }
+        INotifyingItemGetter<FilePath> Insignia_Property { get; }
 
         #endregion
 
@@ -989,44 +1127,46 @@ namespace Mutagen
 namespace Mutagen.Internals
 {
     #region Field Index
-    public enum MasterReference_FieldIndex
+    public enum Rank_FieldIndex
     {
-        Master = 0,
-        FileSize = 1,
+        RankNumber = 0,
+        MaleName = 1,
+        FemaleName = 2,
+        Insignia = 3,
     }
     #endregion
 
     #region Registration
-    public class MasterReference_Registration : ILoquiRegistration
+    public class Rank_Registration : ILoquiRegistration
     {
-        public static readonly MasterReference_Registration Instance = new MasterReference_Registration();
+        public static readonly Rank_Registration Instance = new Rank_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Mutagen.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Mutagen.ProtocolKey,
-            msgID: 5,
+            msgID: 24,
             version: 0);
 
-        public const string GUID = "8f2ed19a-5edb-4f8f-9d29-43dc638aade9";
+        public const string GUID = "4945b664-16ac-4464-89b0-03534ffd5e18";
 
-        public const ushort FieldCount = 2;
+        public const ushort FieldCount = 4;
 
-        public static readonly Type MaskType = typeof(MasterReference_Mask<>);
+        public static readonly Type MaskType = typeof(Rank_Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(MasterReference_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Rank_ErrorMask);
 
-        public static readonly Type ClassType = typeof(MasterReference);
+        public static readonly Type ClassType = typeof(Rank);
 
-        public static readonly Type GetterType = typeof(IMasterReferenceGetter);
+        public static readonly Type GetterType = typeof(IRankGetter);
 
-        public static readonly Type SetterType = typeof(IMasterReference);
+        public static readonly Type SetterType = typeof(IRank);
 
-        public static readonly Type CommonType = typeof(MasterReferenceCommon);
+        public static readonly Type CommonType = typeof(RankCommon);
 
-        public const string FullName = "Mutagen.MasterReference";
+        public const string FullName = "Mutagen.Rank";
 
-        public const string Name = "MasterReference";
+        public const string Name = "Rank";
 
         public const string Namespace = "Mutagen";
 
@@ -1038,10 +1178,14 @@ namespace Mutagen.Internals
         {
             switch (str.Upper)
             {
-                case "MASTER":
-                    return (ushort)MasterReference_FieldIndex.Master;
-                case "FILESIZE":
-                    return (ushort)MasterReference_FieldIndex.FileSize;
+                case "RANKNUMBER":
+                    return (ushort)Rank_FieldIndex.RankNumber;
+                case "MALENAME":
+                    return (ushort)Rank_FieldIndex.MaleName;
+                case "FEMALENAME":
+                    return (ushort)Rank_FieldIndex.FemaleName;
+                case "INSIGNIA":
+                    return (ushort)Rank_FieldIndex.Insignia;
                 default:
                     return null;
             }
@@ -1049,11 +1193,13 @@ namespace Mutagen.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
+            Rank_FieldIndex enu = (Rank_FieldIndex)index;
             switch (enu)
             {
-                case MasterReference_FieldIndex.Master:
-                case MasterReference_FieldIndex.FileSize:
+                case Rank_FieldIndex.RankNumber:
+                case Rank_FieldIndex.MaleName:
+                case Rank_FieldIndex.FemaleName:
+                case Rank_FieldIndex.Insignia:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1062,11 +1208,13 @@ namespace Mutagen.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
+            Rank_FieldIndex enu = (Rank_FieldIndex)index;
             switch (enu)
             {
-                case MasterReference_FieldIndex.Master:
-                case MasterReference_FieldIndex.FileSize:
+                case Rank_FieldIndex.RankNumber:
+                case Rank_FieldIndex.MaleName:
+                case Rank_FieldIndex.FemaleName:
+                case Rank_FieldIndex.Insignia:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1075,11 +1223,13 @@ namespace Mutagen.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
+            Rank_FieldIndex enu = (Rank_FieldIndex)index;
             switch (enu)
             {
-                case MasterReference_FieldIndex.Master:
-                case MasterReference_FieldIndex.FileSize:
+                case Rank_FieldIndex.RankNumber:
+                case Rank_FieldIndex.MaleName:
+                case Rank_FieldIndex.FemaleName:
+                case Rank_FieldIndex.Insignia:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1088,13 +1238,17 @@ namespace Mutagen.Internals
 
         public static string GetNthName(ushort index)
         {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
+            Rank_FieldIndex enu = (Rank_FieldIndex)index;
             switch (enu)
             {
-                case MasterReference_FieldIndex.Master:
-                    return "Master";
-                case MasterReference_FieldIndex.FileSize:
-                    return "FileSize";
+                case Rank_FieldIndex.RankNumber:
+                    return "RankNumber";
+                case Rank_FieldIndex.MaleName:
+                    return "MaleName";
+                case Rank_FieldIndex.FemaleName:
+                    return "FemaleName";
+                case Rank_FieldIndex.Insignia:
+                    return "Insignia";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1102,11 +1256,13 @@ namespace Mutagen.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
+            Rank_FieldIndex enu = (Rank_FieldIndex)index;
             switch (enu)
             {
-                case MasterReference_FieldIndex.Master:
-                case MasterReference_FieldIndex.FileSize:
+                case Rank_FieldIndex.RankNumber:
+                case Rank_FieldIndex.MaleName:
+                case Rank_FieldIndex.FemaleName:
+                case Rank_FieldIndex.Insignia:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1115,11 +1271,13 @@ namespace Mutagen.Internals
 
         public static bool IsProtected(ushort index)
         {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
+            Rank_FieldIndex enu = (Rank_FieldIndex)index;
             switch (enu)
             {
-                case MasterReference_FieldIndex.Master:
-                case MasterReference_FieldIndex.FileSize:
+                case Rank_FieldIndex.RankNumber:
+                case Rank_FieldIndex.MaleName:
+                case Rank_FieldIndex.FemaleName:
+                case Rank_FieldIndex.Insignia:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1128,23 +1286,29 @@ namespace Mutagen.Internals
 
         public static Type GetNthType(ushort index)
         {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
+            Rank_FieldIndex enu = (Rank_FieldIndex)index;
             switch (enu)
             {
-                case MasterReference_FieldIndex.Master:
+                case Rank_FieldIndex.RankNumber:
+                    return typeof(Int32);
+                case Rank_FieldIndex.MaleName:
                     return typeof(String);
-                case MasterReference_FieldIndex.FileSize:
-                    return typeof(UInt64);
+                case Rank_FieldIndex.FemaleName:
+                    return typeof(String);
+                case Rank_FieldIndex.Insignia:
+                    return typeof(FilePath);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
-        public static readonly RecordType MAST_HEADER = new RecordType("MAST");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = MAST_HEADER;
+        public static readonly RecordType RNAM_HEADER = new RecordType("RNAM");
+        public static readonly RecordType MNAM_HEADER = new RecordType("MNAM");
+        public static readonly RecordType FNAM_HEADER = new RecordType("FNAM");
+        public static readonly RecordType INAM_HEADER = new RecordType("INAM");
+        public static readonly RecordType TRIGGERING_RECORD_TYPE = RNAM_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 2;
+        public const int NumTypedFields = 4;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1175,17 +1339,17 @@ namespace Mutagen.Internals
     #endregion
 
     #region Extensions
-    public static class MasterReferenceCommon
+    public static class RankCommon
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IMasterReference item,
-            IMasterReferenceGetter rhs,
-            MasterReference_CopyMask copyMask = null,
-            IMasterReferenceGetter def = null,
+            this IRank item,
+            IRankGetter rhs,
+            Rank_CopyMask copyMask = null,
+            IRankGetter def = null,
             NotifyingFireParameters? cmds = null)
         {
-            MasterReferenceCommon.CopyFieldsFrom(
+            RankCommon.CopyFieldsFrom(
                 item: item,
                 rhs: rhs,
                 def: def,
@@ -1196,14 +1360,14 @@ namespace Mutagen.Internals
         }
 
         public static void CopyFieldsFrom(
-            this IMasterReference item,
-            IMasterReferenceGetter rhs,
-            out MasterReference_ErrorMask errorMask,
-            MasterReference_CopyMask copyMask = null,
-            IMasterReferenceGetter def = null,
+            this IRank item,
+            IRankGetter rhs,
+            out Rank_ErrorMask errorMask,
+            Rank_CopyMask copyMask = null,
+            IRankGetter def = null,
             NotifyingFireParameters? cmds = null)
         {
-            MasterReferenceCommon.CopyFieldsFrom(
+            RankCommon.CopyFieldsFrom(
                 item: item,
                 rhs: rhs,
                 def: def,
@@ -1214,20 +1378,20 @@ namespace Mutagen.Internals
         }
 
         public static void CopyFieldsFrom(
-            this IMasterReference item,
-            IMasterReferenceGetter rhs,
-            IMasterReferenceGetter def,
+            this IRank item,
+            IRankGetter rhs,
+            IRankGetter def,
             bool doErrorMask,
-            out MasterReference_ErrorMask errorMask,
-            MasterReference_CopyMask copyMask,
+            out Rank_ErrorMask errorMask,
+            Rank_CopyMask copyMask,
             NotifyingFireParameters? cmds)
         {
-            MasterReference_ErrorMask retErrorMask = null;
-            Func<MasterReference_ErrorMask> maskGetter = () =>
+            Rank_ErrorMask retErrorMask = null;
+            Func<Rank_ErrorMask> maskGetter = () =>
             {
                 if (retErrorMask == null)
                 {
-                    retErrorMask = new MasterReference_ErrorMask();
+                    retErrorMask = new Rank_ErrorMask();
                 }
                 return retErrorMask;
             };
@@ -1243,42 +1407,72 @@ namespace Mutagen.Internals
         }
 
         public static void CopyFieldsFrom(
-            this IMasterReference item,
-            IMasterReferenceGetter rhs,
-            IMasterReferenceGetter def,
+            this IRank item,
+            IRankGetter rhs,
+            IRankGetter def,
             bool doErrorMask,
-            Func<MasterReference_ErrorMask> errorMask,
-            MasterReference_CopyMask copyMask,
+            Func<Rank_ErrorMask> errorMask,
+            Rank_CopyMask copyMask,
             NotifyingFireParameters? cmds)
         {
-            if (copyMask?.Master ?? true)
+            if (copyMask?.RankNumber ?? true)
             {
                 try
                 {
-                    item.Master_Property.SetToWithDefault(
-                        rhs.Master_Property,
-                        def?.Master_Property,
+                    item.RankNumber_Property.SetToWithDefault(
+                        rhs.RankNumber_Property,
+                        def?.RankNumber_Property,
                         cmds);
                 }
                 catch (Exception ex)
                 when (doErrorMask)
                 {
-                    errorMask().SetNthException((int)MasterReference_FieldIndex.Master, ex);
+                    errorMask().SetNthException((int)Rank_FieldIndex.RankNumber, ex);
                 }
             }
-            if (copyMask?.FileSize ?? true)
+            if (copyMask?.MaleName ?? true)
             {
                 try
                 {
-                    item.FileSize_Property.SetToWithDefault(
-                        rhs.FileSize_Property,
-                        def?.FileSize_Property,
+                    item.MaleName_Property.SetToWithDefault(
+                        rhs.MaleName_Property,
+                        def?.MaleName_Property,
                         cmds);
                 }
                 catch (Exception ex)
                 when (doErrorMask)
                 {
-                    errorMask().SetNthException((int)MasterReference_FieldIndex.FileSize, ex);
+                    errorMask().SetNthException((int)Rank_FieldIndex.MaleName, ex);
+                }
+            }
+            if (copyMask?.FemaleName ?? true)
+            {
+                try
+                {
+                    item.FemaleName_Property.SetToWithDefault(
+                        rhs.FemaleName_Property,
+                        def?.FemaleName_Property,
+                        cmds);
+                }
+                catch (Exception ex)
+                when (doErrorMask)
+                {
+                    errorMask().SetNthException((int)Rank_FieldIndex.FemaleName, ex);
+                }
+            }
+            if (copyMask?.Insignia ?? true)
+            {
+                try
+                {
+                    item.Insignia_Property.SetToWithDefault(
+                        rhs.Insignia_Property,
+                        def?.Insignia_Property,
+                        cmds);
+                }
+                catch (Exception ex)
+                when (doErrorMask)
+                {
+                    errorMask().SetNthException((int)Rank_FieldIndex.Insignia, ex);
                 }
             }
         }
@@ -1288,17 +1482,23 @@ namespace Mutagen.Internals
         public static void SetNthObjectHasBeenSet(
             ushort index,
             bool on,
-            IMasterReference obj,
+            IRank obj,
             NotifyingFireParameters? cmds = null)
         {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
+            Rank_FieldIndex enu = (Rank_FieldIndex)index;
             switch (enu)
             {
-                case MasterReference_FieldIndex.Master:
-                    obj.Master_Property.HasBeenSet = on;
+                case Rank_FieldIndex.RankNumber:
+                    obj.RankNumber_Property.HasBeenSet = on;
                     break;
-                case MasterReference_FieldIndex.FileSize:
-                    obj.FileSize_Property.HasBeenSet = on;
+                case Rank_FieldIndex.MaleName:
+                    obj.MaleName_Property.HasBeenSet = on;
+                    break;
+                case Rank_FieldIndex.FemaleName:
+                    obj.FemaleName_Property.HasBeenSet = on;
+                    break;
+                case Rank_FieldIndex.Insignia:
+                    obj.Insignia_Property.HasBeenSet = on;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1307,17 +1507,23 @@ namespace Mutagen.Internals
 
         public static void UnsetNthObject(
             ushort index,
-            IMasterReference obj,
+            IRank obj,
             NotifyingUnsetParameters? cmds = null)
         {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
+            Rank_FieldIndex enu = (Rank_FieldIndex)index;
             switch (enu)
             {
-                case MasterReference_FieldIndex.Master:
-                    obj.Master_Property.Unset(cmds);
+                case Rank_FieldIndex.RankNumber:
+                    obj.RankNumber_Property.Unset(cmds);
                     break;
-                case MasterReference_FieldIndex.FileSize:
-                    obj.FileSize_Property.Unset(cmds);
+                case Rank_FieldIndex.MaleName:
+                    obj.MaleName_Property.Unset(cmds);
+                    break;
+                case Rank_FieldIndex.FemaleName:
+                    obj.FemaleName_Property.Unset(cmds);
+                    break;
+                case Rank_FieldIndex.Insignia:
+                    obj.Insignia_Property.Unset(cmds);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1326,15 +1532,19 @@ namespace Mutagen.Internals
 
         public static bool GetNthObjectHasBeenSet(
             ushort index,
-            IMasterReference obj)
+            IRank obj)
         {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
+            Rank_FieldIndex enu = (Rank_FieldIndex)index;
             switch (enu)
             {
-                case MasterReference_FieldIndex.Master:
-                    return obj.Master_Property.HasBeenSet;
-                case MasterReference_FieldIndex.FileSize:
-                    return obj.FileSize_Property.HasBeenSet;
+                case Rank_FieldIndex.RankNumber:
+                    return obj.RankNumber_Property.HasBeenSet;
+                case Rank_FieldIndex.MaleName:
+                    return obj.MaleName_Property.HasBeenSet;
+                case Rank_FieldIndex.FemaleName:
+                    return obj.FemaleName_Property.HasBeenSet;
+                case Rank_FieldIndex.Insignia:
+                    return obj.Insignia_Property.HasBeenSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1342,51 +1552,59 @@ namespace Mutagen.Internals
 
         public static object GetNthObject(
             ushort index,
-            IMasterReferenceGetter obj)
+            IRankGetter obj)
         {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
+            Rank_FieldIndex enu = (Rank_FieldIndex)index;
             switch (enu)
             {
-                case MasterReference_FieldIndex.Master:
-                    return obj.Master;
-                case MasterReference_FieldIndex.FileSize:
-                    return obj.FileSize;
+                case Rank_FieldIndex.RankNumber:
+                    return obj.RankNumber;
+                case Rank_FieldIndex.MaleName:
+                    return obj.MaleName;
+                case Rank_FieldIndex.FemaleName:
+                    return obj.FemaleName;
+                case Rank_FieldIndex.Insignia:
+                    return obj.Insignia;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
         public static void Clear(
-            IMasterReference item,
+            IRank item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.Master_Property.Unset(cmds.ToUnsetParams());
-            item.FileSize_Property.Unset(cmds.ToUnsetParams());
+            item.RankNumber_Property.Unset(cmds.ToUnsetParams());
+            item.MaleName_Property.Unset(cmds.ToUnsetParams());
+            item.FemaleName_Property.Unset(cmds.ToUnsetParams());
+            item.Insignia_Property.Unset(cmds.ToUnsetParams());
         }
 
-        public static MasterReference_Mask<bool> GetEqualsMask(
-            this IMasterReferenceGetter item,
-            IMasterReferenceGetter rhs)
+        public static Rank_Mask<bool> GetEqualsMask(
+            this IRankGetter item,
+            IRankGetter rhs)
         {
-            var ret = new MasterReference_Mask<bool>();
+            var ret = new Rank_Mask<bool>();
             FillEqualsMask(item, rhs, ret);
             return ret;
         }
 
         public static void FillEqualsMask(
-            IMasterReferenceGetter item,
-            IMasterReferenceGetter rhs,
-            MasterReference_Mask<bool> ret)
+            IRankGetter item,
+            IRankGetter rhs,
+            Rank_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Master = item.Master_Property.Equals(rhs.Master_Property, (l, r) => object.Equals(l, r));
-            ret.FileSize = item.FileSize_Property.Equals(rhs.FileSize_Property, (l, r) => l == r);
+            ret.RankNumber = item.RankNumber_Property.Equals(rhs.RankNumber_Property, (l, r) => l == r);
+            ret.MaleName = item.MaleName_Property.Equals(rhs.MaleName_Property, (l, r) => object.Equals(l, r));
+            ret.FemaleName = item.FemaleName_Property.Equals(rhs.FemaleName_Property, (l, r) => object.Equals(l, r));
+            ret.Insignia = item.Insignia_Property.Equals(rhs.Insignia_Property, (l, r) => object.Equals(l, r));
         }
 
         public static string ToString(
-            this IMasterReferenceGetter item,
+            this IRankGetter item,
             string name = null,
-            MasterReference_Mask<bool> printMask = null)
+            Rank_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             item.ToString(fg, name, printMask);
@@ -1394,48 +1612,60 @@ namespace Mutagen.Internals
         }
 
         public static void ToString(
-            this IMasterReferenceGetter item,
+            this IRankGetter item,
             FileGeneration fg,
             string name = null,
-            MasterReference_Mask<bool> printMask = null)
+            Rank_Mask<bool> printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(MasterReference)} =>");
+                fg.AppendLine($"{nameof(Rank)} =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(MasterReference)}) =>");
+                fg.AppendLine($"{name} ({nameof(Rank)}) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Master ?? true)
+                if (printMask?.RankNumber ?? true)
                 {
-                    fg.AppendLine($"Master => {item.Master}");
+                    fg.AppendLine($"RankNumber => {item.RankNumber}");
                 }
-                if (printMask?.FileSize ?? true)
+                if (printMask?.MaleName ?? true)
                 {
-                    fg.AppendLine($"FileSize => {item.FileSize}");
+                    fg.AppendLine($"MaleName => {item.MaleName}");
+                }
+                if (printMask?.FemaleName ?? true)
+                {
+                    fg.AppendLine($"FemaleName => {item.FemaleName}");
+                }
+                if (printMask?.Insignia ?? true)
+                {
+                    fg.AppendLine($"Insignia => {item.Insignia}");
                 }
             }
             fg.AppendLine("]");
         }
 
         public static bool HasBeenSet(
-            this IMasterReferenceGetter item,
-            MasterReference_Mask<bool?> checkMask)
+            this IRankGetter item,
+            Rank_Mask<bool?> checkMask)
         {
-            if (checkMask.Master.HasValue && checkMask.Master.Value != item.Master_Property.HasBeenSet) return false;
-            if (checkMask.FileSize.HasValue && checkMask.FileSize.Value != item.FileSize_Property.HasBeenSet) return false;
+            if (checkMask.RankNumber.HasValue && checkMask.RankNumber.Value != item.RankNumber_Property.HasBeenSet) return false;
+            if (checkMask.MaleName.HasValue && checkMask.MaleName.Value != item.MaleName_Property.HasBeenSet) return false;
+            if (checkMask.FemaleName.HasValue && checkMask.FemaleName.Value != item.FemaleName_Property.HasBeenSet) return false;
+            if (checkMask.Insignia.HasValue && checkMask.Insignia.Value != item.Insignia_Property.HasBeenSet) return false;
             return true;
         }
 
-        public static MasterReference_Mask<bool> GetHasBeenSetMask(IMasterReferenceGetter item)
+        public static Rank_Mask<bool> GetHasBeenSetMask(IRankGetter item)
         {
-            var ret = new MasterReference_Mask<bool>();
-            ret.Master = item.Master_Property.HasBeenSet;
-            ret.FileSize = item.FileSize_Property.HasBeenSet;
+            var ret = new Rank_Mask<bool>();
+            ret.RankNumber = item.RankNumber_Property.HasBeenSet;
+            ret.MaleName = item.MaleName_Property.HasBeenSet;
+            ret.FemaleName = item.FemaleName_Property.HasBeenSet;
+            ret.Insignia = item.Insignia_Property.HasBeenSet;
             return ret;
         }
 
@@ -1443,64 +1673,94 @@ namespace Mutagen.Internals
         #region XML Write
         public static void Write_XML(
             XmlWriter writer,
-            IMasterReferenceGetter item,
+            IRankGetter item,
             bool doMasks,
-            out MasterReference_ErrorMask errorMask,
+            out Rank_ErrorMask errorMask,
             string name = null)
         {
-            MasterReference_ErrorMask errMaskRet = null;
+            Rank_ErrorMask errMaskRet = null;
             Write_XML_Internal(
                 writer: writer,
                 name: name,
                 item: item,
                 doMasks: doMasks,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new MasterReference_ErrorMask()) : default(Func<MasterReference_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Rank_ErrorMask()) : default(Func<Rank_ErrorMask>));
             errorMask = errMaskRet;
         }
 
         private static void Write_XML_Internal(
             XmlWriter writer,
-            IMasterReferenceGetter item,
+            IRankGetter item,
             bool doMasks,
-            Func<MasterReference_ErrorMask> errorMask,
+            Func<Rank_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.MasterReference"))
+                using (new ElementWrapper(writer, name ?? "Mutagen.Rank"))
                 {
                     if (name != null)
                     {
-                        writer.WriteAttributeString("type", "Mutagen.MasterReference");
+                        writer.WriteAttributeString("type", "Mutagen.Rank");
                     }
-                    if (item.Master_Property.HasBeenSet)
+                    if (item.RankNumber_Property.HasBeenSet)
+                    {
+                        Exception subMask;
+                        Int32XmlTranslation.Instance.Write(
+                            writer,
+                            nameof(item.RankNumber),
+                            item.RankNumber,
+                            doMasks: doMasks,
+                            errorMask: out subMask);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)Rank_FieldIndex.RankNumber,
+                            subMask);
+                    }
+                    if (item.MaleName_Property.HasBeenSet)
                     {
                         Exception subMask;
                         StringXmlTranslation.Instance.Write(
                             writer,
-                            nameof(item.Master),
-                            item.Master,
+                            nameof(item.MaleName),
+                            item.MaleName,
                             doMasks: doMasks,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
                             doMasks,
-                            (int)MasterReference_FieldIndex.Master,
+                            (int)Rank_FieldIndex.MaleName,
                             subMask);
                     }
-                    if (item.FileSize_Property.HasBeenSet)
+                    if (item.FemaleName_Property.HasBeenSet)
                     {
                         Exception subMask;
-                        UInt64XmlTranslation.Instance.Write(
+                        StringXmlTranslation.Instance.Write(
                             writer,
-                            nameof(item.FileSize),
-                            item.FileSize,
+                            nameof(item.FemaleName),
+                            item.FemaleName,
                             doMasks: doMasks,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
                             doMasks,
-                            (int)MasterReference_FieldIndex.FileSize,
+                            (int)Rank_FieldIndex.FemaleName,
+                            subMask);
+                    }
+                    if (item.Insignia_Property.HasBeenSet)
+                    {
+                        Exception subMask;
+                        FilePathXmlTranslation.Instance.Write(
+                            writer,
+                            nameof(item.Insignia),
+                            item.Insignia,
+                            doMasks: doMasks,
+                            errorMask: out subMask);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)Rank_FieldIndex.Insignia,
                             subMask);
                     }
                 }
@@ -1519,24 +1779,24 @@ namespace Mutagen.Internals
         #region Binary Write
         public static void Write_Binary(
             MutagenWriter writer,
-            IMasterReferenceGetter item,
+            IRankGetter item,
             bool doMasks,
-            out MasterReference_ErrorMask errorMask)
+            out Rank_ErrorMask errorMask)
         {
-            MasterReference_ErrorMask errMaskRet = null;
+            Rank_ErrorMask errMaskRet = null;
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
                 doMasks: doMasks,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new MasterReference_ErrorMask()) : default(Func<MasterReference_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Rank_ErrorMask()) : default(Func<Rank_ErrorMask>));
             errorMask = errMaskRet;
         }
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
-            IMasterReferenceGetter item,
+            IRankGetter item,
             bool doMasks,
-            Func<MasterReference_ErrorMask> errorMask)
+            Func<Rank_ErrorMask> errorMask)
         {
             try
             {
@@ -1555,39 +1815,69 @@ namespace Mutagen.Internals
         #endregion
 
         public static void Write_Binary_RecordTypes(
-            IMasterReferenceGetter item,
+            IRankGetter item,
             MutagenWriter writer,
             bool doMasks,
-            Func<MasterReference_ErrorMask> errorMask)
+            Func<Rank_ErrorMask> errorMask)
         {
             {
                 Exception subMask;
-                Mutagen.Binary.StringBinaryTranslation.Instance.Write(
+                Mutagen.Binary.Int32BinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.Master,
+                    item: item.RankNumber,
                     doMasks: doMasks,
                     errorMask: out subMask,
-                    header: MasterReference_Registration.MAST_HEADER,
+                    header: Rank_Registration.RNAM_HEADER,
                     nullable: false);
                 ErrorMask.HandleErrorMask(
                     errorMask,
                     doMasks,
-                    (int)MasterReference_FieldIndex.Master,
+                    (int)Rank_FieldIndex.RankNumber,
                     subMask);
             }
             {
                 Exception subMask;
-                Mutagen.Binary.UInt64BinaryTranslation.Instance.Write(
+                Mutagen.Binary.StringBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.FileSize,
+                    item: item.MaleName,
                     doMasks: doMasks,
                     errorMask: out subMask,
-                    header: MasterReference_Registration.DATA_HEADER,
+                    header: Rank_Registration.MNAM_HEADER,
                     nullable: false);
                 ErrorMask.HandleErrorMask(
                     errorMask,
                     doMasks,
-                    (int)MasterReference_FieldIndex.FileSize,
+                    (int)Rank_FieldIndex.MaleName,
+                    subMask);
+            }
+            {
+                Exception subMask;
+                Mutagen.Binary.StringBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.FemaleName,
+                    doMasks: doMasks,
+                    errorMask: out subMask,
+                    header: Rank_Registration.FNAM_HEADER,
+                    nullable: false);
+                ErrorMask.HandleErrorMask(
+                    errorMask,
+                    doMasks,
+                    (int)Rank_FieldIndex.FemaleName,
+                    subMask);
+            }
+            {
+                Exception subMask;
+                Mutagen.Binary.FilePathBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Insignia,
+                    doMasks: doMasks,
+                    errorMask: out subMask,
+                    header: Rank_Registration.INAM_HEADER,
+                    nullable: false);
+                ErrorMask.HandleErrorMask(
+                    errorMask,
+                    doMasks,
+                    (int)Rank_FieldIndex.Insignia,
                     subMask);
             }
         }
@@ -1600,44 +1890,52 @@ namespace Mutagen.Internals
     #region Modules
 
     #region Mask
-    public class MasterReference_Mask<T> : IMask<T>, IEquatable<MasterReference_Mask<T>>
+    public class Rank_Mask<T> : IMask<T>, IEquatable<Rank_Mask<T>>
     {
         #region Ctors
-        public MasterReference_Mask()
+        public Rank_Mask()
         {
         }
 
-        public MasterReference_Mask(T initialValue)
+        public Rank_Mask(T initialValue)
         {
-            this.Master = initialValue;
-            this.FileSize = initialValue;
+            this.RankNumber = initialValue;
+            this.MaleName = initialValue;
+            this.FemaleName = initialValue;
+            this.Insignia = initialValue;
         }
         #endregion
 
         #region Members
-        public T Master;
-        public T FileSize;
+        public T RankNumber;
+        public T MaleName;
+        public T FemaleName;
+        public T Insignia;
         #endregion
 
         #region Equals
         public override bool Equals(object obj)
         {
-            if (!(obj is MasterReference_Mask<T> rhs)) return false;
+            if (!(obj is Rank_Mask<T> rhs)) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(MasterReference_Mask<T> rhs)
+        public bool Equals(Rank_Mask<T> rhs)
         {
             if (rhs == null) return false;
-            if (!object.Equals(this.Master, rhs.Master)) return false;
-            if (!object.Equals(this.FileSize, rhs.FileSize)) return false;
+            if (!object.Equals(this.RankNumber, rhs.RankNumber)) return false;
+            if (!object.Equals(this.MaleName, rhs.MaleName)) return false;
+            if (!object.Equals(this.FemaleName, rhs.FemaleName)) return false;
+            if (!object.Equals(this.Insignia, rhs.Insignia)) return false;
             return true;
         }
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = ret.CombineHashCode(this.Master?.GetHashCode());
-            ret = ret.CombineHashCode(this.FileSize?.GetHashCode());
+            ret = ret.CombineHashCode(this.RankNumber?.GetHashCode());
+            ret = ret.CombineHashCode(this.MaleName?.GetHashCode());
+            ret = ret.CombineHashCode(this.FemaleName?.GetHashCode());
+            ret = ret.CombineHashCode(this.Insignia?.GetHashCode());
             return ret;
         }
 
@@ -1646,24 +1944,28 @@ namespace Mutagen.Internals
         #region All Equal
         public bool AllEqual(Func<T, bool> eval)
         {
-            if (!eval(this.Master)) return false;
-            if (!eval(this.FileSize)) return false;
+            if (!eval(this.RankNumber)) return false;
+            if (!eval(this.MaleName)) return false;
+            if (!eval(this.FemaleName)) return false;
+            if (!eval(this.Insignia)) return false;
             return true;
         }
         #endregion
 
         #region Translate
-        public MasterReference_Mask<R> Translate<R>(Func<T, R> eval)
+        public Rank_Mask<R> Translate<R>(Func<T, R> eval)
         {
-            var ret = new MasterReference_Mask<R>();
+            var ret = new Rank_Mask<R>();
             this.Translate_InternalFill(ret, eval);
             return ret;
         }
 
-        protected void Translate_InternalFill<R>(MasterReference_Mask<R> obj, Func<T, R> eval)
+        protected void Translate_InternalFill<R>(Rank_Mask<R> obj, Func<T, R> eval)
         {
-            obj.Master = eval(this.Master);
-            obj.FileSize = eval(this.FileSize);
+            obj.RankNumber = eval(this.RankNumber);
+            obj.MaleName = eval(this.MaleName);
+            obj.FemaleName = eval(this.FemaleName);
+            obj.Insignia = eval(this.Insignia);
         }
         #endregion
 
@@ -1679,26 +1981,34 @@ namespace Mutagen.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(MasterReference_Mask<bool> printMask = null)
+        public string ToString(Rank_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, MasterReference_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, Rank_Mask<bool> printMask = null)
         {
-            fg.AppendLine($"{nameof(MasterReference_Mask<T>)} =>");
+            fg.AppendLine($"{nameof(Rank_Mask<T>)} =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Master ?? true)
+                if (printMask?.RankNumber ?? true)
                 {
-                    fg.AppendLine($"Master => {Master.ToStringSafe()}");
+                    fg.AppendLine($"RankNumber => {RankNumber.ToStringSafe()}");
                 }
-                if (printMask?.FileSize ?? true)
+                if (printMask?.MaleName ?? true)
                 {
-                    fg.AppendLine($"FileSize => {FileSize.ToStringSafe()}");
+                    fg.AppendLine($"MaleName => {MaleName.ToStringSafe()}");
+                }
+                if (printMask?.FemaleName ?? true)
+                {
+                    fg.AppendLine($"FemaleName => {FemaleName.ToStringSafe()}");
+                }
+                if (printMask?.Insignia ?? true)
+                {
+                    fg.AppendLine($"Insignia => {Insignia.ToStringSafe()}");
                 }
             }
             fg.AppendLine("]");
@@ -1707,7 +2017,7 @@ namespace Mutagen.Internals
 
     }
 
-    public class MasterReference_ErrorMask : IErrorMask
+    public class Rank_ErrorMask : IErrorMask
     {
         #region Members
         public Exception Overall { get; set; }
@@ -1723,21 +2033,29 @@ namespace Mutagen.Internals
                 return _warnings;
             }
         }
-        public Exception Master;
-        public Exception FileSize;
+        public Exception RankNumber;
+        public Exception MaleName;
+        public Exception FemaleName;
+        public Exception Insignia;
         #endregion
 
         #region IErrorMask
         public void SetNthException(int index, Exception ex)
         {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
+            Rank_FieldIndex enu = (Rank_FieldIndex)index;
             switch (enu)
             {
-                case MasterReference_FieldIndex.Master:
-                    this.Master = ex;
+                case Rank_FieldIndex.RankNumber:
+                    this.RankNumber = ex;
                     break;
-                case MasterReference_FieldIndex.FileSize:
-                    this.FileSize = ex;
+                case Rank_FieldIndex.MaleName:
+                    this.MaleName = ex;
+                    break;
+                case Rank_FieldIndex.FemaleName:
+                    this.FemaleName = ex;
+                    break;
+                case Rank_FieldIndex.Insignia:
+                    this.Insignia = ex;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1746,14 +2064,20 @@ namespace Mutagen.Internals
 
         public void SetNthMask(int index, object obj)
         {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
+            Rank_FieldIndex enu = (Rank_FieldIndex)index;
             switch (enu)
             {
-                case MasterReference_FieldIndex.Master:
-                    this.Master = (Exception)obj;
+                case Rank_FieldIndex.RankNumber:
+                    this.RankNumber = (Exception)obj;
                     break;
-                case MasterReference_FieldIndex.FileSize:
-                    this.FileSize = (Exception)obj;
+                case Rank_FieldIndex.MaleName:
+                    this.MaleName = (Exception)obj;
+                    break;
+                case Rank_FieldIndex.FemaleName:
+                    this.FemaleName = (Exception)obj;
+                    break;
+                case Rank_FieldIndex.Insignia:
+                    this.Insignia = (Exception)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1771,7 +2095,7 @@ namespace Mutagen.Internals
 
         public void ToString(FileGeneration fg)
         {
-            fg.AppendLine("MasterReference_ErrorMask =>");
+            fg.AppendLine("Rank_ErrorMask =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
@@ -1791,26 +2115,36 @@ namespace Mutagen.Internals
         }
         protected void ToString_FillInternal(FileGeneration fg)
         {
-            if (Master != null)
+            if (RankNumber != null)
             {
-                fg.AppendLine($"Master => {Master.ToStringSafe()}");
+                fg.AppendLine($"RankNumber => {RankNumber.ToStringSafe()}");
             }
-            if (FileSize != null)
+            if (MaleName != null)
             {
-                fg.AppendLine($"FileSize => {FileSize.ToStringSafe()}");
+                fg.AppendLine($"MaleName => {MaleName.ToStringSafe()}");
+            }
+            if (FemaleName != null)
+            {
+                fg.AppendLine($"FemaleName => {FemaleName.ToStringSafe()}");
+            }
+            if (Insignia != null)
+            {
+                fg.AppendLine($"Insignia => {Insignia.ToStringSafe()}");
             }
         }
         #endregion
 
         #region Combine
-        public MasterReference_ErrorMask Combine(MasterReference_ErrorMask rhs)
+        public Rank_ErrorMask Combine(Rank_ErrorMask rhs)
         {
-            var ret = new MasterReference_ErrorMask();
-            ret.Master = this.Master.Combine(rhs.Master);
-            ret.FileSize = this.FileSize.Combine(rhs.FileSize);
+            var ret = new Rank_ErrorMask();
+            ret.RankNumber = this.RankNumber.Combine(rhs.RankNumber);
+            ret.MaleName = this.MaleName.Combine(rhs.MaleName);
+            ret.FemaleName = this.FemaleName.Combine(rhs.FemaleName);
+            ret.Insignia = this.Insignia.Combine(rhs.Insignia);
             return ret;
         }
-        public static MasterReference_ErrorMask Combine(MasterReference_ErrorMask lhs, MasterReference_ErrorMask rhs)
+        public static Rank_ErrorMask Combine(Rank_ErrorMask lhs, Rank_ErrorMask rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -1818,11 +2152,13 @@ namespace Mutagen.Internals
         #endregion
 
     }
-    public class MasterReference_CopyMask
+    public class Rank_CopyMask
     {
         #region Members
-        public bool Master;
-        public bool FileSize;
+        public bool RankNumber;
+        public bool MaleName;
+        public bool FemaleName;
+        public bool Insignia;
         #endregion
 
     }

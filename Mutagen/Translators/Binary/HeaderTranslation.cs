@@ -163,12 +163,12 @@ namespace Mutagen.Binary
             switch (type)
             {
                 case ObjectType.Subrecord:
+                case ObjectType.Struct:
                     lengthLength = Constants.SUBRECORD_LENGTHLENGTH;
                     break;
                 case ObjectType.Record:
                     lengthLength = Constants.RECORD_LENGTHLENGTH;
                     break;
-                case ObjectType.Struct:
                 case ObjectType.Group:
                 case ObjectType.Mod:
                 default:

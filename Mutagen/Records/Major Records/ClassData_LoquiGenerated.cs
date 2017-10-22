@@ -47,15 +47,15 @@ namespace Mutagen
 
         #endregion
         #region Specialization
-        protected readonly INotifyingItem<Specialization> _Specialization = NotifyingItem.Factory<Specialization>(markAsSet: false);
-        public INotifyingItem<Specialization> Specialization_Property => _Specialization;
-        public Specialization Specialization
+        protected readonly INotifyingItem<Class.Specialization> _Specialization = NotifyingItem.Factory<Class.Specialization>(markAsSet: false);
+        public INotifyingItem<Class.Specialization> Specialization_Property => _Specialization;
+        public Class.Specialization Specialization
         {
             get => this._Specialization.Item;
             set => this._Specialization.Set(value);
         }
-        INotifyingItem<Specialization> IClassData.Specialization_Property => this.Specialization_Property;
-        INotifyingItemGetter<Specialization> IClassDataGetter.Specialization_Property => this.Specialization_Property;
+        INotifyingItem<Class.Specialization> IClassData.Specialization_Property => this.Specialization_Property;
+        INotifyingItemGetter<Class.Specialization> IClassDataGetter.Specialization_Property => this.Specialization_Property;
         #endregion
         #region SecondaryAttributes
         private readonly INotifyingList<ActorValue> _SecondaryAttributes = new NotifyingListBounded<ActorValue>(max: 7);
@@ -535,7 +535,7 @@ namespace Mutagen
                 case "Specialization":
                     {
                         Exception subMask;
-                        var tryGet = EnumXmlTranslation<Specialization>.Instance.Parse(
+                        var tryGet = EnumXmlTranslation<Class.Specialization>.Instance.Parse(
                             root,
                             nullable: false,
                             doMasks: doMasks,
@@ -936,7 +936,7 @@ namespace Mutagen
             if (frame.Complete) return;
             {
                 Exception subMask;
-                var tryGet = Mutagen.Binary.EnumBinaryTranslation<Specialization>.Instance.Parse(
+                var tryGet = Mutagen.Binary.EnumBinaryTranslation<Class.Specialization>.Instance.Parse(
                     frame: frame.Spawn(new ContentLength(4)),
                     doMasks: doMasks,
                     errorMask: out subMask);
@@ -1096,7 +1096,7 @@ namespace Mutagen
                     break;
                 case ClassData_FieldIndex.Specialization:
                     this._Specialization.Set(
-                        (Specialization)obj,
+                        (Class.Specialization)obj,
                         cmds);
                     break;
                 case ClassData_FieldIndex.SecondaryAttributes:
@@ -1159,7 +1159,7 @@ namespace Mutagen
                     break;
                 case ClassData_FieldIndex.Specialization:
                     obj._Specialization.Set(
-                        (Specialization)pair.Value,
+                        (Class.Specialization)pair.Value,
                         null);
                     break;
                 case ClassData_FieldIndex.SecondaryAttributes:
@@ -1196,8 +1196,8 @@ namespace Mutagen
     public interface IClassData : IClassDataGetter, ILoquiClass<IClassData, IClassDataGetter>, ILoquiClass<ClassData, IClassDataGetter>
     {
         new INotifyingList<ActorValue> PrimaryAttributes { get; }
-        new Specialization Specialization { get; set; }
-        new INotifyingItem<Specialization> Specialization_Property { get; }
+        new Class.Specialization Specialization { get; set; }
+        new INotifyingItem<Class.Specialization> Specialization_Property { get; }
 
         new INotifyingList<ActorValue> SecondaryAttributes { get; }
         new ClassFlag Flags { get; set; }
@@ -1217,8 +1217,8 @@ namespace Mutagen
         INotifyingListGetter<ActorValue> PrimaryAttributes { get; }
         #endregion
         #region Specialization
-        Specialization Specialization { get; }
-        INotifyingItemGetter<Specialization> Specialization_Property { get; }
+        Class.Specialization Specialization { get; }
+        INotifyingItemGetter<Class.Specialization> Specialization_Property { get; }
 
         #endregion
         #region SecondaryAttributes
@@ -1436,7 +1436,7 @@ namespace Mutagen.Internals
                 case ClassData_FieldIndex.PrimaryAttributes:
                     return typeof(NotifyingList<ActorValue>);
                 case ClassData_FieldIndex.Specialization:
-                    return typeof(Specialization);
+                    return typeof(Class.Specialization);
                 case ClassData_FieldIndex.SecondaryAttributes:
                     return typeof(NotifyingList<ActorValue>);
                 case ClassData_FieldIndex.Flags:
@@ -2043,7 +2043,7 @@ namespace Mutagen.Internals
                     if (item.Specialization_Property.HasBeenSet)
                     {
                         Exception subMask;
-                        EnumXmlTranslation<Specialization>.Instance.Write(
+                        EnumXmlTranslation<Class.Specialization>.Instance.Write(
                             writer,
                             nameof(item.Specialization),
                             item.Specialization,
@@ -2214,7 +2214,7 @@ namespace Mutagen.Internals
             }
             {
                 Exception subMask;
-                Mutagen.Binary.EnumBinaryTranslation<Specialization>.Instance.Write(
+                Mutagen.Binary.EnumBinaryTranslation<Class.Specialization>.Instance.Write(
                     writer,
                     item.Specialization,
                     doMasks: doMasks,

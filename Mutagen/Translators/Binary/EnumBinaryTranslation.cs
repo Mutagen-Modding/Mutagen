@@ -52,6 +52,39 @@ namespace Mutagen.Binary
             }
         }
 
+        public void Write(
+            MutagenWriter writer,
+            E? item,
+            RecordType header,
+            ContentLength length,
+            bool nullable,
+            bool doMasks,
+            out Exception errorMask)
+        {
+            if (item == null)
+            {
+                if (nullable)
+                {
+                    errorMask = null;
+                    return;
+                }
+                throw new ArgumentException("Non optional string was null.");
+            }
+            try
+            {
+                using (HeaderExport.ExportHeader(writer, header, ObjectType.Subrecord))
+                {
+                    WriteValue(writer, item.Value, length);
+                }
+                errorMask = null;
+            }
+            catch (Exception ex)
+            when (doMasks)
+            {
+                errorMask = ex;
+            }
+        }
+
         protected E ParseValue(MutagenFrame reader)
         {
             int i;

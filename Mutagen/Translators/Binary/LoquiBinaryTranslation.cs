@@ -86,8 +86,7 @@ namespace Mutagen.Binary
             copyIn(fields, item);
             mask = maskObj;
         }
-
-        [DebuggerStepThrough]
+        
         public static CREATE_FUNC GetCreateFunc()
         {
             var tType = typeof(T);

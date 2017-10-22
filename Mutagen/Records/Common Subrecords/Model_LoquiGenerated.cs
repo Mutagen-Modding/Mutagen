@@ -23,51 +23,51 @@ using Mutagen.Binary;
 namespace Mutagen
 {
     #region Class
-    public partial class MasterReference : IMasterReference, ILoquiObjectSetter, IEquatable<MasterReference>
+    public partial class Model : IModel, ILoquiObjectSetter, IEquatable<Model>
     {
-        ILoquiRegistration ILoquiObject.Registration => MasterReference_Registration.Instance;
-        public static MasterReference_Registration Registration => MasterReference_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Model_Registration.Instance;
+        public static Model_Registration Registration => Model_Registration.Instance;
 
         #region Ctor
-        public MasterReference()
+        public Model()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Master
-        protected readonly INotifyingItem<String> _Master = NotifyingItem.Factory<String>(markAsSet: false);
-        public INotifyingItem<String> Master_Property => _Master;
-        public String Master
+        #region File
+        protected readonly INotifyingItem<FilePath> _File = NotifyingItem.Factory<FilePath>(markAsSet: false);
+        public INotifyingItem<FilePath> File_Property => _File;
+        public FilePath File
         {
-            get => this._Master.Item;
-            set => this._Master.Set(value);
+            get => this._File.Item;
+            set => this._File.Set(value);
         }
-        INotifyingItem<String> IMasterReference.Master_Property => this.Master_Property;
-        INotifyingItemGetter<String> IMasterReferenceGetter.Master_Property => this.Master_Property;
+        INotifyingItem<FilePath> IModel.File_Property => this.File_Property;
+        INotifyingItemGetter<FilePath> IModelGetter.File_Property => this.File_Property;
         #endregion
-        #region FileSize
-        protected readonly INotifyingItem<UInt64> _FileSize = NotifyingItem.Factory<UInt64>(markAsSet: false);
-        public INotifyingItem<UInt64> FileSize_Property => _FileSize;
-        public UInt64 FileSize
+        #region BoundRadius
+        protected readonly INotifyingItem<Single> _BoundRadius = NotifyingItem.Factory<Single>(markAsSet: false);
+        public INotifyingItem<Single> BoundRadius_Property => _BoundRadius;
+        public Single BoundRadius
         {
-            get => this._FileSize.Item;
-            set => this._FileSize.Set(value);
+            get => this._BoundRadius.Item;
+            set => this._BoundRadius.Set(value);
         }
-        INotifyingItem<UInt64> IMasterReference.FileSize_Property => this.FileSize_Property;
-        INotifyingItemGetter<UInt64> IMasterReferenceGetter.FileSize_Property => this.FileSize_Property;
+        INotifyingItem<Single> IModel.BoundRadius_Property => this.BoundRadius_Property;
+        INotifyingItemGetter<Single> IModelGetter.BoundRadius_Property => this.BoundRadius_Property;
         #endregion
 
         #region Loqui Getter Interface
 
-        protected object GetNthObject(ushort index) => MasterReferenceCommon.GetNthObject(index, this);
+        protected object GetNthObject(ushort index) => ModelCommon.GetNthObject(index, this);
         object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
 
-        protected bool GetNthObjectHasBeenSet(ushort index) => MasterReferenceCommon.GetNthObjectHasBeenSet(index, this);
+        protected bool GetNthObjectHasBeenSet(ushort index) => ModelCommon.GetNthObjectHasBeenSet(index, this);
         bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
 
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => MasterReferenceCommon.UnsetNthObject(index, this, cmds);
+        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => ModelCommon.UnsetNthObject(index, this, cmds);
         void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => this.UnsetNthObject(index, cmds);
 
         #endregion
@@ -75,7 +75,7 @@ namespace Mutagen
         #region Loqui Interface
         protected void SetNthObjectHasBeenSet(ushort index, bool on)
         {
-            MasterReferenceCommon.SetNthObjectHasBeenSet(index, on, this);
+            ModelCommon.SetNthObjectHasBeenSet(index, on, this);
         }
         void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
 
@@ -84,48 +84,48 @@ namespace Mutagen
         #region To String
         public override string ToString()
         {
-            return MasterReferenceCommon.ToString(this, printMask: null);
+            return ModelCommon.ToString(this, printMask: null);
         }
 
         public string ToString(
             string name = null,
-            MasterReference_Mask<bool> printMask = null)
+            Model_Mask<bool> printMask = null)
         {
-            return MasterReferenceCommon.ToString(this, name: name, printMask: printMask);
+            return ModelCommon.ToString(this, name: name, printMask: printMask);
         }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            MasterReferenceCommon.ToString(this, fg, name: name, printMask: null);
+            ModelCommon.ToString(this, fg, name: name, printMask: null);
         }
 
         #endregion
 
-        public MasterReference_Mask<bool> GetHasBeenSetMask()
+        public Model_Mask<bool> GetHasBeenSetMask()
         {
-            return MasterReferenceCommon.GetHasBeenSetMask(this);
+            return ModelCommon.GetHasBeenSetMask(this);
         }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is MasterReference rhs)) return false;
+            if (!(obj is Model rhs)) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(MasterReference rhs)
+        public bool Equals(Model rhs)
         {
             if (rhs == null) return false;
-            if (Master_Property.HasBeenSet != rhs.Master_Property.HasBeenSet) return false;
-            if (Master_Property.HasBeenSet)
+            if (File_Property.HasBeenSet != rhs.File_Property.HasBeenSet) return false;
+            if (File_Property.HasBeenSet)
             {
-                if (!object.Equals(Master, rhs.Master)) return false;
+                if (!object.Equals(File, rhs.File)) return false;
             }
-            if (FileSize_Property.HasBeenSet != rhs.FileSize_Property.HasBeenSet) return false;
-            if (FileSize_Property.HasBeenSet)
+            if (BoundRadius_Property.HasBeenSet != rhs.BoundRadius_Property.HasBeenSet) return false;
+            if (BoundRadius_Property.HasBeenSet)
             {
-                if (FileSize != rhs.FileSize) return false;
+                if (BoundRadius != rhs.BoundRadius) return false;
             }
             return true;
         }
@@ -133,13 +133,13 @@ namespace Mutagen
         public override int GetHashCode()
         {
             int ret = 0;
-            if (Master_Property.HasBeenSet)
+            if (File_Property.HasBeenSet)
             {
-                ret = HashHelper.GetHashCode(Master).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(File).CombineHashCode(ret);
             }
-            if (FileSize_Property.HasBeenSet)
+            if (BoundRadius_Property.HasBeenSet)
             {
-                ret = HashHelper.GetHashCode(FileSize).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(BoundRadius).CombineHashCode(ret);
             }
             return ret;
         }
@@ -150,7 +150,7 @@ namespace Mutagen
         #region XML Translation
         #region XML Create
         [DebuggerStepThrough]
-        public static MasterReference Create_XML(XElement root)
+        public static Model Create_XML(XElement root)
         {
             return Create_XML(
                 root: root,
@@ -159,9 +159,9 @@ namespace Mutagen
         }
 
         [DebuggerStepThrough]
-        public static MasterReference Create_XML(
+        public static Model Create_XML(
             XElement root,
-            out MasterReference_ErrorMask errorMask)
+            out Model_ErrorMask errorMask)
         {
             return Create_XML(
                 root: root,
@@ -170,10 +170,10 @@ namespace Mutagen
         }
 
         [DebuggerStepThrough]
-        public static MasterReference Create_XML(
+        public static Model Create_XML(
             XElement root,
             bool doMasks,
-            out MasterReference_ErrorMask errorMask)
+            out Model_ErrorMask errorMask)
         {
             var ret = Create_XML(
                 root: root,
@@ -183,27 +183,27 @@ namespace Mutagen
         }
 
         [DebuggerStepThrough]
-        public static (MasterReference Object, MasterReference_ErrorMask ErrorMask) Create_XML(
+        public static (Model Object, Model_ErrorMask ErrorMask) Create_XML(
             XElement root,
             bool doMasks)
         {
-            MasterReference_ErrorMask errMaskRet = null;
+            Model_ErrorMask errMaskRet = null;
             var ret = Create_XML_Internal(
                 root: root,
                 doMasks: doMasks,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new MasterReference_ErrorMask()) : default(Func<MasterReference_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Model_ErrorMask()) : default(Func<Model_ErrorMask>));
             return (ret, errMaskRet);
         }
 
-        public static MasterReference Create_XML(string path)
+        public static Model Create_XML(string path)
         {
             var root = XDocument.Load(path).Root;
             return Create_XML(root: root);
         }
 
-        public static MasterReference Create_XML(
+        public static Model Create_XML(
             string path,
-            out MasterReference_ErrorMask errorMask)
+            out Model_ErrorMask errorMask)
         {
             var root = XDocument.Load(path).Root;
             return Create_XML(
@@ -211,15 +211,15 @@ namespace Mutagen
                 errorMask: out errorMask);
         }
 
-        public static MasterReference Create_XML(Stream stream)
+        public static Model Create_XML(Stream stream)
         {
             var root = XDocument.Load(stream).Root;
             return Create_XML(root: root);
         }
 
-        public static MasterReference Create_XML(
+        public static Model Create_XML(
             Stream stream,
-            out MasterReference_ErrorMask errorMask)
+            out Model_ErrorMask errorMask)
         {
             var root = XDocument.Load(stream).Root;
             return Create_XML(
@@ -234,7 +234,7 @@ namespace Mutagen
             XElement root,
             NotifyingFireParameters? cmds = null)
         {
-            LoquiXmlTranslation<MasterReference, MasterReference_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
@@ -245,10 +245,10 @@ namespace Mutagen
 
         public virtual void CopyIn_XML(
             XElement root,
-            out MasterReference_ErrorMask errorMask,
+            out Model_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
-            LoquiXmlTranslation<MasterReference, MasterReference_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
@@ -269,7 +269,7 @@ namespace Mutagen
 
         public void CopyIn_XML(
             string path,
-            out MasterReference_ErrorMask errorMask,
+            out Model_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             var root = XDocument.Load(path).Root;
@@ -291,7 +291,7 @@ namespace Mutagen
 
         public void CopyIn_XML(
             Stream stream,
-            out MasterReference_ErrorMask errorMask,
+            out Model_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             var root = XDocument.Load(stream).Root;
@@ -306,10 +306,10 @@ namespace Mutagen
         #region XML Write
         public virtual void Write_XML(
             XmlWriter writer,
-            out MasterReference_ErrorMask errorMask,
+            out Model_ErrorMask errorMask,
             string name = null)
         {
-            errorMask = (MasterReference_ErrorMask)this.Write_XML_Internal(
+            errorMask = (Model_ErrorMask)this.Write_XML_Internal(
                 writer: writer,
                 name: name,
                 doMasks: true);
@@ -317,7 +317,7 @@ namespace Mutagen
 
         public virtual void Write_XML(
             string path,
-            out MasterReference_ErrorMask errorMask,
+            out Model_ErrorMask errorMask,
             string name = null)
         {
             using (var writer = new XmlTextWriter(path, Encoding.ASCII))
@@ -333,7 +333,7 @@ namespace Mutagen
 
         public virtual void Write_XML(
             Stream stream,
-            out MasterReference_ErrorMask errorMask,
+            out Model_ErrorMask errorMask,
             string name = null)
         {
             using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
@@ -390,7 +390,7 @@ namespace Mutagen
             bool doMasks,
             string name = null)
         {
-            MasterReferenceCommon.Write_XML(
+            ModelCommon.Write_XML(
                 writer: writer,
                 item: this,
                 doMasks: doMasks,
@@ -399,12 +399,12 @@ namespace Mutagen
         }
         #endregion
 
-        private static MasterReference Create_XML_Internal(
+        private static Model Create_XML_Internal(
             XElement root,
             bool doMasks,
-            Func<MasterReference_ErrorMask> errorMask)
+            Func<Model_ErrorMask> errorMask)
         {
-            var ret = new MasterReference();
+            var ret = new Model();
             try
             {
                 foreach (var elem in root.Elements())
@@ -426,41 +426,41 @@ namespace Mutagen
         }
 
         protected static void Fill_XML_Internal(
-            MasterReference item,
+            Model item,
             XElement root,
             string name,
             bool doMasks,
-            Func<MasterReference_ErrorMask> errorMask)
+            Func<Model_ErrorMask> errorMask)
         {
             switch (name)
             {
-                case "Master":
+                case "File":
                     {
                         Exception subMask;
-                        var tryGet = StringXmlTranslation.Instance.Parse(
+                        var tryGet = FilePathXmlTranslation.Instance.ParseNonNull(
                             root,
                             doMasks: doMasks,
                             errorMask: out subMask);
-                        item._Master.SetIfSucceeded(tryGet);
+                        item._File.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
                             doMasks,
-                            (int)MasterReference_FieldIndex.Master,
+                            (int)Model_FieldIndex.File,
                             subMask);
                     }
                     break;
-                case "FileSize":
+                case "BoundRadius":
                     {
                         Exception subMask;
-                        var tryGet = UInt64XmlTranslation.Instance.ParseNonNull(
+                        var tryGet = FloatXmlTranslation.Instance.ParseNonNull(
                             root,
                             doMasks: doMasks,
                             errorMask: out subMask);
-                        item._FileSize.SetIfSucceeded(tryGet);
+                        item._BoundRadius.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
                             doMasks,
-                            (int)MasterReference_FieldIndex.FileSize,
+                            (int)Model_FieldIndex.BoundRadius,
                             subMask);
                     }
                     break;
@@ -474,7 +474,7 @@ namespace Mutagen
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public static MasterReference Create_Binary(MutagenFrame frame)
+        public static Model Create_Binary(MutagenFrame frame)
         {
             return Create_Binary(
                 frame: frame,
@@ -483,9 +483,9 @@ namespace Mutagen
         }
 
         [DebuggerStepThrough]
-        public static MasterReference Create_Binary(
+        public static Model Create_Binary(
             MutagenFrame frame,
-            out MasterReference_ErrorMask errorMask)
+            out Model_ErrorMask errorMask)
         {
             return Create_Binary(
                 frame: frame,
@@ -494,10 +494,10 @@ namespace Mutagen
         }
 
         [DebuggerStepThrough]
-        public static MasterReference Create_Binary(
+        public static Model Create_Binary(
             MutagenFrame frame,
             bool doMasks,
-            out MasterReference_ErrorMask errorMask)
+            out Model_ErrorMask errorMask)
         {
             var ret = Create_Binary(
                 frame: frame,
@@ -507,19 +507,19 @@ namespace Mutagen
         }
 
         [DebuggerStepThrough]
-        public static (MasterReference Object, MasterReference_ErrorMask ErrorMask) Create_Binary(
+        public static (Model Object, Model_ErrorMask ErrorMask) Create_Binary(
             MutagenFrame frame,
             bool doMasks)
         {
-            MasterReference_ErrorMask errMaskRet = null;
+            Model_ErrorMask errMaskRet = null;
             var ret = Create_Binary_Internal(
                 frame: frame,
                 doMasks: doMasks,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new MasterReference_ErrorMask()) : default(Func<MasterReference_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Model_ErrorMask()) : default(Func<Model_ErrorMask>));
             return (ret, errMaskRet);
         }
 
-        public static MasterReference Create_Binary(string path)
+        public static Model Create_Binary(string path)
         {
             using (var reader = new MutagenReader(path))
             {
@@ -528,9 +528,9 @@ namespace Mutagen
             }
         }
 
-        public static MasterReference Create_Binary(
+        public static Model Create_Binary(
             string path,
-            out MasterReference_ErrorMask errorMask)
+            out Model_ErrorMask errorMask)
         {
             using (var reader = new MutagenReader(path))
             {
@@ -541,7 +541,7 @@ namespace Mutagen
             }
         }
 
-        public static MasterReference Create_Binary(Stream stream)
+        public static Model Create_Binary(Stream stream)
         {
             using (var reader = new MutagenReader(stream))
             {
@@ -550,9 +550,9 @@ namespace Mutagen
             }
         }
 
-        public static MasterReference Create_Binary(
+        public static Model Create_Binary(
             Stream stream,
-            out MasterReference_ErrorMask errorMask)
+            out Model_ErrorMask errorMask)
         {
             using (var reader = new MutagenReader(stream))
             {
@@ -570,7 +570,7 @@ namespace Mutagen
             MutagenFrame frame,
             NotifyingFireParameters? cmds = null)
         {
-            LoquiBinaryTranslation<MasterReference, MasterReference_ErrorMask>.Instance.CopyIn(
+            LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.CopyIn(
                 frame: frame,
                 item: this,
                 skipProtected: true,
@@ -581,10 +581,10 @@ namespace Mutagen
 
         public virtual void CopyIn_Binary(
             MutagenFrame frame,
-            out MasterReference_ErrorMask errorMask,
+            out Model_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
-            LoquiBinaryTranslation<MasterReference, MasterReference_ErrorMask>.Instance.CopyIn(
+            LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.CopyIn(
                 frame: frame,
                 item: this,
                 skipProtected: true,
@@ -608,7 +608,7 @@ namespace Mutagen
 
         public void CopyIn_Binary(
             string path,
-            out MasterReference_ErrorMask errorMask,
+            out Model_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             using (var reader = new MutagenReader(path))
@@ -636,7 +636,7 @@ namespace Mutagen
 
         public void CopyIn_Binary(
             Stream stream,
-            out MasterReference_ErrorMask errorMask,
+            out Model_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             using (var reader = new MutagenReader(stream))
@@ -654,16 +654,16 @@ namespace Mutagen
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
-            out MasterReference_ErrorMask errorMask)
+            out Model_ErrorMask errorMask)
         {
-            errorMask = (MasterReference_ErrorMask)this.Write_Binary_Internal(
+            errorMask = (Model_ErrorMask)this.Write_Binary_Internal(
                 writer: writer,
                 doMasks: true);
         }
 
         public virtual void Write_Binary(
             string path,
-            out MasterReference_ErrorMask errorMask)
+            out Model_ErrorMask errorMask)
         {
             using (var writer = new MutagenWriter(path))
             {
@@ -675,7 +675,7 @@ namespace Mutagen
 
         public virtual void Write_Binary(
             Stream stream,
-            out MasterReference_ErrorMask errorMask)
+            out Model_ErrorMask errorMask)
         {
             using (var writer = new MutagenWriter(stream))
             {
@@ -712,7 +712,7 @@ namespace Mutagen
             MutagenWriter writer,
             bool doMasks)
         {
-            MasterReferenceCommon.Write_Binary(
+            ModelCommon.Write_Binary(
                 writer: writer,
                 item: this,
                 doMasks: doMasks,
@@ -721,12 +721,12 @@ namespace Mutagen
         }
         #endregion
 
-        private static MasterReference Create_Binary_Internal(
+        private static Model Create_Binary_Internal(
             MutagenFrame frame,
             bool doMasks,
-            Func<MasterReference_ErrorMask> errorMask)
+            Func<Model_ErrorMask> errorMask)
         {
-            var ret = new MasterReference();
+            var ret = new Model();
             try
             {
                 using (frame)
@@ -755,53 +755,53 @@ namespace Mutagen
         }
 
         protected static void Fill_Binary_Structs(
-            MasterReference item,
+            Model item,
             MutagenFrame frame,
             bool doMasks,
-            Func<MasterReference_ErrorMask> errorMask)
+            Func<Model_ErrorMask> errorMask)
         {
         }
 
         protected static void Fill_Binary_RecordTypes(
-            MasterReference item,
+            Model item,
             MutagenFrame frame,
             bool doMasks,
-            Func<MasterReference_ErrorMask> errorMask)
+            Func<Model_ErrorMask> errorMask)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
                 frame: frame,
                 contentLength: out var contentLength);
             switch (nextRecordType.Type)
             {
-                case "MAST":
+                case "MODL":
                 {
                     Exception subMask;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var tryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
+                    var tryGet = Mutagen.Binary.FilePathBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         doMasks: doMasks,
                         errorMask: out subMask);
-                    item._Master.SetIfSucceeded(tryGet);
+                    item._File.SetIfSucceeded(tryGet);
                     ErrorMask.HandleErrorMask(
                         errorMask,
                         doMasks,
-                        (int)MasterReference_FieldIndex.Master,
+                        (int)Model_FieldIndex.File,
                         subMask);
                 }
                 break;
-                case "DATA":
+                case "MODB":
                 {
                     Exception subMask;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var tryGet = Mutagen.Binary.UInt64BinaryTranslation.Instance.Parse(
+                    var tryGet = Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         doMasks: doMasks,
                         errorMask: out subMask);
-                    item._FileSize.SetIfSucceeded(tryGet);
+                    item._BoundRadius.SetIfSucceeded(tryGet);
                     ErrorMask.HandleErrorMask(
                         errorMask,
                         doMasks,
-                        (int)MasterReference_FieldIndex.FileSize,
+                        (int)Model_FieldIndex.BoundRadius,
                         subMask);
                 }
                 break;
@@ -812,29 +812,29 @@ namespace Mutagen
 
         #endregion
 
-        public MasterReference Copy(
-            MasterReference_CopyMask copyMask = null,
-            IMasterReferenceGetter def = null)
+        public Model Copy(
+            Model_CopyMask copyMask = null,
+            IModelGetter def = null)
         {
-            return MasterReference.Copy(
+            return Model.Copy(
                 this,
                 copyMask: copyMask,
                 def: def);
         }
 
-        public static MasterReference Copy(
-            IMasterReference item,
-            MasterReference_CopyMask copyMask = null,
-            IMasterReferenceGetter def = null)
+        public static Model Copy(
+            IModel item,
+            Model_CopyMask copyMask = null,
+            IModelGetter def = null)
         {
-            MasterReference ret;
-            if (item.GetType().Equals(typeof(MasterReference)))
+            Model ret;
+            if (item.GetType().Equals(typeof(Model)))
             {
-                ret = new MasterReference();
+                ret = new Model();
             }
             else
             {
-                ret = (MasterReference)Activator.CreateInstance(item.GetType());
+                ret = (Model)Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom(
                 item,
@@ -845,14 +845,14 @@ namespace Mutagen
 
         public static CopyType CopyGeneric<CopyType>(
             CopyType item,
-            MasterReference_CopyMask copyMask = null,
-            IMasterReferenceGetter def = null)
-            where CopyType : class, IMasterReference
+            Model_CopyMask copyMask = null,
+            IModelGetter def = null)
+            where CopyType : class, IModel
         {
             CopyType ret;
-            if (item.GetType().Equals(typeof(MasterReference)))
+            if (item.GetType().Equals(typeof(Model)))
             {
-                ret = new MasterReference() as CopyType;
+                ret = new Model() as CopyType;
             }
             else
             {
@@ -868,12 +868,12 @@ namespace Mutagen
             return ret;
         }
 
-        public static MasterReference Copy_ToLoqui(
-            IMasterReferenceGetter item,
-            MasterReference_CopyMask copyMask = null,
-            IMasterReferenceGetter def = null)
+        public static Model Copy_ToLoqui(
+            IModelGetter item,
+            Model_CopyMask copyMask = null,
+            IModelGetter def = null)
         {
-            var ret = new MasterReference();
+            var ret = new Model();
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
@@ -884,17 +884,17 @@ namespace Mutagen
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds = null)
         {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
+            Model_FieldIndex enu = (Model_FieldIndex)index;
             switch (enu)
             {
-                case MasterReference_FieldIndex.Master:
-                    this._Master.Set(
-                        (String)obj,
+                case Model_FieldIndex.File:
+                    this._File.Set(
+                        (FilePath)obj,
                         cmds);
                     break;
-                case MasterReference_FieldIndex.FileSize:
-                    this._FileSize.Set(
-                        (UInt64)obj,
+                case Model_FieldIndex.BoundRadius:
+                    this._BoundRadius.Set(
+                        (Single)obj,
                         cmds);
                     break;
                 default:
@@ -912,43 +912,43 @@ namespace Mutagen
         public void Clear(NotifyingUnsetParameters? cmds = null)
         {
             CallClearPartial_Internal(cmds);
-            MasterReferenceCommon.Clear(this, cmds);
+            ModelCommon.Clear(this, cmds);
         }
 
 
-        public static MasterReference Create(IEnumerable<KeyValuePair<ushort, object>> fields)
+        public static Model Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
-            var ret = new MasterReference();
+            var ret = new Model();
             foreach (var pair in fields)
             {
-                CopyInInternal_MasterReference(ret, pair);
+                CopyInInternal_Model(ret, pair);
             }
             return ret;
         }
 
-        protected static void CopyInInternal_MasterReference(MasterReference obj, KeyValuePair<ushort, object> pair)
+        protected static void CopyInInternal_Model(Model obj, KeyValuePair<ushort, object> pair)
         {
-            if (!EnumExt.TryParse(pair.Key, out MasterReference_FieldIndex enu))
+            if (!EnumExt.TryParse(pair.Key, out Model_FieldIndex enu))
             {
                 throw new ArgumentException($"Unknown index: {pair.Key}");
             }
             switch (enu)
             {
-                case MasterReference_FieldIndex.Master:
-                    obj._Master.Set(
-                        (String)pair.Value,
+                case Model_FieldIndex.File:
+                    obj._File.Set(
+                        (FilePath)pair.Value,
                         null);
                     break;
-                case MasterReference_FieldIndex.FileSize:
-                    obj._FileSize.Set(
-                        (UInt64)pair.Value,
+                case Model_FieldIndex.BoundRadius:
+                    obj._BoundRadius.Set(
+                        (Single)pair.Value,
                         null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, MasterReference obj)
+        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Model obj)
         {
             ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
         }
@@ -957,26 +957,26 @@ namespace Mutagen
     #endregion
 
     #region Interface
-    public interface IMasterReference : IMasterReferenceGetter, ILoquiClass<IMasterReference, IMasterReferenceGetter>, ILoquiClass<MasterReference, IMasterReferenceGetter>
+    public interface IModel : IModelGetter, ILoquiClass<IModel, IModelGetter>, ILoquiClass<Model, IModelGetter>
     {
-        new String Master { get; set; }
-        new INotifyingItem<String> Master_Property { get; }
+        new FilePath File { get; set; }
+        new INotifyingItem<FilePath> File_Property { get; }
 
-        new UInt64 FileSize { get; set; }
-        new INotifyingItem<UInt64> FileSize_Property { get; }
+        new Single BoundRadius { get; set; }
+        new INotifyingItem<Single> BoundRadius_Property { get; }
 
     }
 
-    public interface IMasterReferenceGetter : ILoquiObject
+    public interface IModelGetter : ILoquiObject
     {
-        #region Master
-        String Master { get; }
-        INotifyingItemGetter<String> Master_Property { get; }
+        #region File
+        FilePath File { get; }
+        INotifyingItemGetter<FilePath> File_Property { get; }
 
         #endregion
-        #region FileSize
-        UInt64 FileSize { get; }
-        INotifyingItemGetter<UInt64> FileSize_Property { get; }
+        #region BoundRadius
+        Single BoundRadius { get; }
+        INotifyingItemGetter<Single> BoundRadius_Property { get; }
 
         #endregion
 
@@ -989,44 +989,44 @@ namespace Mutagen
 namespace Mutagen.Internals
 {
     #region Field Index
-    public enum MasterReference_FieldIndex
+    public enum Model_FieldIndex
     {
-        Master = 0,
-        FileSize = 1,
+        File = 0,
+        BoundRadius = 1,
     }
     #endregion
 
     #region Registration
-    public class MasterReference_Registration : ILoquiRegistration
+    public class Model_Registration : ILoquiRegistration
     {
-        public static readonly MasterReference_Registration Instance = new MasterReference_Registration();
+        public static readonly Model_Registration Instance = new Model_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Mutagen.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Mutagen.ProtocolKey,
-            msgID: 5,
+            msgID: 20,
             version: 0);
 
-        public const string GUID = "8f2ed19a-5edb-4f8f-9d29-43dc638aade9";
+        public const string GUID = "b989dfe1-feb4-4492-9a94-897f6be0c20a";
 
         public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(MasterReference_Mask<>);
+        public static readonly Type MaskType = typeof(Model_Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(MasterReference_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Model_ErrorMask);
 
-        public static readonly Type ClassType = typeof(MasterReference);
+        public static readonly Type ClassType = typeof(Model);
 
-        public static readonly Type GetterType = typeof(IMasterReferenceGetter);
+        public static readonly Type GetterType = typeof(IModelGetter);
 
-        public static readonly Type SetterType = typeof(IMasterReference);
+        public static readonly Type SetterType = typeof(IModel);
 
-        public static readonly Type CommonType = typeof(MasterReferenceCommon);
+        public static readonly Type CommonType = typeof(ModelCommon);
 
-        public const string FullName = "Mutagen.MasterReference";
+        public const string FullName = "Mutagen.Model";
 
-        public const string Name = "MasterReference";
+        public const string Name = "Model";
 
         public const string Namespace = "Mutagen";
 
@@ -1038,10 +1038,10 @@ namespace Mutagen.Internals
         {
             switch (str.Upper)
             {
-                case "MASTER":
-                    return (ushort)MasterReference_FieldIndex.Master;
-                case "FILESIZE":
-                    return (ushort)MasterReference_FieldIndex.FileSize;
+                case "FILE":
+                    return (ushort)Model_FieldIndex.File;
+                case "BOUNDRADIUS":
+                    return (ushort)Model_FieldIndex.BoundRadius;
                 default:
                     return null;
             }
@@ -1049,11 +1049,11 @@ namespace Mutagen.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
+            Model_FieldIndex enu = (Model_FieldIndex)index;
             switch (enu)
             {
-                case MasterReference_FieldIndex.Master:
-                case MasterReference_FieldIndex.FileSize:
+                case Model_FieldIndex.File:
+                case Model_FieldIndex.BoundRadius:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1062,11 +1062,11 @@ namespace Mutagen.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
+            Model_FieldIndex enu = (Model_FieldIndex)index;
             switch (enu)
             {
-                case MasterReference_FieldIndex.Master:
-                case MasterReference_FieldIndex.FileSize:
+                case Model_FieldIndex.File:
+                case Model_FieldIndex.BoundRadius:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1075,11 +1075,11 @@ namespace Mutagen.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
+            Model_FieldIndex enu = (Model_FieldIndex)index;
             switch (enu)
             {
-                case MasterReference_FieldIndex.Master:
-                case MasterReference_FieldIndex.FileSize:
+                case Model_FieldIndex.File:
+                case Model_FieldIndex.BoundRadius:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1088,13 +1088,13 @@ namespace Mutagen.Internals
 
         public static string GetNthName(ushort index)
         {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
+            Model_FieldIndex enu = (Model_FieldIndex)index;
             switch (enu)
             {
-                case MasterReference_FieldIndex.Master:
-                    return "Master";
-                case MasterReference_FieldIndex.FileSize:
-                    return "FileSize";
+                case Model_FieldIndex.File:
+                    return "File";
+                case Model_FieldIndex.BoundRadius:
+                    return "BoundRadius";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1102,11 +1102,11 @@ namespace Mutagen.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
+            Model_FieldIndex enu = (Model_FieldIndex)index;
             switch (enu)
             {
-                case MasterReference_FieldIndex.Master:
-                case MasterReference_FieldIndex.FileSize:
+                case Model_FieldIndex.File:
+                case Model_FieldIndex.BoundRadius:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1115,11 +1115,11 @@ namespace Mutagen.Internals
 
         public static bool IsProtected(ushort index)
         {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
+            Model_FieldIndex enu = (Model_FieldIndex)index;
             switch (enu)
             {
-                case MasterReference_FieldIndex.Master:
-                case MasterReference_FieldIndex.FileSize:
+                case Model_FieldIndex.File:
+                case Model_FieldIndex.BoundRadius:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1128,21 +1128,21 @@ namespace Mutagen.Internals
 
         public static Type GetNthType(ushort index)
         {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
+            Model_FieldIndex enu = (Model_FieldIndex)index;
             switch (enu)
             {
-                case MasterReference_FieldIndex.Master:
-                    return typeof(String);
-                case MasterReference_FieldIndex.FileSize:
-                    return typeof(UInt64);
+                case Model_FieldIndex.File:
+                    return typeof(FilePath);
+                case Model_FieldIndex.BoundRadius:
+                    return typeof(Single);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
-        public static readonly RecordType MAST_HEADER = new RecordType("MAST");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = MAST_HEADER;
+        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
+        public static readonly RecordType MODB_HEADER = new RecordType("MODB");
+        public static readonly RecordType TRIGGERING_RECORD_TYPE = MODL_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 2;
         #region Interface
@@ -1175,17 +1175,17 @@ namespace Mutagen.Internals
     #endregion
 
     #region Extensions
-    public static class MasterReferenceCommon
+    public static class ModelCommon
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IMasterReference item,
-            IMasterReferenceGetter rhs,
-            MasterReference_CopyMask copyMask = null,
-            IMasterReferenceGetter def = null,
+            this IModel item,
+            IModelGetter rhs,
+            Model_CopyMask copyMask = null,
+            IModelGetter def = null,
             NotifyingFireParameters? cmds = null)
         {
-            MasterReferenceCommon.CopyFieldsFrom(
+            ModelCommon.CopyFieldsFrom(
                 item: item,
                 rhs: rhs,
                 def: def,
@@ -1196,14 +1196,14 @@ namespace Mutagen.Internals
         }
 
         public static void CopyFieldsFrom(
-            this IMasterReference item,
-            IMasterReferenceGetter rhs,
-            out MasterReference_ErrorMask errorMask,
-            MasterReference_CopyMask copyMask = null,
-            IMasterReferenceGetter def = null,
+            this IModel item,
+            IModelGetter rhs,
+            out Model_ErrorMask errorMask,
+            Model_CopyMask copyMask = null,
+            IModelGetter def = null,
             NotifyingFireParameters? cmds = null)
         {
-            MasterReferenceCommon.CopyFieldsFrom(
+            ModelCommon.CopyFieldsFrom(
                 item: item,
                 rhs: rhs,
                 def: def,
@@ -1214,20 +1214,20 @@ namespace Mutagen.Internals
         }
 
         public static void CopyFieldsFrom(
-            this IMasterReference item,
-            IMasterReferenceGetter rhs,
-            IMasterReferenceGetter def,
+            this IModel item,
+            IModelGetter rhs,
+            IModelGetter def,
             bool doErrorMask,
-            out MasterReference_ErrorMask errorMask,
-            MasterReference_CopyMask copyMask,
+            out Model_ErrorMask errorMask,
+            Model_CopyMask copyMask,
             NotifyingFireParameters? cmds)
         {
-            MasterReference_ErrorMask retErrorMask = null;
-            Func<MasterReference_ErrorMask> maskGetter = () =>
+            Model_ErrorMask retErrorMask = null;
+            Func<Model_ErrorMask> maskGetter = () =>
             {
                 if (retErrorMask == null)
                 {
-                    retErrorMask = new MasterReference_ErrorMask();
+                    retErrorMask = new Model_ErrorMask();
                 }
                 return retErrorMask;
             };
@@ -1243,42 +1243,42 @@ namespace Mutagen.Internals
         }
 
         public static void CopyFieldsFrom(
-            this IMasterReference item,
-            IMasterReferenceGetter rhs,
-            IMasterReferenceGetter def,
+            this IModel item,
+            IModelGetter rhs,
+            IModelGetter def,
             bool doErrorMask,
-            Func<MasterReference_ErrorMask> errorMask,
-            MasterReference_CopyMask copyMask,
+            Func<Model_ErrorMask> errorMask,
+            Model_CopyMask copyMask,
             NotifyingFireParameters? cmds)
         {
-            if (copyMask?.Master ?? true)
+            if (copyMask?.File ?? true)
             {
                 try
                 {
-                    item.Master_Property.SetToWithDefault(
-                        rhs.Master_Property,
-                        def?.Master_Property,
+                    item.File_Property.SetToWithDefault(
+                        rhs.File_Property,
+                        def?.File_Property,
                         cmds);
                 }
                 catch (Exception ex)
                 when (doErrorMask)
                 {
-                    errorMask().SetNthException((int)MasterReference_FieldIndex.Master, ex);
+                    errorMask().SetNthException((int)Model_FieldIndex.File, ex);
                 }
             }
-            if (copyMask?.FileSize ?? true)
+            if (copyMask?.BoundRadius ?? true)
             {
                 try
                 {
-                    item.FileSize_Property.SetToWithDefault(
-                        rhs.FileSize_Property,
-                        def?.FileSize_Property,
+                    item.BoundRadius_Property.SetToWithDefault(
+                        rhs.BoundRadius_Property,
+                        def?.BoundRadius_Property,
                         cmds);
                 }
                 catch (Exception ex)
                 when (doErrorMask)
                 {
-                    errorMask().SetNthException((int)MasterReference_FieldIndex.FileSize, ex);
+                    errorMask().SetNthException((int)Model_FieldIndex.BoundRadius, ex);
                 }
             }
         }
@@ -1288,17 +1288,17 @@ namespace Mutagen.Internals
         public static void SetNthObjectHasBeenSet(
             ushort index,
             bool on,
-            IMasterReference obj,
+            IModel obj,
             NotifyingFireParameters? cmds = null)
         {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
+            Model_FieldIndex enu = (Model_FieldIndex)index;
             switch (enu)
             {
-                case MasterReference_FieldIndex.Master:
-                    obj.Master_Property.HasBeenSet = on;
+                case Model_FieldIndex.File:
+                    obj.File_Property.HasBeenSet = on;
                     break;
-                case MasterReference_FieldIndex.FileSize:
-                    obj.FileSize_Property.HasBeenSet = on;
+                case Model_FieldIndex.BoundRadius:
+                    obj.BoundRadius_Property.HasBeenSet = on;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1307,17 +1307,17 @@ namespace Mutagen.Internals
 
         public static void UnsetNthObject(
             ushort index,
-            IMasterReference obj,
+            IModel obj,
             NotifyingUnsetParameters? cmds = null)
         {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
+            Model_FieldIndex enu = (Model_FieldIndex)index;
             switch (enu)
             {
-                case MasterReference_FieldIndex.Master:
-                    obj.Master_Property.Unset(cmds);
+                case Model_FieldIndex.File:
+                    obj.File_Property.Unset(cmds);
                     break;
-                case MasterReference_FieldIndex.FileSize:
-                    obj.FileSize_Property.Unset(cmds);
+                case Model_FieldIndex.BoundRadius:
+                    obj.BoundRadius_Property.Unset(cmds);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1326,15 +1326,15 @@ namespace Mutagen.Internals
 
         public static bool GetNthObjectHasBeenSet(
             ushort index,
-            IMasterReference obj)
+            IModel obj)
         {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
+            Model_FieldIndex enu = (Model_FieldIndex)index;
             switch (enu)
             {
-                case MasterReference_FieldIndex.Master:
-                    return obj.Master_Property.HasBeenSet;
-                case MasterReference_FieldIndex.FileSize:
-                    return obj.FileSize_Property.HasBeenSet;
+                case Model_FieldIndex.File:
+                    return obj.File_Property.HasBeenSet;
+                case Model_FieldIndex.BoundRadius:
+                    return obj.BoundRadius_Property.HasBeenSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1342,51 +1342,51 @@ namespace Mutagen.Internals
 
         public static object GetNthObject(
             ushort index,
-            IMasterReferenceGetter obj)
+            IModelGetter obj)
         {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
+            Model_FieldIndex enu = (Model_FieldIndex)index;
             switch (enu)
             {
-                case MasterReference_FieldIndex.Master:
-                    return obj.Master;
-                case MasterReference_FieldIndex.FileSize:
-                    return obj.FileSize;
+                case Model_FieldIndex.File:
+                    return obj.File;
+                case Model_FieldIndex.BoundRadius:
+                    return obj.BoundRadius;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
         public static void Clear(
-            IMasterReference item,
+            IModel item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.Master_Property.Unset(cmds.ToUnsetParams());
-            item.FileSize_Property.Unset(cmds.ToUnsetParams());
+            item.File_Property.Unset(cmds.ToUnsetParams());
+            item.BoundRadius_Property.Unset(cmds.ToUnsetParams());
         }
 
-        public static MasterReference_Mask<bool> GetEqualsMask(
-            this IMasterReferenceGetter item,
-            IMasterReferenceGetter rhs)
+        public static Model_Mask<bool> GetEqualsMask(
+            this IModelGetter item,
+            IModelGetter rhs)
         {
-            var ret = new MasterReference_Mask<bool>();
+            var ret = new Model_Mask<bool>();
             FillEqualsMask(item, rhs, ret);
             return ret;
         }
 
         public static void FillEqualsMask(
-            IMasterReferenceGetter item,
-            IMasterReferenceGetter rhs,
-            MasterReference_Mask<bool> ret)
+            IModelGetter item,
+            IModelGetter rhs,
+            Model_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Master = item.Master_Property.Equals(rhs.Master_Property, (l, r) => object.Equals(l, r));
-            ret.FileSize = item.FileSize_Property.Equals(rhs.FileSize_Property, (l, r) => l == r);
+            ret.File = item.File_Property.Equals(rhs.File_Property, (l, r) => object.Equals(l, r));
+            ret.BoundRadius = item.BoundRadius_Property.Equals(rhs.BoundRadius_Property, (l, r) => l == r);
         }
 
         public static string ToString(
-            this IMasterReferenceGetter item,
+            this IModelGetter item,
             string name = null,
-            MasterReference_Mask<bool> printMask = null)
+            Model_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             item.ToString(fg, name, printMask);
@@ -1394,48 +1394,48 @@ namespace Mutagen.Internals
         }
 
         public static void ToString(
-            this IMasterReferenceGetter item,
+            this IModelGetter item,
             FileGeneration fg,
             string name = null,
-            MasterReference_Mask<bool> printMask = null)
+            Model_Mask<bool> printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(MasterReference)} =>");
+                fg.AppendLine($"{nameof(Model)} =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(MasterReference)}) =>");
+                fg.AppendLine($"{name} ({nameof(Model)}) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Master ?? true)
+                if (printMask?.File ?? true)
                 {
-                    fg.AppendLine($"Master => {item.Master}");
+                    fg.AppendLine($"File => {item.File}");
                 }
-                if (printMask?.FileSize ?? true)
+                if (printMask?.BoundRadius ?? true)
                 {
-                    fg.AppendLine($"FileSize => {item.FileSize}");
+                    fg.AppendLine($"BoundRadius => {item.BoundRadius}");
                 }
             }
             fg.AppendLine("]");
         }
 
         public static bool HasBeenSet(
-            this IMasterReferenceGetter item,
-            MasterReference_Mask<bool?> checkMask)
+            this IModelGetter item,
+            Model_Mask<bool?> checkMask)
         {
-            if (checkMask.Master.HasValue && checkMask.Master.Value != item.Master_Property.HasBeenSet) return false;
-            if (checkMask.FileSize.HasValue && checkMask.FileSize.Value != item.FileSize_Property.HasBeenSet) return false;
+            if (checkMask.File.HasValue && checkMask.File.Value != item.File_Property.HasBeenSet) return false;
+            if (checkMask.BoundRadius.HasValue && checkMask.BoundRadius.Value != item.BoundRadius_Property.HasBeenSet) return false;
             return true;
         }
 
-        public static MasterReference_Mask<bool> GetHasBeenSetMask(IMasterReferenceGetter item)
+        public static Model_Mask<bool> GetHasBeenSetMask(IModelGetter item)
         {
-            var ret = new MasterReference_Mask<bool>();
-            ret.Master = item.Master_Property.HasBeenSet;
-            ret.FileSize = item.FileSize_Property.HasBeenSet;
+            var ret = new Model_Mask<bool>();
+            ret.File = item.File_Property.HasBeenSet;
+            ret.BoundRadius = item.BoundRadius_Property.HasBeenSet;
             return ret;
         }
 
@@ -1443,64 +1443,64 @@ namespace Mutagen.Internals
         #region XML Write
         public static void Write_XML(
             XmlWriter writer,
-            IMasterReferenceGetter item,
+            IModelGetter item,
             bool doMasks,
-            out MasterReference_ErrorMask errorMask,
+            out Model_ErrorMask errorMask,
             string name = null)
         {
-            MasterReference_ErrorMask errMaskRet = null;
+            Model_ErrorMask errMaskRet = null;
             Write_XML_Internal(
                 writer: writer,
                 name: name,
                 item: item,
                 doMasks: doMasks,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new MasterReference_ErrorMask()) : default(Func<MasterReference_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Model_ErrorMask()) : default(Func<Model_ErrorMask>));
             errorMask = errMaskRet;
         }
 
         private static void Write_XML_Internal(
             XmlWriter writer,
-            IMasterReferenceGetter item,
+            IModelGetter item,
             bool doMasks,
-            Func<MasterReference_ErrorMask> errorMask,
+            Func<Model_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.MasterReference"))
+                using (new ElementWrapper(writer, name ?? "Mutagen.Model"))
                 {
                     if (name != null)
                     {
-                        writer.WriteAttributeString("type", "Mutagen.MasterReference");
+                        writer.WriteAttributeString("type", "Mutagen.Model");
                     }
-                    if (item.Master_Property.HasBeenSet)
+                    if (item.File_Property.HasBeenSet)
                     {
                         Exception subMask;
-                        StringXmlTranslation.Instance.Write(
+                        FilePathXmlTranslation.Instance.Write(
                             writer,
-                            nameof(item.Master),
-                            item.Master,
+                            nameof(item.File),
+                            item.File,
                             doMasks: doMasks,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
                             doMasks,
-                            (int)MasterReference_FieldIndex.Master,
+                            (int)Model_FieldIndex.File,
                             subMask);
                     }
-                    if (item.FileSize_Property.HasBeenSet)
+                    if (item.BoundRadius_Property.HasBeenSet)
                     {
                         Exception subMask;
-                        UInt64XmlTranslation.Instance.Write(
+                        FloatXmlTranslation.Instance.Write(
                             writer,
-                            nameof(item.FileSize),
-                            item.FileSize,
+                            nameof(item.BoundRadius),
+                            item.BoundRadius,
                             doMasks: doMasks,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
                             doMasks,
-                            (int)MasterReference_FieldIndex.FileSize,
+                            (int)Model_FieldIndex.BoundRadius,
                             subMask);
                     }
                 }
@@ -1519,24 +1519,24 @@ namespace Mutagen.Internals
         #region Binary Write
         public static void Write_Binary(
             MutagenWriter writer,
-            IMasterReferenceGetter item,
+            IModelGetter item,
             bool doMasks,
-            out MasterReference_ErrorMask errorMask)
+            out Model_ErrorMask errorMask)
         {
-            MasterReference_ErrorMask errMaskRet = null;
+            Model_ErrorMask errMaskRet = null;
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
                 doMasks: doMasks,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new MasterReference_ErrorMask()) : default(Func<MasterReference_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Model_ErrorMask()) : default(Func<Model_ErrorMask>));
             errorMask = errMaskRet;
         }
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
-            IMasterReferenceGetter item,
+            IModelGetter item,
             bool doMasks,
-            Func<MasterReference_ErrorMask> errorMask)
+            Func<Model_ErrorMask> errorMask)
         {
             try
             {
@@ -1555,39 +1555,39 @@ namespace Mutagen.Internals
         #endregion
 
         public static void Write_Binary_RecordTypes(
-            IMasterReferenceGetter item,
+            IModelGetter item,
             MutagenWriter writer,
             bool doMasks,
-            Func<MasterReference_ErrorMask> errorMask)
+            Func<Model_ErrorMask> errorMask)
         {
             {
                 Exception subMask;
-                Mutagen.Binary.StringBinaryTranslation.Instance.Write(
+                Mutagen.Binary.FilePathBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.Master,
+                    item: item.File,
                     doMasks: doMasks,
                     errorMask: out subMask,
-                    header: MasterReference_Registration.MAST_HEADER,
+                    header: Model_Registration.MODL_HEADER,
                     nullable: false);
                 ErrorMask.HandleErrorMask(
                     errorMask,
                     doMasks,
-                    (int)MasterReference_FieldIndex.Master,
+                    (int)Model_FieldIndex.File,
                     subMask);
             }
             {
                 Exception subMask;
-                Mutagen.Binary.UInt64BinaryTranslation.Instance.Write(
+                Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.FileSize,
+                    item: item.BoundRadius,
                     doMasks: doMasks,
                     errorMask: out subMask,
-                    header: MasterReference_Registration.DATA_HEADER,
+                    header: Model_Registration.MODB_HEADER,
                     nullable: false);
                 ErrorMask.HandleErrorMask(
                     errorMask,
                     doMasks,
-                    (int)MasterReference_FieldIndex.FileSize,
+                    (int)Model_FieldIndex.BoundRadius,
                     subMask);
             }
         }
@@ -1600,44 +1600,44 @@ namespace Mutagen.Internals
     #region Modules
 
     #region Mask
-    public class MasterReference_Mask<T> : IMask<T>, IEquatable<MasterReference_Mask<T>>
+    public class Model_Mask<T> : IMask<T>, IEquatable<Model_Mask<T>>
     {
         #region Ctors
-        public MasterReference_Mask()
+        public Model_Mask()
         {
         }
 
-        public MasterReference_Mask(T initialValue)
+        public Model_Mask(T initialValue)
         {
-            this.Master = initialValue;
-            this.FileSize = initialValue;
+            this.File = initialValue;
+            this.BoundRadius = initialValue;
         }
         #endregion
 
         #region Members
-        public T Master;
-        public T FileSize;
+        public T File;
+        public T BoundRadius;
         #endregion
 
         #region Equals
         public override bool Equals(object obj)
         {
-            if (!(obj is MasterReference_Mask<T> rhs)) return false;
+            if (!(obj is Model_Mask<T> rhs)) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(MasterReference_Mask<T> rhs)
+        public bool Equals(Model_Mask<T> rhs)
         {
             if (rhs == null) return false;
-            if (!object.Equals(this.Master, rhs.Master)) return false;
-            if (!object.Equals(this.FileSize, rhs.FileSize)) return false;
+            if (!object.Equals(this.File, rhs.File)) return false;
+            if (!object.Equals(this.BoundRadius, rhs.BoundRadius)) return false;
             return true;
         }
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = ret.CombineHashCode(this.Master?.GetHashCode());
-            ret = ret.CombineHashCode(this.FileSize?.GetHashCode());
+            ret = ret.CombineHashCode(this.File?.GetHashCode());
+            ret = ret.CombineHashCode(this.BoundRadius?.GetHashCode());
             return ret;
         }
 
@@ -1646,24 +1646,24 @@ namespace Mutagen.Internals
         #region All Equal
         public bool AllEqual(Func<T, bool> eval)
         {
-            if (!eval(this.Master)) return false;
-            if (!eval(this.FileSize)) return false;
+            if (!eval(this.File)) return false;
+            if (!eval(this.BoundRadius)) return false;
             return true;
         }
         #endregion
 
         #region Translate
-        public MasterReference_Mask<R> Translate<R>(Func<T, R> eval)
+        public Model_Mask<R> Translate<R>(Func<T, R> eval)
         {
-            var ret = new MasterReference_Mask<R>();
+            var ret = new Model_Mask<R>();
             this.Translate_InternalFill(ret, eval);
             return ret;
         }
 
-        protected void Translate_InternalFill<R>(MasterReference_Mask<R> obj, Func<T, R> eval)
+        protected void Translate_InternalFill<R>(Model_Mask<R> obj, Func<T, R> eval)
         {
-            obj.Master = eval(this.Master);
-            obj.FileSize = eval(this.FileSize);
+            obj.File = eval(this.File);
+            obj.BoundRadius = eval(this.BoundRadius);
         }
         #endregion
 
@@ -1679,26 +1679,26 @@ namespace Mutagen.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(MasterReference_Mask<bool> printMask = null)
+        public string ToString(Model_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, MasterReference_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, Model_Mask<bool> printMask = null)
         {
-            fg.AppendLine($"{nameof(MasterReference_Mask<T>)} =>");
+            fg.AppendLine($"{nameof(Model_Mask<T>)} =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Master ?? true)
+                if (printMask?.File ?? true)
                 {
-                    fg.AppendLine($"Master => {Master.ToStringSafe()}");
+                    fg.AppendLine($"File => {File.ToStringSafe()}");
                 }
-                if (printMask?.FileSize ?? true)
+                if (printMask?.BoundRadius ?? true)
                 {
-                    fg.AppendLine($"FileSize => {FileSize.ToStringSafe()}");
+                    fg.AppendLine($"BoundRadius => {BoundRadius.ToStringSafe()}");
                 }
             }
             fg.AppendLine("]");
@@ -1707,7 +1707,7 @@ namespace Mutagen.Internals
 
     }
 
-    public class MasterReference_ErrorMask : IErrorMask
+    public class Model_ErrorMask : IErrorMask
     {
         #region Members
         public Exception Overall { get; set; }
@@ -1723,21 +1723,21 @@ namespace Mutagen.Internals
                 return _warnings;
             }
         }
-        public Exception Master;
-        public Exception FileSize;
+        public Exception File;
+        public Exception BoundRadius;
         #endregion
 
         #region IErrorMask
         public void SetNthException(int index, Exception ex)
         {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
+            Model_FieldIndex enu = (Model_FieldIndex)index;
             switch (enu)
             {
-                case MasterReference_FieldIndex.Master:
-                    this.Master = ex;
+                case Model_FieldIndex.File:
+                    this.File = ex;
                     break;
-                case MasterReference_FieldIndex.FileSize:
-                    this.FileSize = ex;
+                case Model_FieldIndex.BoundRadius:
+                    this.BoundRadius = ex;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1746,14 +1746,14 @@ namespace Mutagen.Internals
 
         public void SetNthMask(int index, object obj)
         {
-            MasterReference_FieldIndex enu = (MasterReference_FieldIndex)index;
+            Model_FieldIndex enu = (Model_FieldIndex)index;
             switch (enu)
             {
-                case MasterReference_FieldIndex.Master:
-                    this.Master = (Exception)obj;
+                case Model_FieldIndex.File:
+                    this.File = (Exception)obj;
                     break;
-                case MasterReference_FieldIndex.FileSize:
-                    this.FileSize = (Exception)obj;
+                case Model_FieldIndex.BoundRadius:
+                    this.BoundRadius = (Exception)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1771,7 +1771,7 @@ namespace Mutagen.Internals
 
         public void ToString(FileGeneration fg)
         {
-            fg.AppendLine("MasterReference_ErrorMask =>");
+            fg.AppendLine("Model_ErrorMask =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
@@ -1791,26 +1791,26 @@ namespace Mutagen.Internals
         }
         protected void ToString_FillInternal(FileGeneration fg)
         {
-            if (Master != null)
+            if (File != null)
             {
-                fg.AppendLine($"Master => {Master.ToStringSafe()}");
+                fg.AppendLine($"File => {File.ToStringSafe()}");
             }
-            if (FileSize != null)
+            if (BoundRadius != null)
             {
-                fg.AppendLine($"FileSize => {FileSize.ToStringSafe()}");
+                fg.AppendLine($"BoundRadius => {BoundRadius.ToStringSafe()}");
             }
         }
         #endregion
 
         #region Combine
-        public MasterReference_ErrorMask Combine(MasterReference_ErrorMask rhs)
+        public Model_ErrorMask Combine(Model_ErrorMask rhs)
         {
-            var ret = new MasterReference_ErrorMask();
-            ret.Master = this.Master.Combine(rhs.Master);
-            ret.FileSize = this.FileSize.Combine(rhs.FileSize);
+            var ret = new Model_ErrorMask();
+            ret.File = this.File.Combine(rhs.File);
+            ret.BoundRadius = this.BoundRadius.Combine(rhs.BoundRadius);
             return ret;
         }
-        public static MasterReference_ErrorMask Combine(MasterReference_ErrorMask lhs, MasterReference_ErrorMask rhs)
+        public static Model_ErrorMask Combine(Model_ErrorMask lhs, Model_ErrorMask rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -1818,11 +1818,11 @@ namespace Mutagen.Internals
         #endregion
 
     }
-    public class MasterReference_CopyMask
+    public class Model_CopyMask
     {
         #region Members
-        public bool Master;
-        public bool FileSize;
+        public bool File;
+        public bool BoundRadius;
         #endregion
 
     }

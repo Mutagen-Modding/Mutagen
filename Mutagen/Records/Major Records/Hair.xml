@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Hair" objType="Record" recordType="HAIR" baseClass="NamedMajorRecord" GUID="c1955ace-52b8-40df-8356-8c42d9dc37eb" ID="21">
+    <Fields>
+      <RefDirect name="Model" refName="Model" />
+      <FilePath name="Icon" recordType="ICON" />
+      <Enum name="Flags" recordType="DATA" enumName="Hair.HairFlag" byteLength="1" />
+    </Fields>
+  </Object>
+</Loqui>

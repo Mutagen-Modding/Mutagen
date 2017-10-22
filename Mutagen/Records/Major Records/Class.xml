@@ -12,7 +12,7 @@
       <List name="PrimaryAttributes" maxSize="2">
         <Enum enumName="ActorValue" />
       </List>
-      <Enum name="Specialization" enumName="Specialization" />
+      <Enum name="Specialization" enumName="Class.Specialization" />
       <List name="SecondaryAttributes" maxSize="7">
         <Enum enumName="ActorValue" />
       </List>

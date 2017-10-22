@@ -20,6 +20,16 @@
           <GenericSpecification Definition="Class" TypeToSpecify="T" />
         </Direct>
       </Ref>
+      <Ref name="Factions">
+        <Direct refName="Group" >
+          <GenericSpecification Definition="Faction" TypeToSpecify="T" />
+        </Direct>
+      </Ref>
+      <!--<Ref name="Hairs">
+        <Direct refName="Group" >
+          <GenericSpecification Definition="Hair" TypeToSpecify="T" />
+        </Direct>
+      </Ref>-->
     </Fields>
   </Object>
 </Loqui>

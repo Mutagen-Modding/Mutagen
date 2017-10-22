@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Model" objType="Struct" GUID="b989dfe1-feb4-4492-9a94-897f6be0c20a" ID="20">
+    <Fields>
+      <FilePath name="File" recordType="MODL" />
+      <Float name="BoundRadius" recordType="MODB" />
+    </Fields>
+  </Object>
+</Loqui>

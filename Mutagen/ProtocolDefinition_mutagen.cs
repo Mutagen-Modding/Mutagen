@@ -26,6 +26,11 @@ namespace Loqui
             LoquiRegistration.Register(Mutagen.Internals.NamedMajorRecord_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Internals.ClassData_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Internals.ClassTraining_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Internals.Model_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Internals.Hair_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Internals.Faction_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Internals.Relation_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Internals.Rank_Registration.Instance);
         }
     }
 }

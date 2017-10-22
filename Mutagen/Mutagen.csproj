@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="Windows-1252"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -51,13 +51,18 @@
     <Compile Include="ContentLength.cs" />
     <Compile Include="Records\Common Enums\ActorValue.cs" />
     <Compile Include="Records\Common Enums\Skill.cs" />
-    <Compile Include="Records\Major Records\Class\ClassFlag.cs">
+    <Compile Include="Records\Major Records\Class.cs">
       <DependentUpon>Class.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\Class\ClassService.cs">
+    <Compile Include="Records\Major Records\ClassFlag.cs">
       <DependentUpon>Class.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\Class\Specialization.cs" />
+    <Compile Include="Records\Major Records\ClassService.cs">
+      <DependentUpon>Class.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Faction.cs">
+      <DependentUpon>Faction.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Global.cs">
       <DependentUpon>Global.xml</DependentUpon>
     </Compile>
@@ -84,6 +89,9 @@
     </Compile>
     <Compile Include="Records\Major Records\GlobalShort.cs">
       <DependentUpon>Global.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Hair.cs">
+      <DependentUpon>Hair.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\MajorRecord.cs">
       <DependentUpon>MajorRecord.xml</DependentUpon>
@@ -164,17 +172,32 @@
     <Compile Include="Records\Major Records\GlobalFloat_LoquiGenerated.cs">
       <DependentUpon>Global.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\Class\Class_LoquiGenerated.cs">
+    <Compile Include="Records\Major Records\Class_LoquiGenerated.cs">
       <DependentUpon>Class.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\NamedMajorRecord_LoquiGenerated.cs">
       <DependentUpon>NamedMajorRecord.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\Class\ClassData_LoquiGenerated.cs">
+    <Compile Include="Records\Major Records\ClassData_LoquiGenerated.cs">
       <DependentUpon>Class.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\Class\ClassTraining_LoquiGenerated.cs">
+    <Compile Include="Records\Major Records\ClassTraining_LoquiGenerated.cs">
       <DependentUpon>Class.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\Model_LoquiGenerated.cs">
+      <DependentUpon>Model.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Hair_LoquiGenerated.cs">
+      <DependentUpon>Hair.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Faction_LoquiGenerated.cs">
+      <DependentUpon>Faction.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Relation_LoquiGenerated.cs">
+      <DependentUpon>Faction.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Rank_LoquiGenerated.cs">
+      <DependentUpon>Faction.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -188,19 +211,28 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Records\Common Subrecords\Model.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Records\Group.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Header\MasterReference.xml">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Records\Major Records\Class\Class.xml">
+    <Content Include="Records\Major Records\Class.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\Faction.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\GameSetting.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Global.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\Hair.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\MajorRecord.xml">

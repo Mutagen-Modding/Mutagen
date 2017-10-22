@@ -163,21 +163,30 @@ namespace Mutagen.Generation
                     fg.AppendLine("try");
                     using (new BraceWrapper(fg))
                     {
-                        var frameMod = objType != ObjectType.Struct
+                        RecordType? recordType = obj.GetTriggeringRecordType();
+                        var frameMod = (objType != ObjectType.Struct || recordType.HasValue)
                             && objType != ObjectType.Mod;
                         if (frameMod)
                         {
                             switch (objType)
                             {
+                                case ObjectType.Struct:
+                                    if (obj.TryGetRecordType(out var recType))
+                                    {
+                                        using (var args = new ArgsWrapper(fg,
+                                            $"frame = frame.Spawn({nameof(HeaderTranslation)}.ParseSubrecord",
+                                            suffixLine: ")"))
+                                        {
+                                            args.Add("frame");
+                                            args.Add($"{obj.RegistrationName}.{recordType.Value.HeaderName}");
+                                        }
+                                    }
+                                    break;
                                 case ObjectType.Record:
                                 case ObjectType.Subrecord:
-                                    RecordType? mutaData = obj.GetTriggeringRecordType();
                                     string funcName;
                                     switch (obj.GetObjectType())
                                     {
-                                        case ObjectType.Struct:
-                                            funcName = "GetSubrecord";
-                                            break;
                                         case ObjectType.Subrecord:
                                             funcName = "ParseSubrecord";
                                             break;
@@ -186,6 +195,7 @@ namespace Mutagen.Generation
                                             break;
                                         case ObjectType.Group:
                                         case ObjectType.Mod:
+                                        case ObjectType.Struct:
                                         default:
                                             throw new NotImplementedException();
                                     }
@@ -194,7 +204,7 @@ namespace Mutagen.Generation
                                         suffixLine: ")"))
                                     {
                                         args.Add("frame");
-                                        args.Add($"{obj.RegistrationName}.{mutaData.Value.HeaderName}");
+                                        args.Add($"{obj.RegistrationName}.{recordType.Value.HeaderName}");
                                     }
                                     break;
                                 case ObjectType.Group:
@@ -223,14 +233,7 @@ namespace Mutagen.Generation
                             }
                             if (HasRecordTypeFields(obj))
                             {
-                                if (objType != ObjectType.Struct)
-                                {
-                                    fg.AppendLine($"while (!frame.Complete)");
-                                }
-                                else
-                                {
-                                    fg.AppendLine($"while (true)");
-                                }
+                                fg.AppendLine($"while (!frame.Complete)");
                                 using (new BraceWrapper(fg))
                                 {
                                     using (var args = new ArgsWrapper(fg,
