@@ -493,7 +493,7 @@ namespace Mutagen
             bool doMasks,
             Func<Global_ErrorMask> errorMask)
         {
-            var nextRecordType = HeaderTranslation.ReadNextSubRecordType(
+            var nextRecordType = HeaderTranslation.GetNextSubRecordType(
                 frame: frame,
                 contentLength: out var contentLength);
             switch (nextRecordType.Type)
@@ -516,6 +516,7 @@ namespace Mutagen
                 case "FLTV":
                 {
                     Exception subMask;
+                    frame.Position += Constants.SUBRECORD_LENGTH;
                     var tryGet = Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         doMasks: doMasks,
@@ -529,7 +530,6 @@ namespace Mutagen
                 }
                 break;
                 default:
-                    frame.Reader.Position -= Constants.SUBRECORD_LENGTH;
                     MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,

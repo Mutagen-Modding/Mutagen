@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>2cdcd4039b0c7e244ab81c21a4d67a75006de4cd</Sha>
+         <Sha>a53b52eaea810400a6304e660a0e42035383b929</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>10-17-2017 17:37:33</CommitDate>
-         <Description>Range classes ToString(string format)</Description>
+         <CommitDate>10-21-2017 20:59:49</CommitDate>
+         <Description>DebuggerStepThroughs</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>16acf22996d68d1de504068b22061561d7948bbf</Sha>
+         <Sha>f06118aa15a3d24092e267b16e09ff12ea5563cf</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>10-21-2017 17:20:45</CommitDate>
-         <Description>ContainerXMLTranslation bugfix for when error masks spawned without failing</Description>
+         <CommitDate>10-21-2017 20:59:53</CommitDate>
+         <Description>DebuggerStepThrough</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

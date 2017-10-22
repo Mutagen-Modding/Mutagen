@@ -55,6 +55,10 @@ namespace Mutagen.Generation
             string maskAccessor)
         {
             var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
+            if (data.TriggeringRecordAccessor != null)
+            {
+                fg.AppendLine($"{nodeAccessor}.Position += Constants.SUBRECORD_LENGTH;");
+            }
             using (var args = new ArgsWrapper(fg,
                 $"var tryGet = {this.Namespace}StringBinaryTranslation.Instance.Parse"))
             {

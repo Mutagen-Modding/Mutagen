@@ -48,6 +48,10 @@ namespace Mutagen.Generation
         {
             var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
             var eType = typeGen as EnumType;
+            if (data.TriggeringRecordAccessor != null)
+            {
+                fg.AppendLine($"{nodeAccessor}.Position += Constants.SUBRECORD_LENGTH;");
+            }
             using (var args = new ArgsWrapper(fg,
                 $"var tryGet = {this.Namespace}EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance.Parse"))
             {

@@ -316,13 +316,13 @@ namespace Mutagen.Generation
                         case ObjectType.Struct:
                         case ObjectType.Subrecord:
                         case ObjectType.Record:
-                            funcName = $"ReadNextSubRecordType";
+                            funcName = $"GetNextSubRecordType";
                             break;
                         case ObjectType.Group:
-                            funcName = $"ReadNextRecordType";
+                            funcName = $"GetNextRecordType";
                             break;
                         case ObjectType.Mod:
-                            funcName = $"ReadNextType";
+                            funcName = $"GetNextType";
                             break;
                         default:
                             throw new NotImplementedException();
@@ -382,18 +382,6 @@ namespace Mutagen.Generation
                             }
 
                             // Default case
-                            switch (obj.GetObjectType())
-                            {
-                                case ObjectType.Record:
-                                    fg.AppendLine($"frame.Reader.Position -= Constants.SUBRECORD_LENGTH;");
-                                    break;
-                                case ObjectType.Struct:
-                                case ObjectType.Subrecord:
-                                case ObjectType.Group:
-                                case ObjectType.Mod:
-                                default:
-                                    break;
-                            }
                             if (obj.HasBaseObject && obj.BaseClassTrail().Any((b) => HasRecordTypeFields(b)))
                             {
                                 using (var args = new ArgsWrapper(fg,

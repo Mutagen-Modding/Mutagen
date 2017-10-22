@@ -18,17 +18,17 @@ namespace Mutagen
             bool doMasks)
         {
             // Skip to FNAM
-            var initialPos = frame.Reader.Position;
+            var initialPos = frame.Position;
             frame.CheckUpcomingRead(new ContentLength(26));
-            frame.Reader.Position += 24;
+            frame.Position += 24;
             var edidLength = frame.Reader.ReadInt16();
-            frame.Reader.Position += edidLength;
+            frame.Position += edidLength;
 
             // Confirm FNAM
             var type = HeaderTranslation.ReadNextSubRecordType(frame, out var len);
             if (!type.Equals(FNAM))
             {
-                var ex = new ArgumentException($"Could not find FNAM in its expected location: {frame.Reader.Position}");
+                var ex = new ArgumentException($"Could not find FNAM in its expected location: {frame.Position}");
                 if (!doMasks) throw ex;
                 return (null, new Global_ErrorMask()
                 {
@@ -69,7 +69,7 @@ namespace Mutagen
             }
 
             // Fill with major record fields
-            frame.Reader.Position = initialPos + 8;
+            frame.Position = initialPos + 8;
             MajorRecord.Fill_Binary(
                 frame,
                 g,

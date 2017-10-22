@@ -871,7 +871,7 @@ namespace Mutagen
             bool doMasks,
             Func<Class_ErrorMask> errorMask)
         {
-            var nextRecordType = HeaderTranslation.ReadNextSubRecordType(
+            var nextRecordType = HeaderTranslation.GetNextSubRecordType(
                 frame: frame,
                 contentLength: out var contentLength);
             switch (nextRecordType.Type)
@@ -879,6 +879,7 @@ namespace Mutagen
                 case "DESC":
                 {
                     Exception subMask;
+                    frame.Position += Constants.SUBRECORD_LENGTH;
                     var tryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         doMasks: doMasks,
@@ -894,6 +895,7 @@ namespace Mutagen
                 case "ICON":
                 {
                     Exception subMask;
+                    frame.Position += Constants.SUBRECORD_LENGTH;
                     var tryGet = Mutagen.Binary.FilePathBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         doMasks: doMasks,
@@ -909,7 +911,6 @@ namespace Mutagen
                 case "DATA":
                 {
                     MaskItem<Exception, ClassData_ErrorMask> subMask;
-                    frame.Reader.Position -= Constants.SUBRECORD_LENGTH;
                     var tryGet = LoquiBinaryTranslation<ClassData, ClassData_ErrorMask>.Instance.Parse(
                         reader: frame,
                         doMasks: doMasks,
@@ -923,7 +924,6 @@ namespace Mutagen
                 }
                 break;
                 default:
-                    frame.Reader.Position -= Constants.SUBRECORD_LENGTH;
                     NamedMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,

@@ -976,7 +976,7 @@ namespace Mutagen
             bool doMasks,
             Func<TES4_ErrorMask> errorMask)
         {
-            var nextRecordType = HeaderTranslation.ReadNextSubRecordType(
+            var nextRecordType = HeaderTranslation.GetNextSubRecordType(
                 frame: frame,
                 contentLength: out var contentLength);
             switch (nextRecordType.Type)
@@ -984,7 +984,6 @@ namespace Mutagen
                 case "HEDR":
                 {
                     MaskItem<Exception, Header_ErrorMask> subMask;
-                    frame.Reader.Position -= Constants.SUBRECORD_LENGTH;
                     var tryGet = LoquiBinaryTranslation<Header, Header_ErrorMask>.Instance.Parse(
                         reader: frame,
                         doMasks: doMasks,
@@ -1000,6 +999,7 @@ namespace Mutagen
                 case "OFST":
                 {
                     Exception subMask;
+                    frame.Position += Constants.SUBRECORD_LENGTH;
                     var tryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                         frame.Spawn(contentLength),
                         doMasks: doMasks,
@@ -1015,6 +1015,7 @@ namespace Mutagen
                 case "DELE":
                 {
                     Exception subMask;
+                    frame.Position += Constants.SUBRECORD_LENGTH;
                     var tryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                         frame.Spawn(contentLength),
                         doMasks: doMasks,
@@ -1030,6 +1031,7 @@ namespace Mutagen
                 case "CNAM":
                 {
                     Exception subMask;
+                    frame.Position += Constants.SUBRECORD_LENGTH;
                     var tryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         doMasks: doMasks,
@@ -1045,6 +1047,7 @@ namespace Mutagen
                 case "SNAM":
                 {
                     Exception subMask;
+                    frame.Position += Constants.SUBRECORD_LENGTH;
                     var tryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         doMasks: doMasks,
@@ -1083,7 +1086,6 @@ namespace Mutagen
                 }
                 break;
                 default:
-                    frame.Reader.Position -= Constants.SUBRECORD_LENGTH;
                     throw new ArgumentException($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
             }
         }

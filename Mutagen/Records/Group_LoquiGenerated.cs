@@ -976,7 +976,7 @@ namespace Mutagen
             Func<Group_ErrorMask<T_ErrMask>> errorMask)
             where T_ErrMask : MajorRecord_ErrorMask, new()
         {
-            var nextRecordType = HeaderTranslation.ReadNextRecordType(
+            var nextRecordType = HeaderTranslation.GetNextRecordType(
                 frame: frame,
                 contentLength: out var contentLength);
             switch (nextRecordType.Type)
@@ -993,7 +993,6 @@ namespace Mutagen
                             maskObj: out subMask,
                             transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, T_ErrMask> listSubMask) =>
                             {
-                                r.Reader.Position -= Constants.RECORD_LENGTH;
                                 return LoquiBinaryTranslation<T, T_ErrMask>.Instance.Parse(
                                     reader: r,
                                     doMasks: listDoMasks,

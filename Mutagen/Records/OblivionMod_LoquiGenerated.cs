@@ -837,7 +837,7 @@ namespace Mutagen
             bool doMasks,
             Func<OblivionMod_ErrorMask> errorMask)
         {
-            var nextRecordType = HeaderTranslation.ReadNextType(
+            var nextRecordType = HeaderTranslation.GetNextType(
                 frame: frame,
                 contentLength: out var contentLength);
             switch (nextRecordType.Type)
@@ -845,7 +845,6 @@ namespace Mutagen
                 case "TES4":
                 {
                     MaskItem<Exception, TES4_ErrorMask> subMask;
-                    frame.Reader.Position -= Constants.RECORD_LENGTH;
                     var tryGet = LoquiBinaryTranslation<TES4, TES4_ErrorMask>.Instance.Parse(
                         reader: frame,
                         doMasks: doMasks,
@@ -861,7 +860,6 @@ namespace Mutagen
                 case "GMST":
                 {
                     MaskItem<Exception, Group_ErrorMask<GameSetting_ErrorMask>> subMask;
-                    frame.Reader.Position -= Constants.GRUP_LENGTH;
                     var tryGet = LoquiBinaryTranslation<Group<GameSetting>, Group_ErrorMask<GameSetting_ErrorMask>>.Instance.Parse(
                         reader: frame,
                         doMasks: doMasks,
@@ -877,7 +875,6 @@ namespace Mutagen
                 case "GLOB":
                 {
                     MaskItem<Exception, Group_ErrorMask<Global_ErrorMask>> subMask;
-                    frame.Reader.Position -= Constants.GRUP_LENGTH;
                     var tryGet = LoquiBinaryTranslation<Group<Global>, Group_ErrorMask<Global_ErrorMask>>.Instance.Parse(
                         reader: frame,
                         doMasks: doMasks,
@@ -893,7 +890,6 @@ namespace Mutagen
                 case "CLAS":
                 {
                     MaskItem<Exception, Group_ErrorMask<Class_ErrorMask>> subMask;
-                    frame.Reader.Position -= Constants.GRUP_LENGTH;
                     var tryGet = LoquiBinaryTranslation<Group<Class>, Group_ErrorMask<Class_ErrorMask>>.Instance.Parse(
                         reader: frame,
                         doMasks: doMasks,

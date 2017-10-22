@@ -768,7 +768,7 @@ namespace Mutagen
             bool doMasks,
             Func<MasterReference_ErrorMask> errorMask)
         {
-            var nextRecordType = HeaderTranslation.ReadNextSubRecordType(
+            var nextRecordType = HeaderTranslation.GetNextSubRecordType(
                 frame: frame,
                 contentLength: out var contentLength);
             switch (nextRecordType.Type)
@@ -776,6 +776,7 @@ namespace Mutagen
                 case "MAST":
                 {
                     Exception subMask;
+                    frame.Position += Constants.SUBRECORD_LENGTH;
                     var tryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         doMasks: doMasks,
@@ -791,6 +792,7 @@ namespace Mutagen
                 case "DATA":
                 {
                     Exception subMask;
+                    frame.Position += Constants.SUBRECORD_LENGTH;
                     var tryGet = Mutagen.Binary.UInt64BinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         doMasks: doMasks,

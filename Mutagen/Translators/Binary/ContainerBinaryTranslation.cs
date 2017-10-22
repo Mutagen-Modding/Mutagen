@@ -81,7 +81,7 @@ namespace Mutagen.Binary
                         maskList.Add(subMaskObj);
                     }
 
-                    if (!HeaderTranslation.TryParseRecordType(frame, objType, triggeringRecord)) break;
+                    if (!HeaderTranslation.TryGetRecordType(frame, objType, triggeringRecord)) break;
                 }
                 maskObj = maskList == null ? null : new MaskItem<Exception, IEnumerable<M>>(null, maskList);
                 return TryGet<IEnumerable<T>>.Succeed(ret);

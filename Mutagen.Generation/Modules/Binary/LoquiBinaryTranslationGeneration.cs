@@ -138,24 +138,6 @@ namespace Mutagen.Generation
             string maskAccessor)
         {
             var loquiGen = typeGen as LoquiType;
-            var objType = loquiGen.TargetObjectGeneration.GetObjectType();
-            switch (objType)
-            {
-                case ObjectType.Struct:
-                    break;
-                case ObjectType.Subrecord:
-                    fg.AppendLine($"{readerAccessor}.Reader.Position -= Constants.SUBRECORD_LENGTH;");
-                    break;
-                case ObjectType.Record:
-                    fg.AppendLine($"{readerAccessor}.Reader.Position -= Constants.RECORD_LENGTH;");
-                    break;
-                case ObjectType.Group:
-                    fg.AppendLine($"{readerAccessor}.Reader.Position -= Constants.GRUP_LENGTH;");
-                    break;
-                case ObjectType.Mod:
-                default:
-                    throw new NotImplementedException();
-            }
             if (loquiGen.TargetObjectGeneration != null)
             {
                 using (var args = new ArgsWrapper(fg,
