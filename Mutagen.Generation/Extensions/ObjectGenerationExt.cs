@@ -29,6 +29,11 @@ namespace Mutagen.Generation
             return false;
         }
 
+        public static bool HasRecordType(this ObjectGeneration objGen)
+        {
+            return TryGetRecordType(objGen, out var recType);
+        }
+
         public static RecordType? GetTriggeringRecordType(this ObjectGeneration objGen)
         {
             if (!TryGetTriggeringRecordType(objGen, out var data))

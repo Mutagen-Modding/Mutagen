@@ -836,11 +836,11 @@ namespace Mutagen
                         errorMask: errorMask);
                     while (!frame.Complete)
                     {
-                        Fill_Binary_RecordTypes(
+                        if (!Fill_Binary_RecordTypes(
                             item: ret,
                             frame: frame,
                             doMasks: doMasks,
-                            errorMask: errorMask);
+                            errorMask: errorMask)) break;
                     }
                 }
             }
@@ -865,7 +865,7 @@ namespace Mutagen
                 errorMask: errorMask);
         }
 
-        protected static void Fill_Binary_RecordTypes(
+        protected static bool Fill_Binary_RecordTypes(
             Class item,
             MutagenFrame frame,
             bool doMasks,
@@ -931,6 +931,7 @@ namespace Mutagen
                         errorMask: errorMask);
                     break;
             }
+            return true;
         }
 
         #endregion

@@ -902,11 +902,11 @@ namespace Mutagen
                         errorMask: errorMask);
                     while (!frame.Complete)
                     {
-                        Fill_Binary_RecordTypes(
+                        if (!Fill_Binary_RecordTypes(
                             item: ret,
                             frame: frame,
                             doMasks: doMasks,
-                            errorMask: errorMask);
+                            errorMask: errorMask)) break;
                     }
                 }
             }
@@ -969,7 +969,7 @@ namespace Mutagen
             }
         }
 
-        protected static void Fill_Binary_RecordTypes<T_ErrMask>(
+        protected static bool Fill_Binary_RecordTypes<T_ErrMask>(
             Group<T> item,
             MutagenFrame frame,
             bool doMasks,
@@ -1009,6 +1009,7 @@ namespace Mutagen
                     }
                     throw new ArgumentException($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
             }
+            return true;
         }
 
         #endregion

@@ -839,11 +839,11 @@ namespace Mutagen
                         errorMask: errorMask);
                     while (!frame.Complete)
                     {
-                        Fill_Binary_RecordTypes(
+                        if (!Fill_Binary_RecordTypes(
                             item: ret,
                             frame: frame,
                             doMasks: doMasks,
-                            errorMask: errorMask);
+                            errorMask: errorMask)) break;
                     }
                 }
             }
@@ -863,7 +863,7 @@ namespace Mutagen
         {
         }
 
-        protected static void Fill_Binary_RecordTypes(
+        protected static bool Fill_Binary_RecordTypes(
             OblivionMod item,
             MutagenFrame frame,
             bool doMasks,
@@ -954,6 +954,7 @@ namespace Mutagen
                     frame.Position += contentLength;
                     break;
             }
+            return true;
         }
 
         #endregion

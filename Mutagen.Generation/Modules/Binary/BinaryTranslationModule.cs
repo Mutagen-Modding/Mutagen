@@ -145,6 +145,7 @@ namespace Mutagen.Generation
 
         private void GenerateCreateExtras(ObjectGeneration obj, FileGeneration fg)
         {
+            bool typelessStruct = obj.GetObjectType() == ObjectType.Struct && !obj.HasRecordType();
             if (!obj.Abstract)
             {
                 ObjectType objType = obj.GetObjectType();
@@ -233,16 +234,29 @@ namespace Mutagen.Generation
                             }
                             if (HasRecordTypeFields(obj))
                             {
+                                if (typelessStruct)
+                                {
+                                    fg.AppendLine("bool first = true;");
+                                }
                                 fg.AppendLine($"while (!frame.Complete)");
                                 using (new BraceWrapper(fg))
                                 {
                                     using (var args = new ArgsWrapper(fg,
-                                        $"Fill_{ModuleNickname}_RecordTypes"))
+                                        $"if (!Fill_{ModuleNickname}_RecordTypes",
+                                        suffixLine: ") break"))
                                     {
                                         args.Add("item: ret");
                                         args.Add("frame: frame");
+                                        if (typelessStruct)
+                                        {
+                                            args.Add("first: first");
+                                        }
                                         args.Add("doMasks: doMasks");
                                         args.Add("errorMask: errorMask");
+                                    }
+                                    if (typelessStruct)
+                                    {
+                                        fg.AppendLine("first = false;");
                                     }
                                 }
                             }
@@ -302,11 +316,15 @@ namespace Mutagen.Generation
             if (HasRecordTypeFields(obj))
             {
                 using (var args = new FunctionWrapper(fg,
-                    $"protected static void Fill_{ModuleNickname}_RecordTypes{obj.Mask_GenericClause(MaskType.Error)}",
+                    $"protected static bool Fill_{ModuleNickname}_RecordTypes{obj.Mask_GenericClause(MaskType.Error)}",
                     wheres: obj.GenericTypes_ErrorMaskWheres))
                 {
                     args.Add($"{obj.ObjectName} item");
                     args.Add("MutagenFrame frame");
+                    if (typelessStruct)
+                    {
+                        args.Add($"bool first");
+                    }
                     args.Add("bool doMasks");
                     args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
                 }
@@ -353,6 +371,10 @@ namespace Mutagen.Generation
                             if (generator.ShouldGenerateCopyIn(field.Field))
                             {
                                 fg.AppendLine($"case \"{data.TriggeringRecordType.Value.Type}\":");
+                                if (typelessStruct && field.Index == 0)
+                                {
+                                    fg.AppendLine($"if (!first) return false;");
+                                }
                                 GenerateFillSnippet(obj, fg, field.Field, generator);
                                 fg.AppendLine("break;");
                             }
@@ -432,6 +454,7 @@ namespace Mutagen.Generation
                             }
                         }
                     }
+                    fg.AppendLine("return true;");
                 }
                 fg.AppendLine();
             }

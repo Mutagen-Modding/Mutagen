@@ -632,7 +632,7 @@ namespace Mutagen
             }
         }
 
-        protected static void Fill_Binary_RecordTypes(
+        protected static bool Fill_Binary_RecordTypes(
             MajorRecord item,
             MutagenFrame frame,
             bool doMasks,
@@ -662,6 +662,7 @@ namespace Mutagen
                 default:
                     throw new ArgumentException($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
             }
+            return true;
         }
 
         #endregion

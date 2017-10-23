@@ -487,7 +487,7 @@ namespace Mutagen
         }
         #endregion
 
-        protected static void Fill_Binary_RecordTypes(
+        protected static bool Fill_Binary_RecordTypes(
             Global item,
             MutagenFrame frame,
             bool doMasks,
@@ -537,6 +537,7 @@ namespace Mutagen
                         errorMask: errorMask);
                     break;
             }
+            return true;
         }
 
         #endregion
