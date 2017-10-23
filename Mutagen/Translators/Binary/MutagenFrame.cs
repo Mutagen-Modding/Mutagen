@@ -11,8 +11,11 @@ namespace Mutagen.Binary
     public struct MutagenFrame : IDisposable
     {
         public static bool ErrorOnFinalPosition;
+
         public readonly MutagenReader Reader;
         public readonly FileLocation FinalPosition;
+        public readonly bool SnapToFinalPosition;
+
         public bool Complete => this.Position >= this.FinalPosition;
         public FileLocation Position
         {
@@ -26,14 +29,28 @@ namespace Mutagen.Binary
         {
             this.Reader = reader;
             this.FinalPosition = reader.Length;
+            this.SnapToFinalPosition = true;
         }
 
+        [DebuggerStepThrough]
         public MutagenFrame(
             MutagenReader reader,
             FileLocation finalPosition)
         {
             this.Reader = reader;
             this.FinalPosition = finalPosition;
+            this.SnapToFinalPosition = true;
+        }
+
+        [DebuggerStepThrough]
+        public MutagenFrame(
+            MutagenReader reader,
+            FileLocation finalPosition,
+            bool snapToFinalPosition)
+        {
+            this.Reader = reader;
+            this.FinalPosition = finalPosition;
+            this.SnapToFinalPosition = snapToFinalPosition;
         }
 
         public bool TryCheckUpcomingRead(ContentLength length)
@@ -58,7 +75,8 @@ namespace Mutagen.Binary
 
         public void Dispose()
         {
-            if (this.Reader.Position != FinalPosition)
+            if (this.SnapToFinalPosition 
+                && this.Reader.Position != FinalPosition)
             {
                 if (ErrorOnFinalPosition)
                 {
@@ -78,6 +96,7 @@ namespace Mutagen.Binary
             return $"{this.Position} - {this.FinalPosition - 1} ({this.Length})";
         }
 
+        [DebuggerStepThrough]
         public MutagenFrame Spawn(FileLocation finalPosition)
         {
             return new MutagenFrame(
@@ -91,6 +110,15 @@ namespace Mutagen.Binary
             return new MutagenFrame(
                 this.Reader,
                 this.Reader.Position + length);
+        }
+
+        [DebuggerStepThrough]
+        public MutagenFrame Spawn(bool snapToFinalPosition)
+        {
+            return new MutagenFrame(
+                this.Reader,
+                this.FinalPosition,
+                snapToFinalPosition);
         }
     }
 }
