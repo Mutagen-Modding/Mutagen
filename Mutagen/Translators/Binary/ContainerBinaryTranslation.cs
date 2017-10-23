@@ -57,44 +57,41 @@ namespace Mutagen.Binary
             out MaskItem<Exception, IEnumerable<M>> maskObj,
             BinarySubParseDelegate<T, M> transl)
         {
-            using (frame)
+            var safeFrame = frame.Spawn(snapToFinalPosition: false);
+            try
             {
-                var safeFrame = frame.Spawn(snapToFinalPosition: false);
-                try
+                List<M> maskList = null;
+                var ret = new List<T>();
+                while (true)
                 {
-                    List<M> maskList = null;
-                    var ret = new List<T>();
-                    while (true)
+                    var get = transl(safeFrame, doMasks, out var subMaskObj);
+                    if (get.Succeeded)
                     {
-                        var get = transl(safeFrame, doMasks, out var subMaskObj);
-                        if (get.Succeeded)
-                        {
-                            ret.Add(get.Value);
-                        }
-                        if (subMaskObj != null)
-                        {
-                            if (!doMasks)
-                            { // This shouldn't actually throw, as subparse is expected to throw if doMasks is off
-                                throw new ArgumentException("Error parsing list.  Could not parse subitem.");
-                            }
-                            if (maskList == null)
-                            {
-                                maskList = new List<M>();
-                            }
-                            maskList.Add(subMaskObj);
-                        }
-
-                        if (!HeaderTranslation.TryGetRecordType(safeFrame, objType, triggeringRecord)) break;
+                        ret.Add(get.Value);
                     }
-                    maskObj = maskList == null ? null : new MaskItem<Exception, IEnumerable<M>>(null, maskList);
-                    return TryGet<IEnumerable<T>>.Succeed(ret);
+                    if (subMaskObj != null)
+                    {
+                        if (!doMasks)
+                        { // This shouldn't actually throw, as subparse is expected to throw if doMasks is off
+                            throw new ArgumentException("Error parsing list.  Could not parse subitem.");
+                        }
+                        if (maskList == null)
+                        {
+                            maskList = new List<M>();
+                        }
+                        maskList.Add(subMaskObj);
+                    }
+
+                    if (!HeaderTranslation.TryGetRecordType(safeFrame, objType, triggeringRecord)) break;
                 }
-                catch (Exception ex)
-                when (doMasks)
-                {
-                    maskObj = new MaskItem<Exception, IEnumerable<M>>(ex, null);
-                    return TryGet<IEnumerable<T>>.Failure;
-                }
+                maskObj = maskList == null ? null : new MaskItem<Exception, IEnumerable<M>>(null, maskList);
+                return TryGet<IEnumerable<T>>.Succeed(ret);
+            }
+            catch (Exception ex)
+            when (doMasks)
+            {
+                maskObj = new MaskItem<Exception, IEnumerable<M>>(ex, null);
+                return TryGet<IEnumerable<T>>.Failure;
             }
         }
 
