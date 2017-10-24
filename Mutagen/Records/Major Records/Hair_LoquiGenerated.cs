@@ -1408,7 +1408,7 @@ namespace Mutagen.Internals
                         cmds,
                         (r, d) =>
                         {
-                            switch (copyMask?.Model.Overall ?? CopyOption.Reference)
+                            switch (copyMask?.Model?.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
                                     return r;
@@ -1435,10 +1435,10 @@ namespace Mutagen.Internals
                                     if (r == null) return default(Model);
                                     return Model.Copy(
                                         r,
-                                        copyMask?.Model.Specific,
+                                        copyMask?.Model?.Specific,
                                         def: d);
                                 default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Model.Overall}. Cannot execute copy.");
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Model?.Overall}. Cannot execute copy.");
                             }
                         }
                         );
@@ -1812,19 +1812,12 @@ namespace Mutagen.Internals
                 writer: writer,
                 doMasks: doMasks,
                 errorMask: errorMask);
-            {
-                MaskItem<Exception, Model_ErrorMask> subMask;
-                LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Write(
-                    writer: writer,
-                    item: item.Model,
-                    doMasks: doMasks,
-                    mask: out subMask);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)Hair_FieldIndex.Model,
-                    subMask);
-            }
+            LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Write(
+                writer: writer,
+                item: item.Model,
+                doMasks: doMasks,
+                fieldIndex: (int)Hair_FieldIndex.Model,
+                errorMask: errorMask);
         }
 
         public static void Write_Binary_RecordTypes(
@@ -1838,37 +1831,23 @@ namespace Mutagen.Internals
                 writer: writer,
                 doMasks: doMasks,
                 errorMask: errorMask);
-            {
-                Exception subMask;
-                Mutagen.Binary.FilePathBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Icon,
-                    doMasks: doMasks,
-                    errorMask: out subMask,
-                    header: Hair_Registration.ICON_HEADER,
-                    nullable: false);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)Hair_FieldIndex.Icon,
-                    subMask);
-            }
-            {
-                Exception subMask;
-                Mutagen.Binary.EnumBinaryTranslation<Hair.HairFlag>.Instance.Write(
-                    writer,
-                    item.Flags,
-                    doMasks: doMasks,
-                    length: new ContentLength(1),
-                    errorMask: out subMask,
-                    header: Hair_Registration.DATA_HEADER,
-                    nullable: false);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)Hair_FieldIndex.Flags,
-                    subMask);
-            }
+            Mutagen.Binary.FilePathBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Icon,
+                fieldIndex: (int)Hair_FieldIndex.Icon,
+                doMasks: doMasks,
+                errorMask: errorMask,
+                header: Hair_Registration.ICON_HEADER,
+                nullable: false);
+            Mutagen.Binary.EnumBinaryTranslation<Hair.HairFlag>.Instance.Write(
+                writer,
+                item.Flags,
+                doMasks: doMasks,
+                length: new ContentLength(1),
+                fieldIndex: (int)Hair_FieldIndex.Flags,
+                errorMask: errorMask,
+                header: Hair_Registration.DATA_HEADER,
+                nullable: false);
         }
 
         #endregion

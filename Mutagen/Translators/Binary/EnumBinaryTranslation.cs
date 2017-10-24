@@ -1,4 +1,5 @@
-﻿using Noggog;
+﻿using Loqui;
+using Noggog;
 using System;
 using System.IO;
 
@@ -52,6 +53,30 @@ namespace Mutagen.Binary
             }
         }
 
+        public void Write<M>(
+            MutagenWriter writer,
+            E? item,
+            ContentLength length,
+            int fieldIndex,
+            bool doMasks,
+            Func<M> errorMask)
+            where M : IErrorMask
+        {
+            if (!item.HasValue) return;
+            try
+            {
+                WriteValue(writer, item.Value, length);
+            }
+            catch (Exception ex)
+            {
+                ErrorMask.HandleException(
+                    errorMask,
+                    doMasks,
+                    fieldIndex,
+                    ex);
+            }
+        }
+
         public void Write(
             MutagenWriter writer,
             E? item,
@@ -83,6 +108,32 @@ namespace Mutagen.Binary
             {
                 errorMask = ex;
             }
+        }
+
+        public void Write<M>(
+            MutagenWriter writer,
+            E? item,
+            RecordType header,
+            ContentLength length,
+            int fieldIndex,
+            bool nullable,
+            bool doMasks,
+            Func<M> errorMask)
+            where M : IErrorMask
+        {
+            this.Write(
+                writer,
+                item,
+                header,
+                length,
+                nullable,
+                doMasks,
+                out var subMask);
+            ErrorMask.HandleException(
+                errorMask,
+                doMasks,
+                fieldIndex,
+                subMask);
         }
 
         protected E ParseValue(MutagenFrame reader)

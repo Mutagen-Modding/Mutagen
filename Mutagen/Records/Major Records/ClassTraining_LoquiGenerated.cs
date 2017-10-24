@@ -1660,46 +1660,25 @@ namespace Mutagen.Internals
             bool doMasks,
             Func<ClassTraining_ErrorMask> errorMask)
         {
-            {
-                Exception subMask;
-                Mutagen.Binary.EnumBinaryTranslation<Skill>.Instance.Write(
-                    writer,
-                    item.TrainedSkill,
-                    doMasks: doMasks,
-                    length: new ContentLength(1),
-                    errorMask: out subMask);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)ClassTraining_FieldIndex.TrainedSkill,
-                    subMask);
-            }
-            {
-                Exception subMask;
-                Mutagen.Binary.ByteBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.MaximumTrainingLevel,
-                    doMasks: doMasks,
-                    errorMask: out subMask);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)ClassTraining_FieldIndex.MaximumTrainingLevel,
-                    subMask);
-            }
-            {
-                Exception subMask;
-                Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Fluff,
-                    doMasks: doMasks,
-                    errorMask: out subMask);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)ClassTraining_FieldIndex.Fluff,
-                    subMask);
-            }
+            Mutagen.Binary.EnumBinaryTranslation<Skill>.Instance.Write(
+                writer,
+                item.TrainedSkill,
+                doMasks: doMasks,
+                length: new ContentLength(1),
+                fieldIndex: (int)ClassTraining_FieldIndex.TrainedSkill,
+                errorMask: errorMask);
+            Mutagen.Binary.ByteBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.MaximumTrainingLevel,
+                fieldIndex: (int)ClassTraining_FieldIndex.MaximumTrainingLevel,
+                doMasks: doMasks,
+                errorMask: errorMask);
+            Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Fluff,
+                doMasks: doMasks,
+                fieldIndex: (int)ClassTraining_FieldIndex.Fluff,
+                errorMask: errorMask);
         }
 
         #endregion

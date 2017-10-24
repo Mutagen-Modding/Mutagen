@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>816da8358bf25a04310c09942566c6aa5509400a</Sha>
+         <Sha>0eff96edc4f5ae4b7ef714b17feae856b5ddcd4e</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>10-22-2017 03:28:05</CommitDate>
-         <Description>EnumType no longer tries to parse namespace.  Was conflicting with mechanics when defined enum was inside a class</Description>
+         <CommitDate>10-24-2017 18:11:23</CommitDate>
+         <Description>TypeGeneration.HasIndex</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

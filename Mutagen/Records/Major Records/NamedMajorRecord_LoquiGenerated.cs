@@ -1097,21 +1097,14 @@ namespace Mutagen.Internals
                 writer: writer,
                 doMasks: doMasks,
                 errorMask: errorMask);
-            {
-                Exception subMask;
-                Mutagen.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Name,
-                    doMasks: doMasks,
-                    errorMask: out subMask,
-                    header: NamedMajorRecord_Registration.FULL_HEADER,
-                    nullable: false);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)NamedMajorRecord_FieldIndex.Name,
-                    subMask);
-            }
+            Mutagen.Binary.StringBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Name,
+                doMasks: doMasks,
+                fieldIndex: (int)NamedMajorRecord_FieldIndex.Name,
+                errorMask: errorMask,
+                header: NamedMajorRecord_Registration.FULL_HEADER,
+                nullable: false);
         }
 
         #endregion

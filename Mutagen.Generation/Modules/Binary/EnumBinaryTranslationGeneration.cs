@@ -28,7 +28,15 @@ namespace Mutagen.Generation
                 args.Add($"{itemAccessor}");
                 args.Add($"doMasks: {doMaskAccessor}");
                 args.Add($"length: new ContentLength({eType.ByteLength})");
-                args.Add($"errorMask: out {maskAccessor}");
+                if (typeGen.HasIndex)
+                {
+                    args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
+                    args.Add($"errorMask: {maskAccessor}");
+                }
+                else
+                {
+                    args.Add($"errorMask: out {maskAccessor}");
+                }
                 if (data.TriggeringRecordAccessor != null)
                 {
                     args.Add($"header: {data.TriggeringRecordAccessor}");

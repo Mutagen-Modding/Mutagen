@@ -1,4 +1,5 @@
-﻿using Noggog;
+﻿using Loqui;
+using Noggog;
 using System;
 using System.IO;
 using System.Text;
@@ -81,6 +82,30 @@ namespace Mutagen.Binary
             {
                 errorMask = ex;
             }
+        }
+
+        public void Write<M>(
+            MutagenWriter writer,
+            string item,
+            RecordType header,
+            int fieldIndex,
+            bool nullable,
+            bool doMasks,
+            Func<M> errorMask)
+            where M : IErrorMask
+        {
+            this.Write(
+                writer,
+                item,
+                header,
+                nullable,
+                doMasks,
+                out var subMask);
+            ErrorMask.HandleException(
+                errorMask,
+                doMasks,
+                fieldIndex,
+                subMask);
         }
 
         void IBinaryTranslation<string, Exception>.Write(MutagenWriter writer, string item, ContentLength length, bool doMasks, out Exception maskObj)

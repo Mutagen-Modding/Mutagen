@@ -183,7 +183,11 @@ namespace Mutagen.Binary
             throw new NotImplementedException();
         }
 
-        public void Write(MutagenWriter writer, T item, bool doMasks, out MaskItem<Exception, M> mask)
+        public void Write(
+            MutagenWriter writer,
+            T item,
+            bool doMasks,
+            out MaskItem<Exception, M> errorMask)
         {
             try
             {
@@ -192,13 +196,63 @@ namespace Mutagen.Binary
                     item: item,
                     doMasks: doMasks,
                     errorMask: out var subMask);
-                mask = subMask == null ? null : new MaskItem<Exception, M>(null, subMask);
+                errorMask = subMask == null ? null : new MaskItem<Exception, M>(null, subMask);
             }
             catch (Exception ex)
             when (doMasks)
             {
-                mask = new MaskItem<Exception, M>(ex, default(M));
+                errorMask = new MaskItem<Exception, M>(ex, default(M));
             }
+        }
+
+        public void Write(
+            MutagenWriter writer,
+            T item,
+            int fieldIndex,
+            bool doMasks,
+            Func<M> errorMask)
+        {
+            try
+            {
+                WRITE.Value(
+                    writer: writer,
+                    item: item,
+                    doMasks: doMasks,
+                    errorMask: out var subMask);
+                ErrorMask.HandleErrorMask(
+                    errorMask,
+                    doMasks,
+                    fieldIndex,
+                    subMask == null ? null : new MaskItem<Exception, M>(null, subMask));
+            }
+            catch (Exception ex)
+            {
+                ErrorMask.HandleException(
+                    errorMask,
+                    doMasks,
+                    fieldIndex,
+                    ex);
+            }
+        }
+
+        public void Write<Mask>(
+            MutagenWriter writer,
+            T item,
+            int fieldIndex,
+            bool doMasks,
+            Func<Mask> errorMask)
+            where Mask : IErrorMask
+        {
+            this.Write(
+                writer,
+                item,
+                doMasks,
+                out var subMask);
+            ErrorMask.HandleErrorMask(
+                errorMask,
+                doMasks,
+                fieldIndex,
+                subMask);
         }
 
         public TryGet<T> Parse(MutagenFrame reader, ContentLength length, bool doMasks, out M maskObj)

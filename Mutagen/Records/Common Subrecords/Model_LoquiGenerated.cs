@@ -1566,36 +1566,22 @@ namespace Mutagen.Internals
             bool doMasks,
             Func<Model_ErrorMask> errorMask)
         {
-            {
-                Exception subMask;
-                Mutagen.Binary.FilePathBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.File,
-                    doMasks: doMasks,
-                    errorMask: out subMask,
-                    header: Model_Registration.MODL_HEADER,
-                    nullable: false);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)Model_FieldIndex.File,
-                    subMask);
-            }
-            {
-                Exception subMask;
-                Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.BoundRadius,
-                    doMasks: doMasks,
-                    errorMask: out subMask,
-                    header: Model_Registration.MODB_HEADER,
-                    nullable: false);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)Model_FieldIndex.BoundRadius,
-                    subMask);
-            }
+            Mutagen.Binary.FilePathBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.File,
+                fieldIndex: (int)Model_FieldIndex.File,
+                doMasks: doMasks,
+                errorMask: errorMask,
+                header: Model_Registration.MODL_HEADER,
+                nullable: false);
+            Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.BoundRadius,
+                fieldIndex: (int)Model_FieldIndex.BoundRadius,
+                doMasks: doMasks,
+                errorMask: errorMask,
+                header: Model_Registration.MODB_HEADER,
+                nullable: false);
         }
 
         #endregion

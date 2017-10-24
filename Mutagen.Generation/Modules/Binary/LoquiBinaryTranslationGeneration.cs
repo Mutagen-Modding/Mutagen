@@ -35,7 +35,15 @@ namespace Mutagen.Generation
                     args.Add($"writer: {writerAccessor}");
                     args.Add($"item: {itemAccessor}");
                     args.Add($"doMasks: {doMaskAccessor}");
-                    args.Add($"mask: out {maskAccessor}");
+                    if (loquiGen.HasIndex)
+                    {
+                        args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
+                        args.Add($"errorMask: {maskAccessor}");
+                    }
+                    else
+                    {
+                        args.Add($"errorMask: out {maskAccessor}");
+                    }
                 }
             }
             else

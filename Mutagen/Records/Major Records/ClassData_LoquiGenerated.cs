@@ -1645,7 +1645,7 @@ namespace Mutagen.Internals
                         cmds,
                         (r, d) =>
                         {
-                            switch (copyMask?.Training.Overall ?? CopyOption.Reference)
+                            switch (copyMask?.Training?.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
                                     return r;
@@ -1672,10 +1672,10 @@ namespace Mutagen.Internals
                                     if (r == null) return default(ClassTraining);
                                     return ClassTraining.Copy(
                                         r,
-                                        copyMask?.Training.Specific,
+                                        copyMask?.Training?.Specific,
                                         def: d);
                                 default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Training.Overall}. Cannot execute copy.");
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Training?.Overall}. Cannot execute copy.");
                             }
                         }
                         );
@@ -2189,107 +2189,65 @@ namespace Mutagen.Internals
             bool doMasks,
             Func<ClassData_ErrorMask> errorMask)
         {
-            {
-                MaskItem<Exception, IEnumerable<Exception>> subMask;
-                Mutagen.Binary.ListBinaryTranslation<ActorValue, Exception>.Instance.Write(
-                    writer: writer,
-                    item: item.PrimaryAttributes,
-                    doMasks: doMasks,
-                    maskObj: out subMask,
-                    transl: (ActorValue subItem, bool listDoMasks, out Exception listSubMask) =>
-                    {
-                        Mutagen.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
-                            writer,
-                            subItem,
-                            doMasks: doMasks,
-                            length: new ContentLength(4),
-                            errorMask: out listSubMask);
-                    }
-                    );
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)ClassData_FieldIndex.PrimaryAttributes,
-                    subMask);
-            }
-            {
-                Exception subMask;
-                Mutagen.Binary.EnumBinaryTranslation<Class.Specialization>.Instance.Write(
-                    writer,
-                    item.Specialization,
-                    doMasks: doMasks,
-                    length: new ContentLength(4),
-                    errorMask: out subMask);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)ClassData_FieldIndex.Specialization,
-                    subMask);
-            }
-            {
-                MaskItem<Exception, IEnumerable<Exception>> subMask;
-                Mutagen.Binary.ListBinaryTranslation<ActorValue, Exception>.Instance.Write(
-                    writer: writer,
-                    item: item.SecondaryAttributes,
-                    doMasks: doMasks,
-                    maskObj: out subMask,
-                    transl: (ActorValue subItem, bool listDoMasks, out Exception listSubMask) =>
-                    {
-                        Mutagen.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
-                            writer,
-                            subItem,
-                            doMasks: doMasks,
-                            length: new ContentLength(4),
-                            errorMask: out listSubMask);
-                    }
-                    );
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)ClassData_FieldIndex.SecondaryAttributes,
-                    subMask);
-            }
-            {
-                Exception subMask;
-                Mutagen.Binary.EnumBinaryTranslation<ClassFlag>.Instance.Write(
-                    writer,
-                    item.Flags,
-                    doMasks: doMasks,
-                    length: new ContentLength(4),
-                    errorMask: out subMask);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)ClassData_FieldIndex.Flags,
-                    subMask);
-            }
-            {
-                Exception subMask;
-                Mutagen.Binary.EnumBinaryTranslation<ClassService>.Instance.Write(
-                    writer,
-                    item.ClassServices,
-                    doMasks: doMasks,
-                    length: new ContentLength(4),
-                    errorMask: out subMask);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)ClassData_FieldIndex.ClassServices,
-                    subMask);
-            }
-            {
-                MaskItem<Exception, ClassTraining_ErrorMask> subMask;
-                LoquiBinaryTranslation<ClassTraining, ClassTraining_ErrorMask>.Instance.Write(
-                    writer: writer,
-                    item: item.Training,
-                    doMasks: doMasks,
-                    mask: out subMask);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)ClassData_FieldIndex.Training,
-                    subMask);
-            }
+            Mutagen.Binary.ListBinaryTranslation<ActorValue, Exception>.Instance.Write(
+                writer: writer,
+                item: item.PrimaryAttributes,
+                fieldIndex: (int)ClassData_FieldIndex.PrimaryAttributes,
+                doMasks: doMasks,
+                errorMask: errorMask,
+                transl: (ActorValue subItem, bool listDoMasks, out Exception listSubMask) =>
+                {
+                    Mutagen.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
+                        writer,
+                        subItem,
+                        doMasks: doMasks,
+                        length: new ContentLength(4),
+                        errorMask: out listSubMask);
+                }
+                );
+            Mutagen.Binary.EnumBinaryTranslation<Class.Specialization>.Instance.Write(
+                writer,
+                item.Specialization,
+                doMasks: doMasks,
+                length: new ContentLength(4),
+                fieldIndex: (int)ClassData_FieldIndex.Specialization,
+                errorMask: errorMask);
+            Mutagen.Binary.ListBinaryTranslation<ActorValue, Exception>.Instance.Write(
+                writer: writer,
+                item: item.SecondaryAttributes,
+                fieldIndex: (int)ClassData_FieldIndex.SecondaryAttributes,
+                doMasks: doMasks,
+                errorMask: errorMask,
+                transl: (ActorValue subItem, bool listDoMasks, out Exception listSubMask) =>
+                {
+                    Mutagen.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
+                        writer,
+                        subItem,
+                        doMasks: doMasks,
+                        length: new ContentLength(4),
+                        errorMask: out listSubMask);
+                }
+                );
+            Mutagen.Binary.EnumBinaryTranslation<ClassFlag>.Instance.Write(
+                writer,
+                item.Flags,
+                doMasks: doMasks,
+                length: new ContentLength(4),
+                fieldIndex: (int)ClassData_FieldIndex.Flags,
+                errorMask: errorMask);
+            Mutagen.Binary.EnumBinaryTranslation<ClassService>.Instance.Write(
+                writer,
+                item.ClassServices,
+                doMasks: doMasks,
+                length: new ContentLength(4),
+                fieldIndex: (int)ClassData_FieldIndex.ClassServices,
+                errorMask: errorMask);
+            LoquiBinaryTranslation<ClassTraining, ClassTraining_ErrorMask>.Instance.Write(
+                writer: writer,
+                item: item.Training,
+                doMasks: doMasks,
+                fieldIndex: (int)ClassData_FieldIndex.Training,
+                errorMask: errorMask);
         }
 
         #endregion

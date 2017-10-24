@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Generation
 {
-    public class FilePathBinaryTranslation : PrimitiveBinaryTranslationGeneration<FilePathType>
+    public class FilePathBinaryTranslationGeneration : PrimitiveBinaryTranslationGeneration<FilePathType>
     {
-        public FilePathBinaryTranslation()
+        public FilePathBinaryTranslationGeneration()
             : base(nullable: true)
         {
             CanBeNotNullable = false;
@@ -31,8 +31,9 @@ namespace Mutagen.Generation
             {
                 args.Add($"writer: {writerAccessor}");
                 args.Add($"item: {itemAccessor}");
+                args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
                 args.Add($"doMasks: {doMaskAccessor}");
-                args.Add($"errorMask: out {maskAccessor}");
+                args.Add($"errorMask: {maskAccessor}");
                 if (data.TriggeringRecordAccessor != null)
                 {
                     args.Add($"header: {data.TriggeringRecordAccessor}");

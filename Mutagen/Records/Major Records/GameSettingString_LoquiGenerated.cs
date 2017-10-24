@@ -1517,21 +1517,14 @@ namespace Mutagen.Internals
                 writer: writer,
                 doMasks: doMasks,
                 errorMask: errorMask);
-            {
-                Exception subMask;
-                Mutagen.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Data,
-                    doMasks: doMasks,
-                    errorMask: out subMask,
-                    header: GameSettingString_Registration.DATA_HEADER,
-                    nullable: false);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)GameSettingString_FieldIndex.Data,
-                    subMask);
-            }
+            Mutagen.Binary.StringBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Data,
+                doMasks: doMasks,
+                fieldIndex: (int)GameSettingString_FieldIndex.Data,
+                errorMask: errorMask,
+                header: GameSettingString_Registration.DATA_HEADER,
+                nullable: false);
         }
 
         #endregion

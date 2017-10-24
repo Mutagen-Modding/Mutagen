@@ -40,7 +40,7 @@ namespace Mutagen.Generation
             this._typeGenerations[typeof(Int64NullType)] = new PrimitiveBinaryTranslationGeneration<long?>();
             this._typeGenerations[typeof(Int64Type)] = new PrimitiveBinaryTranslationGeneration<long>();
             this._typeGenerations[typeof(StringType)] = new StringBinaryTranslationGeneration();
-            this._typeGenerations[typeof(FilePathType)] = new FilePathBinaryTranslation();
+            this._typeGenerations[typeof(FilePathType)] = new FilePathBinaryTranslationGeneration();
             this._typeGenerations[typeof(UInt8NullType)] = new PrimitiveBinaryTranslationGeneration<byte?>();
             this._typeGenerations[typeof(UInt8Type)] = new PrimitiveBinaryTranslationGeneration<byte>();
             this._typeGenerations[typeof(UInt16NullType)] = new PrimitiveBinaryTranslationGeneration<ushort?>();
@@ -708,26 +708,14 @@ namespace Mutagen.Generation
                         {
                             throw new ArgumentException("Unsupported type generator: " + field);
                         }
-                        using (new BraceWrapper(fg))
-                        {
-                            fg.AppendLine($"{maskType} subMask;");
-                            generator.GenerateWrite(
-                                fg: fg,
-                                objGen: obj,
-                                typeGen: field,
-                                writerAccessor: "writer",
-                                itemAccessor: $"item.{field.Name}",
-                                doMaskAccessor: "doMasks",
-                                maskAccessor: $"subMask");
-                            using (var args = new ArgsWrapper(fg,
-                                $"ErrorMask.HandleErrorMask"))
-                            {
-                                args.Add("errorMask");
-                                args.Add("doMasks");
-                                args.Add($"(int){field.IndexEnumName}");
-                                args.Add("subMask");
-                            }
-                        }
+                        generator.GenerateWrite(
+                            fg: fg,
+                            objGen: obj,
+                            typeGen: field,
+                            writerAccessor: "writer",
+                            itemAccessor: $"item.{field.Name}",
+                            doMaskAccessor: "doMasks",
+                            maskAccessor: "errorMask");
                     }
                 }
                 fg.AppendLine();
@@ -769,25 +757,14 @@ namespace Mutagen.Generation
                         var maskType = this.Gen.MaskModule.GetMaskModule(field.GetType()).GetErrorMaskTypeStr(field);
                         if (data.CustomBinary)
                         {
-                            using (new BraceWrapper(fg))
+                            using (var args = new ArgsWrapper(fg,
+                                $"{obj.ObjectName}.WriteBinary_{field.Name}"))
                             {
-                                fg.AppendLine($"{maskType} subMask;");
-                                using (var args = new ArgsWrapper(fg,
-                                    $"{obj.ObjectName}.WriteBinary_{field.Name}"))
-                                {
-                                    args.Add("writer: writer");
-                                    args.Add("item: item");
-                                    args.Add("doMasks: doMasks");
-                                    args.Add("errorMask: out subMask");
-                                }
-                                using (var args = new ArgsWrapper(fg,
-                                    $"ErrorMask.HandleErrorMask"))
-                                {
-                                    args.Add("errorMask");
-                                    args.Add("doMasks");
-                                    args.Add($"(int){field.IndexEnumName}");
-                                    args.Add("subMask");
-                                }
+                                args.Add("writer: writer");
+                                args.Add("item: item");
+                                args.Add($"fieldIndex: (int){field.IndexEnumName}");
+                                args.Add("doMasks: doMasks");
+                                args.Add("errorMask: errorMask");
                             }
                             continue;
                         }
@@ -798,26 +775,14 @@ namespace Mutagen.Generation
 
                         if (!generator.ShouldGenerateWrite(field)) continue;
 
-                        using (new BraceWrapper(fg))
-                        {
-                            fg.AppendLine($"{maskType} subMask;");
-                            generator.GenerateWrite(
-                                fg: fg,
-                                objGen: obj,
-                                typeGen: field,
-                                writerAccessor: "writer",
-                                itemAccessor: $"item.{field.Name}",
-                                doMaskAccessor: "doMasks",
-                                maskAccessor: $"subMask");
-                            using (var args = new ArgsWrapper(fg,
-                                $"ErrorMask.HandleErrorMask"))
-                            {
-                                args.Add("errorMask");
-                                args.Add("doMasks");
-                                args.Add($"(int){field.IndexEnumName}");
-                                args.Add("subMask");
-                            }
-                        }
+                        generator.GenerateWrite(
+                            fg: fg,
+                            objGen: obj,
+                            typeGen: field,
+                            writerAccessor: "writer",
+                            itemAccessor: $"item.{field.Name}",
+                            doMaskAccessor: "doMasks",
+                            maskAccessor: $"errorMask");
                     }
                 }
                 fg.AppendLine();

@@ -1531,45 +1531,24 @@ namespace Mutagen.Internals
             bool doMasks,
             Func<MajorRecord_ErrorMask> errorMask)
         {
-            {
-                Exception subMask;
-                Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Flags,
-                    doMasks: doMasks,
-                    errorMask: out subMask);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)MajorRecord_FieldIndex.Flags,
-                    subMask);
-            }
-            {
-                Exception subMask;
-                Mutagen.Binary.FormIDBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.FormID,
-                    doMasks: doMasks,
-                    errorMask: out subMask);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)MajorRecord_FieldIndex.FormID,
-                    subMask);
-            }
-            {
-                Exception subMask;
-                Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Version,
-                    doMasks: doMasks,
-                    errorMask: out subMask);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)MajorRecord_FieldIndex.Version,
-                    subMask);
-            }
+            Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Flags,
+                doMasks: doMasks,
+                fieldIndex: (int)MajorRecord_FieldIndex.Flags,
+                errorMask: errorMask);
+            Mutagen.Binary.FormIDBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.FormID,
+                fieldIndex: (int)MajorRecord_FieldIndex.FormID,
+                doMasks: doMasks,
+                errorMask: errorMask);
+            Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Version,
+                doMasks: doMasks,
+                fieldIndex: (int)MajorRecord_FieldIndex.Version,
+                errorMask: errorMask);
         }
 
         public static void Write_Binary_RecordTypes(
@@ -1578,21 +1557,14 @@ namespace Mutagen.Internals
             bool doMasks,
             Func<MajorRecord_ErrorMask> errorMask)
         {
-            {
-                Exception subMask;
-                Mutagen.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.EditorID,
-                    doMasks: doMasks,
-                    errorMask: out subMask,
-                    header: MajorRecord_Registration.EDID_HEADER,
-                    nullable: false);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)MajorRecord_FieldIndex.EditorID,
-                    subMask);
-            }
+            Mutagen.Binary.StringBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.EditorID,
+                doMasks: doMasks,
+                fieldIndex: (int)MajorRecord_FieldIndex.EditorID,
+                errorMask: errorMask,
+                header: MajorRecord_Registration.EDID_HEADER,
+                nullable: false);
         }
 
         #endregion

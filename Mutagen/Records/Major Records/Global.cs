@@ -1,4 +1,5 @@
-﻿using Mutagen.Binary;
+﻿using Loqui;
+using Mutagen.Binary;
 using Mutagen.Internals;
 using System;
 using System.Collections.Generic;
@@ -106,15 +107,22 @@ namespace Mutagen
             errorMask = null;
         }
 
-        internal static void WriteBinary_TypeChar(MutagenWriter writer, IGlobalGetter item, bool doMasks, out Exception errorMask)
+        internal static void WriteBinary_TypeChar<M>(
+            MutagenWriter writer, 
+            IGlobalGetter item,
+            int fieldIndex,
+            bool doMasks, 
+            Func<M> errorMask)
+            where M : IErrorMask
         {
             Mutagen.Binary.CharBinaryTranslation.Instance.Write(
                 writer,
                 item.TypeChar,
                 header: Global_Registration.FNAM_HEADER,
+                fieldIndex: fieldIndex,
                 nullable: false,
                 doMasks: doMasks,
-                errorMask: out errorMask);
+                errorMask: errorMask);
         }
     }
 }

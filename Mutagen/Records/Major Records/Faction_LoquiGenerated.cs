@@ -1518,7 +1518,7 @@ namespace Mutagen.Internals
                                     if (r == null) return default(Relation);
                                     return Relation.Copy(
                                         r,
-                                        copyMask?.Relations.Specific,
+                                        copyMask?.Relations?.Specific,
                                         def: d);
                                 default:
                                     throw new NotImplementedException($"Unknown CopyOption {copyMask?.Relations.Overall}. Cannot execute copy.");
@@ -1580,7 +1580,7 @@ namespace Mutagen.Internals
                                     if (r == null) return default(Rank);
                                     return Rank.Copy(
                                         r,
-                                        copyMask?.Ranks.Specific,
+                                        copyMask?.Ranks?.Specific,
                                         def: d);
                                 default:
                                     throw new NotImplementedException($"Unknown CopyOption {copyMask?.Ranks.Overall}. Cannot execute copy.");
@@ -2056,81 +2056,53 @@ namespace Mutagen.Internals
                 writer: writer,
                 doMasks: doMasks,
                 errorMask: errorMask);
-            {
-                MaskItem<Exception, IEnumerable<MaskItem<Exception, Relation_ErrorMask>>> subMask;
-                Mutagen.Binary.ListBinaryTranslation<Relation, MaskItem<Exception, Relation_ErrorMask>>.Instance.Write(
-                    writer: writer,
-                    item: item.Relations,
-                    doMasks: doMasks,
-                    maskObj: out subMask,
-                    transl: (Relation subItem, bool listDoMasks, out MaskItem<Exception, Relation_ErrorMask> listSubMask) =>
-                    {
-                        LoquiBinaryTranslation<Relation, Relation_ErrorMask>.Instance.Write(
-                            writer: writer,
-                            item: subItem,
-                            doMasks: doMasks,
-                            mask: out listSubMask);
-                    }
-                    );
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)Faction_FieldIndex.Relations,
-                    subMask);
-            }
-            {
-                Exception subMask;
-                Mutagen.Binary.EnumBinaryTranslation<Faction.FactionFlag>.Instance.Write(
-                    writer,
-                    item.Flags,
-                    doMasks: doMasks,
-                    length: new ContentLength(1),
-                    errorMask: out subMask,
-                    header: Faction_Registration.DATA_HEADER,
-                    nullable: false);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)Faction_FieldIndex.Flags,
-                    subMask);
-            }
-            {
-                Exception subMask;
-                Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.CrimeGoldMultiplier,
-                    doMasks: doMasks,
-                    errorMask: out subMask,
-                    header: Faction_Registration.CNAM_HEADER,
-                    nullable: false);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)Faction_FieldIndex.CrimeGoldMultiplier,
-                    subMask);
-            }
-            {
-                MaskItem<Exception, IEnumerable<MaskItem<Exception, Rank_ErrorMask>>> subMask;
-                Mutagen.Binary.ListBinaryTranslation<Rank, MaskItem<Exception, Rank_ErrorMask>>.Instance.Write(
-                    writer: writer,
-                    item: item.Ranks,
-                    doMasks: doMasks,
-                    maskObj: out subMask,
-                    transl: (Rank subItem, bool listDoMasks, out MaskItem<Exception, Rank_ErrorMask> listSubMask) =>
-                    {
-                        LoquiBinaryTranslation<Rank, Rank_ErrorMask>.Instance.Write(
-                            writer: writer,
-                            item: subItem,
-                            doMasks: doMasks,
-                            mask: out listSubMask);
-                    }
-                    );
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)Faction_FieldIndex.Ranks,
-                    subMask);
-            }
+            Mutagen.Binary.ListBinaryTranslation<Relation, MaskItem<Exception, Relation_ErrorMask>>.Instance.Write(
+                writer: writer,
+                item: item.Relations,
+                fieldIndex: (int)Faction_FieldIndex.Relations,
+                doMasks: doMasks,
+                errorMask: errorMask,
+                transl: (Relation subItem, bool listDoMasks, out MaskItem<Exception, Relation_ErrorMask> listSubMask) =>
+                {
+                    LoquiBinaryTranslation<Relation, Relation_ErrorMask>.Instance.Write(
+                        writer: writer,
+                        item: subItem,
+                        doMasks: doMasks,
+                        errorMask: out listSubMask);
+                }
+                );
+            Mutagen.Binary.EnumBinaryTranslation<Faction.FactionFlag>.Instance.Write(
+                writer,
+                item.Flags,
+                doMasks: doMasks,
+                length: new ContentLength(1),
+                fieldIndex: (int)Faction_FieldIndex.Flags,
+                errorMask: errorMask,
+                header: Faction_Registration.DATA_HEADER,
+                nullable: false);
+            Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.CrimeGoldMultiplier,
+                fieldIndex: (int)Faction_FieldIndex.CrimeGoldMultiplier,
+                doMasks: doMasks,
+                errorMask: errorMask,
+                header: Faction_Registration.CNAM_HEADER,
+                nullable: false);
+            Mutagen.Binary.ListBinaryTranslation<Rank, MaskItem<Exception, Rank_ErrorMask>>.Instance.Write(
+                writer: writer,
+                item: item.Ranks,
+                fieldIndex: (int)Faction_FieldIndex.Ranks,
+                doMasks: doMasks,
+                errorMask: errorMask,
+                transl: (Rank subItem, bool listDoMasks, out MaskItem<Exception, Rank_ErrorMask> listSubMask) =>
+                {
+                    LoquiBinaryTranslation<Rank, Rank_ErrorMask>.Instance.Write(
+                        writer: writer,
+                        item: subItem,
+                        doMasks: doMasks,
+                        errorMask: out listSubMask);
+                }
+                );
         }
 
         #endregion

@@ -1982,32 +1982,18 @@ namespace Mutagen.Internals
                     (int)Group_FieldIndex.ContainedRecordType,
                     subMask);
             }
-            {
-                Exception subMask;
-                Mutagen.Binary.Int32BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.GroupType,
-                    doMasks: doMasks,
-                    errorMask: out subMask);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)Group_FieldIndex.GroupType,
-                    subMask);
-            }
-            {
-                Exception subMask;
-                Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.LastModified,
-                    doMasks: doMasks,
-                    errorMask: out subMask);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)Group_FieldIndex.LastModified,
-                    subMask);
-            }
+            Mutagen.Binary.Int32BinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.GroupType,
+                fieldIndex: (int)Group_FieldIndex.GroupType,
+                doMasks: doMasks,
+                errorMask: errorMask);
+            Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.LastModified,
+                doMasks: doMasks,
+                fieldIndex: (int)Group_FieldIndex.LastModified,
+                errorMask: errorMask);
         }
 
         public static void Write_Binary_RecordTypes<T, T_ErrMask>(
@@ -2018,28 +2004,21 @@ namespace Mutagen.Internals
             where T : MajorRecord, ILoquiObjectGetter
             where T_ErrMask : MajorRecord_ErrorMask, new()
         {
-            {
-                MaskItem<Exception, IEnumerable<MaskItem<Exception, T_ErrMask>>> subMask;
-                Mutagen.Binary.ListBinaryTranslation<T, MaskItem<Exception, T_ErrMask>>.Instance.Write(
-                    writer: writer,
-                    item: item.Items,
-                    doMasks: doMasks,
-                    maskObj: out subMask,
-                    transl: (T subItem, bool listDoMasks, out MaskItem<Exception, T_ErrMask> listSubMask) =>
-                    {
-                        LoquiBinaryTranslation<T, T_ErrMask>.Instance.Write(
-                            writer: writer,
-                            item: subItem,
-                            doMasks: doMasks,
-                            mask: out listSubMask);
-                    }
-                    );
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)Group_FieldIndex.Items,
-                    subMask);
-            }
+            Mutagen.Binary.ListBinaryTranslation<T, MaskItem<Exception, T_ErrMask>>.Instance.Write(
+                writer: writer,
+                item: item.Items,
+                fieldIndex: (int)Group_FieldIndex.Items,
+                doMasks: doMasks,
+                errorMask: errorMask,
+                transl: (T subItem, bool listDoMasks, out MaskItem<Exception, T_ErrMask> listSubMask) =>
+                {
+                    LoquiBinaryTranslation<T, T_ErrMask>.Instance.Write(
+                        writer: writer,
+                        item: subItem,
+                        doMasks: doMasks,
+                        errorMask: out listSubMask);
+                }
+                );
         }
 
         #endregion

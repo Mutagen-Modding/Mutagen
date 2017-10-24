@@ -1826,66 +1826,38 @@ namespace Mutagen.Internals
             bool doMasks,
             Func<Rank_ErrorMask> errorMask)
         {
-            {
-                Exception subMask;
-                Mutagen.Binary.Int32BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.RankNumber,
-                    doMasks: doMasks,
-                    errorMask: out subMask,
-                    header: Rank_Registration.RNAM_HEADER,
-                    nullable: false);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)Rank_FieldIndex.RankNumber,
-                    subMask);
-            }
-            {
-                Exception subMask;
-                Mutagen.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.MaleName,
-                    doMasks: doMasks,
-                    errorMask: out subMask,
-                    header: Rank_Registration.MNAM_HEADER,
-                    nullable: false);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)Rank_FieldIndex.MaleName,
-                    subMask);
-            }
-            {
-                Exception subMask;
-                Mutagen.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.FemaleName,
-                    doMasks: doMasks,
-                    errorMask: out subMask,
-                    header: Rank_Registration.FNAM_HEADER,
-                    nullable: false);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)Rank_FieldIndex.FemaleName,
-                    subMask);
-            }
-            {
-                Exception subMask;
-                Mutagen.Binary.FilePathBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Insignia,
-                    doMasks: doMasks,
-                    errorMask: out subMask,
-                    header: Rank_Registration.INAM_HEADER,
-                    nullable: false);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)Rank_FieldIndex.Insignia,
-                    subMask);
-            }
+            Mutagen.Binary.Int32BinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.RankNumber,
+                fieldIndex: (int)Rank_FieldIndex.RankNumber,
+                doMasks: doMasks,
+                errorMask: errorMask,
+                header: Rank_Registration.RNAM_HEADER,
+                nullable: false);
+            Mutagen.Binary.StringBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.MaleName,
+                doMasks: doMasks,
+                fieldIndex: (int)Rank_FieldIndex.MaleName,
+                errorMask: errorMask,
+                header: Rank_Registration.MNAM_HEADER,
+                nullable: false);
+            Mutagen.Binary.StringBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.FemaleName,
+                doMasks: doMasks,
+                fieldIndex: (int)Rank_FieldIndex.FemaleName,
+                errorMask: errorMask,
+                header: Rank_Registration.FNAM_HEADER,
+                nullable: false);
+            Mutagen.Binary.FilePathBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Insignia,
+                fieldIndex: (int)Rank_FieldIndex.Insignia,
+                doMasks: doMasks,
+                errorMask: errorMask,
+                header: Rank_Registration.INAM_HEADER,
+                nullable: false);
         }
 
         #endregion

@@ -1540,32 +1540,18 @@ namespace Mutagen.Internals
             bool doMasks,
             Func<Relation_ErrorMask> errorMask)
         {
-            {
-                Exception subMask;
-                Mutagen.Binary.FormIDBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Faction,
-                    doMasks: doMasks,
-                    errorMask: out subMask);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)Relation_FieldIndex.Faction,
-                    subMask);
-            }
-            {
-                Exception subMask;
-                Mutagen.Binary.Int32BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Modifier,
-                    doMasks: doMasks,
-                    errorMask: out subMask);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)Relation_FieldIndex.Modifier,
-                    subMask);
-            }
+            Mutagen.Binary.FormIDBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Faction,
+                fieldIndex: (int)Relation_FieldIndex.Faction,
+                doMasks: doMasks,
+                errorMask: errorMask);
+            Mutagen.Binary.Int32BinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Modifier,
+                fieldIndex: (int)Relation_FieldIndex.Modifier,
+                doMasks: doMasks,
+                errorMask: errorMask);
         }
 
         #endregion

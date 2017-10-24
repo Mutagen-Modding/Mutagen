@@ -1706,7 +1706,7 @@ namespace Mutagen.Internals
                         cmds,
                         (r, d) =>
                         {
-                            switch (copyMask?.Header.Overall ?? CopyOption.Reference)
+                            switch (copyMask?.Header?.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
                                     return r;
@@ -1733,10 +1733,10 @@ namespace Mutagen.Internals
                                     if (r == null) return default(Header);
                                     return Header.Copy(
                                         r,
-                                        copyMask?.Header.Specific,
+                                        copyMask?.Header?.Specific,
                                         def: d);
                                 default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Header.Overall}. Cannot execute copy.");
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Header?.Overall}. Cannot execute copy.");
                             }
                         }
                         );
@@ -1825,7 +1825,7 @@ namespace Mutagen.Internals
                                     if (r == null) return default(MasterReference);
                                     return MasterReference.Copy(
                                         r,
-                                        copyMask?.MasterReferences.Specific,
+                                        copyMask?.MasterReferences?.Specific,
                                         def: d);
                                 default:
                                     throw new NotImplementedException($"Unknown CopyOption {copyMask?.MasterReferences.Overall}. Cannot execute copy.");
@@ -2345,19 +2345,12 @@ namespace Mutagen.Internals
             bool doMasks,
             Func<TES4_ErrorMask> errorMask)
         {
-            {
-                Exception subMask;
-                Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Fluff,
-                    doMasks: doMasks,
-                    errorMask: out subMask);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)TES4_FieldIndex.Fluff,
-                    subMask);
-            }
+            Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Fluff,
+                doMasks: doMasks,
+                fieldIndex: (int)TES4_FieldIndex.Fluff,
+                errorMask: errorMask);
         }
 
         public static void Write_Binary_RecordTypes(
@@ -2366,101 +2359,59 @@ namespace Mutagen.Internals
             bool doMasks,
             Func<TES4_ErrorMask> errorMask)
         {
-            {
-                MaskItem<Exception, Header_ErrorMask> subMask;
-                LoquiBinaryTranslation<Header, Header_ErrorMask>.Instance.Write(
-                    writer: writer,
-                    item: item.Header,
-                    doMasks: doMasks,
-                    mask: out subMask);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)TES4_FieldIndex.Header,
-                    subMask);
-            }
-            {
-                Exception subMask;
-                Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.TypeOffsets,
-                    doMasks: doMasks,
-                    errorMask: out subMask,
-                    header: TES4_Registration.OFST_HEADER,
-                    nullable: true);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)TES4_FieldIndex.TypeOffsets,
-                    subMask);
-            }
-            {
-                Exception subMask;
-                Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Deleted,
-                    doMasks: doMasks,
-                    errorMask: out subMask,
-                    header: TES4_Registration.DELE_HEADER,
-                    nullable: true);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)TES4_FieldIndex.Deleted,
-                    subMask);
-            }
-            {
-                Exception subMask;
-                Mutagen.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Author,
-                    doMasks: doMasks,
-                    errorMask: out subMask,
-                    header: TES4_Registration.CNAM_HEADER,
-                    nullable: true);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)TES4_FieldIndex.Author,
-                    subMask);
-            }
-            {
-                Exception subMask;
-                Mutagen.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Description,
-                    doMasks: doMasks,
-                    errorMask: out subMask,
-                    header: TES4_Registration.SNAM_HEADER,
-                    nullable: true);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)TES4_FieldIndex.Description,
-                    subMask);
-            }
-            {
-                MaskItem<Exception, IEnumerable<MaskItem<Exception, MasterReference_ErrorMask>>> subMask;
-                Mutagen.Binary.ListBinaryTranslation<MasterReference, MaskItem<Exception, MasterReference_ErrorMask>>.Instance.Write(
-                    writer: writer,
-                    item: item.MasterReferences,
-                    doMasks: doMasks,
-                    maskObj: out subMask,
-                    transl: (MasterReference subItem, bool listDoMasks, out MaskItem<Exception, MasterReference_ErrorMask> listSubMask) =>
-                    {
-                        LoquiBinaryTranslation<MasterReference, MasterReference_ErrorMask>.Instance.Write(
-                            writer: writer,
-                            item: subItem,
-                            doMasks: doMasks,
-                            mask: out listSubMask);
-                    }
-                    );
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)TES4_FieldIndex.MasterReferences,
-                    subMask);
-            }
+            LoquiBinaryTranslation<Header, Header_ErrorMask>.Instance.Write(
+                writer: writer,
+                item: item.Header,
+                doMasks: doMasks,
+                fieldIndex: (int)TES4_FieldIndex.Header,
+                errorMask: errorMask);
+            Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.TypeOffsets,
+                doMasks: doMasks,
+                fieldIndex: (int)TES4_FieldIndex.TypeOffsets,
+                errorMask: errorMask,
+                header: TES4_Registration.OFST_HEADER,
+                nullable: true);
+            Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Deleted,
+                doMasks: doMasks,
+                fieldIndex: (int)TES4_FieldIndex.Deleted,
+                errorMask: errorMask,
+                header: TES4_Registration.DELE_HEADER,
+                nullable: true);
+            Mutagen.Binary.StringBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Author,
+                doMasks: doMasks,
+                fieldIndex: (int)TES4_FieldIndex.Author,
+                errorMask: errorMask,
+                header: TES4_Registration.CNAM_HEADER,
+                nullable: true);
+            Mutagen.Binary.StringBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Description,
+                doMasks: doMasks,
+                fieldIndex: (int)TES4_FieldIndex.Description,
+                errorMask: errorMask,
+                header: TES4_Registration.SNAM_HEADER,
+                nullable: true);
+            Mutagen.Binary.ListBinaryTranslation<MasterReference, MaskItem<Exception, MasterReference_ErrorMask>>.Instance.Write(
+                writer: writer,
+                item: item.MasterReferences,
+                fieldIndex: (int)TES4_FieldIndex.MasterReferences,
+                doMasks: doMasks,
+                errorMask: errorMask,
+                transl: (MasterReference subItem, bool listDoMasks, out MaskItem<Exception, MasterReference_ErrorMask> listSubMask) =>
+                {
+                    LoquiBinaryTranslation<MasterReference, MasterReference_ErrorMask>.Instance.Write(
+                        writer: writer,
+                        item: subItem,
+                        doMasks: doMasks,
+                        errorMask: out listSubMask);
+                }
+                );
         }
 
         #endregion

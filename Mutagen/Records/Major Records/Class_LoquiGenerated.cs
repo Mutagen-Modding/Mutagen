@@ -1449,7 +1449,7 @@ namespace Mutagen.Internals
                         cmds,
                         (r, d) =>
                         {
-                            switch (copyMask?.ClassData.Overall ?? CopyOption.Reference)
+                            switch (copyMask?.ClassData?.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
                                     return r;
@@ -1476,10 +1476,10 @@ namespace Mutagen.Internals
                                     if (r == null) return default(ClassData);
                                     return ClassData.Copy(
                                         r,
-                                        copyMask?.ClassData.Specific,
+                                        copyMask?.ClassData?.Specific,
                                         def: d);
                                 default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.ClassData.Overall}. Cannot execute copy.");
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.ClassData?.Overall}. Cannot execute copy.");
                             }
                         }
                         );
@@ -1823,49 +1823,28 @@ namespace Mutagen.Internals
                 writer: writer,
                 doMasks: doMasks,
                 errorMask: errorMask);
-            {
-                Exception subMask;
-                Mutagen.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Description,
-                    doMasks: doMasks,
-                    errorMask: out subMask,
-                    header: Class_Registration.DESC_HEADER,
-                    nullable: false);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)Class_FieldIndex.Description,
-                    subMask);
-            }
-            {
-                Exception subMask;
-                Mutagen.Binary.FilePathBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Icon,
-                    doMasks: doMasks,
-                    errorMask: out subMask,
-                    header: Class_Registration.ICON_HEADER,
-                    nullable: false);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)Class_FieldIndex.Icon,
-                    subMask);
-            }
-            {
-                MaskItem<Exception, ClassData_ErrorMask> subMask;
-                LoquiBinaryTranslation<ClassData, ClassData_ErrorMask>.Instance.Write(
-                    writer: writer,
-                    item: item.ClassData,
-                    doMasks: doMasks,
-                    mask: out subMask);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)Class_FieldIndex.ClassData,
-                    subMask);
-            }
+            Mutagen.Binary.StringBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Description,
+                doMasks: doMasks,
+                fieldIndex: (int)Class_FieldIndex.Description,
+                errorMask: errorMask,
+                header: Class_Registration.DESC_HEADER,
+                nullable: false);
+            Mutagen.Binary.FilePathBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Icon,
+                fieldIndex: (int)Class_FieldIndex.Icon,
+                doMasks: doMasks,
+                errorMask: errorMask,
+                header: Class_Registration.ICON_HEADER,
+                nullable: false);
+            LoquiBinaryTranslation<ClassData, ClassData_ErrorMask>.Instance.Write(
+                writer: writer,
+                item: item.ClassData,
+                doMasks: doMasks,
+                fieldIndex: (int)Class_FieldIndex.ClassData,
+                errorMask: errorMask);
         }
 
         #endregion

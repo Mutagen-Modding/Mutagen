@@ -1566,36 +1566,22 @@ namespace Mutagen.Internals
             bool doMasks,
             Func<MasterReference_ErrorMask> errorMask)
         {
-            {
-                Exception subMask;
-                Mutagen.Binary.StringBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Master,
-                    doMasks: doMasks,
-                    errorMask: out subMask,
-                    header: MasterReference_Registration.MAST_HEADER,
-                    nullable: false);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)MasterReference_FieldIndex.Master,
-                    subMask);
-            }
-            {
-                Exception subMask;
-                Mutagen.Binary.UInt64BinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.FileSize,
-                    doMasks: doMasks,
-                    errorMask: out subMask,
-                    header: MasterReference_Registration.DATA_HEADER,
-                    nullable: false);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)MasterReference_FieldIndex.FileSize,
-                    subMask);
-            }
+            Mutagen.Binary.StringBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Master,
+                doMasks: doMasks,
+                fieldIndex: (int)MasterReference_FieldIndex.Master,
+                errorMask: errorMask,
+                header: MasterReference_Registration.MAST_HEADER,
+                nullable: false);
+            Mutagen.Binary.UInt64BinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.FileSize,
+                fieldIndex: (int)MasterReference_FieldIndex.FileSize,
+                doMasks: doMasks,
+                errorMask: errorMask,
+                header: MasterReference_Registration.DATA_HEADER,
+                nullable: false);
         }
 
         #endregion

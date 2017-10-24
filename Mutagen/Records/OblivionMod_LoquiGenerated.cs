@@ -1500,7 +1500,7 @@ namespace Mutagen.Internals
                         cmds,
                         (r, d) =>
                         {
-                            switch (copyMask?.TES4.Overall ?? CopyOption.Reference)
+                            switch (copyMask?.TES4?.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
                                     return r;
@@ -1527,10 +1527,10 @@ namespace Mutagen.Internals
                                     if (r == null) return default(TES4);
                                     return TES4.Copy(
                                         r,
-                                        copyMask?.TES4.Specific,
+                                        copyMask?.TES4?.Specific,
                                         def: d);
                                 default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.TES4.Overall}. Cannot execute copy.");
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.TES4?.Overall}. Cannot execute copy.");
                             }
                         }
                         );
@@ -1551,7 +1551,7 @@ namespace Mutagen.Internals
                         cmds,
                         (r, d) =>
                         {
-                            switch (copyMask?.GameSettings.Overall ?? CopyOption.Reference)
+                            switch (copyMask?.GameSettings?.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
                                     return r;
@@ -1578,10 +1578,10 @@ namespace Mutagen.Internals
                                     if (r == null) return default(Group<GameSetting>);
                                     return Group<GameSetting>.Copy(
                                         r,
-                                        copyMask?.GameSettings.Specific,
+                                        copyMask?.GameSettings?.Specific,
                                         def: d);
                                 default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.GameSettings.Overall}. Cannot execute copy.");
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.GameSettings?.Overall}. Cannot execute copy.");
                             }
                         }
                         );
@@ -1602,7 +1602,7 @@ namespace Mutagen.Internals
                         cmds,
                         (r, d) =>
                         {
-                            switch (copyMask?.Globals.Overall ?? CopyOption.Reference)
+                            switch (copyMask?.Globals?.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
                                     return r;
@@ -1629,10 +1629,10 @@ namespace Mutagen.Internals
                                     if (r == null) return default(Group<Global>);
                                     return Group<Global>.Copy(
                                         r,
-                                        copyMask?.Globals.Specific,
+                                        copyMask?.Globals?.Specific,
                                         def: d);
                                 default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Globals.Overall}. Cannot execute copy.");
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Globals?.Overall}. Cannot execute copy.");
                             }
                         }
                         );
@@ -1653,7 +1653,7 @@ namespace Mutagen.Internals
                         cmds,
                         (r, d) =>
                         {
-                            switch (copyMask?.Classes.Overall ?? CopyOption.Reference)
+                            switch (copyMask?.Classes?.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
                                     return r;
@@ -1680,10 +1680,10 @@ namespace Mutagen.Internals
                                     if (r == null) return default(Group<Class>);
                                     return Group<Class>.Copy(
                                         r,
-                                        copyMask?.Classes.Specific,
+                                        copyMask?.Classes?.Specific,
                                         def: d);
                                 default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Classes.Overall}. Cannot execute copy.");
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Classes?.Overall}. Cannot execute copy.");
                             }
                         }
                         );
@@ -1704,7 +1704,7 @@ namespace Mutagen.Internals
                         cmds,
                         (r, d) =>
                         {
-                            switch (copyMask?.Factions.Overall ?? CopyOption.Reference)
+                            switch (copyMask?.Factions?.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
                                     return r;
@@ -1731,10 +1731,10 @@ namespace Mutagen.Internals
                                     if (r == null) return default(Group<Faction>);
                                     return Group<Faction>.Copy(
                                         r,
-                                        copyMask?.Factions.Specific,
+                                        copyMask?.Factions?.Specific,
                                         def: d);
                                 default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Factions.Overall}. Cannot execute copy.");
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Factions?.Overall}. Cannot execute copy.");
                             }
                         }
                         );
@@ -2133,71 +2133,36 @@ namespace Mutagen.Internals
             bool doMasks,
             Func<OblivionMod_ErrorMask> errorMask)
         {
-            {
-                MaskItem<Exception, TES4_ErrorMask> subMask;
-                LoquiBinaryTranslation<TES4, TES4_ErrorMask>.Instance.Write(
-                    writer: writer,
-                    item: item.TES4,
-                    doMasks: doMasks,
-                    mask: out subMask);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)OblivionMod_FieldIndex.TES4,
-                    subMask);
-            }
-            {
-                MaskItem<Exception, Group_ErrorMask<GameSetting_ErrorMask>> subMask;
-                LoquiBinaryTranslation<Group<GameSetting>, Group_ErrorMask<GameSetting_ErrorMask>>.Instance.Write(
-                    writer: writer,
-                    item: item.GameSettings,
-                    doMasks: doMasks,
-                    mask: out subMask);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)OblivionMod_FieldIndex.GameSettings,
-                    subMask);
-            }
-            {
-                MaskItem<Exception, Group_ErrorMask<Global_ErrorMask>> subMask;
-                LoquiBinaryTranslation<Group<Global>, Group_ErrorMask<Global_ErrorMask>>.Instance.Write(
-                    writer: writer,
-                    item: item.Globals,
-                    doMasks: doMasks,
-                    mask: out subMask);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)OblivionMod_FieldIndex.Globals,
-                    subMask);
-            }
-            {
-                MaskItem<Exception, Group_ErrorMask<Class_ErrorMask>> subMask;
-                LoquiBinaryTranslation<Group<Class>, Group_ErrorMask<Class_ErrorMask>>.Instance.Write(
-                    writer: writer,
-                    item: item.Classes,
-                    doMasks: doMasks,
-                    mask: out subMask);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)OblivionMod_FieldIndex.Classes,
-                    subMask);
-            }
-            {
-                MaskItem<Exception, Group_ErrorMask<Faction_ErrorMask>> subMask;
-                LoquiBinaryTranslation<Group<Faction>, Group_ErrorMask<Faction_ErrorMask>>.Instance.Write(
-                    writer: writer,
-                    item: item.Factions,
-                    doMasks: doMasks,
-                    mask: out subMask);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)OblivionMod_FieldIndex.Factions,
-                    subMask);
-            }
+            LoquiBinaryTranslation<TES4, TES4_ErrorMask>.Instance.Write(
+                writer: writer,
+                item: item.TES4,
+                doMasks: doMasks,
+                fieldIndex: (int)OblivionMod_FieldIndex.TES4,
+                errorMask: errorMask);
+            LoquiBinaryTranslation<Group<GameSetting>, Group_ErrorMask<GameSetting_ErrorMask>>.Instance.Write(
+                writer: writer,
+                item: item.GameSettings,
+                doMasks: doMasks,
+                fieldIndex: (int)OblivionMod_FieldIndex.GameSettings,
+                errorMask: errorMask);
+            LoquiBinaryTranslation<Group<Global>, Group_ErrorMask<Global_ErrorMask>>.Instance.Write(
+                writer: writer,
+                item: item.Globals,
+                doMasks: doMasks,
+                fieldIndex: (int)OblivionMod_FieldIndex.Globals,
+                errorMask: errorMask);
+            LoquiBinaryTranslation<Group<Class>, Group_ErrorMask<Class_ErrorMask>>.Instance.Write(
+                writer: writer,
+                item: item.Classes,
+                doMasks: doMasks,
+                fieldIndex: (int)OblivionMod_FieldIndex.Classes,
+                errorMask: errorMask);
+            LoquiBinaryTranslation<Group<Faction>, Group_ErrorMask<Faction_ErrorMask>>.Instance.Write(
+                writer: writer,
+                item: item.Factions,
+                doMasks: doMasks,
+                fieldIndex: (int)OblivionMod_FieldIndex.Factions,
+                errorMask: errorMask);
         }
 
         #endregion

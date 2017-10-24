@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Noggog;
+using Loqui;
 
 namespace Mutagen.Binary
 {
@@ -60,6 +61,30 @@ namespace Mutagen.Binary
                 nullable,
                 doMasks,
                 out errorMask);
+        }
+
+        public void Write<M>(
+            MutagenWriter writer,
+            FilePath item,
+            RecordType header,
+            int fieldIndex,
+            bool nullable,
+            bool doMasks,
+            Func<M> errorMask)
+            where M : IErrorMask
+        {
+            this.Write(
+                writer,
+                item,
+                header,
+                nullable,
+                doMasks,
+                out var subMask);
+            ErrorMask.HandleException(
+                errorMask,
+                doMasks,
+                fieldIndex,
+                subMask);
         }
     }
 }

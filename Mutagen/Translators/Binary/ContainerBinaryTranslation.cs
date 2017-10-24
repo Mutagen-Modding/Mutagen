@@ -48,7 +48,7 @@ namespace Mutagen.Binary
                 return TryGet<IEnumerable<T>>.Failure;
             }
         }
-        
+
         public TryGet<IEnumerable<T>> ParseRepeatedItem(
             MutagenFrame frame,
             bool doMasks,
@@ -138,7 +138,7 @@ namespace Mutagen.Binary
         }
 
         public abstract TryGet<T> ParseSingleItem(MutagenFrame frame, BinarySubParseDelegate<T, M> transl, bool doMasks, out M maskObj);
-        
+
         void IBinaryTranslation<IEnumerable<T>, MaskItem<Exception, IEnumerable<M>>>.Write(MutagenWriter writer, IEnumerable<T> item, ContentLength length, bool doMasks, out MaskItem<Exception, IEnumerable<M>> maskObj)
         {
             Write(writer, item, doMasks, out maskObj);
@@ -206,6 +206,49 @@ namespace Mutagen.Binary
             when (doMasks)
             {
                 maskObj = new MaskItem<Exception, IEnumerable<M>>(ex, null);
+            }
+        }
+
+        public void Write<Mask>(
+            MutagenWriter writer,
+            IEnumerable<T> item,
+            bool doMasks,
+            int fieldIndex,
+            Func<Mask> errorMask,
+            BinarySubWriteDelegate<T, M> transl)
+            where Mask : IErrorMask
+        {
+            try
+            {
+                List<M> maskList = null;
+                foreach (var i in item)
+                {
+                    this.WriteSingleItem(writer, transl, i, doMasks, out var errObj);
+                    if (errObj != null)
+                    {
+                        if (maskList == null)
+                        {
+                            maskList = new List<M>();
+                        }
+                        maskList.Add(errObj);
+                    }
+                }
+                if (maskList != null)
+                {
+                    ErrorMask.HandleErrorMask(
+                        errorMask,
+                        doMasks,
+                        fieldIndex,
+                        new MaskItem<Exception, IEnumerable<M>>(null, maskList));
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorMask.HandleException(
+                    errorMask,
+                    doMasks,
+                    fieldIndex,
+                    ex);
             }
         }
 

@@ -31,8 +31,9 @@ namespace Mutagen.Generation
             {
                 args.Add($"writer: {writerAccessor}");
                 args.Add($"item: {itemAccessor}");
+                args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
                 args.Add($"doMasks: {doMaskAccessor}");
-                args.Add($"maskObj: out {maskAccessor}");
+                args.Add($"errorMask: {maskAccessor}");
                 args.Add((gen) =>
                 {
                     gen.AppendLine($"transl: ({list.SubTypeGeneration.TypeName} subItem, bool listDoMasks, out {subMaskStr} listSubMask) =>");

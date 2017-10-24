@@ -1190,34 +1190,20 @@ namespace Mutagen.Internals
                 writer: writer,
                 doMasks: doMasks,
                 errorMask: errorMask);
-            {
-                Exception subMask;
-                Global.WriteBinary_TypeChar(
-                    writer: writer,
-                    item: item,
-                    doMasks: doMasks,
-                    errorMask: out subMask);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)Global_FieldIndex.TypeChar,
-                    subMask);
-            }
-            {
-                Exception subMask;
-                Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.RawFloat,
-                    doMasks: doMasks,
-                    errorMask: out subMask,
-                    header: Global_Registration.FLTV_HEADER,
-                    nullable: false);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)Global_FieldIndex.RawFloat,
-                    subMask);
-            }
+            Global.WriteBinary_TypeChar(
+                writer: writer,
+                item: item,
+                fieldIndex: (int)Global_FieldIndex.TypeChar,
+                doMasks: doMasks,
+                errorMask: errorMask);
+            Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.RawFloat,
+                fieldIndex: (int)Global_FieldIndex.RawFloat,
+                doMasks: doMasks,
+                errorMask: errorMask,
+                header: Global_Registration.FLTV_HEADER,
+                nullable: false);
         }
 
         #endregion
