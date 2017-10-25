@@ -499,35 +499,21 @@ namespace Mutagen
             switch (nextRecordType.Type)
             {
                 case "FNAM":
-                {
-                    Exception subMask;
                     FillBinary_TypeChar(
                         frame: frame,
                         item: item,
                         doMasks: doMasks,
-                        errorMask: out subMask);
-                    ErrorMask.HandleErrorMask(
-                        errorMask,
-                        doMasks,
-                        (int)Global_FieldIndex.TypeChar,
-                        subMask);
-                }
+                        fieldIndex: (int)Global_FieldIndex.TypeChar,
+                        errorMask: errorMask);
                 break;
                 case "FLTV":
-                {
-                    Exception subMask;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var tryGet = Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
+                    var RawFloattryGet = Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         doMasks: doMasks,
-                        errorMask: out subMask);
-                    item._RawFloat.SetIfSucceeded(tryGet);
-                    ErrorMask.HandleErrorMask(
-                        errorMask,
-                        doMasks,
-                        (int)Global_FieldIndex.RawFloat,
-                        subMask);
-                }
+                        fieldIndex: (int)Global_FieldIndex.RawFloat,
+                        errorMask: errorMask);
+                    item._RawFloat.SetIfSucceeded(RawFloattryGet);
                 break;
                 default:
                     MajorRecord.Fill_Binary_RecordTypes(

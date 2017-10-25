@@ -849,68 +849,40 @@ namespace Mutagen
             {
                 case "RNAM":
                 if (!first) return false;
-                {
-                    Exception subMask;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var tryGet = Mutagen.Binary.Int32BinaryTranslation.Instance.Parse(
+                    var RankNumbertryGet = Mutagen.Binary.Int32BinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         doMasks: doMasks,
-                        errorMask: out subMask);
-                    item._RankNumber.SetIfSucceeded(tryGet);
-                    ErrorMask.HandleErrorMask(
-                        errorMask,
-                        doMasks,
-                        (int)Rank_FieldIndex.RankNumber,
-                        subMask);
-                }
+                        fieldIndex: (int)Rank_FieldIndex.RankNumber,
+                        errorMask: errorMask);
+                    item._RankNumber.SetIfSucceeded(RankNumbertryGet);
                 break;
                 case "MNAM":
-                {
-                    Exception subMask;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var tryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
+                    var MaleNametryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
+                        fieldIndex: (int)Rank_FieldIndex.MaleName,
                         doMasks: doMasks,
-                        errorMask: out subMask);
-                    item._MaleName.SetIfSucceeded(tryGet);
-                    ErrorMask.HandleErrorMask(
-                        errorMask,
-                        doMasks,
-                        (int)Rank_FieldIndex.MaleName,
-                        subMask);
-                }
+                        errorMask: errorMask);
+                    item._MaleName.SetIfSucceeded(MaleNametryGet);
                 break;
                 case "FNAM":
-                {
-                    Exception subMask;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var tryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
+                    var FemaleNametryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
+                        fieldIndex: (int)Rank_FieldIndex.FemaleName,
                         doMasks: doMasks,
-                        errorMask: out subMask);
-                    item._FemaleName.SetIfSucceeded(tryGet);
-                    ErrorMask.HandleErrorMask(
-                        errorMask,
-                        doMasks,
-                        (int)Rank_FieldIndex.FemaleName,
-                        subMask);
-                }
+                        errorMask: errorMask);
+                    item._FemaleName.SetIfSucceeded(FemaleNametryGet);
                 break;
                 case "INAM":
-                {
-                    Exception subMask;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var tryGet = Mutagen.Binary.FilePathBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         doMasks: doMasks,
-                        errorMask: out subMask);
+                        fieldIndex: (int)Rank_FieldIndex.Insignia,
+                        errorMask: errorMask);
                     item._Insignia.SetIfSucceeded(tryGet);
-                    ErrorMask.HandleErrorMask(
-                        errorMask,
-                        doMasks,
-                        (int)Rank_FieldIndex.Insignia,
-                        subMask);
-                }
                 break;
                 default:
                     throw new ArgumentException($"Unexpected header {nextRecordType.Type} at position {frame.Position}");

@@ -911,107 +911,65 @@ namespace Mutagen
             Func<ClassData_ErrorMask> errorMask)
         {
             if (frame.Complete) return;
-            {
-                MaskItem<Exception, IEnumerable<Exception>> subMask;
-                var listTryGet = Mutagen.Binary.ListBinaryTranslation<ActorValue, Exception>.Instance.ParseRepeatedItem(
-                    frame: frame,
-                    amount: 2,
-                    doMasks: doMasks,
-                    maskObj: out subMask,
-                    transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
-                    {
-                        return Mutagen.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
-                            frame: r.Spawn(new ContentLength(4)),
-                            doMasks: listDoMasks,
-                            errorMask: out listSubMask);
-                    }
-                    );
-                item._PrimaryAttributes.SetIfSucceeded(listTryGet);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)ClassData_FieldIndex.PrimaryAttributes,
-                    subMask);
-            }
+            var PrimaryAttributestryGet = Mutagen.Binary.ListBinaryTranslation<ActorValue, Exception>.Instance.ParseRepeatedItem(
+                frame: frame,
+                amount: 2,
+                fieldIndex: (int)ClassData_FieldIndex.PrimaryAttributes,
+                doMasks: doMasks,
+                errorMask: errorMask,
+                transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
+                {
+                    return Mutagen.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
+                        frame: r.Spawn(new ContentLength(4)),
+                        doMasks: listDoMasks,
+                        errorMask: out listSubMask);
+                }
+                );
+            item._PrimaryAttributes.SetIfSucceeded(PrimaryAttributestryGet);
             if (frame.Complete) return;
-            {
-                Exception subMask;
-                var tryGet = Mutagen.Binary.EnumBinaryTranslation<Class.Specialization>.Instance.Parse(
-                    frame: frame.Spawn(new ContentLength(4)),
-                    doMasks: doMasks,
-                    errorMask: out subMask);
-                item._Specialization.SetIfSucceeded(tryGet);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)ClassData_FieldIndex.Specialization,
-                    subMask);
-            }
+            var SpecializationtryGet = Mutagen.Binary.EnumBinaryTranslation<Class.Specialization>.Instance.Parse(
+                frame: frame.Spawn(new ContentLength(4)),
+                fieldIndex: (int)ClassData_FieldIndex.Specialization,
+                doMasks: doMasks,
+                errorMask: errorMask);
+            item._Specialization.SetIfSucceeded(SpecializationtryGet);
             if (frame.Complete) return;
-            {
-                MaskItem<Exception, IEnumerable<Exception>> subMask;
-                var listTryGet = Mutagen.Binary.ListBinaryTranslation<ActorValue, Exception>.Instance.ParseRepeatedItem(
-                    frame: frame,
-                    amount: 7,
-                    doMasks: doMasks,
-                    maskObj: out subMask,
-                    transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
-                    {
-                        return Mutagen.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
-                            frame: r.Spawn(new ContentLength(4)),
-                            doMasks: listDoMasks,
-                            errorMask: out listSubMask);
-                    }
-                    );
-                item._SecondaryAttributes.SetIfSucceeded(listTryGet);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)ClassData_FieldIndex.SecondaryAttributes,
-                    subMask);
-            }
+            var SecondaryAttributestryGet = Mutagen.Binary.ListBinaryTranslation<ActorValue, Exception>.Instance.ParseRepeatedItem(
+                frame: frame,
+                amount: 7,
+                fieldIndex: (int)ClassData_FieldIndex.SecondaryAttributes,
+                doMasks: doMasks,
+                errorMask: errorMask,
+                transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
+                {
+                    return Mutagen.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
+                        frame: r.Spawn(new ContentLength(4)),
+                        doMasks: listDoMasks,
+                        errorMask: out listSubMask);
+                }
+                );
+            item._SecondaryAttributes.SetIfSucceeded(SecondaryAttributestryGet);
             if (frame.Complete) return;
-            {
-                Exception subMask;
-                var tryGet = Mutagen.Binary.EnumBinaryTranslation<ClassFlag>.Instance.Parse(
-                    frame: frame.Spawn(new ContentLength(4)),
-                    doMasks: doMasks,
-                    errorMask: out subMask);
-                item._Flags.SetIfSucceeded(tryGet);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)ClassData_FieldIndex.Flags,
-                    subMask);
-            }
+            var FlagstryGet = Mutagen.Binary.EnumBinaryTranslation<ClassFlag>.Instance.Parse(
+                frame: frame.Spawn(new ContentLength(4)),
+                fieldIndex: (int)ClassData_FieldIndex.Flags,
+                doMasks: doMasks,
+                errorMask: errorMask);
+            item._Flags.SetIfSucceeded(FlagstryGet);
             if (frame.Complete) return;
-            {
-                Exception subMask;
-                var tryGet = Mutagen.Binary.EnumBinaryTranslation<ClassService>.Instance.Parse(
-                    frame: frame.Spawn(new ContentLength(4)),
-                    doMasks: doMasks,
-                    errorMask: out subMask);
-                item._ClassServices.SetIfSucceeded(tryGet);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)ClassData_FieldIndex.ClassServices,
-                    subMask);
-            }
+            var ClassServicestryGet = Mutagen.Binary.EnumBinaryTranslation<ClassService>.Instance.Parse(
+                frame: frame.Spawn(new ContentLength(4)),
+                fieldIndex: (int)ClassData_FieldIndex.ClassServices,
+                doMasks: doMasks,
+                errorMask: errorMask);
+            item._ClassServices.SetIfSucceeded(ClassServicestryGet);
             if (frame.Complete) return;
-            {
-                MaskItem<Exception, ClassTraining_ErrorMask> subMask;
-                var tryGet = LoquiBinaryTranslation<ClassTraining, ClassTraining_ErrorMask>.Instance.Parse(
-                    reader: frame,
-                    doMasks: doMasks,
-                    mask: out subMask);
-                item._Training.SetIfSucceeded(tryGet);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)ClassData_FieldIndex.Training,
-                    subMask);
-            }
+            var TrainingtryGet = LoquiBinaryTranslation<ClassTraining, ClassTraining_ErrorMask>.Instance.Parse(
+                frame: frame,
+                doMasks: doMasks,
+                fieldIndex: (int)ClassData_FieldIndex.Training,
+                errorMask: errorMask);
+            item._Training.SetIfSucceeded(TrainingtryGet);
         }
 
         #endregion

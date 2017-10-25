@@ -61,17 +61,17 @@ namespace Mutagen.Generation
             string doMaskAccessor,
             string maskAccessor)
         {
-            GenerateCopyInRet(fg, objGen, typeGen, nodeAccessor, "var listTryGet = ", doMaskAccessor, maskAccessor);
+            GenerateCopyInRet(fg, objGen, typeGen, nodeAccessor, $"var {typeGen.Name}tryGet = ", doMaskAccessor, maskAccessor);
             if (itemAccessor.PropertyAccess != null)
             {
-                fg.AppendLine($"{itemAccessor.PropertyAccess}.{nameof(INotifyingCollectionExt.SetIfSucceeded)}(listTryGet);");
+                fg.AppendLine($"{itemAccessor.PropertyAccess}.{nameof(INotifyingCollectionExt.SetIfSucceeded)}({typeGen.Name}tryGet);");
             }
             else
             {
-                fg.AppendLine("if (listTryGet.Succeeded)");
+                fg.AppendLine("if ({typeGen.Name}tryGet.Succeeded)");
                 using (new BraceWrapper(fg))
                 {
-                    fg.AppendLine($"{itemAccessor.DirectAccess} = listTryGet.Value;");
+                    fg.AppendLine($"{itemAccessor.DirectAccess} = {typeGen.Name}tryGet.Value;");
                 }
             }
         }
@@ -108,12 +108,13 @@ namespace Mutagen.Generation
                 {
                     throw new ArgumentException();
                 }
+                args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
                 args.Add($"doMasks: {doMaskAccessor}");
                 if (list.SubTypeGeneration is LoquiType loqui)
                 {
                     args.Add($"objType: {nameof(ObjectType)}.{loqui.TargetObjectGeneration.GetObjectType()}");
                 }
-                args.Add($"maskObj: out {maskAccessor}");
+                args.Add($"errorMask: {maskAccessor}");
                 args.Add((gen) =>
                 {
                     gen.AppendLine($"transl: (MutagenFrame r, bool listDoMasks, out {typeGen.ProtoGen.Gen.MaskModule.GetMaskModule(list.SubTypeGeneration.GetType()).GetErrorMaskTypeStr(list.SubTypeGeneration)} listSubMask) =>");

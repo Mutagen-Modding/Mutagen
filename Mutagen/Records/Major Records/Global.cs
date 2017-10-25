@@ -102,7 +102,13 @@ namespace Mutagen
             return (g, errMask);
         }
 
-        private static void FillBinary_TypeChar(MutagenFrame frame, Global item, bool doMasks, out Exception errorMask)
+        private static void FillBinary_TypeChar<M>(
+            MutagenFrame frame,
+            Global item,
+            bool doMasks,
+            int fieldIndex,
+            Func<M> errorMask)
+            where M : IErrorMask
         {
             errorMask = null;
         }

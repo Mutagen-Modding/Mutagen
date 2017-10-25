@@ -877,51 +877,30 @@ namespace Mutagen
             switch (nextRecordType.Type)
             {
                 case "DESC":
-                {
-                    Exception subMask;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var tryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
+                    var DescriptiontryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
+                        fieldIndex: (int)Class_FieldIndex.Description,
                         doMasks: doMasks,
-                        errorMask: out subMask);
-                    item._Description.SetIfSucceeded(tryGet);
-                    ErrorMask.HandleErrorMask(
-                        errorMask,
-                        doMasks,
-                        (int)Class_FieldIndex.Description,
-                        subMask);
-                }
+                        errorMask: errorMask);
+                    item._Description.SetIfSucceeded(DescriptiontryGet);
                 break;
                 case "ICON":
-                {
-                    Exception subMask;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var tryGet = Mutagen.Binary.FilePathBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         doMasks: doMasks,
-                        errorMask: out subMask);
+                        fieldIndex: (int)Class_FieldIndex.Icon,
+                        errorMask: errorMask);
                     item._Icon.SetIfSucceeded(tryGet);
-                    ErrorMask.HandleErrorMask(
-                        errorMask,
-                        doMasks,
-                        (int)Class_FieldIndex.Icon,
-                        subMask);
-                }
                 break;
                 case "DATA":
-                {
-                    MaskItem<Exception, ClassData_ErrorMask> subMask;
-                    var tryGet = LoquiBinaryTranslation<ClassData, ClassData_ErrorMask>.Instance.Parse(
-                        reader: frame,
+                    var ClassDatatryGet = LoquiBinaryTranslation<ClassData, ClassData_ErrorMask>.Instance.Parse(
+                        frame: frame,
                         doMasks: doMasks,
-                        mask: out subMask);
-                    item._ClassData.SetIfSucceeded(tryGet);
-                    ErrorMask.HandleErrorMask(
-                        errorMask,
-                        doMasks,
-                        (int)Class_FieldIndex.ClassData,
-                        subMask);
-                }
+                        fieldIndex: (int)Class_FieldIndex.ClassData,
+                        errorMask: errorMask);
+                    item._ClassData.SetIfSucceeded(ClassDatatryGet);
                 break;
                 default:
                     NamedMajorRecord.Fill_Binary_RecordTypes(

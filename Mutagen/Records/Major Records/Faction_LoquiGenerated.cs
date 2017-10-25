@@ -917,86 +917,58 @@ namespace Mutagen
             switch (nextRecordType.Type)
             {
                 case "XNAM":
-                {
-                    MaskItem<Exception, IEnumerable<MaskItem<Exception, Relation_ErrorMask>>> subMask;
-                    var listTryGet = Mutagen.Binary.ListBinaryTranslation<Relation, MaskItem<Exception, Relation_ErrorMask>>.Instance.ParseRepeatedItem(
+                    var RelationstryGet = Mutagen.Binary.ListBinaryTranslation<Relation, MaskItem<Exception, Relation_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: Faction_Registration.XNAM_HEADER,
+                        fieldIndex: (int)Faction_FieldIndex.Relations,
                         doMasks: doMasks,
                         objType: ObjectType.Struct,
-                        maskObj: out subMask,
+                        errorMask: errorMask,
                         transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, Relation_ErrorMask> listSubMask) =>
                         {
                             return LoquiBinaryTranslation<Relation, Relation_ErrorMask>.Instance.Parse(
-                                reader: r,
+                                frame: r,
                                 doMasks: listDoMasks,
-                                mask: out listSubMask);
+                                errorMask: out listSubMask);
                         }
                         );
-                    item._Relations.SetIfSucceeded(listTryGet);
-                    ErrorMask.HandleErrorMask(
-                        errorMask,
-                        doMasks,
-                        (int)Faction_FieldIndex.Relations,
-                        subMask);
-                }
+                    item._Relations.SetIfSucceeded(RelationstryGet);
                 break;
                 case "DATA":
-                {
-                    Exception subMask;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var tryGet = Mutagen.Binary.EnumBinaryTranslation<Faction.FactionFlag>.Instance.Parse(
+                    var FlagstryGet = Mutagen.Binary.EnumBinaryTranslation<Faction.FactionFlag>.Instance.Parse(
                         frame.Spawn(contentLength),
+                        fieldIndex: (int)Faction_FieldIndex.Flags,
                         doMasks: doMasks,
-                        errorMask: out subMask);
-                    item._Flags.SetIfSucceeded(tryGet);
-                    ErrorMask.HandleErrorMask(
-                        errorMask,
-                        doMasks,
-                        (int)Faction_FieldIndex.Flags,
-                        subMask);
-                }
+                        errorMask: errorMask);
+                    item._Flags.SetIfSucceeded(FlagstryGet);
                 break;
                 case "CNAM":
-                {
-                    Exception subMask;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var tryGet = Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
+                    var CrimeGoldMultipliertryGet = Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         doMasks: doMasks,
-                        errorMask: out subMask);
-                    item._CrimeGoldMultiplier.SetIfSucceeded(tryGet);
-                    ErrorMask.HandleErrorMask(
-                        errorMask,
-                        doMasks,
-                        (int)Faction_FieldIndex.CrimeGoldMultiplier,
-                        subMask);
-                }
+                        fieldIndex: (int)Faction_FieldIndex.CrimeGoldMultiplier,
+                        errorMask: errorMask);
+                    item._CrimeGoldMultiplier.SetIfSucceeded(CrimeGoldMultipliertryGet);
                 break;
                 case "RNAM":
-                {
-                    MaskItem<Exception, IEnumerable<MaskItem<Exception, Rank_ErrorMask>>> subMask;
-                    var listTryGet = Mutagen.Binary.ListBinaryTranslation<Rank, MaskItem<Exception, Rank_ErrorMask>>.Instance.ParseRepeatedItem(
+                    var RankstryGet = Mutagen.Binary.ListBinaryTranslation<Rank, MaskItem<Exception, Rank_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: Faction_Registration.RNAM_HEADER,
+                        fieldIndex: (int)Faction_FieldIndex.Ranks,
                         doMasks: doMasks,
                         objType: ObjectType.Struct,
-                        maskObj: out subMask,
+                        errorMask: errorMask,
                         transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, Rank_ErrorMask> listSubMask) =>
                         {
                             return LoquiBinaryTranslation<Rank, Rank_ErrorMask>.Instance.Parse(
-                                reader: r,
+                                frame: r,
                                 doMasks: listDoMasks,
-                                mask: out listSubMask);
+                                errorMask: out listSubMask);
                         }
                         );
-                    item._Ranks.SetIfSucceeded(listTryGet);
-                    ErrorMask.HandleErrorMask(
-                        errorMask,
-                        doMasks,
-                        (int)Faction_FieldIndex.Ranks,
-                        subMask);
-                }
+                    item._Ranks.SetIfSucceeded(RankstryGet);
                 break;
                 default:
                     NamedMajorRecord.Fill_Binary_RecordTypes(

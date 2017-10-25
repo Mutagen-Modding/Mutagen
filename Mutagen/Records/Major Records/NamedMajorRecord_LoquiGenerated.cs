@@ -465,20 +465,13 @@ namespace Mutagen
             switch (nextRecordType.Type)
             {
                 case "FULL":
-                {
-                    Exception subMask;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var tryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
+                    var NametryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
+                        fieldIndex: (int)NamedMajorRecord_FieldIndex.Name,
                         doMasks: doMasks,
-                        errorMask: out subMask);
-                    item._Name.SetIfSucceeded(tryGet);
-                    ErrorMask.HandleErrorMask(
-                        errorMask,
-                        doMasks,
-                        (int)NamedMajorRecord_FieldIndex.Name,
-                        subMask);
-                }
+                        errorMask: errorMask);
+                    item._Name.SetIfSucceeded(NametryGet);
                 break;
                 default:
                     MajorRecord.Fill_Binary_RecordTypes(

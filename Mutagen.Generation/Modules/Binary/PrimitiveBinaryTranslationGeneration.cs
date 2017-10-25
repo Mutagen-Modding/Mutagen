@@ -62,7 +62,7 @@ namespace Mutagen.Generation
                 fg.AppendLine($"{nodeAccessor}.Position += Constants.SUBRECORD_LENGTH;");
             }
             using (var args = new ArgsWrapper(fg,
-                $"var tryGet = {this.Namespace}{this.typeName}BinaryTranslation.Instance.Parse"))
+                $"var {typeGen.Name}tryGet = {this.Namespace}{this.typeName}BinaryTranslation.Instance.Parse"))
             {
                 if (data.TriggeringRecordAccessor != null)
                 {
@@ -73,11 +73,19 @@ namespace Mutagen.Generation
                     args.Add($"frame: {nodeAccessor}");
                 }
                 args.Add($"doMasks: {doMaskAccessor}");
-                args.Add($"errorMask: out {maskAccessor}");
+                if (typeGen.HasIndex)
+                {
+                    args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
+                    args.Add($"errorMask: {maskAccessor}");
+                }
+                else
+                {
+                    args.Add($"errorMask: out {maskAccessor}");
+                }
             }
             if (itemAccessor.PropertyAccess != null)
             {
-                fg.AppendLine($"{itemAccessor.PropertyAccess}.{nameof(INotifyingCollectionExt.SetIfSucceeded)}(tryGet);");
+                fg.AppendLine($"{itemAccessor.PropertyAccess}.{nameof(INotifyingCollectionExt.SetIfSucceeded)}({typeGen.Name}tryGet);");
             }
             else
             {

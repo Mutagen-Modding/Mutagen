@@ -955,19 +955,12 @@ namespace Mutagen
             Func<TES4_ErrorMask> errorMask)
         {
             if (frame.Complete) return;
-            {
-                Exception subMask;
-                var tryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                    frame: frame.Spawn(new ContentLength(12)),
-                    doMasks: doMasks,
-                    errorMask: out subMask);
-                item._Fluff.SetIfSucceeded(tryGet);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)TES4_FieldIndex.Fluff,
-                    subMask);
-            }
+            var FlufftryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                frame: frame.Spawn(new ContentLength(12)),
+                fieldIndex: (int)TES4_FieldIndex.Fluff,
+                doMasks: doMasks,
+                errorMask: errorMask);
+            item._Fluff.SetIfSucceeded(FlufftryGet);
         }
 
         protected static bool Fill_Binary_RecordTypes(
@@ -982,108 +975,66 @@ namespace Mutagen
             switch (nextRecordType.Type)
             {
                 case "HEDR":
-                {
-                    MaskItem<Exception, Header_ErrorMask> subMask;
-                    var tryGet = LoquiBinaryTranslation<Header, Header_ErrorMask>.Instance.Parse(
-                        reader: frame,
+                    var HeadertryGet = LoquiBinaryTranslation<Header, Header_ErrorMask>.Instance.Parse(
+                        frame: frame,
                         doMasks: doMasks,
-                        mask: out subMask);
-                    item._Header.SetIfSucceeded(tryGet);
-                    ErrorMask.HandleErrorMask(
-                        errorMask,
-                        doMasks,
-                        (int)TES4_FieldIndex.Header,
-                        subMask);
-                }
+                        fieldIndex: (int)TES4_FieldIndex.Header,
+                        errorMask: errorMask);
+                    item._Header.SetIfSucceeded(HeadertryGet);
                 break;
                 case "OFST":
-                {
-                    Exception subMask;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var tryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                    var TypeOffsetstryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                         frame.Spawn(contentLength),
+                        fieldIndex: (int)TES4_FieldIndex.TypeOffsets,
                         doMasks: doMasks,
-                        errorMask: out subMask);
-                    item._TypeOffsets.SetIfSucceeded(tryGet);
-                    ErrorMask.HandleErrorMask(
-                        errorMask,
-                        doMasks,
-                        (int)TES4_FieldIndex.TypeOffsets,
-                        subMask);
-                }
+                        errorMask: errorMask);
+                    item._TypeOffsets.SetIfSucceeded(TypeOffsetstryGet);
                 break;
                 case "DELE":
-                {
-                    Exception subMask;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var tryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                    var DeletedtryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                         frame.Spawn(contentLength),
+                        fieldIndex: (int)TES4_FieldIndex.Deleted,
                         doMasks: doMasks,
-                        errorMask: out subMask);
-                    item._Deleted.SetIfSucceeded(tryGet);
-                    ErrorMask.HandleErrorMask(
-                        errorMask,
-                        doMasks,
-                        (int)TES4_FieldIndex.Deleted,
-                        subMask);
-                }
+                        errorMask: errorMask);
+                    item._Deleted.SetIfSucceeded(DeletedtryGet);
                 break;
                 case "CNAM":
-                {
-                    Exception subMask;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var tryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
+                    var AuthortryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
+                        fieldIndex: (int)TES4_FieldIndex.Author,
                         doMasks: doMasks,
-                        errorMask: out subMask);
-                    item._Author.SetIfSucceeded(tryGet);
-                    ErrorMask.HandleErrorMask(
-                        errorMask,
-                        doMasks,
-                        (int)TES4_FieldIndex.Author,
-                        subMask);
-                }
+                        errorMask: errorMask);
+                    item._Author.SetIfSucceeded(AuthortryGet);
                 break;
                 case "SNAM":
-                {
-                    Exception subMask;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var tryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
+                    var DescriptiontryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
+                        fieldIndex: (int)TES4_FieldIndex.Description,
                         doMasks: doMasks,
-                        errorMask: out subMask);
-                    item._Description.SetIfSucceeded(tryGet);
-                    ErrorMask.HandleErrorMask(
-                        errorMask,
-                        doMasks,
-                        (int)TES4_FieldIndex.Description,
-                        subMask);
-                }
+                        errorMask: errorMask);
+                    item._Description.SetIfSucceeded(DescriptiontryGet);
                 break;
                 case "MAST":
-                {
-                    MaskItem<Exception, IEnumerable<MaskItem<Exception, MasterReference_ErrorMask>>> subMask;
-                    var listTryGet = Mutagen.Binary.ListBinaryTranslation<MasterReference, MaskItem<Exception, MasterReference_ErrorMask>>.Instance.ParseRepeatedItem(
+                    var MasterReferencestryGet = Mutagen.Binary.ListBinaryTranslation<MasterReference, MaskItem<Exception, MasterReference_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: TES4_Registration.MAST_HEADER,
+                        fieldIndex: (int)TES4_FieldIndex.MasterReferences,
                         doMasks: doMasks,
                         objType: ObjectType.Struct,
-                        maskObj: out subMask,
+                        errorMask: errorMask,
                         transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, MasterReference_ErrorMask> listSubMask) =>
                         {
                             return LoquiBinaryTranslation<MasterReference, MasterReference_ErrorMask>.Instance.Parse(
-                                reader: r,
+                                frame: r,
                                 doMasks: listDoMasks,
-                                mask: out listSubMask);
+                                errorMask: out listSubMask);
                         }
                         );
-                    item._MasterReferences.SetIfSucceeded(listTryGet);
-                    ErrorMask.HandleErrorMask(
-                        errorMask,
-                        doMasks,
-                        (int)TES4_FieldIndex.MasterReferences,
-                        subMask);
-                }
+                    item._MasterReferences.SetIfSucceeded(MasterReferencestryGet);
                 break;
                 default:
                     throw new ArgumentException($"Unexpected header {nextRecordType.Type} at position {frame.Position}");

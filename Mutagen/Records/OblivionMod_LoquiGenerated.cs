@@ -875,79 +875,44 @@ namespace Mutagen
             switch (nextRecordType.Type)
             {
                 case "TES4":
-                {
-                    MaskItem<Exception, TES4_ErrorMask> subMask;
-                    var tryGet = LoquiBinaryTranslation<TES4, TES4_ErrorMask>.Instance.Parse(
-                        reader: frame,
+                    var TES4tryGet = LoquiBinaryTranslation<TES4, TES4_ErrorMask>.Instance.Parse(
+                        frame: frame,
                         doMasks: doMasks,
-                        mask: out subMask);
-                    item._TES4.SetIfSucceeded(tryGet);
-                    ErrorMask.HandleErrorMask(
-                        errorMask,
-                        doMasks,
-                        (int)OblivionMod_FieldIndex.TES4,
-                        subMask);
-                }
+                        fieldIndex: (int)OblivionMod_FieldIndex.TES4,
+                        errorMask: errorMask);
+                    item._TES4.SetIfSucceeded(TES4tryGet);
                 break;
                 case "GMST":
-                {
-                    MaskItem<Exception, Group_ErrorMask<GameSetting_ErrorMask>> subMask;
-                    var tryGet = LoquiBinaryTranslation<Group<GameSetting>, Group_ErrorMask<GameSetting_ErrorMask>>.Instance.Parse(
-                        reader: frame,
+                    var GameSettingstryGet = LoquiBinaryTranslation<Group<GameSetting>, Group_ErrorMask<GameSetting_ErrorMask>>.Instance.Parse(
+                        frame: frame,
                         doMasks: doMasks,
-                        mask: out subMask);
-                    item._GameSettings.SetIfSucceeded(tryGet);
-                    ErrorMask.HandleErrorMask(
-                        errorMask,
-                        doMasks,
-                        (int)OblivionMod_FieldIndex.GameSettings,
-                        subMask);
-                }
+                        fieldIndex: (int)OblivionMod_FieldIndex.GameSettings,
+                        errorMask: errorMask);
+                    item._GameSettings.SetIfSucceeded(GameSettingstryGet);
                 break;
                 case "GLOB":
-                {
-                    MaskItem<Exception, Group_ErrorMask<Global_ErrorMask>> subMask;
-                    var tryGet = LoquiBinaryTranslation<Group<Global>, Group_ErrorMask<Global_ErrorMask>>.Instance.Parse(
-                        reader: frame,
+                    var GlobalstryGet = LoquiBinaryTranslation<Group<Global>, Group_ErrorMask<Global_ErrorMask>>.Instance.Parse(
+                        frame: frame,
                         doMasks: doMasks,
-                        mask: out subMask);
-                    item._Globals.SetIfSucceeded(tryGet);
-                    ErrorMask.HandleErrorMask(
-                        errorMask,
-                        doMasks,
-                        (int)OblivionMod_FieldIndex.Globals,
-                        subMask);
-                }
+                        fieldIndex: (int)OblivionMod_FieldIndex.Globals,
+                        errorMask: errorMask);
+                    item._Globals.SetIfSucceeded(GlobalstryGet);
                 break;
                 case "CLAS":
-                {
-                    MaskItem<Exception, Group_ErrorMask<Class_ErrorMask>> subMask;
-                    var tryGet = LoquiBinaryTranslation<Group<Class>, Group_ErrorMask<Class_ErrorMask>>.Instance.Parse(
-                        reader: frame,
+                    var ClassestryGet = LoquiBinaryTranslation<Group<Class>, Group_ErrorMask<Class_ErrorMask>>.Instance.Parse(
+                        frame: frame,
                         doMasks: doMasks,
-                        mask: out subMask);
-                    item._Classes.SetIfSucceeded(tryGet);
-                    ErrorMask.HandleErrorMask(
-                        errorMask,
-                        doMasks,
-                        (int)OblivionMod_FieldIndex.Classes,
-                        subMask);
-                }
+                        fieldIndex: (int)OblivionMod_FieldIndex.Classes,
+                        errorMask: errorMask);
+                    item._Classes.SetIfSucceeded(ClassestryGet);
                 break;
                 case "FACT":
-                {
-                    MaskItem<Exception, Group_ErrorMask<Faction_ErrorMask>> subMask;
-                    var tryGet = LoquiBinaryTranslation<Group<Faction>, Group_ErrorMask<Faction_ErrorMask>>.Instance.Parse(
-                        reader: frame,
+                    var FactionstryGet = LoquiBinaryTranslation<Group<Faction>, Group_ErrorMask<Faction_ErrorMask>>.Instance.Parse(
+                        frame: frame,
                         doMasks: doMasks,
-                        mask: out subMask);
-                    item._Factions.SetIfSucceeded(tryGet);
-                    ErrorMask.HandleErrorMask(
-                        errorMask,
-                        doMasks,
-                        (int)OblivionMod_FieldIndex.Factions,
-                        subMask);
-                }
+                        fieldIndex: (int)OblivionMod_FieldIndex.Factions,
+                        errorMask: errorMask);
+                    item._Factions.SetIfSucceeded(FactionstryGet);
                 break;
                 default:
                     errorMask().Warnings.Add($"Unexpected header {nextRecordType.Type} at position {frame.Position}");

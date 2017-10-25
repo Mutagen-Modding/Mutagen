@@ -779,36 +779,22 @@ namespace Mutagen
             {
                 case "MAST":
                 if (!first) return false;
-                {
-                    Exception subMask;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var tryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
+                    var MastertryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
+                        fieldIndex: (int)MasterReference_FieldIndex.Master,
                         doMasks: doMasks,
-                        errorMask: out subMask);
-                    item._Master.SetIfSucceeded(tryGet);
-                    ErrorMask.HandleErrorMask(
-                        errorMask,
-                        doMasks,
-                        (int)MasterReference_FieldIndex.Master,
-                        subMask);
-                }
+                        errorMask: errorMask);
+                    item._Master.SetIfSucceeded(MastertryGet);
                 break;
                 case "DATA":
-                {
-                    Exception subMask;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var tryGet = Mutagen.Binary.UInt64BinaryTranslation.Instance.Parse(
+                    var FileSizetryGet = Mutagen.Binary.UInt64BinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         doMasks: doMasks,
-                        errorMask: out subMask);
-                    item._FileSize.SetIfSucceeded(tryGet);
-                    ErrorMask.HandleErrorMask(
-                        errorMask,
-                        doMasks,
-                        (int)MasterReference_FieldIndex.FileSize,
-                        subMask);
-                }
+                        fieldIndex: (int)MasterReference_FieldIndex.FileSize,
+                        errorMask: errorMask);
+                    item._FileSize.SetIfSucceeded(FileSizetryGet);
                 break;
                 default:
                     throw new ArgumentException($"Unexpected header {nextRecordType.Type} at position {frame.Position}");

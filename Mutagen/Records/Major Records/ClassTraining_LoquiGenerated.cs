@@ -792,47 +792,26 @@ namespace Mutagen
             Func<ClassTraining_ErrorMask> errorMask)
         {
             if (frame.Complete) return;
-            {
-                Exception subMask;
-                var tryGet = Mutagen.Binary.EnumBinaryTranslation<Skill>.Instance.Parse(
-                    frame: frame.Spawn(new ContentLength(1)),
-                    doMasks: doMasks,
-                    errorMask: out subMask);
-                item._TrainedSkill.SetIfSucceeded(tryGet);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)ClassTraining_FieldIndex.TrainedSkill,
-                    subMask);
-            }
+            var TrainedSkilltryGet = Mutagen.Binary.EnumBinaryTranslation<Skill>.Instance.Parse(
+                frame: frame.Spawn(new ContentLength(1)),
+                fieldIndex: (int)ClassTraining_FieldIndex.TrainedSkill,
+                doMasks: doMasks,
+                errorMask: errorMask);
+            item._TrainedSkill.SetIfSucceeded(TrainedSkilltryGet);
             if (frame.Complete) return;
-            {
-                Exception subMask;
-                var tryGet = Mutagen.Binary.ByteBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    doMasks: doMasks,
-                    errorMask: out subMask);
-                item._MaximumTrainingLevel.SetIfSucceeded(tryGet);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)ClassTraining_FieldIndex.MaximumTrainingLevel,
-                    subMask);
-            }
+            var MaximumTrainingLeveltryGet = Mutagen.Binary.ByteBinaryTranslation.Instance.Parse(
+                frame: frame,
+                doMasks: doMasks,
+                fieldIndex: (int)ClassTraining_FieldIndex.MaximumTrainingLevel,
+                errorMask: errorMask);
+            item._MaximumTrainingLevel.SetIfSucceeded(MaximumTrainingLeveltryGet);
             if (frame.Complete) return;
-            {
-                Exception subMask;
-                var tryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                    frame: frame.Spawn(new ContentLength(2)),
-                    doMasks: doMasks,
-                    errorMask: out subMask);
-                item._Fluff.SetIfSucceeded(tryGet);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)ClassTraining_FieldIndex.Fluff,
-                    subMask);
-            }
+            var FlufftryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                frame: frame.Spawn(new ContentLength(2)),
+                fieldIndex: (int)ClassTraining_FieldIndex.Fluff,
+                doMasks: doMasks,
+                errorMask: errorMask);
+            item._Fluff.SetIfSucceeded(FlufftryGet);
         }
 
         #endregion

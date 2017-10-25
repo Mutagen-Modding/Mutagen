@@ -29,6 +29,25 @@ namespace Mutagen.Binary
             }
         }
 
+        public TryGet<E> Parse<M>(
+            MutagenFrame frame,
+            int fieldIndex,
+            bool doMasks,
+            Func<M> errorMask)
+            where M : IErrorMask
+        {
+            var ret = this.Parse(
+                frame,
+                doMasks,
+                out var ex);
+            ErrorMask.HandleErrorMask(
+                errorMask,
+                doMasks,
+                fieldIndex,
+                ex);
+            return ret;
+        }
+
         public void Write(MutagenWriter writer, E item, ContentLength length, bool doMasks, out Exception errorMask)
         {
             Write(writer, (E?)item, length, doMasks, out errorMask);

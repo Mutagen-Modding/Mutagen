@@ -779,36 +779,22 @@ namespace Mutagen
             {
                 case "MODL":
                 if (!first) return false;
-                {
-                    Exception subMask;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var tryGet = Mutagen.Binary.FilePathBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         doMasks: doMasks,
-                        errorMask: out subMask);
+                        fieldIndex: (int)Model_FieldIndex.File,
+                        errorMask: errorMask);
                     item._File.SetIfSucceeded(tryGet);
-                    ErrorMask.HandleErrorMask(
-                        errorMask,
-                        doMasks,
-                        (int)Model_FieldIndex.File,
-                        subMask);
-                }
                 break;
                 case "MODB":
-                {
-                    Exception subMask;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var tryGet = Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
+                    var BoundRadiustryGet = Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         doMasks: doMasks,
-                        errorMask: out subMask);
-                    item._BoundRadius.SetIfSucceeded(tryGet);
-                    ErrorMask.HandleErrorMask(
-                        errorMask,
-                        doMasks,
-                        (int)Model_FieldIndex.BoundRadius,
-                        subMask);
-                }
+                        fieldIndex: (int)Model_FieldIndex.BoundRadius,
+                        errorMask: errorMask);
+                    item._BoundRadius.SetIfSucceeded(BoundRadiustryGet);
                 break;
                 default:
                     throw new ArgumentException($"Unexpected header {nextRecordType.Type} at position {frame.Position}");

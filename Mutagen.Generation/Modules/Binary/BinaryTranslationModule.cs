@@ -307,7 +307,7 @@ namespace Mutagen.Generation
                             throw new ArgumentException("Unsupported type generator: " + field);
                         }
                         fg.AppendLine($"if (frame.Complete) return;");
-                        GenerateFillSnippet(obj, fg, field, generator);
+                        GenerateFillSnippet(obj, fg, field, generator, needBrace: false);
                     }
                 }
                 fg.AppendLine();
@@ -466,31 +466,29 @@ namespace Mutagen.Generation
             var maskType = this.Gen.MaskModule.GetMaskModule(field.GetType()).GetErrorMaskTypeStr(field);
             if (data.CustomBinary)
             {
-                using (new BraceWrapper(fg))
+                using (new DepthWrapper(fg, doIt: needBrace))
                 {
-                    fg.AppendLine($"{maskType} subMask;");
                     using (var args = new ArgsWrapper(fg,
                         $"FillBinary_{field.Name}"))
                     {
                         args.Add("frame: frame");
                         args.Add("item: item");
                         args.Add("doMasks: doMasks");
-                        args.Add("errorMask: out subMask");
-                    }
-                    using (var args = new ArgsWrapper(fg,
-                        $"ErrorMask.HandleErrorMask"))
-                    {
-                        args.Add("errorMask");
-                        args.Add("doMasks");
-                        args.Add($"(int){field.IndexEnumName}");
-                        args.Add("subMask");
+                        if (field.HasIndex)
+                        {
+                            args.Add($"fieldIndex: (int){field.IndexEnumName}");
+                            args.Add($"errorMask: errorMask");
+                        }
+                        else
+                        {
+                            args.Add($"errorMask: out errorMask");
+                        }
                     }
                 }
                 return;
             }
-            using (new BraceWrapper(fg, doIt: needBrace))
+            using (new DepthWrapper(fg, doIt: needBrace))
             {
-                fg.AppendLine($"{maskType} subMask;");
                 generator.GenerateCopyIn(
                     fg: fg,
                     objGen: obj,
@@ -502,15 +500,7 @@ namespace Mutagen.Generation
                         PropertyAccess = field.Notifying == NotifyingOption.None ? null : $"item.{field.ProtectedProperty}"
                     },
                     doMaskAccessor: "doMasks",
-                    maskAccessor: $"subMask");
-                using (var args = new ArgsWrapper(fg,
-                    $"ErrorMask.HandleErrorMask"))
-                {
-                    args.Add("errorMask");
-                    args.Add("doMasks");
-                    args.Add($"(int){field.IndexEnumName}");
-                    args.Add("subMask");
-                }
+                    maskAccessor: $"errorMask");
             }
         }
 

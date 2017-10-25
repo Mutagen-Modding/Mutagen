@@ -855,19 +855,12 @@ namespace Mutagen
                 doMasks: doMasks,
                 errorMask: errorMask);
             if (frame.Complete) return;
-            {
-                MaskItem<Exception, Model_ErrorMask> subMask;
-                var tryGet = LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
-                    reader: frame,
-                    doMasks: doMasks,
-                    mask: out subMask);
-                item._Model.SetIfSucceeded(tryGet);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)Hair_FieldIndex.Model,
-                    subMask);
-            }
+            var ModeltryGet = LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                frame: frame,
+                doMasks: doMasks,
+                fieldIndex: (int)Hair_FieldIndex.Model,
+                errorMask: errorMask);
+            item._Model.SetIfSucceeded(ModeltryGet);
         }
 
         protected static bool Fill_Binary_RecordTypes(
@@ -882,36 +875,22 @@ namespace Mutagen
             switch (nextRecordType.Type)
             {
                 case "ICON":
-                {
-                    Exception subMask;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var tryGet = Mutagen.Binary.FilePathBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         doMasks: doMasks,
-                        errorMask: out subMask);
+                        fieldIndex: (int)Hair_FieldIndex.Icon,
+                        errorMask: errorMask);
                     item._Icon.SetIfSucceeded(tryGet);
-                    ErrorMask.HandleErrorMask(
-                        errorMask,
-                        doMasks,
-                        (int)Hair_FieldIndex.Icon,
-                        subMask);
-                }
                 break;
                 case "DATA":
-                {
-                    Exception subMask;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var tryGet = Mutagen.Binary.EnumBinaryTranslation<Hair.HairFlag>.Instance.Parse(
+                    var FlagstryGet = Mutagen.Binary.EnumBinaryTranslation<Hair.HairFlag>.Instance.Parse(
                         frame.Spawn(contentLength),
+                        fieldIndex: (int)Hair_FieldIndex.Flags,
                         doMasks: doMasks,
-                        errorMask: out subMask);
-                    item._Flags.SetIfSucceeded(tryGet);
-                    ErrorMask.HandleErrorMask(
-                        errorMask,
-                        doMasks,
-                        (int)Hair_FieldIndex.Flags,
-                        subMask);
-                }
+                        errorMask: errorMask);
+                    item._Flags.SetIfSucceeded(FlagstryGet);
                 break;
                 default:
                     NamedMajorRecord.Fill_Binary_RecordTypes(

@@ -12,10 +12,15 @@ namespace Mutagen
     public partial class Group<T>
         where T : MajorRecord, ILoquiObjectGetter
     {
-        private static void FillBinary_ContainedRecordType(MutagenFrame frame, Group<T> item, bool doMasks, out Exception errorMask)
+        private static void FillBinary_ContainedRecordType<M>(
+            MutagenFrame frame,
+            Group<T> item,
+            bool doMasks,
+            int fieldIndex,
+            Func<M> errorMask)
+            where M : IErrorMask
         {
             frame.Reader.Position += 4;
-            errorMask = null;
         }
 
         internal static void WriteBinary_ContainedRecordType(MutagenWriter writer, IGroupGetter<T> item, bool doMasks, out Exception errorMask)

@@ -926,47 +926,26 @@ namespace Mutagen
             where T_ErrMask : MajorRecord_ErrorMask, new()
         {
             if (frame.Complete) return;
-            {
-                Exception subMask;
-                FillBinary_ContainedRecordType(
-                    frame: frame,
-                    item: item,
-                    doMasks: doMasks,
-                    errorMask: out subMask);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)Group_FieldIndex.ContainedRecordType,
-                    subMask);
-            }
+            FillBinary_ContainedRecordType(
+                frame: frame,
+                item: item,
+                doMasks: doMasks,
+                fieldIndex: (int)Group_FieldIndex.ContainedRecordType,
+                errorMask: errorMask);
             if (frame.Complete) return;
-            {
-                Exception subMask;
-                var tryGet = Mutagen.Binary.Int32BinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    doMasks: doMasks,
-                    errorMask: out subMask);
-                item._GroupType.SetIfSucceeded(tryGet);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)Group_FieldIndex.GroupType,
-                    subMask);
-            }
+            var GroupTypetryGet = Mutagen.Binary.Int32BinaryTranslation.Instance.Parse(
+                frame: frame,
+                doMasks: doMasks,
+                fieldIndex: (int)Group_FieldIndex.GroupType,
+                errorMask: errorMask);
+            item._GroupType.SetIfSucceeded(GroupTypetryGet);
             if (frame.Complete) return;
-            {
-                Exception subMask;
-                var tryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                    frame: frame.Spawn(new ContentLength(4)),
-                    doMasks: doMasks,
-                    errorMask: out subMask);
-                item._LastModified.SetIfSucceeded(tryGet);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)Group_FieldIndex.LastModified,
-                    subMask);
-            }
+            var LastModifiedtryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                frame: frame.Spawn(new ContentLength(4)),
+                fieldIndex: (int)Group_FieldIndex.LastModified,
+                doMasks: doMasks,
+                errorMask: errorMask);
+            item._LastModified.SetIfSucceeded(LastModifiedtryGet);
         }
 
         protected static bool Fill_Binary_RecordTypes<T_ErrMask>(
@@ -984,27 +963,22 @@ namespace Mutagen
                 default:
                     if (nextRecordType.Equals(Group<T>.T_RecordType))
                     {
-                        MaskItem<Exception, IEnumerable<MaskItem<Exception, T_ErrMask>>> subMask;
-                        var listTryGet = Mutagen.Binary.ListBinaryTranslation<T, MaskItem<Exception, T_ErrMask>>.Instance.ParseRepeatedItem(
+                        var ItemstryGet = Mutagen.Binary.ListBinaryTranslation<T, MaskItem<Exception, T_ErrMask>>.Instance.ParseRepeatedItem(
                             frame: frame,
                             triggeringRecord: Group<T>.T_RecordType,
+                            fieldIndex: (int)Group_FieldIndex.Items,
                             doMasks: doMasks,
                             objType: ObjectType.Record,
-                            maskObj: out subMask,
+                            errorMask: errorMask,
                             transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, T_ErrMask> listSubMask) =>
                             {
                                 return LoquiBinaryTranslation<T, T_ErrMask>.Instance.Parse(
-                                    reader: r,
+                                    frame: r,
                                     doMasks: listDoMasks,
-                                    mask: out listSubMask);
+                                    errorMask: out listSubMask);
                             }
                             );
-                        item._Items.SetIfSucceeded(listTryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            doMasks,
-                            (int)Group_FieldIndex.Items,
-                            subMask);
+                        item._Items.SetIfSucceeded(ItemstryGet);
                         break;
                     }
                     throw new ArgumentException($"Unexpected header {nextRecordType.Type} at position {frame.Position}");

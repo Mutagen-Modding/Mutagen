@@ -799,20 +799,13 @@ namespace Mutagen
             switch (nextRecordType.Type)
             {
                 case "DATA":
-                {
-                    Exception subMask;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var tryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
+                    var DatatryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
+                        fieldIndex: (int)GameSettingString_FieldIndex.Data,
                         doMasks: doMasks,
-                        errorMask: out subMask);
-                    item._Data.SetIfSucceeded(tryGet);
-                    ErrorMask.HandleErrorMask(
-                        errorMask,
-                        doMasks,
-                        (int)GameSettingString_FieldIndex.Data,
-                        subMask);
-                }
+                        errorMask: errorMask);
+                    item._Data.SetIfSucceeded(DatatryGet);
                 break;
                 default:
                     GameSetting.Fill_Binary_RecordTypes(

@@ -791,47 +791,26 @@ namespace Mutagen
             Func<Header_ErrorMask> errorMask)
         {
             if (frame.Complete) return;
-            {
-                Exception subMask;
-                var tryGet = Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    doMasks: doMasks,
-                    errorMask: out subMask);
-                item._Version.SetIfSucceeded(tryGet);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)Header_FieldIndex.Version,
-                    subMask);
-            }
+            var VersiontryGet = Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
+                frame: frame,
+                doMasks: doMasks,
+                fieldIndex: (int)Header_FieldIndex.Version,
+                errorMask: errorMask);
+            item._Version.SetIfSucceeded(VersiontryGet);
             if (frame.Complete) return;
-            {
-                Exception subMask;
-                var tryGet = Mutagen.Binary.Int32BinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    doMasks: doMasks,
-                    errorMask: out subMask);
-                item._NumRecords.SetIfSucceeded(tryGet);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)Header_FieldIndex.NumRecords,
-                    subMask);
-            }
+            var NumRecordstryGet = Mutagen.Binary.Int32BinaryTranslation.Instance.Parse(
+                frame: frame,
+                doMasks: doMasks,
+                fieldIndex: (int)Header_FieldIndex.NumRecords,
+                errorMask: errorMask);
+            item._NumRecords.SetIfSucceeded(NumRecordstryGet);
             if (frame.Complete) return;
-            {
-                Exception subMask;
-                var tryGet = Mutagen.Binary.UInt32BinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    doMasks: doMasks,
-                    errorMask: out subMask);
-                item._NextObjectID.SetIfSucceeded(tryGet);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)Header_FieldIndex.NextObjectID,
-                    subMask);
-            }
+            var NextObjectIDtryGet = Mutagen.Binary.UInt32BinaryTranslation.Instance.Parse(
+                frame: frame,
+                doMasks: doMasks,
+                fieldIndex: (int)Header_FieldIndex.NextObjectID,
+                errorMask: errorMask);
+            item._NextObjectID.SetIfSucceeded(NextObjectIDtryGet);
         }
 
         #endregion

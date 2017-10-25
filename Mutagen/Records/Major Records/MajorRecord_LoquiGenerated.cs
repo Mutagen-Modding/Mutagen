@@ -589,47 +589,26 @@ namespace Mutagen
             Func<MajorRecord_ErrorMask> errorMask)
         {
             if (frame.Complete) return;
-            {
-                Exception subMask;
-                var tryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                    frame: frame.Spawn(new ContentLength(4)),
-                    doMasks: doMasks,
-                    errorMask: out subMask);
-                item._Flags.SetIfSucceeded(tryGet);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)MajorRecord_FieldIndex.Flags,
-                    subMask);
-            }
+            var FlagstryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                frame: frame.Spawn(new ContentLength(4)),
+                fieldIndex: (int)MajorRecord_FieldIndex.Flags,
+                doMasks: doMasks,
+                errorMask: errorMask);
+            item._Flags.SetIfSucceeded(FlagstryGet);
             if (frame.Complete) return;
-            {
-                Exception subMask;
-                var tryGet = Mutagen.Binary.FormIDBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    doMasks: doMasks,
-                    errorMask: out subMask);
-                item._FormID.SetIfSucceeded(tryGet);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)MajorRecord_FieldIndex.FormID,
-                    subMask);
-            }
+            var FormIDtryGet = Mutagen.Binary.FormIDBinaryTranslation.Instance.Parse(
+                frame: frame,
+                doMasks: doMasks,
+                fieldIndex: (int)MajorRecord_FieldIndex.FormID,
+                errorMask: errorMask);
+            item._FormID.SetIfSucceeded(FormIDtryGet);
             if (frame.Complete) return;
-            {
-                Exception subMask;
-                var tryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                    frame: frame.Spawn(new ContentLength(4)),
-                    doMasks: doMasks,
-                    errorMask: out subMask);
-                item._Version.SetIfSucceeded(tryGet);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)MajorRecord_FieldIndex.Version,
-                    subMask);
-            }
+            var VersiontryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                frame: frame.Spawn(new ContentLength(4)),
+                fieldIndex: (int)MajorRecord_FieldIndex.Version,
+                doMasks: doMasks,
+                errorMask: errorMask);
+            item._Version.SetIfSucceeded(VersiontryGet);
         }
 
         protected static bool Fill_Binary_RecordTypes(
@@ -644,20 +623,13 @@ namespace Mutagen
             switch (nextRecordType.Type)
             {
                 case "EDID":
-                {
-                    Exception subMask;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var tryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
+                    var EditorIDtryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
+                        fieldIndex: (int)MajorRecord_FieldIndex.EditorID,
                         doMasks: doMasks,
-                        errorMask: out subMask);
-                    item._EditorID.SetIfSucceeded(tryGet);
-                    ErrorMask.HandleErrorMask(
-                        errorMask,
-                        doMasks,
-                        (int)MajorRecord_FieldIndex.EditorID,
-                        subMask);
-                }
+                        errorMask: errorMask);
+                    item._EditorID.SetIfSucceeded(EditorIDtryGet);
                 break;
                 default:
                     throw new ArgumentException($"Unexpected header {nextRecordType.Type} at position {frame.Position}");

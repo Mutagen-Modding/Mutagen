@@ -102,19 +102,19 @@ namespace Mutagen.Generation
                         objGen: objGen, 
                         typeGen: typeGen, 
                         readerAccessor: readerAccessor, 
-                        retAccessor: "var tryGet = ",
+                        retAccessor: $"var {typeGen.Name}tryGet = ",
                         doMaskAccessor: doMaskAccessor, 
                         maskAccessor: maskAccessor);
                     if (itemAccessor.PropertyAccess != null)
                     {
-                        fg.AppendLine($"{itemAccessor.PropertyAccess}.{nameof(INotifyingCollectionExt.SetIfSucceeded)}(tryGet);");
+                        fg.AppendLine($"{itemAccessor.PropertyAccess}.{nameof(INotifyingCollectionExt.SetIfSucceeded)}({typeGen.Name}tryGet);");
                     }
                     else
                     {
-                        fg.AppendLine("if (tryGet.Succeeded)");
+                        fg.AppendLine($"if ({typeGen.Name}tryGet.Succeeded)");
                         using (new BraceWrapper(fg))
                         {
-                            fg.AppendLine($"{itemAccessor.DirectAccess} = tryGet.Value;");
+                            fg.AppendLine($"{itemAccessor.DirectAccess} = {typeGen.Name}tryGet.Value;");
                         }
                     }
                 }
@@ -151,9 +151,17 @@ namespace Mutagen.Generation
                 using (var args = new ArgsWrapper(fg,
                     $"{retAccessor}LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}, {loquiGen.MaskItemString(MaskType.Error)}>.Instance.Parse"))
                 {
-                    args.Add($"reader: {readerAccessor}");
+                    args.Add($"frame: {readerAccessor}");
                     args.Add($"doMasks: {doMaskAccessor}");
-                    args.Add($"mask: out {maskAccessor}");
+                    if (loquiGen.HasIndex)
+                    {
+                        args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
+                        args.Add($"errorMask: {maskAccessor}");
+                    }
+                    else
+                    {
+                        args.Add($"errorMask: out {maskAccessor}");
+                    }
                 }
             }
             else

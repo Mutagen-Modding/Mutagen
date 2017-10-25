@@ -148,23 +148,46 @@ namespace Mutagen.Binary
         }
 
         [DebuggerStepThrough]
-        public TryGet<T> Parse(MutagenFrame reader, bool doMasks, out MaskItem<Exception, M> mask)
+        public TryGet<T> Parse(
+            MutagenFrame frame,
+            bool doMasks,
+            out MaskItem<Exception, M> errorMask)
         {
             try
             {
                 var ret = TryGet<T>.Succeed(CREATE.Value(
-                    reader: reader,
+                    reader: frame,
                     doMasks: doMasks,
                     errorMask: out var subMask));
-                mask = subMask == null ? null : new MaskItem<Exception, M>(null, subMask);
+                errorMask = subMask == null ? null : new MaskItem<Exception, M>(null, subMask);
                 return ret;
             }
             catch (Exception ex)
             when (doMasks)
             {
-                mask = new MaskItem<Exception, M>(ex, default(M));
+                errorMask = new MaskItem<Exception, M>(ex, default(M));
                 return TryGet<T>.Failure;
             }
+        }
+
+        [DebuggerStepThrough]
+        public TryGet<T> Parse<Mask>(
+            MutagenFrame frame,
+            int fieldIndex,
+            bool doMasks,
+            Func<Mask> errorMask)
+            where Mask : IErrorMask
+        {
+            var ret = this.Parse(
+                frame,
+                doMasks,
+                out MaskItem<Exception, M> ex);
+            ErrorMask.HandleErrorMask(
+                errorMask,
+                doMasks,
+                fieldIndex,
+                ex);
+            return ret;
         }
 
         public TryGet<T> Parse(MutagenFrame reader, bool doMasks, out M mask)

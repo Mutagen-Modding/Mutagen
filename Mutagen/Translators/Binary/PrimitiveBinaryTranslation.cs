@@ -31,6 +31,25 @@ namespace Mutagen.Binary
             }
         }
 
+        public TryGet<T> Parse<M>(
+            MutagenFrame frame,
+            int fieldIndex,
+            bool doMasks,
+            Func<M> errorMask)
+            where M : IErrorMask
+        {
+            var ret = this.Parse(
+                frame,
+                doMasks,
+                out var ex);
+            ErrorMask.HandleErrorMask(
+                errorMask,
+                doMasks,
+                fieldIndex,
+                ex);
+            return ret;
+        }
+
         public TryGet<T> Parse(MutagenFrame frame, ContentLength length, bool doMasks, out Exception errorMask)
         {
             if (this.ExpectedLength.HasValue && length != this.ExpectedLength)

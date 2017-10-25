@@ -61,7 +61,7 @@ namespace Mutagen.Generation
                 fg.AppendLine($"{nodeAccessor}.Position += Constants.SUBRECORD_LENGTH;");
             }
             using (var args = new ArgsWrapper(fg,
-                $"var tryGet = {this.Namespace}StringBinaryTranslation.Instance.Parse"))
+                $"var {typeGen.Name}tryGet = {this.Namespace}StringBinaryTranslation.Instance.Parse"))
             {
                 if (data.TriggeringRecordAccessor != null)
                 {
@@ -71,19 +71,20 @@ namespace Mutagen.Generation
                 {
                     args.Add($"frame: {nodeAccessor}");
                 }
+                args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
                 args.Add($"doMasks: {doMaskAccessor}");
-                args.Add($"errorMask: out {maskAccessor}");
+                args.Add($"errorMask: {maskAccessor}");
             }
             if (itemAccessor.PropertyAccess != null)
             {
-                fg.AppendLine($"{itemAccessor.PropertyAccess}.{nameof(INotifyingCollectionExt.SetIfSucceeded)}(tryGet);");
+                fg.AppendLine($"{itemAccessor.PropertyAccess}.{nameof(INotifyingCollectionExt.SetIfSucceeded)}({typeGen.Name}tryGet);");
             }
             else
             {
-                fg.AppendLine("if (tryGet.Succeeded)");
+                fg.AppendLine("if ({typeGen.Name}tryGet.Succeeded)");
                 using (new BraceWrapper(fg))
                 {
-                    fg.AppendLine($"{itemAccessor.DirectAccess} = tryGet.Value;");
+                    fg.AppendLine($"{itemAccessor.DirectAccess} = {typeGen.Name}tryGet.Value;");
                 }
             }
         }
