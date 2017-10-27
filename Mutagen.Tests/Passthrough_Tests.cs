@@ -132,11 +132,11 @@ namespace Mutagen.Tests
                     }
                     if (prototypeReader.Position != prototypeReader.Length)
                     {
-                        throw new ArgumentException($"Stream {prototypePath} had more data past position {prototypeReader.Position} than {path2}");
+                        throw new ArgumentException($"Stream {prototypePath} had more data past position 0x{prototypeReader.Position.ToString("X")} than {path2}");
                     }
                     if (reader2.Position != reader2.Length)
                     {
-                        throw new ArgumentException($"Stream {path2} had more data past position {reader2.Position} than {prototypePath}");
+                        throw new ArgumentException($"Stream {path2} had more data past position 0x{reader2.Position.ToString("X")} than {prototypePath}");
                     }
                 }
             }

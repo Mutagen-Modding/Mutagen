@@ -848,7 +848,7 @@ namespace Mutagen
             switch (nextRecordType.Type)
             {
                 case "RNAM":
-                if (!first) return false;
+                    if (!first) return false;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var RankNumbertryGet = Mutagen.Binary.Int32BinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
@@ -885,7 +885,7 @@ namespace Mutagen
                     item._Insignia.SetIfSucceeded(tryGet);
                 break;
                 default:
-                    throw new ArgumentException($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
+                    return false;
             }
             return true;
         }

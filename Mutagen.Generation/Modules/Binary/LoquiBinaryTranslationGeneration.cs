@@ -151,7 +151,7 @@ namespace Mutagen.Generation
                 using (var args = new ArgsWrapper(fg,
                     $"{retAccessor}LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}, {loquiGen.MaskItemString(MaskType.Error)}>.Instance.Parse"))
                 {
-                    args.Add($"frame: {readerAccessor}");
+                    args.Add($"frame: {readerAccessor}{(loquiGen.TargetObjectGeneration.GetObjectType() == ObjectType.Struct ? ".Spawn(snapToFinalPosition: false)" : null)}");
                     args.Add($"doMasks: {doMaskAccessor}");
                     if (loquiGen.HasIndex)
                     {

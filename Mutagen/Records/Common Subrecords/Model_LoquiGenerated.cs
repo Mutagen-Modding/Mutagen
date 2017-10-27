@@ -778,7 +778,7 @@ namespace Mutagen
             switch (nextRecordType.Type)
             {
                 case "MODL":
-                if (!first) return false;
+                    if (!first) return false;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var tryGet = Mutagen.Binary.FilePathBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
@@ -797,7 +797,7 @@ namespace Mutagen
                     item._BoundRadius.SetIfSucceeded(BoundRadiustryGet);
                 break;
                 default:
-                    throw new ArgumentException($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
+                    return false;
             }
             return true;
         }

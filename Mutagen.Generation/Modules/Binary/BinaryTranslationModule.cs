@@ -373,7 +373,10 @@ namespace Mutagen.Generation
                                 fg.AppendLine($"case \"{data.TriggeringRecordType.Value.Type}\":");
                                 if (typelessStruct && field.Index == 0)
                                 {
-                                    fg.AppendLine($"if (!first) return false;");
+                                    using (new DepthWrapper(fg))
+                                    {
+                                        fg.AppendLine($"if (!first) return false;");
+                                    }
                                 }
                                 GenerateFillSnippet(obj, fg, field.Field, generator);
                                 fg.AppendLine("break;");
@@ -422,7 +425,11 @@ namespace Mutagen.Generation
                             else
                             {
                                 var failOnUnknown = (bool)obj.CustomData[Constants.FAIL_ON_UNKNOWN];
-                                if (failOnUnknown)
+                                if (mutaObjType == ObjectType.Struct)
+                                {
+                                    fg.AppendLine("return false;");
+                                }
+                                else if (failOnUnknown)
                                 {
                                     fg.AppendLine("throw new ArgumentException($\"Unexpected header {nextRecordType.Type} at position {frame.Position}\");");
                                 }

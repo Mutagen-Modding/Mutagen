@@ -25,11 +25,11 @@
           <GenericSpecification Definition="Faction" TypeToSpecify="T" />
         </Direct>
       </Ref>
-      <!--<Ref name="Hairs">
+      <Ref name="Hairs">
         <Direct refName="Group" >
           <GenericSpecification Definition="Hair" TypeToSpecify="T" />
         </Direct>
-      </Ref>-->
+      </Ref>
     </Fields>
   </Object>
 </Loqui>

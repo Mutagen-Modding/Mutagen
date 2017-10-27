@@ -927,7 +927,7 @@ namespace Mutagen
                         transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, Relation_ErrorMask> listSubMask) =>
                         {
                             return LoquiBinaryTranslation<Relation, Relation_ErrorMask>.Instance.Parse(
-                                frame: r,
+                                frame: r.Spawn(snapToFinalPosition: false),
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask);
                         }
@@ -963,7 +963,7 @@ namespace Mutagen
                         transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, Rank_ErrorMask> listSubMask) =>
                         {
                             return LoquiBinaryTranslation<Rank, Rank_ErrorMask>.Instance.Parse(
-                                frame: r,
+                                frame: r.Spawn(snapToFinalPosition: false),
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask);
                         }

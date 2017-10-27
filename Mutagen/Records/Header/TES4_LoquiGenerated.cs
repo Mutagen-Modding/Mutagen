@@ -1029,7 +1029,7 @@ namespace Mutagen
                         transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, MasterReference_ErrorMask> listSubMask) =>
                         {
                             return LoquiBinaryTranslation<MasterReference, MasterReference_ErrorMask>.Instance.Parse(
-                                frame: r,
+                                frame: r.Spawn(snapToFinalPosition: false),
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask);
                         }
