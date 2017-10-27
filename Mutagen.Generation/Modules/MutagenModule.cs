@@ -120,6 +120,7 @@ namespace Mutagen.Generation
             if (isGRUP)
             {
                 obj.CustomData[Constants.RECORD_TYPE] = new RecordType("GRUP");
+                obj.CustomData[Constants.TRIGGERING_RECORD_TYPE] = new RecordType("GRUP");
             }
 
             var objType = obj.Node.GetAttribute("objType");
@@ -177,7 +178,7 @@ namespace Mutagen.Generation
             if (field is LoquiType loqui)
             {
                 if (loqui.RefGen != null
-                    && loqui.RefGen.Obj.TryGetRecordType(out recType))
+                    && loqui.RefGen.Obj.TryGetTriggeringRecordType(out recType))
                 {
                     if (loqui.RefGen.Name.Equals("Group"))
                     {

@@ -854,13 +854,6 @@ namespace Mutagen
                 frame: frame,
                 doMasks: doMasks,
                 errorMask: errorMask);
-            if (frame.Complete) return;
-            var ModeltryGet = LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
-                frame: frame,
-                doMasks: doMasks,
-                fieldIndex: (int)Hair_FieldIndex.Model,
-                errorMask: errorMask);
-            item._Model.SetIfSucceeded(ModeltryGet);
         }
 
         protected static bool Fill_Binary_RecordTypes(
@@ -874,6 +867,14 @@ namespace Mutagen
                 contentLength: out var contentLength);
             switch (nextRecordType.Type)
             {
+                case "MODL":
+                    var ModeltryGet = LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                        frame: frame,
+                        doMasks: doMasks,
+                        fieldIndex: (int)Hair_FieldIndex.Model,
+                        errorMask: errorMask);
+                    item._Model.SetIfSucceeded(ModeltryGet);
+                break;
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var tryGet = Mutagen.Binary.FilePathBinaryTranslation.Instance.Parse(
@@ -1258,11 +1259,12 @@ namespace Mutagen.Internals
         }
 
         public static readonly RecordType HAIR_HEADER = new RecordType("HAIR");
+        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
         public static readonly RecordType ICON_HEADER = new RecordType("ICON");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = HAIR_HEADER;
-        public const int NumStructFields = 1;
-        public const int NumTypedFields = 2;
+        public const int NumStructFields = 0;
+        public const int NumTypedFields = 3;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1760,7 +1762,7 @@ namespace Mutagen.Internals
                     record: Hair_Registration.HAIR_HEADER,
                     type: ObjectType.Record))
                 {
-                    Write_Binary_Embedded(
+                    MajorRecordCommon.Write_Binary_Embedded(
                         item: item,
                         writer: writer,
                         doMasks: doMasks,
@@ -1780,25 +1782,6 @@ namespace Mutagen.Internals
         }
         #endregion
 
-        public static void Write_Binary_Embedded(
-            IHairGetter item,
-            MutagenWriter writer,
-            bool doMasks,
-            Func<Hair_ErrorMask> errorMask)
-        {
-            MajorRecordCommon.Write_Binary_Embedded(
-                item: item,
-                writer: writer,
-                doMasks: doMasks,
-                errorMask: errorMask);
-            LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Write(
-                writer: writer,
-                item: item.Model_Property,
-                doMasks: doMasks,
-                fieldIndex: (int)Hair_FieldIndex.Model,
-                errorMask: errorMask);
-        }
-
         public static void Write_Binary_RecordTypes(
             IHairGetter item,
             MutagenWriter writer,
@@ -1809,6 +1792,12 @@ namespace Mutagen.Internals
                 item: item,
                 writer: writer,
                 doMasks: doMasks,
+                errorMask: errorMask);
+            LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Write(
+                writer: writer,
+                item: item.Model_Property,
+                doMasks: doMasks,
+                fieldIndex: (int)Hair_FieldIndex.Model,
                 errorMask: errorMask);
             Mutagen.Binary.FilePathBinaryTranslation.Instance.Write(
                 writer: writer,
