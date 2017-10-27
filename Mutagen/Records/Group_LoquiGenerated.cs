@@ -1958,13 +1958,13 @@ namespace Mutagen.Internals
             }
             Mutagen.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.GroupType,
+                item: item.GroupType_Property,
                 fieldIndex: (int)Group_FieldIndex.GroupType,
                 doMasks: doMasks,
                 errorMask: errorMask);
             Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.LastModified,
+                item: item.LastModified_Property,
                 doMasks: doMasks,
                 fieldIndex: (int)Group_FieldIndex.LastModified,
                 errorMask: errorMask);

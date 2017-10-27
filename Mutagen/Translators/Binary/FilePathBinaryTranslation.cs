@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Noggog;
 using Loqui;
+using Noggog.Notifying;
 
 namespace Mutagen.Binary
 {
@@ -104,6 +105,27 @@ namespace Mutagen.Binary
                 doMasks,
                 fieldIndex,
                 subMask);
+        }
+
+        public void Write<M>(
+            MutagenWriter writer,
+            IHasBeenSetItemGetter<FilePath> item,
+            RecordType header,
+            int fieldIndex,
+            bool nullable,
+            bool doMasks,
+            Func<M> errorMask)
+            where M : IErrorMask
+        {
+            if (!item.HasBeenSet) return;
+            this.Write(
+                writer,
+                item.Item,
+                header,
+                fieldIndex,
+                nullable,
+                doMasks,
+                errorMask);
         }
     }
 }

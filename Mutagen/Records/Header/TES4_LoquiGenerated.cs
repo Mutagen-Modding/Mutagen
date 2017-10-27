@@ -2298,7 +2298,7 @@ namespace Mutagen.Internals
         {
             Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Fluff,
+                item: item.Fluff_Property,
                 doMasks: doMasks,
                 fieldIndex: (int)TES4_FieldIndex.Fluff,
                 errorMask: errorMask);
@@ -2312,13 +2312,13 @@ namespace Mutagen.Internals
         {
             LoquiBinaryTranslation<Header, Header_ErrorMask>.Instance.Write(
                 writer: writer,
-                item: item.Header,
+                item: item.Header_Property,
                 doMasks: doMasks,
                 fieldIndex: (int)TES4_FieldIndex.Header,
                 errorMask: errorMask);
             Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.TypeOffsets,
+                item: item.TypeOffsets_Property,
                 doMasks: doMasks,
                 fieldIndex: (int)TES4_FieldIndex.TypeOffsets,
                 errorMask: errorMask,
@@ -2326,7 +2326,7 @@ namespace Mutagen.Internals
                 nullable: true);
             Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Deleted,
+                item: item.Deleted_Property,
                 doMasks: doMasks,
                 fieldIndex: (int)TES4_FieldIndex.Deleted,
                 errorMask: errorMask,
@@ -2334,7 +2334,7 @@ namespace Mutagen.Internals
                 nullable: true);
             Mutagen.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Author,
+                item: item.Author_Property,
                 doMasks: doMasks,
                 fieldIndex: (int)TES4_FieldIndex.Author,
                 errorMask: errorMask,
@@ -2342,7 +2342,7 @@ namespace Mutagen.Internals
                 nullable: true);
             Mutagen.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Description,
+                item: item.Description_Property,
                 doMasks: doMasks,
                 fieldIndex: (int)TES4_FieldIndex.Description,
                 errorMask: errorMask,

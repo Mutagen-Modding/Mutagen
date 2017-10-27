@@ -1641,20 +1641,20 @@ namespace Mutagen.Internals
         {
             Mutagen.Binary.EnumBinaryTranslation<Skill>.Instance.Write(
                 writer,
-                item.TrainedSkill,
+                item.TrainedSkill_Property,
                 doMasks: doMasks,
                 length: new ContentLength(1),
                 fieldIndex: (int)ClassTraining_FieldIndex.TrainedSkill,
                 errorMask: errorMask);
             Mutagen.Binary.ByteBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.MaximumTrainingLevel,
+                item: item.MaximumTrainingLevel_Property,
                 fieldIndex: (int)ClassTraining_FieldIndex.MaximumTrainingLevel,
                 doMasks: doMasks,
                 errorMask: errorMask);
             Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Fluff,
+                item: item.Fluff_Property,
                 doMasks: doMasks,
                 fieldIndex: (int)ClassTraining_FieldIndex.Fluff,
                 errorMask: errorMask);

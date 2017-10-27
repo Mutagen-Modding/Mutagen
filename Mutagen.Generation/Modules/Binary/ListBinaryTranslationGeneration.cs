@@ -15,7 +15,7 @@ namespace Mutagen.Generation
             ObjectGeneration objGen,
             TypeGeneration typeGen,
             string writerAccessor,
-            string itemAccessor,
+            Accessor itemAccessor,
             string doMaskAccessor,
             string maskAccessor)
         {
@@ -30,7 +30,7 @@ namespace Mutagen.Generation
                 $"{this.Namespace}ListBinaryTranslation<{list.SubTypeGeneration.TypeName}, {subMaskStr}>.Instance.Write"))
             {
                 args.Add($"writer: {writerAccessor}");
-                args.Add($"item: {itemAccessor}");
+                args.Add($"item: {itemAccessor.PropertyOrDirectAccess}");
                 args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
                 args.Add($"doMasks: {doMaskAccessor}");
                 args.Add($"errorMask: {maskAccessor}");
@@ -44,7 +44,7 @@ namespace Mutagen.Generation
                             objGen: objGen,
                             typeGen: list.SubTypeGeneration, 
                             writerAccessor: "writer", 
-                            itemAccessor: $"subItem", 
+                            itemAccessor: new Accessor($"subItem"), 
                             doMaskAccessor: doMaskAccessor,
                             maskAccessor: $"listSubMask");
                     }

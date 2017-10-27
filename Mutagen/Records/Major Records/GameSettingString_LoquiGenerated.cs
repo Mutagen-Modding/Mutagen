@@ -1512,7 +1512,7 @@ namespace Mutagen.Internals
                 errorMask: errorMask);
             Mutagen.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Data,
+                item: item.Data_Property,
                 doMasks: doMasks,
                 fieldIndex: (int)GameSettingString_FieldIndex.Data,
                 errorMask: errorMask,

@@ -1,5 +1,6 @@
 ﻿using Loqui;
 using Noggog;
+using Noggog.Notifying;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -105,6 +106,27 @@ namespace Mutagen.Binary
 
         public void Write<M>(
             MutagenWriter writer,
+            IHasBeenSetItemGetter<T> item,
+            RecordType header,
+            int fieldIndex,
+            bool nullable,
+            bool doMasks,
+            Func<M> errorMask)
+            where M : IErrorMask
+        {
+            if (!item.HasBeenSet) return;
+            this.Write(
+                writer,
+                item.Item,
+                header,
+                fieldIndex,
+                nullable,
+                doMasks,
+                errorMask);
+        }
+
+        public void Write<M>(
+            MutagenWriter writer,
             T item,
             int fieldIndex,
             bool doMasks,
@@ -121,6 +143,23 @@ namespace Mutagen.Binary
                 doMasks,
                 fieldIndex,
                 subMask);
+        }
+
+        public void Write<M>(
+            MutagenWriter writer,
+            IHasBeenSetItemGetter<T> item,
+            int fieldIndex,
+            bool doMasks,
+            Func<M> errorMask)
+            where M : IErrorMask
+        {
+            if (!item.HasBeenSet) return;
+            this.Write(
+                writer,
+                item.Item,
+                fieldIndex,
+                doMasks,
+                errorMask);
         }
 
         void IBinaryTranslation<T, Exception>.Write(MutagenWriter writer, T item, ContentLength length, bool doMasks, out Exception maskObj)

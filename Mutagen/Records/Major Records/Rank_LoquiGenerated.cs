@@ -1800,7 +1800,7 @@ namespace Mutagen.Internals
         {
             Mutagen.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.RankNumber,
+                item: item.RankNumber_Property,
                 fieldIndex: (int)Rank_FieldIndex.RankNumber,
                 doMasks: doMasks,
                 errorMask: errorMask,
@@ -1808,7 +1808,7 @@ namespace Mutagen.Internals
                 nullable: false);
             Mutagen.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.MaleName,
+                item: item.MaleName_Property,
                 doMasks: doMasks,
                 fieldIndex: (int)Rank_FieldIndex.MaleName,
                 errorMask: errorMask,
@@ -1816,7 +1816,7 @@ namespace Mutagen.Internals
                 nullable: false);
             Mutagen.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.FemaleName,
+                item: item.FemaleName_Property,
                 doMasks: doMasks,
                 fieldIndex: (int)Rank_FieldIndex.FemaleName,
                 errorMask: errorMask,
@@ -1824,7 +1824,7 @@ namespace Mutagen.Internals
                 nullable: false);
             Mutagen.Binary.FilePathBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Insignia,
+                item: item.Insignia_Property,
                 fieldIndex: (int)Rank_FieldIndex.Insignia,
                 doMasks: doMasks,
                 errorMask: errorMask,

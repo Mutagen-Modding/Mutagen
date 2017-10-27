@@ -15,7 +15,7 @@ namespace Mutagen.Generation
             ObjectGeneration objGen,
             TypeGeneration typeGen,
             string writerAccessor,
-            string itemAccessor,
+            Accessor itemAccessor,
             string doMaskAccessor,
             string maskAccessor)
         {
@@ -25,7 +25,7 @@ namespace Mutagen.Generation
                 $"{Namespace}EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance.Write"))
             {
                 args.Add(writerAccessor);
-                args.Add($"{itemAccessor}");
+                args.Add($"{itemAccessor.PropertyOrDirectAccess}");
                 args.Add($"doMasks: {doMaskAccessor}");
                 args.Add($"length: new ContentLength({eType.ByteLength})");
                 if (typeGen.HasIndex)

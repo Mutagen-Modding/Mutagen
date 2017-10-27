@@ -22,7 +22,7 @@ namespace Mutagen.Generation
             ObjectGeneration objGen,
             TypeGeneration typeGen,
             string writerAccessor,
-            string itemAccessor,
+            Accessor itemAccessor,
             string doMaskAccessor,
             string maskAccessor)
         {
@@ -33,7 +33,7 @@ namespace Mutagen.Generation
                     $"LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}, {loquiGen.MaskItemString(MaskType.Error)}>.Instance.Write"))
                 {
                     args.Add($"writer: {writerAccessor}");
-                    args.Add($"item: {itemAccessor}");
+                    args.Add($"item: {itemAccessor.PropertyOrDirectAccess}");
                     args.Add($"doMasks: {doMaskAccessor}");
                     if (loquiGen.HasIndex)
                     {

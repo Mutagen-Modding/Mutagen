@@ -1804,7 +1804,7 @@ namespace Mutagen.Internals
                 errorMask: errorMask);
             Mutagen.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Description,
+                item: item.Description_Property,
                 doMasks: doMasks,
                 fieldIndex: (int)Class_FieldIndex.Description,
                 errorMask: errorMask,
@@ -1812,7 +1812,7 @@ namespace Mutagen.Internals
                 nullable: false);
             Mutagen.Binary.FilePathBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Icon,
+                item: item.Icon_Property,
                 fieldIndex: (int)Class_FieldIndex.Icon,
                 doMasks: doMasks,
                 errorMask: errorMask,
@@ -1820,7 +1820,7 @@ namespace Mutagen.Internals
                 nullable: false);
             LoquiBinaryTranslation<ClassData, ClassData_ErrorMask>.Instance.Write(
                 writer: writer,
-                item: item.ClassData,
+                item: item.ClassData_Property,
                 doMasks: doMasks,
                 fieldIndex: (int)Class_FieldIndex.ClassData,
                 errorMask: errorMask);

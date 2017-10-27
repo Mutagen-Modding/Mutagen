@@ -2165,7 +2165,7 @@ namespace Mutagen.Internals
                 );
             Mutagen.Binary.EnumBinaryTranslation<Class.Specialization>.Instance.Write(
                 writer,
-                item.Specialization,
+                item.Specialization_Property,
                 doMasks: doMasks,
                 length: new ContentLength(4),
                 fieldIndex: (int)ClassData_FieldIndex.Specialization,
@@ -2188,21 +2188,21 @@ namespace Mutagen.Internals
                 );
             Mutagen.Binary.EnumBinaryTranslation<ClassFlag>.Instance.Write(
                 writer,
-                item.Flags,
+                item.Flags_Property,
                 doMasks: doMasks,
                 length: new ContentLength(4),
                 fieldIndex: (int)ClassData_FieldIndex.Flags,
                 errorMask: errorMask);
             Mutagen.Binary.EnumBinaryTranslation<ClassService>.Instance.Write(
                 writer,
-                item.ClassServices,
+                item.ClassServices_Property,
                 doMasks: doMasks,
                 length: new ContentLength(4),
                 fieldIndex: (int)ClassData_FieldIndex.ClassServices,
                 errorMask: errorMask);
             LoquiBinaryTranslation<ClassTraining, ClassTraining_ErrorMask>.Instance.Write(
                 writer: writer,
-                item: item.Training,
+                item: item.Training_Property,
                 doMasks: doMasks,
                 fieldIndex: (int)ClassData_FieldIndex.Training,
                 errorMask: errorMask);

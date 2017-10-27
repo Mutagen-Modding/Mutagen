@@ -1528,13 +1528,13 @@ namespace Mutagen.Internals
         {
             Mutagen.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Faction,
+                item: item.Faction_Property,
                 fieldIndex: (int)Relation_FieldIndex.Faction,
                 doMasks: doMasks,
                 errorMask: errorMask);
             Mutagen.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Modifier,
+                item: item.Modifier_Property,
                 fieldIndex: (int)Relation_FieldIndex.Modifier,
                 doMasks: doMasks,
                 errorMask: errorMask);

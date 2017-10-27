@@ -1092,7 +1092,7 @@ namespace Mutagen.Internals
                 errorMask: errorMask);
             Mutagen.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Name,
+                item: item.Name_Property,
                 doMasks: doMasks,
                 fieldIndex: (int)NamedMajorRecord_FieldIndex.Name,
                 errorMask: errorMask,

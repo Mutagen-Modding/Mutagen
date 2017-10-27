@@ -703,7 +703,7 @@ namespace Mutagen.Generation
                             objGen: obj,
                             typeGen: field,
                             writerAccessor: "writer",
-                            itemAccessor: $"item.{field.Name}",
+                            itemAccessor: new Accessor(field, "item."),
                             doMaskAccessor: "doMasks",
                             maskAccessor: "errorMask");
                     }
@@ -770,7 +770,7 @@ namespace Mutagen.Generation
                             objGen: obj,
                             typeGen: field,
                             writerAccessor: "writer",
-                            itemAccessor: $"item.{field.Name}",
+                            itemAccessor: new Accessor(field, "item."),
                             doMaskAccessor: "doMasks",
                             maskAccessor: $"errorMask");
                     }

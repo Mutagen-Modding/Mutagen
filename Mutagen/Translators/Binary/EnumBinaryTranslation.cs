@@ -1,5 +1,6 @@
 ﻿using Loqui;
 using Noggog;
+using Noggog.Notifying;
 using System;
 using System.IO;
 
@@ -81,7 +82,7 @@ namespace Mutagen.Binary
             Func<M> errorMask)
             where M : IErrorMask
         {
-            if (!item.HasValue) return;
+            if (!item.HasValue) throw new NotImplementedException();
             try
             {
                 WriteValue(writer, item.Value, length);
@@ -94,6 +95,44 @@ namespace Mutagen.Binary
                     fieldIndex,
                     ex);
             }
+        }
+
+        public void Write<M>(
+            MutagenWriter writer,
+            IHasBeenSetItemGetter<E?> item,
+            ContentLength length,
+            int fieldIndex,
+            bool doMasks,
+            Func<M> errorMask)
+            where M : IErrorMask
+        {
+            if (!item.HasBeenSet) return;
+            this.Write(
+                writer,
+                item.Item,
+                length,
+                fieldIndex,
+                doMasks,
+                errorMask);
+        }
+
+        public void Write<M>(
+            MutagenWriter writer,
+            IHasBeenSetItemGetter<E> item,
+            ContentLength length,
+            int fieldIndex,
+            bool doMasks,
+            Func<M> errorMask)
+            where M : IErrorMask
+        {
+            if (!item.HasBeenSet) return;
+            this.Write(
+                writer,
+                item.Item,
+                length,
+                fieldIndex,
+                doMasks,
+                errorMask);
         }
 
         public void Write(
@@ -153,6 +192,52 @@ namespace Mutagen.Binary
                 doMasks,
                 fieldIndex,
                 subMask);
+        }
+
+        public void Write<M>(
+            MutagenWriter writer,
+            IHasBeenSetItemGetter<E?> item,
+            RecordType header,
+            ContentLength length,
+            int fieldIndex,
+            bool nullable,
+            bool doMasks,
+            Func<M> errorMask)
+            where M : IErrorMask
+        {
+            if (!item.HasBeenSet) return;
+            this.Write(
+                writer,
+                item.Item,
+                header,
+                length,
+                fieldIndex,
+                nullable,
+                doMasks,
+                errorMask);
+        }
+
+        public void Write<M>(
+            MutagenWriter writer,
+            IHasBeenSetItemGetter<E> item,
+            RecordType header,
+            ContentLength length,
+            int fieldIndex,
+            bool nullable,
+            bool doMasks,
+            Func<M> errorMask)
+            where M : IErrorMask
+        {
+            if (!item.HasBeenSet) return;
+            this.Write(
+                writer,
+                item.Item,
+                header,
+                length,
+                fieldIndex,
+                nullable,
+                doMasks,
+                errorMask);
         }
 
         protected E ParseValue(MutagenFrame reader)

@@ -1554,7 +1554,7 @@ namespace Mutagen.Internals
         {
             Mutagen.Binary.FilePathBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.File,
+                item: item.File_Property,
                 fieldIndex: (int)Model_FieldIndex.File,
                 doMasks: doMasks,
                 errorMask: errorMask,
@@ -1562,7 +1562,7 @@ namespace Mutagen.Internals
                 nullable: false);
             Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.BoundRadius,
+                item: item.BoundRadius_Property,
                 fieldIndex: (int)Model_FieldIndex.BoundRadius,
                 doMasks: doMasks,
                 errorMask: errorMask,

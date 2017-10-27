@@ -25,8 +25,8 @@ namespace Mutagen.Generation
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,
-            string writerAccessor, 
-            string itemAccessor,
+            string writerAccessor,
+            Accessor itemAccessor,
             string doMaskAccessor,
             string maskAccessor)
         {
@@ -35,7 +35,7 @@ namespace Mutagen.Generation
                 $"{this.Namespace}{this.typeName}BinaryTranslation.Instance.Write"))
             {
                 args.Add($"writer: {writerAccessor}");
-                args.Add($"item: {itemAccessor}");
+                args.Add($"item: {itemAccessor.PropertyOrDirectAccess}");
                 args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
                 args.Add($"doMasks: {doMaskAccessor}");
                 args.Add($"errorMask: {maskAccessor}");

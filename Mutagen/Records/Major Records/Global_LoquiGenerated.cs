@@ -1184,7 +1184,7 @@ namespace Mutagen.Internals
                 errorMask: errorMask);
             Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.RawFloat,
+                item: item.RawFloat_Property,
                 fieldIndex: (int)Global_FieldIndex.RawFloat,
                 doMasks: doMasks,
                 errorMask: errorMask,

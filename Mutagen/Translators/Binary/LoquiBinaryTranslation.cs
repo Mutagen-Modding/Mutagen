@@ -278,6 +278,23 @@ namespace Mutagen.Binary
                 subMask);
         }
 
+        public void Write<Mask>(
+            MutagenWriter writer,
+            IHasBeenSetItemGetter<T> item,
+            int fieldIndex,
+            bool doMasks,
+            Func<Mask> errorMask)
+            where Mask : IErrorMask
+        {
+            if (!item.HasBeenSet) return;
+            this.Write(
+                writer,
+                item.Item,
+                fieldIndex,
+                doMasks,
+                errorMask);
+        }
+
         public TryGet<T> Parse(MutagenFrame reader, ContentLength length, bool doMasks, out M maskObj)
         {
             throw new NotImplementedException();

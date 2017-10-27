@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>1f028a439847c0431411b25505acd64a41e780b2</Sha>
+         <Sha>98c06e115e1b3d977b53922321da92139c4027b7</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>10-25-2017 18:12:21</CommitDate>
-         <Description>DepthWrapper.DoIt parameter</Description>
+         <CommitDate>10-26-2017 21:44:35</CommitDate>
+         <Description>Accessor convenience ctor</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

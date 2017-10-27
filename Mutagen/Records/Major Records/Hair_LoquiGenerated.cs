@@ -1793,7 +1793,7 @@ namespace Mutagen.Internals
                 errorMask: errorMask);
             LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Write(
                 writer: writer,
-                item: item.Model,
+                item: item.Model_Property,
                 doMasks: doMasks,
                 fieldIndex: (int)Hair_FieldIndex.Model,
                 errorMask: errorMask);
@@ -1812,7 +1812,7 @@ namespace Mutagen.Internals
                 errorMask: errorMask);
             Mutagen.Binary.FilePathBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Icon,
+                item: item.Icon_Property,
                 fieldIndex: (int)Hair_FieldIndex.Icon,
                 doMasks: doMasks,
                 errorMask: errorMask,
@@ -1820,7 +1820,7 @@ namespace Mutagen.Internals
                 nullable: false);
             Mutagen.Binary.EnumBinaryTranslation<Hair.HairFlag>.Instance.Write(
                 writer,
-                item.Flags,
+                item.Flags_Property,
                 doMasks: doMasks,
                 length: new ContentLength(1),
                 fieldIndex: (int)Hair_FieldIndex.Flags,

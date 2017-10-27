@@ -1648,19 +1648,19 @@ namespace Mutagen.Internals
         {
             Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Version,
+                item: item.Version_Property,
                 fieldIndex: (int)Header_FieldIndex.Version,
                 doMasks: doMasks,
                 errorMask: errorMask);
             Mutagen.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.NumRecords,
+                item: item.NumRecords_Property,
                 fieldIndex: (int)Header_FieldIndex.NumRecords,
                 doMasks: doMasks,
                 errorMask: errorMask);
             Mutagen.Binary.UInt32BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.NextObjectID,
+                item: item.NextObjectID_Property,
                 fieldIndex: (int)Header_FieldIndex.NextObjectID,
                 doMasks: doMasks,
                 errorMask: errorMask);

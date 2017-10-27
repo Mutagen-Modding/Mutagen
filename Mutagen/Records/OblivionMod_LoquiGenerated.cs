@@ -2100,31 +2100,31 @@ namespace Mutagen.Internals
         {
             LoquiBinaryTranslation<TES4, TES4_ErrorMask>.Instance.Write(
                 writer: writer,
-                item: item.TES4,
+                item: item.TES4_Property,
                 doMasks: doMasks,
                 fieldIndex: (int)OblivionMod_FieldIndex.TES4,
                 errorMask: errorMask);
             LoquiBinaryTranslation<Group<GameSetting>, Group_ErrorMask<GameSetting_ErrorMask>>.Instance.Write(
                 writer: writer,
-                item: item.GameSettings,
+                item: item.GameSettings_Property,
                 doMasks: doMasks,
                 fieldIndex: (int)OblivionMod_FieldIndex.GameSettings,
                 errorMask: errorMask);
             LoquiBinaryTranslation<Group<Global>, Group_ErrorMask<Global_ErrorMask>>.Instance.Write(
                 writer: writer,
-                item: item.Globals,
+                item: item.Globals_Property,
                 doMasks: doMasks,
                 fieldIndex: (int)OblivionMod_FieldIndex.Globals,
                 errorMask: errorMask);
             LoquiBinaryTranslation<Group<Class>, Group_ErrorMask<Class_ErrorMask>>.Instance.Write(
                 writer: writer,
-                item: item.Classes,
+                item: item.Classes_Property,
                 doMasks: doMasks,
                 fieldIndex: (int)OblivionMod_FieldIndex.Classes,
                 errorMask: errorMask);
             LoquiBinaryTranslation<Group<Faction>, Group_ErrorMask<Faction_ErrorMask>>.Instance.Write(
                 writer: writer,
-                item: item.Factions,
+                item: item.Factions_Property,
                 doMasks: doMasks,
                 fieldIndex: (int)OblivionMod_FieldIndex.Factions,
                 errorMask: errorMask);

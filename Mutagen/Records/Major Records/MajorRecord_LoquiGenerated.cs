@@ -1505,19 +1505,19 @@ namespace Mutagen.Internals
         {
             Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Flags,
+                item: item.Flags_Property,
                 doMasks: doMasks,
                 fieldIndex: (int)MajorRecord_FieldIndex.Flags,
                 errorMask: errorMask);
             Mutagen.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.FormID,
+                item: item.FormID_Property,
                 fieldIndex: (int)MajorRecord_FieldIndex.FormID,
                 doMasks: doMasks,
                 errorMask: errorMask);
             Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Version,
+                item: item.Version_Property,
                 doMasks: doMasks,
                 fieldIndex: (int)MajorRecord_FieldIndex.Version,
                 errorMask: errorMask);
@@ -1531,7 +1531,7 @@ namespace Mutagen.Internals
         {
             Mutagen.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.EditorID,
+                item: item.EditorID_Property,
                 doMasks: doMasks,
                 fieldIndex: (int)MajorRecord_FieldIndex.EditorID,
                 errorMask: errorMask,

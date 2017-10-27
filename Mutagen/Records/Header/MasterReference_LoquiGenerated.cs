@@ -1554,7 +1554,7 @@ namespace Mutagen.Internals
         {
             Mutagen.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Master,
+                item: item.Master_Property,
                 doMasks: doMasks,
                 fieldIndex: (int)MasterReference_FieldIndex.Master,
                 errorMask: errorMask,
@@ -1562,7 +1562,7 @@ namespace Mutagen.Internals
                 nullable: false);
             Mutagen.Binary.UInt64BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.FileSize,
+                item: item.FileSize_Property,
                 fieldIndex: (int)MasterReference_FieldIndex.FileSize,
                 doMasks: doMasks,
                 errorMask: errorMask,

@@ -2045,7 +2045,7 @@ namespace Mutagen.Internals
                 );
             Mutagen.Binary.EnumBinaryTranslation<Faction.FactionFlag>.Instance.Write(
                 writer,
-                item.Flags,
+                item.Flags_Property,
                 doMasks: doMasks,
                 length: new ContentLength(1),
                 fieldIndex: (int)Faction_FieldIndex.Flags,
@@ -2054,7 +2054,7 @@ namespace Mutagen.Internals
                 nullable: false);
             Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.CrimeGoldMultiplier,
+                item: item.CrimeGoldMultiplier_Property,
                 fieldIndex: (int)Faction_FieldIndex.CrimeGoldMultiplier,
                 doMasks: doMasks,
                 errorMask: errorMask,
