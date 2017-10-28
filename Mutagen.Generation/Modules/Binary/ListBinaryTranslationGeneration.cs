@@ -110,7 +110,8 @@ namespace Mutagen.Generation
                 }
                 args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
                 args.Add($"doMasks: {doMaskAccessor}");
-                if (list.SubTypeGeneration is LoquiType loqui)
+                if (list.SubTypeGeneration is LoquiType loqui
+                    && !list.MaxValue.HasValue)
                 {
                     args.Add($"objType: {nameof(ObjectType)}.{loqui.TargetObjectGeneration.GetObjectType()}");
                 }

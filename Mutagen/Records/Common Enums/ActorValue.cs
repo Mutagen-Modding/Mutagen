@@ -8,6 +8,7 @@ namespace Mutagen
 {
     public enum ActorValue
     {
+        None = -1,
         Strength = 0,
         Intelligence = 1,
         Willpower = 2,

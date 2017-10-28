@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>98c06e115e1b3d977b53922321da92139c4027b7</Sha>
+         <Sha>655f7ab1fd25f312be4d55414a4c985e4cde144e</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>10-26-2017 21:44:35</CommitDate>
-         <Description>Accessor convenience ctor</Description>
+         <CommitDate>10-28-2017 01:13:59</CommitDate>
+         <Description>Reflist max size</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

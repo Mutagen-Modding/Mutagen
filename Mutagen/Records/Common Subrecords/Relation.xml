@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Relation" objType="Struct" recordType="XNAM" GUID="1a14276a-e5c3-4feb-8bf0-1d16878e7eb9" ID="23">
+    <Fields>
+      <FormID name="Faction" />
+      <Int32 name="Modifier" />
+    </Fields>
+  </Object>
+</Loqui>

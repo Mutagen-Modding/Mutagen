@@ -8,12 +8,6 @@
       <RefList name="Ranks" refName="Rank" />
     </Fields>
   </Object>
-  <Object name="Relation" objType="Struct" recordType="XNAM" GUID="1a14276a-e5c3-4feb-8bf0-1d16878e7eb9" ID="23">
-    <Fields>
-      <FormID name="Faction" />
-      <Int32 name="Modifier" />
-    </Fields>
-  </Object>
   <Object name="Rank" objType="Struct" GUID="4945b664-16ac-4464-89b0-03534ffd5e18" ID="24">
     <Fields>
       <Int32 name="RankNumber" recordType="RNAM" />

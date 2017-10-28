@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Race" objType="Record" baseClass="NamedMajorRecord" GUID="265136e6-60a6-4ade-a7c4-b31197fb95e5" ID="25">
+    <Fields>
+      <String name="Description" recordType="DESC" />
+      <List name="Spells">
+        <FormID recordType="SPLO" />
+      </List>
+      <RefList name="Relations" refName="Relation" />
+      <RefDirect name="Data" refName="RaceData" />
+    </Fields>
+  </Object>
+  <Object name="RaceData" objType="Struct" GUID="0f6434d7-0cdc-430d-bd2a-9f7a099425f2" ID="26">
+    <Fields>
+      <RefList name="SkillBoosts" maxSize="7" refName="SkillBoost" />
+      <ByteArray name="Fluff" length="4" nullable="false" />
+      <Float name="MaleHeight" />
+      <Float name="FemaleHeight" />
+      <Float name="MaleWeight" />
+      <Float name="FemaleWeight" />
+      <Enum name="Flags" enumName="Race.Flag" byteLength="2"/>
+    </Fields>
+  </Object>
+  <Object name="SkillBoost" objType="Struct" GUID="5b28ecc2-3bf5-495e-9f6f-db9ce344e94e" ID="27">
+    <Fields>
+      <Enum name="Skill" enumName="ActorValue" byteLength="1" />
+      <Int8 name="Boost" />
+    </Fields>
+  </Object>
+</Loqui>

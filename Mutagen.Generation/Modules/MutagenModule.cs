@@ -210,17 +210,28 @@ namespace Mutagen.Generation
                     data.TriggeringRecordAccessor = $"{loqui.GenericDef.Name}_RecordType";
                 }
             }
-            else if (field is ListType listType
-                && listType.SubTypeGeneration is LoquiType subListLoqui)
+            else if (field is ListType listType)
             {
-                if (subListLoqui.RefGen != null
-                    && subListLoqui.RefGen.Obj.TryGetTriggeringRecordType(out recType))
+                if (listType.SubTypeGeneration is LoquiType subListLoqui)
                 {
-                    data.RecordType = recType;
+                    if (subListLoqui.RefGen != null
+                        && subListLoqui.RefGen.Obj.TryGetTriggeringRecordType(out recType))
+                    {
+                        data.RecordType = recType;
+                    }
+                    else if (subListLoqui.GenericDef != null)
+                    {
+                        data.TriggeringRecordAccessor = $"{subListLoqui.GenericDef.Name}_RecordType";
+                    }
                 }
-                else if (subListLoqui.GenericDef != null)
+                else
                 {
-                    data.TriggeringRecordAccessor = $"{subListLoqui.GenericDef.Name}_RecordType";
+                    var subData = listType.SubTypeGeneration.CustomData.TryCreateValue(Constants.DATA_KEY, () => new MutagenFieldData()) as MutagenFieldData;
+                    if (subData.TriggeringRecordAccessor != null)
+                    {
+                        data.TriggeringRecordAccessor = $"{obj.RegistrationName}.{subData.RecordType.Value.HeaderName}";
+                        data.TriggeringRecordType = subData.RecordType;
+                    }
                 }
             }
 

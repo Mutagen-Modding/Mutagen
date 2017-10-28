@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Spell" objType="Record" recordType="SPEL" baseClass="NamedMajorRecord" GUID="6e7673df-39d3-4704-b1ef-ac774f9d01c3" ID="28">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

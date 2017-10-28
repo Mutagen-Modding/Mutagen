@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Eye" recordType="EYES" objType="Record" baseClass="NamedMajorRecord" GUID="adf54439-4091-4d26-ae99-171e4b211def" ID="29">
+    <Fields>
+      <FilePath name="Icon" recordType="ICON" />
+    </Fields>
+  </Object>
+</Loqui>
