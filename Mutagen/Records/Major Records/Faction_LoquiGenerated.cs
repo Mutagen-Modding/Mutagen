@@ -2055,8 +2055,8 @@ namespace Mutagen.Internals
             Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.CrimeGoldMultiplier_Property,
-                fieldIndex: (int)Faction_FieldIndex.CrimeGoldMultiplier,
                 doMasks: doMasks,
+                fieldIndex: (int)Faction_FieldIndex.CrimeGoldMultiplier,
                 errorMask: errorMask,
                 header: Faction_Registration.CNAM_HEADER,
                 nullable: false);

@@ -12,6 +12,7 @@ using Loqui;
 using Noggog;
 using Noggog.Notifying;
 using Mutagen.Internals;
+using Mutagen;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -23,51 +24,45 @@ using Mutagen.Binary;
 namespace Mutagen
 {
     #region Class
-    public partial class Model : IModel, ILoquiObjectSetter, IEquatable<Model>
+    public partial class RaceStatsGendered : IRaceStatsGendered, ILoquiObjectSetter, IEquatable<RaceStatsGendered>
     {
-        ILoquiRegistration ILoquiObject.Registration => Model_Registration.Instance;
-        public static Model_Registration Registration => Model_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => RaceStatsGendered_Registration.Instance;
+        public static RaceStatsGendered_Registration Registration => RaceStatsGendered_Registration.Instance;
 
         #region Ctor
-        public Model()
+        public RaceStatsGendered()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region File
-        protected readonly INotifyingItem<FilePath> _File = NotifyingItem.Factory<FilePath>(markAsSet: false);
-        public INotifyingItem<FilePath> File_Property => _File;
-        public FilePath File
-        {
-            get => this._File.Item;
-            set => this._File.Set(value);
-        }
-        INotifyingItem<FilePath> IModel.File_Property => this.File_Property;
-        INotifyingItemGetter<FilePath> IModelGetter.File_Property => this.File_Property;
+        #region Male
+        private readonly INotifyingItem<RaceStats> _Male = new NotifyingItem<RaceStats>();
+        public INotifyingItem<RaceStats> Male_Property => this._Male;
+        RaceStats IRaceStatsGenderedGetter.Male => this.Male;
+        public RaceStats Male { get => _Male.Item; set => _Male.Item = value; }
+        INotifyingItem<RaceStats> IRaceStatsGendered.Male_Property => this.Male_Property;
+        INotifyingItemGetter<RaceStats> IRaceStatsGenderedGetter.Male_Property => this.Male_Property;
         #endregion
-        #region BoundRadius
-        protected readonly INotifyingItem<Single> _BoundRadius = NotifyingItem.Factory<Single>(markAsSet: false);
-        public INotifyingItem<Single> BoundRadius_Property => _BoundRadius;
-        public Single BoundRadius
-        {
-            get => this._BoundRadius.Item;
-            set => this._BoundRadius.Set(value);
-        }
-        INotifyingItem<Single> IModel.BoundRadius_Property => this.BoundRadius_Property;
-        INotifyingItemGetter<Single> IModelGetter.BoundRadius_Property => this.BoundRadius_Property;
+        #region Female
+        private readonly INotifyingItem<RaceStats> _Female = new NotifyingItem<RaceStats>();
+        public INotifyingItem<RaceStats> Female_Property => this._Female;
+        RaceStats IRaceStatsGenderedGetter.Female => this.Female;
+        public RaceStats Female { get => _Female.Item; set => _Female.Item = value; }
+        INotifyingItem<RaceStats> IRaceStatsGendered.Female_Property => this.Female_Property;
+        INotifyingItemGetter<RaceStats> IRaceStatsGenderedGetter.Female_Property => this.Female_Property;
         #endregion
 
         #region Loqui Getter Interface
 
-        protected object GetNthObject(ushort index) => ModelCommon.GetNthObject(index, this);
+        protected object GetNthObject(ushort index) => RaceStatsGenderedCommon.GetNthObject(index, this);
         object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
 
-        protected bool GetNthObjectHasBeenSet(ushort index) => ModelCommon.GetNthObjectHasBeenSet(index, this);
+        protected bool GetNthObjectHasBeenSet(ushort index) => RaceStatsGenderedCommon.GetNthObjectHasBeenSet(index, this);
         bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
 
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => ModelCommon.UnsetNthObject(index, this, cmds);
+        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => RaceStatsGenderedCommon.UnsetNthObject(index, this, cmds);
         void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => this.UnsetNthObject(index, cmds);
 
         #endregion
@@ -75,7 +70,7 @@ namespace Mutagen
         #region Loqui Interface
         protected void SetNthObjectHasBeenSet(ushort index, bool on)
         {
-            ModelCommon.SetNthObjectHasBeenSet(index, on, this);
+            RaceStatsGenderedCommon.SetNthObjectHasBeenSet(index, on, this);
         }
         void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
 
@@ -84,48 +79,48 @@ namespace Mutagen
         #region To String
         public override string ToString()
         {
-            return ModelCommon.ToString(this, printMask: null);
+            return RaceStatsGenderedCommon.ToString(this, printMask: null);
         }
 
         public string ToString(
             string name = null,
-            Model_Mask<bool> printMask = null)
+            RaceStatsGendered_Mask<bool> printMask = null)
         {
-            return ModelCommon.ToString(this, name: name, printMask: printMask);
+            return RaceStatsGenderedCommon.ToString(this, name: name, printMask: printMask);
         }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            ModelCommon.ToString(this, fg, name: name, printMask: null);
+            RaceStatsGenderedCommon.ToString(this, fg, name: name, printMask: null);
         }
 
         #endregion
 
-        public Model_Mask<bool> GetHasBeenSetMask()
+        public RaceStatsGendered_Mask<bool> GetHasBeenSetMask()
         {
-            return ModelCommon.GetHasBeenSetMask(this);
+            return RaceStatsGenderedCommon.GetHasBeenSetMask(this);
         }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is Model rhs)) return false;
+            if (!(obj is RaceStatsGendered rhs)) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(Model rhs)
+        public bool Equals(RaceStatsGendered rhs)
         {
             if (rhs == null) return false;
-            if (File_Property.HasBeenSet != rhs.File_Property.HasBeenSet) return false;
-            if (File_Property.HasBeenSet)
+            if (Male_Property.HasBeenSet != rhs.Male_Property.HasBeenSet) return false;
+            if (Male_Property.HasBeenSet)
             {
-                if (!object.Equals(File, rhs.File)) return false;
+                if (!object.Equals(Male, rhs.Male)) return false;
             }
-            if (BoundRadius_Property.HasBeenSet != rhs.BoundRadius_Property.HasBeenSet) return false;
-            if (BoundRadius_Property.HasBeenSet)
+            if (Female_Property.HasBeenSet != rhs.Female_Property.HasBeenSet) return false;
+            if (Female_Property.HasBeenSet)
             {
-                if (BoundRadius != rhs.BoundRadius) return false;
+                if (!object.Equals(Female, rhs.Female)) return false;
             }
             return true;
         }
@@ -133,13 +128,13 @@ namespace Mutagen
         public override int GetHashCode()
         {
             int ret = 0;
-            if (File_Property.HasBeenSet)
+            if (Male_Property.HasBeenSet)
             {
-                ret = HashHelper.GetHashCode(File).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(Male).CombineHashCode(ret);
             }
-            if (BoundRadius_Property.HasBeenSet)
+            if (Female_Property.HasBeenSet)
             {
-                ret = HashHelper.GetHashCode(BoundRadius).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(Female).CombineHashCode(ret);
             }
             return ret;
         }
@@ -150,7 +145,7 @@ namespace Mutagen
         #region XML Translation
         #region XML Create
         [DebuggerStepThrough]
-        public static Model Create_XML(XElement root)
+        public static RaceStatsGendered Create_XML(XElement root)
         {
             return Create_XML(
                 root: root,
@@ -159,9 +154,9 @@ namespace Mutagen
         }
 
         [DebuggerStepThrough]
-        public static Model Create_XML(
+        public static RaceStatsGendered Create_XML(
             XElement root,
-            out Model_ErrorMask errorMask)
+            out RaceStatsGendered_ErrorMask errorMask)
         {
             return Create_XML(
                 root: root,
@@ -170,10 +165,10 @@ namespace Mutagen
         }
 
         [DebuggerStepThrough]
-        public static Model Create_XML(
+        public static RaceStatsGendered Create_XML(
             XElement root,
             bool doMasks,
-            out Model_ErrorMask errorMask)
+            out RaceStatsGendered_ErrorMask errorMask)
         {
             var ret = Create_XML(
                 root: root,
@@ -183,27 +178,27 @@ namespace Mutagen
         }
 
         [DebuggerStepThrough]
-        public static (Model Object, Model_ErrorMask ErrorMask) Create_XML(
+        public static (RaceStatsGendered Object, RaceStatsGendered_ErrorMask ErrorMask) Create_XML(
             XElement root,
             bool doMasks)
         {
-            Model_ErrorMask errMaskRet = null;
+            RaceStatsGendered_ErrorMask errMaskRet = null;
             var ret = Create_XML_Internal(
                 root: root,
                 doMasks: doMasks,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Model_ErrorMask()) : default(Func<Model_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new RaceStatsGendered_ErrorMask()) : default(Func<RaceStatsGendered_ErrorMask>));
             return (ret, errMaskRet);
         }
 
-        public static Model Create_XML(string path)
+        public static RaceStatsGendered Create_XML(string path)
         {
             var root = XDocument.Load(path).Root;
             return Create_XML(root: root);
         }
 
-        public static Model Create_XML(
+        public static RaceStatsGendered Create_XML(
             string path,
-            out Model_ErrorMask errorMask)
+            out RaceStatsGendered_ErrorMask errorMask)
         {
             var root = XDocument.Load(path).Root;
             return Create_XML(
@@ -211,15 +206,15 @@ namespace Mutagen
                 errorMask: out errorMask);
         }
 
-        public static Model Create_XML(Stream stream)
+        public static RaceStatsGendered Create_XML(Stream stream)
         {
             var root = XDocument.Load(stream).Root;
             return Create_XML(root: root);
         }
 
-        public static Model Create_XML(
+        public static RaceStatsGendered Create_XML(
             Stream stream,
-            out Model_ErrorMask errorMask)
+            out RaceStatsGendered_ErrorMask errorMask)
         {
             var root = XDocument.Load(stream).Root;
             return Create_XML(
@@ -234,7 +229,7 @@ namespace Mutagen
             XElement root,
             NotifyingFireParameters? cmds = null)
         {
-            LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<RaceStatsGendered, RaceStatsGendered_ErrorMask>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
@@ -245,10 +240,10 @@ namespace Mutagen
 
         public virtual void CopyIn_XML(
             XElement root,
-            out Model_ErrorMask errorMask,
+            out RaceStatsGendered_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
-            LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<RaceStatsGendered, RaceStatsGendered_ErrorMask>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
@@ -269,7 +264,7 @@ namespace Mutagen
 
         public void CopyIn_XML(
             string path,
-            out Model_ErrorMask errorMask,
+            out RaceStatsGendered_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             var root = XDocument.Load(path).Root;
@@ -291,7 +286,7 @@ namespace Mutagen
 
         public void CopyIn_XML(
             Stream stream,
-            out Model_ErrorMask errorMask,
+            out RaceStatsGendered_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             var root = XDocument.Load(stream).Root;
@@ -306,10 +301,10 @@ namespace Mutagen
         #region XML Write
         public virtual void Write_XML(
             XmlWriter writer,
-            out Model_ErrorMask errorMask,
+            out RaceStatsGendered_ErrorMask errorMask,
             string name = null)
         {
-            errorMask = (Model_ErrorMask)this.Write_XML_Internal(
+            errorMask = (RaceStatsGendered_ErrorMask)this.Write_XML_Internal(
                 writer: writer,
                 name: name,
                 doMasks: true);
@@ -317,7 +312,7 @@ namespace Mutagen
 
         public virtual void Write_XML(
             string path,
-            out Model_ErrorMask errorMask,
+            out RaceStatsGendered_ErrorMask errorMask,
             string name = null)
         {
             using (var writer = new XmlTextWriter(path, Encoding.ASCII))
@@ -333,7 +328,7 @@ namespace Mutagen
 
         public virtual void Write_XML(
             Stream stream,
-            out Model_ErrorMask errorMask,
+            out RaceStatsGendered_ErrorMask errorMask,
             string name = null)
         {
             using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
@@ -390,7 +385,7 @@ namespace Mutagen
             bool doMasks,
             string name = null)
         {
-            ModelCommon.Write_XML(
+            RaceStatsGenderedCommon.Write_XML(
                 writer: writer,
                 item: this,
                 doMasks: doMasks,
@@ -399,12 +394,12 @@ namespace Mutagen
         }
         #endregion
 
-        private static Model Create_XML_Internal(
+        private static RaceStatsGendered Create_XML_Internal(
             XElement root,
             bool doMasks,
-            Func<Model_ErrorMask> errorMask)
+            Func<RaceStatsGendered_ErrorMask> errorMask)
         {
-            var ret = new Model();
+            var ret = new RaceStatsGendered();
             try
             {
                 foreach (var elem in root.Elements())
@@ -426,41 +421,41 @@ namespace Mutagen
         }
 
         protected static void Fill_XML_Internal(
-            Model item,
+            RaceStatsGendered item,
             XElement root,
             string name,
             bool doMasks,
-            Func<Model_ErrorMask> errorMask)
+            Func<RaceStatsGendered_ErrorMask> errorMask)
         {
             switch (name)
             {
-                case "File":
+                case "Male":
                     {
-                        Exception subMask;
-                        var tryGet = FilePathXmlTranslation.Instance.ParseNonNull(
-                            root,
+                        MaskItem<Exception, RaceStats_ErrorMask> subMask;
+                        var tryGet = LoquiXmlTranslation<RaceStats, RaceStats_ErrorMask>.Instance.Parse(
+                            root: root,
                             doMasks: doMasks,
-                            errorMask: out subMask);
-                        item._File.SetIfSucceeded(tryGet);
+                            mask: out subMask);
+                        item._Male.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
                             doMasks,
-                            (int)Model_FieldIndex.File,
+                            (int)RaceStatsGendered_FieldIndex.Male,
                             subMask);
                     }
                     break;
-                case "BoundRadius":
+                case "Female":
                     {
-                        Exception subMask;
-                        var tryGet = FloatXmlTranslation.Instance.ParseNonNull(
-                            root,
+                        MaskItem<Exception, RaceStats_ErrorMask> subMask;
+                        var tryGet = LoquiXmlTranslation<RaceStats, RaceStats_ErrorMask>.Instance.Parse(
+                            root: root,
                             doMasks: doMasks,
-                            errorMask: out subMask);
-                        item._BoundRadius.SetIfSucceeded(tryGet);
+                            mask: out subMask);
+                        item._Female.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
                             doMasks,
-                            (int)Model_FieldIndex.BoundRadius,
+                            (int)RaceStatsGendered_FieldIndex.Female,
                             subMask);
                     }
                     break;
@@ -474,7 +469,7 @@ namespace Mutagen
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public static Model Create_Binary(MutagenFrame frame)
+        public static RaceStatsGendered Create_Binary(MutagenFrame frame)
         {
             return Create_Binary(
                 frame: frame,
@@ -483,9 +478,9 @@ namespace Mutagen
         }
 
         [DebuggerStepThrough]
-        public static Model Create_Binary(
+        public static RaceStatsGendered Create_Binary(
             MutagenFrame frame,
-            out Model_ErrorMask errorMask)
+            out RaceStatsGendered_ErrorMask errorMask)
         {
             return Create_Binary(
                 frame: frame,
@@ -494,10 +489,10 @@ namespace Mutagen
         }
 
         [DebuggerStepThrough]
-        public static Model Create_Binary(
+        public static RaceStatsGendered Create_Binary(
             MutagenFrame frame,
             bool doMasks,
-            out Model_ErrorMask errorMask)
+            out RaceStatsGendered_ErrorMask errorMask)
         {
             var ret = Create_Binary(
                 frame: frame,
@@ -507,19 +502,19 @@ namespace Mutagen
         }
 
         [DebuggerStepThrough]
-        public static (Model Object, Model_ErrorMask ErrorMask) Create_Binary(
+        public static (RaceStatsGendered Object, RaceStatsGendered_ErrorMask ErrorMask) Create_Binary(
             MutagenFrame frame,
             bool doMasks)
         {
-            Model_ErrorMask errMaskRet = null;
+            RaceStatsGendered_ErrorMask errMaskRet = null;
             var ret = Create_Binary_Internal(
                 frame: frame,
                 doMasks: doMasks,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Model_ErrorMask()) : default(Func<Model_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new RaceStatsGendered_ErrorMask()) : default(Func<RaceStatsGendered_ErrorMask>));
             return (ret, errMaskRet);
         }
 
-        public static Model Create_Binary(string path)
+        public static RaceStatsGendered Create_Binary(string path)
         {
             using (var reader = new MutagenReader(path))
             {
@@ -528,9 +523,9 @@ namespace Mutagen
             }
         }
 
-        public static Model Create_Binary(
+        public static RaceStatsGendered Create_Binary(
             string path,
-            out Model_ErrorMask errorMask)
+            out RaceStatsGendered_ErrorMask errorMask)
         {
             using (var reader = new MutagenReader(path))
             {
@@ -541,7 +536,7 @@ namespace Mutagen
             }
         }
 
-        public static Model Create_Binary(Stream stream)
+        public static RaceStatsGendered Create_Binary(Stream stream)
         {
             using (var reader = new MutagenReader(stream))
             {
@@ -550,9 +545,9 @@ namespace Mutagen
             }
         }
 
-        public static Model Create_Binary(
+        public static RaceStatsGendered Create_Binary(
             Stream stream,
-            out Model_ErrorMask errorMask)
+            out RaceStatsGendered_ErrorMask errorMask)
         {
             using (var reader = new MutagenReader(stream))
             {
@@ -570,7 +565,7 @@ namespace Mutagen
             MutagenFrame frame,
             NotifyingFireParameters? cmds = null)
         {
-            LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.CopyIn(
+            LoquiBinaryTranslation<RaceStatsGendered, RaceStatsGendered_ErrorMask>.Instance.CopyIn(
                 frame: frame,
                 item: this,
                 skipProtected: true,
@@ -581,10 +576,10 @@ namespace Mutagen
 
         public virtual void CopyIn_Binary(
             MutagenFrame frame,
-            out Model_ErrorMask errorMask,
+            out RaceStatsGendered_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
-            LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.CopyIn(
+            LoquiBinaryTranslation<RaceStatsGendered, RaceStatsGendered_ErrorMask>.Instance.CopyIn(
                 frame: frame,
                 item: this,
                 skipProtected: true,
@@ -608,7 +603,7 @@ namespace Mutagen
 
         public void CopyIn_Binary(
             string path,
-            out Model_ErrorMask errorMask,
+            out RaceStatsGendered_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             using (var reader = new MutagenReader(path))
@@ -636,7 +631,7 @@ namespace Mutagen
 
         public void CopyIn_Binary(
             Stream stream,
-            out Model_ErrorMask errorMask,
+            out RaceStatsGendered_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             using (var reader = new MutagenReader(stream))
@@ -654,16 +649,16 @@ namespace Mutagen
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
-            out Model_ErrorMask errorMask)
+            out RaceStatsGendered_ErrorMask errorMask)
         {
-            errorMask = (Model_ErrorMask)this.Write_Binary_Internal(
+            errorMask = (RaceStatsGendered_ErrorMask)this.Write_Binary_Internal(
                 writer: writer,
                 doMasks: true);
         }
 
         public virtual void Write_Binary(
             string path,
-            out Model_ErrorMask errorMask)
+            out RaceStatsGendered_ErrorMask errorMask)
         {
             using (var writer = new MutagenWriter(path))
             {
@@ -675,7 +670,7 @@ namespace Mutagen
 
         public virtual void Write_Binary(
             Stream stream,
-            out Model_ErrorMask errorMask)
+            out RaceStatsGendered_ErrorMask errorMask)
         {
             using (var writer = new MutagenWriter(stream))
             {
@@ -712,7 +707,7 @@ namespace Mutagen
             MutagenWriter writer,
             bool doMasks)
         {
-            ModelCommon.Write_Binary(
+            RaceStatsGenderedCommon.Write_Binary(
                 writer: writer,
                 item: this,
                 doMasks: doMasks,
@@ -721,14 +716,17 @@ namespace Mutagen
         }
         #endregion
 
-        private static Model Create_Binary_Internal(
+        private static RaceStatsGendered Create_Binary_Internal(
             MutagenFrame frame,
             bool doMasks,
-            Func<Model_ErrorMask> errorMask)
+            Func<RaceStatsGendered_ErrorMask> errorMask)
         {
-            var ret = new Model();
+            var ret = new RaceStatsGendered();
             try
             {
+                frame = frame.Spawn(HeaderTranslation.ParseSubrecord(
+                    frame,
+                    RaceStatsGendered_Registration.ATTR_HEADER));
                 using (frame)
                 {
                     Fill_Binary_Structs(
@@ -736,17 +734,6 @@ namespace Mutagen
                         frame: frame,
                         doMasks: doMasks,
                         errorMask: errorMask);
-                    bool first = true;
-                    while (!frame.Complete)
-                    {
-                        if (!Fill_Binary_RecordTypes(
-                            item: ret,
-                            frame: frame,
-                            first: first,
-                            doMasks: doMasks,
-                            errorMask: errorMask)) break;
-                        first = false;
-                    }
                 }
             }
             catch (Exception ex)
@@ -758,75 +745,52 @@ namespace Mutagen
         }
 
         protected static void Fill_Binary_Structs(
-            Model item,
+            RaceStatsGendered item,
             MutagenFrame frame,
             bool doMasks,
-            Func<Model_ErrorMask> errorMask)
+            Func<RaceStatsGendered_ErrorMask> errorMask)
         {
-        }
-
-        protected static bool Fill_Binary_RecordTypes(
-            Model item,
-            MutagenFrame frame,
-            bool first,
-            bool doMasks,
-            Func<Model_ErrorMask> errorMask)
-        {
-            var nextRecordType = HeaderTranslation.GetNextSubRecordType(
-                frame: frame,
-                contentLength: out var contentLength);
-            switch (nextRecordType.Type)
-            {
-                case "MODL":
-                    if (!first) return false;
-                    frame.Position += Constants.SUBRECORD_LENGTH;
-                    var tryGet = Mutagen.Binary.FilePathBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
-                        doMasks: doMasks,
-                        fieldIndex: (int)Model_FieldIndex.File,
-                        errorMask: errorMask);
-                    item._File.SetIfSucceeded(tryGet);
-                break;
-                case "MODB":
-                    frame.Position += Constants.SUBRECORD_LENGTH;
-                    var BoundRadiustryGet = Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
-                        doMasks: doMasks,
-                        fieldIndex: (int)Model_FieldIndex.BoundRadius,
-                        errorMask: errorMask);
-                    item._BoundRadius.SetIfSucceeded(BoundRadiustryGet);
-                break;
-                default:
-                    return false;
-            }
-            return true;
+            if (frame.Complete) return;
+            var MaletryGet = LoquiBinaryTranslation<RaceStats, RaceStats_ErrorMask>.Instance.Parse(
+                frame: frame.Spawn(snapToFinalPosition: false),
+                doMasks: doMasks,
+                fieldIndex: (int)RaceStatsGendered_FieldIndex.Male,
+                errorMask: errorMask);
+            item._Male.SetIfSucceeded(MaletryGet);
+            if (frame.Complete) return;
+            var FemaletryGet = LoquiBinaryTranslation<RaceStats, RaceStats_ErrorMask>.Instance.Parse(
+                frame: frame.Spawn(snapToFinalPosition: false),
+                doMasks: doMasks,
+                fieldIndex: (int)RaceStatsGendered_FieldIndex.Female,
+                errorMask: errorMask);
+            item._Female.SetIfSucceeded(FemaletryGet);
         }
 
         #endregion
 
-        public Model Copy(
-            Model_CopyMask copyMask = null,
-            IModelGetter def = null)
+        public RaceStatsGendered Copy(
+            RaceStatsGendered_CopyMask copyMask = null,
+            IRaceStatsGenderedGetter def = null)
         {
-            return Model.Copy(
+            return RaceStatsGendered.Copy(
                 this,
                 copyMask: copyMask,
                 def: def);
         }
 
-        public static Model Copy(
-            IModel item,
-            Model_CopyMask copyMask = null,
-            IModelGetter def = null)
+        public static RaceStatsGendered Copy(
+            IRaceStatsGendered item,
+            RaceStatsGendered_CopyMask copyMask = null,
+            IRaceStatsGenderedGetter def = null)
         {
-            Model ret;
-            if (item.GetType().Equals(typeof(Model)))
+            RaceStatsGendered ret;
+            if (item.GetType().Equals(typeof(RaceStatsGendered)))
             {
-                ret = new Model();
+                ret = new RaceStatsGendered();
             }
             else
             {
-                ret = (Model)Activator.CreateInstance(item.GetType());
+                ret = (RaceStatsGendered)Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom(
                 item,
@@ -837,14 +801,14 @@ namespace Mutagen
 
         public static CopyType CopyGeneric<CopyType>(
             CopyType item,
-            Model_CopyMask copyMask = null,
-            IModelGetter def = null)
-            where CopyType : class, IModel
+            RaceStatsGendered_CopyMask copyMask = null,
+            IRaceStatsGenderedGetter def = null)
+            where CopyType : class, IRaceStatsGendered
         {
             CopyType ret;
-            if (item.GetType().Equals(typeof(Model)))
+            if (item.GetType().Equals(typeof(RaceStatsGendered)))
             {
-                ret = new Model() as CopyType;
+                ret = new RaceStatsGendered() as CopyType;
             }
             else
             {
@@ -860,12 +824,12 @@ namespace Mutagen
             return ret;
         }
 
-        public static Model Copy_ToLoqui(
-            IModelGetter item,
-            Model_CopyMask copyMask = null,
-            IModelGetter def = null)
+        public static RaceStatsGendered Copy_ToLoqui(
+            IRaceStatsGenderedGetter item,
+            RaceStatsGendered_CopyMask copyMask = null,
+            IRaceStatsGenderedGetter def = null)
         {
-            var ret = new Model();
+            var ret = new RaceStatsGendered();
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
@@ -876,17 +840,17 @@ namespace Mutagen
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds = null)
         {
-            Model_FieldIndex enu = (Model_FieldIndex)index;
+            RaceStatsGendered_FieldIndex enu = (RaceStatsGendered_FieldIndex)index;
             switch (enu)
             {
-                case Model_FieldIndex.File:
-                    this._File.Set(
-                        (FilePath)obj,
+                case RaceStatsGendered_FieldIndex.Male:
+                    this._Male.Set(
+                        (RaceStats)obj,
                         cmds);
                     break;
-                case Model_FieldIndex.BoundRadius:
-                    this._BoundRadius.Set(
-                        (Single)obj,
+                case RaceStatsGendered_FieldIndex.Female:
+                    this._Female.Set(
+                        (RaceStats)obj,
                         cmds);
                     break;
                 default:
@@ -904,43 +868,43 @@ namespace Mutagen
         public void Clear(NotifyingUnsetParameters? cmds = null)
         {
             CallClearPartial_Internal(cmds);
-            ModelCommon.Clear(this, cmds);
+            RaceStatsGenderedCommon.Clear(this, cmds);
         }
 
 
-        public static Model Create(IEnumerable<KeyValuePair<ushort, object>> fields)
+        public static RaceStatsGendered Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
-            var ret = new Model();
+            var ret = new RaceStatsGendered();
             foreach (var pair in fields)
             {
-                CopyInInternal_Model(ret, pair);
+                CopyInInternal_RaceStatsGendered(ret, pair);
             }
             return ret;
         }
 
-        protected static void CopyInInternal_Model(Model obj, KeyValuePair<ushort, object> pair)
+        protected static void CopyInInternal_RaceStatsGendered(RaceStatsGendered obj, KeyValuePair<ushort, object> pair)
         {
-            if (!EnumExt.TryParse(pair.Key, out Model_FieldIndex enu))
+            if (!EnumExt.TryParse(pair.Key, out RaceStatsGendered_FieldIndex enu))
             {
                 throw new ArgumentException($"Unknown index: {pair.Key}");
             }
             switch (enu)
             {
-                case Model_FieldIndex.File:
-                    obj._File.Set(
-                        (FilePath)pair.Value,
+                case RaceStatsGendered_FieldIndex.Male:
+                    obj._Male.Set(
+                        (RaceStats)pair.Value,
                         null);
                     break;
-                case Model_FieldIndex.BoundRadius:
-                    obj._BoundRadius.Set(
-                        (Single)pair.Value,
+                case RaceStatsGendered_FieldIndex.Female:
+                    obj._Female.Set(
+                        (RaceStats)pair.Value,
                         null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Model obj)
+        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, RaceStatsGendered obj)
         {
             ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
         }
@@ -949,26 +913,26 @@ namespace Mutagen
     #endregion
 
     #region Interface
-    public interface IModel : IModelGetter, ILoquiClass<IModel, IModelGetter>, ILoquiClass<Model, IModelGetter>
+    public interface IRaceStatsGendered : IRaceStatsGenderedGetter, ILoquiClass<IRaceStatsGendered, IRaceStatsGenderedGetter>, ILoquiClass<RaceStatsGendered, IRaceStatsGenderedGetter>
     {
-        new FilePath File { get; set; }
-        new INotifyingItem<FilePath> File_Property { get; }
+        new RaceStats Male { get; set; }
+        new INotifyingItem<RaceStats> Male_Property { get; }
 
-        new Single BoundRadius { get; set; }
-        new INotifyingItem<Single> BoundRadius_Property { get; }
+        new RaceStats Female { get; set; }
+        new INotifyingItem<RaceStats> Female_Property { get; }
 
     }
 
-    public interface IModelGetter : ILoquiObject
+    public interface IRaceStatsGenderedGetter : ILoquiObject
     {
-        #region File
-        FilePath File { get; }
-        INotifyingItemGetter<FilePath> File_Property { get; }
+        #region Male
+        RaceStats Male { get; }
+        INotifyingItemGetter<RaceStats> Male_Property { get; }
 
         #endregion
-        #region BoundRadius
-        Single BoundRadius { get; }
-        INotifyingItemGetter<Single> BoundRadius_Property { get; }
+        #region Female
+        RaceStats Female { get; }
+        INotifyingItemGetter<RaceStats> Female_Property { get; }
 
         #endregion
 
@@ -981,44 +945,44 @@ namespace Mutagen
 namespace Mutagen.Internals
 {
     #region Field Index
-    public enum Model_FieldIndex
+    public enum RaceStatsGendered_FieldIndex
     {
-        File = 0,
-        BoundRadius = 1,
+        Male = 0,
+        Female = 1,
     }
     #endregion
 
     #region Registration
-    public class Model_Registration : ILoquiRegistration
+    public class RaceStatsGendered_Registration : ILoquiRegistration
     {
-        public static readonly Model_Registration Instance = new Model_Registration();
+        public static readonly RaceStatsGendered_Registration Instance = new RaceStatsGendered_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Mutagen.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Mutagen.ProtocolKey,
-            msgID: 20,
+            msgID: 30,
             version: 0);
 
-        public const string GUID = "b989dfe1-feb4-4492-9a94-897f6be0c20a";
+        public const string GUID = "f6f95fe6-ec9c-4ddd-9713-820547d6c485";
 
         public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(Model_Mask<>);
+        public static readonly Type MaskType = typeof(RaceStatsGendered_Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Model_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(RaceStatsGendered_ErrorMask);
 
-        public static readonly Type ClassType = typeof(Model);
+        public static readonly Type ClassType = typeof(RaceStatsGendered);
 
-        public static readonly Type GetterType = typeof(IModelGetter);
+        public static readonly Type GetterType = typeof(IRaceStatsGenderedGetter);
 
-        public static readonly Type SetterType = typeof(IModel);
+        public static readonly Type SetterType = typeof(IRaceStatsGendered);
 
-        public static readonly Type CommonType = typeof(ModelCommon);
+        public static readonly Type CommonType = typeof(RaceStatsGenderedCommon);
 
-        public const string FullName = "Mutagen.Model";
+        public const string FullName = "Mutagen.RaceStatsGendered";
 
-        public const string Name = "Model";
+        public const string Name = "RaceStatsGendered";
 
         public const string Namespace = "Mutagen";
 
@@ -1030,10 +994,10 @@ namespace Mutagen.Internals
         {
             switch (str.Upper)
             {
-                case "FILE":
-                    return (ushort)Model_FieldIndex.File;
-                case "BOUNDRADIUS":
-                    return (ushort)Model_FieldIndex.BoundRadius;
+                case "MALE":
+                    return (ushort)RaceStatsGendered_FieldIndex.Male;
+                case "FEMALE":
+                    return (ushort)RaceStatsGendered_FieldIndex.Female;
                 default:
                     return null;
             }
@@ -1041,11 +1005,11 @@ namespace Mutagen.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            Model_FieldIndex enu = (Model_FieldIndex)index;
+            RaceStatsGendered_FieldIndex enu = (RaceStatsGendered_FieldIndex)index;
             switch (enu)
             {
-                case Model_FieldIndex.File:
-                case Model_FieldIndex.BoundRadius:
+                case RaceStatsGendered_FieldIndex.Male:
+                case RaceStatsGendered_FieldIndex.Female:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1054,12 +1018,12 @@ namespace Mutagen.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            Model_FieldIndex enu = (Model_FieldIndex)index;
+            RaceStatsGendered_FieldIndex enu = (RaceStatsGendered_FieldIndex)index;
             switch (enu)
             {
-                case Model_FieldIndex.File:
-                case Model_FieldIndex.BoundRadius:
-                    return false;
+                case RaceStatsGendered_FieldIndex.Male:
+                case RaceStatsGendered_FieldIndex.Female:
+                    return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1067,11 +1031,11 @@ namespace Mutagen.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            Model_FieldIndex enu = (Model_FieldIndex)index;
+            RaceStatsGendered_FieldIndex enu = (RaceStatsGendered_FieldIndex)index;
             switch (enu)
             {
-                case Model_FieldIndex.File:
-                case Model_FieldIndex.BoundRadius:
+                case RaceStatsGendered_FieldIndex.Male:
+                case RaceStatsGendered_FieldIndex.Female:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1080,13 +1044,13 @@ namespace Mutagen.Internals
 
         public static string GetNthName(ushort index)
         {
-            Model_FieldIndex enu = (Model_FieldIndex)index;
+            RaceStatsGendered_FieldIndex enu = (RaceStatsGendered_FieldIndex)index;
             switch (enu)
             {
-                case Model_FieldIndex.File:
-                    return "File";
-                case Model_FieldIndex.BoundRadius:
-                    return "BoundRadius";
+                case RaceStatsGendered_FieldIndex.Male:
+                    return "Male";
+                case RaceStatsGendered_FieldIndex.Female:
+                    return "Female";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1094,11 +1058,11 @@ namespace Mutagen.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            Model_FieldIndex enu = (Model_FieldIndex)index;
+            RaceStatsGendered_FieldIndex enu = (RaceStatsGendered_FieldIndex)index;
             switch (enu)
             {
-                case Model_FieldIndex.File:
-                case Model_FieldIndex.BoundRadius:
+                case RaceStatsGendered_FieldIndex.Male:
+                case RaceStatsGendered_FieldIndex.Female:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1107,11 +1071,11 @@ namespace Mutagen.Internals
 
         public static bool IsProtected(ushort index)
         {
-            Model_FieldIndex enu = (Model_FieldIndex)index;
+            RaceStatsGendered_FieldIndex enu = (RaceStatsGendered_FieldIndex)index;
             switch (enu)
             {
-                case Model_FieldIndex.File:
-                case Model_FieldIndex.BoundRadius:
+                case RaceStatsGendered_FieldIndex.Male:
+                case RaceStatsGendered_FieldIndex.Female:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1120,23 +1084,22 @@ namespace Mutagen.Internals
 
         public static Type GetNthType(ushort index)
         {
-            Model_FieldIndex enu = (Model_FieldIndex)index;
+            RaceStatsGendered_FieldIndex enu = (RaceStatsGendered_FieldIndex)index;
             switch (enu)
             {
-                case Model_FieldIndex.File:
-                    return typeof(FilePath);
-                case Model_FieldIndex.BoundRadius:
-                    return typeof(Single);
+                case RaceStatsGendered_FieldIndex.Male:
+                    return typeof(RaceStats);
+                case RaceStatsGendered_FieldIndex.Female:
+                    return typeof(RaceStats);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
-        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
-        public static readonly RecordType MODB_HEADER = new RecordType("MODB");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = MODL_HEADER;
-        public const int NumStructFields = 0;
-        public const int NumTypedFields = 2;
+        public static readonly RecordType ATTR_HEADER = new RecordType("ATTR");
+        public static readonly RecordType TRIGGERING_RECORD_TYPE = ATTR_HEADER;
+        public const int NumStructFields = 2;
+        public const int NumTypedFields = 0;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1167,17 +1130,17 @@ namespace Mutagen.Internals
     #endregion
 
     #region Extensions
-    public static class ModelCommon
+    public static class RaceStatsGenderedCommon
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IModel item,
-            IModelGetter rhs,
-            Model_CopyMask copyMask = null,
-            IModelGetter def = null,
+            this IRaceStatsGendered item,
+            IRaceStatsGenderedGetter rhs,
+            RaceStatsGendered_CopyMask copyMask = null,
+            IRaceStatsGenderedGetter def = null,
             NotifyingFireParameters? cmds = null)
         {
-            ModelCommon.CopyFieldsFrom(
+            RaceStatsGenderedCommon.CopyFieldsFrom(
                 item: item,
                 rhs: rhs,
                 def: def,
@@ -1188,14 +1151,14 @@ namespace Mutagen.Internals
         }
 
         public static void CopyFieldsFrom(
-            this IModel item,
-            IModelGetter rhs,
-            out Model_ErrorMask errorMask,
-            Model_CopyMask copyMask = null,
-            IModelGetter def = null,
+            this IRaceStatsGendered item,
+            IRaceStatsGenderedGetter rhs,
+            out RaceStatsGendered_ErrorMask errorMask,
+            RaceStatsGendered_CopyMask copyMask = null,
+            IRaceStatsGenderedGetter def = null,
             NotifyingFireParameters? cmds = null)
         {
-            ModelCommon.CopyFieldsFrom(
+            RaceStatsGenderedCommon.CopyFieldsFrom(
                 item: item,
                 rhs: rhs,
                 def: def,
@@ -1206,20 +1169,20 @@ namespace Mutagen.Internals
         }
 
         public static void CopyFieldsFrom(
-            this IModel item,
-            IModelGetter rhs,
-            IModelGetter def,
+            this IRaceStatsGendered item,
+            IRaceStatsGenderedGetter rhs,
+            IRaceStatsGenderedGetter def,
             bool doErrorMask,
-            out Model_ErrorMask errorMask,
-            Model_CopyMask copyMask,
+            out RaceStatsGendered_ErrorMask errorMask,
+            RaceStatsGendered_CopyMask copyMask,
             NotifyingFireParameters? cmds)
         {
-            Model_ErrorMask retErrorMask = null;
-            Func<Model_ErrorMask> maskGetter = () =>
+            RaceStatsGendered_ErrorMask retErrorMask = null;
+            Func<RaceStatsGendered_ErrorMask> maskGetter = () =>
             {
                 if (retErrorMask == null)
                 {
-                    retErrorMask = new Model_ErrorMask();
+                    retErrorMask = new RaceStatsGendered_ErrorMask();
                 }
                 return retErrorMask;
             };
@@ -1235,42 +1198,114 @@ namespace Mutagen.Internals
         }
 
         public static void CopyFieldsFrom(
-            this IModel item,
-            IModelGetter rhs,
-            IModelGetter def,
+            this IRaceStatsGendered item,
+            IRaceStatsGenderedGetter rhs,
+            IRaceStatsGenderedGetter def,
             bool doErrorMask,
-            Func<Model_ErrorMask> errorMask,
-            Model_CopyMask copyMask,
+            Func<RaceStatsGendered_ErrorMask> errorMask,
+            RaceStatsGendered_CopyMask copyMask,
             NotifyingFireParameters? cmds)
         {
-            if (copyMask?.File ?? true)
+            if (copyMask?.Male.Overall != CopyOption.Skip)
             {
                 try
                 {
-                    item.File_Property.SetToWithDefault(
-                        rhs.File_Property,
-                        def?.File_Property,
-                        cmds);
+                    item.Male_Property.SetToWithDefault(
+                        rhs.Male_Property,
+                        def?.Male_Property,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.Male?.Overall ?? CopyOption.Reference)
+                            {
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    RaceStatsCommon.CopyFieldsFrom(
+                                        item: item.Male,
+                                        rhs: rhs.Male,
+                                        def: def?.Male,
+                                        doErrorMask: doErrorMask,
+                                        errorMask: (doErrorMask ? new Func<RaceStats_ErrorMask>(() =>
+                                        {
+                                            var baseMask = errorMask();
+                                            if (baseMask.Male.Specific == null)
+                                            {
+                                                baseMask.Male = new MaskItem<Exception, RaceStats_ErrorMask>(null, new RaceStats_ErrorMask());
+                                            }
+                                            return baseMask.Male.Specific;
+                                        }
+                                        ) : null),
+                                        copyMask: copyMask?.Male.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(RaceStats);
+                                    return RaceStats.Copy(
+                                        r,
+                                        copyMask?.Male?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Male?.Overall}. Cannot execute copy.");
+                            }
+                        }
+                        );
                 }
                 catch (Exception ex)
                 when (doErrorMask)
                 {
-                    errorMask().SetNthException((int)Model_FieldIndex.File, ex);
+                    errorMask().SetNthException((int)RaceStatsGendered_FieldIndex.Male, ex);
                 }
             }
-            if (copyMask?.BoundRadius ?? true)
+            if (copyMask?.Female.Overall != CopyOption.Skip)
             {
                 try
                 {
-                    item.BoundRadius_Property.SetToWithDefault(
-                        rhs.BoundRadius_Property,
-                        def?.BoundRadius_Property,
-                        cmds);
+                    item.Female_Property.SetToWithDefault(
+                        rhs.Female_Property,
+                        def?.Female_Property,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.Female?.Overall ?? CopyOption.Reference)
+                            {
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    RaceStatsCommon.CopyFieldsFrom(
+                                        item: item.Female,
+                                        rhs: rhs.Female,
+                                        def: def?.Female,
+                                        doErrorMask: doErrorMask,
+                                        errorMask: (doErrorMask ? new Func<RaceStats_ErrorMask>(() =>
+                                        {
+                                            var baseMask = errorMask();
+                                            if (baseMask.Female.Specific == null)
+                                            {
+                                                baseMask.Female = new MaskItem<Exception, RaceStats_ErrorMask>(null, new RaceStats_ErrorMask());
+                                            }
+                                            return baseMask.Female.Specific;
+                                        }
+                                        ) : null),
+                                        copyMask: copyMask?.Female.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(RaceStats);
+                                    return RaceStats.Copy(
+                                        r,
+                                        copyMask?.Female?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Female?.Overall}. Cannot execute copy.");
+                            }
+                        }
+                        );
                 }
                 catch (Exception ex)
                 when (doErrorMask)
                 {
-                    errorMask().SetNthException((int)Model_FieldIndex.BoundRadius, ex);
+                    errorMask().SetNthException((int)RaceStatsGendered_FieldIndex.Female, ex);
                 }
             }
         }
@@ -1280,17 +1315,17 @@ namespace Mutagen.Internals
         public static void SetNthObjectHasBeenSet(
             ushort index,
             bool on,
-            IModel obj,
+            IRaceStatsGendered obj,
             NotifyingFireParameters? cmds = null)
         {
-            Model_FieldIndex enu = (Model_FieldIndex)index;
+            RaceStatsGendered_FieldIndex enu = (RaceStatsGendered_FieldIndex)index;
             switch (enu)
             {
-                case Model_FieldIndex.File:
-                    obj.File_Property.HasBeenSet = on;
+                case RaceStatsGendered_FieldIndex.Male:
+                    obj.Male_Property.HasBeenSet = on;
                     break;
-                case Model_FieldIndex.BoundRadius:
-                    obj.BoundRadius_Property.HasBeenSet = on;
+                case RaceStatsGendered_FieldIndex.Female:
+                    obj.Female_Property.HasBeenSet = on;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1299,17 +1334,17 @@ namespace Mutagen.Internals
 
         public static void UnsetNthObject(
             ushort index,
-            IModel obj,
+            IRaceStatsGendered obj,
             NotifyingUnsetParameters? cmds = null)
         {
-            Model_FieldIndex enu = (Model_FieldIndex)index;
+            RaceStatsGendered_FieldIndex enu = (RaceStatsGendered_FieldIndex)index;
             switch (enu)
             {
-                case Model_FieldIndex.File:
-                    obj.File_Property.Unset(cmds);
+                case RaceStatsGendered_FieldIndex.Male:
+                    obj.Male_Property.Unset(cmds);
                     break;
-                case Model_FieldIndex.BoundRadius:
-                    obj.BoundRadius_Property.Unset(cmds);
+                case RaceStatsGendered_FieldIndex.Female:
+                    obj.Female_Property.Unset(cmds);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1318,15 +1353,15 @@ namespace Mutagen.Internals
 
         public static bool GetNthObjectHasBeenSet(
             ushort index,
-            IModel obj)
+            IRaceStatsGendered obj)
         {
-            Model_FieldIndex enu = (Model_FieldIndex)index;
+            RaceStatsGendered_FieldIndex enu = (RaceStatsGendered_FieldIndex)index;
             switch (enu)
             {
-                case Model_FieldIndex.File:
-                    return obj.File_Property.HasBeenSet;
-                case Model_FieldIndex.BoundRadius:
-                    return obj.BoundRadius_Property.HasBeenSet;
+                case RaceStatsGendered_FieldIndex.Male:
+                    return obj.Male_Property.HasBeenSet;
+                case RaceStatsGendered_FieldIndex.Female:
+                    return obj.Female_Property.HasBeenSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1334,51 +1369,51 @@ namespace Mutagen.Internals
 
         public static object GetNthObject(
             ushort index,
-            IModelGetter obj)
+            IRaceStatsGenderedGetter obj)
         {
-            Model_FieldIndex enu = (Model_FieldIndex)index;
+            RaceStatsGendered_FieldIndex enu = (RaceStatsGendered_FieldIndex)index;
             switch (enu)
             {
-                case Model_FieldIndex.File:
-                    return obj.File;
-                case Model_FieldIndex.BoundRadius:
-                    return obj.BoundRadius;
+                case RaceStatsGendered_FieldIndex.Male:
+                    return obj.Male;
+                case RaceStatsGendered_FieldIndex.Female:
+                    return obj.Female;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
         public static void Clear(
-            IModel item,
+            IRaceStatsGendered item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.File_Property.Unset(cmds.ToUnsetParams());
-            item.BoundRadius_Property.Unset(cmds.ToUnsetParams());
+            item.Male_Property.Unset(cmds.ToUnsetParams());
+            item.Female_Property.Unset(cmds.ToUnsetParams());
         }
 
-        public static Model_Mask<bool> GetEqualsMask(
-            this IModelGetter item,
-            IModelGetter rhs)
+        public static RaceStatsGendered_Mask<bool> GetEqualsMask(
+            this IRaceStatsGenderedGetter item,
+            IRaceStatsGenderedGetter rhs)
         {
-            var ret = new Model_Mask<bool>();
+            var ret = new RaceStatsGendered_Mask<bool>();
             FillEqualsMask(item, rhs, ret);
             return ret;
         }
 
         public static void FillEqualsMask(
-            IModelGetter item,
-            IModelGetter rhs,
-            Model_Mask<bool> ret)
+            IRaceStatsGenderedGetter item,
+            IRaceStatsGenderedGetter rhs,
+            RaceStatsGendered_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.File = item.File_Property.Equals(rhs.File_Property, (l, r) => object.Equals(l, r));
-            ret.BoundRadius = item.BoundRadius_Property.Equals(rhs.BoundRadius_Property, (l, r) => l == r);
+            ret.Male = item.Male_Property.LoquiEqualsHelper(rhs.Male_Property, (loqLhs, loqRhs) => RaceStatsCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Female = item.Female_Property.LoquiEqualsHelper(rhs.Female_Property, (loqLhs, loqRhs) => RaceStatsCommon.GetEqualsMask(loqLhs, loqRhs));
         }
 
         public static string ToString(
-            this IModelGetter item,
+            this IRaceStatsGenderedGetter item,
             string name = null,
-            Model_Mask<bool> printMask = null)
+            RaceStatsGendered_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             item.ToString(fg, name, printMask);
@@ -1386,48 +1421,50 @@ namespace Mutagen.Internals
         }
 
         public static void ToString(
-            this IModelGetter item,
+            this IRaceStatsGenderedGetter item,
             FileGeneration fg,
             string name = null,
-            Model_Mask<bool> printMask = null)
+            RaceStatsGendered_Mask<bool> printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(Model)} =>");
+                fg.AppendLine($"{nameof(RaceStatsGendered)} =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(Model)}) =>");
+                fg.AppendLine($"{name} ({nameof(RaceStatsGendered)}) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.File ?? true)
+                if (printMask?.Male?.Overall ?? true)
                 {
-                    fg.AppendLine($"File => {item.File}");
+                    item.Male?.ToString(fg, "Male");
                 }
-                if (printMask?.BoundRadius ?? true)
+                if (printMask?.Female?.Overall ?? true)
                 {
-                    fg.AppendLine($"BoundRadius => {item.BoundRadius}");
+                    item.Female?.ToString(fg, "Female");
                 }
             }
             fg.AppendLine("]");
         }
 
         public static bool HasBeenSet(
-            this IModelGetter item,
-            Model_Mask<bool?> checkMask)
+            this IRaceStatsGenderedGetter item,
+            RaceStatsGendered_Mask<bool?> checkMask)
         {
-            if (checkMask.File.HasValue && checkMask.File.Value != item.File_Property.HasBeenSet) return false;
-            if (checkMask.BoundRadius.HasValue && checkMask.BoundRadius.Value != item.BoundRadius_Property.HasBeenSet) return false;
+            if (checkMask.Male.Overall.HasValue && checkMask.Male.Overall.Value != item.Male_Property.HasBeenSet) return false;
+            if (checkMask.Male.Specific != null && (item.Male_Property.Item == null || !item.Male_Property.Item.HasBeenSet(checkMask.Male.Specific))) return false;
+            if (checkMask.Female.Overall.HasValue && checkMask.Female.Overall.Value != item.Female_Property.HasBeenSet) return false;
+            if (checkMask.Female.Specific != null && (item.Female_Property.Item == null || !item.Female_Property.Item.HasBeenSet(checkMask.Female.Specific))) return false;
             return true;
         }
 
-        public static Model_Mask<bool> GetHasBeenSetMask(IModelGetter item)
+        public static RaceStatsGendered_Mask<bool> GetHasBeenSetMask(IRaceStatsGenderedGetter item)
         {
-            var ret = new Model_Mask<bool>();
-            ret.File = item.File_Property.HasBeenSet;
-            ret.BoundRadius = item.BoundRadius_Property.HasBeenSet;
+            var ret = new RaceStatsGendered_Mask<bool>();
+            ret.Male = new MaskItem<bool, RaceStats_Mask<bool>>(item.Male_Property.HasBeenSet, RaceStatsCommon.GetHasBeenSetMask(item.Male_Property.Item));
+            ret.Female = new MaskItem<bool, RaceStats_Mask<bool>>(item.Female_Property.HasBeenSet, RaceStatsCommon.GetHasBeenSetMask(item.Female_Property.Item));
             return ret;
         }
 
@@ -1435,64 +1472,66 @@ namespace Mutagen.Internals
         #region XML Write
         public static void Write_XML(
             XmlWriter writer,
-            IModelGetter item,
+            IRaceStatsGenderedGetter item,
             bool doMasks,
-            out Model_ErrorMask errorMask,
+            out RaceStatsGendered_ErrorMask errorMask,
             string name = null)
         {
-            Model_ErrorMask errMaskRet = null;
+            RaceStatsGendered_ErrorMask errMaskRet = null;
             Write_XML_Internal(
                 writer: writer,
                 name: name,
                 item: item,
                 doMasks: doMasks,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Model_ErrorMask()) : default(Func<Model_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new RaceStatsGendered_ErrorMask()) : default(Func<RaceStatsGendered_ErrorMask>));
             errorMask = errMaskRet;
         }
 
         private static void Write_XML_Internal(
             XmlWriter writer,
-            IModelGetter item,
+            IRaceStatsGenderedGetter item,
             bool doMasks,
-            Func<Model_ErrorMask> errorMask,
+            Func<RaceStatsGendered_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Model"))
+                using (new ElementWrapper(writer, name ?? "Mutagen.RaceStatsGendered"))
                 {
                     if (name != null)
                     {
-                        writer.WriteAttributeString("type", "Mutagen.Model");
+                        writer.WriteAttributeString("type", "Mutagen.RaceStatsGendered");
                     }
-                    if (item.File_Property.HasBeenSet)
+                    if (item.Male_Property.HasBeenSet)
                     {
-                        Exception subMask;
-                        FilePathXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.File),
-                            item.File,
+                        MaskItem<Exception, RaceStats_ErrorMask> subMask;
+                        LoquiXmlTranslation<RaceStats, RaceStats_ErrorMask>.Instance.Write(
+                            writer: writer,
+                            item: item.Male,
+                            name: nameof(item.Male),
                             doMasks: doMasks,
-                            errorMask: out subMask);
+                            mask: out RaceStats_ErrorMask loquiMask);
+                        subMask = loquiMask == null ? null : new MaskItem<Exception, RaceStats_ErrorMask>(null, loquiMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
                             doMasks,
-                            (int)Model_FieldIndex.File,
+                            (int)RaceStatsGendered_FieldIndex.Male,
                             subMask);
                     }
-                    if (item.BoundRadius_Property.HasBeenSet)
+                    if (item.Female_Property.HasBeenSet)
                     {
-                        Exception subMask;
-                        FloatXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.BoundRadius),
-                            item.BoundRadius,
+                        MaskItem<Exception, RaceStats_ErrorMask> subMask;
+                        LoquiXmlTranslation<RaceStats, RaceStats_ErrorMask>.Instance.Write(
+                            writer: writer,
+                            item: item.Female,
+                            name: nameof(item.Female),
                             doMasks: doMasks,
-                            errorMask: out subMask);
+                            mask: out RaceStats_ErrorMask loquiMask);
+                        subMask = loquiMask == null ? null : new MaskItem<Exception, RaceStats_ErrorMask>(null, loquiMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
                             doMasks,
-                            (int)Model_FieldIndex.BoundRadius,
+                            (int)RaceStatsGendered_FieldIndex.Female,
                             subMask);
                     }
                 }
@@ -1511,32 +1550,38 @@ namespace Mutagen.Internals
         #region Binary Write
         public static void Write_Binary(
             MutagenWriter writer,
-            IModelGetter item,
+            IRaceStatsGenderedGetter item,
             bool doMasks,
-            out Model_ErrorMask errorMask)
+            out RaceStatsGendered_ErrorMask errorMask)
         {
-            Model_ErrorMask errMaskRet = null;
+            RaceStatsGendered_ErrorMask errMaskRet = null;
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
                 doMasks: doMasks,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Model_ErrorMask()) : default(Func<Model_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new RaceStatsGendered_ErrorMask()) : default(Func<RaceStatsGendered_ErrorMask>));
             errorMask = errMaskRet;
         }
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
-            IModelGetter item,
+            IRaceStatsGenderedGetter item,
             bool doMasks,
-            Func<Model_ErrorMask> errorMask)
+            Func<RaceStatsGendered_ErrorMask> errorMask)
         {
             try
             {
-                Write_Binary_RecordTypes(
-                    item: item,
+                using (HeaderExport.ExportHeader(
                     writer: writer,
-                    doMasks: doMasks,
-                    errorMask: errorMask);
+                    record: RaceStatsGendered_Registration.ATTR_HEADER,
+                    type: ObjectType.Struct))
+                {
+                    Write_Binary_Embedded(
+                        item: item,
+                        writer: writer,
+                        doMasks: doMasks,
+                        errorMask: errorMask);
+                }
             }
             catch (Exception ex)
             when (doMasks)
@@ -1546,28 +1591,24 @@ namespace Mutagen.Internals
         }
         #endregion
 
-        public static void Write_Binary_RecordTypes(
-            IModelGetter item,
+        public static void Write_Binary_Embedded(
+            IRaceStatsGenderedGetter item,
             MutagenWriter writer,
             bool doMasks,
-            Func<Model_ErrorMask> errorMask)
+            Func<RaceStatsGendered_ErrorMask> errorMask)
         {
-            Mutagen.Binary.FilePathBinaryTranslation.Instance.Write(
+            LoquiBinaryTranslation<RaceStats, RaceStats_ErrorMask>.Instance.Write(
                 writer: writer,
-                item: item.File_Property,
-                fieldIndex: (int)Model_FieldIndex.File,
+                item: item.Male_Property,
                 doMasks: doMasks,
-                errorMask: errorMask,
-                header: Model_Registration.MODL_HEADER,
-                nullable: false);
-            Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
+                fieldIndex: (int)RaceStatsGendered_FieldIndex.Male,
+                errorMask: errorMask);
+            LoquiBinaryTranslation<RaceStats, RaceStats_ErrorMask>.Instance.Write(
                 writer: writer,
-                item: item.BoundRadius_Property,
+                item: item.Female_Property,
                 doMasks: doMasks,
-                fieldIndex: (int)Model_FieldIndex.BoundRadius,
-                errorMask: errorMask,
-                header: Model_Registration.MODB_HEADER,
-                nullable: false);
+                fieldIndex: (int)RaceStatsGendered_FieldIndex.Female,
+                errorMask: errorMask);
         }
 
         #endregion
@@ -1578,44 +1619,44 @@ namespace Mutagen.Internals
     #region Modules
 
     #region Mask
-    public class Model_Mask<T> : IMask<T>, IEquatable<Model_Mask<T>>
+    public class RaceStatsGendered_Mask<T> : IMask<T>, IEquatable<RaceStatsGendered_Mask<T>>
     {
         #region Ctors
-        public Model_Mask()
+        public RaceStatsGendered_Mask()
         {
         }
 
-        public Model_Mask(T initialValue)
+        public RaceStatsGendered_Mask(T initialValue)
         {
-            this.File = initialValue;
-            this.BoundRadius = initialValue;
+            this.Male = new MaskItem<T, RaceStats_Mask<T>>(initialValue, new RaceStats_Mask<T>(initialValue));
+            this.Female = new MaskItem<T, RaceStats_Mask<T>>(initialValue, new RaceStats_Mask<T>(initialValue));
         }
         #endregion
 
         #region Members
-        public T File;
-        public T BoundRadius;
+        public MaskItem<T, RaceStats_Mask<T>> Male { get; set; }
+        public MaskItem<T, RaceStats_Mask<T>> Female { get; set; }
         #endregion
 
         #region Equals
         public override bool Equals(object obj)
         {
-            if (!(obj is Model_Mask<T> rhs)) return false;
+            if (!(obj is RaceStatsGendered_Mask<T> rhs)) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(Model_Mask<T> rhs)
+        public bool Equals(RaceStatsGendered_Mask<T> rhs)
         {
             if (rhs == null) return false;
-            if (!object.Equals(this.File, rhs.File)) return false;
-            if (!object.Equals(this.BoundRadius, rhs.BoundRadius)) return false;
+            if (!object.Equals(this.Male, rhs.Male)) return false;
+            if (!object.Equals(this.Female, rhs.Female)) return false;
             return true;
         }
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = ret.CombineHashCode(this.File?.GetHashCode());
-            ret = ret.CombineHashCode(this.BoundRadius?.GetHashCode());
+            ret = ret.CombineHashCode(this.Male?.GetHashCode());
+            ret = ret.CombineHashCode(this.Female?.GetHashCode());
             return ret;
         }
 
@@ -1624,24 +1665,48 @@ namespace Mutagen.Internals
         #region All Equal
         public bool AllEqual(Func<T, bool> eval)
         {
-            if (!eval(this.File)) return false;
-            if (!eval(this.BoundRadius)) return false;
+            if (Male != null)
+            {
+                if (!eval(this.Male.Overall)) return false;
+                if (Male.Specific != null && !Male.Specific.AllEqual(eval)) return false;
+            }
+            if (Female != null)
+            {
+                if (!eval(this.Female.Overall)) return false;
+                if (Female.Specific != null && !Female.Specific.AllEqual(eval)) return false;
+            }
             return true;
         }
         #endregion
 
         #region Translate
-        public Model_Mask<R> Translate<R>(Func<T, R> eval)
+        public RaceStatsGendered_Mask<R> Translate<R>(Func<T, R> eval)
         {
-            var ret = new Model_Mask<R>();
+            var ret = new RaceStatsGendered_Mask<R>();
             this.Translate_InternalFill(ret, eval);
             return ret;
         }
 
-        protected void Translate_InternalFill<R>(Model_Mask<R> obj, Func<T, R> eval)
+        protected void Translate_InternalFill<R>(RaceStatsGendered_Mask<R> obj, Func<T, R> eval)
         {
-            obj.File = eval(this.File);
-            obj.BoundRadius = eval(this.BoundRadius);
+            if (this.Male != null)
+            {
+                obj.Male = new MaskItem<R, RaceStats_Mask<R>>();
+                obj.Male.Overall = eval(this.Male.Overall);
+                if (this.Male.Specific != null)
+                {
+                    obj.Male.Specific = this.Male.Specific.Translate(eval);
+                }
+            }
+            if (this.Female != null)
+            {
+                obj.Female = new MaskItem<R, RaceStats_Mask<R>>();
+                obj.Female.Overall = eval(this.Female.Overall);
+                if (this.Female.Specific != null)
+                {
+                    obj.Female.Specific = this.Female.Specific.Translate(eval);
+                }
+            }
         }
         #endregion
 
@@ -1657,26 +1722,26 @@ namespace Mutagen.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(Model_Mask<bool> printMask = null)
+        public string ToString(RaceStatsGendered_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, Model_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, RaceStatsGendered_Mask<bool> printMask = null)
         {
-            fg.AppendLine($"{nameof(Model_Mask<T>)} =>");
+            fg.AppendLine($"{nameof(RaceStatsGendered_Mask<T>)} =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.File ?? true)
+                if (printMask?.Male?.Overall ?? true)
                 {
-                    fg.AppendLine($"File => {File.ToStringSafe()}");
+                    Male.ToString(fg);
                 }
-                if (printMask?.BoundRadius ?? true)
+                if (printMask?.Female?.Overall ?? true)
                 {
-                    fg.AppendLine($"BoundRadius => {BoundRadius.ToStringSafe()}");
+                    Female.ToString(fg);
                 }
             }
             fg.AppendLine("]");
@@ -1685,7 +1750,7 @@ namespace Mutagen.Internals
 
     }
 
-    public class Model_ErrorMask : IErrorMask
+    public class RaceStatsGendered_ErrorMask : IErrorMask
     {
         #region Members
         public Exception Overall { get; set; }
@@ -1701,21 +1766,21 @@ namespace Mutagen.Internals
                 return _warnings;
             }
         }
-        public Exception File;
-        public Exception BoundRadius;
+        public MaskItem<Exception, RaceStats_ErrorMask> Male;
+        public MaskItem<Exception, RaceStats_ErrorMask> Female;
         #endregion
 
         #region IErrorMask
         public void SetNthException(int index, Exception ex)
         {
-            Model_FieldIndex enu = (Model_FieldIndex)index;
+            RaceStatsGendered_FieldIndex enu = (RaceStatsGendered_FieldIndex)index;
             switch (enu)
             {
-                case Model_FieldIndex.File:
-                    this.File = ex;
+                case RaceStatsGendered_FieldIndex.Male:
+                    this.Male = new MaskItem<Exception, RaceStats_ErrorMask>(ex, null);
                     break;
-                case Model_FieldIndex.BoundRadius:
-                    this.BoundRadius = ex;
+                case RaceStatsGendered_FieldIndex.Female:
+                    this.Female = new MaskItem<Exception, RaceStats_ErrorMask>(ex, null);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1724,14 +1789,14 @@ namespace Mutagen.Internals
 
         public void SetNthMask(int index, object obj)
         {
-            Model_FieldIndex enu = (Model_FieldIndex)index;
+            RaceStatsGendered_FieldIndex enu = (RaceStatsGendered_FieldIndex)index;
             switch (enu)
             {
-                case Model_FieldIndex.File:
-                    this.File = (Exception)obj;
+                case RaceStatsGendered_FieldIndex.Male:
+                    this.Male = (MaskItem<Exception, RaceStats_ErrorMask>)obj;
                     break;
-                case Model_FieldIndex.BoundRadius:
-                    this.BoundRadius = (Exception)obj;
+                case RaceStatsGendered_FieldIndex.Female:
+                    this.Female = (MaskItem<Exception, RaceStats_ErrorMask>)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1749,7 +1814,7 @@ namespace Mutagen.Internals
 
         public void ToString(FileGeneration fg)
         {
-            fg.AppendLine("Model_ErrorMask =>");
+            fg.AppendLine("RaceStatsGendered_ErrorMask =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
@@ -1769,26 +1834,26 @@ namespace Mutagen.Internals
         }
         protected void ToString_FillInternal(FileGeneration fg)
         {
-            if (File != null)
+            if (Male != null)
             {
-                fg.AppendLine($"File => {File.ToStringSafe()}");
+                Male.ToString(fg);
             }
-            if (BoundRadius != null)
+            if (Female != null)
             {
-                fg.AppendLine($"BoundRadius => {BoundRadius.ToStringSafe()}");
+                Female.ToString(fg);
             }
         }
         #endregion
 
         #region Combine
-        public Model_ErrorMask Combine(Model_ErrorMask rhs)
+        public RaceStatsGendered_ErrorMask Combine(RaceStatsGendered_ErrorMask rhs)
         {
-            var ret = new Model_ErrorMask();
-            ret.File = this.File.Combine(rhs.File);
-            ret.BoundRadius = this.BoundRadius.Combine(rhs.BoundRadius);
+            var ret = new RaceStatsGendered_ErrorMask();
+            ret.Male = new MaskItem<Exception, RaceStats_ErrorMask>(this.Male.Overall.Combine(rhs.Male.Overall), this.Male.Specific.Combine(rhs.Male.Specific));
+            ret.Female = new MaskItem<Exception, RaceStats_ErrorMask>(this.Female.Overall.Combine(rhs.Female.Overall), this.Female.Specific.Combine(rhs.Female.Specific));
             return ret;
         }
-        public static Model_ErrorMask Combine(Model_ErrorMask lhs, Model_ErrorMask rhs)
+        public static RaceStatsGendered_ErrorMask Combine(RaceStatsGendered_ErrorMask lhs, RaceStatsGendered_ErrorMask rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -1796,11 +1861,11 @@ namespace Mutagen.Internals
         #endregion
 
     }
-    public class Model_CopyMask
+    public class RaceStatsGendered_CopyMask
     {
         #region Members
-        public bool File;
-        public bool BoundRadius;
+        public MaskItem<CopyOption, RaceStats_CopyMask> Male;
+        public MaskItem<CopyOption, RaceStats_CopyMask> Female;
         #endregion
 
     }

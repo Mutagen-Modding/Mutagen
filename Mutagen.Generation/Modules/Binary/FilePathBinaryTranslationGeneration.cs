@@ -13,7 +13,6 @@ namespace Mutagen.Generation
         public FilePathBinaryTranslationGeneration()
             : base(nullable: true)
         {
-            CanBeNotNullable = false;
         }
 
         public override void GenerateWrite(
@@ -110,10 +109,6 @@ namespace Mutagen.Generation
                 $"{retAccessor}{this.Namespace}FilePathBinaryTranslation.Instance.Parse"))
             {
                 args.Add(nodeAccessor);
-                if (CanBeNotNullable)
-                {
-                    args.Add($"nullable: {Nullable.ToString().ToLower()}");
-                }
                 args.Add($"doMasks: {doMaskAccessor}");
                 args.Add($"errorMask: out {maskAccessor}");
                 if (data.TriggeringRecordAccessor != null)

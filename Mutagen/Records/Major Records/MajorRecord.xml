@@ -3,7 +3,7 @@
   <Object name="MajorRecord" objType="Record" abstract="true" GUID="c30a3850-c815-4c80-b058-aadd0b17a147" ID="6">
     <Fields>
       <ByteArray name="Flags" length="4" nullable="false" />
-      <FormID name="FormID" />
+      <FormID name="FormID" protected="true" />
       <ByteArray name="Version" length="4" nullable="false" />
       <String name="EditorID" recordType="EDID" />
       <UnsafeObject name="RecordType" derivative="true" >

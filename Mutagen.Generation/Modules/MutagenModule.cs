@@ -115,7 +115,7 @@ namespace Mutagen.Generation
                     }
                 }
             }
-            obj.CustomData[Constants.FAIL_ON_UNKNOWN] = obj.Node.GetAttribute<bool>("failOnUnknownType", defaultVal: true);
+            obj.CustomData[Constants.FAIL_ON_UNKNOWN] = obj.Node.GetAttribute<bool>("failOnUnknownType", defaultVal: false);
 
             if (isGRUP)
             {
@@ -231,6 +231,7 @@ namespace Mutagen.Generation
                     {
                         data.TriggeringRecordAccessor = $"{obj.RegistrationName}.{subData.RecordType.Value.HeaderName}";
                         data.TriggeringRecordType = subData.RecordType;
+                        data.RecordType = subData.RecordType;
                     }
                 }
             }

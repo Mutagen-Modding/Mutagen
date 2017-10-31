@@ -100,10 +100,6 @@ namespace Mutagen.Generation
                 (this.Nullable ? string.Empty : $".Bubble((o) => o.Value)")))
             {
                 args.Add(nodeAccessor);
-                if (CanBeNotNullable)
-                {
-                    args.Add($"nullable: {Nullable.ToString().ToLower()}");
-                }
                 args.Add($"doMasks: {doMaskAccessor}");
                 args.Add($"errorMask: out {maskAccessor}");
                 if (data.TriggeringRecordAccessor != null)

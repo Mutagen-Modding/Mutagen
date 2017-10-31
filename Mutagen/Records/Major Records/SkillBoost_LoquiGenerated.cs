@@ -1526,8 +1526,8 @@ namespace Mutagen.Internals
             Mutagen.Binary.Int8BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Boost_Property,
-                fieldIndex: (int)SkillBoost_FieldIndex.Boost,
                 doMasks: doMasks,
+                fieldIndex: (int)SkillBoost_FieldIndex.Boost,
                 errorMask: errorMask);
         }
 

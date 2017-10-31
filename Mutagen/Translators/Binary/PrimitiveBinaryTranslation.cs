@@ -17,6 +17,14 @@ namespace Mutagen.Binary
         {
             try
             {
+                if (ExpectedLength.HasValue)
+                {
+                    if (!frame.TryCheckUpcomingRead(this.ExpectedLength.Value, out var ex))
+                    {
+                        frame.Position = frame.FinalPosition;
+                        throw ex;
+                    }
+                }
                 var parse = ParseValue(frame);
                 errorMask = null;
                 return TryGet<T>.Succeed(parse);

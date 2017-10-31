@@ -1185,8 +1185,8 @@ namespace Mutagen.Internals
             Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.RawFloat_Property,
-                fieldIndex: (int)Global_FieldIndex.RawFloat,
                 doMasks: doMasks,
+                fieldIndex: (int)Global_FieldIndex.RawFloat,
                 errorMask: errorMask,
                 header: Global_Registration.FLTV_HEADER,
                 nullable: false);

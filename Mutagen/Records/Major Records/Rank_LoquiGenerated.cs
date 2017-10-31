@@ -1801,8 +1801,8 @@ namespace Mutagen.Internals
             Mutagen.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.RankNumber_Property,
-                fieldIndex: (int)Rank_FieldIndex.RankNumber,
                 doMasks: doMasks,
+                fieldIndex: (int)Rank_FieldIndex.RankNumber,
                 errorMask: errorMask,
                 header: Rank_Registration.RNAM_HEADER,
                 nullable: false);

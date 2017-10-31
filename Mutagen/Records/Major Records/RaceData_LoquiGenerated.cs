@@ -913,6 +913,9 @@ namespace Mutagen
             var ret = new RaceData();
             try
             {
+                frame = frame.Spawn(HeaderTranslation.ParseSubrecord(
+                    frame,
+                    RaceData_Registration.DATA_HEADER));
                 using (frame)
                 {
                     Fill_Binary_Structs(
@@ -1470,6 +1473,8 @@ namespace Mutagen.Internals
             }
         }
 
+        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
+        public static readonly RecordType TRIGGERING_RECORD_TYPE = DATA_HEADER;
         public const int NumStructFields = 7;
         public const int NumTypedFields = 0;
         #region Interface
@@ -2173,11 +2178,17 @@ namespace Mutagen.Internals
         {
             try
             {
-                Write_Binary_Embedded(
-                    item: item,
+                using (HeaderExport.ExportHeader(
                     writer: writer,
-                    doMasks: doMasks,
-                    errorMask: errorMask);
+                    record: RaceData_Registration.DATA_HEADER,
+                    type: ObjectType.Struct))
+                {
+                    Write_Binary_Embedded(
+                        item: item,
+                        writer: writer,
+                        doMasks: doMasks,
+                        errorMask: errorMask);
+                }
             }
             catch (Exception ex)
             when (doMasks)
@@ -2217,26 +2228,26 @@ namespace Mutagen.Internals
             Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.MaleHeight_Property,
-                fieldIndex: (int)RaceData_FieldIndex.MaleHeight,
                 doMasks: doMasks,
+                fieldIndex: (int)RaceData_FieldIndex.MaleHeight,
                 errorMask: errorMask);
             Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FemaleHeight_Property,
-                fieldIndex: (int)RaceData_FieldIndex.FemaleHeight,
                 doMasks: doMasks,
+                fieldIndex: (int)RaceData_FieldIndex.FemaleHeight,
                 errorMask: errorMask);
             Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.MaleWeight_Property,
-                fieldIndex: (int)RaceData_FieldIndex.MaleWeight,
                 doMasks: doMasks,
+                fieldIndex: (int)RaceData_FieldIndex.MaleWeight,
                 errorMask: errorMask);
             Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FemaleWeight_Property,
-                fieldIndex: (int)RaceData_FieldIndex.FemaleWeight,
                 doMasks: doMasks,
+                fieldIndex: (int)RaceData_FieldIndex.FemaleWeight,
                 errorMask: errorMask);
             Mutagen.Binary.EnumBinaryTranslation<Race.Flag>.Instance.Write(
                 writer,

@@ -1529,14 +1529,14 @@ namespace Mutagen.Internals
             Mutagen.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Faction_Property,
-                fieldIndex: (int)Relation_FieldIndex.Faction,
                 doMasks: doMasks,
+                fieldIndex: (int)Relation_FieldIndex.Faction,
                 errorMask: errorMask);
             Mutagen.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Modifier_Property,
-                fieldIndex: (int)Relation_FieldIndex.Modifier,
                 doMasks: doMasks,
+                fieldIndex: (int)Relation_FieldIndex.Modifier,
                 errorMask: errorMask);
         }
 

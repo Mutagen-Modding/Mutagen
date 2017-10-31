@@ -51,13 +51,12 @@ namespace Mutagen
         #endregion
         #region FormID
         protected readonly INotifyingItem<FormID> _FormID = NotifyingItem.Factory<FormID>(markAsSet: false);
-        public INotifyingItem<FormID> FormID_Property => _FormID;
+        public INotifyingItemGetter<FormID> FormID_Property => _FormID;
         public FormID FormID
         {
             get => this._FormID.Item;
-            set => this._FormID.Set(value);
+            protected set => this._FormID.Set(value);
         }
-        INotifyingItem<FormID> IMajorRecord.FormID_Property => this.FormID_Property;
         INotifyingItemGetter<FormID> IMajorRecordGetter.FormID_Property => this.FormID_Property;
         #endregion
         #region Version
@@ -632,7 +631,9 @@ namespace Mutagen
                     item._EditorID.SetIfSucceeded(EditorIDtryGet);
                 break;
                 default:
-                    throw new ArgumentException($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
+                    errorMask().Warnings.Add($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
+                    frame.Position += contentLength + Constants.SUBRECORD_LENGTH;
+                    break;
             }
             return true;
         }
@@ -731,9 +732,6 @@ namespace Mutagen
     {
         new Byte[] Flags { get; set; }
         new INotifyingItem<Byte[]> Flags_Property { get; }
-
-        new FormID FormID { get; set; }
-        new INotifyingItem<FormID> FormID_Property { get; }
 
         new Byte[] Version { get; set; }
         new INotifyingItem<Byte[]> Version_Property { get; }
@@ -937,10 +935,10 @@ namespace Mutagen.Internals
             MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
             switch (enu)
             {
+                case MajorRecord_FieldIndex.FormID:
                 case MajorRecord_FieldIndex.RecordType:
                     return true;
                 case MajorRecord_FieldIndex.Flags:
-                case MajorRecord_FieldIndex.FormID:
                 case MajorRecord_FieldIndex.Version:
                 case MajorRecord_FieldIndex.EditorID:
                     return false;
@@ -1093,21 +1091,6 @@ namespace Mutagen.Internals
                     errorMask().SetNthException((int)MajorRecord_FieldIndex.Flags, ex);
                 }
             }
-            if (copyMask?.FormID ?? true)
-            {
-                try
-                {
-                    item.FormID_Property.SetToWithDefault(
-                        rhs.FormID_Property,
-                        def?.FormID_Property,
-                        cmds);
-                }
-                catch (Exception ex)
-                when (doErrorMask)
-                {
-                    errorMask().SetNthException((int)MajorRecord_FieldIndex.FormID, ex);
-                }
-            }
             if (copyMask?.Version ?? true)
             {
                 try
@@ -1157,8 +1140,7 @@ namespace Mutagen.Internals
                     obj.Flags_Property.HasBeenSet = on;
                     break;
                 case MajorRecord_FieldIndex.FormID:
-                    obj.FormID_Property.HasBeenSet = on;
-                    break;
+                    throw new ArgumentException("Tried to set at a readonly index " + index);
                 case MajorRecord_FieldIndex.Version:
                     obj.Version_Property.HasBeenSet = on;
                     break;
@@ -1184,8 +1166,7 @@ namespace Mutagen.Internals
                     obj.Flags_Property.Unset(cmds);
                     break;
                 case MajorRecord_FieldIndex.FormID:
-                    obj.FormID_Property.Unset(cmds);
-                    break;
+                    throw new ArgumentException("Tried to set at a readonly index " + index);
                 case MajorRecord_FieldIndex.Version:
                     obj.Version_Property.Unset(cmds);
                     break;
@@ -1246,7 +1227,6 @@ namespace Mutagen.Internals
             NotifyingUnsetParameters? cmds = null)
         {
             item.Flags_Property.Unset(cmds.ToUnsetParams());
-            item.FormID_Property.Unset(cmds.ToUnsetParams());
             item.Version_Property.Unset(cmds.ToUnsetParams());
             item.EditorID_Property.Unset(cmds.ToUnsetParams());
         }
@@ -1512,8 +1492,8 @@ namespace Mutagen.Internals
             Mutagen.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FormID_Property,
-                fieldIndex: (int)MajorRecord_FieldIndex.FormID,
                 doMasks: doMasks,
+                fieldIndex: (int)MajorRecord_FieldIndex.FormID,
                 errorMask: errorMask);
             Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,

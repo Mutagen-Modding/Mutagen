@@ -436,26 +436,24 @@ namespace Mutagen.Generation
                                 else
                                 {
                                     fg.AppendLine($"errorMask().Warnings.Add($\"Unexpected header {{nextRecordType.Type}} at position {{frame.Position}}\");");
-                                    string minusString;
+                                    string addString;
                                     switch (obj.GetObjectType())
                                     {
-                                        case ObjectType.Struct:
                                         case ObjectType.Mod:
-                                            minusString = null;
+                                        case ObjectType.Struct:
+                                            addString = null;
                                             break;
                                         case ObjectType.Subrecord:
-                                            minusString = " - Constants.SUBRECORD_LENGTH";
-                                            break;
                                         case ObjectType.Record:
-                                            minusString = " - Constants.RECORD_LENGTH";
+                                            addString = " + Constants.SUBRECORD_LENGTH";
                                             break;
                                         case ObjectType.Group:
-                                            minusString = " - Constants.GRUP_LENGTH";
+                                            addString = " + Constants.RECORD_LENGTH";
                                             break;
                                         default:
                                             throw new NotImplementedException();
                                     }
-                                    fg.AppendLine($"frame.Position += contentLength{minusString};");
+                                    fg.AppendLine($"frame.Position += contentLength{addString};");
                                     fg.AppendLine($"break;");
                                 }
                             }

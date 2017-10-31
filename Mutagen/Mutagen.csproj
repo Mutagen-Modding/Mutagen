@@ -220,6 +220,12 @@
     <Compile Include="Records\Major Records\Eye_LoquiGenerated.cs">
       <DependentUpon>Eye.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\RaceStatsGendered_LoquiGenerated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RaceStats_LoquiGenerated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\CSharpExt\CSharpExt\CSharpExt.csproj">

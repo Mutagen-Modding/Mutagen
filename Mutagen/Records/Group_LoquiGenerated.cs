@@ -981,7 +981,9 @@ namespace Mutagen
                         item._Items.SetIfSucceeded(ItemstryGet);
                         break;
                     }
-                    throw new ArgumentException($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
+                    errorMask().Warnings.Add($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
+                    frame.Position += contentLength + Constants.RECORD_LENGTH;
+                    break;
             }
             return true;
         }
@@ -1960,8 +1962,8 @@ namespace Mutagen.Internals
             Mutagen.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.GroupType_Property,
-                fieldIndex: (int)Group_FieldIndex.GroupType,
                 doMasks: doMasks,
+                fieldIndex: (int)Group_FieldIndex.GroupType,
                 errorMask: errorMask);
             Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,

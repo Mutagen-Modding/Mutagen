@@ -1649,8 +1649,8 @@ namespace Mutagen.Internals
             Mutagen.Binary.ByteBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.MaximumTrainingLevel_Property,
-                fieldIndex: (int)ClassTraining_FieldIndex.MaximumTrainingLevel,
                 doMasks: doMasks,
+                fieldIndex: (int)ClassTraining_FieldIndex.MaximumTrainingLevel,
                 errorMask: errorMask);
             Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,

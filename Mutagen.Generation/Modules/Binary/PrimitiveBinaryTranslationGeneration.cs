@@ -13,7 +13,6 @@ namespace Mutagen.Generation
         protected string typeName;
         protected bool? nullable;
         public bool Nullable => nullable ?? false || typeof(T).GetName().EndsWith("?");
-        public bool CanBeNotNullable = true;
 
         public PrimitiveBinaryTranslationGeneration(string typeName = null, bool? nullable = null)
         {
@@ -36,9 +35,16 @@ namespace Mutagen.Generation
             {
                 args.Add($"writer: {writerAccessor}");
                 args.Add($"item: {itemAccessor.PropertyOrDirectAccess}");
-                args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
                 args.Add($"doMasks: {doMaskAccessor}");
-                args.Add($"errorMask: {maskAccessor}");
+                if (typeGen.HasIndex)
+                {
+                    args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
+                    args.Add($"errorMask: {maskAccessor}");
+                }
+                else
+                {
+                    args.Add($"errorMask: out {maskAccessor}");
+                }
                 if (data.TriggeringRecordAccessor != null)
                 {
                     args.Add($"header: {data.TriggeringRecordAccessor}");
@@ -106,15 +112,15 @@ namespace Mutagen.Generation
             string doMaskAccessor, 
             string maskAccessor)
         {
+            if (typeGen.TryGetFieldData(out var data)
+                && data.TriggeringRecordType.HasValue)
+            {
+                fg.AppendLine("r.Position += Constants.SUBRECORD_LENGTH;");
+            }
             using (var args = new ArgsWrapper(fg,
-                $"{retAccessor}{this.Namespace}{this.typeName}BinaryTranslation.Instance.Parse",
-                (this.Nullable ? string.Empty : $".Bubble((o) => o.Value)")))
+                $"{retAccessor}{this.Namespace}{this.typeName}BinaryTranslation.Instance.Parse"))
             {
                 args.Add(nodeAccessor);
-                if (CanBeNotNullable)
-                {
-                    args.Add($"nullable: {Nullable.ToString().ToLower()}");
-                }
                 args.Add($"doMasks: {doMaskAccessor}");
                 args.Add($"errorMask: out {maskAccessor}");
             }

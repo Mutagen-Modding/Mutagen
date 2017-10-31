@@ -1037,7 +1037,9 @@ namespace Mutagen
                     item._MasterReferences.SetIfSucceeded(MasterReferencestryGet);
                 break;
                 default:
-                    throw new ArgumentException($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
+                    errorMask().Warnings.Add($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
+                    frame.Position += contentLength + Constants.SUBRECORD_LENGTH;
+                    break;
             }
             return true;
         }

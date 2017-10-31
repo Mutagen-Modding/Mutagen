@@ -60,17 +60,29 @@ namespace Mutagen.Binary
 
         public void CheckUpcomingRead(ContentLength length)
         {
+            if (!TryCheckUpcomingRead(length, out var ex))
+            {
+                throw ex;
+            }
+        }
+
+        public bool TryCheckUpcomingRead(ContentLength length, out Exception ex)
+        {
             if (!TryCheckUpcomingRead(length))
             {
                 if (Complete)
                 {
-                    throw new ArgumentException($"Frame was complete, so did not have any remaining bytes to parse. At {this.Position}. Desired {length} more bytes. {this.Length} past the final position {this.FinalPosition}.");
+                    ex = new ArgumentException($"Frame was complete, so did not have any remaining bytes to parse. At {this.Position}. Desired {length} more bytes. {this.Length} past the final position {this.FinalPosition}.");
+                    return false;
                 }
                 else
                 {
-                    throw new ArgumentException($"Frame did not have enough remaining bytes to parse. At {this.Position}. Desired {length} more bytes.  Only {this.Length} left before final position {this.FinalPosition}.");
+                    ex = new ArgumentException($"Frame did not have enough remaining bytes to parse. At {this.Position}. Desired {length} more bytes.  Only {this.Length} left before final position {this.FinalPosition}.");
+                    return false;
                 }
             }
+            ex = null;
+            return true;
         }
 
         public void Dispose()

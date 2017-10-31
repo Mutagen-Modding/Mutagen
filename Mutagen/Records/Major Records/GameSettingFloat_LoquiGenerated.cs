@@ -1513,8 +1513,8 @@ namespace Mutagen.Internals
             Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Data_Property,
-                fieldIndex: (int)GameSettingFloat_FieldIndex.Data,
                 doMasks: doMasks,
+                fieldIndex: (int)GameSettingFloat_FieldIndex.Data,
                 errorMask: errorMask,
                 header: GameSettingFloat_Registration.DATA_HEADER,
                 nullable: false);

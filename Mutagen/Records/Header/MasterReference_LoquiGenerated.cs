@@ -1563,8 +1563,8 @@ namespace Mutagen.Internals
             Mutagen.Binary.UInt64BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FileSize_Property,
-                fieldIndex: (int)MasterReference_FieldIndex.FileSize,
                 doMasks: doMasks,
+                fieldIndex: (int)MasterReference_FieldIndex.FileSize,
                 errorMask: errorMask,
                 header: MasterReference_Registration.DATA_HEADER,
                 nullable: false);

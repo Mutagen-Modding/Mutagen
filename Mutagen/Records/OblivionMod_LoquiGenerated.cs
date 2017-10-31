@@ -95,6 +95,14 @@ namespace Mutagen
         INotifyingItem<Group<Hair>> IOblivionMod.Hairs_Property => this.Hairs_Property;
         INotifyingItemGetter<Group<Hair>> IOblivionModGetter.Hairs_Property => this.Hairs_Property;
         #endregion
+        #region Races
+        private readonly INotifyingItem<Group<Race>> _Races = new NotifyingItem<Group<Race>>();
+        public INotifyingItem<Group<Race>> Races_Property => this._Races;
+        Group<Race> IOblivionModGetter.Races => this.Races;
+        public Group<Race> Races { get => _Races.Item; set => _Races.Item = value; }
+        INotifyingItem<Group<Race>> IOblivionMod.Races_Property => this.Races_Property;
+        INotifyingItemGetter<Group<Race>> IOblivionModGetter.Races_Property => this.Races_Property;
+        #endregion
 
         #region Loqui Getter Interface
 
@@ -184,6 +192,11 @@ namespace Mutagen
             {
                 if (!object.Equals(Hairs, rhs.Hairs)) return false;
             }
+            if (Races_Property.HasBeenSet != rhs.Races_Property.HasBeenSet) return false;
+            if (Races_Property.HasBeenSet)
+            {
+                if (!object.Equals(Races, rhs.Races)) return false;
+            }
             return true;
         }
 
@@ -213,6 +226,10 @@ namespace Mutagen
             if (Hairs_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(Hairs).CombineHashCode(ret);
+            }
+            if (Races_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Races).CombineHashCode(ret);
             }
             return ret;
         }
@@ -597,6 +614,21 @@ namespace Mutagen
                             subMask);
                     }
                     break;
+                case "Races":
+                    {
+                        MaskItem<Exception, Group_ErrorMask<Race_ErrorMask>> subMask;
+                        var tryGet = LoquiXmlTranslation<Group<Race>, Group_ErrorMask<Race_ErrorMask>>.Instance.Parse(
+                            root: root,
+                            doMasks: doMasks,
+                            mask: out subMask);
+                        item._Races.SetIfSucceeded(tryGet);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)OblivionMod_FieldIndex.Races,
+                            subMask);
+                    }
+                    break;
                 default:
                     break;
             }
@@ -954,6 +986,14 @@ namespace Mutagen
                         errorMask: errorMask);
                     item._Hairs.SetIfSucceeded(HairstryGet);
                 break;
+                case "RACE":
+                    var RacestryGet = LoquiBinaryTranslation<Group<Race>, Group_ErrorMask<Race_ErrorMask>>.Instance.Parse(
+                        frame: frame,
+                        doMasks: doMasks,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Races,
+                        errorMask: errorMask);
+                    item._Races.SetIfSucceeded(RacestryGet);
+                break;
                 default:
                     errorMask().Warnings.Add($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength;
@@ -1069,6 +1109,11 @@ namespace Mutagen
                         (Group<Hair>)obj,
                         cmds);
                     break;
+                case OblivionMod_FieldIndex.Races:
+                    this._Races.Set(
+                        (Group<Race>)obj,
+                        cmds);
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1136,6 +1181,11 @@ namespace Mutagen
                         (Group<Hair>)pair.Value,
                         null);
                     break;
+                case OblivionMod_FieldIndex.Races:
+                    obj._Races.Set(
+                        (Group<Race>)pair.Value,
+                        null);
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -1168,6 +1218,9 @@ namespace Mutagen
 
         new Group<Hair> Hairs { get; set; }
         new INotifyingItem<Group<Hair>> Hairs_Property { get; }
+
+        new Group<Race> Races { get; set; }
+        new INotifyingItem<Group<Race>> Races_Property { get; }
 
     }
 
@@ -1203,6 +1256,11 @@ namespace Mutagen
         INotifyingItemGetter<Group<Hair>> Hairs_Property { get; }
 
         #endregion
+        #region Races
+        Group<Race> Races { get; }
+        INotifyingItemGetter<Group<Race>> Races_Property { get; }
+
+        #endregion
 
     }
 
@@ -1221,6 +1279,7 @@ namespace Mutagen.Internals
         Classes = 3,
         Factions = 4,
         Hairs = 5,
+        Races = 6,
     }
     #endregion
 
@@ -1238,7 +1297,7 @@ namespace Mutagen.Internals
 
         public const string GUID = "b6f626df-b164-466b-960a-1639d88f66bc";
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 7;
 
         public static readonly Type MaskType = typeof(OblivionMod_Mask<>);
 
@@ -1278,6 +1337,8 @@ namespace Mutagen.Internals
                     return (ushort)OblivionMod_FieldIndex.Factions;
                 case "HAIRS":
                     return (ushort)OblivionMod_FieldIndex.Hairs;
+                case "RACES":
+                    return (ushort)OblivionMod_FieldIndex.Races;
                 default:
                     return null;
             }
@@ -1294,6 +1355,7 @@ namespace Mutagen.Internals
                 case OblivionMod_FieldIndex.Classes:
                 case OblivionMod_FieldIndex.Factions:
                 case OblivionMod_FieldIndex.Hairs:
+                case OblivionMod_FieldIndex.Races:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1311,6 +1373,7 @@ namespace Mutagen.Internals
                 case OblivionMod_FieldIndex.Classes:
                 case OblivionMod_FieldIndex.Factions:
                 case OblivionMod_FieldIndex.Hairs:
+                case OblivionMod_FieldIndex.Races:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1328,6 +1391,7 @@ namespace Mutagen.Internals
                 case OblivionMod_FieldIndex.Classes:
                 case OblivionMod_FieldIndex.Factions:
                 case OblivionMod_FieldIndex.Hairs:
+                case OblivionMod_FieldIndex.Races:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1351,6 +1415,8 @@ namespace Mutagen.Internals
                     return "Factions";
                 case OblivionMod_FieldIndex.Hairs:
                     return "Hairs";
+                case OblivionMod_FieldIndex.Races:
+                    return "Races";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1367,6 +1433,7 @@ namespace Mutagen.Internals
                 case OblivionMod_FieldIndex.Classes:
                 case OblivionMod_FieldIndex.Factions:
                 case OblivionMod_FieldIndex.Hairs:
+                case OblivionMod_FieldIndex.Races:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1384,6 +1451,7 @@ namespace Mutagen.Internals
                 case OblivionMod_FieldIndex.Classes:
                 case OblivionMod_FieldIndex.Factions:
                 case OblivionMod_FieldIndex.Hairs:
+                case OblivionMod_FieldIndex.Races:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1407,6 +1475,8 @@ namespace Mutagen.Internals
                     return typeof(Group<Faction>);
                 case OblivionMod_FieldIndex.Hairs:
                     return typeof(Group<Hair>);
+                case OblivionMod_FieldIndex.Races:
+                    return typeof(Group<Race>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1418,8 +1488,9 @@ namespace Mutagen.Internals
         public static readonly RecordType CLAS_HEADER = new RecordType("CLAS");
         public static readonly RecordType FACT_HEADER = new RecordType("FACT");
         public static readonly RecordType HAIR_HEADER = new RecordType("HAIR");
+        public static readonly RecordType RACE_HEADER = new RecordType("RACE");
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 6;
+        public const int NumTypedFields = 7;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1832,6 +1903,57 @@ namespace Mutagen.Internals
                     errorMask().SetNthException((int)OblivionMod_FieldIndex.Hairs, ex);
                 }
             }
+            if (copyMask?.Races.Overall != CopyOption.Skip)
+            {
+                try
+                {
+                    item.Races_Property.SetToWithDefault(
+                        rhs.Races_Property,
+                        def?.Races_Property,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.Races?.Overall ?? CopyOption.Reference)
+                            {
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    GroupCommon.CopyFieldsFrom(
+                                        item: item.Races,
+                                        rhs: rhs.Races,
+                                        def: def?.Races,
+                                        doErrorMask: doErrorMask,
+                                        errorMask: (doErrorMask ? new Func<Group_ErrorMask<Race_ErrorMask>>(() =>
+                                        {
+                                            var baseMask = errorMask();
+                                            if (baseMask.Races.Specific == null)
+                                            {
+                                                baseMask.Races = new MaskItem<Exception, Group_ErrorMask<Race_ErrorMask>>(null, new Group_ErrorMask<Race_ErrorMask>());
+                                            }
+                                            return baseMask.Races.Specific;
+                                        }
+                                        ) : null),
+                                        copyMask: copyMask?.Races.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(Group<Race>);
+                                    return Group<Race>.Copy(
+                                        r,
+                                        copyMask?.Races?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Races?.Overall}. Cannot execute copy.");
+                            }
+                        }
+                        );
+                }
+                catch (Exception ex)
+                when (doErrorMask)
+                {
+                    errorMask().SetNthException((int)OblivionMod_FieldIndex.Races, ex);
+                }
+            }
         }
 
         #endregion
@@ -1862,6 +1984,9 @@ namespace Mutagen.Internals
                     break;
                 case OblivionMod_FieldIndex.Hairs:
                     obj.Hairs_Property.HasBeenSet = on;
+                    break;
+                case OblivionMod_FieldIndex.Races:
+                    obj.Races_Property.HasBeenSet = on;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1894,6 +2019,9 @@ namespace Mutagen.Internals
                 case OblivionMod_FieldIndex.Hairs:
                     obj.Hairs_Property.Unset(cmds);
                     break;
+                case OblivionMod_FieldIndex.Races:
+                    obj.Races_Property.Unset(cmds);
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1918,6 +2046,8 @@ namespace Mutagen.Internals
                     return obj.Factions_Property.HasBeenSet;
                 case OblivionMod_FieldIndex.Hairs:
                     return obj.Hairs_Property.HasBeenSet;
+                case OblivionMod_FieldIndex.Races:
+                    return obj.Races_Property.HasBeenSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1942,6 +2072,8 @@ namespace Mutagen.Internals
                     return obj.Factions;
                 case OblivionMod_FieldIndex.Hairs:
                     return obj.Hairs;
+                case OblivionMod_FieldIndex.Races:
+                    return obj.Races;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1957,6 +2089,7 @@ namespace Mutagen.Internals
             item.Classes_Property.Unset(cmds.ToUnsetParams());
             item.Factions_Property.Unset(cmds.ToUnsetParams());
             item.Hairs_Property.Unset(cmds.ToUnsetParams());
+            item.Races_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static OblivionMod_Mask<bool> GetEqualsMask(
@@ -1980,6 +2113,7 @@ namespace Mutagen.Internals
             ret.Classes = item.Classes_Property.LoquiEqualsHelper(rhs.Classes_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
             ret.Factions = item.Factions_Property.LoquiEqualsHelper(rhs.Factions_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
             ret.Hairs = item.Hairs_Property.LoquiEqualsHelper(rhs.Hairs_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Races = item.Races_Property.LoquiEqualsHelper(rhs.Races_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
         }
 
         public static string ToString(
@@ -2033,6 +2167,10 @@ namespace Mutagen.Internals
                 {
                     item.Hairs?.ToString(fg, "Hairs");
                 }
+                if (printMask?.Races?.Overall ?? true)
+                {
+                    item.Races?.ToString(fg, "Races");
+                }
             }
             fg.AppendLine("]");
         }
@@ -2053,6 +2191,8 @@ namespace Mutagen.Internals
             if (checkMask.Factions.Specific != null && (item.Factions_Property.Item == null || !item.Factions_Property.Item.HasBeenSet(checkMask.Factions.Specific))) return false;
             if (checkMask.Hairs.Overall.HasValue && checkMask.Hairs.Overall.Value != item.Hairs_Property.HasBeenSet) return false;
             if (checkMask.Hairs.Specific != null && (item.Hairs_Property.Item == null || !item.Hairs_Property.Item.HasBeenSet(checkMask.Hairs.Specific))) return false;
+            if (checkMask.Races.Overall.HasValue && checkMask.Races.Overall.Value != item.Races_Property.HasBeenSet) return false;
+            if (checkMask.Races.Specific != null && (item.Races_Property.Item == null || !item.Races_Property.Item.HasBeenSet(checkMask.Races.Specific))) return false;
             return true;
         }
 
@@ -2065,6 +2205,7 @@ namespace Mutagen.Internals
             ret.Classes = new MaskItem<bool, Group_Mask<bool>>(item.Classes_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.Classes_Property.Item));
             ret.Factions = new MaskItem<bool, Group_Mask<bool>>(item.Factions_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.Factions_Property.Item));
             ret.Hairs = new MaskItem<bool, Group_Mask<bool>>(item.Hairs_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.Hairs_Property.Item));
+            ret.Races = new MaskItem<bool, Group_Mask<bool>>(item.Races_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.Races_Property.Item));
             return ret;
         }
 
@@ -2198,6 +2339,22 @@ namespace Mutagen.Internals
                             (int)OblivionMod_FieldIndex.Hairs,
                             subMask);
                     }
+                    if (item.Races_Property.HasBeenSet)
+                    {
+                        MaskItem<Exception, Group_ErrorMask<Race_ErrorMask>> subMask;
+                        LoquiXmlTranslation<Group<Race>, Group_ErrorMask<Race_ErrorMask>>.Instance.Write(
+                            writer: writer,
+                            item: item.Races,
+                            name: nameof(item.Races),
+                            doMasks: doMasks,
+                            mask: out Group_ErrorMask<Race_ErrorMask> loquiMask);
+                        subMask = loquiMask == null ? null : new MaskItem<Exception, Group_ErrorMask<Race_ErrorMask>>(null, loquiMask);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)OblivionMod_FieldIndex.Races,
+                            subMask);
+                    }
                 }
             }
             catch (Exception ex)
@@ -2291,6 +2448,12 @@ namespace Mutagen.Internals
                 doMasks: doMasks,
                 fieldIndex: (int)OblivionMod_FieldIndex.Hairs,
                 errorMask: errorMask);
+            LoquiBinaryTranslation<Group<Race>, Group_ErrorMask<Race_ErrorMask>>.Instance.Write(
+                writer: writer,
+                item: item.Races_Property,
+                doMasks: doMasks,
+                fieldIndex: (int)OblivionMod_FieldIndex.Races,
+                errorMask: errorMask);
         }
 
         #endregion
@@ -2316,6 +2479,7 @@ namespace Mutagen.Internals
             this.Classes = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.Factions = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.Hairs = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
+            this.Races = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
         }
         #endregion
 
@@ -2326,6 +2490,7 @@ namespace Mutagen.Internals
         public MaskItem<T, Group_Mask<T>> Classes { get; set; }
         public MaskItem<T, Group_Mask<T>> Factions { get; set; }
         public MaskItem<T, Group_Mask<T>> Hairs { get; set; }
+        public MaskItem<T, Group_Mask<T>> Races { get; set; }
         #endregion
 
         #region Equals
@@ -2344,6 +2509,7 @@ namespace Mutagen.Internals
             if (!object.Equals(this.Classes, rhs.Classes)) return false;
             if (!object.Equals(this.Factions, rhs.Factions)) return false;
             if (!object.Equals(this.Hairs, rhs.Hairs)) return false;
+            if (!object.Equals(this.Races, rhs.Races)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -2355,6 +2521,7 @@ namespace Mutagen.Internals
             ret = ret.CombineHashCode(this.Classes?.GetHashCode());
             ret = ret.CombineHashCode(this.Factions?.GetHashCode());
             ret = ret.CombineHashCode(this.Hairs?.GetHashCode());
+            ret = ret.CombineHashCode(this.Races?.GetHashCode());
             return ret;
         }
 
@@ -2392,6 +2559,11 @@ namespace Mutagen.Internals
             {
                 if (!eval(this.Hairs.Overall)) return false;
                 if (Hairs.Specific != null && !Hairs.Specific.AllEqual(eval)) return false;
+            }
+            if (Races != null)
+            {
+                if (!eval(this.Races.Overall)) return false;
+                if (Races.Specific != null && !Races.Specific.AllEqual(eval)) return false;
             }
             return true;
         }
@@ -2461,6 +2633,15 @@ namespace Mutagen.Internals
                     obj.Hairs.Specific = this.Hairs.Specific.Translate(eval);
                 }
             }
+            if (this.Races != null)
+            {
+                obj.Races = new MaskItem<R, Group_Mask<R>>();
+                obj.Races.Overall = eval(this.Races.Overall);
+                if (this.Races.Specific != null)
+                {
+                    obj.Races.Specific = this.Races.Specific.Translate(eval);
+                }
+            }
         }
         #endregion
 
@@ -2513,6 +2694,10 @@ namespace Mutagen.Internals
                 {
                     Hairs.ToString(fg);
                 }
+                if (printMask?.Races?.Overall ?? true)
+                {
+                    Races.ToString(fg);
+                }
             }
             fg.AppendLine("]");
         }
@@ -2542,6 +2727,7 @@ namespace Mutagen.Internals
         public MaskItem<Exception, Group_ErrorMask<Class_ErrorMask>> Classes;
         public MaskItem<Exception, Group_ErrorMask<Faction_ErrorMask>> Factions;
         public MaskItem<Exception, Group_ErrorMask<Hair_ErrorMask>> Hairs;
+        public MaskItem<Exception, Group_ErrorMask<Race_ErrorMask>> Races;
         #endregion
 
         #region IErrorMask
@@ -2567,6 +2753,9 @@ namespace Mutagen.Internals
                     break;
                 case OblivionMod_FieldIndex.Hairs:
                     this.Hairs = new MaskItem<Exception, Group_ErrorMask<Hair_ErrorMask>>(ex, null);
+                    break;
+                case OblivionMod_FieldIndex.Races:
+                    this.Races = new MaskItem<Exception, Group_ErrorMask<Race_ErrorMask>>(ex, null);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2595,6 +2784,9 @@ namespace Mutagen.Internals
                     break;
                 case OblivionMod_FieldIndex.Hairs:
                     this.Hairs = (MaskItem<Exception, Group_ErrorMask<Hair_ErrorMask>>)obj;
+                    break;
+                case OblivionMod_FieldIndex.Races:
+                    this.Races = (MaskItem<Exception, Group_ErrorMask<Race_ErrorMask>>)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2656,6 +2848,10 @@ namespace Mutagen.Internals
             {
                 Hairs.ToString(fg);
             }
+            if (Races != null)
+            {
+                Races.ToString(fg);
+            }
         }
         #endregion
 
@@ -2669,6 +2865,7 @@ namespace Mutagen.Internals
             ret.Classes = new MaskItem<Exception, Group_ErrorMask<Class_ErrorMask>>(this.Classes.Overall.Combine(rhs.Classes.Overall), this.Classes.Specific.Combine(rhs.Classes.Specific));
             ret.Factions = new MaskItem<Exception, Group_ErrorMask<Faction_ErrorMask>>(this.Factions.Overall.Combine(rhs.Factions.Overall), this.Factions.Specific.Combine(rhs.Factions.Specific));
             ret.Hairs = new MaskItem<Exception, Group_ErrorMask<Hair_ErrorMask>>(this.Hairs.Overall.Combine(rhs.Hairs.Overall), this.Hairs.Specific.Combine(rhs.Hairs.Specific));
+            ret.Races = new MaskItem<Exception, Group_ErrorMask<Race_ErrorMask>>(this.Races.Overall.Combine(rhs.Races.Overall), this.Races.Specific.Combine(rhs.Races.Specific));
             return ret;
         }
         public static OblivionMod_ErrorMask Combine(OblivionMod_ErrorMask lhs, OblivionMod_ErrorMask rhs)
@@ -2688,6 +2885,7 @@ namespace Mutagen.Internals
         public MaskItem<CopyOption, Group_CopyMask<Class_CopyMask>> Classes;
         public MaskItem<CopyOption, Group_CopyMask<Faction_CopyMask>> Factions;
         public MaskItem<CopyOption, Group_CopyMask<Hair_CopyMask>> Hairs;
+        public MaskItem<CopyOption, Group_CopyMask<Race_CopyMask>> Races;
         #endregion
 
     }
