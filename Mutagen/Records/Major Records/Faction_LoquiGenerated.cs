@@ -922,7 +922,7 @@ namespace Mutagen
                         triggeringRecord: Faction_Registration.XNAM_HEADER,
                         fieldIndex: (int)Faction_FieldIndex.Relations,
                         doMasks: doMasks,
-                        objType: ObjectType.Struct,
+                        objType: ObjectType.Subrecord,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, Relation_ErrorMask> listSubMask) =>
                         {
@@ -958,7 +958,7 @@ namespace Mutagen
                         triggeringRecord: Faction_Registration.RNAM_HEADER,
                         fieldIndex: (int)Faction_FieldIndex.Ranks,
                         doMasks: doMasks,
-                        objType: ObjectType.Struct,
+                        objType: ObjectType.Subrecord,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, Rank_ErrorMask> listSubMask) =>
                         {

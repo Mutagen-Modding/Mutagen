@@ -752,14 +752,14 @@ namespace Mutagen
         {
             if (frame.Complete) return;
             var MaletryGet = LoquiBinaryTranslation<RaceStats, RaceStats_ErrorMask>.Instance.Parse(
-                frame: frame.Spawn(snapToFinalPosition: false),
+                frame: frame,
                 doMasks: doMasks,
                 fieldIndex: (int)RaceStatsGendered_FieldIndex.Male,
                 errorMask: errorMask);
             item._Male.SetIfSucceeded(MaletryGet);
             if (frame.Complete) return;
             var FemaletryGet = LoquiBinaryTranslation<RaceStats, RaceStats_ErrorMask>.Instance.Parse(
-                frame: frame.Spawn(snapToFinalPosition: false),
+                frame: frame,
                 doMasks: doMasks,
                 fieldIndex: (int)RaceStatsGendered_FieldIndex.Female,
                 errorMask: errorMask);
@@ -1574,7 +1574,7 @@ namespace Mutagen.Internals
                 using (HeaderExport.ExportHeader(
                     writer: writer,
                     record: RaceStatsGendered_Registration.ATTR_HEADER,
-                    type: ObjectType.Struct))
+                    type: ObjectType.Subrecord))
                 {
                     Write_Binary_Embedded(
                         item: item,

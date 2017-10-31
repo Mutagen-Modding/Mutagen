@@ -145,7 +145,7 @@ namespace Mutagen.Generation
 
         private void GenerateCreateExtras(ObjectGeneration obj, FileGeneration fg)
         {
-            bool typelessStruct = obj.GetObjectType() == ObjectType.Struct && !obj.HasRecordType();
+            bool typelessStruct = obj.GetObjectType() == ObjectType.Subrecord && !obj.HasRecordType();
             if (!obj.Abstract)
             {
                 ObjectType objType = obj.GetObjectType();
@@ -165,13 +165,13 @@ namespace Mutagen.Generation
                     using (new BraceWrapper(fg))
                     {
                         RecordType? recordType = obj.GetTriggeringRecordType();
-                        var frameMod = (objType != ObjectType.Struct || recordType.HasValue)
+                        var frameMod = (objType != ObjectType.Subrecord || recordType.HasValue)
                             && objType != ObjectType.Mod;
                         if (frameMod)
                         {
                             switch (objType)
                             {
-                                case ObjectType.Struct:
+                                case ObjectType.Subrecord:
                                     if (obj.TryGetRecordType(out var recType))
                                     {
                                         using (var args = new ArgsWrapper(fg,
@@ -184,24 +184,8 @@ namespace Mutagen.Generation
                                     }
                                     break;
                                 case ObjectType.Record:
-                                case ObjectType.Subrecord:
-                                    string funcName;
-                                    switch (obj.GetObjectType())
-                                    {
-                                        case ObjectType.Subrecord:
-                                            funcName = "ParseSubrecord";
-                                            break;
-                                        case ObjectType.Record:
-                                            funcName = "ParseRecord";
-                                            break;
-                                        case ObjectType.Group:
-                                        case ObjectType.Mod:
-                                        case ObjectType.Struct:
-                                        default:
-                                            throw new NotImplementedException();
-                                    }
                                     using (var args = new ArgsWrapper(fg,
-                                        $"frame = frame.Spawn({nameof(HeaderTranslation)}.{funcName}",
+                                        $"frame = frame.Spawn({nameof(HeaderTranslation)}.ParseRecord",
                                         suffixLine: ")"))
                                     {
                                         args.Add("frame");
@@ -334,7 +318,6 @@ namespace Mutagen.Generation
                     string funcName;
                     switch (mutaObjType)
                     {
-                        case ObjectType.Struct:
                         case ObjectType.Subrecord:
                         case ObjectType.Record:
                             funcName = $"GetNextSubRecordType";
@@ -425,7 +408,7 @@ namespace Mutagen.Generation
                             else
                             {
                                 var failOnUnknown = (bool)obj.CustomData[Constants.FAIL_ON_UNKNOWN];
-                                if (mutaObjType == ObjectType.Struct)
+                                if (mutaObjType == ObjectType.Subrecord)
                                 {
                                     fg.AppendLine("return false;");
                                 }
@@ -440,7 +423,6 @@ namespace Mutagen.Generation
                                     switch (obj.GetObjectType())
                                     {
                                         case ObjectType.Mod:
-                                        case ObjectType.Struct:
                                             addString = null;
                                             break;
                                         case ObjectType.Subrecord:

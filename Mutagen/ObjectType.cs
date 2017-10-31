@@ -9,7 +9,6 @@ namespace Mutagen
 {
     public enum ObjectType
     {
-        Struct,
         Subrecord,
         Record,
         Group,
@@ -25,7 +24,6 @@ namespace System
         {
             switch (objType)
             {
-                case ObjectType.Struct:
                 case ObjectType.Subrecord:
                     return Constants.SUBRECORD_LENGTHLENGTH;
                 case ObjectType.Record:
@@ -42,8 +40,6 @@ namespace System
         {
             switch (objType)
             {
-                case ObjectType.Struct:
-                    return ContentLength.Zero;
                 case ObjectType.Subrecord:
                     return Constants.SUBRECORD_HEADER_OFFSET;
                 case ObjectType.Record:

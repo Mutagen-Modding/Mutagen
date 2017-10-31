@@ -1024,7 +1024,7 @@ namespace Mutagen
                         triggeringRecord: TES4_Registration.MAST_HEADER,
                         fieldIndex: (int)TES4_FieldIndex.MasterReferences,
                         doMasks: doMasks,
-                        objType: ObjectType.Struct,
+                        objType: ObjectType.Subrecord,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, MasterReference_ErrorMask> listSubMask) =>
                         {

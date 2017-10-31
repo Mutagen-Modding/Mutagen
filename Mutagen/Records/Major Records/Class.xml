@@ -21,7 +21,7 @@
       <RefDirect name="Training" refName="ClassTraining" singleton="None" />
     </Fields>
   </Object>
-  <Object name="ClassTraining" objType="Struct" GUID="db3e6d59-8545-4d81-8531-4eb0b56c4a47" ID="19">
+  <Object name="ClassTraining" objType="Subrecord" GUID="db3e6d59-8545-4d81-8531-4eb0b56c4a47" ID="19">
     <Fields>
       <Enum name="TrainedSkill" enumName="Skill" byteLength="1" />
       <UInt8 name="MaximumTrainingLevel" max="100" min="0" />

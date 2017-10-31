@@ -97,14 +97,21 @@ namespace Mutagen.Generation
                 }
                 else
                 {
-                    GenerateCopyInRet(
-                        fg: fg,
-                        objGen: objGen, 
-                        typeGen: typeGen, 
-                        readerAccessor: readerAccessor, 
-                        retAccessor: $"var {typeGen.Name}tryGet = ",
-                        doMaskAccessor: doMaskAccessor, 
-                        maskAccessor: maskAccessor);
+                    using (var args = new ArgsWrapper(fg,
+                        $"var {typeGen.Name}tryGet = LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}, {loquiGen.MaskItemString(MaskType.Error)}>.Instance.Parse"))
+                    {
+                        args.Add($"frame: {readerAccessor}");
+                        args.Add($"doMasks: {doMaskAccessor}");
+                        if (loquiGen.HasIndex)
+                        {
+                            args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
+                            args.Add($"errorMask: {maskAccessor}");
+                        }
+                        else
+                        {
+                            args.Add($"errorMask: out {maskAccessor}");
+                        }
+                    }
                     if (itemAccessor.PropertyAccess != null)
                     {
                         fg.AppendLine($"{itemAccessor.PropertyAccess}.{nameof(INotifyingCollectionExt.SetIfSucceeded)}({typeGen.Name}tryGet);");
@@ -151,7 +158,7 @@ namespace Mutagen.Generation
                 using (var args = new ArgsWrapper(fg,
                     $"{retAccessor}LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}, {loquiGen.MaskItemString(MaskType.Error)}>.Instance.Parse"))
                 {
-                    args.Add($"frame: {readerAccessor}{(loquiGen.TargetObjectGeneration.GetObjectType() == ObjectType.Struct ? ".Spawn(snapToFinalPosition: false)" : null)}");
+                    args.Add($"frame: {readerAccessor}{(loquiGen.TargetObjectGeneration.GetObjectType() == ObjectType.Subrecord ? ".Spawn(snapToFinalPosition: false)" : null)}");
                     args.Add($"doMasks: {doMaskAccessor}");
                     if (loquiGen.HasIndex)
                     {

@@ -1085,7 +1085,7 @@ namespace Mutagen
                         triggeringRecord: Race_Registration.XNAM_HEADER,
                         fieldIndex: (int)Race_FieldIndex.Relations,
                         doMasks: doMasks,
-                        objType: ObjectType.Struct,
+                        objType: ObjectType.Subrecord,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, Relation_ErrorMask> listSubMask) =>
                         {
@@ -1099,7 +1099,7 @@ namespace Mutagen
                 break;
                 case "DATA":
                     var DatatryGet = LoquiBinaryTranslation<RaceData, RaceData_ErrorMask>.Instance.Parse(
-                        frame: frame.Spawn(snapToFinalPosition: false),
+                        frame: frame,
                         doMasks: doMasks,
                         fieldIndex: (int)Race_FieldIndex.Data,
                         errorMask: errorMask);
@@ -1134,7 +1134,7 @@ namespace Mutagen
                 break;
                 case "ATTR":
                     var RaceStatstryGet = LoquiBinaryTranslation<RaceStatsGendered, RaceStatsGendered_ErrorMask>.Instance.Parse(
-                        frame: frame.Spawn(snapToFinalPosition: false),
+                        frame: frame,
                         doMasks: doMasks,
                         fieldIndex: (int)Race_FieldIndex.RaceStats,
                         errorMask: errorMask);

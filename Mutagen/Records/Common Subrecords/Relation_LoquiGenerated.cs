@@ -1503,7 +1503,7 @@ namespace Mutagen.Internals
                 using (HeaderExport.ExportHeader(
                     writer: writer,
                     record: Relation_Registration.XNAM_HEADER,
-                    type: ObjectType.Struct))
+                    type: ObjectType.Subrecord))
                 {
                     Write_Binary_Embedded(
                         item: item,

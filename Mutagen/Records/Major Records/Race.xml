@@ -14,7 +14,7 @@
       <RefDirect name="RaceStats" refName="RaceStatsGendered" />
     </Fields>
   </Object>
-  <Object name="RaceData" objType="Struct" recordType="DATA" GUID="0f6434d7-0cdc-430d-bd2a-9f7a099425f2" ID="26">
+  <Object name="RaceData" objType="Subrecord" recordType="DATA" GUID="0f6434d7-0cdc-430d-bd2a-9f7a099425f2" ID="26">
     <Fields>
       <RefList name="SkillBoosts" maxSize="7" refName="SkillBoost" />
       <ByteArray name="Fluff" length="4" nullable="false" />
@@ -25,19 +25,19 @@
       <Enum name="Flags" enumName="Race.Flag" byteLength="2" />
     </Fields>
   </Object>
-  <Object name="SkillBoost" objType="Struct" GUID="5b28ecc2-3bf5-495e-9f6f-db9ce344e94e" ID="27">
+  <Object name="SkillBoost" objType="Subrecord" GUID="5b28ecc2-3bf5-495e-9f6f-db9ce344e94e" ID="27">
     <Fields>
       <Enum name="Skill" enumName="ActorValue" byteLength="1" />
       <Int8 name="Boost" />
     </Fields>
   </Object>
-  <Object name="RaceStatsGendered" objType="Struct" recordType="ATTR" GUID="f6f95fe6-ec9c-4ddd-9713-820547d6c485" ID="30">
+  <Object name="RaceStatsGendered" objType="Subrecord" recordType="ATTR" GUID="f6f95fe6-ec9c-4ddd-9713-820547d6c485" ID="30">
     <Fields>
       <RefDirect name="Male" refName="RaceStats" />
       <RefDirect name="Female" refName="RaceStats" />
     </Fields>
   </Object>
-  <Object name="RaceStats" objType="Struct" GUID="3cbe1b09-d220-47e3-a57d-3d9a4feada8b" ID="31">
+  <Object name="RaceStats" objType="Subrecord" GUID="3cbe1b09-d220-47e3-a57d-3d9a4feada8b" ID="31">
     <Fields>
       <UInt8 name="Strength" />
       <UInt8 name="Intelligence" />
