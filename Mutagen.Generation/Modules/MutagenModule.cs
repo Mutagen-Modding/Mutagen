@@ -169,6 +169,22 @@ namespace Mutagen.Generation
             data.CustomBinary = node.GetAttribute<bool>("customBinary", false);
         }
 
+        public override void PostLoad(ObjectGeneration obj)
+        {
+            base.PostLoad(obj);
+            Dictionary<string, TypeGeneration> triggerMapping = new Dictionary<string, TypeGeneration>();
+            foreach (var field in obj.Fields)
+            {
+                if (!field.TryGetFieldData(out var mutaData)) continue;
+                if (mutaData.TriggeringRecordAccessor == null) continue;
+                if (triggerMapping.TryGetValue(mutaData.TriggeringRecordAccessor, out var existingField))
+                {
+                    throw new ArgumentException($"{obj.Name} cannot have two fields that have the same trigger {mutaData.TriggeringRecordAccessor}: {existingField.Name} AND {field.Name}");
+                }
+                triggerMapping[mutaData.TriggeringRecordAccessor] = field;
+            }
+        }
+
         private void SetRecordTrigger(
             ObjectGeneration obj,
             TypeGeneration field,
