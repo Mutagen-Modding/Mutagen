@@ -30,6 +30,11 @@
           <GenericSpecification Definition="Hair" TypeToSpecify="T" />
         </Direct>
       </Ref>
+      <Ref name="Eyes">
+        <Direct refName="Group" >
+          <GenericSpecification Definition="Eye" TypeToSpecify="T" />
+        </Direct>
+      </Ref>
       <Ref name="Races">
         <Direct refName="Group" >
           <GenericSpecification Definition="Race" TypeToSpecify="T" />

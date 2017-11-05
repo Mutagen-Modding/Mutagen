@@ -47,6 +47,17 @@ namespace Mutagen
         INotifyingItem<FilePath> IEye.Icon_Property => this.Icon_Property;
         INotifyingItemGetter<FilePath> IEyeGetter.Icon_Property => this.Icon_Property;
         #endregion
+        #region Flags
+        protected readonly INotifyingItem<Eye.Flag> _Flags = NotifyingItem.Factory<Eye.Flag>(markAsSet: false);
+        public INotifyingItem<Eye.Flag> Flags_Property => _Flags;
+        public Eye.Flag Flags
+        {
+            get => this._Flags.Item;
+            set => this._Flags.Set(value);
+        }
+        INotifyingItem<Eye.Flag> IEye.Flags_Property => this.Flags_Property;
+        INotifyingItemGetter<Eye.Flag> IEyeGetter.Flags_Property => this.Flags_Property;
+        #endregion
 
         #region Loqui Getter Interface
 
@@ -108,6 +119,11 @@ namespace Mutagen
             {
                 if (!object.Equals(Icon, rhs.Icon)) return false;
             }
+            if (Flags_Property.HasBeenSet != rhs.Flags_Property.HasBeenSet) return false;
+            if (Flags_Property.HasBeenSet)
+            {
+                if (Flags != rhs.Flags) return false;
+            }
             return true;
         }
 
@@ -117,6 +133,10 @@ namespace Mutagen
             if (Icon_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(Icon).CombineHashCode(ret);
+            }
+            if (Flags_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
             }
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
@@ -448,6 +468,22 @@ namespace Mutagen
                             errorMask,
                             doMasks,
                             (int)Eye_FieldIndex.Icon,
+                            subMask);
+                    }
+                    break;
+                case "Flags":
+                    {
+                        Exception subMask;
+                        var tryGet = EnumXmlTranslation<Eye.Flag>.Instance.Parse(
+                            root,
+                            nullable: false,
+                            doMasks: doMasks,
+                            errorMask: out subMask).Bubble((o) => o.Value);
+                        item._Flags.SetIfSucceeded(tryGet);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)Eye_FieldIndex.Flags,
                             subMask);
                     }
                     break;
@@ -807,6 +843,15 @@ namespace Mutagen
                         errorMask: errorMask);
                     item._Icon.SetIfSucceeded(tryGet);
                 break;
+                case "DATA":
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    var FlagstryGet = Mutagen.Binary.EnumBinaryTranslation<Eye.Flag>.Instance.Parse(
+                        frame.Spawn(contentLength),
+                        fieldIndex: (int)Eye_FieldIndex.Flags,
+                        doMasks: doMasks,
+                        errorMask: errorMask);
+                    item._Flags.SetIfSucceeded(FlagstryGet);
+                break;
                 default:
                     NamedMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
@@ -899,6 +944,11 @@ namespace Mutagen
                         (FilePath)obj,
                         cmds);
                     break;
+                case Eye_FieldIndex.Flags:
+                    this._Flags.Set(
+                        (Eye.Flag)obj,
+                        cmds);
+                    break;
                 default:
                     base.SetNthObject(index, obj, cmds);
                     break;
@@ -935,6 +985,11 @@ namespace Mutagen
                         (FilePath)pair.Value,
                         null);
                     break;
+                case Eye_FieldIndex.Flags:
+                    obj._Flags.Set(
+                        (Eye.Flag)pair.Value,
+                        null);
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -953,6 +1008,9 @@ namespace Mutagen
         new FilePath Icon { get; set; }
         new INotifyingItem<FilePath> Icon_Property { get; }
 
+        new Eye.Flag Flags { get; set; }
+        new INotifyingItem<Eye.Flag> Flags_Property { get; }
+
     }
 
     public interface IEyeGetter : INamedMajorRecordGetter
@@ -960,6 +1018,11 @@ namespace Mutagen
         #region Icon
         FilePath Icon { get; }
         INotifyingItemGetter<FilePath> Icon_Property { get; }
+
+        #endregion
+        #region Flags
+        Eye.Flag Flags { get; }
+        INotifyingItemGetter<Eye.Flag> Flags_Property { get; }
 
         #endregion
 
@@ -975,6 +1038,7 @@ namespace Mutagen.Internals
     public enum Eye_FieldIndex
     {
         Icon = 6,
+        Flags = 7,
     }
     #endregion
 
@@ -992,7 +1056,7 @@ namespace Mutagen.Internals
 
         public const string GUID = "adf54439-4091-4d26-ae99-171e4b211def";
 
-        public const ushort FieldCount = 1;
+        public const ushort FieldCount = 2;
 
         public static readonly Type MaskType = typeof(Eye_Mask<>);
 
@@ -1022,6 +1086,8 @@ namespace Mutagen.Internals
             {
                 case "ICON":
                     return (ushort)Eye_FieldIndex.Icon;
+                case "FLAGS":
+                    return (ushort)Eye_FieldIndex.Flags;
                 default:
                     return null;
             }
@@ -1033,6 +1099,7 @@ namespace Mutagen.Internals
             switch (enu)
             {
                 case Eye_FieldIndex.Icon:
+                case Eye_FieldIndex.Flags:
                     return false;
                 default:
                     return NamedMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -1045,6 +1112,7 @@ namespace Mutagen.Internals
             switch (enu)
             {
                 case Eye_FieldIndex.Icon:
+                case Eye_FieldIndex.Flags:
                     return false;
                 default:
                     return NamedMajorRecord_Registration.GetNthIsLoqui(index);
@@ -1057,6 +1125,7 @@ namespace Mutagen.Internals
             switch (enu)
             {
                 case Eye_FieldIndex.Icon:
+                case Eye_FieldIndex.Flags:
                     return false;
                 default:
                     return NamedMajorRecord_Registration.GetNthIsSingleton(index);
@@ -1070,6 +1139,8 @@ namespace Mutagen.Internals
             {
                 case Eye_FieldIndex.Icon:
                     return "Icon";
+                case Eye_FieldIndex.Flags:
+                    return "Flags";
                 default:
                     return NamedMajorRecord_Registration.GetNthName(index);
             }
@@ -1081,6 +1152,7 @@ namespace Mutagen.Internals
             switch (enu)
             {
                 case Eye_FieldIndex.Icon:
+                case Eye_FieldIndex.Flags:
                     return false;
                 default:
                     return NamedMajorRecord_Registration.IsNthDerivative(index);
@@ -1093,6 +1165,7 @@ namespace Mutagen.Internals
             switch (enu)
             {
                 case Eye_FieldIndex.Icon:
+                case Eye_FieldIndex.Flags:
                     return false;
                 default:
                     return NamedMajorRecord_Registration.IsProtected(index);
@@ -1106,6 +1179,8 @@ namespace Mutagen.Internals
             {
                 case Eye_FieldIndex.Icon:
                     return typeof(FilePath);
+                case Eye_FieldIndex.Flags:
+                    return typeof(Eye.Flag);
                 default:
                     return NamedMajorRecord_Registration.GetNthType(index);
             }
@@ -1113,9 +1188,10 @@ namespace Mutagen.Internals
 
         public static readonly RecordType EYES_HEADER = new RecordType("EYES");
         public static readonly RecordType ICON_HEADER = new RecordType("ICON");
+        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = EYES_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 1;
+        public const int NumTypedFields = 2;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1245,6 +1321,21 @@ namespace Mutagen.Internals
                     errorMask().SetNthException((int)Eye_FieldIndex.Icon, ex);
                 }
             }
+            if (copyMask?.Flags ?? true)
+            {
+                try
+                {
+                    item.Flags_Property.SetToWithDefault(
+                        rhs.Flags_Property,
+                        def?.Flags_Property,
+                        cmds);
+                }
+                catch (Exception ex)
+                when (doErrorMask)
+                {
+                    errorMask().SetNthException((int)Eye_FieldIndex.Flags, ex);
+                }
+            }
         }
 
         #endregion
@@ -1260,6 +1351,9 @@ namespace Mutagen.Internals
             {
                 case Eye_FieldIndex.Icon:
                     obj.Icon_Property.HasBeenSet = on;
+                    break;
+                case Eye_FieldIndex.Flags:
+                    obj.Flags_Property.HasBeenSet = on;
                     break;
                 default:
                     NamedMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
@@ -1278,6 +1372,9 @@ namespace Mutagen.Internals
                 case Eye_FieldIndex.Icon:
                     obj.Icon_Property.Unset(cmds);
                     break;
+                case Eye_FieldIndex.Flags:
+                    obj.Flags_Property.Unset(cmds);
+                    break;
                 default:
                     NamedMajorRecordCommon.UnsetNthObject(index, obj);
                     break;
@@ -1293,6 +1390,8 @@ namespace Mutagen.Internals
             {
                 case Eye_FieldIndex.Icon:
                     return obj.Icon_Property.HasBeenSet;
+                case Eye_FieldIndex.Flags:
+                    return obj.Flags_Property.HasBeenSet;
                 default:
                     return NamedMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -1307,6 +1406,8 @@ namespace Mutagen.Internals
             {
                 case Eye_FieldIndex.Icon:
                     return obj.Icon;
+                case Eye_FieldIndex.Flags:
+                    return obj.Flags;
                 default:
                     return NamedMajorRecordCommon.GetNthObject(index, obj);
             }
@@ -1317,6 +1418,7 @@ namespace Mutagen.Internals
             NotifyingUnsetParameters? cmds = null)
         {
             item.Icon_Property.Unset(cmds.ToUnsetParams());
+            item.Flags_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static Eye_Mask<bool> GetEqualsMask(
@@ -1335,6 +1437,7 @@ namespace Mutagen.Internals
         {
             if (rhs == null) return;
             ret.Icon = item.Icon_Property.Equals(rhs.Icon_Property, (l, r) => object.Equals(l, r));
+            ret.Flags = item.Flags_Property.Equals(rhs.Flags_Property, (l, r) => l == r);
             NamedMajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -1369,6 +1472,10 @@ namespace Mutagen.Internals
                 {
                     fg.AppendLine($"Icon => {item.Icon}");
                 }
+                if (printMask?.Flags ?? true)
+                {
+                    fg.AppendLine($"Flags => {item.Flags}");
+                }
             }
             fg.AppendLine("]");
         }
@@ -1378,6 +1485,7 @@ namespace Mutagen.Internals
             Eye_Mask<bool?> checkMask)
         {
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_Property.HasBeenSet) return false;
+            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_Property.HasBeenSet) return false;
             return true;
         }
 
@@ -1385,6 +1493,7 @@ namespace Mutagen.Internals
         {
             var ret = new Eye_Mask<bool>();
             ret.Icon = item.Icon_Property.HasBeenSet;
+            ret.Flags = item.Flags_Property.HasBeenSet;
             return ret;
         }
 
@@ -1435,6 +1544,21 @@ namespace Mutagen.Internals
                             errorMask,
                             doMasks,
                             (int)Eye_FieldIndex.Icon,
+                            subMask);
+                    }
+                    if (item.Flags_Property.HasBeenSet)
+                    {
+                        Exception subMask;
+                        EnumXmlTranslation<Eye.Flag>.Instance.Write(
+                            writer,
+                            nameof(item.Flags),
+                            item.Flags,
+                            doMasks: doMasks,
+                            errorMask: out subMask);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)Eye_FieldIndex.Flags,
                             subMask);
                     }
                 }
@@ -1518,6 +1642,15 @@ namespace Mutagen.Internals
                 errorMask: errorMask,
                 header: Eye_Registration.ICON_HEADER,
                 nullable: false);
+            Mutagen.Binary.EnumBinaryTranslation<Eye.Flag>.Instance.Write(
+                writer,
+                item.Flags_Property,
+                doMasks: doMasks,
+                length: new ContentLength(1),
+                fieldIndex: (int)Eye_FieldIndex.Flags,
+                errorMask: errorMask,
+                header: Eye_Registration.DATA_HEADER,
+                nullable: false);
         }
 
         #endregion
@@ -1538,11 +1671,13 @@ namespace Mutagen.Internals
         public Eye_Mask(T initialValue)
         {
             this.Icon = initialValue;
+            this.Flags = initialValue;
         }
         #endregion
 
         #region Members
         public T Icon;
+        public T Flags;
         #endregion
 
         #region Equals
@@ -1557,12 +1692,14 @@ namespace Mutagen.Internals
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
             if (!object.Equals(this.Icon, rhs.Icon)) return false;
+            if (!object.Equals(this.Flags, rhs.Flags)) return false;
             return true;
         }
         public override int GetHashCode()
         {
             int ret = 0;
             ret = ret.CombineHashCode(this.Icon?.GetHashCode());
+            ret = ret.CombineHashCode(this.Flags?.GetHashCode());
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -1574,6 +1711,7 @@ namespace Mutagen.Internals
         {
             if (!base.AllEqual(eval)) return false;
             if (!eval(this.Icon)) return false;
+            if (!eval(this.Flags)) return false;
             return true;
         }
         #endregion
@@ -1590,6 +1728,7 @@ namespace Mutagen.Internals
         {
             base.Translate_InternalFill(obj, eval);
             obj.Icon = eval(this.Icon);
+            obj.Flags = eval(this.Flags);
         }
         #endregion
 
@@ -1623,6 +1762,10 @@ namespace Mutagen.Internals
                 {
                     fg.AppendLine($"Icon => {Icon.ToStringSafe()}");
                 }
+                if (printMask?.Flags ?? true)
+                {
+                    fg.AppendLine($"Flags => {Flags.ToStringSafe()}");
+                }
             }
             fg.AppendLine("]");
         }
@@ -1634,6 +1777,7 @@ namespace Mutagen.Internals
     {
         #region Members
         public Exception Icon;
+        public Exception Flags;
         #endregion
 
         #region IErrorMask
@@ -1644,6 +1788,9 @@ namespace Mutagen.Internals
             {
                 case Eye_FieldIndex.Icon:
                     this.Icon = ex;
+                    break;
+                case Eye_FieldIndex.Flags:
+                    this.Flags = ex;
                     break;
                 default:
                     base.SetNthException(index, ex);
@@ -1658,6 +1805,9 @@ namespace Mutagen.Internals
             {
                 case Eye_FieldIndex.Icon:
                     this.Icon = (Exception)obj;
+                    break;
+                case Eye_FieldIndex.Flags:
+                    this.Flags = (Exception)obj;
                     break;
                 default:
                     base.SetNthMask(index, obj);
@@ -1701,6 +1851,10 @@ namespace Mutagen.Internals
             {
                 fg.AppendLine($"Icon => {Icon.ToStringSafe()}");
             }
+            if (Flags != null)
+            {
+                fg.AppendLine($"Flags => {Flags.ToStringSafe()}");
+            }
         }
         #endregion
 
@@ -1709,6 +1863,7 @@ namespace Mutagen.Internals
         {
             var ret = new Eye_ErrorMask();
             ret.Icon = this.Icon.Combine(rhs.Icon);
+            ret.Flags = this.Flags.Combine(rhs.Flags);
             return ret;
         }
         public static Eye_ErrorMask Combine(Eye_ErrorMask lhs, Eye_ErrorMask rhs)
@@ -1723,6 +1878,7 @@ namespace Mutagen.Internals
     {
         #region Members
         public bool Icon;
+        public bool Flags;
         #endregion
 
     }
