@@ -832,20 +832,26 @@ namespace Mutagen
             {
                 case "MNAM":
                     if (!first) return false;
-                    FillBinary_Male_Custom(
-                        frame: frame,
-                        item: item,
-                        doMasks: doMasks,
-                        fieldIndex: (int)GenderedBodyData_FieldIndex.Male,
-                        errorMask: errorMask);
+                    using (var subFrame = frame.Spawn(Constants.SUBRECORD_LENGTH + contentLength))
+                    {
+                        FillBinary_Male_Custom(
+                            frame: subFrame,
+                            item: item,
+                            doMasks: doMasks,
+                            fieldIndex: (int)GenderedBodyData_FieldIndex.Male,
+                            errorMask: errorMask);
+                    }
                 break;
                 case "FNAM":
-                    FillBinary_Female_Custom(
-                        frame: frame,
-                        item: item,
-                        doMasks: doMasks,
-                        fieldIndex: (int)GenderedBodyData_FieldIndex.Female,
-                        errorMask: errorMask);
+                    using (var subFrame = frame.Spawn(Constants.SUBRECORD_LENGTH + contentLength))
+                    {
+                        FillBinary_Female_Custom(
+                            frame: subFrame,
+                            item: item,
+                            doMasks: doMasks,
+                            fieldIndex: (int)GenderedBodyData_FieldIndex.Female,
+                            errorMask: errorMask);
+                    }
                 break;
                 default:
                     return false;

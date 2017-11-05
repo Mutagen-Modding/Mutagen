@@ -528,12 +528,15 @@ namespace Mutagen
             switch (nextRecordType.Type)
             {
                 case "FNAM":
-                    FillBinary_TypeChar_Custom(
-                        frame: frame,
-                        item: item,
-                        doMasks: doMasks,
-                        fieldIndex: (int)Global_FieldIndex.TypeChar,
-                        errorMask: errorMask);
+                    using (var subFrame = frame.Spawn(Constants.SUBRECORD_LENGTH + contentLength))
+                    {
+                        FillBinary_TypeChar_Custom(
+                            frame: subFrame,
+                            item: item,
+                            doMasks: doMasks,
+                            fieldIndex: (int)Global_FieldIndex.TypeChar,
+                            errorMask: errorMask);
+                    }
                 break;
                 case "FLTV":
                     frame.Position += Constants.SUBRECORD_LENGTH;

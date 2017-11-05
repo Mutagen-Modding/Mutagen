@@ -545,20 +545,27 @@ namespace Mutagen.Generation
             {
                 using (new DepthWrapper(fg, doIt: needBrace))
                 {
-                    using (var args = new ArgsWrapper(fg,
-                        $"FillBinary_{field.Name}_Custom"))
+                    if (data.HasTrigger)
                     {
-                        args.Add("frame: frame");
-                        args.Add("item: item");
-                        args.Add("doMasks: doMasks");
-                        if (field.HasIndex)
+                        fg.AppendLine($"using (var subFrame = frame.Spawn(Constants.SUBRECORD_LENGTH + contentLength))");
+                    }
+                    using (new BraceWrapper(fg, doIt: data.HasTrigger))
+                    {
+                        using (var args = new ArgsWrapper(fg,
+                            $"FillBinary_{field.Name}_Custom"))
                         {
-                            args.Add($"fieldIndex: (int){field.IndexEnumName}");
-                            args.Add($"errorMask: errorMask");
-                        }
-                        else
-                        {
-                            args.Add($"errorMask: out errorMask");
+                            args.Add($"frame: {(data.HasTrigger ? "subFrame" : "frame")}");
+                            args.Add("item: item");
+                            args.Add("doMasks: doMasks");
+                            if (field.HasIndex)
+                            {
+                                args.Add($"fieldIndex: (int){field.IndexEnumName}");
+                                args.Add($"errorMask: errorMask");
+                            }
+                            else
+                            {
+                                args.Add($"errorMask: out errorMask");
+                            }
                         }
                     }
                 }

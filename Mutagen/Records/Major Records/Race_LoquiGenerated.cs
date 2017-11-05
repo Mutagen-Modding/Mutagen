@@ -1323,12 +1323,15 @@ namespace Mutagen
                     item._RaceStats.SetIfSucceeded(RaceStatstryGet);
                 break;
                 case "NAM0":
-                    FillBinary_FaceData_Custom(
-                        frame: frame,
-                        item: item,
-                        doMasks: doMasks,
-                        fieldIndex: (int)Race_FieldIndex.FaceData,
-                        errorMask: errorMask);
+                    using (var subFrame = frame.Spawn(Constants.SUBRECORD_LENGTH + contentLength))
+                    {
+                        FillBinary_FaceData_Custom(
+                            frame: subFrame,
+                            item: item,
+                            doMasks: doMasks,
+                            fieldIndex: (int)Race_FieldIndex.FaceData,
+                            errorMask: errorMask);
+                    }
                 break;
                 case "MNAM":
                     var BodyDatatryGet = LoquiBinaryTranslation<GenderedBodyData, GenderedBodyData_ErrorMask>.Instance.Parse(
