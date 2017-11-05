@@ -965,7 +965,7 @@ namespace Mutagen
             item._ClassServices.SetIfSucceeded(ClassServicestryGet);
             if (frame.Complete) return;
             var TrainingtryGet = LoquiBinaryTranslation<ClassTraining, ClassTraining_ErrorMask>.Instance.Parse(
-                frame: frame,
+                frame: frame.Spawn(snapToFinalPosition: false),
                 doMasks: doMasks,
                 fieldIndex: (int)ClassData_FieldIndex.Training,
                 errorMask: errorMask);

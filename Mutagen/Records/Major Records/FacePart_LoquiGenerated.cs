@@ -823,7 +823,7 @@ namespace Mutagen
                 break;
                 case "MODL":
                     var ModeltryGet = LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
-                        frame: frame,
+                        frame: frame.Spawn(snapToFinalPosition: false),
                         doMasks: doMasks,
                         fieldIndex: (int)FacePart_FieldIndex.Model,
                         errorMask: errorMask);

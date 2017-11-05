@@ -97,11 +97,10 @@ namespace Mutagen.Generation
                 }
                 else
                 {
-                    var data = loquiGen.GetFieldData();
                     using (var args = new ArgsWrapper(fg,
                         $"var {typeGen.Name}tryGet = LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}, {loquiGen.MaskItemString(MaskType.Error)}>.Instance.Parse"))
                     {
-                        args.Add($"frame: {readerAccessor}");
+                        args.Add($"frame: {readerAccessor}{(loquiGen.TargetObjectGeneration.HasRecordType() ? null : ".Spawn(snapToFinalPosition: false)")}");
                         args.Add($"doMasks: {doMaskAccessor}");
                         if (loquiGen.HasIndex)
                         {

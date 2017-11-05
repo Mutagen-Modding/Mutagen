@@ -1332,7 +1332,7 @@ namespace Mutagen
                 break;
                 case "MNAM":
                     var BodyDatatryGet = LoquiBinaryTranslation<GenderedBodyData, GenderedBodyData_ErrorMask>.Instance.Parse(
-                        frame: frame,
+                        frame: frame.Spawn(snapToFinalPosition: false),
                         doMasks: doMasks,
                         fieldIndex: (int)Race_FieldIndex.BodyData,
                         errorMask: errorMask);
