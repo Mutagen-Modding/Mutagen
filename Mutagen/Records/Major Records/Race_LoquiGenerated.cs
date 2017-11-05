@@ -1322,7 +1322,7 @@ namespace Mutagen
                         errorMask: errorMask);
                     item._RaceStats.SetIfSucceeded(RaceStatstryGet);
                 break;
-                case "INDX":
+                case "NAM0":
                     FillBinary_FaceData_Custom(
                         frame: frame,
                         item: item,
@@ -1961,7 +1961,7 @@ namespace Mutagen.Internals
         public static readonly RecordType PNAM_HEADER = new RecordType("PNAM");
         public static readonly RecordType UNAM_HEADER = new RecordType("UNAM");
         public static readonly RecordType ATTR_HEADER = new RecordType("ATTR");
-        public static readonly RecordType INDX_HEADER = new RecordType("INDX");
+        public static readonly RecordType NAM0_HEADER = new RecordType("NAM0");
         public static readonly RecordType MNAM_HEADER = new RecordType("MNAM");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = RACE_HEADER;
         public const int NumStructFields = 0;

@@ -214,7 +214,8 @@ namespace Mutagen.Generation
                     data.TriggeringRecordAccessor = $"{loqui.GenericDef.Name}_RecordType";
                 }
             }
-            else if (field is LoquiListType loquiList)
+            else if (field is LoquiListType loquiList
+                && !data.RecordType.HasValue)
             {
                 loqui = loquiList.SubTypeGeneration as LoquiType;
                 if (loqui.RefGen.Obj.TryGetTriggeringRecordType(out recType))
@@ -226,7 +227,8 @@ namespace Mutagen.Generation
                     data.TriggeringRecordAccessor = $"{loqui.GenericDef.Name}_RecordType";
                 }
             }
-            else if (field is ListType listType)
+            else if (field is ListType listType
+                && !data.RecordType.HasValue)
             {
                 if (listType.SubTypeGeneration is LoquiType subListLoqui)
                 {
