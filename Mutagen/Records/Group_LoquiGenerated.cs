@@ -883,6 +883,38 @@ namespace Mutagen
         }
         #endregion
 
+        static partial void FillBinary_ContainedRecordType_Custom<T_ErrMask>(
+            MutagenFrame frame,
+            IGroupGetter<T> item,
+            bool doMasks,
+            int fieldIndex,
+            Func<Group_ErrorMask<T_ErrMask>> errorMask)
+            where T_ErrMask : MajorRecord_ErrorMask, new();
+
+        static partial void WriteBinary_ContainedRecordType_Custom<T_ErrMask>(
+            MutagenWriter writer,
+            IGroupGetter<T> item,
+            bool doMasks,
+            int fieldIndex,
+            Func<Group_ErrorMask<T_ErrMask>> errorMask)
+            where T_ErrMask : MajorRecord_ErrorMask, new();
+
+        public static void WriteBinary_ContainedRecordType<T_ErrMask>(
+            MutagenWriter writer,
+            IGroupGetter<T> item,
+            bool doMasks,
+            int fieldIndex,
+            Func<Group_ErrorMask<T_ErrMask>> errorMask)
+            where T_ErrMask : MajorRecord_ErrorMask, new()
+        {
+            WriteBinary_ContainedRecordType_Custom(
+                writer: writer,
+                item: item,
+                doMasks: doMasks,
+                fieldIndex: fieldIndex,
+                errorMask: errorMask);
+        }
+
         private static Group<T> Create_Binary_Internal<T_ErrMask>(
             MutagenFrame frame,
             bool doMasks,
@@ -926,7 +958,7 @@ namespace Mutagen
             where T_ErrMask : MajorRecord_ErrorMask, new()
         {
             if (frame.Complete) return;
-            FillBinary_ContainedRecordType(
+            FillBinary_ContainedRecordType_Custom(
                 frame: frame,
                 item: item,
                 doMasks: doMasks,
@@ -1946,19 +1978,12 @@ namespace Mutagen.Internals
             where T : MajorRecord, ILoquiObjectGetter
             where T_ErrMask : MajorRecord_ErrorMask, new()
         {
-            {
-                Exception subMask;
-                Group<T>.WriteBinary_ContainedRecordType(
-                    writer: writer,
-                    item: item,
-                    doMasks: doMasks,
-                    errorMask: out subMask);
-                ErrorMask.HandleErrorMask(
-                    errorMask,
-                    doMasks,
-                    (int)Group_FieldIndex.ContainedRecordType,
-                    subMask);
-            }
+            Group<T>.WriteBinary_ContainedRecordType(
+                writer: writer,
+                item: item,
+                fieldIndex: (int)Group_FieldIndex.ContainedRecordType,
+                doMasks: doMasks,
+                errorMask: errorMask);
             Mutagen.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.GroupType_Property,

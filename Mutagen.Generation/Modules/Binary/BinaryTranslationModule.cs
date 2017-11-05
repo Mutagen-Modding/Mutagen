@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Loqui;
 using Mutagen.Binary;
+using System.IO;
 
 namespace Mutagen.Generation
 {
@@ -114,7 +115,96 @@ namespace Mutagen.Generation
         public override void GenerateInClass(ObjectGeneration obj, FileGeneration fg)
         {
             base.GenerateInClass(obj, fg);
+            GenerateCustomPartials(obj, fg);
             GenerateCreateExtras(obj, fg);
+        }
+
+        private void GenerateCustomPartials(ObjectGeneration obj, FileGeneration fg)
+        {
+            foreach (var field in obj.Fields)
+            {
+                if (!field.TryGetFieldData(out var mutaData)) continue;
+                if (!mutaData.CustomBinary) continue;
+                using (var args = new FunctionWrapper(fg,
+                    $"static partial void FillBinary_{field.Name}_Custom{obj.Mask_GenericClause(MaskType.Error)}",
+                    wheres: obj.GenericTypes_ErrorMaskWheres)
+                {
+                    SemiColon = true
+                })
+                {
+                    args.Add($"{nameof(MutagenFrame)} frame");
+                    args.Add($"{obj.Getter_InterfaceStr} item");
+                    args.Add("bool doMasks");
+                    if (field.HasIndex)
+                    {
+                        args.Add($"int fieldIndex");
+                        args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
+                    }
+                    else
+                    {
+                        args.Add($"out {obj.Mask(MaskType.Error)} errorMask");
+                    }
+                }
+                fg.AppendLine();
+                using (var args = new FunctionWrapper(fg,
+                    $"static partial void WriteBinary_{field.Name}_Custom{obj.Mask_GenericClause(MaskType.Error)}",
+                    wheres: obj.GenericTypes_ErrorMaskWheres)
+                {
+                    SemiColon = true
+                })
+                {
+                    args.Add($"{nameof(MutagenWriter)} writer");
+                    args.Add($"{obj.Getter_InterfaceStr} item");
+                    args.Add("bool doMasks");
+                    if (field.HasIndex)
+                    {
+                        args.Add($"int fieldIndex");
+                        args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
+                    }
+                    else
+                    {
+                        args.Add($"out {obj.Mask(MaskType.Error)} errorMask");
+                    }
+                }
+                fg.AppendLine();
+                using (var args = new FunctionWrapper(fg,
+                    $"public static void WriteBinary_{field.Name}{obj.Mask_GenericClause(MaskType.Error)}",
+                    wheres: obj.GenericTypes_ErrorMaskWheres))
+                {
+                    args.Add($"{nameof(MutagenWriter)} writer");
+                    args.Add($"{obj.Getter_InterfaceStr} item");
+                    args.Add("bool doMasks");
+                    if (field.HasIndex)
+                    {
+                        args.Add($"int fieldIndex");
+                        args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
+                    }
+                    else
+                    {
+                        args.Add($"out {obj.Mask(MaskType.Error)} errorMask");
+                    }
+                }
+                using (new BraceWrapper(fg))
+                {
+                    using (var args = new ArgsWrapper(fg,
+                        $"WriteBinary_{field.Name}_Custom"))
+                    {
+                        args.Add("writer: writer");
+                        args.Add("item: item");
+                        args.Add("doMasks: doMasks");
+                        if (field.HasIndex)
+                        {
+                            args.Add($"fieldIndex: fieldIndex");
+                            args.Add($"errorMask: errorMask");
+                        }
+                        else
+                        {
+                            args.Add($"errorMask: out errorMask");
+                        }
+                    }
+                }
+                fg.AppendLine();
+            }
         }
 
         public override void GenerateInCommonExt(ObjectGeneration obj, FileGeneration fg)
@@ -456,7 +546,7 @@ namespace Mutagen.Generation
                 using (new DepthWrapper(fg, doIt: needBrace))
                 {
                     using (var args = new ArgsWrapper(fg,
-                        $"FillBinary_{field.Name}"))
+                        $"FillBinary_{field.Name}_Custom"))
                     {
                         args.Add("frame: frame");
                         args.Add("item: item");
@@ -659,25 +749,14 @@ namespace Mutagen.Generation
                         var maskType = this.Gen.MaskModule.GetMaskModule(field.GetType()).GetErrorMaskTypeStr(field);
                         if (data.CustomBinary)
                         {
-                            using (new BraceWrapper(fg))
+                            using (var args = new ArgsWrapper(fg,
+                                $"{obj.ObjectName}.WriteBinary_{field.Name}"))
                             {
-                                fg.AppendLine($"{maskType} subMask;");
-                                using (var args = new ArgsWrapper(fg,
-                                    $"{obj.ObjectName}.WriteBinary_{field.Name}"))
-                                {
-                                    args.Add("writer: writer");
-                                    args.Add("item: item");
-                                    args.Add("doMasks: doMasks");
-                                    args.Add("errorMask: out subMask");
-                                }
-                                using (var args = new ArgsWrapper(fg,
-                                    $"ErrorMask.HandleErrorMask"))
-                                {
-                                    args.Add("errorMask");
-                                    args.Add("doMasks");
-                                    args.Add($"(int){field.IndexEnumName}");
-                                    args.Add("subMask");
-                                }
+                                args.Add("writer: writer");
+                                args.Add("item: item");
+                                args.Add($"fieldIndex: (int){field.IndexEnumName}");
+                                args.Add("doMasks: doMasks");
+                                args.Add("errorMask: errorMask");
                             }
                             continue;
                         }

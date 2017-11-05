@@ -102,24 +102,12 @@ namespace Mutagen
             return (g, errMask);
         }
 
-        private static void FillBinary_TypeChar<M>(
-            MutagenFrame frame,
-            Global item,
-            bool doMasks,
-            int fieldIndex,
-            Func<M> errorMask)
-            where M : IErrorMask
-        {
-            errorMask = null;
-        }
-
-        internal static void WriteBinary_TypeChar<M>(
+        static partial void WriteBinary_TypeChar_Custom(
             MutagenWriter writer, 
-            IGlobalGetter item,
-            int fieldIndex,
+            IGlobalGetter item, 
             bool doMasks, 
-            Func<M> errorMask)
-            where M : IErrorMask
+            int fieldIndex,
+            Func<Global_ErrorMask> errorMask)
         {
             Mutagen.Binary.CharBinaryTranslation.Instance.Write(
                 writer,

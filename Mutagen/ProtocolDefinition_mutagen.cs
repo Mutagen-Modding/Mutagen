@@ -38,6 +38,12 @@ namespace Loqui
             LoquiRegistration.Register(Mutagen.Internals.Eye_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Internals.RaceStatsGendered_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Internals.RaceStats_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Internals.RaceVoices_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Internals.RaceHair_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Internals.FacePart_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Internals.GenderedBodyData_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Internals.BodyData_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Internals.BodyPart_Registration.Instance);
         }
     }
 }

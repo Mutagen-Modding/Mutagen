@@ -71,6 +71,27 @@
       </xs:complexContent>
     </xs:complexType>
 
+    <xs:complexType name="RefDirect">
+      <xs:complexContent>
+        <xs:extension base="RefDirect">
+          <xs:attribute name="recordType" type="xs:string" >
+            <xs:annotation>
+              <xs:documentation>
+                Typical four letter ASCII tag used for the record type.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="customBinary" type="xs:boolean" >
+            <xs:annotation>
+              <xs:documentation>
+                Whether to expose a custom import/export snippet for binary translation
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+
     <xs:complexType name="ByteArray">
       <xs:complexContent>
         <xs:extension base="ByteArray">

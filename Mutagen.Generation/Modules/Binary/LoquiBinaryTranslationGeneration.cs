@@ -97,6 +97,7 @@ namespace Mutagen.Generation
                 }
                 else
                 {
+                    var data = loquiGen.GetFieldData();
                     using (var args = new ArgsWrapper(fg,
                         $"var {typeGen.Name}tryGet = LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}, {loquiGen.MaskItemString(MaskType.Error)}>.Instance.Parse"))
                     {

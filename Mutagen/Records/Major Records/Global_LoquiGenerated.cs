@@ -487,6 +487,35 @@ namespace Mutagen
         }
         #endregion
 
+        static partial void FillBinary_TypeChar_Custom(
+            MutagenFrame frame,
+            IGlobalGetter item,
+            bool doMasks,
+            int fieldIndex,
+            Func<Global_ErrorMask> errorMask);
+
+        static partial void WriteBinary_TypeChar_Custom(
+            MutagenWriter writer,
+            IGlobalGetter item,
+            bool doMasks,
+            int fieldIndex,
+            Func<Global_ErrorMask> errorMask);
+
+        public static void WriteBinary_TypeChar(
+            MutagenWriter writer,
+            IGlobalGetter item,
+            bool doMasks,
+            int fieldIndex,
+            Func<Global_ErrorMask> errorMask)
+        {
+            WriteBinary_TypeChar_Custom(
+                writer: writer,
+                item: item,
+                doMasks: doMasks,
+                fieldIndex: fieldIndex,
+                errorMask: errorMask);
+        }
+
         protected static bool Fill_Binary_RecordTypes(
             Global item,
             MutagenFrame frame,
@@ -499,7 +528,7 @@ namespace Mutagen
             switch (nextRecordType.Type)
             {
                 case "FNAM":
-                    FillBinary_TypeChar(
+                    FillBinary_TypeChar_Custom(
                         frame: frame,
                         item: item,
                         doMasks: doMasks,
