@@ -997,7 +997,7 @@ namespace Mutagen
                     {
                         var ItemstryGet = Mutagen.Binary.ListBinaryTranslation<T, MaskItem<Exception, T_ErrMask>>.Instance.ParseRepeatedItem(
                             frame: frame,
-                            triggeringRecord: Group<T>.T_RecordType,
+                            triggeringRecord: T_RecordType,
                             fieldIndex: (int)Group_FieldIndex.Items,
                             doMasks: doMasks,
                             objType: ObjectType.Record,

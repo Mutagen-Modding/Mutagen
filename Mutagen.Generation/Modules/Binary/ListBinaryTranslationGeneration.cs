@@ -25,6 +25,12 @@ namespace Mutagen.Generation
                 throw new ArgumentException("Unsupported type generator: " + list.SubTypeGeneration);
             }
 
+            if (typeGen.TryGetFieldData(out var data)
+                && data.MarkerType.HasValue)
+            {
+                fg.AppendLine($"using (HeaderExport.ExportHeader(writer, {objGen.RegistrationName}.{data.MarkerType.Value.Type}_HEADER, ObjectType.Subrecord)) {{ }}");
+            }
+
             var subMaskStr = subTransl.MaskModule.GetMaskModule(list.SubTypeGeneration.GetType()).GetErrorMaskTypeStr(list.SubTypeGeneration);
             using (var args = new ArgsWrapper(fg,
                 $"{this.Namespace}ListBinaryTranslation<{list.SubTypeGeneration.TypeName}, {subMaskStr}>.Instance.Write"))
@@ -87,10 +93,17 @@ namespace Mutagen.Generation
         {
             var list = typeGen as ListType;
             var data = list.GetFieldData();
+            var subData = list.SubTypeGeneration.GetFieldData();
             if (!this.Module.TryGetTypeGeneration(list.SubTypeGeneration.GetType(), out var subTransl))
             {
                 throw new ArgumentException("Unsupported type generator: " + list.SubTypeGeneration);
             }
+
+            if (data.MarkerType.HasValue)
+            {
+                fg.AppendLine("frame.Position += Constants.SUBRECORD_LENGTH + contentLength; // Skip marker");
+            }
+
             var subMaskStr = subTransl.MaskModule.GetMaskModule(list.SubTypeGeneration.GetType()).GetErrorMaskTypeStr(list.SubTypeGeneration);
             using (var args = new ArgsWrapper(fg,
                 $"{retAccessor}{this.Namespace}ListBinaryTranslation<{list.SubTypeGeneration.TypeName}, {subMaskStr}>.Instance.ParseRepeatedItem"))
@@ -100,9 +113,9 @@ namespace Mutagen.Generation
                 {
                     args.Add($"amount: {list.MaxValue.Value}");
                 }
-                else if (!string.IsNullOrWhiteSpace(data.TriggeringRecordAccessor))
+                else if (!string.IsNullOrWhiteSpace(subData.TriggeringRecordAccessor))
                 {
-                    args.Add($"triggeringRecord: {data.TriggeringRecordAccessor}");
+                    args.Add($"triggeringRecord: {subData.TriggeringRecordAccessor}");
                 }
                 else
                 {

@@ -14,8 +14,8 @@
       <Int32 name="FaceGenMainClamp" recordType="PNAM" />
       <Int32 name="FaceGenFaceClamp" recordType="UNAM" />
       <RefDirect name="RaceStats" refName="RaceStatsGendered" />
-      <RefList name="FaceData" refName="FacePart" recordType="NAM0" customBinary="true" />
-      <RefDirect name="BodyData" refName="GenderedBodyData" />
+      <RefList name="FaceData" refName="FacePart" markerType="NAM0" />
+      <RefDirect name="BodyData" refName="GenderedBodyData" markerType="NAM1" />
     </Fields>
   </Object>
   <Object name="RaceData" objType="Subrecord" recordType="DATA" GUID="0f6434d7-0cdc-430d-bd2a-9f7a099425f2" ID="26">
@@ -74,8 +74,8 @@
   </Object>
   <Object name="GenderedBodyData" objType="Subrecord" GUID="5b885494-7571-4e60-a255-76d26bbfd419" ID="35">
     <Fields>
-      <RefDirect name="Male" refName="BodyData" recordType="MNAM" customBinary="true"/>
-      <RefDirect name="Female" refName="BodyData" recordType="FNAM" customBinary="true"/>
+      <RefDirect name="Male" refName="BodyData" markerType="MNAM" />
+      <RefDirect name="Female" refName="BodyData" markerType="FNAM" />
     </Fields>
   </Object>
   <Object name="BodyData" objType="Subrecord" GUID="c54b8db9-9671-471b-8f85-8ee30c93b2ed" ID="36">

@@ -64,8 +64,14 @@ namespace Mutagen.Generation
             foreach (var field in obj.Fields)
             {
                 var data = field.GetFieldData();
-                if (!data.RecordType.HasValue) continue;
-                recordTypes.Add(data.RecordType.Value);
+                if (data.RecordType.HasValue)
+                {
+                    recordTypes.Add(data.RecordType.Value);
+                }
+                if (data.MarkerType.HasValue)
+                {
+                    recordTypes.Add(data.MarkerType.Value);
+                }
             }
             foreach (var type in recordTypes)
             {
@@ -129,6 +135,14 @@ namespace Mutagen.Generation
                 throw new ArgumentException("Must specify object type.");
             }
             obj.CustomData[Constants.OBJECT_TYPE] = objTypeEnum;
+
+            if (obj.Node.TryGetAttribute("markerType", out var markerType))
+            {
+                var markerTypeRec = new RecordType(markerType.Value);
+                obj.CustomData[Constants.MARKER_TYPE] = markerTypeRec;
+                obj.CustomData[Constants.RECORD_TYPE] = markerTypeRec;
+                obj.CustomData[Constants.TRIGGERING_RECORD_TYPE] = markerTypeRec;
+            }
         }
 
         public override void PostFieldLoad(ObjectGeneration obj, TypeGeneration field, XElement node)
@@ -138,6 +152,16 @@ namespace Mutagen.Generation
             if (recordAttr != null)
             {
                 data.RecordType = new RecordType(recordAttr);
+            }
+            var markerAttr = node.GetAttribute("markerType");
+            if (markerAttr != null)
+            {
+                data.MarkerType = new RecordType(markerAttr);
+            }
+            if (recordAttr != null
+                && markerAttr != null)
+            {
+                throw new ArgumentException("Cannot have both record type and marker type defined");
             }
             SetRecordTrigger(obj, field, data);
             ModifyGRUPRecordTrigger(obj, field, data);
@@ -254,8 +278,26 @@ namespace Mutagen.Generation
                 }
             }
 
-            if (data.RecordType.HasValue
+            SetTriggeringRecordAccessors(obj, data);
+
+            if (field is ContainerType contType)
+            {
+                var subData = contType.SubTypeGeneration.CustomData.TryCreateValue(Constants.DATA_KEY, () => new MutagenFieldData()) as MutagenFieldData;
+                subData.RecordType = data.RecordType;
+                SetTriggeringRecordAccessors(obj, subData);
+            }
+        }
+
+        private void SetTriggeringRecordAccessors(ObjectGeneration obj, MutagenFieldData data)
+        {
+            if (data.MarkerType.HasValue
                 && data.TriggeringRecordAccessor == null)
+            {
+                data.TriggeringRecordAccessor = $"{obj.RegistrationName}.{data.MarkerType.Value.HeaderName}";
+                data.TriggeringRecordType = data.MarkerType;
+            }
+            else if (data.RecordType.HasValue
+                  && data.TriggeringRecordAccessor == null)
             {
                 data.TriggeringRecordAccessor = $"{obj.RegistrationName}.{data.RecordType.Value.HeaderName}";
                 data.TriggeringRecordType = data.RecordType;

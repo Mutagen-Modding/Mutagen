@@ -434,7 +434,7 @@ namespace Mutagen.Generation
                         {
                             if (!field.Field.TryGetFieldData(out var data)
                                 || data.TriggeringRecordAccessor == null
-                                || !data.RecordType.HasValue) continue;
+                                || !data.TriggeringRecordType.HasValue) continue;
                             if (field.Field.Derivative && !data.CustomBinary) continue;
                             if (!this.TryGetTypeGeneration(field.Field.GetType(), out var generator))
                             {
@@ -464,7 +464,7 @@ namespace Mutagen.Generation
                             {
                                 if (!field.Field.TryGetFieldData(out var data)
                                     || data.TriggeringRecordAccessor == null
-                                    || data.RecordType.HasValue) continue;
+                                    || data.TriggeringRecordType.HasValue) continue;
                                 if (field.Field.Derivative && !data.CustomBinary) continue;
                                 if (!this.TryGetTypeGeneration(field.Field.GetType(), out var generator))
                                 {

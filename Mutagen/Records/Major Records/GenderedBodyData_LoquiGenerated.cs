@@ -716,64 +716,6 @@ namespace Mutagen
         }
         #endregion
 
-        static partial void FillBinary_Male_Custom(
-            MutagenFrame frame,
-            IGenderedBodyDataGetter item,
-            bool doMasks,
-            int fieldIndex,
-            Func<GenderedBodyData_ErrorMask> errorMask);
-
-        static partial void WriteBinary_Male_Custom(
-            MutagenWriter writer,
-            IGenderedBodyDataGetter item,
-            bool doMasks,
-            int fieldIndex,
-            Func<GenderedBodyData_ErrorMask> errorMask);
-
-        public static void WriteBinary_Male(
-            MutagenWriter writer,
-            IGenderedBodyDataGetter item,
-            bool doMasks,
-            int fieldIndex,
-            Func<GenderedBodyData_ErrorMask> errorMask)
-        {
-            WriteBinary_Male_Custom(
-                writer: writer,
-                item: item,
-                doMasks: doMasks,
-                fieldIndex: fieldIndex,
-                errorMask: errorMask);
-        }
-
-        static partial void FillBinary_Female_Custom(
-            MutagenFrame frame,
-            IGenderedBodyDataGetter item,
-            bool doMasks,
-            int fieldIndex,
-            Func<GenderedBodyData_ErrorMask> errorMask);
-
-        static partial void WriteBinary_Female_Custom(
-            MutagenWriter writer,
-            IGenderedBodyDataGetter item,
-            bool doMasks,
-            int fieldIndex,
-            Func<GenderedBodyData_ErrorMask> errorMask);
-
-        public static void WriteBinary_Female(
-            MutagenWriter writer,
-            IGenderedBodyDataGetter item,
-            bool doMasks,
-            int fieldIndex,
-            Func<GenderedBodyData_ErrorMask> errorMask)
-        {
-            WriteBinary_Female_Custom(
-                writer: writer,
-                item: item,
-                doMasks: doMasks,
-                fieldIndex: fieldIndex,
-                errorMask: errorMask);
-        }
-
         private static GenderedBodyData Create_Binary_Internal(
             MutagenFrame frame,
             bool doMasks,
@@ -832,26 +774,22 @@ namespace Mutagen
             {
                 case "MNAM":
                     if (!first) return false;
-                    using (var subFrame = frame.Spawn(Constants.SUBRECORD_LENGTH + contentLength))
-                    {
-                        FillBinary_Male_Custom(
-                            frame: subFrame,
-                            item: item,
-                            doMasks: doMasks,
-                            fieldIndex: (int)GenderedBodyData_FieldIndex.Male,
-                            errorMask: errorMask);
-                    }
+                    frame.Position += Constants.SUBRECORD_LENGTH + contentLength; // Skip marker
+                    var MaletryGet = LoquiBinaryTranslation<BodyData, BodyData_ErrorMask>.Instance.Parse(
+                        frame: frame.Spawn(snapToFinalPosition: false),
+                        doMasks: doMasks,
+                        fieldIndex: (int)GenderedBodyData_FieldIndex.Male,
+                        errorMask: errorMask);
+                    item._Male.SetIfSucceeded(MaletryGet);
                 break;
                 case "FNAM":
-                    using (var subFrame = frame.Spawn(Constants.SUBRECORD_LENGTH + contentLength))
-                    {
-                        FillBinary_Female_Custom(
-                            frame: subFrame,
-                            item: item,
-                            doMasks: doMasks,
-                            fieldIndex: (int)GenderedBodyData_FieldIndex.Female,
-                            errorMask: errorMask);
-                    }
+                    frame.Position += Constants.SUBRECORD_LENGTH + contentLength; // Skip marker
+                    var FemaletryGet = LoquiBinaryTranslation<BodyData, BodyData_ErrorMask>.Instance.Parse(
+                        frame: frame.Spawn(snapToFinalPosition: false),
+                        doMasks: doMasks,
+                        fieldIndex: (int)GenderedBodyData_FieldIndex.Female,
+                        errorMask: errorMask);
+                    item._Female.SetIfSucceeded(FemaletryGet);
                 break;
                 default:
                     return false;
@@ -1191,7 +1129,6 @@ namespace Mutagen.Internals
 
         public static readonly RecordType MNAM_HEADER = new RecordType("MNAM");
         public static readonly RecordType FNAM_HEADER = new RecordType("FNAM");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = MNAM_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 2;
         #region Interface
@@ -1685,17 +1622,19 @@ namespace Mutagen.Internals
             bool doMasks,
             Func<GenderedBodyData_ErrorMask> errorMask)
         {
-            GenderedBodyData.WriteBinary_Male(
+            using (HeaderExport.ExportHeader(writer, GenderedBodyData_Registration.MNAM_HEADER, ObjectType.Subrecord)) { }
+            LoquiBinaryTranslation<BodyData, BodyData_ErrorMask>.Instance.Write(
                 writer: writer,
-                item: item,
+                item: item.Male_Property,
+                doMasks: doMasks,
                 fieldIndex: (int)GenderedBodyData_FieldIndex.Male,
-                doMasks: doMasks,
                 errorMask: errorMask);
-            GenderedBodyData.WriteBinary_Female(
+            using (HeaderExport.ExportHeader(writer, GenderedBodyData_Registration.FNAM_HEADER, ObjectType.Subrecord)) { }
+            LoquiBinaryTranslation<BodyData, BodyData_ErrorMask>.Instance.Write(
                 writer: writer,
-                item: item,
-                fieldIndex: (int)GenderedBodyData_FieldIndex.Female,
+                item: item.Female_Property,
                 doMasks: doMasks,
+                fieldIndex: (int)GenderedBodyData_FieldIndex.Female,
                 errorMask: errorMask);
         }
 

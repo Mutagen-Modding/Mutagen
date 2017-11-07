@@ -1128,35 +1128,6 @@ namespace Mutagen
         }
         #endregion
 
-        static partial void FillBinary_FaceData_Custom(
-            MutagenFrame frame,
-            IRaceGetter item,
-            bool doMasks,
-            int fieldIndex,
-            Func<Race_ErrorMask> errorMask);
-
-        static partial void WriteBinary_FaceData_Custom(
-            MutagenWriter writer,
-            IRaceGetter item,
-            bool doMasks,
-            int fieldIndex,
-            Func<Race_ErrorMask> errorMask);
-
-        public static void WriteBinary_FaceData(
-            MutagenWriter writer,
-            IRaceGetter item,
-            bool doMasks,
-            int fieldIndex,
-            Func<Race_ErrorMask> errorMask)
-        {
-            WriteBinary_FaceData_Custom(
-                writer: writer,
-                item: item,
-                doMasks: doMasks,
-                fieldIndex: fieldIndex,
-                errorMask: errorMask);
-        }
-
         private static Race Create_Binary_Internal(
             MutagenFrame frame,
             bool doMasks,
@@ -1323,17 +1294,26 @@ namespace Mutagen
                     item._RaceStats.SetIfSucceeded(RaceStatstryGet);
                 break;
                 case "NAM0":
-                    using (var subFrame = frame.Spawn(Constants.SUBRECORD_LENGTH + contentLength))
-                    {
-                        FillBinary_FaceData_Custom(
-                            frame: subFrame,
-                            item: item,
-                            doMasks: doMasks,
-                            fieldIndex: (int)Race_FieldIndex.FaceData,
-                            errorMask: errorMask);
-                    }
+                    frame.Position += Constants.SUBRECORD_LENGTH + contentLength; // Skip marker
+                    var FaceDatatryGet = Mutagen.Binary.ListBinaryTranslation<FacePart, MaskItem<Exception, FacePart_ErrorMask>>.Instance.ParseRepeatedItem(
+                        frame: frame,
+                        triggeringRecord: Race_Registration.INDX_HEADER,
+                        fieldIndex: (int)Race_FieldIndex.FaceData,
+                        doMasks: doMasks,
+                        objType: ObjectType.Subrecord,
+                        errorMask: errorMask,
+                        transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, FacePart_ErrorMask> listSubMask) =>
+                        {
+                            return LoquiBinaryTranslation<FacePart, FacePart_ErrorMask>.Instance.Parse(
+                                frame: r.Spawn(snapToFinalPosition: false),
+                                doMasks: listDoMasks,
+                                errorMask: out listSubMask);
+                        }
+                        );
+                    item._FaceData.SetIfSucceeded(FaceDatatryGet);
                 break;
-                case "MNAM":
+                case "NAM1":
+                    frame.Position += Constants.SUBRECORD_LENGTH + contentLength; // Skip marker
                     var BodyDatatryGet = LoquiBinaryTranslation<GenderedBodyData, GenderedBodyData_ErrorMask>.Instance.Parse(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         doMasks: doMasks,
@@ -1964,8 +1944,9 @@ namespace Mutagen.Internals
         public static readonly RecordType PNAM_HEADER = new RecordType("PNAM");
         public static readonly RecordType UNAM_HEADER = new RecordType("UNAM");
         public static readonly RecordType ATTR_HEADER = new RecordType("ATTR");
+        public static readonly RecordType INDX_HEADER = new RecordType("INDX");
         public static readonly RecordType NAM0_HEADER = new RecordType("NAM0");
-        public static readonly RecordType MNAM_HEADER = new RecordType("MNAM");
+        public static readonly RecordType NAM1_HEADER = new RecordType("NAM1");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = RACE_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 12;
@@ -3343,12 +3324,23 @@ namespace Mutagen.Internals
                 doMasks: doMasks,
                 fieldIndex: (int)Race_FieldIndex.RaceStats,
                 errorMask: errorMask);
-            Race.WriteBinary_FaceData(
+            using (HeaderExport.ExportHeader(writer, Race_Registration.NAM0_HEADER, ObjectType.Subrecord)) { }
+            Mutagen.Binary.ListBinaryTranslation<FacePart, MaskItem<Exception, FacePart_ErrorMask>>.Instance.Write(
                 writer: writer,
-                item: item,
+                item: item.FaceData,
                 fieldIndex: (int)Race_FieldIndex.FaceData,
                 doMasks: doMasks,
-                errorMask: errorMask);
+                errorMask: errorMask,
+                transl: (FacePart subItem, bool listDoMasks, out MaskItem<Exception, FacePart_ErrorMask> listSubMask) =>
+                {
+                    LoquiBinaryTranslation<FacePart, FacePart_ErrorMask>.Instance.Write(
+                        writer: writer,
+                        item: subItem,
+                        doMasks: doMasks,
+                        errorMask: out listSubMask);
+                }
+                );
+            using (HeaderExport.ExportHeader(writer, Race_Registration.NAM1_HEADER, ObjectType.Subrecord)) { }
             LoquiBinaryTranslation<GenderedBodyData, GenderedBodyData_ErrorMask>.Instance.Write(
                 writer: writer,
                 item: item.BodyData_Property,

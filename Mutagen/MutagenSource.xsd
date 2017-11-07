@@ -81,6 +81,13 @@
               </xs:documentation>
             </xs:annotation>
           </xs:attribute>
+          <xs:attribute name="markerType" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                Typical four letter ASCII tag used for the discarded marker type.
+              </xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
           <xs:attribute name="customBinary" type="xs:boolean" >
             <xs:annotation>
               <xs:documentation>

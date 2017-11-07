@@ -29,6 +29,11 @@ namespace Mutagen.Generation
             var loquiGen = typeGen as LoquiType;
             if (loquiGen.TargetObjectGeneration != null)
             {
+                if (loquiGen.TryGetFieldData(out var data)
+                    && data.MarkerType.HasValue)
+                {
+                    fg.AppendLine($"using (HeaderExport.ExportHeader(writer, {objGen.RegistrationName}.{data.MarkerType.Value.Type}_HEADER, ObjectType.Subrecord)) {{ }}");
+                }
                 using (var args = new ArgsWrapper(fg,
                     $"LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}, {loquiGen.MaskItemString(MaskType.Error)}>.Instance.Write"))
                 {
@@ -97,6 +102,12 @@ namespace Mutagen.Generation
                 }
                 else
                 {
+                    if (loquiGen.TryGetFieldData(out var data)
+                        && data.MarkerType.HasValue)
+                    {
+                        fg.AppendLine("frame.Position += Constants.SUBRECORD_LENGTH + contentLength; // Skip marker");
+                    }
+
                     using (var args = new ArgsWrapper(fg,
                         $"var {typeGen.Name}tryGet = LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}, {loquiGen.MaskItemString(MaskType.Error)}>.Instance.Parse"))
                     {
