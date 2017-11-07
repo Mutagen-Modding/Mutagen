@@ -44,6 +44,7 @@ namespace Loqui
             LoquiRegistration.Register(Mutagen.Internals.GenderedBodyData_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Internals.BodyData_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Internals.BodyPart_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Internals.FaceGenData_Registration.Instance);
         }
     }
 }

@@ -138,7 +138,7 @@ namespace Mutagen.Binary
                 item,
                 doMasks,
                 out var subMask);
-            ErrorMask.HandleException(
+            ErrorMask.HandleErrorMask(
                 errorMask,
                 doMasks,
                 fieldIndex,

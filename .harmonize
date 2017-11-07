@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>5ee2ddb9b63dc3ff628800b7f02fd1ac8d611276</Sha>
+         <Sha>e27ce54173f328d092d442f8488b054c96cbf235</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>11-03-2017 18:44:59</CommitDate>
-         <Description>FunctionWrapper.Semicolon</Description>
+         <CommitDate>11-07-2017 19:43:18</CommitDate>
+         <Description>ErrorMask.HandleException breaks out if exception is null</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

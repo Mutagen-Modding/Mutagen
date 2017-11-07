@@ -8,6 +8,13 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Generation
 {
+    public enum ListBinaryType
+    {
+        Amount,
+        Trigger,
+        Frame
+    }
+
     public class ListBinaryTranslationGeneration : BinaryTranslationGeneration
     {
         public override void GenerateWrite(
@@ -31,6 +38,22 @@ namespace Mutagen.Generation
                 fg.AppendLine($"using (HeaderExport.ExportHeader(writer, {objGen.RegistrationName}.{data.MarkerType.Value.Type}_HEADER, ObjectType.Subrecord)) {{ }}");
             }
 
+            var subData = list.SubTypeGeneration.GetFieldData();
+
+            ListBinaryType listBinaryType;
+            if (list.MaxValue.HasValue)
+            {
+                listBinaryType = ListBinaryType.Amount;
+            }
+            else if (!string.IsNullOrWhiteSpace(subData.TriggeringRecordAccessor))
+            {
+                listBinaryType = ListBinaryType.Trigger;
+            }
+            else
+            {
+                listBinaryType = ListBinaryType.Frame;
+            }
+
             var subMaskStr = subTransl.MaskModule.GetMaskModule(list.SubTypeGeneration.GetType()).GetErrorMaskTypeStr(list.SubTypeGeneration);
             using (var args = new ArgsWrapper(fg,
                 $"{this.Namespace}ListBinaryTranslation<{list.SubTypeGeneration.TypeName}, {subMaskStr}>.Instance.Write"))
@@ -38,6 +61,10 @@ namespace Mutagen.Generation
                 args.Add($"writer: {writerAccessor}");
                 args.Add($"item: {itemAccessor.PropertyOrDirectAccess}");
                 args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
+                if (listBinaryType == ListBinaryType.Frame)
+                {
+                    args.Add($"recordType: {data.TriggeringRecordAccessor}");
+                }
                 args.Add($"doMasks: {doMaskAccessor}");
                 args.Add($"errorMask: {maskAccessor}");
                 args.Add((gen) =>
@@ -99,27 +126,50 @@ namespace Mutagen.Generation
                 throw new ArgumentException("Unsupported type generator: " + list.SubTypeGeneration);
             }
 
+            ListBinaryType listBinaryType;
+            if (list.MaxValue.HasValue)
+            {
+                listBinaryType = ListBinaryType.Amount;
+            }
+            else if (!string.IsNullOrWhiteSpace(subData.TriggeringRecordAccessor))
+            {
+                listBinaryType = ListBinaryType.Trigger;
+            }
+            else
+            {
+                listBinaryType = ListBinaryType.Frame;
+            }
+
             if (data.MarkerType.HasValue)
             {
                 fg.AppendLine("frame.Position += Constants.SUBRECORD_LENGTH + contentLength; // Skip marker");
+            }
+            else if (listBinaryType == ListBinaryType.Frame)
+            {
+                fg.AppendLine("frame.Position += Constants.SUBRECORD_LENGTH;");
             }
 
             var subMaskStr = subTransl.MaskModule.GetMaskModule(list.SubTypeGeneration.GetType()).GetErrorMaskTypeStr(list.SubTypeGeneration);
             using (var args = new ArgsWrapper(fg,
                 $"{retAccessor}{this.Namespace}ListBinaryTranslation<{list.SubTypeGeneration.TypeName}, {subMaskStr}>.Instance.ParseRepeatedItem"))
             {
-                args.Add($"frame: frame");
-                if (list.MaxValue.HasValue)
+                if (listBinaryType == ListBinaryType.Amount)
                 {
+                    args.Add($"frame: frame");
                     args.Add($"amount: {list.MaxValue.Value}");
                 }
-                else if (!string.IsNullOrWhiteSpace(subData.TriggeringRecordAccessor))
+                else if (listBinaryType == ListBinaryType.Trigger)
                 {
+                    args.Add($"frame: frame");
                     args.Add($"triggeringRecord: {subData.TriggeringRecordAccessor}");
+                }
+                else if (listBinaryType == ListBinaryType.Frame)
+                {
+                    args.Add($"frame: frame.Spawn(contentLength)");
                 }
                 else
                 {
-                    throw new ArgumentException();
+                    throw new NotImplementedException();
                 }
                 args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
                 args.Add($"doMasks: {doMaskAccessor}");

@@ -68,9 +68,19 @@ namespace Mutagen.Generation
                 {
                     recordTypes.Add(data.RecordType.Value);
                 }
+                if (data.TriggeringRecordType.HasValue)
+                {
+                    recordTypes.Add(data.TriggeringRecordType.Value);
+                }
                 if (data.MarkerType.HasValue)
                 {
                     recordTypes.Add(data.MarkerType.Value);
+                }
+                if (field is ContainerType contType)
+                {
+                    if (!contType.SubTypeGeneration.TryGetFieldData(out var subData)) continue;
+                    if (!subData.TriggeringRecordType.HasValue) continue;
+                    recordTypes.Add(subData.TriggeringRecordType.Value);
                 }
             }
             foreach (var type in recordTypes)
@@ -172,10 +182,6 @@ namespace Mutagen.Generation
                 throw new ArgumentException("Cannot have an optional field if it is not a record typed field.");
             }
             data.Length = node.GetAttribute<long?>("length", null);
-            if (data.Length.HasValue && data.RecordType.HasValue)
-            {
-                throw new ArgumentException("Cannot define both length and record type.");
-            }
             if (field is ByteArrayType byteArray
                 && !data.Length.HasValue)
             {
@@ -244,7 +250,7 @@ namespace Mutagen.Generation
                 loqui = loquiList.SubTypeGeneration as LoquiType;
                 if (loqui.RefGen.Obj.TryGetTriggeringRecordType(out recType))
                 {
-                    data.RecordType = recType;
+                    data.TriggeringRecordType = recType;
                 }
                 else if (loqui.GenericDef != null)
                 {
@@ -259,7 +265,7 @@ namespace Mutagen.Generation
                     if (subListLoqui.RefGen != null
                         && subListLoqui.RefGen.Obj.TryGetTriggeringRecordType(out recType))
                     {
-                        data.RecordType = recType;
+                        data.TriggeringRecordType = recType;
                     }
                     else if (subListLoqui.GenericDef != null)
                     {
@@ -280,27 +286,33 @@ namespace Mutagen.Generation
 
             SetTriggeringRecordAccessors(obj, data);
 
-            if (field is ContainerType contType)
+            if (field is ContainerType contType
+                && contType.SubTypeGeneration is LoquiType contLoqui)
             {
-                var subData = contType.SubTypeGeneration.CustomData.TryCreateValue(Constants.DATA_KEY, () => new MutagenFieldData()) as MutagenFieldData;
-                subData.RecordType = data.RecordType;
-                SetTriggeringRecordAccessors(obj, subData);
+                var subData = contLoqui.CustomData.TryCreateValue(Constants.DATA_KEY, () => new MutagenFieldData()) as MutagenFieldData;
+                SetRecordTrigger(
+                    obj,
+                    contLoqui,
+                    subData);
             }
         }
 
         private void SetTriggeringRecordAccessors(ObjectGeneration obj, MutagenFieldData data)
         {
-            if (data.MarkerType.HasValue
-                && data.TriggeringRecordAccessor == null)
+            if (data.TriggeringRecordAccessor != null) return;
+            if (data.MarkerType.HasValue)
             {
                 data.TriggeringRecordAccessor = $"{obj.RegistrationName}.{data.MarkerType.Value.HeaderName}";
                 data.TriggeringRecordType = data.MarkerType;
             }
-            else if (data.RecordType.HasValue
-                  && data.TriggeringRecordAccessor == null)
+            else if (data.RecordType.HasValue)
             {
                 data.TriggeringRecordAccessor = $"{obj.RegistrationName}.{data.RecordType.Value.HeaderName}";
                 data.TriggeringRecordType = data.RecordType;
+            }
+            else if (data.TriggeringRecordType.HasValue)
+            {
+                data.TriggeringRecordAccessor = $"{obj.RegistrationName}.{data.TriggeringRecordType.Value.HeaderName}";
             }
         }
 

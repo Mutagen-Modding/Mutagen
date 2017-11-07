@@ -16,6 +16,14 @@
       <RefDirect name="RaceStats" refName="RaceStatsGendered" />
       <RefList name="FaceData" refName="FacePart" markerType="NAM0" />
       <RefDirect name="BodyData" refName="GenderedBodyData" markerType="NAM1" />
+      <List name="Hairs" recordType="HNAM">
+        <FormID />
+      </List>
+      <List name="Eyes" recordType="ENAM">
+        <FormID />
+      </List>
+      <RefDirect name="FaceGenData" refName="FaceGenData" />
+      <ByteArray name="Unknown" recordType="SNAM" length="2" nullable="false" />
     </Fields>
   </Object>
   <Object name="RaceData" objType="Subrecord" recordType="DATA" GUID="0f6434d7-0cdc-430d-bd2a-9f7a099425f2" ID="26">
@@ -88,6 +96,13 @@
     <Fields>
       <Enum name="Index" enumName="Race.BodyIndex" recordType="INDX" byteLength="4" />
       <FilePath name="Icon" recordType="ICON" />
+    </Fields>
+  </Object>
+  <Object name="FaceGenData" objType="Subrecord" GUID="e43c6320-1bd4-466d-b0c0-3e30495b7e41" ID="38">
+    <Fields>
+      <ByteArray name="SymmetricGeometry" recordType="FGGS" />
+      <ByteArray name="AsymmetricGeometry" recordType="FGGA" />
+      <ByteArray name="SymmetricTexture" recordType="FGTS" />
     </Fields>
   </Object>
 </Loqui>

@@ -148,6 +148,45 @@ namespace Mutagen
         INotifyingItem<GenderedBodyData> IRace.BodyData_Property => this.BodyData_Property;
         INotifyingItemGetter<GenderedBodyData> IRaceGetter.BodyData_Property => this.BodyData_Property;
         #endregion
+        #region Hairs
+        private readonly INotifyingList<FormID> _Hairs = new NotifyingList<FormID>();
+        public INotifyingList<FormID> Hairs => _Hairs;
+        #region Interface Members
+        INotifyingList<FormID> IRace.Hairs => _Hairs;
+        INotifyingListGetter<FormID> IRaceGetter.Hairs => _Hairs;
+        #endregion
+
+        #endregion
+        #region Eyes
+        private readonly INotifyingList<FormID> _Eyes = new NotifyingList<FormID>();
+        public INotifyingList<FormID> Eyes => _Eyes;
+        #region Interface Members
+        INotifyingList<FormID> IRace.Eyes => _Eyes;
+        INotifyingListGetter<FormID> IRaceGetter.Eyes => _Eyes;
+        #endregion
+
+        #endregion
+        #region FaceGenData
+        private readonly INotifyingItem<FaceGenData> _FaceGenData = new NotifyingItem<FaceGenData>();
+        public INotifyingItem<FaceGenData> FaceGenData_Property => this._FaceGenData;
+        FaceGenData IRaceGetter.FaceGenData => this.FaceGenData;
+        public FaceGenData FaceGenData { get => _FaceGenData.Item; set => _FaceGenData.Item = value; }
+        INotifyingItem<FaceGenData> IRace.FaceGenData_Property => this.FaceGenData_Property;
+        INotifyingItemGetter<FaceGenData> IRaceGetter.FaceGenData_Property => this.FaceGenData_Property;
+        #endregion
+        #region Unknown
+        protected readonly INotifyingItem<Byte[]> _Unknown = NotifyingItem.Factory<Byte[]>(
+            markAsSet: false,
+            noNullFallback: () => new byte[2]);
+        public INotifyingItem<Byte[]> Unknown_Property => _Unknown;
+        public Byte[] Unknown
+        {
+            get => this._Unknown.Item;
+            set => this._Unknown.Set(value);
+        }
+        INotifyingItem<Byte[]> IRace.Unknown_Property => this.Unknown_Property;
+        INotifyingItemGetter<Byte[]> IRaceGetter.Unknown_Property => this.Unknown_Property;
+        #endregion
 
         #region Loqui Getter Interface
 
@@ -264,6 +303,26 @@ namespace Mutagen
             {
                 if (!object.Equals(BodyData, rhs.BodyData)) return false;
             }
+            if (Hairs.HasBeenSet != rhs.Hairs.HasBeenSet) return false;
+            if (Hairs.HasBeenSet)
+            {
+                if (!Hairs.SequenceEqual(rhs.Hairs)) return false;
+            }
+            if (Eyes.HasBeenSet != rhs.Eyes.HasBeenSet) return false;
+            if (Eyes.HasBeenSet)
+            {
+                if (!Eyes.SequenceEqual(rhs.Eyes)) return false;
+            }
+            if (FaceGenData_Property.HasBeenSet != rhs.FaceGenData_Property.HasBeenSet) return false;
+            if (FaceGenData_Property.HasBeenSet)
+            {
+                if (!object.Equals(FaceGenData, rhs.FaceGenData)) return false;
+            }
+            if (Unknown_Property.HasBeenSet != rhs.Unknown_Property.HasBeenSet) return false;
+            if (Unknown_Property.HasBeenSet)
+            {
+                if (!Unknown.EqualsFast(rhs.Unknown)) return false;
+            }
             return true;
         }
 
@@ -317,6 +376,22 @@ namespace Mutagen
             if (BodyData_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(BodyData).CombineHashCode(ret);
+            }
+            if (Hairs.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Hairs).CombineHashCode(ret);
+            }
+            if (Eyes.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Eyes).CombineHashCode(ret);
+            }
+            if (FaceGenData_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(FaceGenData).CombineHashCode(ret);
+            }
+            if (Unknown_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Unknown).CombineHashCode(ret);
             }
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
@@ -841,6 +916,84 @@ namespace Mutagen
                             subMask);
                     }
                     break;
+                case "Hairs":
+                    {
+                        MaskItem<Exception, IEnumerable<Exception>> subMask;
+                        var listTryGet = ListXmlTranslation<FormID, Exception>.Instance.Parse(
+                            root: root,
+                            doMasks: doMasks,
+                            maskObj: out subMask,
+                            transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
+                            {
+                                return FormIDXmlTranslation.Instance.Parse(
+                                    r,
+                                    nullable: false,
+                                    doMasks: listDoMasks,
+                                    errorMask: out listSubMask).Bubble((o) => o.Value);
+                            }
+                            );
+                        item._Hairs.SetIfSucceeded(listTryGet);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)Race_FieldIndex.Hairs,
+                            subMask);
+                    }
+                    break;
+                case "Eyes":
+                    {
+                        MaskItem<Exception, IEnumerable<Exception>> subMask;
+                        var listTryGet = ListXmlTranslation<FormID, Exception>.Instance.Parse(
+                            root: root,
+                            doMasks: doMasks,
+                            maskObj: out subMask,
+                            transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
+                            {
+                                return FormIDXmlTranslation.Instance.Parse(
+                                    r,
+                                    nullable: false,
+                                    doMasks: listDoMasks,
+                                    errorMask: out listSubMask).Bubble((o) => o.Value);
+                            }
+                            );
+                        item._Eyes.SetIfSucceeded(listTryGet);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)Race_FieldIndex.Eyes,
+                            subMask);
+                    }
+                    break;
+                case "FaceGenData":
+                    {
+                        MaskItem<Exception, FaceGenData_ErrorMask> subMask;
+                        var tryGet = LoquiXmlTranslation<FaceGenData, FaceGenData_ErrorMask>.Instance.Parse(
+                            root: root,
+                            doMasks: doMasks,
+                            mask: out subMask);
+                        item._FaceGenData.SetIfSucceeded(tryGet);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)Race_FieldIndex.FaceGenData,
+                            subMask);
+                    }
+                    break;
+                case "Unknown":
+                    {
+                        Exception subMask;
+                        var tryGet = ByteArrayXmlTranslation.Instance.Parse(
+                            root,
+                            doMasks: doMasks,
+                            errorMask: out subMask);
+                        item._Unknown.SetIfSucceeded(tryGet);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)Race_FieldIndex.Unknown,
+                            subMask);
+                    }
+                    break;
                 default:
                     NamedMajorRecord.Fill_XML_Internal(
                         item: item,
@@ -1321,6 +1474,59 @@ namespace Mutagen
                         errorMask: errorMask);
                     item._BodyData.SetIfSucceeded(BodyDatatryGet);
                 break;
+                case "HNAM":
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    var HairstryGet = Mutagen.Binary.ListBinaryTranslation<FormID, Exception>.Instance.ParseRepeatedItem(
+                        frame: frame.Spawn(contentLength),
+                        fieldIndex: (int)Race_FieldIndex.Hairs,
+                        doMasks: doMasks,
+                        objType: ObjectType.Subrecord,
+                        errorMask: errorMask,
+                        transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
+                        {
+                            return Mutagen.Binary.FormIDBinaryTranslation.Instance.Parse(
+                                r,
+                                doMasks: listDoMasks,
+                                errorMask: out listSubMask);
+                        }
+                        );
+                    item._Hairs.SetIfSucceeded(HairstryGet);
+                break;
+                case "ENAM":
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    var EyestryGet = Mutagen.Binary.ListBinaryTranslation<FormID, Exception>.Instance.ParseRepeatedItem(
+                        frame: frame.Spawn(contentLength),
+                        fieldIndex: (int)Race_FieldIndex.Eyes,
+                        doMasks: doMasks,
+                        objType: ObjectType.Subrecord,
+                        errorMask: errorMask,
+                        transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
+                        {
+                            return Mutagen.Binary.FormIDBinaryTranslation.Instance.Parse(
+                                r,
+                                doMasks: listDoMasks,
+                                errorMask: out listSubMask);
+                        }
+                        );
+                    item._Eyes.SetIfSucceeded(EyestryGet);
+                break;
+                case "FGGS":
+                    var FaceGenDatatryGet = LoquiBinaryTranslation<FaceGenData, FaceGenData_ErrorMask>.Instance.Parse(
+                        frame: frame.Spawn(snapToFinalPosition: false),
+                        doMasks: doMasks,
+                        fieldIndex: (int)Race_FieldIndex.FaceGenData,
+                        errorMask: errorMask);
+                    item._FaceGenData.SetIfSucceeded(FaceGenDatatryGet);
+                break;
+                case "SNAM":
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    var UnknowntryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                        frame.Spawn(contentLength),
+                        fieldIndex: (int)Race_FieldIndex.Unknown,
+                        doMasks: doMasks,
+                        errorMask: errorMask);
+                    item._Unknown.SetIfSucceeded(UnknowntryGet);
+                break;
                 default:
                     NamedMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
@@ -1462,6 +1668,22 @@ namespace Mutagen
                         (GenderedBodyData)obj,
                         cmds);
                     break;
+                case Race_FieldIndex.Hairs:
+                    this._Hairs.SetTo((IEnumerable<FormID>)obj, cmds);
+                    break;
+                case Race_FieldIndex.Eyes:
+                    this._Eyes.SetTo((IEnumerable<FormID>)obj, cmds);
+                    break;
+                case Race_FieldIndex.FaceGenData:
+                    this._FaceGenData.Set(
+                        (FaceGenData)obj,
+                        cmds);
+                    break;
+                case Race_FieldIndex.Unknown:
+                    this._Unknown.Set(
+                        (Byte[])obj,
+                        cmds);
+                    break;
                 default:
                     base.SetNthObject(index, obj, cmds);
                     break;
@@ -1547,6 +1769,22 @@ namespace Mutagen
                         (GenderedBodyData)pair.Value,
                         null);
                     break;
+                case Race_FieldIndex.Hairs:
+                    obj._Hairs.SetTo((IEnumerable<FormID>)pair.Value, null);
+                    break;
+                case Race_FieldIndex.Eyes:
+                    obj._Eyes.SetTo((IEnumerable<FormID>)pair.Value, null);
+                    break;
+                case Race_FieldIndex.FaceGenData:
+                    obj._FaceGenData.Set(
+                        (FaceGenData)pair.Value,
+                        null);
+                    break;
+                case Race_FieldIndex.Unknown:
+                    obj._Unknown.Set(
+                        (Byte[])pair.Value,
+                        null);
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -1591,6 +1829,14 @@ namespace Mutagen
         new INotifyingList<FacePart> FaceData { get; }
         new GenderedBodyData BodyData { get; set; }
         new INotifyingItem<GenderedBodyData> BodyData_Property { get; }
+
+        new INotifyingList<FormID> Hairs { get; }
+        new INotifyingList<FormID> Eyes { get; }
+        new FaceGenData FaceGenData { get; set; }
+        new INotifyingItem<FaceGenData> FaceGenData_Property { get; }
+
+        new Byte[] Unknown { get; set; }
+        new INotifyingItem<Byte[]> Unknown_Property { get; }
 
     }
 
@@ -1650,6 +1896,22 @@ namespace Mutagen
         INotifyingItemGetter<GenderedBodyData> BodyData_Property { get; }
 
         #endregion
+        #region Hairs
+        INotifyingListGetter<FormID> Hairs { get; }
+        #endregion
+        #region Eyes
+        INotifyingListGetter<FormID> Eyes { get; }
+        #endregion
+        #region FaceGenData
+        FaceGenData FaceGenData { get; }
+        INotifyingItemGetter<FaceGenData> FaceGenData_Property { get; }
+
+        #endregion
+        #region Unknown
+        Byte[] Unknown { get; }
+        INotifyingItemGetter<Byte[]> Unknown_Property { get; }
+
+        #endregion
 
     }
 
@@ -1674,6 +1936,10 @@ namespace Mutagen.Internals
         RaceStats = 15,
         FaceData = 16,
         BodyData = 17,
+        Hairs = 18,
+        Eyes = 19,
+        FaceGenData = 20,
+        Unknown = 21,
     }
     #endregion
 
@@ -1691,7 +1957,7 @@ namespace Mutagen.Internals
 
         public const string GUID = "265136e6-60a6-4ade-a7c4-b31197fb95e5";
 
-        public const ushort FieldCount = 12;
+        public const ushort FieldCount = 16;
 
         public static readonly Type MaskType = typeof(Race_Mask<>);
 
@@ -1743,6 +2009,14 @@ namespace Mutagen.Internals
                     return (ushort)Race_FieldIndex.FaceData;
                 case "BODYDATA":
                     return (ushort)Race_FieldIndex.BodyData;
+                case "HAIRS":
+                    return (ushort)Race_FieldIndex.Hairs;
+                case "EYES":
+                    return (ushort)Race_FieldIndex.Eyes;
+                case "FACEGENDATA":
+                    return (ushort)Race_FieldIndex.FaceGenData;
+                case "UNKNOWN":
+                    return (ushort)Race_FieldIndex.Unknown;
                 default:
                     return null;
             }
@@ -1756,6 +2030,8 @@ namespace Mutagen.Internals
                 case Race_FieldIndex.Spells:
                 case Race_FieldIndex.Relations:
                 case Race_FieldIndex.FaceData:
+                case Race_FieldIndex.Hairs:
+                case Race_FieldIndex.Eyes:
                     return true;
                 case Race_FieldIndex.Description:
                 case Race_FieldIndex.Data:
@@ -1766,6 +2042,8 @@ namespace Mutagen.Internals
                 case Race_FieldIndex.FaceGenFaceClamp:
                 case Race_FieldIndex.RaceStats:
                 case Race_FieldIndex.BodyData:
+                case Race_FieldIndex.FaceGenData:
+                case Race_FieldIndex.Unknown:
                     return false;
                 default:
                     return NamedMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -1784,12 +2062,16 @@ namespace Mutagen.Internals
                 case Race_FieldIndex.RaceStats:
                 case Race_FieldIndex.FaceData:
                 case Race_FieldIndex.BodyData:
+                case Race_FieldIndex.FaceGenData:
                     return true;
                 case Race_FieldIndex.Description:
                 case Race_FieldIndex.Spells:
                 case Race_FieldIndex.DefaultHairColor:
                 case Race_FieldIndex.FaceGenMainClamp:
                 case Race_FieldIndex.FaceGenFaceClamp:
+                case Race_FieldIndex.Hairs:
+                case Race_FieldIndex.Eyes:
+                case Race_FieldIndex.Unknown:
                     return false;
                 default:
                     return NamedMajorRecord_Registration.GetNthIsLoqui(index);
@@ -1813,6 +2095,10 @@ namespace Mutagen.Internals
                 case Race_FieldIndex.RaceStats:
                 case Race_FieldIndex.FaceData:
                 case Race_FieldIndex.BodyData:
+                case Race_FieldIndex.Hairs:
+                case Race_FieldIndex.Eyes:
+                case Race_FieldIndex.FaceGenData:
+                case Race_FieldIndex.Unknown:
                     return false;
                 default:
                     return NamedMajorRecord_Registration.GetNthIsSingleton(index);
@@ -1848,6 +2134,14 @@ namespace Mutagen.Internals
                     return "FaceData";
                 case Race_FieldIndex.BodyData:
                     return "BodyData";
+                case Race_FieldIndex.Hairs:
+                    return "Hairs";
+                case Race_FieldIndex.Eyes:
+                    return "Eyes";
+                case Race_FieldIndex.FaceGenData:
+                    return "FaceGenData";
+                case Race_FieldIndex.Unknown:
+                    return "Unknown";
                 default:
                     return NamedMajorRecord_Registration.GetNthName(index);
             }
@@ -1870,6 +2164,10 @@ namespace Mutagen.Internals
                 case Race_FieldIndex.RaceStats:
                 case Race_FieldIndex.FaceData:
                 case Race_FieldIndex.BodyData:
+                case Race_FieldIndex.Hairs:
+                case Race_FieldIndex.Eyes:
+                case Race_FieldIndex.FaceGenData:
+                case Race_FieldIndex.Unknown:
                     return false;
                 default:
                     return NamedMajorRecord_Registration.IsNthDerivative(index);
@@ -1893,6 +2191,10 @@ namespace Mutagen.Internals
                 case Race_FieldIndex.RaceStats:
                 case Race_FieldIndex.FaceData:
                 case Race_FieldIndex.BodyData:
+                case Race_FieldIndex.Hairs:
+                case Race_FieldIndex.Eyes:
+                case Race_FieldIndex.FaceGenData:
+                case Race_FieldIndex.Unknown:
                     return false;
                 default:
                     return NamedMajorRecord_Registration.IsProtected(index);
@@ -1928,6 +2230,14 @@ namespace Mutagen.Internals
                     return typeof(NotifyingList<FacePart>);
                 case Race_FieldIndex.BodyData:
                     return typeof(GenderedBodyData);
+                case Race_FieldIndex.Hairs:
+                    return typeof(NotifyingList<FormID>);
+                case Race_FieldIndex.Eyes:
+                    return typeof(NotifyingList<FormID>);
+                case Race_FieldIndex.FaceGenData:
+                    return typeof(FaceGenData);
+                case Race_FieldIndex.Unknown:
+                    return typeof(Byte[]);
                 default:
                     return NamedMajorRecord_Registration.GetNthType(index);
             }
@@ -1944,12 +2254,16 @@ namespace Mutagen.Internals
         public static readonly RecordType PNAM_HEADER = new RecordType("PNAM");
         public static readonly RecordType UNAM_HEADER = new RecordType("UNAM");
         public static readonly RecordType ATTR_HEADER = new RecordType("ATTR");
-        public static readonly RecordType INDX_HEADER = new RecordType("INDX");
         public static readonly RecordType NAM0_HEADER = new RecordType("NAM0");
+        public static readonly RecordType INDX_HEADER = new RecordType("INDX");
         public static readonly RecordType NAM1_HEADER = new RecordType("NAM1");
+        public static readonly RecordType HNAM_HEADER = new RecordType("HNAM");
+        public static readonly RecordType ENAM_HEADER = new RecordType("ENAM");
+        public static readonly RecordType FGGS_HEADER = new RecordType("FGGS");
+        public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = RACE_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 12;
+        public const int NumTypedFields = 16;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -2458,6 +2772,102 @@ namespace Mutagen.Internals
                     errorMask().SetNthException((int)Race_FieldIndex.BodyData, ex);
                 }
             }
+            if (copyMask?.Hairs != CopyOption.Skip)
+            {
+                try
+                {
+                    item.Hairs.SetToWithDefault(
+                        rhs.Hairs,
+                        def?.Hairs,
+                        cmds);
+                }
+                catch (Exception ex)
+                when (doErrorMask)
+                {
+                    errorMask().SetNthException((int)Race_FieldIndex.Hairs, ex);
+                }
+            }
+            if (copyMask?.Eyes != CopyOption.Skip)
+            {
+                try
+                {
+                    item.Eyes.SetToWithDefault(
+                        rhs.Eyes,
+                        def?.Eyes,
+                        cmds);
+                }
+                catch (Exception ex)
+                when (doErrorMask)
+                {
+                    errorMask().SetNthException((int)Race_FieldIndex.Eyes, ex);
+                }
+            }
+            if (copyMask?.FaceGenData.Overall != CopyOption.Skip)
+            {
+                try
+                {
+                    item.FaceGenData_Property.SetToWithDefault(
+                        rhs.FaceGenData_Property,
+                        def?.FaceGenData_Property,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.FaceGenData?.Overall ?? CopyOption.Reference)
+                            {
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    FaceGenDataCommon.CopyFieldsFrom(
+                                        item: item.FaceGenData,
+                                        rhs: rhs.FaceGenData,
+                                        def: def?.FaceGenData,
+                                        doErrorMask: doErrorMask,
+                                        errorMask: (doErrorMask ? new Func<FaceGenData_ErrorMask>(() =>
+                                        {
+                                            var baseMask = errorMask();
+                                            if (baseMask.FaceGenData.Specific == null)
+                                            {
+                                                baseMask.FaceGenData = new MaskItem<Exception, FaceGenData_ErrorMask>(null, new FaceGenData_ErrorMask());
+                                            }
+                                            return baseMask.FaceGenData.Specific;
+                                        }
+                                        ) : null),
+                                        copyMask: copyMask?.FaceGenData.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(FaceGenData);
+                                    return FaceGenData.Copy(
+                                        r,
+                                        copyMask?.FaceGenData?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.FaceGenData?.Overall}. Cannot execute copy.");
+                            }
+                        }
+                        );
+                }
+                catch (Exception ex)
+                when (doErrorMask)
+                {
+                    errorMask().SetNthException((int)Race_FieldIndex.FaceGenData, ex);
+                }
+            }
+            if (copyMask?.Unknown ?? true)
+            {
+                try
+                {
+                    item.Unknown_Property.SetToWithDefault(
+                        rhs.Unknown_Property,
+                        def?.Unknown_Property,
+                        cmds);
+                }
+                catch (Exception ex)
+                when (doErrorMask)
+                {
+                    errorMask().SetNthException((int)Race_FieldIndex.Unknown, ex);
+                }
+            }
         }
 
         #endregion
@@ -2506,6 +2916,18 @@ namespace Mutagen.Internals
                     break;
                 case Race_FieldIndex.BodyData:
                     obj.BodyData_Property.HasBeenSet = on;
+                    break;
+                case Race_FieldIndex.Hairs:
+                    obj.Hairs.HasBeenSet = on;
+                    break;
+                case Race_FieldIndex.Eyes:
+                    obj.Eyes.HasBeenSet = on;
+                    break;
+                case Race_FieldIndex.FaceGenData:
+                    obj.FaceGenData_Property.HasBeenSet = on;
+                    break;
+                case Race_FieldIndex.Unknown:
+                    obj.Unknown_Property.HasBeenSet = on;
                     break;
                 default:
                     NamedMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
@@ -2557,6 +2979,18 @@ namespace Mutagen.Internals
                 case Race_FieldIndex.BodyData:
                     obj.BodyData_Property.Unset(cmds);
                     break;
+                case Race_FieldIndex.Hairs:
+                    obj.Hairs.Unset(cmds);
+                    break;
+                case Race_FieldIndex.Eyes:
+                    obj.Eyes.Unset(cmds);
+                    break;
+                case Race_FieldIndex.FaceGenData:
+                    obj.FaceGenData_Property.Unset(cmds);
+                    break;
+                case Race_FieldIndex.Unknown:
+                    obj.Unknown_Property.Unset(cmds);
+                    break;
                 default:
                     NamedMajorRecordCommon.UnsetNthObject(index, obj);
                     break;
@@ -2594,6 +3028,14 @@ namespace Mutagen.Internals
                     return obj.FaceData.HasBeenSet;
                 case Race_FieldIndex.BodyData:
                     return obj.BodyData_Property.HasBeenSet;
+                case Race_FieldIndex.Hairs:
+                    return obj.Hairs.HasBeenSet;
+                case Race_FieldIndex.Eyes:
+                    return obj.Eyes.HasBeenSet;
+                case Race_FieldIndex.FaceGenData:
+                    return obj.FaceGenData_Property.HasBeenSet;
+                case Race_FieldIndex.Unknown:
+                    return obj.Unknown_Property.HasBeenSet;
                 default:
                     return NamedMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -2630,6 +3072,14 @@ namespace Mutagen.Internals
                     return obj.FaceData;
                 case Race_FieldIndex.BodyData:
                     return obj.BodyData;
+                case Race_FieldIndex.Hairs:
+                    return obj.Hairs;
+                case Race_FieldIndex.Eyes:
+                    return obj.Eyes;
+                case Race_FieldIndex.FaceGenData:
+                    return obj.FaceGenData;
+                case Race_FieldIndex.Unknown:
+                    return obj.Unknown;
                 default:
                     return NamedMajorRecordCommon.GetNthObject(index, obj);
             }
@@ -2651,6 +3101,10 @@ namespace Mutagen.Internals
             item.RaceStats_Property.Unset(cmds.ToUnsetParams());
             item.FaceData.Unset(cmds.ToUnsetParams());
             item.BodyData_Property.Unset(cmds.ToUnsetParams());
+            item.Hairs.Unset(cmds.ToUnsetParams());
+            item.Eyes.Unset(cmds.ToUnsetParams());
+            item.FaceGenData_Property.Unset(cmds.ToUnsetParams());
+            item.Unknown_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static Race_Mask<bool> GetEqualsMask(
@@ -2746,6 +3200,46 @@ namespace Mutagen.Internals
                 ret.FaceData.Overall = false;
             }
             ret.BodyData = item.BodyData_Property.LoquiEqualsHelper(rhs.BodyData_Property, (loqLhs, loqRhs) => GenderedBodyDataCommon.GetEqualsMask(loqLhs, loqRhs));
+            if (item.Hairs.HasBeenSet == rhs.Hairs.HasBeenSet)
+            {
+                if (item.Hairs.HasBeenSet)
+                {
+                    ret.Hairs = new MaskItem<bool, IEnumerable<bool>>();
+                    ret.Hairs.Specific = item.Hairs.SelectAgainst<FormID, bool>(rhs.Hairs, ((l, r) => object.Equals(l, r)), out ret.Hairs.Overall);
+                    ret.Hairs.Overall = ret.Hairs.Overall && ret.Hairs.Specific.All((b) => b);
+                }
+                else
+                {
+                    ret.Hairs = new MaskItem<bool, IEnumerable<bool>>();
+                    ret.Hairs.Overall = true;
+                }
+            }
+            else
+            {
+                ret.Hairs = new MaskItem<bool, IEnumerable<bool>>();
+                ret.Hairs.Overall = false;
+            }
+            if (item.Eyes.HasBeenSet == rhs.Eyes.HasBeenSet)
+            {
+                if (item.Eyes.HasBeenSet)
+                {
+                    ret.Eyes = new MaskItem<bool, IEnumerable<bool>>();
+                    ret.Eyes.Specific = item.Eyes.SelectAgainst<FormID, bool>(rhs.Eyes, ((l, r) => object.Equals(l, r)), out ret.Eyes.Overall);
+                    ret.Eyes.Overall = ret.Eyes.Overall && ret.Eyes.Specific.All((b) => b);
+                }
+                else
+                {
+                    ret.Eyes = new MaskItem<bool, IEnumerable<bool>>();
+                    ret.Eyes.Overall = true;
+                }
+            }
+            else
+            {
+                ret.Eyes = new MaskItem<bool, IEnumerable<bool>>();
+                ret.Eyes.Overall = false;
+            }
+            ret.FaceGenData = item.FaceGenData_Property.LoquiEqualsHelper(rhs.FaceGenData_Property, (loqLhs, loqRhs) => FaceGenDataCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Unknown = item.Unknown_Property.Equals(rhs.Unknown_Property, (l, r) => l.EqualsFast(r));
             NamedMajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -2866,6 +3360,50 @@ namespace Mutagen.Internals
                 {
                     item.BodyData?.ToString(fg, "BodyData");
                 }
+                if (printMask?.Hairs?.Overall ?? true)
+                {
+                    fg.AppendLine("Hairs =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        foreach (var subItem in item.Hairs)
+                        {
+                            fg.AppendLine("[");
+                            using (new DepthWrapper(fg))
+                            {
+                                fg.AppendLine($"Item => {subItem}");
+                            }
+                            fg.AppendLine("]");
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (printMask?.Eyes?.Overall ?? true)
+                {
+                    fg.AppendLine("Eyes =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        foreach (var subItem in item.Eyes)
+                        {
+                            fg.AppendLine("[");
+                            using (new DepthWrapper(fg))
+                            {
+                                fg.AppendLine($"Item => {subItem}");
+                            }
+                            fg.AppendLine("]");
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (printMask?.FaceGenData?.Overall ?? true)
+                {
+                    item.FaceGenData?.ToString(fg, "FaceGenData");
+                }
+                if (printMask?.Unknown ?? true)
+                {
+                    fg.AppendLine($"Unknown => {item.Unknown}");
+                }
             }
             fg.AppendLine("]");
         }
@@ -2891,6 +3429,11 @@ namespace Mutagen.Internals
             if (checkMask.FaceData.Overall.HasValue && checkMask.FaceData.Overall.Value != item.FaceData.HasBeenSet) return false;
             if (checkMask.BodyData.Overall.HasValue && checkMask.BodyData.Overall.Value != item.BodyData_Property.HasBeenSet) return false;
             if (checkMask.BodyData.Specific != null && (item.BodyData_Property.Item == null || !item.BodyData_Property.Item.HasBeenSet(checkMask.BodyData.Specific))) return false;
+            if (checkMask.Hairs.Overall.HasValue && checkMask.Hairs.Overall.Value != item.Hairs.HasBeenSet) return false;
+            if (checkMask.Eyes.Overall.HasValue && checkMask.Eyes.Overall.Value != item.Eyes.HasBeenSet) return false;
+            if (checkMask.FaceGenData.Overall.HasValue && checkMask.FaceGenData.Overall.Value != item.FaceGenData_Property.HasBeenSet) return false;
+            if (checkMask.FaceGenData.Specific != null && (item.FaceGenData_Property.Item == null || !item.FaceGenData_Property.Item.HasBeenSet(checkMask.FaceGenData.Specific))) return false;
+            if (checkMask.Unknown.HasValue && checkMask.Unknown.Value != item.Unknown_Property.HasBeenSet) return false;
             return true;
         }
 
@@ -2909,6 +3452,10 @@ namespace Mutagen.Internals
             ret.RaceStats = new MaskItem<bool, RaceStatsGendered_Mask<bool>>(item.RaceStats_Property.HasBeenSet, RaceStatsGenderedCommon.GetHasBeenSetMask(item.RaceStats_Property.Item));
             ret.FaceData = new MaskItem<bool, IEnumerable<MaskItem<bool, FacePart_Mask<bool>>>>(item.FaceData.HasBeenSet, item.FaceData.Select((i) => new MaskItem<bool, FacePart_Mask<bool>>(true, i.GetHasBeenSetMask())));
             ret.BodyData = new MaskItem<bool, GenderedBodyData_Mask<bool>>(item.BodyData_Property.HasBeenSet, GenderedBodyDataCommon.GetHasBeenSetMask(item.BodyData_Property.Item));
+            ret.Hairs = new MaskItem<bool, IEnumerable<bool>>(item.Hairs.HasBeenSet, null);
+            ret.Eyes = new MaskItem<bool, IEnumerable<bool>>(item.Eyes.HasBeenSet, null);
+            ret.FaceGenData = new MaskItem<bool, FaceGenData_Mask<bool>>(item.FaceGenData_Property.HasBeenSet, FaceGenDataCommon.GetHasBeenSetMask(item.FaceGenData_Property.Item));
+            ret.Unknown = item.Unknown_Property.HasBeenSet;
             return ret;
         }
 
@@ -3163,6 +3710,87 @@ namespace Mutagen.Internals
                             (int)Race_FieldIndex.BodyData,
                             subMask);
                     }
+                    if (item.Hairs.HasBeenSet)
+                    {
+                        MaskItem<Exception, IEnumerable<Exception>> subMask;
+                        ListXmlTranslation<FormID, Exception>.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Hairs),
+                            item: item.Hairs,
+                            doMasks: doMasks,
+                            maskObj: out subMask,
+                            transl: (FormID subItem, bool listDoMasks, out Exception listSubMask) =>
+                            {
+                                FormIDXmlTranslation.Instance.Write(
+                                    writer,
+                                    "Item",
+                                    subItem,
+                                    doMasks: doMasks,
+                                    errorMask: out listSubMask);
+                            }
+                            );
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)Race_FieldIndex.Hairs,
+                            subMask);
+                    }
+                    if (item.Eyes.HasBeenSet)
+                    {
+                        MaskItem<Exception, IEnumerable<Exception>> subMask;
+                        ListXmlTranslation<FormID, Exception>.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Eyes),
+                            item: item.Eyes,
+                            doMasks: doMasks,
+                            maskObj: out subMask,
+                            transl: (FormID subItem, bool listDoMasks, out Exception listSubMask) =>
+                            {
+                                FormIDXmlTranslation.Instance.Write(
+                                    writer,
+                                    "Item",
+                                    subItem,
+                                    doMasks: doMasks,
+                                    errorMask: out listSubMask);
+                            }
+                            );
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)Race_FieldIndex.Eyes,
+                            subMask);
+                    }
+                    if (item.FaceGenData_Property.HasBeenSet)
+                    {
+                        MaskItem<Exception, FaceGenData_ErrorMask> subMask;
+                        LoquiXmlTranslation<FaceGenData, FaceGenData_ErrorMask>.Instance.Write(
+                            writer: writer,
+                            item: item.FaceGenData,
+                            name: nameof(item.FaceGenData),
+                            doMasks: doMasks,
+                            mask: out FaceGenData_ErrorMask loquiMask);
+                        subMask = loquiMask == null ? null : new MaskItem<Exception, FaceGenData_ErrorMask>(null, loquiMask);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)Race_FieldIndex.FaceGenData,
+                            subMask);
+                    }
+                    if (item.Unknown_Property.HasBeenSet)
+                    {
+                        Exception subMask;
+                        ByteArrayXmlTranslation.Instance.Write(
+                            writer,
+                            nameof(item.Unknown),
+                            item.Unknown,
+                            doMasks: doMasks,
+                            errorMask: out subMask);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)Race_FieldIndex.Unknown,
+                            subMask);
+                    }
                 }
             }
             catch (Exception ex)
@@ -3347,6 +3975,52 @@ namespace Mutagen.Internals
                 doMasks: doMasks,
                 fieldIndex: (int)Race_FieldIndex.BodyData,
                 errorMask: errorMask);
+            Mutagen.Binary.ListBinaryTranslation<FormID, Exception>.Instance.Write(
+                writer: writer,
+                item: item.Hairs,
+                fieldIndex: (int)Race_FieldIndex.Hairs,
+                recordType: Race_Registration.HNAM_HEADER,
+                doMasks: doMasks,
+                errorMask: errorMask,
+                transl: (FormID subItem, bool listDoMasks, out Exception listSubMask) =>
+                {
+                    Mutagen.Binary.FormIDBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: subItem,
+                        doMasks: doMasks,
+                        errorMask: out listSubMask);
+                }
+                );
+            Mutagen.Binary.ListBinaryTranslation<FormID, Exception>.Instance.Write(
+                writer: writer,
+                item: item.Eyes,
+                fieldIndex: (int)Race_FieldIndex.Eyes,
+                recordType: Race_Registration.ENAM_HEADER,
+                doMasks: doMasks,
+                errorMask: errorMask,
+                transl: (FormID subItem, bool listDoMasks, out Exception listSubMask) =>
+                {
+                    Mutagen.Binary.FormIDBinaryTranslation.Instance.Write(
+                        writer: writer,
+                        item: subItem,
+                        doMasks: doMasks,
+                        errorMask: out listSubMask);
+                }
+                );
+            LoquiBinaryTranslation<FaceGenData, FaceGenData_ErrorMask>.Instance.Write(
+                writer: writer,
+                item: item.FaceGenData_Property,
+                doMasks: doMasks,
+                fieldIndex: (int)Race_FieldIndex.FaceGenData,
+                errorMask: errorMask);
+            Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Unknown_Property,
+                doMasks: doMasks,
+                fieldIndex: (int)Race_FieldIndex.Unknown,
+                errorMask: errorMask,
+                header: Race_Registration.SNAM_HEADER,
+                nullable: false);
         }
 
         #endregion
@@ -3378,6 +4052,10 @@ namespace Mutagen.Internals
             this.RaceStats = new MaskItem<T, RaceStatsGendered_Mask<T>>(initialValue, new RaceStatsGendered_Mask<T>(initialValue));
             this.FaceData = new MaskItem<T, IEnumerable<MaskItem<T, FacePart_Mask<T>>>>(initialValue, null);
             this.BodyData = new MaskItem<T, GenderedBodyData_Mask<T>>(initialValue, new GenderedBodyData_Mask<T>(initialValue));
+            this.Hairs = new MaskItem<T, IEnumerable<T>>(initialValue, null);
+            this.Eyes = new MaskItem<T, IEnumerable<T>>(initialValue, null);
+            this.FaceGenData = new MaskItem<T, FaceGenData_Mask<T>>(initialValue, new FaceGenData_Mask<T>(initialValue));
+            this.Unknown = initialValue;
         }
         #endregion
 
@@ -3394,6 +4072,10 @@ namespace Mutagen.Internals
         public MaskItem<T, RaceStatsGendered_Mask<T>> RaceStats { get; set; }
         public MaskItem<T, IEnumerable<MaskItem<T, FacePart_Mask<T>>>> FaceData;
         public MaskItem<T, GenderedBodyData_Mask<T>> BodyData { get; set; }
+        public MaskItem<T, IEnumerable<T>> Hairs;
+        public MaskItem<T, IEnumerable<T>> Eyes;
+        public MaskItem<T, FaceGenData_Mask<T>> FaceGenData { get; set; }
+        public T Unknown;
         #endregion
 
         #region Equals
@@ -3419,6 +4101,10 @@ namespace Mutagen.Internals
             if (!object.Equals(this.RaceStats, rhs.RaceStats)) return false;
             if (!object.Equals(this.FaceData, rhs.FaceData)) return false;
             if (!object.Equals(this.BodyData, rhs.BodyData)) return false;
+            if (!object.Equals(this.Hairs, rhs.Hairs)) return false;
+            if (!object.Equals(this.Eyes, rhs.Eyes)) return false;
+            if (!object.Equals(this.FaceGenData, rhs.FaceGenData)) return false;
+            if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -3436,6 +4122,10 @@ namespace Mutagen.Internals
             ret = ret.CombineHashCode(this.RaceStats?.GetHashCode());
             ret = ret.CombineHashCode(this.FaceData?.GetHashCode());
             ret = ret.CombineHashCode(this.BodyData?.GetHashCode());
+            ret = ret.CombineHashCode(this.Hairs?.GetHashCode());
+            ret = ret.CombineHashCode(this.Eyes?.GetHashCode());
+            ret = ret.CombineHashCode(this.FaceGenData?.GetHashCode());
+            ret = ret.CombineHashCode(this.Unknown?.GetHashCode());
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -3510,6 +4200,34 @@ namespace Mutagen.Internals
                 if (!eval(this.BodyData.Overall)) return false;
                 if (BodyData.Specific != null && !BodyData.Specific.AllEqual(eval)) return false;
             }
+            if (Hairs != null)
+            {
+                if (!eval(this.Hairs.Overall)) return false;
+                if (Hairs.Specific != null)
+                {
+                    foreach (var item in Hairs.Specific)
+                    {
+                        if (!eval(item)) return false;
+                    }
+                }
+            }
+            if (Eyes != null)
+            {
+                if (!eval(this.Eyes.Overall)) return false;
+                if (Eyes.Specific != null)
+                {
+                    foreach (var item in Eyes.Specific)
+                    {
+                        if (!eval(item)) return false;
+                    }
+                }
+            }
+            if (FaceGenData != null)
+            {
+                if (!eval(this.FaceGenData.Overall)) return false;
+                if (FaceGenData.Specific != null && !FaceGenData.Specific.AllEqual(eval)) return false;
+            }
+            if (!eval(this.Unknown)) return false;
             return true;
         }
         #endregion
@@ -3638,6 +4356,48 @@ namespace Mutagen.Internals
                     obj.BodyData.Specific = this.BodyData.Specific.Translate(eval);
                 }
             }
+            if (Hairs != null)
+            {
+                obj.Hairs = new MaskItem<R, IEnumerable<R>>();
+                obj.Hairs.Overall = eval(this.Hairs.Overall);
+                if (Hairs.Specific != null)
+                {
+                    List<R> l = new List<R>();
+                    obj.Hairs.Specific = l;
+                    foreach (var item in Hairs.Specific)
+                    {
+                        R mask = default(R);
+                        mask = eval(item);
+                        l.Add(mask);
+                    }
+                }
+            }
+            if (Eyes != null)
+            {
+                obj.Eyes = new MaskItem<R, IEnumerable<R>>();
+                obj.Eyes.Overall = eval(this.Eyes.Overall);
+                if (Eyes.Specific != null)
+                {
+                    List<R> l = new List<R>();
+                    obj.Eyes.Specific = l;
+                    foreach (var item in Eyes.Specific)
+                    {
+                        R mask = default(R);
+                        mask = eval(item);
+                        l.Add(mask);
+                    }
+                }
+            }
+            if (this.FaceGenData != null)
+            {
+                obj.FaceGenData = new MaskItem<R, FaceGenData_Mask<R>>();
+                obj.FaceGenData.Overall = eval(this.FaceGenData.Overall);
+                if (this.FaceGenData.Specific != null)
+                {
+                    obj.FaceGenData.Specific = this.FaceGenData.Specific.Translate(eval);
+                }
+            }
+            obj.Unknown = eval(this.Unknown);
         }
         #endregion
 
@@ -3648,6 +4408,8 @@ namespace Mutagen.Internals
             this.Spells.Specific = null;
             this.Relations.Specific = null;
             this.FaceData.Specific = null;
+            this.Hairs.Specific = null;
+            this.Eyes.Specific = null;
         }
         #endregion
 
@@ -3781,6 +4543,64 @@ namespace Mutagen.Internals
                 {
                     BodyData.ToString(fg);
                 }
+                if (printMask?.Hairs?.Overall ?? true)
+                {
+                    fg.AppendLine("Hairs =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        if (Hairs.Overall != null)
+                        {
+                            fg.AppendLine(Hairs.Overall.ToString());
+                        }
+                        if (Hairs.Specific != null)
+                        {
+                            foreach (var subItem in Hairs.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLine($" => {subItem.ToStringSafe()}");
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (printMask?.Eyes?.Overall ?? true)
+                {
+                    fg.AppendLine("Eyes =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        if (Eyes.Overall != null)
+                        {
+                            fg.AppendLine(Eyes.Overall.ToString());
+                        }
+                        if (Eyes.Specific != null)
+                        {
+                            foreach (var subItem in Eyes.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLine($" => {subItem.ToStringSafe()}");
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (printMask?.FaceGenData?.Overall ?? true)
+                {
+                    FaceGenData.ToString(fg);
+                }
+                if (printMask?.Unknown ?? true)
+                {
+                    fg.AppendLine($"Unknown => {Unknown.ToStringSafe()}");
+                }
             }
             fg.AppendLine("]");
         }
@@ -3803,6 +4623,10 @@ namespace Mutagen.Internals
         public MaskItem<Exception, RaceStatsGendered_ErrorMask> RaceStats;
         public MaskItem<Exception, IEnumerable<MaskItem<Exception, FacePart_ErrorMask>>> FaceData;
         public MaskItem<Exception, GenderedBodyData_ErrorMask> BodyData;
+        public MaskItem<Exception, IEnumerable<Exception>> Hairs;
+        public MaskItem<Exception, IEnumerable<Exception>> Eyes;
+        public MaskItem<Exception, FaceGenData_ErrorMask> FaceGenData;
+        public Exception Unknown;
         #endregion
 
         #region IErrorMask
@@ -3846,6 +4670,18 @@ namespace Mutagen.Internals
                     break;
                 case Race_FieldIndex.BodyData:
                     this.BodyData = new MaskItem<Exception, GenderedBodyData_ErrorMask>(ex, null);
+                    break;
+                case Race_FieldIndex.Hairs:
+                    this.Hairs = new MaskItem<Exception, IEnumerable<Exception>>(ex, null);
+                    break;
+                case Race_FieldIndex.Eyes:
+                    this.Eyes = new MaskItem<Exception, IEnumerable<Exception>>(ex, null);
+                    break;
+                case Race_FieldIndex.FaceGenData:
+                    this.FaceGenData = new MaskItem<Exception, FaceGenData_ErrorMask>(ex, null);
+                    break;
+                case Race_FieldIndex.Unknown:
+                    this.Unknown = ex;
                     break;
                 default:
                     base.SetNthException(index, ex);
@@ -3893,6 +4729,18 @@ namespace Mutagen.Internals
                     break;
                 case Race_FieldIndex.BodyData:
                     this.BodyData = (MaskItem<Exception, GenderedBodyData_ErrorMask>)obj;
+                    break;
+                case Race_FieldIndex.Hairs:
+                    this.Hairs = (MaskItem<Exception, IEnumerable<Exception>>)obj;
+                    break;
+                case Race_FieldIndex.Eyes:
+                    this.Eyes = (MaskItem<Exception, IEnumerable<Exception>>)obj;
+                    break;
+                case Race_FieldIndex.FaceGenData:
+                    this.FaceGenData = (MaskItem<Exception, FaceGenData_ErrorMask>)obj;
+                    break;
+                case Race_FieldIndex.Unknown:
+                    this.Unknown = (Exception)obj;
                     break;
                 default:
                     base.SetNthMask(index, obj);
@@ -4043,6 +4891,64 @@ namespace Mutagen.Internals
             {
                 BodyData.ToString(fg);
             }
+            if (Hairs != null)
+            {
+                fg.AppendLine("Hairs =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (Hairs.Overall != null)
+                    {
+                        fg.AppendLine(Hairs.Overall.ToString());
+                    }
+                    if (Hairs.Specific != null)
+                    {
+                        foreach (var subItem in Hairs.Specific)
+                        {
+                            fg.AppendLine("[");
+                            using (new DepthWrapper(fg))
+                            {
+                                fg.AppendLine($" => {subItem.ToStringSafe()}");
+                            }
+                            fg.AppendLine("]");
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (Eyes != null)
+            {
+                fg.AppendLine("Eyes =>");
+                fg.AppendLine("[");
+                using (new DepthWrapper(fg))
+                {
+                    if (Eyes.Overall != null)
+                    {
+                        fg.AppendLine(Eyes.Overall.ToString());
+                    }
+                    if (Eyes.Specific != null)
+                    {
+                        foreach (var subItem in Eyes.Specific)
+                        {
+                            fg.AppendLine("[");
+                            using (new DepthWrapper(fg))
+                            {
+                                fg.AppendLine($" => {subItem.ToStringSafe()}");
+                            }
+                            fg.AppendLine("]");
+                        }
+                    }
+                }
+                fg.AppendLine("]");
+            }
+            if (FaceGenData != null)
+            {
+                FaceGenData.ToString(fg);
+            }
+            if (Unknown != null)
+            {
+                fg.AppendLine($"Unknown => {Unknown.ToStringSafe()}");
+            }
         }
         #endregion
 
@@ -4062,6 +4968,10 @@ namespace Mutagen.Internals
             ret.RaceStats = new MaskItem<Exception, RaceStatsGendered_ErrorMask>(this.RaceStats.Overall.Combine(rhs.RaceStats.Overall), this.RaceStats.Specific.Combine(rhs.RaceStats.Specific));
             ret.FaceData = new MaskItem<Exception, IEnumerable<MaskItem<Exception, FacePart_ErrorMask>>>(this.FaceData.Overall.Combine(rhs.FaceData.Overall), new List<MaskItem<Exception, FacePart_ErrorMask>>(this.FaceData.Specific.And(rhs.FaceData.Specific)));
             ret.BodyData = new MaskItem<Exception, GenderedBodyData_ErrorMask>(this.BodyData.Overall.Combine(rhs.BodyData.Overall), this.BodyData.Specific.Combine(rhs.BodyData.Specific));
+            ret.Hairs = new MaskItem<Exception, IEnumerable<Exception>>(this.Hairs.Overall.Combine(rhs.Hairs.Overall), new List<Exception>(this.Hairs.Specific.And(rhs.Hairs.Specific)));
+            ret.Eyes = new MaskItem<Exception, IEnumerable<Exception>>(this.Eyes.Overall.Combine(rhs.Eyes.Overall), new List<Exception>(this.Eyes.Specific.And(rhs.Eyes.Specific)));
+            ret.FaceGenData = new MaskItem<Exception, FaceGenData_ErrorMask>(this.FaceGenData.Overall.Combine(rhs.FaceGenData.Overall), this.FaceGenData.Specific.Combine(rhs.FaceGenData.Specific));
+            ret.Unknown = this.Unknown.Combine(rhs.Unknown);
             return ret;
         }
         public static Race_ErrorMask Combine(Race_ErrorMask lhs, Race_ErrorMask rhs)
@@ -4087,6 +4997,10 @@ namespace Mutagen.Internals
         public MaskItem<CopyOption, RaceStatsGendered_CopyMask> RaceStats;
         public MaskItem<CopyOption, FacePart_CopyMask> FaceData;
         public MaskItem<CopyOption, GenderedBodyData_CopyMask> BodyData;
+        public CopyOption Hairs;
+        public CopyOption Eyes;
+        public MaskItem<CopyOption, FaceGenData_CopyMask> FaceGenData;
+        public bool Unknown;
         #endregion
 
     }
