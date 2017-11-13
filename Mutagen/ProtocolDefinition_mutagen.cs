@@ -45,6 +45,9 @@ namespace Loqui
             LoquiRegistration.Register(Mutagen.Internals.BodyData_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Internals.BodyPart_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Internals.FaceGenData_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Internals.Sound_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Internals.SoundData_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Internals.SoundDataExtended_Registration.Instance);
         }
     }
 }

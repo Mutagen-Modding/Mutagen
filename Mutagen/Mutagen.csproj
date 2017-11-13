@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="us-ascii"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -21,6 +21,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <NoWarn>CS1998</NoWarn>
+    <WarningsAsErrors>CS4014</WarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -105,6 +107,10 @@
     <Compile Include="Records\Major Records\Race.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\SoundData.cs">
+      <DependentUpon>Sound.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Translators\Binary\ZeroBufferBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\FilePathBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\MutagenFrame.cs" />
     <Compile Include="Translators\Binary\MutagenReader.cs" />
@@ -247,6 +253,15 @@
     <Compile Include="Records\Major Records\FaceGenData_LoquiGenerated.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Sound_LoquiGenerated.cs">
+      <DependentUpon>Sound.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SoundData_LoquiGenerated.cs">
+      <DependentUpon>Sound.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SoundDataExtended_LoquiGenerated.cs">
+      <DependentUpon>Sound.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\CSharpExt\CSharpExt\CSharpExt.csproj">
@@ -296,6 +311,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Race.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\Sound.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Spell.xml">

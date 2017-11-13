@@ -472,7 +472,7 @@ namespace Mutagen
                         doMasks: doMasks,
                         errorMask: errorMask);
                     item._Name.SetIfSucceeded(NametryGet);
-                break;
+                    break;
                 default:
                     MajorRecord.Fill_Binary_RecordTypes(
                         item: item,

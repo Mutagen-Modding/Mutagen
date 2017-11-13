@@ -786,7 +786,7 @@ namespace Mutagen
                         fieldIndex: (int)Model_FieldIndex.File,
                         errorMask: errorMask);
                     item._File.SetIfSucceeded(tryGet);
-                break;
+                    break;
                 case "MODB":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var BoundRadiustryGet = Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
@@ -795,7 +795,7 @@ namespace Mutagen
                         fieldIndex: (int)Model_FieldIndex.BoundRadius,
                         errorMask: errorMask);
                     item._BoundRadius.SetIfSucceeded(BoundRadiustryGet);
-                break;
+                    break;
                 default:
                     return false;
             }

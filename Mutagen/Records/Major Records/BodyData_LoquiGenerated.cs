@@ -789,7 +789,7 @@ namespace Mutagen
                         fieldIndex: (int)BodyData_FieldIndex.Model,
                         errorMask: errorMask);
                     item._Model.SetIfSucceeded(ModeltryGet);
-                break;
+                    break;
                 case "INDX":
                     var BodyPartstryGet = Mutagen.Binary.ListBinaryTranslation<BodyPart, MaskItem<Exception, BodyPart_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
@@ -807,7 +807,7 @@ namespace Mutagen
                         }
                         );
                     item._BodyParts.SetIfSucceeded(BodyPartstryGet);
-                break;
+                    break;
                 default:
                     return false;
             }

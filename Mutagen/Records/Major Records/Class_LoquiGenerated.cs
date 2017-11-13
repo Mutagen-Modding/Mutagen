@@ -884,7 +884,7 @@ namespace Mutagen
                         doMasks: doMasks,
                         errorMask: errorMask);
                     item._Description.SetIfSucceeded(DescriptiontryGet);
-                break;
+                    break;
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var tryGet = Mutagen.Binary.FilePathBinaryTranslation.Instance.Parse(
@@ -893,7 +893,7 @@ namespace Mutagen
                         fieldIndex: (int)Class_FieldIndex.Icon,
                         errorMask: errorMask);
                     item._Icon.SetIfSucceeded(tryGet);
-                break;
+                    break;
                 case "DATA":
                     var ClassDatatryGet = LoquiBinaryTranslation<ClassData, ClassData_ErrorMask>.Instance.Parse(
                         frame: frame,
@@ -901,7 +901,7 @@ namespace Mutagen
                         fieldIndex: (int)Class_FieldIndex.ClassData,
                         errorMask: errorMask);
                     item._ClassData.SetIfSucceeded(ClassDatatryGet);
-                break;
+                    break;
                 default:
                     NamedMajorRecord.Fill_Binary_RecordTypes(
                         item: item,

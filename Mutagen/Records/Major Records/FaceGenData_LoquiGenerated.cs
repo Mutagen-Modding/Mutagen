@@ -821,7 +821,7 @@ namespace Mutagen
                         doMasks: doMasks,
                         errorMask: errorMask);
                     item._SymmetricGeometry.SetIfSucceeded(SymmetricGeometrytryGet);
-                break;
+                    break;
                 case "FGGA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var AsymmetricGeometrytryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
@@ -830,7 +830,7 @@ namespace Mutagen
                         doMasks: doMasks,
                         errorMask: errorMask);
                     item._AsymmetricGeometry.SetIfSucceeded(AsymmetricGeometrytryGet);
-                break;
+                    break;
                 case "FGTS":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var SymmetricTexturetryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
@@ -839,7 +839,7 @@ namespace Mutagen
                         doMasks: doMasks,
                         errorMask: errorMask);
                     item._SymmetricTexture.SetIfSucceeded(SymmetricTexturetryGet);
-                break;
+                    break;
                 default:
                     return false;
             }

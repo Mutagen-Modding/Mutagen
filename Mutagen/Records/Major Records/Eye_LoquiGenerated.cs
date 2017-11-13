@@ -842,7 +842,7 @@ namespace Mutagen
                         fieldIndex: (int)Eye_FieldIndex.Icon,
                         errorMask: errorMask);
                     item._Icon.SetIfSucceeded(tryGet);
-                break;
+                    break;
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var FlagstryGet = Mutagen.Binary.EnumBinaryTranslation<Eye.Flag>.Instance.Parse(
@@ -851,7 +851,7 @@ namespace Mutagen
                         doMasks: doMasks,
                         errorMask: errorMask);
                     item._Flags.SetIfSucceeded(FlagstryGet);
-                break;
+                    break;
                 default:
                     NamedMajorRecord.Fill_Binary_RecordTypes(
                         item: item,

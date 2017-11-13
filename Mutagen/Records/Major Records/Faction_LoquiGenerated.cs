@@ -933,7 +933,7 @@ namespace Mutagen
                         }
                         );
                     item._Relations.SetIfSucceeded(RelationstryGet);
-                break;
+                    break;
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var FlagstryGet = Mutagen.Binary.EnumBinaryTranslation<Faction.FactionFlag>.Instance.Parse(
@@ -942,7 +942,7 @@ namespace Mutagen
                         doMasks: doMasks,
                         errorMask: errorMask);
                     item._Flags.SetIfSucceeded(FlagstryGet);
-                break;
+                    break;
                 case "CNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var CrimeGoldMultipliertryGet = Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
@@ -951,7 +951,7 @@ namespace Mutagen
                         fieldIndex: (int)Faction_FieldIndex.CrimeGoldMultiplier,
                         errorMask: errorMask);
                     item._CrimeGoldMultiplier.SetIfSucceeded(CrimeGoldMultipliertryGet);
-                break;
+                    break;
                 case "RNAM":
                     var RankstryGet = Mutagen.Binary.ListBinaryTranslation<Rank, MaskItem<Exception, Rank_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
@@ -969,7 +969,7 @@ namespace Mutagen
                         }
                         );
                     item._Ranks.SetIfSucceeded(RankstryGet);
-                break;
+                    break;
                 default:
                     NamedMajorRecord.Fill_Binary_RecordTypes(
                         item: item,

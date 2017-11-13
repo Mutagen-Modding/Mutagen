@@ -36,18 +36,18 @@ namespace Mutagen
         partial void CustomCtor();
         #endregion
 
-        #region Flags
-        protected readonly INotifyingItem<Byte[]> _Flags = NotifyingItem.Factory<Byte[]>(
+        #region MajorRecordFlags
+        protected readonly INotifyingItem<Byte[]> _MajorRecordFlags = NotifyingItem.Factory<Byte[]>(
             markAsSet: false,
             noNullFallback: () => new byte[4]);
-        public INotifyingItem<Byte[]> Flags_Property => _Flags;
-        public Byte[] Flags
+        public INotifyingItem<Byte[]> MajorRecordFlags_Property => _MajorRecordFlags;
+        public Byte[] MajorRecordFlags
         {
-            get => this._Flags.Item;
-            set => this._Flags.Set(value);
+            get => this._MajorRecordFlags.Item;
+            set => this._MajorRecordFlags.Set(value);
         }
-        INotifyingItem<Byte[]> IMajorRecord.Flags_Property => this.Flags_Property;
-        INotifyingItemGetter<Byte[]> IMajorRecordGetter.Flags_Property => this.Flags_Property;
+        INotifyingItem<Byte[]> IMajorRecord.MajorRecordFlags_Property => this.MajorRecordFlags_Property;
+        INotifyingItemGetter<Byte[]> IMajorRecordGetter.MajorRecordFlags_Property => this.MajorRecordFlags_Property;
         #endregion
         #region FormID
         protected readonly INotifyingItem<FormID> _FormID = NotifyingItem.Factory<FormID>(markAsSet: false);
@@ -152,10 +152,10 @@ namespace Mutagen
         public bool Equals(MajorRecord rhs)
         {
             if (rhs == null) return false;
-            if (Flags_Property.HasBeenSet != rhs.Flags_Property.HasBeenSet) return false;
-            if (Flags_Property.HasBeenSet)
+            if (MajorRecordFlags_Property.HasBeenSet != rhs.MajorRecordFlags_Property.HasBeenSet) return false;
+            if (MajorRecordFlags_Property.HasBeenSet)
             {
-                if (!Flags.EqualsFast(rhs.Flags)) return false;
+                if (!MajorRecordFlags.EqualsFast(rhs.MajorRecordFlags)) return false;
             }
             if (FormID_Property.HasBeenSet != rhs.FormID_Property.HasBeenSet) return false;
             if (FormID_Property.HasBeenSet)
@@ -183,9 +183,9 @@ namespace Mutagen
         public override int GetHashCode()
         {
             int ret = 0;
-            if (Flags_Property.HasBeenSet)
+            if (MajorRecordFlags_Property.HasBeenSet)
             {
-                ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(MajorRecordFlags).CombineHashCode(ret);
             }
             if (FormID_Property.HasBeenSet)
             {
@@ -361,18 +361,18 @@ namespace Mutagen
         {
             switch (name)
             {
-                case "Flags":
+                case "MajorRecordFlags":
                     {
                         Exception subMask;
                         var tryGet = ByteArrayXmlTranslation.Instance.Parse(
                             root,
                             doMasks: doMasks,
                             errorMask: out subMask);
-                        item._Flags.SetIfSucceeded(tryGet);
+                        item._MajorRecordFlags.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
                             doMasks,
-                            (int)MajorRecord_FieldIndex.Flags,
+                            (int)MajorRecord_FieldIndex.MajorRecordFlags,
                             subMask);
                     }
                     break;
@@ -588,12 +588,12 @@ namespace Mutagen
             Func<MajorRecord_ErrorMask> errorMask)
         {
             if (frame.Complete) return;
-            var FlagstryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+            var MajorRecordFlagstryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(4)),
-                fieldIndex: (int)MajorRecord_FieldIndex.Flags,
+                fieldIndex: (int)MajorRecord_FieldIndex.MajorRecordFlags,
                 doMasks: doMasks,
                 errorMask: errorMask);
-            item._Flags.SetIfSucceeded(FlagstryGet);
+            item._MajorRecordFlags.SetIfSucceeded(MajorRecordFlagstryGet);
             if (frame.Complete) return;
             var FormIDtryGet = Mutagen.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
@@ -629,7 +629,7 @@ namespace Mutagen
                         doMasks: doMasks,
                         errorMask: errorMask);
                     item._EditorID.SetIfSucceeded(EditorIDtryGet);
-                break;
+                    break;
                 default:
                     errorMask().Warnings.Add($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength + Constants.SUBRECORD_LENGTH;
@@ -648,8 +648,8 @@ namespace Mutagen
             {
                 case MajorRecord_FieldIndex.RecordType:
                     throw new ArgumentException($"Tried to set at a derivative index {index}");
-                case MajorRecord_FieldIndex.Flags:
-                    this._Flags.Set(
+                case MajorRecord_FieldIndex.MajorRecordFlags:
+                    this._MajorRecordFlags.Set(
                         (Byte[])obj,
                         cmds);
                     break;
@@ -695,8 +695,8 @@ namespace Mutagen
             }
             switch (enu)
             {
-                case MajorRecord_FieldIndex.Flags:
-                    obj._Flags.Set(
+                case MajorRecord_FieldIndex.MajorRecordFlags:
+                    obj._MajorRecordFlags.Set(
                         (Byte[])pair.Value,
                         null);
                     break;
@@ -730,8 +730,8 @@ namespace Mutagen
     #region Interface
     public interface IMajorRecord : IMajorRecordGetter, ILoquiClass<IMajorRecord, IMajorRecordGetter>, ILoquiClass<MajorRecord, IMajorRecordGetter>
     {
-        new Byte[] Flags { get; set; }
-        new INotifyingItem<Byte[]> Flags_Property { get; }
+        new Byte[] MajorRecordFlags { get; set; }
+        new INotifyingItem<Byte[]> MajorRecordFlags_Property { get; }
 
         new Byte[] Version { get; set; }
         new INotifyingItem<Byte[]> Version_Property { get; }
@@ -743,9 +743,9 @@ namespace Mutagen
 
     public interface IMajorRecordGetter : ILoquiObject
     {
-        #region Flags
-        Byte[] Flags { get; }
-        INotifyingItemGetter<Byte[]> Flags_Property { get; }
+        #region MajorRecordFlags
+        Byte[] MajorRecordFlags { get; }
+        INotifyingItemGetter<Byte[]> MajorRecordFlags_Property { get; }
 
         #endregion
         #region FormID
@@ -780,7 +780,7 @@ namespace Mutagen.Internals
     #region Field Index
     public enum MajorRecord_FieldIndex
     {
-        Flags = 0,
+        MajorRecordFlags = 0,
         FormID = 1,
         Version = 2,
         EditorID = 3,
@@ -830,8 +830,8 @@ namespace Mutagen.Internals
         {
             switch (str.Upper)
             {
-                case "FLAGS":
-                    return (ushort)MajorRecord_FieldIndex.Flags;
+                case "MAJORRECORDFLAGS":
+                    return (ushort)MajorRecord_FieldIndex.MajorRecordFlags;
                 case "FORMID":
                     return (ushort)MajorRecord_FieldIndex.FormID;
                 case "VERSION":
@@ -850,7 +850,7 @@ namespace Mutagen.Internals
             MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
             switch (enu)
             {
-                case MajorRecord_FieldIndex.Flags:
+                case MajorRecord_FieldIndex.MajorRecordFlags:
                 case MajorRecord_FieldIndex.FormID:
                 case MajorRecord_FieldIndex.Version:
                 case MajorRecord_FieldIndex.EditorID:
@@ -866,7 +866,7 @@ namespace Mutagen.Internals
             MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
             switch (enu)
             {
-                case MajorRecord_FieldIndex.Flags:
+                case MajorRecord_FieldIndex.MajorRecordFlags:
                 case MajorRecord_FieldIndex.FormID:
                 case MajorRecord_FieldIndex.Version:
                 case MajorRecord_FieldIndex.EditorID:
@@ -882,7 +882,7 @@ namespace Mutagen.Internals
             MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
             switch (enu)
             {
-                case MajorRecord_FieldIndex.Flags:
+                case MajorRecord_FieldIndex.MajorRecordFlags:
                 case MajorRecord_FieldIndex.FormID:
                 case MajorRecord_FieldIndex.Version:
                 case MajorRecord_FieldIndex.EditorID:
@@ -898,8 +898,8 @@ namespace Mutagen.Internals
             MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
             switch (enu)
             {
-                case MajorRecord_FieldIndex.Flags:
-                    return "Flags";
+                case MajorRecord_FieldIndex.MajorRecordFlags:
+                    return "MajorRecordFlags";
                 case MajorRecord_FieldIndex.FormID:
                     return "FormID";
                 case MajorRecord_FieldIndex.Version:
@@ -920,7 +920,7 @@ namespace Mutagen.Internals
             {
                 case MajorRecord_FieldIndex.RecordType:
                     return true;
-                case MajorRecord_FieldIndex.Flags:
+                case MajorRecord_FieldIndex.MajorRecordFlags:
                 case MajorRecord_FieldIndex.FormID:
                 case MajorRecord_FieldIndex.Version:
                 case MajorRecord_FieldIndex.EditorID:
@@ -938,7 +938,7 @@ namespace Mutagen.Internals
                 case MajorRecord_FieldIndex.FormID:
                 case MajorRecord_FieldIndex.RecordType:
                     return true;
-                case MajorRecord_FieldIndex.Flags:
+                case MajorRecord_FieldIndex.MajorRecordFlags:
                 case MajorRecord_FieldIndex.Version:
                 case MajorRecord_FieldIndex.EditorID:
                     return false;
@@ -952,7 +952,7 @@ namespace Mutagen.Internals
             MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
             switch (enu)
             {
-                case MajorRecord_FieldIndex.Flags:
+                case MajorRecord_FieldIndex.MajorRecordFlags:
                     return typeof(Byte[]);
                 case MajorRecord_FieldIndex.FormID:
                     return typeof(FormID);
@@ -1076,19 +1076,19 @@ namespace Mutagen.Internals
             MajorRecord_CopyMask copyMask,
             NotifyingFireParameters? cmds)
         {
-            if (copyMask?.Flags ?? true)
+            if (copyMask?.MajorRecordFlags ?? true)
             {
                 try
                 {
-                    item.Flags_Property.SetToWithDefault(
-                        rhs.Flags_Property,
-                        def?.Flags_Property,
+                    item.MajorRecordFlags_Property.SetToWithDefault(
+                        rhs.MajorRecordFlags_Property,
+                        def?.MajorRecordFlags_Property,
                         cmds);
                 }
                 catch (Exception ex)
                 when (doErrorMask)
                 {
-                    errorMask().SetNthException((int)MajorRecord_FieldIndex.Flags, ex);
+                    errorMask().SetNthException((int)MajorRecord_FieldIndex.MajorRecordFlags, ex);
                 }
             }
             if (copyMask?.Version ?? true)
@@ -1136,8 +1136,8 @@ namespace Mutagen.Internals
             {
                 case MajorRecord_FieldIndex.RecordType:
                     throw new ArgumentException($"Tried to set at a derivative index {index}");
-                case MajorRecord_FieldIndex.Flags:
-                    obj.Flags_Property.HasBeenSet = on;
+                case MajorRecord_FieldIndex.MajorRecordFlags:
+                    obj.MajorRecordFlags_Property.HasBeenSet = on;
                     break;
                 case MajorRecord_FieldIndex.FormID:
                     throw new ArgumentException("Tried to set at a readonly index " + index);
@@ -1162,8 +1162,8 @@ namespace Mutagen.Internals
             {
                 case MajorRecord_FieldIndex.RecordType:
                     throw new ArgumentException($"Tried to unset at a derivative index {index}");
-                case MajorRecord_FieldIndex.Flags:
-                    obj.Flags_Property.Unset(cmds);
+                case MajorRecord_FieldIndex.MajorRecordFlags:
+                    obj.MajorRecordFlags_Property.Unset(cmds);
                     break;
                 case MajorRecord_FieldIndex.FormID:
                     throw new ArgumentException("Tried to set at a readonly index " + index);
@@ -1185,8 +1185,8 @@ namespace Mutagen.Internals
             MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
             switch (enu)
             {
-                case MajorRecord_FieldIndex.Flags:
-                    return obj.Flags_Property.HasBeenSet;
+                case MajorRecord_FieldIndex.MajorRecordFlags:
+                    return obj.MajorRecordFlags_Property.HasBeenSet;
                 case MajorRecord_FieldIndex.FormID:
                     return obj.FormID_Property.HasBeenSet;
                 case MajorRecord_FieldIndex.Version:
@@ -1207,8 +1207,8 @@ namespace Mutagen.Internals
             MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
             switch (enu)
             {
-                case MajorRecord_FieldIndex.Flags:
-                    return obj.Flags;
+                case MajorRecord_FieldIndex.MajorRecordFlags:
+                    return obj.MajorRecordFlags;
                 case MajorRecord_FieldIndex.FormID:
                     return obj.FormID;
                 case MajorRecord_FieldIndex.Version:
@@ -1226,7 +1226,7 @@ namespace Mutagen.Internals
             IMajorRecord item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.Flags_Property.Unset(cmds.ToUnsetParams());
+            item.MajorRecordFlags_Property.Unset(cmds.ToUnsetParams());
             item.Version_Property.Unset(cmds.ToUnsetParams());
             item.EditorID_Property.Unset(cmds.ToUnsetParams());
         }
@@ -1246,7 +1246,7 @@ namespace Mutagen.Internals
             MajorRecord_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Flags = item.Flags_Property.Equals(rhs.Flags_Property, (l, r) => l.EqualsFast(r));
+            ret.MajorRecordFlags = item.MajorRecordFlags_Property.Equals(rhs.MajorRecordFlags_Property, (l, r) => l.EqualsFast(r));
             ret.FormID = item.FormID_Property.Equals(rhs.FormID_Property, (l, r) => l == r);
             ret.Version = item.Version_Property.Equals(rhs.Version_Property, (l, r) => l.EqualsFast(r));
             ret.EditorID = item.EditorID_Property.Equals(rhs.EditorID_Property, (l, r) => object.Equals(l, r));
@@ -1280,9 +1280,9 @@ namespace Mutagen.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Flags ?? true)
+                if (printMask?.MajorRecordFlags ?? true)
                 {
-                    fg.AppendLine($"Flags => {item.Flags}");
+                    fg.AppendLine($"MajorRecordFlags => {item.MajorRecordFlags}");
                 }
                 if (printMask?.FormID ?? true)
                 {
@@ -1308,7 +1308,7 @@ namespace Mutagen.Internals
             this IMajorRecordGetter item,
             MajorRecord_Mask<bool?> checkMask)
         {
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_Property.HasBeenSet) return false;
+            if (checkMask.MajorRecordFlags.HasValue && checkMask.MajorRecordFlags.Value != item.MajorRecordFlags_Property.HasBeenSet) return false;
             if (checkMask.FormID.HasValue && checkMask.FormID.Value != item.FormID_Property.HasBeenSet) return false;
             if (checkMask.Version.HasValue && checkMask.Version.Value != item.Version_Property.HasBeenSet) return false;
             if (checkMask.EditorID.HasValue && checkMask.EditorID.Value != item.EditorID_Property.HasBeenSet) return false;
@@ -1319,7 +1319,7 @@ namespace Mutagen.Internals
         public static MajorRecord_Mask<bool> GetHasBeenSetMask(IMajorRecordGetter item)
         {
             var ret = new MajorRecord_Mask<bool>();
-            ret.Flags = item.Flags_Property.HasBeenSet;
+            ret.MajorRecordFlags = item.MajorRecordFlags_Property.HasBeenSet;
             ret.FormID = item.FormID_Property.HasBeenSet;
             ret.Version = item.Version_Property.HasBeenSet;
             ret.EditorID = item.EditorID_Property.HasBeenSet;
@@ -1361,19 +1361,19 @@ namespace Mutagen.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.MajorRecord");
                     }
-                    if (item.Flags_Property.HasBeenSet)
+                    if (item.MajorRecordFlags_Property.HasBeenSet)
                     {
                         Exception subMask;
                         ByteArrayXmlTranslation.Instance.Write(
                             writer,
-                            nameof(item.Flags),
-                            item.Flags,
+                            nameof(item.MajorRecordFlags),
+                            item.MajorRecordFlags,
                             doMasks: doMasks,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
                             doMasks,
-                            (int)MajorRecord_FieldIndex.Flags,
+                            (int)MajorRecord_FieldIndex.MajorRecordFlags,
                             subMask);
                     }
                     if (item.FormID_Property.HasBeenSet)
@@ -1485,9 +1485,9 @@ namespace Mutagen.Internals
         {
             Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Flags_Property,
+                item: item.MajorRecordFlags_Property,
                 doMasks: doMasks,
-                fieldIndex: (int)MajorRecord_FieldIndex.Flags,
+                fieldIndex: (int)MajorRecord_FieldIndex.MajorRecordFlags,
                 errorMask: errorMask);
             Mutagen.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
@@ -1536,7 +1536,7 @@ namespace Mutagen.Internals
 
         public MajorRecord_Mask(T initialValue)
         {
-            this.Flags = initialValue;
+            this.MajorRecordFlags = initialValue;
             this.FormID = initialValue;
             this.Version = initialValue;
             this.EditorID = initialValue;
@@ -1545,7 +1545,7 @@ namespace Mutagen.Internals
         #endregion
 
         #region Members
-        public T Flags;
+        public T MajorRecordFlags;
         public T FormID;
         public T Version;
         public T EditorID;
@@ -1562,7 +1562,7 @@ namespace Mutagen.Internals
         public bool Equals(MajorRecord_Mask<T> rhs)
         {
             if (rhs == null) return false;
-            if (!object.Equals(this.Flags, rhs.Flags)) return false;
+            if (!object.Equals(this.MajorRecordFlags, rhs.MajorRecordFlags)) return false;
             if (!object.Equals(this.FormID, rhs.FormID)) return false;
             if (!object.Equals(this.Version, rhs.Version)) return false;
             if (!object.Equals(this.EditorID, rhs.EditorID)) return false;
@@ -1572,7 +1572,7 @@ namespace Mutagen.Internals
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = ret.CombineHashCode(this.Flags?.GetHashCode());
+            ret = ret.CombineHashCode(this.MajorRecordFlags?.GetHashCode());
             ret = ret.CombineHashCode(this.FormID?.GetHashCode());
             ret = ret.CombineHashCode(this.Version?.GetHashCode());
             ret = ret.CombineHashCode(this.EditorID?.GetHashCode());
@@ -1585,7 +1585,7 @@ namespace Mutagen.Internals
         #region All Equal
         public virtual bool AllEqual(Func<T, bool> eval)
         {
-            if (!eval(this.Flags)) return false;
+            if (!eval(this.MajorRecordFlags)) return false;
             if (!eval(this.FormID)) return false;
             if (!eval(this.Version)) return false;
             if (!eval(this.EditorID)) return false;
@@ -1604,7 +1604,7 @@ namespace Mutagen.Internals
 
         protected void Translate_InternalFill<R>(MajorRecord_Mask<R> obj, Func<T, R> eval)
         {
-            obj.Flags = eval(this.Flags);
+            obj.MajorRecordFlags = eval(this.MajorRecordFlags);
             obj.FormID = eval(this.FormID);
             obj.Version = eval(this.Version);
             obj.EditorID = eval(this.EditorID);
@@ -1637,9 +1637,9 @@ namespace Mutagen.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Flags ?? true)
+                if (printMask?.MajorRecordFlags ?? true)
                 {
-                    fg.AppendLine($"Flags => {Flags.ToStringSafe()}");
+                    fg.AppendLine($"MajorRecordFlags => {MajorRecordFlags.ToStringSafe()}");
                 }
                 if (printMask?.FormID ?? true)
                 {
@@ -1680,7 +1680,7 @@ namespace Mutagen.Internals
                 return _warnings;
             }
         }
-        public Exception Flags;
+        public Exception MajorRecordFlags;
         public Exception FormID;
         public Exception Version;
         public Exception EditorID;
@@ -1693,8 +1693,8 @@ namespace Mutagen.Internals
             MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
             switch (enu)
             {
-                case MajorRecord_FieldIndex.Flags:
-                    this.Flags = ex;
+                case MajorRecord_FieldIndex.MajorRecordFlags:
+                    this.MajorRecordFlags = ex;
                     break;
                 case MajorRecord_FieldIndex.FormID:
                     this.FormID = ex;
@@ -1718,8 +1718,8 @@ namespace Mutagen.Internals
             MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
             switch (enu)
             {
-                case MajorRecord_FieldIndex.Flags:
-                    this.Flags = (Exception)obj;
+                case MajorRecord_FieldIndex.MajorRecordFlags:
+                    this.MajorRecordFlags = (Exception)obj;
                     break;
                 case MajorRecord_FieldIndex.FormID:
                     this.FormID = (Exception)obj;
@@ -1769,9 +1769,9 @@ namespace Mutagen.Internals
         }
         protected virtual void ToString_FillInternal(FileGeneration fg)
         {
-            if (Flags != null)
+            if (MajorRecordFlags != null)
             {
-                fg.AppendLine($"Flags => {Flags.ToStringSafe()}");
+                fg.AppendLine($"MajorRecordFlags => {MajorRecordFlags.ToStringSafe()}");
             }
             if (FormID != null)
             {
@@ -1796,7 +1796,7 @@ namespace Mutagen.Internals
         public MajorRecord_ErrorMask Combine(MajorRecord_ErrorMask rhs)
         {
             var ret = new MajorRecord_ErrorMask();
-            ret.Flags = this.Flags.Combine(rhs.Flags);
+            ret.MajorRecordFlags = this.MajorRecordFlags.Combine(rhs.MajorRecordFlags);
             ret.FormID = this.FormID.Combine(rhs.FormID);
             ret.Version = this.Version.Combine(rhs.Version);
             ret.EditorID = this.EditorID.Combine(rhs.EditorID);
@@ -1814,7 +1814,7 @@ namespace Mutagen.Internals
     public class MajorRecord_CopyMask
     {
         #region Members
-        public bool Flags;
+        public bool MajorRecordFlags;
         public bool FormID;
         public bool Version;
         public bool EditorID;

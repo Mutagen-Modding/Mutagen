@@ -981,7 +981,7 @@ namespace Mutagen
                         fieldIndex: (int)TES4_FieldIndex.Header,
                         errorMask: errorMask);
                     item._Header.SetIfSucceeded(HeadertryGet);
-                break;
+                    break;
                 case "OFST":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var TypeOffsetstryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
@@ -990,7 +990,7 @@ namespace Mutagen
                         doMasks: doMasks,
                         errorMask: errorMask);
                     item._TypeOffsets.SetIfSucceeded(TypeOffsetstryGet);
-                break;
+                    break;
                 case "DELE":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var DeletedtryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
@@ -999,7 +999,7 @@ namespace Mutagen
                         doMasks: doMasks,
                         errorMask: errorMask);
                     item._Deleted.SetIfSucceeded(DeletedtryGet);
-                break;
+                    break;
                 case "CNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var AuthortryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
@@ -1008,7 +1008,7 @@ namespace Mutagen
                         doMasks: doMasks,
                         errorMask: errorMask);
                     item._Author.SetIfSucceeded(AuthortryGet);
-                break;
+                    break;
                 case "SNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var DescriptiontryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
@@ -1017,7 +1017,7 @@ namespace Mutagen
                         doMasks: doMasks,
                         errorMask: errorMask);
                     item._Description.SetIfSucceeded(DescriptiontryGet);
-                break;
+                    break;
                 case "MAST":
                     var MasterReferencestryGet = Mutagen.Binary.ListBinaryTranslation<MasterReference, MaskItem<Exception, MasterReference_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
@@ -1035,7 +1035,7 @@ namespace Mutagen
                         }
                         );
                     item._MasterReferences.SetIfSucceeded(MasterReferencestryGet);
-                break;
+                    break;
                 default:
                     errorMask().Warnings.Add($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength + Constants.SUBRECORD_LENGTH;

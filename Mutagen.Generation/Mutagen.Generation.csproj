@@ -23,6 +23,9 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <NoWarn>CS1998</NoWarn>
+    <WarningsAsErrors>CS4014</WarningsAsErrors>
+    <LangVersion>7.1</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -32,6 +35,8 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <NoWarn>CS1998</NoWarn>
+    <WarningsAsErrors>CS4014</WarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -50,12 +55,14 @@
     <Compile Include="Fields\EnumType.cs" />
     <Compile Include="Fields\FormIDType.cs" />
     <Compile Include="Fields\MutagenFieldData.cs" />
+    <Compile Include="Fields\ZeroBufferType.cs" />
     <Compile Include="Modules\Binary\BinaryTranslationModule.cs" />
     <Compile Include="Modules\Binary\ByteArrayTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\EnumBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\FilePathBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\ListBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\LoquiBinaryTranslationGeneration.cs" />
+    <Compile Include="Modules\Binary\ZeroBufferBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\PrimitiveBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\BinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\StringBinaryTranslationGeneration.cs" />

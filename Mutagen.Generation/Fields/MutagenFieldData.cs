@@ -18,12 +18,7 @@ namespace Mutagen.Generation
         public bool IncludeInLength;
         public bool Vestigial;
         public bool CustomBinary;
-
-        public void CopyOver(MutagenFieldData other)
-        {
-            this.RecordType = other.RecordType;
-            this.TriggeringRecordType = other.TriggeringRecordType;
-            this.TriggeringRecordAccessor = other.TriggeringRecordAccessor;
-        }
+        public List<RecordType> SubTypes = new List<RecordType>();
+        public IEnumerable<RecordType> TriggeringRecordTypes => TriggeringRecordType.Value.And(SubTypes);
     }
 }

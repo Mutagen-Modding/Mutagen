@@ -53,6 +53,7 @@ namespace Mutagen.Generation
             this._typeGenerations[typeof(FormIDType)] = new PrimitiveBinaryTranslationGeneration<FormID>();
             this._typeGenerations[typeof(ListType)] = new ListBinaryTranslationGeneration();
             this._typeGenerations[typeof(ByteArrayType)] = new ByteArrayTranslationGeneration();
+            this._typeGenerations[typeof(ZeroBufferType)] = new ZeroBufferBinaryTranslationGeneration();
             this.MainAPI = new TranslationModuleAPI(
                 writerAPI: new MethodAPI("MutagenWriter writer"),
                 readerAPI: new MethodAPI("MutagenFrame frame"));
@@ -133,7 +134,7 @@ namespace Mutagen.Generation
                 })
                 {
                     args.Add($"{nameof(MutagenFrame)} frame");
-                    args.Add($"{obj.Getter_InterfaceStr} item");
+                    args.Add($"{obj.InterfaceStr} item");
                     args.Add("bool doMasks");
                     if (field.HasIndex)
                     {
@@ -452,7 +453,10 @@ namespace Mutagen.Generation
                                     }
                                 }
                                 GenerateFillSnippet(obj, fg, field.Field, generator);
-                                fg.AppendLine("break;");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLine("break;");
+                                }
                             }
                         }
                         fg.AppendLine($"default:");

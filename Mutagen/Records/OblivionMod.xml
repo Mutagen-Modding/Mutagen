@@ -40,6 +40,11 @@
           <GenericSpecification Definition="Race" TypeToSpecify="T" />
         </Direct>
       </Ref>
+      <Ref name="Sounds">
+        <Direct refName="Group" >
+          <GenericSpecification Definition="Sound" TypeToSpecify="T" />
+        </Direct>
+      </Ref>
     </Fields>
   </Object>
 </Loqui>

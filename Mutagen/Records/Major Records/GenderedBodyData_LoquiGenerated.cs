@@ -781,7 +781,7 @@ namespace Mutagen
                         fieldIndex: (int)GenderedBodyData_FieldIndex.Male,
                         errorMask: errorMask);
                     item._Male.SetIfSucceeded(MaletryGet);
-                break;
+                    break;
                 case "FNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH + contentLength; // Skip marker
                     var FemaletryGet = LoquiBinaryTranslation<BodyData, BodyData_ErrorMask>.Instance.Parse(
@@ -790,7 +790,7 @@ namespace Mutagen
                         fieldIndex: (int)GenderedBodyData_FieldIndex.Female,
                         errorMask: errorMask);
                     item._Female.SetIfSucceeded(FemaletryGet);
-                break;
+                    break;
                 default:
                     return false;
             }

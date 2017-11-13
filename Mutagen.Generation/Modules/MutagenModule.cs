@@ -21,8 +21,8 @@ namespace Mutagen.Generation
         public override void GenerateInRegistration(ObjectGeneration obj, FileGeneration fg)
         {
             GenerateKnownRecordTypes(obj, fg);
-            fg.AppendLine($"public const int NumStructFields = {obj.Fields.Where((f) => f.GetFieldData().TriggeringRecordAccessor == null).Count()};");
-            fg.AppendLine($"public const int NumTypedFields = {obj.Fields.Where((f) => f.GetFieldData().TriggeringRecordAccessor != null).Count()};");
+            fg.AppendLine($"public const int NumStructFields = {obj.Fields.Where((f) => f.GenerateTypicalItems && f.GetFieldData().TriggeringRecordAccessor == null).Count()};");
+            fg.AppendLine($"public const int NumTypedFields = {obj.Fields.Where((f) => f.GenerateTypicalItems && f.GetFieldData().TriggeringRecordAccessor != null).Count()};");
         }
 
         private IEnumerable<string> GetGenerics(ObjectGeneration obj, FileGeneration fg)
@@ -75,6 +75,10 @@ namespace Mutagen.Generation
                 if (data.MarkerType.HasValue)
                 {
                     recordTypes.Add(data.MarkerType.Value);
+                }
+                foreach (var subType in data.SubTypes)
+                {
+                    recordTypes.Add(subType);
                 }
                 if (field is ContainerType contType)
                 {
@@ -212,6 +216,22 @@ namespace Mutagen.Generation
                     throw new ArgumentException($"{obj.Name} cannot have two fields that have the same trigger {mutaData.TriggeringRecordAccessor}: {existingField.Name} AND {field.Name}");
                 }
                 triggerMapping[mutaData.TriggeringRecordAccessor] = field;
+            }
+        }
+
+        public override async Task Resolve(ObjectGeneration obj)
+        {
+            foreach (var field in obj.Fields)
+            {
+                if (!(field is LoquiType loqui)) continue;
+                if (loqui.TargetObjectGeneration == null) continue;
+                var inheritingObjs = await loqui.TargetObjectGeneration.InheritingObjects();
+                var data = loqui.GetFieldData();
+                foreach (var subObj in inheritingObjs)
+                {
+                    if (!subObj.TryGetTriggeringRecordType(out var subRec)) continue;
+                    data.SubTypes.Add(subRec);
+                }
             }
         }
 

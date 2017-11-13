@@ -489,7 +489,7 @@ namespace Mutagen
 
         static partial void FillBinary_TypeChar_Custom(
             MutagenFrame frame,
-            IGlobalGetter item,
+            IGlobal item,
             bool doMasks,
             int fieldIndex,
             Func<Global_ErrorMask> errorMask);
@@ -537,7 +537,7 @@ namespace Mutagen
                             fieldIndex: (int)Global_FieldIndex.TypeChar,
                             errorMask: errorMask);
                     }
-                break;
+                    break;
                 case "FLTV":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var RawFloattryGet = Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
@@ -546,7 +546,7 @@ namespace Mutagen
                         fieldIndex: (int)Global_FieldIndex.RawFloat,
                         errorMask: errorMask);
                     item._RawFloat.SetIfSucceeded(RawFloattryGet);
-                break;
+                    break;
                 default:
                     MajorRecord.Fill_Binary_RecordTypes(
                         item: item,

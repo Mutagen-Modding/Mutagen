@@ -820,7 +820,7 @@ namespace Mutagen
                         doMasks: doMasks,
                         errorMask: errorMask);
                     item._Index.SetIfSucceeded(IndextryGet);
-                break;
+                    break;
                 case "MODL":
                     var ModeltryGet = LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         frame: frame.Spawn(snapToFinalPosition: false),
@@ -828,7 +828,7 @@ namespace Mutagen
                         fieldIndex: (int)FacePart_FieldIndex.Model,
                         errorMask: errorMask);
                     item._Model.SetIfSucceeded(ModeltryGet);
-                break;
+                    break;
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var tryGet = Mutagen.Binary.FilePathBinaryTranslation.Instance.Parse(
@@ -837,7 +837,7 @@ namespace Mutagen
                         fieldIndex: (int)FacePart_FieldIndex.Icon,
                         errorMask: errorMask);
                     item._Icon.SetIfSucceeded(tryGet);
-                break;
+                    break;
                 default:
                     return false;
             }

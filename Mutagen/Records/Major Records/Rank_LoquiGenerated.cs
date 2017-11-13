@@ -856,7 +856,7 @@ namespace Mutagen
                         fieldIndex: (int)Rank_FieldIndex.RankNumber,
                         errorMask: errorMask);
                     item._RankNumber.SetIfSucceeded(RankNumbertryGet);
-                break;
+                    break;
                 case "MNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var MaleNametryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
@@ -865,7 +865,7 @@ namespace Mutagen
                         doMasks: doMasks,
                         errorMask: errorMask);
                     item._MaleName.SetIfSucceeded(MaleNametryGet);
-                break;
+                    break;
                 case "FNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var FemaleNametryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
@@ -874,7 +874,7 @@ namespace Mutagen
                         doMasks: doMasks,
                         errorMask: errorMask);
                     item._FemaleName.SetIfSucceeded(FemaleNametryGet);
-                break;
+                    break;
                 case "INAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var tryGet = Mutagen.Binary.FilePathBinaryTranslation.Instance.Parse(
@@ -883,7 +883,7 @@ namespace Mutagen
                         fieldIndex: (int)Rank_FieldIndex.Insignia,
                         errorMask: errorMask);
                     item._Insignia.SetIfSucceeded(tryGet);
-                break;
+                    break;
                 default:
                     return false;
             }

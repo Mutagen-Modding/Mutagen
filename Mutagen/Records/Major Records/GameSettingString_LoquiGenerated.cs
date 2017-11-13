@@ -806,7 +806,7 @@ namespace Mutagen
                         doMasks: doMasks,
                         errorMask: errorMask);
                     item._Data.SetIfSucceeded(DatatryGet);
-                break;
+                    break;
                 default:
                     GameSetting.Fill_Binary_RecordTypes(
                         item: item,

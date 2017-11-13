@@ -15,7 +15,7 @@ namespace Mutagen
     {
         static partial void FillBinary_ContainedRecordType_Custom<T_ErrMask>(
             MutagenFrame frame, 
-            IGroupGetter<T> item,
+            IGroup<T> item,
             bool doMasks, 
             int fieldIndex,
             Func<Group_ErrorMask<T_ErrMask>> errorMask) 

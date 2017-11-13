@@ -1349,7 +1349,7 @@ namespace Mutagen
                         doMasks: doMasks,
                         errorMask: errorMask);
                     item._Description.SetIfSucceeded(DescriptiontryGet);
-                break;
+                    break;
                 case "SPLO":
                     var SpellstryGet = Mutagen.Binary.ListBinaryTranslation<FormID, Exception>.Instance.ParseRepeatedItem(
                         frame: frame,
@@ -1368,7 +1368,7 @@ namespace Mutagen
                         }
                         );
                     item._Spells.SetIfSucceeded(SpellstryGet);
-                break;
+                    break;
                 case "XNAM":
                     var RelationstryGet = Mutagen.Binary.ListBinaryTranslation<Relation, MaskItem<Exception, Relation_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
@@ -1386,7 +1386,7 @@ namespace Mutagen
                         }
                         );
                     item._Relations.SetIfSucceeded(RelationstryGet);
-                break;
+                    break;
                 case "DATA":
                     var DatatryGet = LoquiBinaryTranslation<RaceData, RaceData_ErrorMask>.Instance.Parse(
                         frame: frame,
@@ -1394,7 +1394,7 @@ namespace Mutagen
                         fieldIndex: (int)Race_FieldIndex.Data,
                         errorMask: errorMask);
                     item._Data.SetIfSucceeded(DatatryGet);
-                break;
+                    break;
                 case "VNAM":
                     var VoicestryGet = LoquiBinaryTranslation<RaceVoices, RaceVoices_ErrorMask>.Instance.Parse(
                         frame: frame,
@@ -1402,7 +1402,7 @@ namespace Mutagen
                         fieldIndex: (int)Race_FieldIndex.Voices,
                         errorMask: errorMask);
                     item._Voices.SetIfSucceeded(VoicestryGet);
-                break;
+                    break;
                 case "DNAM":
                     var DefaultHairtryGet = LoquiBinaryTranslation<RaceHair, RaceHair_ErrorMask>.Instance.Parse(
                         frame: frame,
@@ -1410,7 +1410,7 @@ namespace Mutagen
                         fieldIndex: (int)Race_FieldIndex.DefaultHair,
                         errorMask: errorMask);
                     item._DefaultHair.SetIfSucceeded(DefaultHairtryGet);
-                break;
+                    break;
                 case "CNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var DefaultHairColortryGet = Mutagen.Binary.ByteBinaryTranslation.Instance.Parse(
@@ -1419,7 +1419,7 @@ namespace Mutagen
                         fieldIndex: (int)Race_FieldIndex.DefaultHairColor,
                         errorMask: errorMask);
                     item._DefaultHairColor.SetIfSucceeded(DefaultHairColortryGet);
-                break;
+                    break;
                 case "PNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var FaceGenMainClamptryGet = Mutagen.Binary.Int32BinaryTranslation.Instance.Parse(
@@ -1428,7 +1428,7 @@ namespace Mutagen
                         fieldIndex: (int)Race_FieldIndex.FaceGenMainClamp,
                         errorMask: errorMask);
                     item._FaceGenMainClamp.SetIfSucceeded(FaceGenMainClamptryGet);
-                break;
+                    break;
                 case "UNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var FaceGenFaceClamptryGet = Mutagen.Binary.Int32BinaryTranslation.Instance.Parse(
@@ -1437,7 +1437,7 @@ namespace Mutagen
                         fieldIndex: (int)Race_FieldIndex.FaceGenFaceClamp,
                         errorMask: errorMask);
                     item._FaceGenFaceClamp.SetIfSucceeded(FaceGenFaceClamptryGet);
-                break;
+                    break;
                 case "ATTR":
                     var RaceStatstryGet = LoquiBinaryTranslation<RaceStatsGendered, RaceStatsGendered_ErrorMask>.Instance.Parse(
                         frame: frame,
@@ -1445,7 +1445,7 @@ namespace Mutagen
                         fieldIndex: (int)Race_FieldIndex.RaceStats,
                         errorMask: errorMask);
                     item._RaceStats.SetIfSucceeded(RaceStatstryGet);
-                break;
+                    break;
                 case "NAM0":
                     frame.Position += Constants.SUBRECORD_LENGTH + contentLength; // Skip marker
                     var FaceDatatryGet = Mutagen.Binary.ListBinaryTranslation<FacePart, MaskItem<Exception, FacePart_ErrorMask>>.Instance.ParseRepeatedItem(
@@ -1464,7 +1464,7 @@ namespace Mutagen
                         }
                         );
                     item._FaceData.SetIfSucceeded(FaceDatatryGet);
-                break;
+                    break;
                 case "NAM1":
                     frame.Position += Constants.SUBRECORD_LENGTH + contentLength; // Skip marker
                     var BodyDatatryGet = LoquiBinaryTranslation<GenderedBodyData, GenderedBodyData_ErrorMask>.Instance.Parse(
@@ -1473,7 +1473,7 @@ namespace Mutagen
                         fieldIndex: (int)Race_FieldIndex.BodyData,
                         errorMask: errorMask);
                     item._BodyData.SetIfSucceeded(BodyDatatryGet);
-                break;
+                    break;
                 case "HNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var HairstryGet = Mutagen.Binary.ListBinaryTranslation<FormID, Exception>.Instance.ParseRepeatedItem(
@@ -1491,7 +1491,7 @@ namespace Mutagen
                         }
                         );
                     item._Hairs.SetIfSucceeded(HairstryGet);
-                break;
+                    break;
                 case "ENAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var EyestryGet = Mutagen.Binary.ListBinaryTranslation<FormID, Exception>.Instance.ParseRepeatedItem(
@@ -1509,7 +1509,7 @@ namespace Mutagen
                         }
                         );
                     item._Eyes.SetIfSucceeded(EyestryGet);
-                break;
+                    break;
                 case "FGGS":
                     var FaceGenDatatryGet = LoquiBinaryTranslation<FaceGenData, FaceGenData_ErrorMask>.Instance.Parse(
                         frame: frame.Spawn(snapToFinalPosition: false),
@@ -1517,7 +1517,7 @@ namespace Mutagen
                         fieldIndex: (int)Race_FieldIndex.FaceGenData,
                         errorMask: errorMask);
                     item._FaceGenData.SetIfSucceeded(FaceGenDatatryGet);
-                break;
+                    break;
                 case "SNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var UnknowntryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
@@ -1526,7 +1526,7 @@ namespace Mutagen
                         doMasks: doMasks,
                         errorMask: errorMask);
                     item._Unknown.SetIfSucceeded(UnknowntryGet);
-                break;
+                    break;
                 default:
                     NamedMajorRecord.Fill_Binary_RecordTypes(
                         item: item,

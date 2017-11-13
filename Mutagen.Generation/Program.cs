@@ -11,7 +11,7 @@ namespace Mutagen.Generation
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             LoquiGenerator gen = new LoquiGenerator(
                 new DirectoryInfo("../../../Mutagen"))
@@ -26,6 +26,7 @@ namespace Mutagen.Generation
             gen.GenerationModules.Add(new MutagenModule());
             gen.Add(new BinaryTranslationModule(gen));
             gen.AddTypeAssociation<FormIDType>("FormID");
+            gen.AddTypeAssociation<ZeroBufferType>("ZeroBuffer");
             gen.ReplaceTypeAssociation<Loqui.Generation.EnumType, Mutagen.Generation.EnumType>();
 
             // Add Projects
@@ -37,7 +38,7 @@ namespace Mutagen.Generation
                     gen,
                     new ProtocolKey("Mutagen")));
 
-            gen.Generate();
+            await gen.Generate();
         }
     }
 }

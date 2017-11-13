@@ -24,64 +24,53 @@ using Mutagen.Binary;
 namespace Mutagen
 {
     #region Class
-    public partial class Hair : NamedMajorRecord, IHair, ILoquiObjectSetter, IEquatable<Hair>
+    public partial class Sound : MajorRecord, ISound, ILoquiObjectSetter, IEquatable<Sound>
     {
-        ILoquiRegistration ILoquiObject.Registration => Hair_Registration.Instance;
-        public new static Hair_Registration Registration => Hair_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Sound_Registration.Instance;
+        public new static Sound_Registration Registration => Sound_Registration.Instance;
 
         #region Ctor
-        public Hair()
+        public Sound()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Model
-        private readonly INotifyingItem<Model> _Model = new NotifyingItem<Model>();
-        public INotifyingItem<Model> Model_Property => this._Model;
-        Model IHairGetter.Model => this.Model;
-        public Model Model { get => _Model.Item; set => _Model.Item = value; }
-        INotifyingItem<Model> IHair.Model_Property => this.Model_Property;
-        INotifyingItemGetter<Model> IHairGetter.Model_Property => this.Model_Property;
-        #endregion
-        #region Icon
-        protected readonly INotifyingItem<FilePath> _Icon = NotifyingItem.Factory<FilePath>(markAsSet: false);
-        public INotifyingItem<FilePath> Icon_Property => _Icon;
-        public FilePath Icon
+        #region File
+        protected readonly INotifyingItem<FilePath> _File = NotifyingItem.Factory<FilePath>(markAsSet: false);
+        public INotifyingItem<FilePath> File_Property => _File;
+        public FilePath File
         {
-            get => this._Icon.Item;
-            set => this._Icon.Set(value);
+            get => this._File.Item;
+            set => this._File.Set(value);
         }
-        INotifyingItem<FilePath> IHair.Icon_Property => this.Icon_Property;
-        INotifyingItemGetter<FilePath> IHairGetter.Icon_Property => this.Icon_Property;
+        INotifyingItem<FilePath> ISound.File_Property => this.File_Property;
+        INotifyingItemGetter<FilePath> ISoundGetter.File_Property => this.File_Property;
         #endregion
-        #region Flags
-        protected readonly INotifyingItem<Hair.HairFlag> _Flags = NotifyingItem.Factory<Hair.HairFlag>(markAsSet: false);
-        public INotifyingItem<Hair.HairFlag> Flags_Property => _Flags;
-        public Hair.HairFlag Flags
-        {
-            get => this._Flags.Item;
-            set => this._Flags.Set(value);
-        }
-        INotifyingItem<Hair.HairFlag> IHair.Flags_Property => this.Flags_Property;
-        INotifyingItemGetter<Hair.HairFlag> IHairGetter.Flags_Property => this.Flags_Property;
+        #region Data
+        private readonly INotifyingItem<SoundData> _Data = new NotifyingItem<SoundData>();
+        public INotifyingItem<SoundData> Data_Property => this._Data;
+        SoundData ISoundGetter.Data => this.Data;
+        public SoundData Data { get => _Data.Item; set => _Data.Item = value; }
+        INotifyingItem<SoundData> ISound.Data_Property => this.Data_Property;
+        INotifyingItemGetter<SoundData> ISoundGetter.Data_Property => this.Data_Property;
         #endregion
 
         #region Loqui Getter Interface
 
-        protected override object GetNthObject(ushort index) => HairCommon.GetNthObject(index, this);
+        protected override object GetNthObject(ushort index) => SoundCommon.GetNthObject(index, this);
 
-        protected override bool GetNthObjectHasBeenSet(ushort index) => HairCommon.GetNthObjectHasBeenSet(index, this);
+        protected override bool GetNthObjectHasBeenSet(ushort index) => SoundCommon.GetNthObjectHasBeenSet(index, this);
 
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => HairCommon.UnsetNthObject(index, this, cmds);
+        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => SoundCommon.UnsetNthObject(index, this, cmds);
 
         #endregion
 
         #region Loqui Interface
         protected override void SetNthObjectHasBeenSet(ushort index, bool on)
         {
-            HairCommon.SetNthObjectHasBeenSet(index, on, this);
+            SoundCommon.SetNthObjectHasBeenSet(index, on, this);
         }
 
         #endregion
@@ -89,54 +78,49 @@ namespace Mutagen
         #region To String
         public override string ToString()
         {
-            return HairCommon.ToString(this, printMask: null);
+            return SoundCommon.ToString(this, printMask: null);
         }
 
         public string ToString(
             string name = null,
-            Hair_Mask<bool> printMask = null)
+            Sound_Mask<bool> printMask = null)
         {
-            return HairCommon.ToString(this, name: name, printMask: printMask);
+            return SoundCommon.ToString(this, name: name, printMask: printMask);
         }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            HairCommon.ToString(this, fg, name: name, printMask: null);
+            SoundCommon.ToString(this, fg, name: name, printMask: null);
         }
 
         #endregion
 
-        public new Hair_Mask<bool> GetHasBeenSetMask()
+        public new Sound_Mask<bool> GetHasBeenSetMask()
         {
-            return HairCommon.GetHasBeenSetMask(this);
+            return SoundCommon.GetHasBeenSetMask(this);
         }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is Hair rhs)) return false;
+            if (!(obj is Sound rhs)) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(Hair rhs)
+        public bool Equals(Sound rhs)
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (Model_Property.HasBeenSet != rhs.Model_Property.HasBeenSet) return false;
-            if (Model_Property.HasBeenSet)
+            if (File_Property.HasBeenSet != rhs.File_Property.HasBeenSet) return false;
+            if (File_Property.HasBeenSet)
             {
-                if (!object.Equals(Model, rhs.Model)) return false;
+                if (!object.Equals(File, rhs.File)) return false;
             }
-            if (Icon_Property.HasBeenSet != rhs.Icon_Property.HasBeenSet) return false;
-            if (Icon_Property.HasBeenSet)
+            if (Data_Property.HasBeenSet != rhs.Data_Property.HasBeenSet) return false;
+            if (Data_Property.HasBeenSet)
             {
-                if (!object.Equals(Icon, rhs.Icon)) return false;
-            }
-            if (Flags_Property.HasBeenSet != rhs.Flags_Property.HasBeenSet) return false;
-            if (Flags_Property.HasBeenSet)
-            {
-                if (Flags != rhs.Flags) return false;
+                if (!object.Equals(Data, rhs.Data)) return false;
             }
             return true;
         }
@@ -144,17 +128,13 @@ namespace Mutagen
         public override int GetHashCode()
         {
             int ret = 0;
-            if (Model_Property.HasBeenSet)
+            if (File_Property.HasBeenSet)
             {
-                ret = HashHelper.GetHashCode(Model).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(File).CombineHashCode(ret);
             }
-            if (Icon_Property.HasBeenSet)
+            if (Data_Property.HasBeenSet)
             {
-                ret = HashHelper.GetHashCode(Icon).CombineHashCode(ret);
-            }
-            if (Flags_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(Data).CombineHashCode(ret);
             }
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
@@ -166,7 +146,7 @@ namespace Mutagen
         #region XML Translation
         #region XML Create
         [DebuggerStepThrough]
-        public new static Hair Create_XML(XElement root)
+        public new static Sound Create_XML(XElement root)
         {
             return Create_XML(
                 root: root,
@@ -175,9 +155,9 @@ namespace Mutagen
         }
 
         [DebuggerStepThrough]
-        public static Hair Create_XML(
+        public static Sound Create_XML(
             XElement root,
-            out Hair_ErrorMask errorMask)
+            out Sound_ErrorMask errorMask)
         {
             return Create_XML(
                 root: root,
@@ -186,10 +166,10 @@ namespace Mutagen
         }
 
         [DebuggerStepThrough]
-        public static Hair Create_XML(
+        public static Sound Create_XML(
             XElement root,
             bool doMasks,
-            out Hair_ErrorMask errorMask)
+            out Sound_ErrorMask errorMask)
         {
             var ret = Create_XML(
                 root: root,
@@ -199,27 +179,27 @@ namespace Mutagen
         }
 
         [DebuggerStepThrough]
-        public static (Hair Object, Hair_ErrorMask ErrorMask) Create_XML(
+        public static (Sound Object, Sound_ErrorMask ErrorMask) Create_XML(
             XElement root,
             bool doMasks)
         {
-            Hair_ErrorMask errMaskRet = null;
+            Sound_ErrorMask errMaskRet = null;
             var ret = Create_XML_Internal(
                 root: root,
                 doMasks: doMasks,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Hair_ErrorMask()) : default(Func<Hair_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Sound_ErrorMask()) : default(Func<Sound_ErrorMask>));
             return (ret, errMaskRet);
         }
 
-        public static Hair Create_XML(string path)
+        public static Sound Create_XML(string path)
         {
             var root = XDocument.Load(path).Root;
             return Create_XML(root: root);
         }
 
-        public static Hair Create_XML(
+        public static Sound Create_XML(
             string path,
-            out Hair_ErrorMask errorMask)
+            out Sound_ErrorMask errorMask)
         {
             var root = XDocument.Load(path).Root;
             return Create_XML(
@@ -227,15 +207,15 @@ namespace Mutagen
                 errorMask: out errorMask);
         }
 
-        public static Hair Create_XML(Stream stream)
+        public static Sound Create_XML(Stream stream)
         {
             var root = XDocument.Load(stream).Root;
             return Create_XML(root: root);
         }
 
-        public static Hair Create_XML(
+        public static Sound Create_XML(
             Stream stream,
-            out Hair_ErrorMask errorMask)
+            out Sound_ErrorMask errorMask)
         {
             var root = XDocument.Load(stream).Root;
             return Create_XML(
@@ -250,7 +230,7 @@ namespace Mutagen
             XElement root,
             NotifyingFireParameters? cmds = null)
         {
-            LoquiXmlTranslation<Hair, Hair_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<Sound, Sound_ErrorMask>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
@@ -261,10 +241,10 @@ namespace Mutagen
 
         public virtual void CopyIn_XML(
             XElement root,
-            out Hair_ErrorMask errorMask,
+            out Sound_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
-            LoquiXmlTranslation<Hair, Hair_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<Sound, Sound_ErrorMask>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
@@ -285,7 +265,7 @@ namespace Mutagen
 
         public void CopyIn_XML(
             string path,
-            out Hair_ErrorMask errorMask,
+            out Sound_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             var root = XDocument.Load(path).Root;
@@ -307,7 +287,7 @@ namespace Mutagen
 
         public void CopyIn_XML(
             Stream stream,
-            out Hair_ErrorMask errorMask,
+            out Sound_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             var root = XDocument.Load(stream).Root;
@@ -319,24 +299,12 @@ namespace Mutagen
 
         public override void CopyIn_XML(
             XElement root,
-            out NamedMajorRecord_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
-        {
-            this.CopyIn_XML(
-                root: root,
-                errorMask: out Hair_ErrorMask errMask,
-                cmds: cmds);
-            errorMask = errMask;
-        }
-
-        public override void CopyIn_XML(
-            XElement root,
             out MajorRecord_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             this.CopyIn_XML(
                 root: root,
-                errorMask: out Hair_ErrorMask errMask,
+                errorMask: out Sound_ErrorMask errMask,
                 cmds: cmds);
             errorMask = errMask;
         }
@@ -346,10 +314,10 @@ namespace Mutagen
         #region XML Write
         public virtual void Write_XML(
             XmlWriter writer,
-            out Hair_ErrorMask errorMask,
+            out Sound_ErrorMask errorMask,
             string name = null)
         {
-            errorMask = (Hair_ErrorMask)this.Write_XML_Internal(
+            errorMask = (Sound_ErrorMask)this.Write_XML_Internal(
                 writer: writer,
                 name: name,
                 doMasks: true);
@@ -357,7 +325,7 @@ namespace Mutagen
 
         public virtual void Write_XML(
             string path,
-            out Hair_ErrorMask errorMask,
+            out Sound_ErrorMask errorMask,
             string name = null)
         {
             using (var writer = new XmlTextWriter(path, Encoding.ASCII))
@@ -373,7 +341,7 @@ namespace Mutagen
 
         public virtual void Write_XML(
             Stream stream,
-            out Hair_ErrorMask errorMask,
+            out Sound_ErrorMask errorMask,
             string name = null)
         {
             using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
@@ -430,7 +398,7 @@ namespace Mutagen
             bool doMasks,
             string name = null)
         {
-            HairCommon.Write_XML(
+            SoundCommon.Write_XML(
                 writer: writer,
                 item: this,
                 doMasks: doMasks,
@@ -439,12 +407,12 @@ namespace Mutagen
         }
         #endregion
 
-        private static Hair Create_XML_Internal(
+        private static Sound Create_XML_Internal(
             XElement root,
             bool doMasks,
-            Func<Hair_ErrorMask> errorMask)
+            Func<Sound_ErrorMask> errorMask)
         {
-            var ret = new Hair();
+            var ret = new Sound();
             try
             {
                 foreach (var elem in root.Elements())
@@ -466,62 +434,46 @@ namespace Mutagen
         }
 
         protected static void Fill_XML_Internal(
-            Hair item,
+            Sound item,
             XElement root,
             string name,
             bool doMasks,
-            Func<Hair_ErrorMask> errorMask)
+            Func<Sound_ErrorMask> errorMask)
         {
             switch (name)
             {
-                case "Model":
-                    {
-                        MaskItem<Exception, Model_ErrorMask> subMask;
-                        var tryGet = LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
-                            root: root,
-                            doMasks: doMasks,
-                            mask: out subMask);
-                        item._Model.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            doMasks,
-                            (int)Hair_FieldIndex.Model,
-                            subMask);
-                    }
-                    break;
-                case "Icon":
+                case "File":
                     {
                         Exception subMask;
                         var tryGet = FilePathXmlTranslation.Instance.ParseNonNull(
                             root,
                             doMasks: doMasks,
                             errorMask: out subMask);
-                        item._Icon.SetIfSucceeded(tryGet);
+                        item._File.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
                             doMasks,
-                            (int)Hair_FieldIndex.Icon,
+                            (int)Sound_FieldIndex.File,
                             subMask);
                     }
                     break;
-                case "Flags":
+                case "Data":
                     {
-                        Exception subMask;
-                        var tryGet = EnumXmlTranslation<Hair.HairFlag>.Instance.Parse(
-                            root,
-                            nullable: false,
+                        MaskItem<Exception, SoundData_ErrorMask> subMask;
+                        var tryGet = LoquiXmlTranslation<SoundData, SoundData_ErrorMask>.Instance.Parse(
+                            root: root,
                             doMasks: doMasks,
-                            errorMask: out subMask).Bubble((o) => o.Value);
-                        item._Flags.SetIfSucceeded(tryGet);
+                            mask: out subMask);
+                        item._Data.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
                             doMasks,
-                            (int)Hair_FieldIndex.Flags,
+                            (int)Sound_FieldIndex.Data,
                             subMask);
                     }
                     break;
                 default:
-                    NamedMajorRecord.Fill_XML_Internal(
+                    MajorRecord.Fill_XML_Internal(
                         item: item,
                         root: root,
                         name: name,
@@ -536,7 +488,7 @@ namespace Mutagen
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public new static Hair Create_Binary(MutagenFrame frame)
+        public new static Sound Create_Binary(MutagenFrame frame)
         {
             return Create_Binary(
                 frame: frame,
@@ -545,9 +497,9 @@ namespace Mutagen
         }
 
         [DebuggerStepThrough]
-        public static Hair Create_Binary(
+        public static Sound Create_Binary(
             MutagenFrame frame,
-            out Hair_ErrorMask errorMask)
+            out Sound_ErrorMask errorMask)
         {
             return Create_Binary(
                 frame: frame,
@@ -556,10 +508,10 @@ namespace Mutagen
         }
 
         [DebuggerStepThrough]
-        public static Hair Create_Binary(
+        public static Sound Create_Binary(
             MutagenFrame frame,
             bool doMasks,
-            out Hair_ErrorMask errorMask)
+            out Sound_ErrorMask errorMask)
         {
             var ret = Create_Binary(
                 frame: frame,
@@ -569,19 +521,19 @@ namespace Mutagen
         }
 
         [DebuggerStepThrough]
-        public static (Hair Object, Hair_ErrorMask ErrorMask) Create_Binary(
+        public static (Sound Object, Sound_ErrorMask ErrorMask) Create_Binary(
             MutagenFrame frame,
             bool doMasks)
         {
-            Hair_ErrorMask errMaskRet = null;
+            Sound_ErrorMask errMaskRet = null;
             var ret = Create_Binary_Internal(
                 frame: frame,
                 doMasks: doMasks,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Hair_ErrorMask()) : default(Func<Hair_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Sound_ErrorMask()) : default(Func<Sound_ErrorMask>));
             return (ret, errMaskRet);
         }
 
-        public static Hair Create_Binary(string path)
+        public static Sound Create_Binary(string path)
         {
             using (var reader = new MutagenReader(path))
             {
@@ -590,9 +542,9 @@ namespace Mutagen
             }
         }
 
-        public static Hair Create_Binary(
+        public static Sound Create_Binary(
             string path,
-            out Hair_ErrorMask errorMask)
+            out Sound_ErrorMask errorMask)
         {
             using (var reader = new MutagenReader(path))
             {
@@ -603,7 +555,7 @@ namespace Mutagen
             }
         }
 
-        public static Hair Create_Binary(Stream stream)
+        public static Sound Create_Binary(Stream stream)
         {
             using (var reader = new MutagenReader(stream))
             {
@@ -612,9 +564,9 @@ namespace Mutagen
             }
         }
 
-        public static Hair Create_Binary(
+        public static Sound Create_Binary(
             Stream stream,
-            out Hair_ErrorMask errorMask)
+            out Sound_ErrorMask errorMask)
         {
             using (var reader = new MutagenReader(stream))
             {
@@ -632,7 +584,7 @@ namespace Mutagen
             MutagenFrame frame,
             NotifyingFireParameters? cmds = null)
         {
-            LoquiBinaryTranslation<Hair, Hair_ErrorMask>.Instance.CopyIn(
+            LoquiBinaryTranslation<Sound, Sound_ErrorMask>.Instance.CopyIn(
                 frame: frame,
                 item: this,
                 skipProtected: true,
@@ -643,10 +595,10 @@ namespace Mutagen
 
         public virtual void CopyIn_Binary(
             MutagenFrame frame,
-            out Hair_ErrorMask errorMask,
+            out Sound_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
-            LoquiBinaryTranslation<Hair, Hair_ErrorMask>.Instance.CopyIn(
+            LoquiBinaryTranslation<Sound, Sound_ErrorMask>.Instance.CopyIn(
                 frame: frame,
                 item: this,
                 skipProtected: true,
@@ -670,7 +622,7 @@ namespace Mutagen
 
         public void CopyIn_Binary(
             string path,
-            out Hair_ErrorMask errorMask,
+            out Sound_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             using (var reader = new MutagenReader(path))
@@ -698,7 +650,7 @@ namespace Mutagen
 
         public void CopyIn_Binary(
             Stream stream,
-            out Hair_ErrorMask errorMask,
+            out Sound_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             using (var reader = new MutagenReader(stream))
@@ -713,24 +665,12 @@ namespace Mutagen
 
         public override void CopyIn_Binary(
             MutagenFrame frame,
-            out NamedMajorRecord_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
-        {
-            this.CopyIn_Binary(
-                frame: frame,
-                errorMask: out Hair_ErrorMask errMask,
-                cmds: cmds);
-            errorMask = errMask;
-        }
-
-        public override void CopyIn_Binary(
-            MutagenFrame frame,
             out MajorRecord_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             this.CopyIn_Binary(
                 frame: frame,
-                errorMask: out Hair_ErrorMask errMask,
+                errorMask: out Sound_ErrorMask errMask,
                 cmds: cmds);
             errorMask = errMask;
         }
@@ -740,16 +680,16 @@ namespace Mutagen
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
-            out Hair_ErrorMask errorMask)
+            out Sound_ErrorMask errorMask)
         {
-            errorMask = (Hair_ErrorMask)this.Write_Binary_Internal(
+            errorMask = (Sound_ErrorMask)this.Write_Binary_Internal(
                 writer: writer,
                 doMasks: true);
         }
 
         public virtual void Write_Binary(
             string path,
-            out Hair_ErrorMask errorMask)
+            out Sound_ErrorMask errorMask)
         {
             using (var writer = new MutagenWriter(path))
             {
@@ -761,7 +701,7 @@ namespace Mutagen
 
         public virtual void Write_Binary(
             Stream stream,
-            out Hair_ErrorMask errorMask)
+            out Sound_ErrorMask errorMask)
         {
             using (var writer = new MutagenWriter(stream))
             {
@@ -798,7 +738,7 @@ namespace Mutagen
             MutagenWriter writer,
             bool doMasks)
         {
-            HairCommon.Write_Binary(
+            SoundCommon.Write_Binary(
                 writer: writer,
                 item: this,
                 doMasks: doMasks,
@@ -807,17 +747,17 @@ namespace Mutagen
         }
         #endregion
 
-        private static Hair Create_Binary_Internal(
+        private static Sound Create_Binary_Internal(
             MutagenFrame frame,
             bool doMasks,
-            Func<Hair_ErrorMask> errorMask)
+            Func<Sound_ErrorMask> errorMask)
         {
-            var ret = new Hair();
+            var ret = new Sound();
             try
             {
                 frame = frame.Spawn(HeaderTranslation.ParseRecord(
                     frame,
-                    Hair_Registration.HAIR_HEADER));
+                    Sound_Registration.SOUN_HEADER));
                 using (frame)
                 {
                     Fill_Binary_Structs(
@@ -844,12 +784,12 @@ namespace Mutagen
         }
 
         protected static void Fill_Binary_Structs(
-            Hair item,
+            Sound item,
             MutagenFrame frame,
             bool doMasks,
-            Func<Hair_ErrorMask> errorMask)
+            Func<Sound_ErrorMask> errorMask)
         {
-            NamedMajorRecord.Fill_Binary_Structs(
+            MajorRecord.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
                 doMasks: doMasks,
@@ -857,44 +797,42 @@ namespace Mutagen
         }
 
         protected static bool Fill_Binary_RecordTypes(
-            Hair item,
+            Sound item,
             MutagenFrame frame,
             bool doMasks,
-            Func<Hair_ErrorMask> errorMask)
+            Func<Sound_ErrorMask> errorMask)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
                 frame: frame,
                 contentLength: out var contentLength);
             switch (nextRecordType.Type)
             {
-                case "MODL":
-                    var ModeltryGet = LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
-                        frame: frame.Spawn(snapToFinalPosition: false),
-                        doMasks: doMasks,
-                        fieldIndex: (int)Hair_FieldIndex.Model,
-                        errorMask: errorMask);
-                    item._Model.SetIfSucceeded(ModeltryGet);
-                    break;
-                case "ICON":
+                case "FNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var tryGet = Mutagen.Binary.FilePathBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         doMasks: doMasks,
-                        fieldIndex: (int)Hair_FieldIndex.Icon,
+                        fieldIndex: (int)Sound_FieldIndex.File,
                         errorMask: errorMask);
-                    item._Icon.SetIfSucceeded(tryGet);
+                    item._File.SetIfSucceeded(tryGet);
                     break;
-                case "DATA":
-                    frame.Position += Constants.SUBRECORD_LENGTH;
-                    var FlagstryGet = Mutagen.Binary.EnumBinaryTranslation<Hair.HairFlag>.Instance.Parse(
-                        frame.Spawn(contentLength),
-                        fieldIndex: (int)Hair_FieldIndex.Flags,
+                case "SNDD":
+                    var DatatryGet = LoquiBinaryTranslation<SoundData, SoundData_ErrorMask>.Instance.Parse(
+                        frame: frame,
                         doMasks: doMasks,
+                        fieldIndex: (int)Sound_FieldIndex.Data,
                         errorMask: errorMask);
-                    item._Flags.SetIfSucceeded(FlagstryGet);
+                    item._Data.SetIfSucceeded(DatatryGet);
+                    break;
+                case "SNDX":
+                    item._Data.SetIfSucceeded(LoquiBinaryTranslation<SoundDataExtended, SoundDataExtended_ErrorMask>.Instance.Parse(
+                        frame: frame,
+                        doMasks: doMasks,
+                        fieldIndex: (int)Sound_FieldIndex.Data,
+                        errorMask: errorMask));
                     break;
                 default:
-                    NamedMajorRecord.Fill_Binary_RecordTypes(
+                    MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
                         doMasks: doMasks,
@@ -906,29 +844,29 @@ namespace Mutagen
 
         #endregion
 
-        public Hair Copy(
-            Hair_CopyMask copyMask = null,
-            IHairGetter def = null)
+        public Sound Copy(
+            Sound_CopyMask copyMask = null,
+            ISoundGetter def = null)
         {
-            return Hair.Copy(
+            return Sound.Copy(
                 this,
                 copyMask: copyMask,
                 def: def);
         }
 
-        public static Hair Copy(
-            IHair item,
-            Hair_CopyMask copyMask = null,
-            IHairGetter def = null)
+        public static Sound Copy(
+            ISound item,
+            Sound_CopyMask copyMask = null,
+            ISoundGetter def = null)
         {
-            Hair ret;
-            if (item.GetType().Equals(typeof(Hair)))
+            Sound ret;
+            if (item.GetType().Equals(typeof(Sound)))
             {
-                ret = new Hair();
+                ret = new Sound();
             }
             else
             {
-                ret = (Hair)Activator.CreateInstance(item.GetType());
+                ret = (Sound)Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom(
                 item,
@@ -939,14 +877,14 @@ namespace Mutagen
 
         public static CopyType CopyGeneric<CopyType>(
             CopyType item,
-            Hair_CopyMask copyMask = null,
-            IHairGetter def = null)
-            where CopyType : class, IHair
+            Sound_CopyMask copyMask = null,
+            ISoundGetter def = null)
+            where CopyType : class, ISound
         {
             CopyType ret;
-            if (item.GetType().Equals(typeof(Hair)))
+            if (item.GetType().Equals(typeof(Sound)))
             {
-                ret = new Hair() as CopyType;
+                ret = new Sound() as CopyType;
             }
             else
             {
@@ -962,12 +900,12 @@ namespace Mutagen
             return ret;
         }
 
-        public static Hair Copy_ToLoqui(
-            IHairGetter item,
-            Hair_CopyMask copyMask = null,
-            IHairGetter def = null)
+        public static Sound Copy_ToLoqui(
+            ISoundGetter item,
+            Sound_CopyMask copyMask = null,
+            ISoundGetter def = null)
         {
-            var ret = new Hair();
+            var ret = new Sound();
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
@@ -977,22 +915,17 @@ namespace Mutagen
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds = null)
         {
-            Hair_FieldIndex enu = (Hair_FieldIndex)index;
+            Sound_FieldIndex enu = (Sound_FieldIndex)index;
             switch (enu)
             {
-                case Hair_FieldIndex.Model:
-                    this._Model.Set(
-                        (Model)obj,
-                        cmds);
-                    break;
-                case Hair_FieldIndex.Icon:
-                    this._Icon.Set(
+                case Sound_FieldIndex.File:
+                    this._File.Set(
                         (FilePath)obj,
                         cmds);
                     break;
-                case Hair_FieldIndex.Flags:
-                    this._Flags.Set(
-                        (Hair.HairFlag)obj,
+                case Sound_FieldIndex.Data:
+                    this._Data.Set(
+                        (SoundData)obj,
                         cmds);
                     break;
                 default:
@@ -1004,48 +937,43 @@ namespace Mutagen
         public override void Clear(NotifyingUnsetParameters? cmds = null)
         {
             CallClearPartial_Internal(cmds);
-            HairCommon.Clear(this, cmds);
+            SoundCommon.Clear(this, cmds);
         }
 
 
-        public new static Hair Create(IEnumerable<KeyValuePair<ushort, object>> fields)
+        public new static Sound Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
-            var ret = new Hair();
+            var ret = new Sound();
             foreach (var pair in fields)
             {
-                CopyInInternal_Hair(ret, pair);
+                CopyInInternal_Sound(ret, pair);
             }
             return ret;
         }
 
-        protected new static void CopyInInternal_Hair(Hair obj, KeyValuePair<ushort, object> pair)
+        protected new static void CopyInInternal_Sound(Sound obj, KeyValuePair<ushort, object> pair)
         {
-            if (!EnumExt.TryParse(pair.Key, out Hair_FieldIndex enu))
+            if (!EnumExt.TryParse(pair.Key, out Sound_FieldIndex enu))
             {
-                CopyInInternal_NamedMajorRecord(obj, pair);
+                CopyInInternal_MajorRecord(obj, pair);
             }
             switch (enu)
             {
-                case Hair_FieldIndex.Model:
-                    obj._Model.Set(
-                        (Model)pair.Value,
-                        null);
-                    break;
-                case Hair_FieldIndex.Icon:
-                    obj._Icon.Set(
+                case Sound_FieldIndex.File:
+                    obj._File.Set(
                         (FilePath)pair.Value,
                         null);
                     break;
-                case Hair_FieldIndex.Flags:
-                    obj._Flags.Set(
-                        (Hair.HairFlag)pair.Value,
+                case Sound_FieldIndex.Data:
+                    obj._Data.Set(
+                        (SoundData)pair.Value,
                         null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Hair obj)
+        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Sound obj)
         {
             ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
         }
@@ -1054,34 +982,26 @@ namespace Mutagen
     #endregion
 
     #region Interface
-    public interface IHair : IHairGetter, INamedMajorRecord, ILoquiClass<IHair, IHairGetter>, ILoquiClass<Hair, IHairGetter>
+    public interface ISound : ISoundGetter, IMajorRecord, ILoquiClass<ISound, ISoundGetter>, ILoquiClass<Sound, ISoundGetter>
     {
-        new Model Model { get; set; }
-        new INotifyingItem<Model> Model_Property { get; }
+        new FilePath File { get; set; }
+        new INotifyingItem<FilePath> File_Property { get; }
 
-        new FilePath Icon { get; set; }
-        new INotifyingItem<FilePath> Icon_Property { get; }
-
-        new Hair.HairFlag Flags { get; set; }
-        new INotifyingItem<Hair.HairFlag> Flags_Property { get; }
+        new SoundData Data { get; set; }
+        new INotifyingItem<SoundData> Data_Property { get; }
 
     }
 
-    public interface IHairGetter : INamedMajorRecordGetter
+    public interface ISoundGetter : IMajorRecordGetter
     {
-        #region Model
-        Model Model { get; }
-        INotifyingItemGetter<Model> Model_Property { get; }
+        #region File
+        FilePath File { get; }
+        INotifyingItemGetter<FilePath> File_Property { get; }
 
         #endregion
-        #region Icon
-        FilePath Icon { get; }
-        INotifyingItemGetter<FilePath> Icon_Property { get; }
-
-        #endregion
-        #region Flags
-        Hair.HairFlag Flags { get; }
-        INotifyingItemGetter<Hair.HairFlag> Flags_Property { get; }
+        #region Data
+        SoundData Data { get; }
+        INotifyingItemGetter<SoundData> Data_Property { get; }
 
         #endregion
 
@@ -1094,45 +1014,44 @@ namespace Mutagen
 namespace Mutagen.Internals
 {
     #region Field Index
-    public enum Hair_FieldIndex
+    public enum Sound_FieldIndex
     {
-        Model = 6,
-        Icon = 7,
-        Flags = 8,
+        File = 5,
+        Data = 6,
     }
     #endregion
 
     #region Registration
-    public class Hair_Registration : ILoquiRegistration
+    public class Sound_Registration : ILoquiRegistration
     {
-        public static readonly Hair_Registration Instance = new Hair_Registration();
+        public static readonly Sound_Registration Instance = new Sound_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Mutagen.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Mutagen.ProtocolKey,
-            msgID: 21,
+            msgID: 39,
             version: 0);
 
-        public const string GUID = "c1955ace-52b8-40df-8356-8c42d9dc37eb";
+        public const string GUID = "449f0e34-9512-4a5f-a83f-7e3dbb0cee42";
 
-        public const ushort FieldCount = 3;
+        public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(Hair_Mask<>);
+        public static readonly Type MaskType = typeof(Sound_Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Hair_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Sound_ErrorMask);
 
-        public static readonly Type ClassType = typeof(Hair);
+        public static readonly Type ClassType = typeof(Sound);
 
-        public static readonly Type GetterType = typeof(IHairGetter);
+        public static readonly Type GetterType = typeof(ISoundGetter);
 
-        public static readonly Type SetterType = typeof(IHair);
+        public static readonly Type SetterType = typeof(ISound);
 
-        public static readonly Type CommonType = typeof(HairCommon);
+        public static readonly Type CommonType = typeof(SoundCommon);
 
-        public const string FullName = "Mutagen.Hair";
+        public const string FullName = "Mutagen.Sound";
 
-        public const string Name = "Hair";
+        public const string Name = "Sound";
 
         public const string Namespace = "Mutagen";
 
@@ -1144,12 +1063,10 @@ namespace Mutagen.Internals
         {
             switch (str.Upper)
             {
-                case "MODEL":
-                    return (ushort)Hair_FieldIndex.Model;
-                case "ICON":
-                    return (ushort)Hair_FieldIndex.Icon;
-                case "FLAGS":
-                    return (ushort)Hair_FieldIndex.Flags;
+                case "FILE":
+                    return (ushort)Sound_FieldIndex.File;
+                case "DATA":
+                    return (ushort)Sound_FieldIndex.Data;
                 default:
                     return null;
             }
@@ -1157,114 +1074,105 @@ namespace Mutagen.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            Hair_FieldIndex enu = (Hair_FieldIndex)index;
+            Sound_FieldIndex enu = (Sound_FieldIndex)index;
             switch (enu)
             {
-                case Hair_FieldIndex.Model:
-                case Hair_FieldIndex.Icon:
-                case Hair_FieldIndex.Flags:
+                case Sound_FieldIndex.File:
+                case Sound_FieldIndex.Data:
                     return false;
                 default:
-                    return NamedMajorRecord_Registration.GetNthIsEnumerable(index);
+                    return MajorRecord_Registration.GetNthIsEnumerable(index);
             }
         }
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            Hair_FieldIndex enu = (Hair_FieldIndex)index;
+            Sound_FieldIndex enu = (Sound_FieldIndex)index;
             switch (enu)
             {
-                case Hair_FieldIndex.Model:
+                case Sound_FieldIndex.Data:
                     return true;
-                case Hair_FieldIndex.Icon:
-                case Hair_FieldIndex.Flags:
+                case Sound_FieldIndex.File:
                     return false;
                 default:
-                    return NamedMajorRecord_Registration.GetNthIsLoqui(index);
+                    return MajorRecord_Registration.GetNthIsLoqui(index);
             }
         }
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            Hair_FieldIndex enu = (Hair_FieldIndex)index;
+            Sound_FieldIndex enu = (Sound_FieldIndex)index;
             switch (enu)
             {
-                case Hair_FieldIndex.Model:
-                case Hair_FieldIndex.Icon:
-                case Hair_FieldIndex.Flags:
+                case Sound_FieldIndex.File:
+                case Sound_FieldIndex.Data:
                     return false;
                 default:
-                    return NamedMajorRecord_Registration.GetNthIsSingleton(index);
+                    return MajorRecord_Registration.GetNthIsSingleton(index);
             }
         }
 
         public static string GetNthName(ushort index)
         {
-            Hair_FieldIndex enu = (Hair_FieldIndex)index;
+            Sound_FieldIndex enu = (Sound_FieldIndex)index;
             switch (enu)
             {
-                case Hair_FieldIndex.Model:
-                    return "Model";
-                case Hair_FieldIndex.Icon:
-                    return "Icon";
-                case Hair_FieldIndex.Flags:
-                    return "Flags";
+                case Sound_FieldIndex.File:
+                    return "File";
+                case Sound_FieldIndex.Data:
+                    return "Data";
                 default:
-                    return NamedMajorRecord_Registration.GetNthName(index);
+                    return MajorRecord_Registration.GetNthName(index);
             }
         }
 
         public static bool IsNthDerivative(ushort index)
         {
-            Hair_FieldIndex enu = (Hair_FieldIndex)index;
+            Sound_FieldIndex enu = (Sound_FieldIndex)index;
             switch (enu)
             {
-                case Hair_FieldIndex.Model:
-                case Hair_FieldIndex.Icon:
-                case Hair_FieldIndex.Flags:
+                case Sound_FieldIndex.File:
+                case Sound_FieldIndex.Data:
                     return false;
                 default:
-                    return NamedMajorRecord_Registration.IsNthDerivative(index);
+                    return MajorRecord_Registration.IsNthDerivative(index);
             }
         }
 
         public static bool IsProtected(ushort index)
         {
-            Hair_FieldIndex enu = (Hair_FieldIndex)index;
+            Sound_FieldIndex enu = (Sound_FieldIndex)index;
             switch (enu)
             {
-                case Hair_FieldIndex.Model:
-                case Hair_FieldIndex.Icon:
-                case Hair_FieldIndex.Flags:
+                case Sound_FieldIndex.File:
+                case Sound_FieldIndex.Data:
                     return false;
                 default:
-                    return NamedMajorRecord_Registration.IsProtected(index);
+                    return MajorRecord_Registration.IsProtected(index);
             }
         }
 
         public static Type GetNthType(ushort index)
         {
-            Hair_FieldIndex enu = (Hair_FieldIndex)index;
+            Sound_FieldIndex enu = (Sound_FieldIndex)index;
             switch (enu)
             {
-                case Hair_FieldIndex.Model:
-                    return typeof(Model);
-                case Hair_FieldIndex.Icon:
+                case Sound_FieldIndex.File:
                     return typeof(FilePath);
-                case Hair_FieldIndex.Flags:
-                    return typeof(Hair.HairFlag);
+                case Sound_FieldIndex.Data:
+                    return typeof(SoundData);
                 default:
-                    return NamedMajorRecord_Registration.GetNthType(index);
+                    return MajorRecord_Registration.GetNthType(index);
             }
         }
 
-        public static readonly RecordType HAIR_HEADER = new RecordType("HAIR");
-        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
-        public static readonly RecordType ICON_HEADER = new RecordType("ICON");
-        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = HAIR_HEADER;
+        public static readonly RecordType SOUN_HEADER = new RecordType("SOUN");
+        public static readonly RecordType FNAM_HEADER = new RecordType("FNAM");
+        public static readonly RecordType SNDD_HEADER = new RecordType("SNDD");
+        public static readonly RecordType SNDX_HEADER = new RecordType("SNDX");
+        public static readonly RecordType TRIGGERING_RECORD_TYPE = SOUN_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 3;
+        public const int NumTypedFields = 2;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1295,17 +1203,17 @@ namespace Mutagen.Internals
     #endregion
 
     #region Extensions
-    public static class HairCommon
+    public static class SoundCommon
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IHair item,
-            IHairGetter rhs,
-            Hair_CopyMask copyMask = null,
-            IHairGetter def = null,
+            this ISound item,
+            ISoundGetter rhs,
+            Sound_CopyMask copyMask = null,
+            ISoundGetter def = null,
             NotifyingFireParameters? cmds = null)
         {
-            HairCommon.CopyFieldsFrom(
+            SoundCommon.CopyFieldsFrom(
                 item: item,
                 rhs: rhs,
                 def: def,
@@ -1316,14 +1224,14 @@ namespace Mutagen.Internals
         }
 
         public static void CopyFieldsFrom(
-            this IHair item,
-            IHairGetter rhs,
-            out Hair_ErrorMask errorMask,
-            Hair_CopyMask copyMask = null,
-            IHairGetter def = null,
+            this ISound item,
+            ISoundGetter rhs,
+            out Sound_ErrorMask errorMask,
+            Sound_CopyMask copyMask = null,
+            ISoundGetter def = null,
             NotifyingFireParameters? cmds = null)
         {
-            HairCommon.CopyFieldsFrom(
+            SoundCommon.CopyFieldsFrom(
                 item: item,
                 rhs: rhs,
                 def: def,
@@ -1334,20 +1242,20 @@ namespace Mutagen.Internals
         }
 
         public static void CopyFieldsFrom(
-            this IHair item,
-            IHairGetter rhs,
-            IHairGetter def,
+            this ISound item,
+            ISoundGetter rhs,
+            ISoundGetter def,
             bool doErrorMask,
-            out Hair_ErrorMask errorMask,
-            Hair_CopyMask copyMask,
+            out Sound_ErrorMask errorMask,
+            Sound_CopyMask copyMask,
             NotifyingFireParameters? cmds)
         {
-            Hair_ErrorMask retErrorMask = null;
-            Func<Hair_ErrorMask> maskGetter = () =>
+            Sound_ErrorMask retErrorMask = null;
+            Func<Sound_ErrorMask> maskGetter = () =>
             {
                 if (retErrorMask == null)
                 {
-                    retErrorMask = new Hair_ErrorMask();
+                    retErrorMask = new Sound_ErrorMask();
                 }
                 return retErrorMask;
             };
@@ -1363,15 +1271,15 @@ namespace Mutagen.Internals
         }
 
         public static void CopyFieldsFrom(
-            this IHair item,
-            IHairGetter rhs,
-            IHairGetter def,
+            this ISound item,
+            ISoundGetter rhs,
+            ISoundGetter def,
             bool doErrorMask,
-            Func<Hair_ErrorMask> errorMask,
-            Hair_CopyMask copyMask,
+            Func<Sound_ErrorMask> errorMask,
+            Sound_CopyMask copyMask,
             NotifyingFireParameters? cmds)
         {
-            NamedMajorRecordCommon.CopyFieldsFrom(
+            MajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1379,47 +1287,62 @@ namespace Mutagen.Internals
                 errorMask,
                 copyMask,
                 cmds);
-            if (copyMask?.Model.Overall != CopyOption.Skip)
+            if (copyMask?.File ?? true)
             {
                 try
                 {
-                    item.Model_Property.SetToWithDefault(
-                        rhs.Model_Property,
-                        def?.Model_Property,
+                    item.File_Property.SetToWithDefault(
+                        rhs.File_Property,
+                        def?.File_Property,
+                        cmds);
+                }
+                catch (Exception ex)
+                when (doErrorMask)
+                {
+                    errorMask().SetNthException((int)Sound_FieldIndex.File, ex);
+                }
+            }
+            if (copyMask?.Data.Overall != CopyOption.Skip)
+            {
+                try
+                {
+                    item.Data_Property.SetToWithDefault(
+                        rhs.Data_Property,
+                        def?.Data_Property,
                         cmds,
                         (r, d) =>
                         {
-                            switch (copyMask?.Model?.Overall ?? CopyOption.Reference)
+                            switch (copyMask?.Data?.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
                                     return r;
                                 case CopyOption.CopyIn:
-                                    ModelCommon.CopyFieldsFrom(
-                                        item: item.Model,
-                                        rhs: rhs.Model,
-                                        def: def?.Model,
+                                    SoundDataCommon.CopyFieldsFrom(
+                                        item: item.Data,
+                                        rhs: rhs.Data,
+                                        def: def?.Data,
                                         doErrorMask: doErrorMask,
-                                        errorMask: (doErrorMask ? new Func<Model_ErrorMask>(() =>
+                                        errorMask: (doErrorMask ? new Func<SoundData_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
-                                            if (baseMask.Model.Specific == null)
+                                            if (baseMask.Data.Specific == null)
                                             {
-                                                baseMask.Model = new MaskItem<Exception, Model_ErrorMask>(null, new Model_ErrorMask());
+                                                baseMask.Data = new MaskItem<Exception, SoundData_ErrorMask>(null, new SoundData_ErrorMask());
                                             }
-                                            return baseMask.Model.Specific;
+                                            return baseMask.Data.Specific;
                                         }
                                         ) : null),
-                                        copyMask: copyMask?.Model.Specific,
+                                        copyMask: copyMask?.Data.Specific,
                                         cmds: cmds);
                                     return r;
                                 case CopyOption.MakeCopy:
-                                    if (r == null) return default(Model);
-                                    return Model.Copy(
+                                    if (r == null) return default(SoundData);
+                                    return SoundData.Copy(
                                         r,
-                                        copyMask?.Model?.Specific,
+                                        copyMask?.Data?.Specific,
                                         def: d);
                                 default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Model?.Overall}. Cannot execute copy.");
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Data?.Overall}. Cannot execute copy.");
                             }
                         }
                         );
@@ -1427,37 +1350,7 @@ namespace Mutagen.Internals
                 catch (Exception ex)
                 when (doErrorMask)
                 {
-                    errorMask().SetNthException((int)Hair_FieldIndex.Model, ex);
-                }
-            }
-            if (copyMask?.Icon ?? true)
-            {
-                try
-                {
-                    item.Icon_Property.SetToWithDefault(
-                        rhs.Icon_Property,
-                        def?.Icon_Property,
-                        cmds);
-                }
-                catch (Exception ex)
-                when (doErrorMask)
-                {
-                    errorMask().SetNthException((int)Hair_FieldIndex.Icon, ex);
-                }
-            }
-            if (copyMask?.Flags ?? true)
-            {
-                try
-                {
-                    item.Flags_Property.SetToWithDefault(
-                        rhs.Flags_Property,
-                        def?.Flags_Property,
-                        cmds);
-                }
-                catch (Exception ex)
-                when (doErrorMask)
-                {
-                    errorMask().SetNthException((int)Hair_FieldIndex.Flags, ex);
+                    errorMask().SetNthException((int)Sound_FieldIndex.Data, ex);
                 }
             }
         }
@@ -1467,120 +1360,108 @@ namespace Mutagen.Internals
         public static void SetNthObjectHasBeenSet(
             ushort index,
             bool on,
-            IHair obj,
+            ISound obj,
             NotifyingFireParameters? cmds = null)
         {
-            Hair_FieldIndex enu = (Hair_FieldIndex)index;
+            Sound_FieldIndex enu = (Sound_FieldIndex)index;
             switch (enu)
             {
-                case Hair_FieldIndex.Model:
-                    obj.Model_Property.HasBeenSet = on;
+                case Sound_FieldIndex.File:
+                    obj.File_Property.HasBeenSet = on;
                     break;
-                case Hair_FieldIndex.Icon:
-                    obj.Icon_Property.HasBeenSet = on;
-                    break;
-                case Hair_FieldIndex.Flags:
-                    obj.Flags_Property.HasBeenSet = on;
+                case Sound_FieldIndex.Data:
+                    obj.Data_Property.HasBeenSet = on;
                     break;
                 default:
-                    NamedMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
+                    MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
             }
         }
 
         public static void UnsetNthObject(
             ushort index,
-            IHair obj,
+            ISound obj,
             NotifyingUnsetParameters? cmds = null)
         {
-            Hair_FieldIndex enu = (Hair_FieldIndex)index;
+            Sound_FieldIndex enu = (Sound_FieldIndex)index;
             switch (enu)
             {
-                case Hair_FieldIndex.Model:
-                    obj.Model_Property.Unset(cmds);
+                case Sound_FieldIndex.File:
+                    obj.File_Property.Unset(cmds);
                     break;
-                case Hair_FieldIndex.Icon:
-                    obj.Icon_Property.Unset(cmds);
-                    break;
-                case Hair_FieldIndex.Flags:
-                    obj.Flags_Property.Unset(cmds);
+                case Sound_FieldIndex.Data:
+                    obj.Data_Property.Unset(cmds);
                     break;
                 default:
-                    NamedMajorRecordCommon.UnsetNthObject(index, obj);
+                    MajorRecordCommon.UnsetNthObject(index, obj);
                     break;
             }
         }
 
         public static bool GetNthObjectHasBeenSet(
             ushort index,
-            IHair obj)
+            ISound obj)
         {
-            Hair_FieldIndex enu = (Hair_FieldIndex)index;
+            Sound_FieldIndex enu = (Sound_FieldIndex)index;
             switch (enu)
             {
-                case Hair_FieldIndex.Model:
-                    return obj.Model_Property.HasBeenSet;
-                case Hair_FieldIndex.Icon:
-                    return obj.Icon_Property.HasBeenSet;
-                case Hair_FieldIndex.Flags:
-                    return obj.Flags_Property.HasBeenSet;
+                case Sound_FieldIndex.File:
+                    return obj.File_Property.HasBeenSet;
+                case Sound_FieldIndex.Data:
+                    return obj.Data_Property.HasBeenSet;
                 default:
-                    return NamedMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
+                    return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
         }
 
         public static object GetNthObject(
             ushort index,
-            IHairGetter obj)
+            ISoundGetter obj)
         {
-            Hair_FieldIndex enu = (Hair_FieldIndex)index;
+            Sound_FieldIndex enu = (Sound_FieldIndex)index;
             switch (enu)
             {
-                case Hair_FieldIndex.Model:
-                    return obj.Model;
-                case Hair_FieldIndex.Icon:
-                    return obj.Icon;
-                case Hair_FieldIndex.Flags:
-                    return obj.Flags;
+                case Sound_FieldIndex.File:
+                    return obj.File;
+                case Sound_FieldIndex.Data:
+                    return obj.Data;
                 default:
-                    return NamedMajorRecordCommon.GetNthObject(index, obj);
+                    return MajorRecordCommon.GetNthObject(index, obj);
             }
         }
 
         public static void Clear(
-            IHair item,
+            ISound item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.Model_Property.Unset(cmds.ToUnsetParams());
-            item.Icon_Property.Unset(cmds.ToUnsetParams());
-            item.Flags_Property.Unset(cmds.ToUnsetParams());
+            item.File_Property.Unset(cmds.ToUnsetParams());
+            item.Data_Property.Unset(cmds.ToUnsetParams());
         }
 
-        public static Hair_Mask<bool> GetEqualsMask(
-            this IHairGetter item,
-            IHairGetter rhs)
+        public static Sound_Mask<bool> GetEqualsMask(
+            this ISoundGetter item,
+            ISoundGetter rhs)
         {
-            var ret = new Hair_Mask<bool>();
+            var ret = new Sound_Mask<bool>();
             FillEqualsMask(item, rhs, ret);
             return ret;
         }
 
         public static void FillEqualsMask(
-            IHairGetter item,
-            IHairGetter rhs,
-            Hair_Mask<bool> ret)
+            ISoundGetter item,
+            ISoundGetter rhs,
+            Sound_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs));
-            ret.Icon = item.Icon_Property.Equals(rhs.Icon_Property, (l, r) => object.Equals(l, r));
-            ret.Flags = item.Flags_Property.Equals(rhs.Flags_Property, (l, r) => l == r);
-            NamedMajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            ret.File = item.File_Property.Equals(rhs.File_Property, (l, r) => object.Equals(l, r));
+            ret.Data = item.Data_Property.LoquiEqualsHelper(rhs.Data_Property, (loqLhs, loqRhs) => SoundDataCommon.GetEqualsMask(loqLhs, loqRhs));
+            MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
-            this IHairGetter item,
+            this ISoundGetter item,
             string name = null,
-            Hair_Mask<bool> printMask = null)
+            Sound_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             item.ToString(fg, name, printMask);
@@ -1588,55 +1469,49 @@ namespace Mutagen.Internals
         }
 
         public static void ToString(
-            this IHairGetter item,
+            this ISoundGetter item,
             FileGeneration fg,
             string name = null,
-            Hair_Mask<bool> printMask = null)
+            Sound_Mask<bool> printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(Hair)} =>");
+                fg.AppendLine($"{nameof(Sound)} =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(Hair)}) =>");
+                fg.AppendLine($"{name} ({nameof(Sound)}) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Model?.Overall ?? true)
+                if (printMask?.File ?? true)
                 {
-                    item.Model?.ToString(fg, "Model");
+                    fg.AppendLine($"File => {item.File}");
                 }
-                if (printMask?.Icon ?? true)
+                if (printMask?.Data?.Overall ?? true)
                 {
-                    fg.AppendLine($"Icon => {item.Icon}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {item.Flags}");
+                    item.Data?.ToString(fg, "Data");
                 }
             }
             fg.AppendLine("]");
         }
 
         public static bool HasBeenSet(
-            this IHairGetter item,
-            Hair_Mask<bool?> checkMask)
+            this ISoundGetter item,
+            Sound_Mask<bool?> checkMask)
         {
-            if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_Property.HasBeenSet) return false;
-            if (checkMask.Model.Specific != null && (item.Model_Property.Item == null || !item.Model_Property.Item.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_Property.HasBeenSet) return false;
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_Property.HasBeenSet) return false;
+            if (checkMask.File.HasValue && checkMask.File.Value != item.File_Property.HasBeenSet) return false;
+            if (checkMask.Data.Overall.HasValue && checkMask.Data.Overall.Value != item.Data_Property.HasBeenSet) return false;
+            if (checkMask.Data.Specific != null && (item.Data_Property.Item == null || !item.Data_Property.Item.HasBeenSet(checkMask.Data.Specific))) return false;
             return true;
         }
 
-        public static Hair_Mask<bool> GetHasBeenSetMask(IHairGetter item)
+        public static Sound_Mask<bool> GetHasBeenSetMask(ISoundGetter item)
         {
-            var ret = new Hair_Mask<bool>();
-            ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_Property.HasBeenSet, ModelCommon.GetHasBeenSetMask(item.Model_Property.Item));
-            ret.Icon = item.Icon_Property.HasBeenSet;
-            ret.Flags = item.Flags_Property.HasBeenSet;
+            var ret = new Sound_Mask<bool>();
+            ret.File = item.File_Property.HasBeenSet;
+            ret.Data = new MaskItem<bool, SoundData_Mask<bool>>(item.Data_Property.HasBeenSet, SoundDataCommon.GetHasBeenSetMask(item.Data_Property.Item));
             return ret;
         }
 
@@ -1644,80 +1519,65 @@ namespace Mutagen.Internals
         #region XML Write
         public static void Write_XML(
             XmlWriter writer,
-            IHairGetter item,
+            ISoundGetter item,
             bool doMasks,
-            out Hair_ErrorMask errorMask,
+            out Sound_ErrorMask errorMask,
             string name = null)
         {
-            Hair_ErrorMask errMaskRet = null;
+            Sound_ErrorMask errMaskRet = null;
             Write_XML_Internal(
                 writer: writer,
                 name: name,
                 item: item,
                 doMasks: doMasks,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Hair_ErrorMask()) : default(Func<Hair_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Sound_ErrorMask()) : default(Func<Sound_ErrorMask>));
             errorMask = errMaskRet;
         }
 
         private static void Write_XML_Internal(
             XmlWriter writer,
-            IHairGetter item,
+            ISoundGetter item,
             bool doMasks,
-            Func<Hair_ErrorMask> errorMask,
+            Func<Sound_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Hair"))
+                using (new ElementWrapper(writer, name ?? "Mutagen.Sound"))
                 {
                     if (name != null)
                     {
-                        writer.WriteAttributeString("type", "Mutagen.Hair");
+                        writer.WriteAttributeString("type", "Mutagen.Sound");
                     }
-                    if (item.Model_Property.HasBeenSet)
-                    {
-                        MaskItem<Exception, Model_ErrorMask> subMask;
-                        LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Write(
-                            writer: writer,
-                            item: item.Model,
-                            name: nameof(item.Model),
-                            doMasks: doMasks,
-                            mask: out Model_ErrorMask loquiMask);
-                        subMask = loquiMask == null ? null : new MaskItem<Exception, Model_ErrorMask>(null, loquiMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            doMasks,
-                            (int)Hair_FieldIndex.Model,
-                            subMask);
-                    }
-                    if (item.Icon_Property.HasBeenSet)
+                    if (item.File_Property.HasBeenSet)
                     {
                         Exception subMask;
                         FilePathXmlTranslation.Instance.Write(
                             writer,
-                            nameof(item.Icon),
-                            item.Icon,
+                            nameof(item.File),
+                            item.File,
                             doMasks: doMasks,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
                             doMasks,
-                            (int)Hair_FieldIndex.Icon,
+                            (int)Sound_FieldIndex.File,
                             subMask);
                     }
-                    if (item.Flags_Property.HasBeenSet)
+                    if (item.Data_Property.HasBeenSet)
                     {
-                        Exception subMask;
-                        EnumXmlTranslation<Hair.HairFlag>.Instance.Write(
-                            writer,
-                            nameof(item.Flags),
-                            item.Flags,
+                        MaskItem<Exception, SoundData_ErrorMask> subMask;
+                        LoquiXmlTranslation<SoundData, SoundData_ErrorMask>.Instance.Write(
+                            writer: writer,
+                            item: item.Data,
+                            name: nameof(item.Data),
                             doMasks: doMasks,
-                            errorMask: out subMask);
+                            mask: out SoundData_ErrorMask loquiMask);
+                        subMask = loquiMask == null ? null : new MaskItem<Exception, SoundData_ErrorMask>(null, loquiMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
                             doMasks,
-                            (int)Hair_FieldIndex.Flags,
+                            (int)Sound_FieldIndex.Data,
                             subMask);
                     }
                 }
@@ -1736,30 +1596,30 @@ namespace Mutagen.Internals
         #region Binary Write
         public static void Write_Binary(
             MutagenWriter writer,
-            IHairGetter item,
+            ISoundGetter item,
             bool doMasks,
-            out Hair_ErrorMask errorMask)
+            out Sound_ErrorMask errorMask)
         {
-            Hair_ErrorMask errMaskRet = null;
+            Sound_ErrorMask errMaskRet = null;
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
                 doMasks: doMasks,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Hair_ErrorMask()) : default(Func<Hair_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Sound_ErrorMask()) : default(Func<Sound_ErrorMask>));
             errorMask = errMaskRet;
         }
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
-            IHairGetter item,
+            ISoundGetter item,
             bool doMasks,
-            Func<Hair_ErrorMask> errorMask)
+            Func<Sound_ErrorMask> errorMask)
         {
             try
             {
                 using (HeaderExport.ExportHeader(
                     writer: writer,
-                    record: Hair_Registration.HAIR_HEADER,
+                    record: Sound_Registration.SOUN_HEADER,
                     type: ObjectType.Record))
                 {
                     MajorRecordCommon.Write_Binary_Embedded(
@@ -1783,39 +1643,30 @@ namespace Mutagen.Internals
         #endregion
 
         public static void Write_Binary_RecordTypes(
-            IHairGetter item,
+            ISoundGetter item,
             MutagenWriter writer,
             bool doMasks,
-            Func<Hair_ErrorMask> errorMask)
+            Func<Sound_ErrorMask> errorMask)
         {
-            NamedMajorRecordCommon.Write_Binary_RecordTypes(
+            MajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
                 writer: writer,
                 doMasks: doMasks,
                 errorMask: errorMask);
-            LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Write(
-                writer: writer,
-                item: item.Model_Property,
-                doMasks: doMasks,
-                fieldIndex: (int)Hair_FieldIndex.Model,
-                errorMask: errorMask);
             Mutagen.Binary.FilePathBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Icon_Property,
-                fieldIndex: (int)Hair_FieldIndex.Icon,
+                item: item.File_Property,
+                fieldIndex: (int)Sound_FieldIndex.File,
                 doMasks: doMasks,
                 errorMask: errorMask,
-                header: Hair_Registration.ICON_HEADER,
+                header: Sound_Registration.FNAM_HEADER,
                 nullable: false);
-            Mutagen.Binary.EnumBinaryTranslation<Hair.HairFlag>.Instance.Write(
-                writer,
-                item.Flags_Property,
+            LoquiBinaryTranslation<SoundData, SoundData_ErrorMask>.Instance.Write(
+                writer: writer,
+                item: item.Data_Property,
                 doMasks: doMasks,
-                length: new ContentLength(1),
-                fieldIndex: (int)Hair_FieldIndex.Flags,
-                errorMask: errorMask,
-                header: Hair_Registration.DATA_HEADER,
-                nullable: false);
+                fieldIndex: (int)Sound_FieldIndex.Data,
+                errorMask: errorMask);
         }
 
         #endregion
@@ -1826,49 +1677,45 @@ namespace Mutagen.Internals
     #region Modules
 
     #region Mask
-    public class Hair_Mask<T> : NamedMajorRecord_Mask<T>, IMask<T>, IEquatable<Hair_Mask<T>>
+    public class Sound_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<Sound_Mask<T>>
     {
         #region Ctors
-        public Hair_Mask()
+        public Sound_Mask()
         {
         }
 
-        public Hair_Mask(T initialValue)
+        public Sound_Mask(T initialValue)
         {
-            this.Model = new MaskItem<T, Model_Mask<T>>(initialValue, new Model_Mask<T>(initialValue));
-            this.Icon = initialValue;
-            this.Flags = initialValue;
+            this.File = initialValue;
+            this.Data = new MaskItem<T, SoundData_Mask<T>>(initialValue, new SoundData_Mask<T>(initialValue));
         }
         #endregion
 
         #region Members
-        public MaskItem<T, Model_Mask<T>> Model { get; set; }
-        public T Icon;
-        public T Flags;
+        public T File;
+        public MaskItem<T, SoundData_Mask<T>> Data { get; set; }
         #endregion
 
         #region Equals
         public override bool Equals(object obj)
         {
-            if (!(obj is Hair_Mask<T> rhs)) return false;
+            if (!(obj is Sound_Mask<T> rhs)) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(Hair_Mask<T> rhs)
+        public bool Equals(Sound_Mask<T> rhs)
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Model, rhs.Model)) return false;
-            if (!object.Equals(this.Icon, rhs.Icon)) return false;
-            if (!object.Equals(this.Flags, rhs.Flags)) return false;
+            if (!object.Equals(this.File, rhs.File)) return false;
+            if (!object.Equals(this.Data, rhs.Data)) return false;
             return true;
         }
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = ret.CombineHashCode(this.Model?.GetHashCode());
-            ret = ret.CombineHashCode(this.Icon?.GetHashCode());
-            ret = ret.CombineHashCode(this.Flags?.GetHashCode());
+            ret = ret.CombineHashCode(this.File?.GetHashCode());
+            ret = ret.CombineHashCode(this.Data?.GetHashCode());
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -1879,39 +1726,37 @@ namespace Mutagen.Internals
         public override bool AllEqual(Func<T, bool> eval)
         {
             if (!base.AllEqual(eval)) return false;
-            if (Model != null)
+            if (!eval(this.File)) return false;
+            if (Data != null)
             {
-                if (!eval(this.Model.Overall)) return false;
-                if (Model.Specific != null && !Model.Specific.AllEqual(eval)) return false;
+                if (!eval(this.Data.Overall)) return false;
+                if (Data.Specific != null && !Data.Specific.AllEqual(eval)) return false;
             }
-            if (!eval(this.Icon)) return false;
-            if (!eval(this.Flags)) return false;
             return true;
         }
         #endregion
 
         #region Translate
-        public new Hair_Mask<R> Translate<R>(Func<T, R> eval)
+        public new Sound_Mask<R> Translate<R>(Func<T, R> eval)
         {
-            var ret = new Hair_Mask<R>();
+            var ret = new Sound_Mask<R>();
             this.Translate_InternalFill(ret, eval);
             return ret;
         }
 
-        protected void Translate_InternalFill<R>(Hair_Mask<R> obj, Func<T, R> eval)
+        protected void Translate_InternalFill<R>(Sound_Mask<R> obj, Func<T, R> eval)
         {
             base.Translate_InternalFill(obj, eval);
-            if (this.Model != null)
+            obj.File = eval(this.File);
+            if (this.Data != null)
             {
-                obj.Model = new MaskItem<R, Model_Mask<R>>();
-                obj.Model.Overall = eval(this.Model.Overall);
-                if (this.Model.Specific != null)
+                obj.Data = new MaskItem<R, SoundData_Mask<R>>();
+                obj.Data.Overall = eval(this.Data.Overall);
+                if (this.Data.Specific != null)
                 {
-                    obj.Model.Specific = this.Model.Specific.Translate(eval);
+                    obj.Data.Specific = this.Data.Specific.Translate(eval);
                 }
             }
-            obj.Icon = eval(this.Icon);
-            obj.Flags = eval(this.Flags);
         }
         #endregion
 
@@ -1928,30 +1773,26 @@ namespace Mutagen.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(Hair_Mask<bool> printMask = null)
+        public string ToString(Sound_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, Hair_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, Sound_Mask<bool> printMask = null)
         {
-            fg.AppendLine($"{nameof(Hair_Mask<T>)} =>");
+            fg.AppendLine($"{nameof(Sound_Mask<T>)} =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Model?.Overall ?? true)
+                if (printMask?.File ?? true)
                 {
-                    Model.ToString(fg);
+                    fg.AppendLine($"File => {File.ToStringSafe()}");
                 }
-                if (printMask?.Icon ?? true)
+                if (printMask?.Data?.Overall ?? true)
                 {
-                    fg.AppendLine($"Icon => {Icon.ToStringSafe()}");
-                }
-                if (printMask?.Flags ?? true)
-                {
-                    fg.AppendLine($"Flags => {Flags.ToStringSafe()}");
+                    Data.ToString(fg);
                 }
             }
             fg.AppendLine("]");
@@ -1960,28 +1801,24 @@ namespace Mutagen.Internals
 
     }
 
-    public class Hair_ErrorMask : NamedMajorRecord_ErrorMask
+    public class Sound_ErrorMask : MajorRecord_ErrorMask
     {
         #region Members
-        public MaskItem<Exception, Model_ErrorMask> Model;
-        public Exception Icon;
-        public Exception Flags;
+        public Exception File;
+        public MaskItem<Exception, SoundData_ErrorMask> Data;
         #endregion
 
         #region IErrorMask
         public override void SetNthException(int index, Exception ex)
         {
-            Hair_FieldIndex enu = (Hair_FieldIndex)index;
+            Sound_FieldIndex enu = (Sound_FieldIndex)index;
             switch (enu)
             {
-                case Hair_FieldIndex.Model:
-                    this.Model = new MaskItem<Exception, Model_ErrorMask>(ex, null);
+                case Sound_FieldIndex.File:
+                    this.File = ex;
                     break;
-                case Hair_FieldIndex.Icon:
-                    this.Icon = ex;
-                    break;
-                case Hair_FieldIndex.Flags:
-                    this.Flags = ex;
+                case Sound_FieldIndex.Data:
+                    this.Data = new MaskItem<Exception, SoundData_ErrorMask>(ex, null);
                     break;
                 default:
                     base.SetNthException(index, ex);
@@ -1991,17 +1828,14 @@ namespace Mutagen.Internals
 
         public override void SetNthMask(int index, object obj)
         {
-            Hair_FieldIndex enu = (Hair_FieldIndex)index;
+            Sound_FieldIndex enu = (Sound_FieldIndex)index;
             switch (enu)
             {
-                case Hair_FieldIndex.Model:
-                    this.Model = (MaskItem<Exception, Model_ErrorMask>)obj;
+                case Sound_FieldIndex.File:
+                    this.File = (Exception)obj;
                     break;
-                case Hair_FieldIndex.Icon:
-                    this.Icon = (Exception)obj;
-                    break;
-                case Hair_FieldIndex.Flags:
-                    this.Flags = (Exception)obj;
+                case Sound_FieldIndex.Data:
+                    this.Data = (MaskItem<Exception, SoundData_ErrorMask>)obj;
                     break;
                 default:
                     base.SetNthMask(index, obj);
@@ -2020,7 +1854,7 @@ namespace Mutagen.Internals
 
         public override void ToString(FileGeneration fg)
         {
-            fg.AppendLine("Hair_ErrorMask =>");
+            fg.AppendLine("Sound_ErrorMask =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
@@ -2041,31 +1875,26 @@ namespace Mutagen.Internals
         protected override void ToString_FillInternal(FileGeneration fg)
         {
             base.ToString_FillInternal(fg);
-            if (Model != null)
+            if (File != null)
             {
-                Model.ToString(fg);
+                fg.AppendLine($"File => {File.ToStringSafe()}");
             }
-            if (Icon != null)
+            if (Data != null)
             {
-                fg.AppendLine($"Icon => {Icon.ToStringSafe()}");
-            }
-            if (Flags != null)
-            {
-                fg.AppendLine($"Flags => {Flags.ToStringSafe()}");
+                Data.ToString(fg);
             }
         }
         #endregion
 
         #region Combine
-        public Hair_ErrorMask Combine(Hair_ErrorMask rhs)
+        public Sound_ErrorMask Combine(Sound_ErrorMask rhs)
         {
-            var ret = new Hair_ErrorMask();
-            ret.Model = new MaskItem<Exception, Model_ErrorMask>(this.Model.Overall.Combine(rhs.Model.Overall), this.Model.Specific.Combine(rhs.Model.Specific));
-            ret.Icon = this.Icon.Combine(rhs.Icon);
-            ret.Flags = this.Flags.Combine(rhs.Flags);
+            var ret = new Sound_ErrorMask();
+            ret.File = this.File.Combine(rhs.File);
+            ret.Data = new MaskItem<Exception, SoundData_ErrorMask>(this.Data.Overall.Combine(rhs.Data.Overall), this.Data.Specific.Combine(rhs.Data.Specific));
             return ret;
         }
-        public static Hair_ErrorMask Combine(Hair_ErrorMask lhs, Hair_ErrorMask rhs)
+        public static Sound_ErrorMask Combine(Sound_ErrorMask lhs, Sound_ErrorMask rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -2073,12 +1902,11 @@ namespace Mutagen.Internals
         #endregion
 
     }
-    public class Hair_CopyMask : NamedMajorRecord_CopyMask
+    public class Sound_CopyMask : MajorRecord_CopyMask
     {
         #region Members
-        public MaskItem<CopyOption, Model_CopyMask> Model;
-        public bool Icon;
-        public bool Flags;
+        public bool File;
+        public MaskItem<CopyOption, SoundData_CopyMask> Data;
         #endregion
 
     }

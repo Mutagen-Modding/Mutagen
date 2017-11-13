@@ -786,7 +786,7 @@ namespace Mutagen
                         doMasks: doMasks,
                         errorMask: errorMask);
                     item._Master.SetIfSucceeded(MastertryGet);
-                break;
+                    break;
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var FileSizetryGet = Mutagen.Binary.UInt64BinaryTranslation.Instance.Parse(
@@ -795,7 +795,7 @@ namespace Mutagen
                         fieldIndex: (int)MasterReference_FieldIndex.FileSize,
                         errorMask: errorMask);
                     item._FileSize.SetIfSucceeded(FileSizetryGet);
-                break;
+                    break;
                 default:
                     return false;
             }
