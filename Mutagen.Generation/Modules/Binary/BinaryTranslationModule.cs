@@ -382,7 +382,7 @@ namespace Mutagen.Generation
                             throw new ArgumentException("Unsupported type generator: " + field);
                         }
                         fg.AppendLine($"if (frame.Complete) return;");
-                        GenerateFillSnippet(obj, fg, field, generator, needBrace: false);
+                        GenerateFillSnippet(obj, fg, field, generator);
                     }
                 }
                 fg.AppendLine();
@@ -444,16 +444,13 @@ namespace Mutagen.Generation
 
                             if (!generator.ShouldGenerateCopyIn(field.Field)) continue;
                             fg.AppendLine($"case \"{data.TriggeringRecordType.Value.Type}\":");
-                            if (typelessStruct && field.Index == 0)
+                            using (new DepthWrapper(fg))
                             {
-                                using (new DepthWrapper(fg))
+                                if (typelessStruct && field.Index == 0)
                                 {
                                     fg.AppendLine($"if (!first) return false;");
                                 }
-                            }
-                            GenerateFillSnippet(obj, fg, field.Field, generator);
-                            using (new DepthWrapper(fg))
-                            {
+                                GenerateFillSnippet(obj, fg, field.Field, generator);
                                 fg.AppendLine("break;");
                             }
                         }
@@ -478,7 +475,7 @@ namespace Mutagen.Generation
                                     fg.AppendLine($"if{(first ? "" : " else")} (nextRecordType.Equals({data.TriggeringRecordAccessor}))");
                                     using (new BraceWrapper(fg))
                                     {
-                                        GenerateFillSnippet(obj, fg, field.Field, generator, needBrace: false);
+                                        GenerateFillSnippet(obj, fg, field.Field, generator);
                                         fg.AppendLine("break;");
                                     }
                                 }
@@ -539,55 +536,49 @@ namespace Mutagen.Generation
             }
         }
 
-        private void GenerateFillSnippet(ObjectGeneration obj, FileGeneration fg, TypeGeneration field, BinaryTranslationGeneration generator, bool needBrace = true)
+        private void GenerateFillSnippet(ObjectGeneration obj, FileGeneration fg, TypeGeneration field, BinaryTranslationGeneration generator)
         {
             var data = field.GetFieldData();
             var maskType = this.Gen.MaskModule.GetMaskModule(field.GetType()).GetErrorMaskTypeStr(field);
             if (data.CustomBinary)
             {
-                using (new DepthWrapper(fg, doIt: needBrace))
+                if (data.HasTrigger)
                 {
-                    if (data.HasTrigger)
+                    fg.AppendLine($"using (var subFrame = frame.Spawn(Constants.SUBRECORD_LENGTH + contentLength))");
+                }
+                using (new BraceWrapper(fg, doIt: data.HasTrigger))
+                {
+                    using (var args = new ArgsWrapper(fg,
+                        $"FillBinary_{field.Name}_Custom"))
                     {
-                        fg.AppendLine($"using (var subFrame = frame.Spawn(Constants.SUBRECORD_LENGTH + contentLength))");
-                    }
-                    using (new BraceWrapper(fg, doIt: data.HasTrigger))
-                    {
-                        using (var args = new ArgsWrapper(fg,
-                            $"FillBinary_{field.Name}_Custom"))
+                        args.Add($"frame: {(data.HasTrigger ? "subFrame" : "frame")}");
+                        args.Add("item: item");
+                        args.Add("doMasks: doMasks");
+                        if (field.HasIndex)
                         {
-                            args.Add($"frame: {(data.HasTrigger ? "subFrame" : "frame")}");
-                            args.Add("item: item");
-                            args.Add("doMasks: doMasks");
-                            if (field.HasIndex)
-                            {
-                                args.Add($"fieldIndex: (int){field.IndexEnumName}");
-                                args.Add($"errorMask: errorMask");
-                            }
-                            else
-                            {
-                                args.Add($"errorMask: out errorMask");
-                            }
+                            args.Add($"fieldIndex: (int){field.IndexEnumName}");
+                            args.Add($"errorMask: errorMask");
+                        }
+                        else
+                        {
+                            args.Add($"errorMask: out errorMask");
                         }
                     }
                 }
                 return;
             }
-            using (new DepthWrapper(fg, doIt: needBrace))
-            {
-                generator.GenerateCopyIn(
-                    fg: fg,
-                    objGen: obj,
-                    typeGen: field,
-                    readerAccessor: "frame",
-                    itemAccessor: new Accessor()
-                    {
-                        DirectAccess = $"item.{field.ProtectedName}",
-                        PropertyAccess = field.Notifying == NotifyingOption.None ? null : $"item.{field.ProtectedProperty}"
-                    },
-                    doMaskAccessor: "doMasks",
-                    maskAccessor: $"errorMask");
-            }
+            generator.GenerateCopyIn(
+                fg: fg,
+                objGen: obj,
+                typeGen: field,
+                readerAccessor: "frame",
+                itemAccessor: new Accessor()
+                {
+                    DirectAccess = $"item.{field.ProtectedName}",
+                    PropertyAccess = field.Notifying == NotifyingOption.None ? null : $"item.{field.ProtectedProperty}"
+                },
+                doMaskAccessor: "doMasks",
+                maskAccessor: $"errorMask");
         }
 
         private void ConvertFromPathOut(FileGeneration fg, InternalTranslation internalToDo)
