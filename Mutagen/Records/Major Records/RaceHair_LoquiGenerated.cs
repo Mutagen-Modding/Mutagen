@@ -1653,7 +1653,7 @@ namespace Mutagen.Internals
 
     }
 
-    public class RaceHair_ErrorMask : IErrorMask
+    public class RaceHair_ErrorMask : IErrorMask, IErrorMask<RaceHair_ErrorMask>
     {
         #region Members
         public Exception Overall { get; set; }

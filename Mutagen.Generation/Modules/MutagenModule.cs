@@ -243,10 +243,10 @@ namespace Mutagen.Generation
             RecordType recType;
             if (field is LoquiType loqui)
             {
-                if (loqui.RefGen != null
-                    && loqui.RefGen.Obj.TryGetTriggeringRecordType(out recType))
+                if (loqui.TargetObjectGeneration != null
+                    && loqui.TargetObjectGeneration.TryGetTriggeringRecordType(out recType))
                 {
-                    if (loqui.RefGen.Name.Equals("Group"))
+                    if (loqui.TargetObjectGeneration.Name.Equals("Group"))
                     {
                         var objName = loqui.GenericSpecification.Specifications["T"];
                         var grupObj = obj.ProtoGen.ObjectGenerationsByName[objName];
@@ -268,7 +268,7 @@ namespace Mutagen.Generation
                 && !data.RecordType.HasValue)
             {
                 loqui = loquiList.SubTypeGeneration as LoquiType;
-                if (loqui.RefGen.Obj.TryGetTriggeringRecordType(out recType))
+                if (loqui.TargetObjectGeneration.TryGetTriggeringRecordType(out recType))
                 {
                     data.TriggeringRecordType = recType;
                 }
@@ -282,8 +282,8 @@ namespace Mutagen.Generation
             {
                 if (listType.SubTypeGeneration is LoquiType subListLoqui)
                 {
-                    if (subListLoqui.RefGen != null
-                        && subListLoqui.RefGen.Obj.TryGetTriggeringRecordType(out recType))
+                    if (subListLoqui.TargetObjectGeneration != null
+                        && subListLoqui.TargetObjectGeneration.TryGetTriggeringRecordType(out recType))
                     {
                         data.TriggeringRecordType = recType;
                     }

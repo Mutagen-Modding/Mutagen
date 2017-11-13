@@ -526,8 +526,8 @@ namespace Mutagen
                             root,
                             nullable: false,
                             doMasks: doMasks,
-                            errorMask: out subMask).Bubble((o) => o.Value);
-                        item._Flags.SetIfSucceeded(tryGet);
+                            errorMask: out subMask);
+                        item._Flags.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
                         ErrorMask.HandleErrorMask(
                             errorMask,
                             doMasks,
@@ -1991,7 +1991,7 @@ namespace Mutagen.Internals
 
     }
 
-    public class SoundData_ErrorMask : IErrorMask
+    public class SoundData_ErrorMask : IErrorMask, IErrorMask<SoundData_ErrorMask>
     {
         #region Members
         public Exception Overall { get; set; }

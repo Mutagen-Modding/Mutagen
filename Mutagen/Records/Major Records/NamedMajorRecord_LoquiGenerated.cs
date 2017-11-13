@@ -1210,7 +1210,7 @@ namespace Mutagen.Internals
 
     }
 
-    public class NamedMajorRecord_ErrorMask : MajorRecord_ErrorMask
+    public class NamedMajorRecord_ErrorMask : MajorRecord_ErrorMask, IErrorMask<NamedMajorRecord_ErrorMask>
     {
         #region Members
         public Exception Name;

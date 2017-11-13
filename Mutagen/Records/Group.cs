@@ -18,8 +18,8 @@ namespace Mutagen
             IGroup<T> item,
             bool doMasks, 
             int fieldIndex,
-            Func<Group_ErrorMask<T_ErrMask>> errorMask) 
-            where T_ErrMask : MajorRecord_ErrorMask, new()
+            Func<Group_ErrorMask<T_ErrMask>> errorMask)
+            where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             frame.Reader.Position += 4;
         }
@@ -29,8 +29,8 @@ namespace Mutagen
             IGroupGetter<T> item,
             bool doMasks, 
             int fieldIndex, 
-            Func<Group_ErrorMask<T_ErrMask>> errorMask) 
-            where T_ErrMask : MajorRecord_ErrorMask, new()
+            Func<Group_ErrorMask<T_ErrMask>> errorMask)
+            where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             Mutagen.Binary.StringBinaryTranslation.Instance.Write(
                 writer,

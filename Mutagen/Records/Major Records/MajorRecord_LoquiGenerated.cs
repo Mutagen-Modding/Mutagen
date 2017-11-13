@@ -1663,7 +1663,7 @@ namespace Mutagen.Internals
 
     }
 
-    public class MajorRecord_ErrorMask : IErrorMask
+    public class MajorRecord_ErrorMask : IErrorMask, IErrorMask<MajorRecord_ErrorMask>
     {
         #region Members
         public Exception Overall { get; set; }

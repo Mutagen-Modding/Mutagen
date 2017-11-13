@@ -1438,7 +1438,7 @@ namespace Mutagen.Internals
 
     }
 
-    public class Spell_ErrorMask : NamedMajorRecord_ErrorMask
+    public class Spell_ErrorMask : NamedMajorRecord_ErrorMask, IErrorMask<Spell_ErrorMask>
     {
         #region IErrorMask
         public override void SetNthException(int index, Exception ex)

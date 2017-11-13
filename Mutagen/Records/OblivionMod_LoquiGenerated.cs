@@ -1740,7 +1740,7 @@ namespace Mutagen.Internals
                         cmds,
                         (r, d) =>
                         {
-                            switch (copyMask?.TES4?.Overall ?? CopyOption.Reference)
+                            switch (copyMask?.TES4.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
                                     return r;
@@ -1791,7 +1791,7 @@ namespace Mutagen.Internals
                         cmds,
                         (r, d) =>
                         {
-                            switch (copyMask?.GameSettings?.Overall ?? CopyOption.Reference)
+                            switch (copyMask?.GameSettings.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
                                     return r;
@@ -1842,7 +1842,7 @@ namespace Mutagen.Internals
                         cmds,
                         (r, d) =>
                         {
-                            switch (copyMask?.Globals?.Overall ?? CopyOption.Reference)
+                            switch (copyMask?.Globals.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
                                     return r;
@@ -1893,7 +1893,7 @@ namespace Mutagen.Internals
                         cmds,
                         (r, d) =>
                         {
-                            switch (copyMask?.Classes?.Overall ?? CopyOption.Reference)
+                            switch (copyMask?.Classes.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
                                     return r;
@@ -1944,7 +1944,7 @@ namespace Mutagen.Internals
                         cmds,
                         (r, d) =>
                         {
-                            switch (copyMask?.Factions?.Overall ?? CopyOption.Reference)
+                            switch (copyMask?.Factions.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
                                     return r;
@@ -1995,7 +1995,7 @@ namespace Mutagen.Internals
                         cmds,
                         (r, d) =>
                         {
-                            switch (copyMask?.Hairs?.Overall ?? CopyOption.Reference)
+                            switch (copyMask?.Hairs.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
                                     return r;
@@ -2046,7 +2046,7 @@ namespace Mutagen.Internals
                         cmds,
                         (r, d) =>
                         {
-                            switch (copyMask?.Eyes?.Overall ?? CopyOption.Reference)
+                            switch (copyMask?.Eyes.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
                                     return r;
@@ -2097,7 +2097,7 @@ namespace Mutagen.Internals
                         cmds,
                         (r, d) =>
                         {
-                            switch (copyMask?.Races?.Overall ?? CopyOption.Reference)
+                            switch (copyMask?.Races.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
                                     return r;
@@ -2148,7 +2148,7 @@ namespace Mutagen.Internals
                         cmds,
                         (r, d) =>
                         {
-                            switch (copyMask?.Sounds?.Overall ?? CopyOption.Reference)
+                            switch (copyMask?.Sounds.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
                                     return r;
@@ -2519,7 +2519,7 @@ namespace Mutagen.Internals
                     if (item.TES4_Property.HasBeenSet)
                     {
                         MaskItem<Exception, TES4_ErrorMask> subMask;
-                        LoquiXmlTranslation<TES4, TES4_ErrorMask>.Instance.Write(
+                        LoquiXmlTranslation<ITES4Getter, TES4_ErrorMask>.Instance.Write(
                             writer: writer,
                             item: item.TES4,
                             name: nameof(item.TES4),
@@ -2535,7 +2535,7 @@ namespace Mutagen.Internals
                     if (item.GameSettings_Property.HasBeenSet)
                     {
                         MaskItem<Exception, Group_ErrorMask<GameSetting_ErrorMask>> subMask;
-                        LoquiXmlTranslation<Group<GameSetting>, Group_ErrorMask<GameSetting_ErrorMask>>.Instance.Write(
+                        LoquiXmlTranslation<IGroupGetter<GameSetting>, Group_ErrorMask<GameSetting_ErrorMask>>.Instance.Write(
                             writer: writer,
                             item: item.GameSettings,
                             name: nameof(item.GameSettings),
@@ -2551,7 +2551,7 @@ namespace Mutagen.Internals
                     if (item.Globals_Property.HasBeenSet)
                     {
                         MaskItem<Exception, Group_ErrorMask<Global_ErrorMask>> subMask;
-                        LoquiXmlTranslation<Group<Global>, Group_ErrorMask<Global_ErrorMask>>.Instance.Write(
+                        LoquiXmlTranslation<IGroupGetter<Global>, Group_ErrorMask<Global_ErrorMask>>.Instance.Write(
                             writer: writer,
                             item: item.Globals,
                             name: nameof(item.Globals),
@@ -2567,7 +2567,7 @@ namespace Mutagen.Internals
                     if (item.Classes_Property.HasBeenSet)
                     {
                         MaskItem<Exception, Group_ErrorMask<Class_ErrorMask>> subMask;
-                        LoquiXmlTranslation<Group<Class>, Group_ErrorMask<Class_ErrorMask>>.Instance.Write(
+                        LoquiXmlTranslation<IGroupGetter<Class>, Group_ErrorMask<Class_ErrorMask>>.Instance.Write(
                             writer: writer,
                             item: item.Classes,
                             name: nameof(item.Classes),
@@ -2583,7 +2583,7 @@ namespace Mutagen.Internals
                     if (item.Factions_Property.HasBeenSet)
                     {
                         MaskItem<Exception, Group_ErrorMask<Faction_ErrorMask>> subMask;
-                        LoquiXmlTranslation<Group<Faction>, Group_ErrorMask<Faction_ErrorMask>>.Instance.Write(
+                        LoquiXmlTranslation<IGroupGetter<Faction>, Group_ErrorMask<Faction_ErrorMask>>.Instance.Write(
                             writer: writer,
                             item: item.Factions,
                             name: nameof(item.Factions),
@@ -2599,7 +2599,7 @@ namespace Mutagen.Internals
                     if (item.Hairs_Property.HasBeenSet)
                     {
                         MaskItem<Exception, Group_ErrorMask<Hair_ErrorMask>> subMask;
-                        LoquiXmlTranslation<Group<Hair>, Group_ErrorMask<Hair_ErrorMask>>.Instance.Write(
+                        LoquiXmlTranslation<IGroupGetter<Hair>, Group_ErrorMask<Hair_ErrorMask>>.Instance.Write(
                             writer: writer,
                             item: item.Hairs,
                             name: nameof(item.Hairs),
@@ -2615,7 +2615,7 @@ namespace Mutagen.Internals
                     if (item.Eyes_Property.HasBeenSet)
                     {
                         MaskItem<Exception, Group_ErrorMask<Eye_ErrorMask>> subMask;
-                        LoquiXmlTranslation<Group<Eye>, Group_ErrorMask<Eye_ErrorMask>>.Instance.Write(
+                        LoquiXmlTranslation<IGroupGetter<Eye>, Group_ErrorMask<Eye_ErrorMask>>.Instance.Write(
                             writer: writer,
                             item: item.Eyes,
                             name: nameof(item.Eyes),
@@ -2631,7 +2631,7 @@ namespace Mutagen.Internals
                     if (item.Races_Property.HasBeenSet)
                     {
                         MaskItem<Exception, Group_ErrorMask<Race_ErrorMask>> subMask;
-                        LoquiXmlTranslation<Group<Race>, Group_ErrorMask<Race_ErrorMask>>.Instance.Write(
+                        LoquiXmlTranslation<IGroupGetter<Race>, Group_ErrorMask<Race_ErrorMask>>.Instance.Write(
                             writer: writer,
                             item: item.Races,
                             name: nameof(item.Races),
@@ -2647,7 +2647,7 @@ namespace Mutagen.Internals
                     if (item.Sounds_Property.HasBeenSet)
                     {
                         MaskItem<Exception, Group_ErrorMask<Sound_ErrorMask>> subMask;
-                        LoquiXmlTranslation<Group<Sound>, Group_ErrorMask<Sound_ErrorMask>>.Instance.Write(
+                        LoquiXmlTranslation<IGroupGetter<Sound>, Group_ErrorMask<Sound_ErrorMask>>.Instance.Write(
                             writer: writer,
                             item: item.Sounds,
                             name: nameof(item.Sounds),
@@ -3066,7 +3066,7 @@ namespace Mutagen.Internals
 
     }
 
-    public class OblivionMod_ErrorMask : IErrorMask
+    public class OblivionMod_ErrorMask : IErrorMask, IErrorMask<OblivionMod_ErrorMask>
     {
         #region Members
         public Exception Overall { get; set; }
@@ -3242,15 +3242,15 @@ namespace Mutagen.Internals
         public OblivionMod_ErrorMask Combine(OblivionMod_ErrorMask rhs)
         {
             var ret = new OblivionMod_ErrorMask();
-            ret.TES4 = new MaskItem<Exception, TES4_ErrorMask>(this.TES4.Overall.Combine(rhs.TES4.Overall), this.TES4.Specific.Combine(rhs.TES4.Specific));
-            ret.GameSettings = new MaskItem<Exception, Group_ErrorMask<GameSetting_ErrorMask>>(this.GameSettings.Overall.Combine(rhs.GameSettings.Overall), this.GameSettings.Specific.Combine(rhs.GameSettings.Specific));
-            ret.Globals = new MaskItem<Exception, Group_ErrorMask<Global_ErrorMask>>(this.Globals.Overall.Combine(rhs.Globals.Overall), this.Globals.Specific.Combine(rhs.Globals.Specific));
-            ret.Classes = new MaskItem<Exception, Group_ErrorMask<Class_ErrorMask>>(this.Classes.Overall.Combine(rhs.Classes.Overall), this.Classes.Specific.Combine(rhs.Classes.Specific));
-            ret.Factions = new MaskItem<Exception, Group_ErrorMask<Faction_ErrorMask>>(this.Factions.Overall.Combine(rhs.Factions.Overall), this.Factions.Specific.Combine(rhs.Factions.Specific));
-            ret.Hairs = new MaskItem<Exception, Group_ErrorMask<Hair_ErrorMask>>(this.Hairs.Overall.Combine(rhs.Hairs.Overall), this.Hairs.Specific.Combine(rhs.Hairs.Specific));
-            ret.Eyes = new MaskItem<Exception, Group_ErrorMask<Eye_ErrorMask>>(this.Eyes.Overall.Combine(rhs.Eyes.Overall), this.Eyes.Specific.Combine(rhs.Eyes.Specific));
-            ret.Races = new MaskItem<Exception, Group_ErrorMask<Race_ErrorMask>>(this.Races.Overall.Combine(rhs.Races.Overall), this.Races.Specific.Combine(rhs.Races.Specific));
-            ret.Sounds = new MaskItem<Exception, Group_ErrorMask<Sound_ErrorMask>>(this.Sounds.Overall.Combine(rhs.Sounds.Overall), this.Sounds.Specific.Combine(rhs.Sounds.Specific));
+            ret.TES4 = new MaskItem<Exception, TES4_ErrorMask>(this.TES4.Overall.Combine(rhs.TES4.Overall), ((IErrorMask<TES4_ErrorMask>)this.TES4.Specific).Combine(rhs.TES4.Specific));
+            ret.GameSettings = new MaskItem<Exception, Group_ErrorMask<GameSetting_ErrorMask>>(this.GameSettings.Overall.Combine(rhs.GameSettings.Overall), ((IErrorMask<Group_ErrorMask<GameSetting_ErrorMask>>)this.GameSettings.Specific).Combine(rhs.GameSettings.Specific));
+            ret.Globals = new MaskItem<Exception, Group_ErrorMask<Global_ErrorMask>>(this.Globals.Overall.Combine(rhs.Globals.Overall), ((IErrorMask<Group_ErrorMask<Global_ErrorMask>>)this.Globals.Specific).Combine(rhs.Globals.Specific));
+            ret.Classes = new MaskItem<Exception, Group_ErrorMask<Class_ErrorMask>>(this.Classes.Overall.Combine(rhs.Classes.Overall), ((IErrorMask<Group_ErrorMask<Class_ErrorMask>>)this.Classes.Specific).Combine(rhs.Classes.Specific));
+            ret.Factions = new MaskItem<Exception, Group_ErrorMask<Faction_ErrorMask>>(this.Factions.Overall.Combine(rhs.Factions.Overall), ((IErrorMask<Group_ErrorMask<Faction_ErrorMask>>)this.Factions.Specific).Combine(rhs.Factions.Specific));
+            ret.Hairs = new MaskItem<Exception, Group_ErrorMask<Hair_ErrorMask>>(this.Hairs.Overall.Combine(rhs.Hairs.Overall), ((IErrorMask<Group_ErrorMask<Hair_ErrorMask>>)this.Hairs.Specific).Combine(rhs.Hairs.Specific));
+            ret.Eyes = new MaskItem<Exception, Group_ErrorMask<Eye_ErrorMask>>(this.Eyes.Overall.Combine(rhs.Eyes.Overall), ((IErrorMask<Group_ErrorMask<Eye_ErrorMask>>)this.Eyes.Specific).Combine(rhs.Eyes.Specific));
+            ret.Races = new MaskItem<Exception, Group_ErrorMask<Race_ErrorMask>>(this.Races.Overall.Combine(rhs.Races.Overall), ((IErrorMask<Group_ErrorMask<Race_ErrorMask>>)this.Races.Specific).Combine(rhs.Races.Specific));
+            ret.Sounds = new MaskItem<Exception, Group_ErrorMask<Sound_ErrorMask>>(this.Sounds.Overall.Combine(rhs.Sounds.Overall), ((IErrorMask<Group_ErrorMask<Sound_ErrorMask>>)this.Sounds.Specific).Combine(rhs.Sounds.Specific));
             return ret;
         }
         public static OblivionMod_ErrorMask Combine(OblivionMod_ErrorMask lhs, OblivionMod_ErrorMask rhs)

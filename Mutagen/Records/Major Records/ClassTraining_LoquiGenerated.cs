@@ -464,8 +464,8 @@ namespace Mutagen
                             root,
                             nullable: false,
                             doMasks: doMasks,
-                            errorMask: out subMask).Bubble((o) => o.Value);
-                        item._TrainedSkill.SetIfSucceeded(tryGet);
+                            errorMask: out subMask);
+                        item._TrainedSkill.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
                         ErrorMask.HandleErrorMask(
                             errorMask,
                             doMasks,
@@ -1784,7 +1784,7 @@ namespace Mutagen.Internals
 
     }
 
-    public class ClassTraining_ErrorMask : IErrorMask
+    public class ClassTraining_ErrorMask : IErrorMask, IErrorMask<ClassTraining_ErrorMask>
     {
         #region Members
         public Exception Overall { get; set; }

@@ -1304,7 +1304,7 @@ namespace Mutagen.Internals
                         cmds,
                         (r, d) =>
                         {
-                            switch (copyMask?.Data?.Overall ?? CopyOption.Reference)
+                            switch (copyMask?.Data.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
                                     return r;
@@ -1559,7 +1559,7 @@ namespace Mutagen.Internals
                     if (item.Data_Property.HasBeenSet)
                     {
                         MaskItem<Exception, SoundData_ErrorMask> subMask;
-                        LoquiXmlTranslation<SoundData, SoundData_ErrorMask>.Instance.Write(
+                        LoquiXmlTranslation<ISoundDataGetter, SoundData_ErrorMask>.Instance.Write(
                             writer: writer,
                             item: item.Data,
                             name: nameof(item.Data),
@@ -1793,7 +1793,7 @@ namespace Mutagen.Internals
 
     }
 
-    public class Sound_ErrorMask : MajorRecord_ErrorMask
+    public class Sound_ErrorMask : MajorRecord_ErrorMask, IErrorMask<Sound_ErrorMask>
     {
         #region Members
         public Exception File;
@@ -1883,7 +1883,7 @@ namespace Mutagen.Internals
         {
             var ret = new Sound_ErrorMask();
             ret.File = this.File.Combine(rhs.File);
-            ret.Data = new MaskItem<Exception, SoundData_ErrorMask>(this.Data.Overall.Combine(rhs.Data.Overall), this.Data.Specific.Combine(rhs.Data.Specific));
+            ret.Data = new MaskItem<Exception, SoundData_ErrorMask>(this.Data.Overall.Combine(rhs.Data.Overall), ((IErrorMask<SoundData_ErrorMask>)this.Data.Specific).Combine(rhs.Data.Specific));
             return ret;
         }
         public static Sound_ErrorMask Combine(Sound_ErrorMask lhs, Sound_ErrorMask rhs)

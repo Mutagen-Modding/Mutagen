@@ -1684,7 +1684,7 @@ namespace Mutagen.Internals
 
     }
 
-    public class Model_ErrorMask : IErrorMask
+    public class Model_ErrorMask : IErrorMask, IErrorMask<Model_ErrorMask>
     {
         #region Members
         public Exception Overall { get; set; }

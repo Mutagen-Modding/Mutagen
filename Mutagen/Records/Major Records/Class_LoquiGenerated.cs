@@ -1427,7 +1427,7 @@ namespace Mutagen.Internals
                         cmds,
                         (r, d) =>
                         {
-                            switch (copyMask?.ClassData?.Overall ?? CopyOption.Reference)
+                            switch (copyMask?.ClassData.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
                                     return r;
@@ -1715,7 +1715,7 @@ namespace Mutagen.Internals
                     if (item.ClassData_Property.HasBeenSet)
                     {
                         MaskItem<Exception, ClassData_ErrorMask> subMask;
-                        LoquiXmlTranslation<ClassData, ClassData_ErrorMask>.Instance.Write(
+                        LoquiXmlTranslation<IClassDataGetter, ClassData_ErrorMask>.Instance.Write(
                             writer: writer,
                             item: item.ClassData,
                             name: nameof(item.ClassData),
@@ -1967,7 +1967,7 @@ namespace Mutagen.Internals
 
     }
 
-    public class Class_ErrorMask : NamedMajorRecord_ErrorMask
+    public class Class_ErrorMask : NamedMajorRecord_ErrorMask, IErrorMask<Class_ErrorMask>
     {
         #region Members
         public Exception Description;
@@ -2069,7 +2069,7 @@ namespace Mutagen.Internals
             var ret = new Class_ErrorMask();
             ret.Description = this.Description.Combine(rhs.Description);
             ret.Icon = this.Icon.Combine(rhs.Icon);
-            ret.ClassData = new MaskItem<Exception, ClassData_ErrorMask>(this.ClassData.Overall.Combine(rhs.ClassData.Overall), this.ClassData.Specific.Combine(rhs.ClassData.Specific));
+            ret.ClassData = new MaskItem<Exception, ClassData_ErrorMask>(this.ClassData.Overall.Combine(rhs.ClassData.Overall), ((IErrorMask<ClassData_ErrorMask>)this.ClassData.Specific).Combine(rhs.ClassData.Specific));
             return ret;
         }
         public static Class_ErrorMask Combine(Class_ErrorMask lhs, Class_ErrorMask rhs)

@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>c8ac96f1925b7f08c4dd6c04f697cd44ea1106f1</Sha>
+         <Sha>0ad6fb65fffdeea6cb9aeaa8bd0050ed556d7ba0</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>11-12-2017 16:37:26</CommitDate>
-         <Description>InheritingObjects member on ObjectGeneration.  Async Resolution, to allow for resolutions to wait on each other for their desired information</Description>
+         <CommitDate>11-13-2017 17:51:09</CommitDate>
+         <Description>Merge fixes</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

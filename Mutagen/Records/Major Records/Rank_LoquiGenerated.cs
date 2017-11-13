@@ -1966,7 +1966,7 @@ namespace Mutagen.Internals
 
     }
 
-    public class Rank_ErrorMask : IErrorMask
+    public class Rank_ErrorMask : IErrorMask, IErrorMask<Rank_ErrorMask>
     {
         #region Members
         public Exception Overall { get; set; }

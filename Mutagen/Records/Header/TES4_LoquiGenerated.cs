@@ -1658,7 +1658,7 @@ namespace Mutagen.Internals
                         cmds,
                         (r, d) =>
                         {
-                            switch (copyMask?.Header?.Overall ?? CopyOption.Reference)
+                            switch (copyMask?.Header.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
                                     return r;
@@ -2130,7 +2130,7 @@ namespace Mutagen.Internals
                     if (item.Header_Property.HasBeenSet)
                     {
                         MaskItem<Exception, Header_ErrorMask> subMask;
-                        LoquiXmlTranslation<Header, Header_ErrorMask>.Instance.Write(
+                        LoquiXmlTranslation<IHeaderGetter, Header_ErrorMask>.Instance.Write(
                             writer: writer,
                             item: item.Header,
                             name: nameof(item.Header),
@@ -2214,7 +2214,7 @@ namespace Mutagen.Internals
                             maskObj: out subMask,
                             transl: (MasterReference subItem, bool listDoMasks, out MaskItem<Exception, MasterReference_ErrorMask> listSubMask) =>
                             {
-                                LoquiXmlTranslation<MasterReference, MasterReference_ErrorMask>.Instance.Write(
+                                LoquiXmlTranslation<IMasterReferenceGetter, MasterReference_ErrorMask>.Instance.Write(
                                     writer: writer,
                                     item: subItem,
                                     name: "Item",
@@ -2599,7 +2599,7 @@ namespace Mutagen.Internals
 
     }
 
-    public class TES4_ErrorMask : IErrorMask
+    public class TES4_ErrorMask : IErrorMask, IErrorMask<TES4_ErrorMask>
     {
         #region Members
         public Exception Overall { get; set; }
@@ -2775,7 +2775,7 @@ namespace Mutagen.Internals
         {
             var ret = new TES4_ErrorMask();
             ret.Fluff = this.Fluff.Combine(rhs.Fluff);
-            ret.Header = new MaskItem<Exception, Header_ErrorMask>(this.Header.Overall.Combine(rhs.Header.Overall), this.Header.Specific.Combine(rhs.Header.Specific));
+            ret.Header = new MaskItem<Exception, Header_ErrorMask>(this.Header.Overall.Combine(rhs.Header.Overall), ((IErrorMask<Header_ErrorMask>)this.Header.Specific).Combine(rhs.Header.Specific));
             ret.TypeOffsets = this.TypeOffsets.Combine(rhs.TypeOffsets);
             ret.Deleted = this.Deleted.Combine(rhs.Deleted);
             ret.Author = this.Author.Combine(rhs.Author);

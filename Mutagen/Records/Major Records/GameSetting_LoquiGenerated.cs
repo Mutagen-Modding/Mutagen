@@ -1033,7 +1033,7 @@ namespace Mutagen.Internals
 
     }
 
-    public class GameSetting_ErrorMask : MajorRecord_ErrorMask
+    public class GameSetting_ErrorMask : MajorRecord_ErrorMask, IErrorMask<GameSetting_ErrorMask>
     {
         #region IErrorMask
         public override void SetNthException(int index, Exception ex)

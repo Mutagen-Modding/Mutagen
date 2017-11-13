@@ -1245,7 +1245,7 @@ namespace Mutagen.Internals
                         cmds,
                         (r, d) =>
                         {
-                            switch (copyMask?.Male?.Overall ?? CopyOption.Reference)
+                            switch (copyMask?.Male.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
                                     return r;
@@ -1296,7 +1296,7 @@ namespace Mutagen.Internals
                         cmds,
                         (r, d) =>
                         {
-                            switch (copyMask?.Female?.Overall ?? CopyOption.Reference)
+                            switch (copyMask?.Female.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
                                     return r;
@@ -1534,7 +1534,7 @@ namespace Mutagen.Internals
                     if (item.Male_Property.HasBeenSet)
                     {
                         MaskItem<Exception, BodyData_ErrorMask> subMask;
-                        LoquiXmlTranslation<BodyData, BodyData_ErrorMask>.Instance.Write(
+                        LoquiXmlTranslation<IBodyDataGetter, BodyData_ErrorMask>.Instance.Write(
                             writer: writer,
                             item: item.Male,
                             name: nameof(item.Male),
@@ -1550,7 +1550,7 @@ namespace Mutagen.Internals
                     if (item.Female_Property.HasBeenSet)
                     {
                         MaskItem<Exception, BodyData_ErrorMask> subMask;
-                        LoquiXmlTranslation<BodyData, BodyData_ErrorMask>.Instance.Write(
+                        LoquiXmlTranslation<IBodyDataGetter, BodyData_ErrorMask>.Instance.Write(
                             writer: writer,
                             item: item.Female,
                             name: nameof(item.Female),
@@ -1775,7 +1775,7 @@ namespace Mutagen.Internals
 
     }
 
-    public class GenderedBodyData_ErrorMask : IErrorMask
+    public class GenderedBodyData_ErrorMask : IErrorMask, IErrorMask<GenderedBodyData_ErrorMask>
     {
         #region Members
         public Exception Overall { get; set; }
@@ -1874,8 +1874,8 @@ namespace Mutagen.Internals
         public GenderedBodyData_ErrorMask Combine(GenderedBodyData_ErrorMask rhs)
         {
             var ret = new GenderedBodyData_ErrorMask();
-            ret.Male = new MaskItem<Exception, BodyData_ErrorMask>(this.Male.Overall.Combine(rhs.Male.Overall), this.Male.Specific.Combine(rhs.Male.Specific));
-            ret.Female = new MaskItem<Exception, BodyData_ErrorMask>(this.Female.Overall.Combine(rhs.Female.Overall), this.Female.Specific.Combine(rhs.Female.Specific));
+            ret.Male = new MaskItem<Exception, BodyData_ErrorMask>(this.Male.Overall.Combine(rhs.Male.Overall), ((IErrorMask<BodyData_ErrorMask>)this.Male.Specific).Combine(rhs.Male.Specific));
+            ret.Female = new MaskItem<Exception, BodyData_ErrorMask>(this.Female.Overall.Combine(rhs.Female.Overall), ((IErrorMask<BodyData_ErrorMask>)this.Female.Specific).Combine(rhs.Female.Specific));
             return ret;
         }
         public static GenderedBodyData_ErrorMask Combine(GenderedBodyData_ErrorMask lhs, GenderedBodyData_ErrorMask rhs)

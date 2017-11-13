@@ -1343,7 +1343,7 @@ namespace Mutagen.Internals
 
     }
 
-    public class Global_ErrorMask : MajorRecord_ErrorMask
+    public class Global_ErrorMask : MajorRecord_ErrorMask, IErrorMask<Global_ErrorMask>
     {
         #region Members
         public Exception TypeChar;

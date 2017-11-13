@@ -1256,7 +1256,7 @@ namespace Mutagen.Internals
                         cmds,
                         (r, d) =>
                         {
-                            switch (copyMask?.Model?.Overall ?? CopyOption.Reference)
+                            switch (copyMask?.Model.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
                                     return r;
@@ -1563,7 +1563,7 @@ namespace Mutagen.Internals
                     if (item.Model_Property.HasBeenSet)
                     {
                         MaskItem<Exception, Model_ErrorMask> subMask;
-                        LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Write(
+                        LoquiXmlTranslation<IModelGetter, Model_ErrorMask>.Instance.Write(
                             writer: writer,
                             item: item.Model,
                             name: nameof(item.Model),
@@ -1587,7 +1587,7 @@ namespace Mutagen.Internals
                             maskObj: out subMask,
                             transl: (BodyPart subItem, bool listDoMasks, out MaskItem<Exception, BodyPart_ErrorMask> listSubMask) =>
                             {
-                                LoquiXmlTranslation<BodyPart, BodyPart_ErrorMask>.Instance.Write(
+                                LoquiXmlTranslation<IBodyPartGetter, BodyPart_ErrorMask>.Instance.Write(
                                     writer: writer,
                                     item: subItem,
                                     name: "Item",
@@ -1865,7 +1865,7 @@ namespace Mutagen.Internals
 
     }
 
-    public class BodyData_ErrorMask : IErrorMask
+    public class BodyData_ErrorMask : IErrorMask, IErrorMask<BodyData_ErrorMask>
     {
         #region Members
         public Exception Overall { get; set; }
@@ -1985,7 +1985,7 @@ namespace Mutagen.Internals
         public BodyData_ErrorMask Combine(BodyData_ErrorMask rhs)
         {
             var ret = new BodyData_ErrorMask();
-            ret.Model = new MaskItem<Exception, Model_ErrorMask>(this.Model.Overall.Combine(rhs.Model.Overall), this.Model.Specific.Combine(rhs.Model.Specific));
+            ret.Model = new MaskItem<Exception, Model_ErrorMask>(this.Model.Overall.Combine(rhs.Model.Overall), ((IErrorMask<Model_ErrorMask>)this.Model.Specific).Combine(rhs.Model.Specific));
             ret.BodyParts = new MaskItem<Exception, IEnumerable<MaskItem<Exception, BodyPart_ErrorMask>>>(this.BodyParts.Overall.Combine(rhs.BodyParts.Overall), new List<MaskItem<Exception, BodyPart_ErrorMask>>(this.BodyParts.Specific.And(rhs.BodyParts.Specific)));
             return ret;
         }

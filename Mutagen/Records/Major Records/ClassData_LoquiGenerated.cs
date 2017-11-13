@@ -517,11 +517,10 @@ namespace Mutagen
                             maskObj: out subMask,
                             transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
                             {
-                                return EnumXmlTranslation<ActorValue>.Instance.Parse(
+                                return EnumXmlTranslation<ActorValue>.Instance.ParseNonNull(
                                     r,
-                                    nullable: false,
                                     doMasks: listDoMasks,
-                                    errorMask: out listSubMask).Bubble((o) => o.Value);
+                                    errorMask: out listSubMask);
                             }
                             );
                         item._PrimaryAttributes.SetIfSucceeded(listTryGet);
@@ -539,8 +538,8 @@ namespace Mutagen
                             root,
                             nullable: false,
                             doMasks: doMasks,
-                            errorMask: out subMask).Bubble((o) => o.Value);
-                        item._Specialization.SetIfSucceeded(tryGet);
+                            errorMask: out subMask);
+                        item._Specialization.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
                         ErrorMask.HandleErrorMask(
                             errorMask,
                             doMasks,
@@ -557,11 +556,10 @@ namespace Mutagen
                             maskObj: out subMask,
                             transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
                             {
-                                return EnumXmlTranslation<ActorValue>.Instance.Parse(
+                                return EnumXmlTranslation<ActorValue>.Instance.ParseNonNull(
                                     r,
-                                    nullable: false,
                                     doMasks: listDoMasks,
-                                    errorMask: out listSubMask).Bubble((o) => o.Value);
+                                    errorMask: out listSubMask);
                             }
                             );
                         item._SecondaryAttributes.SetIfSucceeded(listTryGet);
@@ -579,8 +577,8 @@ namespace Mutagen
                             root,
                             nullable: false,
                             doMasks: doMasks,
-                            errorMask: out subMask).Bubble((o) => o.Value);
-                        item._Flags.SetIfSucceeded(tryGet);
+                            errorMask: out subMask);
+                        item._Flags.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
                         ErrorMask.HandleErrorMask(
                             errorMask,
                             doMasks,
@@ -595,8 +593,8 @@ namespace Mutagen
                             root,
                             nullable: false,
                             doMasks: doMasks,
-                            errorMask: out subMask).Bubble((o) => o.Value);
-                        item._ClassServices.SetIfSucceeded(tryGet);
+                            errorMask: out subMask);
+                        item._ClassServices.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
                         ErrorMask.HandleErrorMask(
                             errorMask,
                             doMasks,
@@ -1602,7 +1600,7 @@ namespace Mutagen.Internals
                         cmds,
                         (r, d) =>
                         {
-                            switch (copyMask?.Training?.Overall ?? CopyOption.Reference)
+                            switch (copyMask?.Training.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
                                     return r;
@@ -2070,7 +2068,7 @@ namespace Mutagen.Internals
                     if (item.Training_Property.HasBeenSet)
                     {
                         MaskItem<Exception, ClassTraining_ErrorMask> subMask;
-                        LoquiXmlTranslation<ClassTraining, ClassTraining_ErrorMask>.Instance.Write(
+                        LoquiXmlTranslation<IClassTrainingGetter, ClassTraining_ErrorMask>.Instance.Write(
                             writer: writer,
                             item: item.Training,
                             name: nameof(item.Training),
@@ -2468,7 +2466,7 @@ namespace Mutagen.Internals
 
     }
 
-    public class ClassData_ErrorMask : IErrorMask
+    public class ClassData_ErrorMask : IErrorMask, IErrorMask<ClassData_ErrorMask>
     {
         #region Members
         public Exception Overall { get; set; }
@@ -2658,7 +2656,7 @@ namespace Mutagen.Internals
             ret.SecondaryAttributes = new MaskItem<Exception, IEnumerable<Exception>>(this.SecondaryAttributes.Overall.Combine(rhs.SecondaryAttributes.Overall), new List<Exception>(this.SecondaryAttributes.Specific.And(rhs.SecondaryAttributes.Specific)));
             ret.Flags = this.Flags.Combine(rhs.Flags);
             ret.ClassServices = this.ClassServices.Combine(rhs.ClassServices);
-            ret.Training = new MaskItem<Exception, ClassTraining_ErrorMask>(this.Training.Overall.Combine(rhs.Training.Overall), this.Training.Specific.Combine(rhs.Training.Specific));
+            ret.Training = new MaskItem<Exception, ClassTraining_ErrorMask>(this.Training.Overall.Combine(rhs.Training.Overall), ((IErrorMask<ClassTraining_ErrorMask>)this.Training.Specific).Combine(rhs.Training.Specific));
             return ret;
         }
         public static ClassData_ErrorMask Combine(ClassData_ErrorMask lhs, ClassData_ErrorMask rhs)

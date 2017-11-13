@@ -38,7 +38,14 @@ namespace Mutagen.Generation
                     gen,
                     new ProtocolKey("Mutagen")));
 
-            await gen.Generate();
+            try
+            {
+                await gen.Generate();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
     }
 }

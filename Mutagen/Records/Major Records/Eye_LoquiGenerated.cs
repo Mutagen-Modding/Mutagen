@@ -478,8 +478,8 @@ namespace Mutagen
                             root,
                             nullable: false,
                             doMasks: doMasks,
-                            errorMask: out subMask).Bubble((o) => o.Value);
-                        item._Flags.SetIfSucceeded(tryGet);
+                            errorMask: out subMask);
+                        item._Flags.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
                         ErrorMask.HandleErrorMask(
                             errorMask,
                             doMasks,
@@ -1773,7 +1773,7 @@ namespace Mutagen.Internals
 
     }
 
-    public class Eye_ErrorMask : NamedMajorRecord_ErrorMask
+    public class Eye_ErrorMask : NamedMajorRecord_ErrorMask, IErrorMask<Eye_ErrorMask>
     {
         #region Members
         public Exception Icon;

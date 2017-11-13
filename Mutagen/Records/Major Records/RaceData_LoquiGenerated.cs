@@ -639,8 +639,8 @@ namespace Mutagen
                             root,
                             nullable: false,
                             doMasks: doMasks,
-                            errorMask: out subMask).Bubble((o) => o.Value);
-                        item._Flags.SetIfSucceeded(tryGet);
+                            errorMask: out subMask);
+                        item._Flags.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
                         ErrorMask.HandleErrorMask(
                             errorMask,
                             doMasks,
@@ -2032,7 +2032,7 @@ namespace Mutagen.Internals
                             maskObj: out subMask,
                             transl: (SkillBoost subItem, bool listDoMasks, out MaskItem<Exception, SkillBoost_ErrorMask> listSubMask) =>
                             {
-                                LoquiXmlTranslation<SkillBoost, SkillBoost_ErrorMask>.Instance.Write(
+                                LoquiXmlTranslation<ISkillBoostGetter, SkillBoost_ErrorMask>.Instance.Write(
                                     writer: writer,
                                     item: subItem,
                                     name: "Item",
@@ -2475,7 +2475,7 @@ namespace Mutagen.Internals
 
     }
 
-    public class RaceData_ErrorMask : IErrorMask
+    public class RaceData_ErrorMask : IErrorMask, IErrorMask<RaceData_ErrorMask>
     {
         #region Members
         public Exception Overall { get; set; }

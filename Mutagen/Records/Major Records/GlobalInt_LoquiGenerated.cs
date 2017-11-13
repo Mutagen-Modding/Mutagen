@@ -1537,7 +1537,7 @@ namespace Mutagen.Internals
 
     }
 
-    public class GlobalInt_ErrorMask : Global_ErrorMask
+    public class GlobalInt_ErrorMask : Global_ErrorMask, IErrorMask<GlobalInt_ErrorMask>
     {
         #region Members
         public Exception Data;

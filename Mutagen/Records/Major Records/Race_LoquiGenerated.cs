@@ -2441,7 +2441,7 @@ namespace Mutagen.Internals
                         cmds,
                         (r, d) =>
                         {
-                            switch (copyMask?.Data?.Overall ?? CopyOption.Reference)
+                            switch (copyMask?.Data.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
                                     return r;
@@ -2492,7 +2492,7 @@ namespace Mutagen.Internals
                         cmds,
                         (r, d) =>
                         {
-                            switch (copyMask?.Voices?.Overall ?? CopyOption.Reference)
+                            switch (copyMask?.Voices.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
                                     return r;
@@ -2543,7 +2543,7 @@ namespace Mutagen.Internals
                         cmds,
                         (r, d) =>
                         {
-                            switch (copyMask?.DefaultHair?.Overall ?? CopyOption.Reference)
+                            switch (copyMask?.DefaultHair.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
                                     return r;
@@ -2639,7 +2639,7 @@ namespace Mutagen.Internals
                         cmds,
                         (r, d) =>
                         {
-                            switch (copyMask?.RaceStats?.Overall ?? CopyOption.Reference)
+                            switch (copyMask?.RaceStats.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
                                     return r;
@@ -2722,7 +2722,7 @@ namespace Mutagen.Internals
                         cmds,
                         (r, d) =>
                         {
-                            switch (copyMask?.BodyData?.Overall ?? CopyOption.Reference)
+                            switch (copyMask?.BodyData.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
                                     return r;
@@ -2803,7 +2803,7 @@ namespace Mutagen.Internals
                         cmds,
                         (r, d) =>
                         {
-                            switch (copyMask?.FaceGenData?.Overall ?? CopyOption.Reference)
+                            switch (copyMask?.FaceGenData.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
                                     return r;
@@ -3535,7 +3535,7 @@ namespace Mutagen.Internals
                             maskObj: out subMask,
                             transl: (Relation subItem, bool listDoMasks, out MaskItem<Exception, Relation_ErrorMask> listSubMask) =>
                             {
-                                LoquiXmlTranslation<Relation, Relation_ErrorMask>.Instance.Write(
+                                LoquiXmlTranslation<IRelationGetter, Relation_ErrorMask>.Instance.Write(
                                     writer: writer,
                                     item: subItem,
                                     name: "Item",
@@ -3553,7 +3553,7 @@ namespace Mutagen.Internals
                     if (item.Data_Property.HasBeenSet)
                     {
                         MaskItem<Exception, RaceData_ErrorMask> subMask;
-                        LoquiXmlTranslation<RaceData, RaceData_ErrorMask>.Instance.Write(
+                        LoquiXmlTranslation<IRaceDataGetter, RaceData_ErrorMask>.Instance.Write(
                             writer: writer,
                             item: item.Data,
                             name: nameof(item.Data),
@@ -3569,7 +3569,7 @@ namespace Mutagen.Internals
                     if (item.Voices_Property.HasBeenSet)
                     {
                         MaskItem<Exception, RaceVoices_ErrorMask> subMask;
-                        LoquiXmlTranslation<RaceVoices, RaceVoices_ErrorMask>.Instance.Write(
+                        LoquiXmlTranslation<IRaceVoicesGetter, RaceVoices_ErrorMask>.Instance.Write(
                             writer: writer,
                             item: item.Voices,
                             name: nameof(item.Voices),
@@ -3585,7 +3585,7 @@ namespace Mutagen.Internals
                     if (item.DefaultHair_Property.HasBeenSet)
                     {
                         MaskItem<Exception, RaceHair_ErrorMask> subMask;
-                        LoquiXmlTranslation<RaceHair, RaceHair_ErrorMask>.Instance.Write(
+                        LoquiXmlTranslation<IRaceHairGetter, RaceHair_ErrorMask>.Instance.Write(
                             writer: writer,
                             item: item.DefaultHair,
                             name: nameof(item.DefaultHair),
@@ -3646,7 +3646,7 @@ namespace Mutagen.Internals
                     if (item.RaceStats_Property.HasBeenSet)
                     {
                         MaskItem<Exception, RaceStatsGendered_ErrorMask> subMask;
-                        LoquiXmlTranslation<RaceStatsGendered, RaceStatsGendered_ErrorMask>.Instance.Write(
+                        LoquiXmlTranslation<IRaceStatsGenderedGetter, RaceStatsGendered_ErrorMask>.Instance.Write(
                             writer: writer,
                             item: item.RaceStats,
                             name: nameof(item.RaceStats),
@@ -3670,7 +3670,7 @@ namespace Mutagen.Internals
                             maskObj: out subMask,
                             transl: (FacePart subItem, bool listDoMasks, out MaskItem<Exception, FacePart_ErrorMask> listSubMask) =>
                             {
-                                LoquiXmlTranslation<FacePart, FacePart_ErrorMask>.Instance.Write(
+                                LoquiXmlTranslation<IFacePartGetter, FacePart_ErrorMask>.Instance.Write(
                                     writer: writer,
                                     item: subItem,
                                     name: "Item",
@@ -3688,7 +3688,7 @@ namespace Mutagen.Internals
                     if (item.BodyData_Property.HasBeenSet)
                     {
                         MaskItem<Exception, GenderedBodyData_ErrorMask> subMask;
-                        LoquiXmlTranslation<GenderedBodyData, GenderedBodyData_ErrorMask>.Instance.Write(
+                        LoquiXmlTranslation<IGenderedBodyDataGetter, GenderedBodyData_ErrorMask>.Instance.Write(
                             writer: writer,
                             item: item.BodyData,
                             name: nameof(item.BodyData),
@@ -3754,7 +3754,7 @@ namespace Mutagen.Internals
                     if (item.FaceGenData_Property.HasBeenSet)
                     {
                         MaskItem<Exception, FaceGenData_ErrorMask> subMask;
-                        LoquiXmlTranslation<FaceGenData, FaceGenData_ErrorMask>.Instance.Write(
+                        LoquiXmlTranslation<IFaceGenDataGetter, FaceGenData_ErrorMask>.Instance.Write(
                             writer: writer,
                             item: item.FaceGenData,
                             name: nameof(item.FaceGenData),
@@ -4599,7 +4599,7 @@ namespace Mutagen.Internals
 
     }
 
-    public class Race_ErrorMask : NamedMajorRecord_ErrorMask
+    public class Race_ErrorMask : NamedMajorRecord_ErrorMask, IErrorMask<Race_ErrorMask>
     {
         #region Members
         public Exception Description;
@@ -4950,18 +4950,18 @@ namespace Mutagen.Internals
             ret.Description = this.Description.Combine(rhs.Description);
             ret.Spells = new MaskItem<Exception, IEnumerable<Exception>>(this.Spells.Overall.Combine(rhs.Spells.Overall), new List<Exception>(this.Spells.Specific.And(rhs.Spells.Specific)));
             ret.Relations = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Relation_ErrorMask>>>(this.Relations.Overall.Combine(rhs.Relations.Overall), new List<MaskItem<Exception, Relation_ErrorMask>>(this.Relations.Specific.And(rhs.Relations.Specific)));
-            ret.Data = new MaskItem<Exception, RaceData_ErrorMask>(this.Data.Overall.Combine(rhs.Data.Overall), this.Data.Specific.Combine(rhs.Data.Specific));
-            ret.Voices = new MaskItem<Exception, RaceVoices_ErrorMask>(this.Voices.Overall.Combine(rhs.Voices.Overall), this.Voices.Specific.Combine(rhs.Voices.Specific));
-            ret.DefaultHair = new MaskItem<Exception, RaceHair_ErrorMask>(this.DefaultHair.Overall.Combine(rhs.DefaultHair.Overall), this.DefaultHair.Specific.Combine(rhs.DefaultHair.Specific));
+            ret.Data = new MaskItem<Exception, RaceData_ErrorMask>(this.Data.Overall.Combine(rhs.Data.Overall), ((IErrorMask<RaceData_ErrorMask>)this.Data.Specific).Combine(rhs.Data.Specific));
+            ret.Voices = new MaskItem<Exception, RaceVoices_ErrorMask>(this.Voices.Overall.Combine(rhs.Voices.Overall), ((IErrorMask<RaceVoices_ErrorMask>)this.Voices.Specific).Combine(rhs.Voices.Specific));
+            ret.DefaultHair = new MaskItem<Exception, RaceHair_ErrorMask>(this.DefaultHair.Overall.Combine(rhs.DefaultHair.Overall), ((IErrorMask<RaceHair_ErrorMask>)this.DefaultHair.Specific).Combine(rhs.DefaultHair.Specific));
             ret.DefaultHairColor = this.DefaultHairColor.Combine(rhs.DefaultHairColor);
             ret.FaceGenMainClamp = this.FaceGenMainClamp.Combine(rhs.FaceGenMainClamp);
             ret.FaceGenFaceClamp = this.FaceGenFaceClamp.Combine(rhs.FaceGenFaceClamp);
-            ret.RaceStats = new MaskItem<Exception, RaceStatsGendered_ErrorMask>(this.RaceStats.Overall.Combine(rhs.RaceStats.Overall), this.RaceStats.Specific.Combine(rhs.RaceStats.Specific));
+            ret.RaceStats = new MaskItem<Exception, RaceStatsGendered_ErrorMask>(this.RaceStats.Overall.Combine(rhs.RaceStats.Overall), ((IErrorMask<RaceStatsGendered_ErrorMask>)this.RaceStats.Specific).Combine(rhs.RaceStats.Specific));
             ret.FaceData = new MaskItem<Exception, IEnumerable<MaskItem<Exception, FacePart_ErrorMask>>>(this.FaceData.Overall.Combine(rhs.FaceData.Overall), new List<MaskItem<Exception, FacePart_ErrorMask>>(this.FaceData.Specific.And(rhs.FaceData.Specific)));
-            ret.BodyData = new MaskItem<Exception, GenderedBodyData_ErrorMask>(this.BodyData.Overall.Combine(rhs.BodyData.Overall), this.BodyData.Specific.Combine(rhs.BodyData.Specific));
+            ret.BodyData = new MaskItem<Exception, GenderedBodyData_ErrorMask>(this.BodyData.Overall.Combine(rhs.BodyData.Overall), ((IErrorMask<GenderedBodyData_ErrorMask>)this.BodyData.Specific).Combine(rhs.BodyData.Specific));
             ret.Hairs = new MaskItem<Exception, IEnumerable<Exception>>(this.Hairs.Overall.Combine(rhs.Hairs.Overall), new List<Exception>(this.Hairs.Specific.And(rhs.Hairs.Specific)));
             ret.Eyes = new MaskItem<Exception, IEnumerable<Exception>>(this.Eyes.Overall.Combine(rhs.Eyes.Overall), new List<Exception>(this.Eyes.Specific.And(rhs.Eyes.Specific)));
-            ret.FaceGenData = new MaskItem<Exception, FaceGenData_ErrorMask>(this.FaceGenData.Overall.Combine(rhs.FaceGenData.Overall), this.FaceGenData.Specific.Combine(rhs.FaceGenData.Specific));
+            ret.FaceGenData = new MaskItem<Exception, FaceGenData_ErrorMask>(this.FaceGenData.Overall.Combine(rhs.FaceGenData.Overall), ((IErrorMask<FaceGenData_ErrorMask>)this.FaceGenData.Specific).Combine(rhs.FaceGenData.Specific));
             ret.Unknown = this.Unknown.Combine(rhs.Unknown);
             return ret;
         }

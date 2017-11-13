@@ -1826,7 +1826,7 @@ namespace Mutagen.Internals
 
     }
 
-    public class FaceGenData_ErrorMask : IErrorMask
+    public class FaceGenData_ErrorMask : IErrorMask, IErrorMask<FaceGenData_ErrorMask>
     {
         #region Members
         public Exception Overall { get; set; }

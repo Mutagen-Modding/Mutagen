@@ -1630,7 +1630,7 @@ namespace Mutagen.Internals
 
     }
 
-    public class GameSettingString_ErrorMask : GameSetting_ErrorMask
+    public class GameSettingString_ErrorMask : GameSetting_ErrorMask, IErrorMask<GameSettingString_ErrorMask>
     {
         #region Members
         public Exception Data;

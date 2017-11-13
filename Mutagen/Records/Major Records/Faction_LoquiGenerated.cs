@@ -522,8 +522,8 @@ namespace Mutagen
                             root,
                             nullable: false,
                             doMasks: doMasks,
-                            errorMask: out subMask).Bubble((o) => o.Value);
-                        item._Flags.SetIfSucceeded(tryGet);
+                            errorMask: out subMask);
+                        item._Flags.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
                         ErrorMask.HandleErrorMask(
                             errorMask,
                             doMasks,
@@ -1883,7 +1883,7 @@ namespace Mutagen.Internals
                             maskObj: out subMask,
                             transl: (Relation subItem, bool listDoMasks, out MaskItem<Exception, Relation_ErrorMask> listSubMask) =>
                             {
-                                LoquiXmlTranslation<Relation, Relation_ErrorMask>.Instance.Write(
+                                LoquiXmlTranslation<IRelationGetter, Relation_ErrorMask>.Instance.Write(
                                     writer: writer,
                                     item: subItem,
                                     name: "Item",
@@ -1939,7 +1939,7 @@ namespace Mutagen.Internals
                             maskObj: out subMask,
                             transl: (Rank subItem, bool listDoMasks, out MaskItem<Exception, Rank_ErrorMask> listSubMask) =>
                             {
-                                LoquiXmlTranslation<Rank, Rank_ErrorMask>.Instance.Write(
+                                LoquiXmlTranslation<IRankGetter, Rank_ErrorMask>.Instance.Write(
                                     writer: writer,
                                     item: subItem,
                                     name: "Item",
@@ -2328,7 +2328,7 @@ namespace Mutagen.Internals
 
     }
 
-    public class Faction_ErrorMask : NamedMajorRecord_ErrorMask
+    public class Faction_ErrorMask : NamedMajorRecord_ErrorMask, IErrorMask<Faction_ErrorMask>
     {
         #region Members
         public MaskItem<Exception, IEnumerable<MaskItem<Exception, Relation_ErrorMask>>> Relations;

@@ -1846,7 +1846,7 @@ namespace Mutagen.Internals
 
     }
 
-    public class SoundDataExtended_ErrorMask : SoundData_ErrorMask
+    public class SoundDataExtended_ErrorMask : SoundData_ErrorMask, IErrorMask<SoundDataExtended_ErrorMask>
     {
         #region Members
         public Exception StaticAttenuation;

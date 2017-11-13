@@ -511,8 +511,8 @@ namespace Mutagen
                             root,
                             nullable: false,
                             doMasks: doMasks,
-                            errorMask: out subMask).Bubble((o) => o.Value);
-                        item._Flags.SetIfSucceeded(tryGet);
+                            errorMask: out subMask);
+                        item._Flags.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
                         ErrorMask.HandleErrorMask(
                             errorMask,
                             doMasks,
@@ -1388,7 +1388,7 @@ namespace Mutagen.Internals
                         cmds,
                         (r, d) =>
                         {
-                            switch (copyMask?.Model?.Overall ?? CopyOption.Reference)
+                            switch (copyMask?.Model.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
                                     return r;
@@ -1676,7 +1676,7 @@ namespace Mutagen.Internals
                     if (item.Model_Property.HasBeenSet)
                     {
                         MaskItem<Exception, Model_ErrorMask> subMask;
-                        LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Write(
+                        LoquiXmlTranslation<IModelGetter, Model_ErrorMask>.Instance.Write(
                             writer: writer,
                             item: item.Model,
                             name: nameof(item.Model),
@@ -1959,7 +1959,7 @@ namespace Mutagen.Internals
 
     }
 
-    public class Hair_ErrorMask : NamedMajorRecord_ErrorMask
+    public class Hair_ErrorMask : NamedMajorRecord_ErrorMask, IErrorMask<Hair_ErrorMask>
     {
         #region Members
         public MaskItem<Exception, Model_ErrorMask> Model;
@@ -2059,7 +2059,7 @@ namespace Mutagen.Internals
         public Hair_ErrorMask Combine(Hair_ErrorMask rhs)
         {
             var ret = new Hair_ErrorMask();
-            ret.Model = new MaskItem<Exception, Model_ErrorMask>(this.Model.Overall.Combine(rhs.Model.Overall), this.Model.Specific.Combine(rhs.Model.Specific));
+            ret.Model = new MaskItem<Exception, Model_ErrorMask>(this.Model.Overall.Combine(rhs.Model.Overall), ((IErrorMask<Model_ErrorMask>)this.Model.Specific).Combine(rhs.Model.Specific));
             ret.Icon = this.Icon.Combine(rhs.Icon);
             ret.Flags = this.Flags.Combine(rhs.Flags);
             return ret;

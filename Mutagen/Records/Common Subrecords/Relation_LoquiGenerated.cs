@@ -1653,7 +1653,7 @@ namespace Mutagen.Internals
 
     }
 
-    public class Relation_ErrorMask : IErrorMask
+    public class Relation_ErrorMask : IErrorMask, IErrorMask<Relation_ErrorMask>
     {
         #region Members
         public Exception Overall { get; set; }
