@@ -799,12 +799,11 @@ namespace Mutagen
                 errorMask: errorMask);
             item._TrainedSkill.SetIfSucceeded(TrainedSkilltryGet);
             if (frame.Complete) return;
-            var MaximumTrainingLeveltryGet = Mutagen.Binary.ByteBinaryTranslation.Instance.Parse(
+            item._MaximumTrainingLevel.SetIfSucceeded(Mutagen.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
                 doMasks: doMasks,
                 fieldIndex: (int)ClassTraining_FieldIndex.MaximumTrainingLevel,
-                errorMask: errorMask);
-            item._MaximumTrainingLevel.SetIfSucceeded(MaximumTrainingLeveltryGet);
+                errorMask: errorMask));
             if (frame.Complete) return;
             var FlufftryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(2)),

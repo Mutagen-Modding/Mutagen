@@ -963,61 +963,53 @@ namespace Mutagen
             Func<RaceStats_ErrorMask> errorMask)
         {
             if (frame.Complete) return;
-            var StrengthtryGet = Mutagen.Binary.ByteBinaryTranslation.Instance.Parse(
+            item._Strength.SetIfSucceeded(Mutagen.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
                 doMasks: doMasks,
                 fieldIndex: (int)RaceStats_FieldIndex.Strength,
-                errorMask: errorMask);
-            item._Strength.SetIfSucceeded(StrengthtryGet);
+                errorMask: errorMask));
             if (frame.Complete) return;
-            var IntelligencetryGet = Mutagen.Binary.ByteBinaryTranslation.Instance.Parse(
+            item._Intelligence.SetIfSucceeded(Mutagen.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
                 doMasks: doMasks,
                 fieldIndex: (int)RaceStats_FieldIndex.Intelligence,
-                errorMask: errorMask);
-            item._Intelligence.SetIfSucceeded(IntelligencetryGet);
+                errorMask: errorMask));
             if (frame.Complete) return;
-            var WillpowertryGet = Mutagen.Binary.ByteBinaryTranslation.Instance.Parse(
+            item._Willpower.SetIfSucceeded(Mutagen.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
                 doMasks: doMasks,
                 fieldIndex: (int)RaceStats_FieldIndex.Willpower,
-                errorMask: errorMask);
-            item._Willpower.SetIfSucceeded(WillpowertryGet);
+                errorMask: errorMask));
             if (frame.Complete) return;
-            var AgilitytryGet = Mutagen.Binary.ByteBinaryTranslation.Instance.Parse(
+            item._Agility.SetIfSucceeded(Mutagen.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
                 doMasks: doMasks,
                 fieldIndex: (int)RaceStats_FieldIndex.Agility,
-                errorMask: errorMask);
-            item._Agility.SetIfSucceeded(AgilitytryGet);
+                errorMask: errorMask));
             if (frame.Complete) return;
-            var SpeedtryGet = Mutagen.Binary.ByteBinaryTranslation.Instance.Parse(
+            item._Speed.SetIfSucceeded(Mutagen.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
                 doMasks: doMasks,
                 fieldIndex: (int)RaceStats_FieldIndex.Speed,
-                errorMask: errorMask);
-            item._Speed.SetIfSucceeded(SpeedtryGet);
+                errorMask: errorMask));
             if (frame.Complete) return;
-            var EndurancetryGet = Mutagen.Binary.ByteBinaryTranslation.Instance.Parse(
+            item._Endurance.SetIfSucceeded(Mutagen.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
                 doMasks: doMasks,
                 fieldIndex: (int)RaceStats_FieldIndex.Endurance,
-                errorMask: errorMask);
-            item._Endurance.SetIfSucceeded(EndurancetryGet);
+                errorMask: errorMask));
             if (frame.Complete) return;
-            var PersonalitytryGet = Mutagen.Binary.ByteBinaryTranslation.Instance.Parse(
+            item._Personality.SetIfSucceeded(Mutagen.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
                 doMasks: doMasks,
                 fieldIndex: (int)RaceStats_FieldIndex.Personality,
-                errorMask: errorMask);
-            item._Personality.SetIfSucceeded(PersonalitytryGet);
+                errorMask: errorMask));
             if (frame.Complete) return;
-            var LucktryGet = Mutagen.Binary.ByteBinaryTranslation.Instance.Parse(
+            item._Luck.SetIfSucceeded(Mutagen.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
                 doMasks: doMasks,
                 fieldIndex: (int)RaceStats_FieldIndex.Luck,
-                errorMask: errorMask);
-            item._Luck.SetIfSucceeded(LucktryGet);
+                errorMask: errorMask));
         }
 
         #endregion

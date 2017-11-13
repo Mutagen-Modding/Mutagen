@@ -791,26 +791,23 @@ namespace Mutagen
             Func<Header_ErrorMask> errorMask)
         {
             if (frame.Complete) return;
-            var VersiontryGet = Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
+            item._Version.SetIfSucceeded(Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
                 doMasks: doMasks,
                 fieldIndex: (int)Header_FieldIndex.Version,
-                errorMask: errorMask);
-            item._Version.SetIfSucceeded(VersiontryGet);
+                errorMask: errorMask));
             if (frame.Complete) return;
-            var NumRecordstryGet = Mutagen.Binary.Int32BinaryTranslation.Instance.Parse(
+            item._NumRecords.SetIfSucceeded(Mutagen.Binary.Int32BinaryTranslation.Instance.Parse(
                 frame: frame,
                 doMasks: doMasks,
                 fieldIndex: (int)Header_FieldIndex.NumRecords,
-                errorMask: errorMask);
-            item._NumRecords.SetIfSucceeded(NumRecordstryGet);
+                errorMask: errorMask));
             if (frame.Complete) return;
-            var NextObjectIDtryGet = Mutagen.Binary.UInt32BinaryTranslation.Instance.Parse(
+            item._NextObjectID.SetIfSucceeded(Mutagen.Binary.UInt32BinaryTranslation.Instance.Parse(
                 frame: frame,
                 doMasks: doMasks,
                 fieldIndex: (int)Header_FieldIndex.NextObjectID,
-                errorMask: errorMask);
-            item._NextObjectID.SetIfSucceeded(NextObjectIDtryGet);
+                errorMask: errorMask));
         }
 
         #endregion

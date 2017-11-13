@@ -835,26 +835,23 @@ namespace Mutagen
                 doMasks: doMasks,
                 errorMask: errorMask);
             if (frame.Complete) return;
-            var StaticAttenuationtryGet = Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
+            item._StaticAttenuation.SetIfSucceeded(Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
                 doMasks: doMasks,
                 fieldIndex: (int)SoundDataExtended_FieldIndex.StaticAttenuation,
-                errorMask: errorMask);
-            item._StaticAttenuation.SetIfSucceeded(StaticAttenuationtryGet);
+                errorMask: errorMask));
             if (frame.Complete) return;
-            var StopTimetryGet = Mutagen.Binary.ByteBinaryTranslation.Instance.Parse(
+            item._StopTime.SetIfSucceeded(Mutagen.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
                 doMasks: doMasks,
                 fieldIndex: (int)SoundDataExtended_FieldIndex.StopTime,
-                errorMask: errorMask);
-            item._StopTime.SetIfSucceeded(StopTimetryGet);
+                errorMask: errorMask));
             if (frame.Complete) return;
-            var StartTimetryGet = Mutagen.Binary.ByteBinaryTranslation.Instance.Parse(
+            item._StartTime.SetIfSucceeded(Mutagen.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
                 doMasks: doMasks,
                 fieldIndex: (int)SoundDataExtended_FieldIndex.StartTime,
-                errorMask: errorMask);
-            item._StartTime.SetIfSucceeded(StartTimetryGet);
+                errorMask: errorMask));
         }
 
         #endregion

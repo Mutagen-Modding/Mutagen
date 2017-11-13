@@ -868,12 +868,11 @@ namespace Mutagen
             switch (nextRecordType.Type)
             {
                 case "MODL":
-                    var ModeltryGet = LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    item._Model.SetIfSucceeded(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         doMasks: doMasks,
                         fieldIndex: (int)Hair_FieldIndex.Model,
-                        errorMask: errorMask);
-                    item._Model.SetIfSucceeded(ModeltryGet);
+                        errorMask: errorMask));
                     break;
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;

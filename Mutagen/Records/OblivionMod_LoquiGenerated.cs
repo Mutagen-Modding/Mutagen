@@ -1003,76 +1003,67 @@ namespace Mutagen
             switch (nextRecordType.Type)
             {
                 case "TES4":
-                    var TES4tryGet = LoquiBinaryTranslation<TES4, TES4_ErrorMask>.Instance.Parse(
+                    item._TES4.SetIfSucceeded(LoquiBinaryTranslation<TES4, TES4_ErrorMask>.Instance.Parse(
                         frame: frame,
                         doMasks: doMasks,
                         fieldIndex: (int)OblivionMod_FieldIndex.TES4,
-                        errorMask: errorMask);
-                    item._TES4.SetIfSucceeded(TES4tryGet);
+                        errorMask: errorMask));
                     break;
                 case "GMST":
-                    var GameSettingstryGet = LoquiBinaryTranslation<Group<GameSetting>, Group_ErrorMask<GameSetting_ErrorMask>>.Instance.Parse(
+                    item._GameSettings.SetIfSucceeded(LoquiBinaryTranslation<Group<GameSetting>, Group_ErrorMask<GameSetting_ErrorMask>>.Instance.Parse(
                         frame: frame,
                         doMasks: doMasks,
                         fieldIndex: (int)OblivionMod_FieldIndex.GameSettings,
-                        errorMask: errorMask);
-                    item._GameSettings.SetIfSucceeded(GameSettingstryGet);
+                        errorMask: errorMask));
                     break;
                 case "GLOB":
-                    var GlobalstryGet = LoquiBinaryTranslation<Group<Global>, Group_ErrorMask<Global_ErrorMask>>.Instance.Parse(
+                    item._Globals.SetIfSucceeded(LoquiBinaryTranslation<Group<Global>, Group_ErrorMask<Global_ErrorMask>>.Instance.Parse(
                         frame: frame,
                         doMasks: doMasks,
                         fieldIndex: (int)OblivionMod_FieldIndex.Globals,
-                        errorMask: errorMask);
-                    item._Globals.SetIfSucceeded(GlobalstryGet);
+                        errorMask: errorMask));
                     break;
                 case "CLAS":
-                    var ClassestryGet = LoquiBinaryTranslation<Group<Class>, Group_ErrorMask<Class_ErrorMask>>.Instance.Parse(
+                    item._Classes.SetIfSucceeded(LoquiBinaryTranslation<Group<Class>, Group_ErrorMask<Class_ErrorMask>>.Instance.Parse(
                         frame: frame,
                         doMasks: doMasks,
                         fieldIndex: (int)OblivionMod_FieldIndex.Classes,
-                        errorMask: errorMask);
-                    item._Classes.SetIfSucceeded(ClassestryGet);
+                        errorMask: errorMask));
                     break;
                 case "FACT":
-                    var FactionstryGet = LoquiBinaryTranslation<Group<Faction>, Group_ErrorMask<Faction_ErrorMask>>.Instance.Parse(
+                    item._Factions.SetIfSucceeded(LoquiBinaryTranslation<Group<Faction>, Group_ErrorMask<Faction_ErrorMask>>.Instance.Parse(
                         frame: frame,
                         doMasks: doMasks,
                         fieldIndex: (int)OblivionMod_FieldIndex.Factions,
-                        errorMask: errorMask);
-                    item._Factions.SetIfSucceeded(FactionstryGet);
+                        errorMask: errorMask));
                     break;
                 case "HAIR":
-                    var HairstryGet = LoquiBinaryTranslation<Group<Hair>, Group_ErrorMask<Hair_ErrorMask>>.Instance.Parse(
+                    item._Hairs.SetIfSucceeded(LoquiBinaryTranslation<Group<Hair>, Group_ErrorMask<Hair_ErrorMask>>.Instance.Parse(
                         frame: frame,
                         doMasks: doMasks,
                         fieldIndex: (int)OblivionMod_FieldIndex.Hairs,
-                        errorMask: errorMask);
-                    item._Hairs.SetIfSucceeded(HairstryGet);
+                        errorMask: errorMask));
                     break;
                 case "EYES":
-                    var EyestryGet = LoquiBinaryTranslation<Group<Eye>, Group_ErrorMask<Eye_ErrorMask>>.Instance.Parse(
+                    item._Eyes.SetIfSucceeded(LoquiBinaryTranslation<Group<Eye>, Group_ErrorMask<Eye_ErrorMask>>.Instance.Parse(
                         frame: frame,
                         doMasks: doMasks,
                         fieldIndex: (int)OblivionMod_FieldIndex.Eyes,
-                        errorMask: errorMask);
-                    item._Eyes.SetIfSucceeded(EyestryGet);
+                        errorMask: errorMask));
                     break;
                 case "RACE":
-                    var RacestryGet = LoquiBinaryTranslation<Group<Race>, Group_ErrorMask<Race_ErrorMask>>.Instance.Parse(
+                    item._Races.SetIfSucceeded(LoquiBinaryTranslation<Group<Race>, Group_ErrorMask<Race_ErrorMask>>.Instance.Parse(
                         frame: frame,
                         doMasks: doMasks,
                         fieldIndex: (int)OblivionMod_FieldIndex.Races,
-                        errorMask: errorMask);
-                    item._Races.SetIfSucceeded(RacestryGet);
+                        errorMask: errorMask));
                     break;
                 case "SOUN":
-                    var SoundstryGet = LoquiBinaryTranslation<Group<Sound>, Group_ErrorMask<Sound_ErrorMask>>.Instance.Parse(
+                    item._Sounds.SetIfSucceeded(LoquiBinaryTranslation<Group<Sound>, Group_ErrorMask<Sound_ErrorMask>>.Instance.Parse(
                         frame: frame,
                         doMasks: doMasks,
                         fieldIndex: (int)OblivionMod_FieldIndex.Sounds,
-                        errorMask: errorMask);
-                    item._Sounds.SetIfSucceeded(SoundstryGet);
+                        errorMask: errorMask));
                     break;
                 default:
                     errorMask().Warnings.Add($"Unexpected header {nextRecordType.Type} at position {frame.Position}");

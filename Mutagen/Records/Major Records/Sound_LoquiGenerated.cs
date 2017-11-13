@@ -817,15 +817,7 @@ namespace Mutagen
                     item._File.SetIfSucceeded(tryGet);
                     break;
                 case "SNDD":
-                    var DatatryGet = LoquiBinaryTranslation<SoundData, SoundData_ErrorMask>.Instance.Parse(
-                        frame: frame,
-                        doMasks: doMasks,
-                        fieldIndex: (int)Sound_FieldIndex.Data,
-                        errorMask: errorMask);
-                    item._Data.SetIfSucceeded(DatatryGet);
-                    break;
-                case "SNDX":
-                    item._Data.SetIfSucceeded(LoquiBinaryTranslation<SoundDataExtended, SoundDataExtended_ErrorMask>.Instance.Parse(
+                    item._Data.SetIfSucceeded(LoquiBinaryTranslation<SoundData, SoundData_ErrorMask>.Instance.Parse(
                         frame: frame,
                         doMasks: doMasks,
                         fieldIndex: (int)Sound_FieldIndex.Data,

@@ -442,21 +442,19 @@ namespace Mutagen.Generation
                                 throw new ArgumentException("Unsupported type generator: " + field.Field);
                             }
 
-                            if (generator.ShouldGenerateCopyIn(field.Field))
+                            if (!generator.ShouldGenerateCopyIn(field.Field)) continue;
+                            fg.AppendLine($"case \"{data.TriggeringRecordType.Value.Type}\":");
+                            if (typelessStruct && field.Index == 0)
                             {
-                                fg.AppendLine($"case \"{data.TriggeringRecordType.Value.Type}\":");
-                                if (typelessStruct && field.Index == 0)
-                                {
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        fg.AppendLine($"if (!first) return false;");
-                                    }
-                                }
-                                GenerateFillSnippet(obj, fg, field.Field, generator);
                                 using (new DepthWrapper(fg))
                                 {
-                                    fg.AppendLine("break;");
+                                    fg.AppendLine($"if (!first) return false;");
                                 }
+                            }
+                            GenerateFillSnippet(obj, fg, field.Field, generator);
+                            using (new DepthWrapper(fg))
+                            {
+                                fg.AppendLine("break;");
                             }
                         }
                         fg.AppendLine($"default:");

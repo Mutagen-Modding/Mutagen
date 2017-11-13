@@ -963,33 +963,29 @@ namespace Mutagen
                 errorMask: errorMask);
             item._Fluff.SetIfSucceeded(FlufftryGet);
             if (frame.Complete) return;
-            var MaleHeighttryGet = Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
+            item._MaleHeight.SetIfSucceeded(Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
                 doMasks: doMasks,
                 fieldIndex: (int)RaceData_FieldIndex.MaleHeight,
-                errorMask: errorMask);
-            item._MaleHeight.SetIfSucceeded(MaleHeighttryGet);
+                errorMask: errorMask));
             if (frame.Complete) return;
-            var FemaleHeighttryGet = Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
+            item._FemaleHeight.SetIfSucceeded(Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
                 doMasks: doMasks,
                 fieldIndex: (int)RaceData_FieldIndex.FemaleHeight,
-                errorMask: errorMask);
-            item._FemaleHeight.SetIfSucceeded(FemaleHeighttryGet);
+                errorMask: errorMask));
             if (frame.Complete) return;
-            var MaleWeighttryGet = Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
+            item._MaleWeight.SetIfSucceeded(Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
                 doMasks: doMasks,
                 fieldIndex: (int)RaceData_FieldIndex.MaleWeight,
-                errorMask: errorMask);
-            item._MaleWeight.SetIfSucceeded(MaleWeighttryGet);
+                errorMask: errorMask));
             if (frame.Complete) return;
-            var FemaleWeighttryGet = Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
+            item._FemaleWeight.SetIfSucceeded(Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
                 doMasks: doMasks,
                 fieldIndex: (int)RaceData_FieldIndex.FemaleWeight,
-                errorMask: errorMask);
-            item._FemaleWeight.SetIfSucceeded(FemaleWeighttryGet);
+                errorMask: errorMask));
             if (frame.Complete) return;
             var FlagstryGet = Mutagen.Binary.EnumBinaryTranslation<Race.Flag>.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(2)),

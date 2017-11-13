@@ -899,12 +899,11 @@ namespace Mutagen
                 fieldIndex: (int)SoundData_FieldIndex.MaximumAttenuationDistance,
                 errorMask: errorMask);
             if (frame.Complete) return;
-            var FrequencyAdjustmenttryGet = Mutagen.Binary.Int8BinaryTranslation.Instance.Parse(
+            item._FrequencyAdjustment.SetIfSucceeded(Mutagen.Binary.Int8BinaryTranslation.Instance.Parse(
                 frame: frame,
                 doMasks: doMasks,
                 fieldIndex: (int)SoundData_FieldIndex.FrequencyAdjustment,
-                errorMask: errorMask);
-            item._FrequencyAdjustment.SetIfSucceeded(FrequencyAdjustmenttryGet);
+                errorMask: errorMask));
             if (frame.Complete) return;
             frame.Position += 1;
             if (frame.Complete) return;

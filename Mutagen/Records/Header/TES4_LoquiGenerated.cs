@@ -975,12 +975,11 @@ namespace Mutagen
             switch (nextRecordType.Type)
             {
                 case "HEDR":
-                    var HeadertryGet = LoquiBinaryTranslation<Header, Header_ErrorMask>.Instance.Parse(
+                    item._Header.SetIfSucceeded(LoquiBinaryTranslation<Header, Header_ErrorMask>.Instance.Parse(
                         frame: frame,
                         doMasks: doMasks,
                         fieldIndex: (int)TES4_FieldIndex.Header,
-                        errorMask: errorMask);
-                    item._Header.SetIfSucceeded(HeadertryGet);
+                        errorMask: errorMask));
                     break;
                 case "OFST":
                     frame.Position += Constants.SUBRECORD_LENGTH;

@@ -761,12 +761,11 @@ namespace Mutagen
                 errorMask: errorMask);
             item._Skill.SetIfSucceeded(SkilltryGet);
             if (frame.Complete) return;
-            var BoosttryGet = Mutagen.Binary.Int8BinaryTranslation.Instance.Parse(
+            item._Boost.SetIfSucceeded(Mutagen.Binary.Int8BinaryTranslation.Instance.Parse(
                 frame: frame,
                 doMasks: doMasks,
                 fieldIndex: (int)SkillBoost_FieldIndex.Boost,
-                errorMask: errorMask);
-            item._Boost.SetIfSucceeded(BoosttryGet);
+                errorMask: errorMask));
         }
 
         #endregion

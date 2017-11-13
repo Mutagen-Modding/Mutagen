@@ -964,12 +964,11 @@ namespace Mutagen
                 errorMask: errorMask);
             item._ClassServices.SetIfSucceeded(ClassServicestryGet);
             if (frame.Complete) return;
-            var TrainingtryGet = LoquiBinaryTranslation<ClassTraining, ClassTraining_ErrorMask>.Instance.Parse(
+            item._Training.SetIfSucceeded(LoquiBinaryTranslation<ClassTraining, ClassTraining_ErrorMask>.Instance.Parse(
                 frame: frame.Spawn(snapToFinalPosition: false),
                 doMasks: doMasks,
                 fieldIndex: (int)ClassData_FieldIndex.Training,
-                errorMask: errorMask);
-            item._Training.SetIfSucceeded(TrainingtryGet);
+                errorMask: errorMask));
         }
 
         #endregion

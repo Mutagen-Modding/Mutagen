@@ -540,12 +540,11 @@ namespace Mutagen
                     break;
                 case "FLTV":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var RawFloattryGet = Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
+                    item._RawFloat.SetIfSucceeded(Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         doMasks: doMasks,
                         fieldIndex: (int)Global_FieldIndex.RawFloat,
-                        errorMask: errorMask);
-                    item._RawFloat.SetIfSucceeded(RawFloattryGet);
+                        errorMask: errorMask));
                     break;
                 default:
                     MajorRecord.Fill_Binary_RecordTypes(

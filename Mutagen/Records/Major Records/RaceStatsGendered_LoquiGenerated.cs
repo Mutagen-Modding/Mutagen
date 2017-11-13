@@ -751,19 +751,17 @@ namespace Mutagen
             Func<RaceStatsGendered_ErrorMask> errorMask)
         {
             if (frame.Complete) return;
-            var MaletryGet = LoquiBinaryTranslation<RaceStats, RaceStats_ErrorMask>.Instance.Parse(
+            item._Male.SetIfSucceeded(LoquiBinaryTranslation<RaceStats, RaceStats_ErrorMask>.Instance.Parse(
                 frame: frame.Spawn(snapToFinalPosition: false),
                 doMasks: doMasks,
                 fieldIndex: (int)RaceStatsGendered_FieldIndex.Male,
-                errorMask: errorMask);
-            item._Male.SetIfSucceeded(MaletryGet);
+                errorMask: errorMask));
             if (frame.Complete) return;
-            var FemaletryGet = LoquiBinaryTranslation<RaceStats, RaceStats_ErrorMask>.Instance.Parse(
+            item._Female.SetIfSucceeded(LoquiBinaryTranslation<RaceStats, RaceStats_ErrorMask>.Instance.Parse(
                 frame: frame.Spawn(snapToFinalPosition: false),
                 doMasks: doMasks,
                 fieldIndex: (int)RaceStatsGendered_FieldIndex.Female,
-                errorMask: errorMask);
-            item._Female.SetIfSucceeded(FemaletryGet);
+                errorMask: errorMask));
         }
 
         #endregion

@@ -789,12 +789,11 @@ namespace Mutagen
                     break;
                 case "MODB":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var BoundRadiustryGet = Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
+                    item._BoundRadius.SetIfSucceeded(Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         doMasks: doMasks,
                         fieldIndex: (int)Model_FieldIndex.BoundRadius,
-                        errorMask: errorMask);
-                    item._BoundRadius.SetIfSucceeded(BoundRadiustryGet);
+                        errorMask: errorMask));
                     break;
                 default:
                     return false;

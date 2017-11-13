@@ -756,19 +756,17 @@ namespace Mutagen
             Func<Relation_ErrorMask> errorMask)
         {
             if (frame.Complete) return;
-            var FactiontryGet = Mutagen.Binary.FormIDBinaryTranslation.Instance.Parse(
+            item._Faction.SetIfSucceeded(Mutagen.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 doMasks: doMasks,
                 fieldIndex: (int)Relation_FieldIndex.Faction,
-                errorMask: errorMask);
-            item._Faction.SetIfSucceeded(FactiontryGet);
+                errorMask: errorMask));
             if (frame.Complete) return;
-            var ModifiertryGet = Mutagen.Binary.Int32BinaryTranslation.Instance.Parse(
+            item._Modifier.SetIfSucceeded(Mutagen.Binary.Int32BinaryTranslation.Instance.Parse(
                 frame: frame,
                 doMasks: doMasks,
                 fieldIndex: (int)Relation_FieldIndex.Modifier,
-                errorMask: errorMask);
-            item._Modifier.SetIfSucceeded(ModifiertryGet);
+                errorMask: errorMask));
         }
 
         #endregion

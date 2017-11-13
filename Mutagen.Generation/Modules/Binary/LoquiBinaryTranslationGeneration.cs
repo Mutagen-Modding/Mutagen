@@ -108,8 +108,17 @@ namespace Mutagen.Generation
                         fg.AppendLine("frame.Position += Constants.SUBRECORD_LENGTH + contentLength; // Skip marker");
                     }
 
-                    using (var args = new ArgsWrapper(fg,
-                        $"var {typeGen.Name}tryGet = LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}, {loquiGen.MaskItemString(MaskType.Error)}>.Instance.Parse"))
+                    ArgsWrapper args;
+                    if (itemAccessor.PropertyAccess != null)
+                    {
+                        args = new ArgsWrapper(fg, $"{itemAccessor.PropertyAccess}.{nameof(INotifyingCollectionExt.SetIfSucceeded)}(LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}, {loquiGen.MaskItemString(MaskType.Error)}>.Instance.Parse",
+                            suffixLine: ")");
+                    }
+                    else
+                    {
+                        args = new ArgsWrapper(fg, $"var {typeGen.Name}tryGet = LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}, {loquiGen.MaskItemString(MaskType.Error)}>.Instance.Parse");
+                    }
+                    using (args)
                     {
                         args.Add($"frame: {readerAccessor}{(loquiGen.TargetObjectGeneration.HasRecordType() ? null : ".Spawn(snapToFinalPosition: false)")}");
                         args.Add($"doMasks: {doMaskAccessor}");
@@ -123,11 +132,7 @@ namespace Mutagen.Generation
                             args.Add($"errorMask: out {maskAccessor}");
                         }
                     }
-                    if (itemAccessor.PropertyAccess != null)
-                    {
-                        fg.AppendLine($"{itemAccessor.PropertyAccess}.{nameof(INotifyingCollectionExt.SetIfSucceeded)}({typeGen.Name}tryGet);");
-                    }
-                    else
+                    if (itemAccessor.PropertyAccess == null)
                     {
                         fg.AppendLine($"if ({typeGen.Name}tryGet.Succeeded)");
                         using (new BraceWrapper(fg))

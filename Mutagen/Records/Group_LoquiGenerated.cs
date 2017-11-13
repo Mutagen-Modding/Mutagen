@@ -965,12 +965,11 @@ namespace Mutagen
                 fieldIndex: (int)Group_FieldIndex.ContainedRecordType,
                 errorMask: errorMask);
             if (frame.Complete) return;
-            var GroupTypetryGet = Mutagen.Binary.Int32BinaryTranslation.Instance.Parse(
+            item._GroupType.SetIfSucceeded(Mutagen.Binary.Int32BinaryTranslation.Instance.Parse(
                 frame: frame,
                 doMasks: doMasks,
                 fieldIndex: (int)Group_FieldIndex.GroupType,
-                errorMask: errorMask);
-            item._GroupType.SetIfSucceeded(GroupTypetryGet);
+                errorMask: errorMask));
             if (frame.Complete) return;
             var LastModifiedtryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(4)),

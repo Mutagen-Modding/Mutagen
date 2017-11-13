@@ -783,12 +783,11 @@ namespace Mutagen
             {
                 case "MODL":
                     if (!first) return false;
-                    var ModeltryGet = LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                    item._Model.SetIfSucceeded(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         doMasks: doMasks,
                         fieldIndex: (int)BodyData_FieldIndex.Model,
-                        errorMask: errorMask);
-                    item._Model.SetIfSucceeded(ModeltryGet);
+                        errorMask: errorMask));
                     break;
                 case "INDX":
                     var BodyPartstryGet = Mutagen.Binary.ListBinaryTranslation<BodyPart, MaskItem<Exception, BodyPart_ErrorMask>>.Instance.ParseRepeatedItem(

@@ -789,12 +789,11 @@ namespace Mutagen
                     break;
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var FileSizetryGet = Mutagen.Binary.UInt64BinaryTranslation.Instance.Parse(
+                    item._FileSize.SetIfSucceeded(Mutagen.Binary.UInt64BinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         doMasks: doMasks,
                         fieldIndex: (int)MasterReference_FieldIndex.FileSize,
-                        errorMask: errorMask);
-                    item._FileSize.SetIfSucceeded(FileSizetryGet);
+                        errorMask: errorMask));
                     break;
                 default:
                     return false;

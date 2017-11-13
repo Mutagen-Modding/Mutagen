@@ -800,12 +800,11 @@ namespace Mutagen
             {
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var DatatryGet = Mutagen.Binary.Int32BinaryTranslation.Instance.Parse(
+                    item._Data.SetIfSucceeded(Mutagen.Binary.Int32BinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         doMasks: doMasks,
                         fieldIndex: (int)GameSettingInt_FieldIndex.Data,
-                        errorMask: errorMask);
-                    item._Data.SetIfSucceeded(DatatryGet);
+                        errorMask: errorMask));
                     break;
                 default:
                     GameSetting.Fill_Binary_RecordTypes(

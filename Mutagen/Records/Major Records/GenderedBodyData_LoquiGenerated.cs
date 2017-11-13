@@ -775,21 +775,19 @@ namespace Mutagen
                 case "MNAM":
                     if (!first) return false;
                     frame.Position += Constants.SUBRECORD_LENGTH + contentLength; // Skip marker
-                    var MaletryGet = LoquiBinaryTranslation<BodyData, BodyData_ErrorMask>.Instance.Parse(
+                    item._Male.SetIfSucceeded(LoquiBinaryTranslation<BodyData, BodyData_ErrorMask>.Instance.Parse(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         doMasks: doMasks,
                         fieldIndex: (int)GenderedBodyData_FieldIndex.Male,
-                        errorMask: errorMask);
-                    item._Male.SetIfSucceeded(MaletryGet);
+                        errorMask: errorMask));
                     break;
                 case "FNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH + contentLength; // Skip marker
-                    var FemaletryGet = LoquiBinaryTranslation<BodyData, BodyData_ErrorMask>.Instance.Parse(
+                    item._Female.SetIfSucceeded(LoquiBinaryTranslation<BodyData, BodyData_ErrorMask>.Instance.Parse(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         doMasks: doMasks,
                         fieldIndex: (int)GenderedBodyData_FieldIndex.Female,
-                        errorMask: errorMask);
-                    item._Female.SetIfSucceeded(FemaletryGet);
+                        errorMask: errorMask));
                     break;
                 default:
                     return false;

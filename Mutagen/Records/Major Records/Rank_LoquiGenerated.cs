@@ -850,12 +850,11 @@ namespace Mutagen
                 case "RNAM":
                     if (!first) return false;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var RankNumbertryGet = Mutagen.Binary.Int32BinaryTranslation.Instance.Parse(
+                    item._RankNumber.SetIfSucceeded(Mutagen.Binary.Int32BinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         doMasks: doMasks,
                         fieldIndex: (int)Rank_FieldIndex.RankNumber,
-                        errorMask: errorMask);
-                    item._RankNumber.SetIfSucceeded(RankNumbertryGet);
+                        errorMask: errorMask));
                     break;
                 case "MNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;

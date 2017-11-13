@@ -756,19 +756,17 @@ namespace Mutagen
             Func<RaceVoices_ErrorMask> errorMask)
         {
             if (frame.Complete) return;
-            var MaletryGet = Mutagen.Binary.FormIDBinaryTranslation.Instance.Parse(
+            item._Male.SetIfSucceeded(Mutagen.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 doMasks: doMasks,
                 fieldIndex: (int)RaceVoices_FieldIndex.Male,
-                errorMask: errorMask);
-            item._Male.SetIfSucceeded(MaletryGet);
+                errorMask: errorMask));
             if (frame.Complete) return;
-            var FemaletryGet = Mutagen.Binary.FormIDBinaryTranslation.Instance.Parse(
+            item._Female.SetIfSucceeded(Mutagen.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 doMasks: doMasks,
                 fieldIndex: (int)RaceVoices_FieldIndex.Female,
-                errorMask: errorMask);
-            item._Female.SetIfSucceeded(FemaletryGet);
+                errorMask: errorMask));
         }
 
         #endregion

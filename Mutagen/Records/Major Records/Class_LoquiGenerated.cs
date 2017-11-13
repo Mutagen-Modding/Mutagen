@@ -895,12 +895,11 @@ namespace Mutagen
                     item._Icon.SetIfSucceeded(tryGet);
                     break;
                 case "DATA":
-                    var ClassDatatryGet = LoquiBinaryTranslation<ClassData, ClassData_ErrorMask>.Instance.Parse(
+                    item._ClassData.SetIfSucceeded(LoquiBinaryTranslation<ClassData, ClassData_ErrorMask>.Instance.Parse(
                         frame: frame,
                         doMasks: doMasks,
                         fieldIndex: (int)Class_FieldIndex.ClassData,
-                        errorMask: errorMask);
-                    item._ClassData.SetIfSucceeded(ClassDatatryGet);
+                        errorMask: errorMask));
                     break;
                 default:
                     NamedMajorRecord.Fill_Binary_RecordTypes(

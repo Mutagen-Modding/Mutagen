@@ -595,12 +595,11 @@ namespace Mutagen
                 errorMask: errorMask);
             item._MajorRecordFlags.SetIfSucceeded(MajorRecordFlagstryGet);
             if (frame.Complete) return;
-            var FormIDtryGet = Mutagen.Binary.FormIDBinaryTranslation.Instance.Parse(
+            item._FormID.SetIfSucceeded(Mutagen.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 doMasks: doMasks,
                 fieldIndex: (int)MajorRecord_FieldIndex.FormID,
-                errorMask: errorMask);
-            item._FormID.SetIfSucceeded(FormIDtryGet);
+                errorMask: errorMask));
             if (frame.Complete) return;
             var VersiontryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(4)),

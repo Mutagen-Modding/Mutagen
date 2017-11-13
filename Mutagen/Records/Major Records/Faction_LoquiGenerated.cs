@@ -945,12 +945,11 @@ namespace Mutagen
                     break;
                 case "CNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var CrimeGoldMultipliertryGet = Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
+                    item._CrimeGoldMultiplier.SetIfSucceeded(Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         doMasks: doMasks,
                         fieldIndex: (int)Faction_FieldIndex.CrimeGoldMultiplier,
-                        errorMask: errorMask);
-                    item._CrimeGoldMultiplier.SetIfSucceeded(CrimeGoldMultipliertryGet);
+                        errorMask: errorMask));
                     break;
                 case "RNAM":
                     var RankstryGet = Mutagen.Binary.ListBinaryTranslation<Rank, MaskItem<Exception, Rank_ErrorMask>>.Instance.ParseRepeatedItem(
