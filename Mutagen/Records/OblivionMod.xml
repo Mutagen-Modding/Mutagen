@@ -45,6 +45,11 @@
           <GenericSpecification Definition="Sound" TypeToSpecify="T" />
         </Direct>
       </Ref>
+      <Ref name="Skills">
+        <Direct refName="Group" >
+          <GenericSpecification Definition="SkillRecord" TypeToSpecify="T" />
+        </Direct>
+      </Ref>
     </Fields>
   </Object>
 </Loqui>

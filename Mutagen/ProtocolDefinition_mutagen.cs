@@ -48,6 +48,8 @@ namespace Loqui
             LoquiRegistration.Register(Mutagen.Internals.Sound_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Internals.SoundData_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Internals.SoundDataExtended_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Internals.SkillRecord_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Internals.SkillData_Registration.Instance);
         }
     }
 }

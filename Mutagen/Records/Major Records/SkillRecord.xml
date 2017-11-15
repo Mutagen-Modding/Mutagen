@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="SkillRecord" objType="Record" baseClass="MajorRecord" recordType="SKIL" GUID="d6afa219-e0d6-4f44-83d4-2d0298897f4d" ID="42">
+    <Fields>
+      <Enum name="Skill" enumName="ActorValue" byteLength="4" recordType="INDX" />
+      <String name="Description" recordType="DESC" />
+      <FilePath name="Icon" recordType="ICON" />
+      <RefDirect name="Data" refName="SkillData" />
+      <String name="ApprenticeText" recordType="ANAM" />
+      <String name="JourneymanText" recordType="JNAM" />
+      <String name="ExpertText" recordType="ENAM" />
+      <String name="MasterText" recordType="MNAM" />
+    </Fields>
+  </Object>
+  <Object name="SkillData" objType="Subrecord" recordType="DATA" GUID="61385379-0a7b-4da0-8228-ae04867c4360" ID="43">
+    <Fields>
+      <Enum name="Action" enumName="ActorValue" byteLength="4" />
+      <Enum name="Attribute" enumName="ActorValue" byteLength="4" />
+      <Enum name="Specialization" enumName="Specialization" byteLength="4" />
+      <Float name="UseValueFirst" />
+      <Float name="UseValueSecond" />
+    </Fields>
+  </Object>
+</Loqui>

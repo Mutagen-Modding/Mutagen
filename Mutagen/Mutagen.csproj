@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="us-ascii"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -52,7 +52,9 @@
     <Compile Include="ProtocolDefinition_mutagen.cs" />
     <Compile Include="ContentLength.cs" />
     <Compile Include="Records\Common Enums\ActorValue.cs" />
+    <Compile Include="Records\Common Enums\Attribute.cs" />
     <Compile Include="Records\Common Enums\Skill.cs" />
+    <Compile Include="Records\Common Enums\Specialization.cs" />
     <Compile Include="Records\Major Records\Class.cs">
       <DependentUpon>Class.xml</DependentUpon>
     </Compile>
@@ -264,6 +266,12 @@
     <Compile Include="Records\Major Records\SoundDataExtended_LoquiGenerated.cs">
       <DependentUpon>Sound.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\SkillData_LoquiGenerated.cs">
+      <DependentUpon>SkillRecord.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SkillRecord_LoquiGenerated.cs">
+      <DependentUpon>SkillRecord.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\CSharpExt\CSharpExt\CSharpExt.csproj">
@@ -313,6 +321,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Race.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\SkillRecord.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Sound.xml">
