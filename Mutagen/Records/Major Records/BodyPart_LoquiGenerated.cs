@@ -1168,7 +1168,7 @@ namespace Mutagen.Internals
     #endregion
 
     #region Extensions
-    public static class BodyPartCommon
+    public static partial class BodyPartCommon
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(

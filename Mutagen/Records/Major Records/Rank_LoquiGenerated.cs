@@ -1316,7 +1316,7 @@ namespace Mutagen.Internals
     #endregion
 
     #region Extensions
-    public static class RankCommon
+    public static partial class RankCommon
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(

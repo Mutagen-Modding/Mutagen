@@ -119,7 +119,7 @@
       <xs:choice>
         <xs:group ref="NamedFieldOptions"/>
         <xs:element name="FormID" type="NFormID"/>
-        <xs:element name="ZeroBuffer" type="ZeroBuffer"/>
+        <xs:element name="Buffer" type="NBuffer"/>
       </xs:choice>
     </xs:group>
 
@@ -127,7 +127,7 @@
       <xs:choice>
         <xs:group ref="FieldOptions"/>
         <xs:element name="FormID" type="FormID"/>
-        <xs:element name="ZeroBuffer" type="ZeroBuffer"/>
+        <xs:element name="Buffer" type="Buffer"/>
       </xs:choice>
     </xs:group>
   </xs:redefine>
@@ -149,10 +149,19 @@
     </xs:complexContent>
   </xs:complexType>
 
-  <xs:complexType name="ZeroBuffer" >
+  <xs:complexType name="Buffer" >
     <xs:complexContent>
       <xs:extension base="Nothing">
         <xs:attribute name="length" type="xs:int" />
+        <xs:attribute name="static" type="xs:boolean" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="NBuffer" >
+    <xs:complexContent>
+      <xs:extension base="Buffer">
+        <xs:attribute name="name" type="xs:string" use="required" />
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>

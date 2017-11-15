@@ -53,7 +53,7 @@ namespace Mutagen.Generation
             this._typeGenerations[typeof(FormIDType)] = new PrimitiveBinaryTranslationGeneration<FormID>();
             this._typeGenerations[typeof(ListType)] = new ListBinaryTranslationGeneration();
             this._typeGenerations[typeof(ByteArrayType)] = new ByteArrayTranslationGeneration();
-            this._typeGenerations[typeof(ZeroBufferType)] = new ZeroBufferBinaryTranslationGeneration();
+            this._typeGenerations[typeof(BufferType)] = new BufferBinaryTranslationGeneration();
             this.MainAPI = new TranslationModuleAPI(
                 writerAPI: new MethodAPI("MutagenWriter writer"),
                 readerAPI: new MethodAPI("MutagenFrame frame"));
@@ -443,15 +443,18 @@ namespace Mutagen.Generation
                             }
 
                             if (!generator.ShouldGenerateCopyIn(field.Field)) continue;
-                            fg.AppendLine($"case \"{data.TriggeringRecordType.Value.Type}\":");
-                            using (new DepthWrapper(fg))
+                            foreach (var gen in data.GenerationTypes)
                             {
-                                if (typelessStruct && field.Index == 0)
+                                fg.AppendLine($"case \"{gen.Key.Type}\":");
+                                using (new DepthWrapper(fg))
                                 {
-                                    fg.AppendLine($"if (!first) return false;");
+                                    if (typelessStruct && field.Index == 0)
+                                    {
+                                        fg.AppendLine($"if (!first) return false;");
+                                    }
+                                    GenerateFillSnippet(obj, fg, gen.Value, generator);
+                                    fg.AppendLine("break;");
                                 }
-                                GenerateFillSnippet(obj, fg, field.Field, generator);
-                                fg.AppendLine("break;");
                             }
                         }
                         fg.AppendLine($"default:");
@@ -539,7 +542,6 @@ namespace Mutagen.Generation
         private void GenerateFillSnippet(ObjectGeneration obj, FileGeneration fg, TypeGeneration field, BinaryTranslationGeneration generator)
         {
             var data = field.GetFieldData();
-            var maskType = this.Gen.MaskModule.GetMaskModule(field.GetType()).GetErrorMaskTypeStr(field);
             if (data.CustomBinary)
             {
                 if (data.HasTrigger)
@@ -556,7 +558,10 @@ namespace Mutagen.Generation
                         args.Add("doMasks: doMasks");
                         if (field.HasIndex)
                         {
-                            args.Add($"fieldIndex: (int){field.IndexEnumName}");
+                            if (field.IntegrateField)
+                            {
+                                args.Add($"fieldIndex: (int){field.IndexEnumName}");
+                            }
                             args.Add($"errorMask: errorMask");
                         }
                         else
@@ -719,7 +724,14 @@ namespace Mutagen.Generation
                     $"public static void Write_{ModuleNickname}_Embedded{obj.GenericTypes_ErrMask}",
                     wheres: obj.GenerateWhereClauses().And(obj.GenericTypes_ErrorMaskWheres).ToArray()))
                 {
-                    args.Add($"{obj.Getter_InterfaceStr} item");
+                    if (obj.ExportWithIGetter)
+                    {
+                        args.Add($"{obj.Getter_InterfaceStr} item");
+                    }
+                    else
+                    {
+                        args.Add($"{obj.ObjectName} item");
+                    }
                     args.Add("MutagenWriter writer");
                     args.Add("bool doMasks");
                     args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
@@ -783,7 +795,14 @@ namespace Mutagen.Generation
                     $"public static void Write_{ModuleNickname}_RecordTypes{obj.GenericTypes_ErrMask}",
                     wheres: obj.GenerateWhereClauses().And(obj.GenericTypes_ErrorMaskWheres).ToArray()))
                 {
-                    args.Add($"{obj.Getter_InterfaceStr} item");
+                    if (obj.ExportWithIGetter)
+                    {
+                        args.Add($"{obj.Getter_InterfaceStr} item");
+                    }
+                    else
+                    {
+                        args.Add($"{obj.ObjectName} item");
+                    }
                     args.Add("MutagenWriter writer");
                     args.Add("bool doMasks");
                     args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");

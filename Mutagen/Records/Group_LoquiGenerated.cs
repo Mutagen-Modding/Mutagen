@@ -1440,7 +1440,7 @@ namespace Mutagen.Internals
     #endregion
 
     #region Extensions
-    public static class GroupCommon
+    public static partial class GroupCommon
     {
         #region Copy Fields From
         public static void CopyFieldsFrom<T, T_CopyMask>(

@@ -1387,7 +1387,7 @@ namespace Mutagen.Internals
     #endregion
 
     #region Extensions
-    public static class FactionCommon
+    public static partial class FactionCommon
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(

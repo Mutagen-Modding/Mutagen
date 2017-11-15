@@ -1166,7 +1166,7 @@ namespace Mutagen.Internals
     #endregion
 
     #region Extensions
-    public static class MasterReferenceCommon
+    public static partial class MasterReferenceCommon
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(

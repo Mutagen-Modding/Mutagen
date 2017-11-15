@@ -66,6 +66,11 @@ namespace Mutagen.Binary
             return Parse(reader, doMasks: doMasks, errorMask: out errorMask);
         }
 
+        public void Write(MutagenWriter writer, T item)
+        {
+            Write(writer, item, doMasks: false, errorMask: out var ex);
+        }
+
         public void Write(MutagenWriter writer, T item, bool doMasks, out Exception errorMask)
         {
             try

@@ -55,14 +55,14 @@
     <Compile Include="Fields\EnumType.cs" />
     <Compile Include="Fields\FormIDType.cs" />
     <Compile Include="Fields\MutagenFieldData.cs" />
-    <Compile Include="Fields\ZeroBufferType.cs" />
+    <Compile Include="Fields\BufferType.cs" />
     <Compile Include="Modules\Binary\BinaryTranslationModule.cs" />
     <Compile Include="Modules\Binary\ByteArrayTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\EnumBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\FilePathBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\ListBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\LoquiBinaryTranslationGeneration.cs" />
-    <Compile Include="Modules\Binary\ZeroBufferBinaryTranslationGeneration.cs" />
+    <Compile Include="Modules\Binary\BufferBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\PrimitiveBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\BinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\StringBinaryTranslationGeneration.cs" />

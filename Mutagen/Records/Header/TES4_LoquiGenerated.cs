@@ -1557,7 +1557,7 @@ namespace Mutagen.Internals
     #endregion
 
     #region Extensions
-    public static class TES4Common
+    public static partial class TES4Common
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(

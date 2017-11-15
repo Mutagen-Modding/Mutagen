@@ -1240,7 +1240,7 @@ namespace Mutagen.Internals
     #endregion
 
     #region Extensions
-    public static class FacePartCommon
+    public static partial class FacePartCommon
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(

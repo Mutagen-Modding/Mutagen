@@ -1036,7 +1036,7 @@ namespace Mutagen.Internals
     #endregion
 
     #region Extensions
-    public static class SpellCommon
+    public static partial class SpellCommon
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(

@@ -1222,7 +1222,7 @@ namespace Mutagen.Internals
     #endregion
 
     #region Extensions
-    public static class EyeCommon
+    public static partial class EyeCommon
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(

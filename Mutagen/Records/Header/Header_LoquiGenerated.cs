@@ -1204,7 +1204,7 @@ namespace Mutagen.Internals
     #endregion
 
     #region Extensions
-    public static class HeaderCommon
+    public static partial class HeaderCommon
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(

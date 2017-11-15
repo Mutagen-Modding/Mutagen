@@ -1145,7 +1145,7 @@ namespace Mutagen.Internals
     #endregion
 
     #region Extensions
-    public static class GameSettingIntCommon
+    public static partial class GameSettingIntCommon
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(

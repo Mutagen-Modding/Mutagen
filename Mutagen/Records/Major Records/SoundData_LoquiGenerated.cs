@@ -908,7 +908,7 @@ namespace Mutagen
             frame.Position += 1;
             if (frame.Complete) return;
             var FlagstryGet = Mutagen.Binary.EnumBinaryTranslation<SoundData.Flag>.Instance.Parse(
-                frame: frame.Spawn(new ContentLength(2)),
+                frame: frame.Spawn(new ContentLength(4)),
                 fieldIndex: (int)SoundData_FieldIndex.Flags,
                 doMasks: doMasks,
                 errorMask: errorMask);
@@ -1135,7 +1135,7 @@ namespace Mutagen.Internals
         MinimumAttenuationDistance = 0,
         MaximumAttenuationDistance = 1,
         FrequencyAdjustment = 2,
-        Flags = 4,
+        Flags = 3,
     }
     #endregion
 
@@ -1339,7 +1339,7 @@ namespace Mutagen.Internals
     #endregion
 
     #region Extensions
-    public static class SoundDataCommon
+    public static partial class SoundDataCommon
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -1673,7 +1673,7 @@ namespace Mutagen.Internals
         #region XML Write
         public static void Write_XML(
             XmlWriter writer,
-            ISoundDataGetter item,
+            SoundData item,
             bool doMasks,
             out SoundData_ErrorMask errorMask,
             string name = null)
@@ -1690,7 +1690,7 @@ namespace Mutagen.Internals
 
         private static void Write_XML_Internal(
             XmlWriter writer,
-            ISoundDataGetter item,
+            SoundData item,
             bool doMasks,
             Func<SoundData_ErrorMask> errorMask,
             string name = null)
@@ -1779,7 +1779,7 @@ namespace Mutagen.Internals
         #region Binary Write
         public static void Write_Binary(
             MutagenWriter writer,
-            ISoundDataGetter item,
+            SoundData item,
             bool doMasks,
             out SoundData_ErrorMask errorMask)
         {
@@ -1794,7 +1794,7 @@ namespace Mutagen.Internals
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
-            ISoundDataGetter item,
+            SoundData item,
             bool doMasks,
             Func<SoundData_ErrorMask> errorMask)
         {
@@ -1821,7 +1821,7 @@ namespace Mutagen.Internals
         #endregion
 
         public static void Write_Binary_Embedded(
-            ISoundDataGetter item,
+            SoundData item,
             MutagenWriter writer,
             bool doMasks,
             Func<SoundData_ErrorMask> errorMask)
@@ -1844,14 +1844,14 @@ namespace Mutagen.Internals
                 doMasks: doMasks,
                 fieldIndex: (int)SoundData_FieldIndex.FrequencyAdjustment,
                 errorMask: errorMask);
-            Mutagen.Binary.ZeroBufferBinaryTranslation.Instance.Write(
+            Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                length: 1);
+                item: item.Marker);
             Mutagen.Binary.EnumBinaryTranslation<SoundData.Flag>.Instance.Write(
                 writer,
                 item.Flags_Property,
                 doMasks: doMasks,
-                length: new ContentLength(2),
+                length: new ContentLength(4),
                 fieldIndex: (int)SoundData_FieldIndex.Flags,
                 errorMask: errorMask);
         }

@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>0ad6fb65fffdeea6cb9aeaa8bd0050ed556d7ba0</Sha>
+         <Sha>753a2094653d8614198e6d4b23feb9456f73e69a</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>11-13-2017 17:51:09</CommitDate>
-         <Description>Merge fixes</Description>
+         <CommitDate>11-14-2017 21:46:54</CommitDate>
+         <Description>ObjectGeneration.ExportWithIGetter.  TypeGeneration.GenerateTypicalItems -&gt; IntegrateField.  Constants work.</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

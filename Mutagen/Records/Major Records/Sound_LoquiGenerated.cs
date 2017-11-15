@@ -823,6 +823,13 @@ namespace Mutagen
                         fieldIndex: (int)Sound_FieldIndex.Data,
                         errorMask: errorMask));
                     break;
+                case "SNDX":
+                    item._Data.SetIfSucceeded(LoquiBinaryTranslation<SoundDataExtended, SoundDataExtended_ErrorMask>.Instance.Parse(
+                        frame: frame,
+                        doMasks: doMasks,
+                        fieldIndex: (int)Sound_FieldIndex.Data,
+                        errorMask: errorMask));
+                    break;
                 default:
                     MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
@@ -1195,7 +1202,7 @@ namespace Mutagen.Internals
     #endregion
 
     #region Extensions
-    public static class SoundCommon
+    public static partial class SoundCommon
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(

@@ -999,7 +999,7 @@ namespace Mutagen.Internals
     #endregion
 
     #region Extensions
-    public static class MajorRecordCommon
+    public static partial class MajorRecordCommon
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(

@@ -8,7 +8,7 @@ using Loqui.Generation;
 
 namespace Mutagen.Generation
 {
-    public class ZeroBufferBinaryTranslationGeneration : BinaryTranslationGeneration
+    public class BufferBinaryTranslationGeneration : BinaryTranslationGeneration
     {
         public override void GenerateCopyIn(
             FileGeneration fg,
@@ -19,7 +19,7 @@ namespace Mutagen.Generation
             string doMaskAccessor,
             string maskAccessor)
         {
-            ZeroBufferType zero = typeGen as ZeroBufferType;
+            BufferType zero = typeGen as BufferType;
             fg.AppendLine($"{readerAccessor}.Position += {zero.Length};");
         }
 
@@ -32,7 +32,7 @@ namespace Mutagen.Generation
             string doMaskAccessor,
             string maskAccessor)
         {
-            ZeroBufferType zero = typeGen as ZeroBufferType;
+            BufferType zero = typeGen as BufferType;
             fg.AppendLine($"{readerAccessor}.Position += {zero.Length};");
         }
 
@@ -45,12 +45,19 @@ namespace Mutagen.Generation
             string doMaskAccessor,
             string maskAccessor)
         {
-            ZeroBufferType zero = typeGen as ZeroBufferType;
+            BufferType zero = typeGen as BufferType;
             using (var args = new ArgsWrapper(fg,
-                $"{this.Namespace}ZeroBufferBinaryTranslation.Instance.Write"))
+                $"{this.Namespace}ByteArrayBinaryTranslation.Instance.Write"))
             {
                 args.Add($"writer: {writerAccessor}");
-                args.Add($"length: {zero.Length}");
+                if (zero.Static)
+                {
+                    args.Add($"item: {objGen.ExtCommonName}.{typeGen.Name}");
+                }
+                else
+                {
+                    args.Add($"item: {itemAccessor.PropertyOrDirectAccess}");
+                }
             }
         }
     }

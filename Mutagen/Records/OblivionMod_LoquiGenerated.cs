@@ -1654,7 +1654,7 @@ namespace Mutagen.Internals
     #endregion
 
     #region Extensions
-    public static class OblivionModCommon
+    public static partial class OblivionModCommon
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(

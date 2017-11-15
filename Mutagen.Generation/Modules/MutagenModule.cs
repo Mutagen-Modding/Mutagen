@@ -21,8 +21,8 @@ namespace Mutagen.Generation
         public override void GenerateInRegistration(ObjectGeneration obj, FileGeneration fg)
         {
             GenerateKnownRecordTypes(obj, fg);
-            fg.AppendLine($"public const int NumStructFields = {obj.Fields.Where((f) => f.GenerateTypicalItems && f.GetFieldData().TriggeringRecordAccessor == null).Count()};");
-            fg.AppendLine($"public const int NumTypedFields = {obj.Fields.Where((f) => f.GenerateTypicalItems && f.GetFieldData().TriggeringRecordAccessor != null).Count()};");
+            fg.AppendLine($"public const int NumStructFields = {obj.Fields.Where((f) => f.IntegrateField && f.GetFieldData().TriggeringRecordAccessor == null).Count()};");
+            fg.AppendLine($"public const int NumTypedFields = {obj.Fields.Where((f) => f.IntegrateField && f.GetFieldData().TriggeringRecordAccessor != null).Count()};");
         }
 
         private IEnumerable<string> GetGenerics(ObjectGeneration obj, FileGeneration fg)
@@ -76,9 +76,9 @@ namespace Mutagen.Generation
                 {
                     recordTypes.Add(data.MarkerType.Value);
                 }
-                foreach (var subType in data.SubTypes)
+                foreach (var subType in data.SubLoquiTypes)
                 {
-                    recordTypes.Add(subType);
+                    recordTypes.Add(subType.Key);
                 }
                 if (field is ContainerType contType)
                 {
@@ -161,7 +161,7 @@ namespace Mutagen.Generation
 
         public override void PostFieldLoad(ObjectGeneration obj, TypeGeneration field, XElement node)
         {
-            var data = field.CustomData.TryCreateValue(Constants.DATA_KEY, () => new MutagenFieldData()) as MutagenFieldData;
+            var data = field.CustomData.TryCreateValue(Constants.DATA_KEY, () => new MutagenFieldData(field)) as MutagenFieldData;
             var recordAttr = node.GetAttribute("recordType");
             if (recordAttr != null)
             {
@@ -230,7 +230,7 @@ namespace Mutagen.Generation
                 foreach (var subObj in inheritingObjs)
                 {
                     if (!subObj.TryGetTriggeringRecordType(out var subRec)) continue;
-                    data.SubTypes.Add(subRec);
+                    data.SubLoquiTypes.Add(subRec, subObj);
                 }
             }
         }
@@ -294,7 +294,7 @@ namespace Mutagen.Generation
                 }
                 else
                 {
-                    var subData = listType.SubTypeGeneration.CustomData.TryCreateValue(Constants.DATA_KEY, () => new MutagenFieldData()) as MutagenFieldData;
+                    var subData = listType.SubTypeGeneration.CustomData.TryCreateValue(Constants.DATA_KEY, () => new MutagenFieldData(listType.SubTypeGeneration)) as MutagenFieldData;
                     if (subData.TriggeringRecordAccessor != null)
                     {
                         data.TriggeringRecordAccessor = $"{obj.RegistrationName}.{subData.RecordType.Value.HeaderName}";
@@ -309,7 +309,7 @@ namespace Mutagen.Generation
             if (field is ContainerType contType
                 && contType.SubTypeGeneration is LoquiType contLoqui)
             {
-                var subData = contLoqui.CustomData.TryCreateValue(Constants.DATA_KEY, () => new MutagenFieldData()) as MutagenFieldData;
+                var subData = contLoqui.CustomData.TryCreateValue(Constants.DATA_KEY, () => new MutagenFieldData(contLoqui)) as MutagenFieldData;
                 SetRecordTrigger(
                     obj,
                     contLoqui,

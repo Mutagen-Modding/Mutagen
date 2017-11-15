@@ -1133,7 +1133,7 @@ namespace Mutagen.Internals
     #endregion
 
     #region Extensions
-    public static class RelationCommon
+    public static partial class RelationCommon
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(

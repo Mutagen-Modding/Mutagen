@@ -2285,7 +2285,7 @@ namespace Mutagen.Internals
     #endregion
 
     #region Extensions
-    public static class RaceCommon
+    public static partial class RaceCommon
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(

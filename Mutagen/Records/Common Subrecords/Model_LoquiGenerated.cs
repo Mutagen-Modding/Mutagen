@@ -1166,7 +1166,7 @@ namespace Mutagen.Internals
     #endregion
 
     #region Extensions
-    public static class ModelCommon
+    public static partial class ModelCommon
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(

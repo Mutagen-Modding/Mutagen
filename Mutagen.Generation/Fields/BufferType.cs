@@ -8,14 +8,17 @@ using System.Xml.Linq;
 
 namespace Mutagen.Generation
 {
-    public class ZeroBufferType : NothingType
+    public class BufferType : ByteArrayType
     {
-        public int Length;
+        public bool Static;
 
         public override void Load(XElement node, bool requireName = true)
         {
-            this.Length = node.GetAttribute<int>("length", throwException: true);
+            this.Nullable = false;
             base.Load(node, requireName);
+            this.IntegrateField = false;
+            this.Static = node.GetAttribute<bool>("static");
+            this.Notifying = NotifyingOption.None;
         }
     }
 }

@@ -1439,7 +1439,7 @@ namespace Mutagen.Internals
     #endregion
 
     #region Extensions
-    public static class ClassDataCommon
+    public static partial class ClassDataCommon
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(

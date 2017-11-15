@@ -1094,7 +1094,7 @@ namespace Mutagen.Internals
     #endregion
 
     #region Extensions
-    public static class GlobalIntCommon
+    public static partial class GlobalIntCommon
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(

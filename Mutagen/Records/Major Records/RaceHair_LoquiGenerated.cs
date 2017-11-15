@@ -1133,7 +1133,7 @@ namespace Mutagen.Internals
     #endregion
 
     #region Extensions
-    public static class RaceHairCommon
+    public static partial class RaceHairCommon
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(

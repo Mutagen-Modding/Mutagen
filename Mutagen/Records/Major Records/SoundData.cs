@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Mutagen.Binary;
 using Mutagen.Internals;
 using Loqui;
+using Noggog.Notifying;
 
 namespace Mutagen
 {
@@ -26,6 +27,9 @@ namespace Mutagen
 
         public const int MinAttenuationDistanceMultiplier = 5;
         public const int MaxAttenuationDistanceMultiplier = 100;
+
+        private static byte[] _marker = new byte[] { 1 };
+        public virtual byte[] Marker => _marker;
 
         partial void CustomCtor()
         {

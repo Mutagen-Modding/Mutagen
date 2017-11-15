@@ -1241,7 +1241,7 @@ namespace Mutagen.Internals
     #endregion
 
     #region Extensions
-    public static class SoundDataExtendedCommon
+    public static partial class SoundDataExtendedCommon
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
@@ -1553,7 +1553,7 @@ namespace Mutagen.Internals
         #region XML Write
         public static void Write_XML(
             XmlWriter writer,
-            ISoundDataExtendedGetter item,
+            SoundDataExtended item,
             bool doMasks,
             out SoundDataExtended_ErrorMask errorMask,
             string name = null)
@@ -1570,7 +1570,7 @@ namespace Mutagen.Internals
 
         private static void Write_XML_Internal(
             XmlWriter writer,
-            ISoundDataExtendedGetter item,
+            SoundDataExtended item,
             bool doMasks,
             Func<SoundDataExtended_ErrorMask> errorMask,
             string name = null)
@@ -1644,7 +1644,7 @@ namespace Mutagen.Internals
         #region Binary Write
         public static void Write_Binary(
             MutagenWriter writer,
-            ISoundDataExtendedGetter item,
+            SoundDataExtended item,
             bool doMasks,
             out SoundDataExtended_ErrorMask errorMask)
         {
@@ -1659,7 +1659,7 @@ namespace Mutagen.Internals
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
-            ISoundDataExtendedGetter item,
+            SoundDataExtended item,
             bool doMasks,
             Func<SoundDataExtended_ErrorMask> errorMask)
         {
@@ -1686,7 +1686,7 @@ namespace Mutagen.Internals
         #endregion
 
         public static void Write_Binary_Embedded(
-            ISoundDataExtendedGetter item,
+            SoundDataExtended item,
             MutagenWriter writer,
             bool doMasks,
             Func<SoundDataExtended_ErrorMask> errorMask)

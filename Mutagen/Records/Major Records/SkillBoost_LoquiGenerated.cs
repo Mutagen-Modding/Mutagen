@@ -1130,7 +1130,7 @@ namespace Mutagen.Internals
     #endregion
 
     #region Extensions
-    public static class SkillBoostCommon
+    public static partial class SkillBoostCommon
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
