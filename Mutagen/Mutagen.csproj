@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="Windows-1252"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -272,6 +272,9 @@
     <Compile Include="Records\Major Records\SkillRecord_LoquiGenerated.cs">
       <DependentUpon>SkillRecord.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\MagicEffect_LoquiGenerated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\CSharpExt\CSharpExt\CSharpExt.csproj">
@@ -312,6 +315,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Hair.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\MagicEffect.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\MajorRecord.xml">
