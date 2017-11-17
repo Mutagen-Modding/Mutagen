@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="us-ascii"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -53,6 +53,8 @@
     <Compile Include="ContentLength.cs" />
     <Compile Include="Records\Common Enums\ActorValue.cs" />
     <Compile Include="Records\Common Enums\Attribute.cs" />
+    <Compile Include="Records\Common Enums\MagicSchool.cs" />
+    <Compile Include="Records\Common Enums\Resistance.cs" />
     <Compile Include="Records\Common Enums\Skill.cs" />
     <Compile Include="Records\Common Enums\Specialization.cs" />
     <Compile Include="Records\Major Records\Class.cs">
@@ -99,6 +101,9 @@
     </Compile>
     <Compile Include="Records\Major Records\Hair.cs">
       <DependentUpon>Hair.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MagicEffect.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\MajorRecord.cs">
       <DependentUpon>MajorRecord.xml</DependentUpon>
@@ -273,6 +278,9 @@
       <DependentUpon>SkillRecord.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\MagicEffect_LoquiGenerated.cs">
+      <DependentUpon>MagicEffect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MagicData_LoquiGenerated.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
   </ItemGroup>

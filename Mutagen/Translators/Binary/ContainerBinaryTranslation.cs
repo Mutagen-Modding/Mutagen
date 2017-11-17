@@ -229,7 +229,7 @@ namespace Mutagen.Binary
                 return TryGet<IEnumerable<T>>.Failure;
             }
         }
-        
+
         public TryGet<IEnumerable<T>> ParseRepeatedItem<Mask>(
             MutagenFrame frame,
             int fieldIndex,
@@ -369,6 +369,27 @@ namespace Mutagen.Binary
         }
 
         public void Write<Mask>(
+            MutagenWriter writer,
+            IHasBeenSetItemGetter<IEnumerable<T>> item,
+            bool doMasks,
+            int fieldIndex,
+            RecordType recordType,
+            Func<Mask> errorMask,
+            BinarySubWriteDelegate<T, M> transl)
+            where Mask : IErrorMask
+        {
+            if (!item.HasBeenSet) return;
+            this.Write(
+                writer: writer,
+                item: item.Item,
+                doMasks: doMasks,
+                fieldIndex: fieldIndex,
+                recordType: recordType,
+                errorMask: errorMask,
+                transl: transl);
+        }
+
+        private void Write<Mask>(
             MutagenWriter writer,
             IEnumerable<T> item,
             bool doMasks,

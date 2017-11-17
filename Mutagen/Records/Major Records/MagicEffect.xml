@@ -5,6 +5,30 @@
       <String name="Description" recordType="DESC" />
       <FilePath name="Icon" recordType="ICON" />
       <RefDirect name="Model" refName="Model" />
+      <RefDirect name="Data" refName="MagicData" />
+      <List name="CounterEffects" recordType="ESCE"  >
+        <FormID />
+      </List>
+    </Fields>
+  </Object>
+  <Object name="MagicData" objType="Subrecord" recordType="DATA" GUID="00b852d0-4427-435b-91e5-2c85703c8d43" ID="45">
+    <Fields>
+      <Enum name="Flags" enumName="MagicEffect.MagicFlag" byteLength="4" />
+      <Float name="BaseCost" />
+      <ByteArray name="Unused" length="4" nullable="false" />
+      <Enum name="MagicSchool" enumName="MagicSchool" byteLength="4" />
+      <Enum name="Resistance" enumName="Resistance" byteLength="4" />
+      <UInt32 name="CounterEffectCount" />
+      <FormID name="Light" />
+      <Float name="ProjectileSpeed" />
+      <FormID name="EffectShader" />
+      <FormID name="EnchantEffect" />
+      <FormID name="CastingSound" />
+      <FormID name="BoltSound" />
+      <FormID name="HitSound" />
+      <FormID name="AreaSound" />
+      <Float name="ConstantEffectEnchantmentFactor" />
+      <Float name="ConstantEffectBarterFactor" />
     </Fields>
   </Object>
 </Loqui>

@@ -50,6 +50,11 @@
           <GenericSpecification Definition="SkillRecord" TypeToSpecify="T" />
         </Direct>
       </Ref>
+      <Ref name="MagicEffects">
+        <Direct refName="Group" >
+          <GenericSpecification Definition="MagicEffect" TypeToSpecify="T" />
+        </Direct>
+      </Ref>
     </Fields>
   </Object>
 </Loqui>
