@@ -52,6 +52,10 @@ namespace Loqui
             LoquiRegistration.Register(Mutagen.Internals.SkillData_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Internals.MagicEffect_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Internals.MagicData_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Internals.Script_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Internals.ScriptMetaSummary_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Internals.LocalVariable_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Internals.LocalVariableData_Registration.Instance);
         }
     }
 }

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="Windows-1252"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -283,6 +283,18 @@
     <Compile Include="Records\Major Records\MagicData_LoquiGenerated.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Script_LoquiGenerated.cs">
+      <DependentUpon>Script.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ScriptMetaSummary_LoquiGenerated.cs">
+      <DependentUpon>Script.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LocalVariable_LoquiGenerated.cs">
+      <DependentUpon>Script.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LocalVariableData_LoquiGenerated.cs">
+      <DependentUpon>Script.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\CSharpExt\CSharpExt\CSharpExt.csproj">
@@ -335,6 +347,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Race.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\Script.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\SkillRecord.xml">
