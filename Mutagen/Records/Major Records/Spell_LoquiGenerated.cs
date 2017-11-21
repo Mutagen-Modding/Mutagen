@@ -795,7 +795,7 @@ namespace Mutagen
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
-                doErrorMask: false,
+                doMasks: false,
                 errorMask: null,
                 cmds: null,
                 def: def);
@@ -1050,7 +1050,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: false,
+                doMasks: false,
                 errorMask: null,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -1068,7 +1068,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: true,
+                doMasks: true,
                 errorMask: out errorMask,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -1078,7 +1078,7 @@ namespace Mutagen.Internals
             this ISpell item,
             ISpellGetter rhs,
             ISpellGetter def,
-            bool doErrorMask,
+            bool doMasks,
             out Spell_ErrorMask errorMask,
             Spell_CopyMask copyMask,
             NotifyingFireParameters? cmds)
@@ -1096,7 +1096,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: true,
+                doMasks: true,
                 errorMask: maskGetter,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -1107,7 +1107,7 @@ namespace Mutagen.Internals
             this ISpell item,
             ISpellGetter rhs,
             ISpellGetter def,
-            bool doErrorMask,
+            bool doMasks,
             Func<Spell_ErrorMask> errorMask,
             Spell_CopyMask copyMask,
             NotifyingFireParameters? cmds)
@@ -1116,7 +1116,7 @@ namespace Mutagen.Internals
                 item,
                 rhs,
                 def,
-                doErrorMask,
+                doMasks,
                 errorMask,
                 copyMask,
                 cmds);

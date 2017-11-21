@@ -949,7 +949,7 @@ namespace Mutagen
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
-                doErrorMask: false,
+                doMasks: false,
                 errorMask: null,
                 cmds: null,
                 def: def);
@@ -1366,7 +1366,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: false,
+                doMasks: false,
                 errorMask: null,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -1384,7 +1384,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: true,
+                doMasks: true,
                 errorMask: out errorMask,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -1394,7 +1394,7 @@ namespace Mutagen.Internals
             this ISkillData item,
             ISkillDataGetter rhs,
             ISkillDataGetter def,
-            bool doErrorMask,
+            bool doMasks,
             out SkillData_ErrorMask errorMask,
             SkillData_CopyMask copyMask,
             NotifyingFireParameters? cmds)
@@ -1412,7 +1412,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: true,
+                doMasks: true,
                 errorMask: maskGetter,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -1423,7 +1423,7 @@ namespace Mutagen.Internals
             this ISkillData item,
             ISkillDataGetter rhs,
             ISkillDataGetter def,
-            bool doErrorMask,
+            bool doMasks,
             Func<SkillData_ErrorMask> errorMask,
             SkillData_CopyMask copyMask,
             NotifyingFireParameters? cmds)
@@ -1438,7 +1438,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)SkillData_FieldIndex.Action, ex);
                 }
@@ -1453,7 +1453,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)SkillData_FieldIndex.Attribute, ex);
                 }
@@ -1468,7 +1468,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)SkillData_FieldIndex.Specialization, ex);
                 }
@@ -1483,7 +1483,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)SkillData_FieldIndex.UseValueFirst, ex);
                 }
@@ -1498,7 +1498,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)SkillData_FieldIndex.UseValueSecond, ex);
                 }

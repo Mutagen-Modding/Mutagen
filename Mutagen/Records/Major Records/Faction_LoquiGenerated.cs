@@ -1031,7 +1031,7 @@ namespace Mutagen
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
-                doErrorMask: false,
+                doMasks: false,
                 errorMask: null,
                 cmds: null,
                 def: def);
@@ -1401,7 +1401,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: false,
+                doMasks: false,
                 errorMask: null,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -1419,7 +1419,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: true,
+                doMasks: true,
                 errorMask: out errorMask,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -1429,7 +1429,7 @@ namespace Mutagen.Internals
             this IFaction item,
             IFactionGetter rhs,
             IFactionGetter def,
-            bool doErrorMask,
+            bool doMasks,
             out Faction_ErrorMask errorMask,
             Faction_CopyMask copyMask,
             NotifyingFireParameters? cmds)
@@ -1447,7 +1447,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: true,
+                doMasks: true,
                 errorMask: maskGetter,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -1458,7 +1458,7 @@ namespace Mutagen.Internals
             this IFaction item,
             IFactionGetter rhs,
             IFactionGetter def,
-            bool doErrorMask,
+            bool doMasks,
             Func<Faction_ErrorMask> errorMask,
             Faction_CopyMask copyMask,
             NotifyingFireParameters? cmds)
@@ -1467,7 +1467,7 @@ namespace Mutagen.Internals
                 item,
                 rhs,
                 def,
-                doErrorMask,
+                doMasks,
                 errorMask,
                 copyMask,
                 cmds);
@@ -1498,7 +1498,7 @@ namespace Mutagen.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)Faction_FieldIndex.Relations, ex);
                 }
@@ -1513,7 +1513,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)Faction_FieldIndex.Flags, ex);
                 }
@@ -1528,7 +1528,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)Faction_FieldIndex.CrimeGoldMultiplier, ex);
                 }
@@ -1560,7 +1560,7 @@ namespace Mutagen.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)Faction_FieldIndex.Ranks, ex);
                 }

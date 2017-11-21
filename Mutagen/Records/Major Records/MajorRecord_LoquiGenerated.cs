@@ -1013,7 +1013,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: false,
+                doMasks: false,
                 errorMask: null,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -1031,7 +1031,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: true,
+                doMasks: true,
                 errorMask: out errorMask,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -1041,7 +1041,7 @@ namespace Mutagen.Internals
             this IMajorRecord item,
             IMajorRecordGetter rhs,
             IMajorRecordGetter def,
-            bool doErrorMask,
+            bool doMasks,
             out MajorRecord_ErrorMask errorMask,
             MajorRecord_CopyMask copyMask,
             NotifyingFireParameters? cmds)
@@ -1059,7 +1059,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: true,
+                doMasks: true,
                 errorMask: maskGetter,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -1070,7 +1070,7 @@ namespace Mutagen.Internals
             this IMajorRecord item,
             IMajorRecordGetter rhs,
             IMajorRecordGetter def,
-            bool doErrorMask,
+            bool doMasks,
             Func<MajorRecord_ErrorMask> errorMask,
             MajorRecord_CopyMask copyMask,
             NotifyingFireParameters? cmds)
@@ -1085,7 +1085,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)MajorRecord_FieldIndex.MajorRecordFlags, ex);
                 }
@@ -1100,7 +1100,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)MajorRecord_FieldIndex.Version, ex);
                 }
@@ -1115,7 +1115,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)MajorRecord_FieldIndex.EditorID, ex);
                 }

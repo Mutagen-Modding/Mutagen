@@ -1403,7 +1403,7 @@ namespace Mutagen
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
-                doErrorMask: false,
+                doMasks: false,
                 errorMask: null,
                 cmds: null,
                 def: def);
@@ -2150,7 +2150,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: false,
+                doMasks: false,
                 errorMask: null,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -2168,7 +2168,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: true,
+                doMasks: true,
                 errorMask: out errorMask,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -2178,7 +2178,7 @@ namespace Mutagen.Internals
             this IMagicData item,
             IMagicDataGetter rhs,
             IMagicDataGetter def,
-            bool doErrorMask,
+            bool doMasks,
             out MagicData_ErrorMask errorMask,
             MagicData_CopyMask copyMask,
             NotifyingFireParameters? cmds)
@@ -2196,7 +2196,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: true,
+                doMasks: true,
                 errorMask: maskGetter,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -2207,7 +2207,7 @@ namespace Mutagen.Internals
             this IMagicData item,
             IMagicDataGetter rhs,
             IMagicDataGetter def,
-            bool doErrorMask,
+            bool doMasks,
             Func<MagicData_ErrorMask> errorMask,
             MagicData_CopyMask copyMask,
             NotifyingFireParameters? cmds)
@@ -2222,7 +2222,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)MagicData_FieldIndex.Flags, ex);
                 }
@@ -2237,7 +2237,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)MagicData_FieldIndex.BaseCost, ex);
                 }
@@ -2252,7 +2252,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)MagicData_FieldIndex.Unused, ex);
                 }
@@ -2267,7 +2267,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)MagicData_FieldIndex.MagicSchool, ex);
                 }
@@ -2282,7 +2282,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)MagicData_FieldIndex.Resistance, ex);
                 }
@@ -2297,7 +2297,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)MagicData_FieldIndex.CounterEffectCount, ex);
                 }
@@ -2312,7 +2312,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)MagicData_FieldIndex.Light, ex);
                 }
@@ -2327,7 +2327,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)MagicData_FieldIndex.ProjectileSpeed, ex);
                 }
@@ -2342,7 +2342,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)MagicData_FieldIndex.EffectShader, ex);
                 }
@@ -2357,7 +2357,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)MagicData_FieldIndex.EnchantEffect, ex);
                 }
@@ -2372,7 +2372,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)MagicData_FieldIndex.CastingSound, ex);
                 }
@@ -2387,7 +2387,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)MagicData_FieldIndex.BoltSound, ex);
                 }
@@ -2402,7 +2402,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)MagicData_FieldIndex.HitSound, ex);
                 }
@@ -2417,7 +2417,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)MagicData_FieldIndex.AreaSound, ex);
                 }
@@ -2432,7 +2432,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)MagicData_FieldIndex.ConstantEffectEnchantmentFactor, ex);
                 }
@@ -2447,7 +2447,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)MagicData_FieldIndex.ConstantEffectBarterFactor, ex);
                 }

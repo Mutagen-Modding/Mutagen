@@ -1020,7 +1020,7 @@ namespace Mutagen
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
-                doErrorMask: false,
+                doMasks: false,
                 errorMask: null,
                 cmds: null,
                 def: def);
@@ -1453,7 +1453,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: false,
+                doMasks: false,
                 errorMask: null,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -1471,7 +1471,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: true,
+                doMasks: true,
                 errorMask: out errorMask,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -1481,7 +1481,7 @@ namespace Mutagen.Internals
             this IClassData item,
             IClassDataGetter rhs,
             IClassDataGetter def,
-            bool doErrorMask,
+            bool doMasks,
             out ClassData_ErrorMask errorMask,
             ClassData_CopyMask copyMask,
             NotifyingFireParameters? cmds)
@@ -1499,7 +1499,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: true,
+                doMasks: true,
                 errorMask: maskGetter,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -1510,7 +1510,7 @@ namespace Mutagen.Internals
             this IClassData item,
             IClassDataGetter rhs,
             IClassDataGetter def,
-            bool doErrorMask,
+            bool doMasks,
             Func<ClassData_ErrorMask> errorMask,
             ClassData_CopyMask copyMask,
             NotifyingFireParameters? cmds)
@@ -1525,7 +1525,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)ClassData_FieldIndex.PrimaryAttributes, ex);
                 }
@@ -1540,7 +1540,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)ClassData_FieldIndex.Specialization, ex);
                 }
@@ -1555,7 +1555,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)ClassData_FieldIndex.SecondaryAttributes, ex);
                 }
@@ -1570,7 +1570,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)ClassData_FieldIndex.Flags, ex);
                 }
@@ -1585,7 +1585,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)ClassData_FieldIndex.ClassServices, ex);
                 }
@@ -1609,8 +1609,8 @@ namespace Mutagen.Internals
                                         item: item.Training,
                                         rhs: rhs.Training,
                                         def: def?.Training,
-                                        doErrorMask: doErrorMask,
-                                        errorMask: (doErrorMask ? new Func<ClassTraining_ErrorMask>(() =>
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<ClassTraining_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
                                             if (baseMask.Training.Specific == null)
@@ -1636,7 +1636,7 @@ namespace Mutagen.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)ClassData_FieldIndex.Training, ex);
                 }

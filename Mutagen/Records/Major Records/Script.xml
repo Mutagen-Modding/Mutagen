@@ -15,7 +15,7 @@
   </Object>
   <Object name="ScriptMetaSummary" objType="Subrecord" recordType="SCHR" GUID="80c1bfa2-bdf3-4bc9-aeb7-306536cdbc91" ID="47">
     <Fields>
-      <Buffer name="Fluff" length="4" />
+      <ByteArray name="Fluff" length="4" nullable="false" />
       <UInt32 name="RefCount" />
       <Int32 name="CompiledSize" derivative="true" customBinary="true" />
       <UInt32 name="VariableCount" derivative="true" customBinary="true" />
@@ -23,7 +23,7 @@
   </Object>
   <Object name="LocalVariable" objType="Subrecord" GUID="b77aa416-b182-4265-8276-44b34bace18f" ID="48">
     <Fields>
-      <RefDirect name="Data" refName="LocalVariableData" />
+      <RefDirect name="Data" refName="LocalVariableData" recordType="SLSD" />
       <String name="Name" recordType="SCVR" />
     </Fields>
   </Object>

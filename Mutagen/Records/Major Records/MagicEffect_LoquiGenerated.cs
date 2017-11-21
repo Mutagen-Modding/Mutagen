@@ -1052,7 +1052,7 @@ namespace Mutagen
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
-                doErrorMask: false,
+                doMasks: false,
                 errorMask: null,
                 cmds: null,
                 def: def);
@@ -1461,7 +1461,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: false,
+                doMasks: false,
                 errorMask: null,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -1479,7 +1479,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: true,
+                doMasks: true,
                 errorMask: out errorMask,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -1489,7 +1489,7 @@ namespace Mutagen.Internals
             this IMagicEffect item,
             IMagicEffectGetter rhs,
             IMagicEffectGetter def,
-            bool doErrorMask,
+            bool doMasks,
             out MagicEffect_ErrorMask errorMask,
             MagicEffect_CopyMask copyMask,
             NotifyingFireParameters? cmds)
@@ -1507,7 +1507,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: true,
+                doMasks: true,
                 errorMask: maskGetter,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -1518,7 +1518,7 @@ namespace Mutagen.Internals
             this IMagicEffect item,
             IMagicEffectGetter rhs,
             IMagicEffectGetter def,
-            bool doErrorMask,
+            bool doMasks,
             Func<MagicEffect_ErrorMask> errorMask,
             MagicEffect_CopyMask copyMask,
             NotifyingFireParameters? cmds)
@@ -1527,7 +1527,7 @@ namespace Mutagen.Internals
                 item,
                 rhs,
                 def,
-                doErrorMask,
+                doMasks,
                 errorMask,
                 copyMask,
                 cmds);
@@ -1541,7 +1541,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)MagicEffect_FieldIndex.Description, ex);
                 }
@@ -1556,7 +1556,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)MagicEffect_FieldIndex.Icon, ex);
                 }
@@ -1580,8 +1580,8 @@ namespace Mutagen.Internals
                                         item: item.Model,
                                         rhs: rhs.Model,
                                         def: def?.Model,
-                                        doErrorMask: doErrorMask,
-                                        errorMask: (doErrorMask ? new Func<Model_ErrorMask>(() =>
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<Model_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
                                             if (baseMask.Model.Specific == null)
@@ -1607,7 +1607,7 @@ namespace Mutagen.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)MagicEffect_FieldIndex.Model, ex);
                 }
@@ -1631,8 +1631,8 @@ namespace Mutagen.Internals
                                         item: item.Data,
                                         rhs: rhs.Data,
                                         def: def?.Data,
-                                        doErrorMask: doErrorMask,
-                                        errorMask: (doErrorMask ? new Func<MagicData_ErrorMask>(() =>
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<MagicData_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
                                             if (baseMask.Data.Specific == null)
@@ -1658,7 +1658,7 @@ namespace Mutagen.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)MagicEffect_FieldIndex.Data, ex);
                 }
@@ -1673,7 +1673,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)MagicEffect_FieldIndex.CounterEffects, ex);
                 }

@@ -852,7 +852,7 @@ namespace Mutagen
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
-                doErrorMask: false,
+                doMasks: false,
                 errorMask: null,
                 cmds: null,
                 def: def);
@@ -1180,7 +1180,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: false,
+                doMasks: false,
                 errorMask: null,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -1198,7 +1198,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: true,
+                doMasks: true,
                 errorMask: out errorMask,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -1208,7 +1208,7 @@ namespace Mutagen.Internals
             this IMasterReference item,
             IMasterReferenceGetter rhs,
             IMasterReferenceGetter def,
-            bool doErrorMask,
+            bool doMasks,
             out MasterReference_ErrorMask errorMask,
             MasterReference_CopyMask copyMask,
             NotifyingFireParameters? cmds)
@@ -1226,7 +1226,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: true,
+                doMasks: true,
                 errorMask: maskGetter,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -1237,7 +1237,7 @@ namespace Mutagen.Internals
             this IMasterReference item,
             IMasterReferenceGetter rhs,
             IMasterReferenceGetter def,
-            bool doErrorMask,
+            bool doMasks,
             Func<MasterReference_ErrorMask> errorMask,
             MasterReference_CopyMask copyMask,
             NotifyingFireParameters? cmds)
@@ -1252,7 +1252,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)MasterReference_FieldIndex.Master, ex);
                 }
@@ -1267,7 +1267,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)MasterReference_FieldIndex.FileSize, ex);
                 }

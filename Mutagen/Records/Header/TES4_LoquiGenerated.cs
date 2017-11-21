@@ -1094,7 +1094,7 @@ namespace Mutagen
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
-                doErrorMask: false,
+                doMasks: false,
                 errorMask: null,
                 cmds: null,
                 def: def);
@@ -1571,7 +1571,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: false,
+                doMasks: false,
                 errorMask: null,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -1589,7 +1589,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: true,
+                doMasks: true,
                 errorMask: out errorMask,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -1599,7 +1599,7 @@ namespace Mutagen.Internals
             this ITES4 item,
             ITES4Getter rhs,
             ITES4Getter def,
-            bool doErrorMask,
+            bool doMasks,
             out TES4_ErrorMask errorMask,
             TES4_CopyMask copyMask,
             NotifyingFireParameters? cmds)
@@ -1617,7 +1617,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: true,
+                doMasks: true,
                 errorMask: maskGetter,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -1628,7 +1628,7 @@ namespace Mutagen.Internals
             this ITES4 item,
             ITES4Getter rhs,
             ITES4Getter def,
-            bool doErrorMask,
+            bool doMasks,
             Func<TES4_ErrorMask> errorMask,
             TES4_CopyMask copyMask,
             NotifyingFireParameters? cmds)
@@ -1643,7 +1643,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)TES4_FieldIndex.Fluff, ex);
                 }
@@ -1667,8 +1667,8 @@ namespace Mutagen.Internals
                                         item: item.Header,
                                         rhs: rhs.Header,
                                         def: def?.Header,
-                                        doErrorMask: doErrorMask,
-                                        errorMask: (doErrorMask ? new Func<Header_ErrorMask>(() =>
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<Header_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
                                             if (baseMask.Header.Specific == null)
@@ -1694,7 +1694,7 @@ namespace Mutagen.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)TES4_FieldIndex.Header, ex);
                 }
@@ -1709,7 +1709,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)TES4_FieldIndex.TypeOffsets, ex);
                 }
@@ -1724,7 +1724,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)TES4_FieldIndex.Deleted, ex);
                 }
@@ -1739,7 +1739,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)TES4_FieldIndex.Author, ex);
                 }
@@ -1754,7 +1754,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)TES4_FieldIndex.Description, ex);
                 }
@@ -1786,7 +1786,7 @@ namespace Mutagen.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)TES4_FieldIndex.MasterReferences, ex);
                 }

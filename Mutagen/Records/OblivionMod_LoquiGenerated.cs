@@ -1202,7 +1202,7 @@ namespace Mutagen
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
-                doErrorMask: false,
+                doMasks: false,
                 errorMask: null,
                 cmds: null,
                 def: def);
@@ -1808,7 +1808,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: false,
+                doMasks: false,
                 errorMask: null,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -1826,7 +1826,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: true,
+                doMasks: true,
                 errorMask: out errorMask,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -1836,7 +1836,7 @@ namespace Mutagen.Internals
             this IOblivionMod item,
             IOblivionModGetter rhs,
             IOblivionModGetter def,
-            bool doErrorMask,
+            bool doMasks,
             out OblivionMod_ErrorMask errorMask,
             OblivionMod_CopyMask copyMask,
             NotifyingFireParameters? cmds)
@@ -1854,7 +1854,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: true,
+                doMasks: true,
                 errorMask: maskGetter,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -1865,7 +1865,7 @@ namespace Mutagen.Internals
             this IOblivionMod item,
             IOblivionModGetter rhs,
             IOblivionModGetter def,
-            bool doErrorMask,
+            bool doMasks,
             Func<OblivionMod_ErrorMask> errorMask,
             OblivionMod_CopyMask copyMask,
             NotifyingFireParameters? cmds)
@@ -1889,8 +1889,8 @@ namespace Mutagen.Internals
                                         item: item.TES4,
                                         rhs: rhs.TES4,
                                         def: def?.TES4,
-                                        doErrorMask: doErrorMask,
-                                        errorMask: (doErrorMask ? new Func<TES4_ErrorMask>(() =>
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<TES4_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
                                             if (baseMask.TES4.Specific == null)
@@ -1916,7 +1916,7 @@ namespace Mutagen.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)OblivionMod_FieldIndex.TES4, ex);
                 }
@@ -1940,8 +1940,8 @@ namespace Mutagen.Internals
                                         item: item.GameSettings,
                                         rhs: rhs.GameSettings,
                                         def: def?.GameSettings,
-                                        doErrorMask: doErrorMask,
-                                        errorMask: (doErrorMask ? new Func<Group_ErrorMask<GameSetting_ErrorMask>>(() =>
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<Group_ErrorMask<GameSetting_ErrorMask>>(() =>
                                         {
                                             var baseMask = errorMask();
                                             if (baseMask.GameSettings.Specific == null)
@@ -1967,7 +1967,7 @@ namespace Mutagen.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)OblivionMod_FieldIndex.GameSettings, ex);
                 }
@@ -1991,8 +1991,8 @@ namespace Mutagen.Internals
                                         item: item.Globals,
                                         rhs: rhs.Globals,
                                         def: def?.Globals,
-                                        doErrorMask: doErrorMask,
-                                        errorMask: (doErrorMask ? new Func<Group_ErrorMask<Global_ErrorMask>>(() =>
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<Group_ErrorMask<Global_ErrorMask>>(() =>
                                         {
                                             var baseMask = errorMask();
                                             if (baseMask.Globals.Specific == null)
@@ -2018,7 +2018,7 @@ namespace Mutagen.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)OblivionMod_FieldIndex.Globals, ex);
                 }
@@ -2042,8 +2042,8 @@ namespace Mutagen.Internals
                                         item: item.Classes,
                                         rhs: rhs.Classes,
                                         def: def?.Classes,
-                                        doErrorMask: doErrorMask,
-                                        errorMask: (doErrorMask ? new Func<Group_ErrorMask<Class_ErrorMask>>(() =>
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<Group_ErrorMask<Class_ErrorMask>>(() =>
                                         {
                                             var baseMask = errorMask();
                                             if (baseMask.Classes.Specific == null)
@@ -2069,7 +2069,7 @@ namespace Mutagen.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)OblivionMod_FieldIndex.Classes, ex);
                 }
@@ -2093,8 +2093,8 @@ namespace Mutagen.Internals
                                         item: item.Factions,
                                         rhs: rhs.Factions,
                                         def: def?.Factions,
-                                        doErrorMask: doErrorMask,
-                                        errorMask: (doErrorMask ? new Func<Group_ErrorMask<Faction_ErrorMask>>(() =>
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<Group_ErrorMask<Faction_ErrorMask>>(() =>
                                         {
                                             var baseMask = errorMask();
                                             if (baseMask.Factions.Specific == null)
@@ -2120,7 +2120,7 @@ namespace Mutagen.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)OblivionMod_FieldIndex.Factions, ex);
                 }
@@ -2144,8 +2144,8 @@ namespace Mutagen.Internals
                                         item: item.Hairs,
                                         rhs: rhs.Hairs,
                                         def: def?.Hairs,
-                                        doErrorMask: doErrorMask,
-                                        errorMask: (doErrorMask ? new Func<Group_ErrorMask<Hair_ErrorMask>>(() =>
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<Group_ErrorMask<Hair_ErrorMask>>(() =>
                                         {
                                             var baseMask = errorMask();
                                             if (baseMask.Hairs.Specific == null)
@@ -2171,7 +2171,7 @@ namespace Mutagen.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)OblivionMod_FieldIndex.Hairs, ex);
                 }
@@ -2195,8 +2195,8 @@ namespace Mutagen.Internals
                                         item: item.Eyes,
                                         rhs: rhs.Eyes,
                                         def: def?.Eyes,
-                                        doErrorMask: doErrorMask,
-                                        errorMask: (doErrorMask ? new Func<Group_ErrorMask<Eye_ErrorMask>>(() =>
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<Group_ErrorMask<Eye_ErrorMask>>(() =>
                                         {
                                             var baseMask = errorMask();
                                             if (baseMask.Eyes.Specific == null)
@@ -2222,7 +2222,7 @@ namespace Mutagen.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)OblivionMod_FieldIndex.Eyes, ex);
                 }
@@ -2246,8 +2246,8 @@ namespace Mutagen.Internals
                                         item: item.Races,
                                         rhs: rhs.Races,
                                         def: def?.Races,
-                                        doErrorMask: doErrorMask,
-                                        errorMask: (doErrorMask ? new Func<Group_ErrorMask<Race_ErrorMask>>(() =>
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<Group_ErrorMask<Race_ErrorMask>>(() =>
                                         {
                                             var baseMask = errorMask();
                                             if (baseMask.Races.Specific == null)
@@ -2273,7 +2273,7 @@ namespace Mutagen.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)OblivionMod_FieldIndex.Races, ex);
                 }
@@ -2297,8 +2297,8 @@ namespace Mutagen.Internals
                                         item: item.Sounds,
                                         rhs: rhs.Sounds,
                                         def: def?.Sounds,
-                                        doErrorMask: doErrorMask,
-                                        errorMask: (doErrorMask ? new Func<Group_ErrorMask<Sound_ErrorMask>>(() =>
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<Group_ErrorMask<Sound_ErrorMask>>(() =>
                                         {
                                             var baseMask = errorMask();
                                             if (baseMask.Sounds.Specific == null)
@@ -2324,7 +2324,7 @@ namespace Mutagen.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)OblivionMod_FieldIndex.Sounds, ex);
                 }
@@ -2348,8 +2348,8 @@ namespace Mutagen.Internals
                                         item: item.Skills,
                                         rhs: rhs.Skills,
                                         def: def?.Skills,
-                                        doErrorMask: doErrorMask,
-                                        errorMask: (doErrorMask ? new Func<Group_ErrorMask<SkillRecord_ErrorMask>>(() =>
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<Group_ErrorMask<SkillRecord_ErrorMask>>(() =>
                                         {
                                             var baseMask = errorMask();
                                             if (baseMask.Skills.Specific == null)
@@ -2375,7 +2375,7 @@ namespace Mutagen.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)OblivionMod_FieldIndex.Skills, ex);
                 }
@@ -2399,8 +2399,8 @@ namespace Mutagen.Internals
                                         item: item.MagicEffects,
                                         rhs: rhs.MagicEffects,
                                         def: def?.MagicEffects,
-                                        doErrorMask: doErrorMask,
-                                        errorMask: (doErrorMask ? new Func<Group_ErrorMask<MagicEffect_ErrorMask>>(() =>
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<Group_ErrorMask<MagicEffect_ErrorMask>>(() =>
                                         {
                                             var baseMask = errorMask();
                                             if (baseMask.MagicEffects.Specific == null)
@@ -2426,7 +2426,7 @@ namespace Mutagen.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)OblivionMod_FieldIndex.MagicEffects, ex);
                 }

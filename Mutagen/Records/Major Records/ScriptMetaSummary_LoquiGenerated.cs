@@ -36,6 +36,19 @@ namespace Mutagen
         partial void CustomCtor();
         #endregion
 
+        #region Fluff
+        protected readonly INotifyingItem<Byte[]> _Fluff = NotifyingItem.Factory<Byte[]>(
+            markAsSet: false,
+            noNullFallback: () => new byte[4]);
+        public INotifyingItem<Byte[]> Fluff_Property => _Fluff;
+        public Byte[] Fluff
+        {
+            get => this._Fluff.Item;
+            set => this._Fluff.Set(value);
+        }
+        INotifyingItem<Byte[]> IScriptMetaSummary.Fluff_Property => this.Fluff_Property;
+        INotifyingItemGetter<Byte[]> IScriptMetaSummaryGetter.Fluff_Property => this.Fluff_Property;
+        #endregion
         #region RefCount
         protected readonly INotifyingItem<UInt32> _RefCount = NotifyingItem.Factory<UInt32>(markAsSet: false);
         public INotifyingItem<UInt32> RefCount_Property => _RefCount;
@@ -126,6 +139,11 @@ namespace Mutagen
         public bool Equals(ScriptMetaSummary rhs)
         {
             if (rhs == null) return false;
+            if (Fluff_Property.HasBeenSet != rhs.Fluff_Property.HasBeenSet) return false;
+            if (Fluff_Property.HasBeenSet)
+            {
+                if (!Fluff.EqualsFast(rhs.Fluff)) return false;
+            }
             if (RefCount_Property.HasBeenSet != rhs.RefCount_Property.HasBeenSet) return false;
             if (RefCount_Property.HasBeenSet)
             {
@@ -147,6 +165,10 @@ namespace Mutagen
         public override int GetHashCode()
         {
             int ret = 0;
+            if (Fluff_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Fluff).CombineHashCode(ret);
+            }
             if (RefCount_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(RefCount).CombineHashCode(ret);
@@ -452,6 +474,21 @@ namespace Mutagen
         {
             switch (name)
             {
+                case "Fluff":
+                    {
+                        Exception subMask;
+                        var tryGet = ByteArrayXmlTranslation.Instance.Parse(
+                            root,
+                            doMasks: doMasks,
+                            errorMask: out subMask);
+                        item._Fluff.SetIfSucceeded(tryGet);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)ScriptMetaSummary_FieldIndex.Fluff,
+                            subMask);
+                    }
+                    break;
                 case "RefCount":
                     {
                         Exception subMask;
@@ -847,7 +884,12 @@ namespace Mutagen
             Func<ScriptMetaSummary_ErrorMask> errorMask)
         {
             if (frame.Complete) return;
-            frame.Position += 4;
+            var FlufftryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                frame: frame.Spawn(new ContentLength(4)),
+                fieldIndex: (int)ScriptMetaSummary_FieldIndex.Fluff,
+                doMasks: doMasks,
+                errorMask: errorMask);
+            item._Fluff.SetIfSucceeded(FlufftryGet);
             if (frame.Complete) return;
             item._RefCount.SetIfSucceeded(Mutagen.Binary.UInt32BinaryTranslation.Instance.Parse(
                 frame: frame,
@@ -921,7 +963,7 @@ namespace Mutagen
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
-                doErrorMask: false,
+                doMasks: false,
                 errorMask: null,
                 cmds: null,
                 def: def);
@@ -950,6 +992,11 @@ namespace Mutagen
                 case ScriptMetaSummary_FieldIndex.CompiledSize:
                 case ScriptMetaSummary_FieldIndex.VariableCount:
                     throw new ArgumentException($"Tried to set at a derivative index {index}");
+                case ScriptMetaSummary_FieldIndex.Fluff:
+                    this._Fluff.Set(
+                        (Byte[])obj,
+                        cmds);
+                    break;
                 case ScriptMetaSummary_FieldIndex.RefCount:
                     this._RefCount.Set(
                         (UInt32)obj,
@@ -992,6 +1039,11 @@ namespace Mutagen
             }
             switch (enu)
             {
+                case ScriptMetaSummary_FieldIndex.Fluff:
+                    obj._Fluff.Set(
+                        (Byte[])pair.Value,
+                        null);
+                    break;
                 case ScriptMetaSummary_FieldIndex.RefCount:
                     obj._RefCount.Set(
                         (UInt32)pair.Value,
@@ -1012,6 +1064,9 @@ namespace Mutagen
     #region Interface
     public interface IScriptMetaSummary : IScriptMetaSummaryGetter, ILoquiClass<IScriptMetaSummary, IScriptMetaSummaryGetter>, ILoquiClass<ScriptMetaSummary, IScriptMetaSummaryGetter>
     {
+        new Byte[] Fluff { get; set; }
+        new INotifyingItem<Byte[]> Fluff_Property { get; }
+
         new UInt32 RefCount { get; set; }
         new INotifyingItem<UInt32> RefCount_Property { get; }
 
@@ -1019,6 +1074,11 @@ namespace Mutagen
 
     public interface IScriptMetaSummaryGetter : ILoquiObject
     {
+        #region Fluff
+        Byte[] Fluff { get; }
+        INotifyingItemGetter<Byte[]> Fluff_Property { get; }
+
+        #endregion
         #region RefCount
         UInt32 RefCount { get; }
         INotifyingItemGetter<UInt32> RefCount_Property { get; }
@@ -1046,9 +1106,10 @@ namespace Mutagen.Internals
     #region Field Index
     public enum ScriptMetaSummary_FieldIndex
     {
-        RefCount = 0,
-        CompiledSize = 1,
-        VariableCount = 2,
+        Fluff = 0,
+        RefCount = 1,
+        CompiledSize = 2,
+        VariableCount = 3,
     }
     #endregion
 
@@ -1066,7 +1127,7 @@ namespace Mutagen.Internals
 
         public const string GUID = "80c1bfa2-bdf3-4bc9-aeb7-306536cdbc91";
 
-        public const ushort FieldCount = 3;
+        public const ushort FieldCount = 4;
 
         public static readonly Type MaskType = typeof(ScriptMetaSummary_Mask<>);
 
@@ -1094,6 +1155,8 @@ namespace Mutagen.Internals
         {
             switch (str.Upper)
             {
+                case "FLUFF":
+                    return (ushort)ScriptMetaSummary_FieldIndex.Fluff;
                 case "REFCOUNT":
                     return (ushort)ScriptMetaSummary_FieldIndex.RefCount;
                 case "COMPILEDSIZE":
@@ -1110,6 +1173,7 @@ namespace Mutagen.Internals
             ScriptMetaSummary_FieldIndex enu = (ScriptMetaSummary_FieldIndex)index;
             switch (enu)
             {
+                case ScriptMetaSummary_FieldIndex.Fluff:
                 case ScriptMetaSummary_FieldIndex.RefCount:
                 case ScriptMetaSummary_FieldIndex.CompiledSize:
                 case ScriptMetaSummary_FieldIndex.VariableCount:
@@ -1124,6 +1188,7 @@ namespace Mutagen.Internals
             ScriptMetaSummary_FieldIndex enu = (ScriptMetaSummary_FieldIndex)index;
             switch (enu)
             {
+                case ScriptMetaSummary_FieldIndex.Fluff:
                 case ScriptMetaSummary_FieldIndex.RefCount:
                 case ScriptMetaSummary_FieldIndex.CompiledSize:
                 case ScriptMetaSummary_FieldIndex.VariableCount:
@@ -1138,6 +1203,7 @@ namespace Mutagen.Internals
             ScriptMetaSummary_FieldIndex enu = (ScriptMetaSummary_FieldIndex)index;
             switch (enu)
             {
+                case ScriptMetaSummary_FieldIndex.Fluff:
                 case ScriptMetaSummary_FieldIndex.RefCount:
                 case ScriptMetaSummary_FieldIndex.CompiledSize:
                 case ScriptMetaSummary_FieldIndex.VariableCount:
@@ -1152,6 +1218,8 @@ namespace Mutagen.Internals
             ScriptMetaSummary_FieldIndex enu = (ScriptMetaSummary_FieldIndex)index;
             switch (enu)
             {
+                case ScriptMetaSummary_FieldIndex.Fluff:
+                    return "Fluff";
                 case ScriptMetaSummary_FieldIndex.RefCount:
                     return "RefCount";
                 case ScriptMetaSummary_FieldIndex.CompiledSize:
@@ -1171,6 +1239,7 @@ namespace Mutagen.Internals
                 case ScriptMetaSummary_FieldIndex.CompiledSize:
                 case ScriptMetaSummary_FieldIndex.VariableCount:
                     return true;
+                case ScriptMetaSummary_FieldIndex.Fluff:
                 case ScriptMetaSummary_FieldIndex.RefCount:
                     return false;
                 default:
@@ -1186,6 +1255,7 @@ namespace Mutagen.Internals
                 case ScriptMetaSummary_FieldIndex.CompiledSize:
                 case ScriptMetaSummary_FieldIndex.VariableCount:
                     return true;
+                case ScriptMetaSummary_FieldIndex.Fluff:
                 case ScriptMetaSummary_FieldIndex.RefCount:
                     return false;
                 default:
@@ -1198,6 +1268,8 @@ namespace Mutagen.Internals
             ScriptMetaSummary_FieldIndex enu = (ScriptMetaSummary_FieldIndex)index;
             switch (enu)
             {
+                case ScriptMetaSummary_FieldIndex.Fluff:
+                    return typeof(Byte[]);
                 case ScriptMetaSummary_FieldIndex.RefCount:
                     return typeof(UInt32);
                 case ScriptMetaSummary_FieldIndex.CompiledSize:
@@ -1211,7 +1283,7 @@ namespace Mutagen.Internals
 
         public static readonly RecordType SCHR_HEADER = new RecordType("SCHR");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = SCHR_HEADER;
-        public const int NumStructFields = 3;
+        public const int NumStructFields = 4;
         public const int NumTypedFields = 0;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1257,7 +1329,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: false,
+                doMasks: false,
                 errorMask: null,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -1275,7 +1347,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: true,
+                doMasks: true,
                 errorMask: out errorMask,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -1285,7 +1357,7 @@ namespace Mutagen.Internals
             this IScriptMetaSummary item,
             IScriptMetaSummaryGetter rhs,
             IScriptMetaSummaryGetter def,
-            bool doErrorMask,
+            bool doMasks,
             out ScriptMetaSummary_ErrorMask errorMask,
             ScriptMetaSummary_CopyMask copyMask,
             NotifyingFireParameters? cmds)
@@ -1303,7 +1375,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: true,
+                doMasks: true,
                 errorMask: maskGetter,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -1314,11 +1386,26 @@ namespace Mutagen.Internals
             this IScriptMetaSummary item,
             IScriptMetaSummaryGetter rhs,
             IScriptMetaSummaryGetter def,
-            bool doErrorMask,
+            bool doMasks,
             Func<ScriptMetaSummary_ErrorMask> errorMask,
             ScriptMetaSummary_CopyMask copyMask,
             NotifyingFireParameters? cmds)
         {
+            if (copyMask?.Fluff ?? true)
+            {
+                try
+                {
+                    item.Fluff_Property.SetToWithDefault(
+                        rhs.Fluff_Property,
+                        def?.Fluff_Property,
+                        cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)ScriptMetaSummary_FieldIndex.Fluff, ex);
+                }
+            }
             if (copyMask?.RefCount ?? true)
             {
                 try
@@ -1329,7 +1416,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)ScriptMetaSummary_FieldIndex.RefCount, ex);
                 }
@@ -1350,6 +1437,9 @@ namespace Mutagen.Internals
                 case ScriptMetaSummary_FieldIndex.CompiledSize:
                 case ScriptMetaSummary_FieldIndex.VariableCount:
                     throw new ArgumentException($"Tried to set at a derivative index {index}");
+                case ScriptMetaSummary_FieldIndex.Fluff:
+                    obj.Fluff_Property.HasBeenSet = on;
+                    break;
                 case ScriptMetaSummary_FieldIndex.RefCount:
                     obj.RefCount_Property.HasBeenSet = on;
                     break;
@@ -1369,6 +1459,9 @@ namespace Mutagen.Internals
                 case ScriptMetaSummary_FieldIndex.CompiledSize:
                 case ScriptMetaSummary_FieldIndex.VariableCount:
                     throw new ArgumentException($"Tried to unset at a derivative index {index}");
+                case ScriptMetaSummary_FieldIndex.Fluff:
+                    obj.Fluff_Property.Unset(cmds);
+                    break;
                 case ScriptMetaSummary_FieldIndex.RefCount:
                     obj.RefCount_Property.Unset(cmds);
                     break;
@@ -1384,6 +1477,8 @@ namespace Mutagen.Internals
             ScriptMetaSummary_FieldIndex enu = (ScriptMetaSummary_FieldIndex)index;
             switch (enu)
             {
+                case ScriptMetaSummary_FieldIndex.Fluff:
+                    return obj.Fluff_Property.HasBeenSet;
                 case ScriptMetaSummary_FieldIndex.RefCount:
                     return obj.RefCount_Property.HasBeenSet;
                 case ScriptMetaSummary_FieldIndex.CompiledSize:
@@ -1402,6 +1497,8 @@ namespace Mutagen.Internals
             ScriptMetaSummary_FieldIndex enu = (ScriptMetaSummary_FieldIndex)index;
             switch (enu)
             {
+                case ScriptMetaSummary_FieldIndex.Fluff:
+                    return obj.Fluff;
                 case ScriptMetaSummary_FieldIndex.RefCount:
                     return obj.RefCount;
                 case ScriptMetaSummary_FieldIndex.CompiledSize:
@@ -1417,6 +1514,7 @@ namespace Mutagen.Internals
             IScriptMetaSummary item,
             NotifyingUnsetParameters? cmds = null)
         {
+            item.Fluff_Property.Unset(cmds.ToUnsetParams());
             item.RefCount_Property.Unset(cmds.ToUnsetParams());
         }
 
@@ -1435,6 +1533,7 @@ namespace Mutagen.Internals
             ScriptMetaSummary_Mask<bool> ret)
         {
             if (rhs == null) return;
+            ret.Fluff = item.Fluff_Property.Equals(rhs.Fluff_Property, (l, r) => l.EqualsFast(r));
             ret.RefCount = item.RefCount_Property.Equals(rhs.RefCount_Property, (l, r) => l == r);
             ret.CompiledSize = item.CompiledSize_Property.Equals(rhs.CompiledSize_Property, (l, r) => l == r);
             ret.VariableCount = item.VariableCount_Property.Equals(rhs.VariableCount_Property, (l, r) => l == r);
@@ -1467,6 +1566,10 @@ namespace Mutagen.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
+                if (printMask?.Fluff ?? true)
+                {
+                    fg.AppendLine($"Fluff => {item.Fluff}");
+                }
                 if (printMask?.RefCount ?? true)
                 {
                     fg.AppendLine($"RefCount => {item.RefCount}");
@@ -1487,6 +1590,7 @@ namespace Mutagen.Internals
             this IScriptMetaSummaryGetter item,
             ScriptMetaSummary_Mask<bool?> checkMask)
         {
+            if (checkMask.Fluff.HasValue && checkMask.Fluff.Value != item.Fluff_Property.HasBeenSet) return false;
             if (checkMask.RefCount.HasValue && checkMask.RefCount.Value != item.RefCount_Property.HasBeenSet) return false;
             if (checkMask.CompiledSize.HasValue && checkMask.CompiledSize.Value != item.CompiledSize_Property.HasBeenSet) return false;
             if (checkMask.VariableCount.HasValue && checkMask.VariableCount.Value != item.VariableCount_Property.HasBeenSet) return false;
@@ -1496,6 +1600,7 @@ namespace Mutagen.Internals
         public static ScriptMetaSummary_Mask<bool> GetHasBeenSetMask(IScriptMetaSummaryGetter item)
         {
             var ret = new ScriptMetaSummary_Mask<bool>();
+            ret.Fluff = item.Fluff_Property.HasBeenSet;
             ret.RefCount = item.RefCount_Property.HasBeenSet;
             ret.CompiledSize = item.CompiledSize_Property.HasBeenSet;
             ret.VariableCount = item.VariableCount_Property.HasBeenSet;
@@ -1535,6 +1640,21 @@ namespace Mutagen.Internals
                     if (name != null)
                     {
                         writer.WriteAttributeString("type", "Mutagen.ScriptMetaSummary");
+                    }
+                    if (item.Fluff_Property.HasBeenSet)
+                    {
+                        Exception subMask;
+                        ByteArrayXmlTranslation.Instance.Write(
+                            writer,
+                            nameof(item.Fluff),
+                            item.Fluff,
+                            doMasks: doMasks,
+                            errorMask: out subMask);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)ScriptMetaSummary_FieldIndex.Fluff,
+                            subMask);
                     }
                     if (item.RefCount_Property.HasBeenSet)
                     {
@@ -1616,7 +1736,10 @@ namespace Mutagen.Internals
         {
             Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Fluff);
+                item: item.Fluff_Property,
+                doMasks: doMasks,
+                fieldIndex: (int)ScriptMetaSummary_FieldIndex.Fluff,
+                errorMask: errorMask);
             Mutagen.Binary.UInt32BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.RefCount_Property,
@@ -1654,6 +1777,7 @@ namespace Mutagen.Internals
 
         public ScriptMetaSummary_Mask(T initialValue)
         {
+            this.Fluff = initialValue;
             this.RefCount = initialValue;
             this.CompiledSize = initialValue;
             this.VariableCount = initialValue;
@@ -1661,6 +1785,7 @@ namespace Mutagen.Internals
         #endregion
 
         #region Members
+        public T Fluff;
         public T RefCount;
         public T CompiledSize;
         public T VariableCount;
@@ -1676,6 +1801,7 @@ namespace Mutagen.Internals
         public bool Equals(ScriptMetaSummary_Mask<T> rhs)
         {
             if (rhs == null) return false;
+            if (!object.Equals(this.Fluff, rhs.Fluff)) return false;
             if (!object.Equals(this.RefCount, rhs.RefCount)) return false;
             if (!object.Equals(this.CompiledSize, rhs.CompiledSize)) return false;
             if (!object.Equals(this.VariableCount, rhs.VariableCount)) return false;
@@ -1684,6 +1810,7 @@ namespace Mutagen.Internals
         public override int GetHashCode()
         {
             int ret = 0;
+            ret = ret.CombineHashCode(this.Fluff?.GetHashCode());
             ret = ret.CombineHashCode(this.RefCount?.GetHashCode());
             ret = ret.CombineHashCode(this.CompiledSize?.GetHashCode());
             ret = ret.CombineHashCode(this.VariableCount?.GetHashCode());
@@ -1695,6 +1822,7 @@ namespace Mutagen.Internals
         #region All Equal
         public bool AllEqual(Func<T, bool> eval)
         {
+            if (!eval(this.Fluff)) return false;
             if (!eval(this.RefCount)) return false;
             if (!eval(this.CompiledSize)) return false;
             if (!eval(this.VariableCount)) return false;
@@ -1712,6 +1840,7 @@ namespace Mutagen.Internals
 
         protected void Translate_InternalFill<R>(ScriptMetaSummary_Mask<R> obj, Func<T, R> eval)
         {
+            obj.Fluff = eval(this.Fluff);
             obj.RefCount = eval(this.RefCount);
             obj.CompiledSize = eval(this.CompiledSize);
             obj.VariableCount = eval(this.VariableCount);
@@ -1743,6 +1872,10 @@ namespace Mutagen.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
+                if (printMask?.Fluff ?? true)
+                {
+                    fg.AppendLine($"Fluff => {Fluff.ToStringSafe()}");
+                }
                 if (printMask?.RefCount ?? true)
                 {
                     fg.AppendLine($"RefCount => {RefCount.ToStringSafe()}");
@@ -1778,6 +1911,7 @@ namespace Mutagen.Internals
                 return _warnings;
             }
         }
+        public Exception Fluff;
         public Exception RefCount;
         public Exception CompiledSize;
         public Exception VariableCount;
@@ -1789,6 +1923,9 @@ namespace Mutagen.Internals
             ScriptMetaSummary_FieldIndex enu = (ScriptMetaSummary_FieldIndex)index;
             switch (enu)
             {
+                case ScriptMetaSummary_FieldIndex.Fluff:
+                    this.Fluff = ex;
+                    break;
                 case ScriptMetaSummary_FieldIndex.RefCount:
                     this.RefCount = ex;
                     break;
@@ -1808,6 +1945,9 @@ namespace Mutagen.Internals
             ScriptMetaSummary_FieldIndex enu = (ScriptMetaSummary_FieldIndex)index;
             switch (enu)
             {
+                case ScriptMetaSummary_FieldIndex.Fluff:
+                    this.Fluff = (Exception)obj;
+                    break;
                 case ScriptMetaSummary_FieldIndex.RefCount:
                     this.RefCount = (Exception)obj;
                     break;
@@ -1853,6 +1993,10 @@ namespace Mutagen.Internals
         }
         protected void ToString_FillInternal(FileGeneration fg)
         {
+            if (Fluff != null)
+            {
+                fg.AppendLine($"Fluff => {Fluff.ToStringSafe()}");
+            }
             if (RefCount != null)
             {
                 fg.AppendLine($"RefCount => {RefCount.ToStringSafe()}");
@@ -1872,6 +2016,7 @@ namespace Mutagen.Internals
         public ScriptMetaSummary_ErrorMask Combine(ScriptMetaSummary_ErrorMask rhs)
         {
             var ret = new ScriptMetaSummary_ErrorMask();
+            ret.Fluff = this.Fluff.Combine(rhs.Fluff);
             ret.RefCount = this.RefCount.Combine(rhs.RefCount);
             ret.CompiledSize = this.CompiledSize.Combine(rhs.CompiledSize);
             ret.VariableCount = this.VariableCount.Combine(rhs.VariableCount);
@@ -1888,6 +2033,7 @@ namespace Mutagen.Internals
     public class ScriptMetaSummary_CopyMask
     {
         #region Members
+        public bool Fluff;
         public bool RefCount;
         public bool CompiledSize;
         public bool VariableCount;

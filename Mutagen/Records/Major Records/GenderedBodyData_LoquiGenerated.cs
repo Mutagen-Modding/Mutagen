@@ -846,7 +846,7 @@ namespace Mutagen
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
-                doErrorMask: false,
+                doMasks: false,
                 errorMask: null,
                 cmds: null,
                 def: def);
@@ -1173,7 +1173,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: false,
+                doMasks: false,
                 errorMask: null,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -1191,7 +1191,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: true,
+                doMasks: true,
                 errorMask: out errorMask,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -1201,7 +1201,7 @@ namespace Mutagen.Internals
             this IGenderedBodyData item,
             IGenderedBodyDataGetter rhs,
             IGenderedBodyDataGetter def,
-            bool doErrorMask,
+            bool doMasks,
             out GenderedBodyData_ErrorMask errorMask,
             GenderedBodyData_CopyMask copyMask,
             NotifyingFireParameters? cmds)
@@ -1219,7 +1219,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: true,
+                doMasks: true,
                 errorMask: maskGetter,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -1230,7 +1230,7 @@ namespace Mutagen.Internals
             this IGenderedBodyData item,
             IGenderedBodyDataGetter rhs,
             IGenderedBodyDataGetter def,
-            bool doErrorMask,
+            bool doMasks,
             Func<GenderedBodyData_ErrorMask> errorMask,
             GenderedBodyData_CopyMask copyMask,
             NotifyingFireParameters? cmds)
@@ -1254,8 +1254,8 @@ namespace Mutagen.Internals
                                         item: item.Male,
                                         rhs: rhs.Male,
                                         def: def?.Male,
-                                        doErrorMask: doErrorMask,
-                                        errorMask: (doErrorMask ? new Func<BodyData_ErrorMask>(() =>
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<BodyData_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
                                             if (baseMask.Male.Specific == null)
@@ -1281,7 +1281,7 @@ namespace Mutagen.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)GenderedBodyData_FieldIndex.Male, ex);
                 }
@@ -1305,8 +1305,8 @@ namespace Mutagen.Internals
                                         item: item.Female,
                                         rhs: rhs.Female,
                                         def: def?.Female,
-                                        doErrorMask: doErrorMask,
-                                        errorMask: (doErrorMask ? new Func<BodyData_ErrorMask>(() =>
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<BodyData_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
                                             if (baseMask.Female.Specific == null)
@@ -1332,7 +1332,7 @@ namespace Mutagen.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)GenderedBodyData_FieldIndex.Female, ex);
                 }

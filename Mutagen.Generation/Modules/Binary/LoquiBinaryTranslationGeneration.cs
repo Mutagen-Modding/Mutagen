@@ -67,7 +67,7 @@ namespace Mutagen.Generation
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,
-            string readerAccessor,
+            string frameAccessor,
             Accessor itemAccessor,
             string doMaskAccessor,
             string maskAccessor)
@@ -78,13 +78,13 @@ namespace Mutagen.Generation
                 if (loquiGen.SingletonType == LoquiType.SingletonLevel.Singleton)
                 {
                     if (loquiGen.InterfaceType == LoquiInterfaceType.IGetter) return;
-                    fg.AppendLine($"{readerAccessor}.Position -= Constants.SUBRECORD_LENGTH;");
+                    fg.AppendLine($"{frameAccessor}.Position -= Constants.SUBRECORD_LENGTH;");
                     using (var args = new ArgsWrapper(fg,
                         $"var tmp = {loquiGen.TargetObjectGeneration.Name}.Create_{ModNickname}"))
                     {
-                        args.Add($"reader: {readerAccessor}");
+                        args.Add($"frame: {frameAccessor}");
                         args.Add($"doMasks: {doMaskAccessor}");
-                        args.Add($"errorMask: out {loquiGen.MaskItemString(MaskType.Error)} createMask");
+                        args.Add($"errorMask: out {loquiGen.MaskItemString(MaskType.Error)} {loquiGen.Name}createMask");
                     }
                     using (var args = new ArgsWrapper(fg,
                         $"{loquiGen.TargetObjectGeneration.ExtCommonName}.CopyFieldsFrom"))
@@ -94,11 +94,17 @@ namespace Mutagen.Generation
                         args.Add("def: null");
                         args.Add("cmds: null");
                         args.Add("copyMask: null");
-                        args.Add($"doErrorMask: {doMaskAccessor}");
-                        args.Add($"errorMask: out {loquiGen.MaskItemString(MaskType.Error)} copyMask");
+                        args.Add("doMasks: doMasks");
+                        args.Add($"errorMask: out var {loquiGen.Name}errorMask");
                     }
-                    fg.AppendLine($"var loquiMask = {loquiGen.MaskItemString(MaskType.Error)}.Combine(createMask, copyMask);");
-                    fg.AppendLine($"{maskAccessor} = loquiMask == null ? null : new MaskItem<Exception, {loquiGen.MaskItemString(MaskType.Error)}>(null, loquiMask);");
+                    using (var args = new ArgsWrapper(fg,
+                        $"ErrorMask.HandleErrorMask"))
+                    {
+                        args.Add($"creator: {maskAccessor}");
+                        args.Add($"doMasks: doMasks");
+                        args.Add($"index: (int){typeGen.IndexEnumName}");
+                        args.Add($"errMaskObj: {loquiGen.MaskItemString(MaskType.Error)}.Combine({loquiGen.Name}createMask, {loquiGen.Name}errorMask)");
+                    }
                 }
                 else
                 {
@@ -120,7 +126,7 @@ namespace Mutagen.Generation
                     }
                     using (args)
                     {
-                        args.Add($"frame: {readerAccessor}{(loquiGen.TargetObjectGeneration.HasRecordType() ? null : ".Spawn(snapToFinalPosition: false)")}");
+                        args.Add($"frame: {frameAccessor}{(loquiGen.TargetObjectGeneration.HasRecordType() ? null : ".Spawn(snapToFinalPosition: false)")}");
                         args.Add($"doMasks: {doMaskAccessor}");
                         if (loquiGen.HasIndex)
                         {
@@ -151,7 +157,7 @@ namespace Mutagen.Generation
                 unsafeXml.GenerateCopyIn(
                     fg: fg,
                     typeGen: typeGen,
-                    nodeAccessor: readerAccessor,
+                    nodeAccessor: frameAccessor,
                     itemAccessor: itemAccessor,
                     doMaskAccessor: doMaskAccessor,
                     maskAccessor: "var unsafeMask");

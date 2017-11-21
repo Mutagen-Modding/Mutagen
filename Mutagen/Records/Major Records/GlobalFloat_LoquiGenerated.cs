@@ -829,7 +829,7 @@ namespace Mutagen
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
-                doErrorMask: false,
+                doMasks: false,
                 errorMask: null,
                 cmds: null,
                 def: def);
@@ -1108,7 +1108,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: false,
+                doMasks: false,
                 errorMask: null,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -1126,7 +1126,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: true,
+                doMasks: true,
                 errorMask: out errorMask,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -1136,7 +1136,7 @@ namespace Mutagen.Internals
             this IGlobalFloat item,
             IGlobalFloatGetter rhs,
             IGlobalFloatGetter def,
-            bool doErrorMask,
+            bool doMasks,
             out GlobalFloat_ErrorMask errorMask,
             GlobalFloat_CopyMask copyMask,
             NotifyingFireParameters? cmds)
@@ -1154,7 +1154,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: true,
+                doMasks: true,
                 errorMask: maskGetter,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -1165,7 +1165,7 @@ namespace Mutagen.Internals
             this IGlobalFloat item,
             IGlobalFloatGetter rhs,
             IGlobalFloatGetter def,
-            bool doErrorMask,
+            bool doMasks,
             Func<GlobalFloat_ErrorMask> errorMask,
             GlobalFloat_CopyMask copyMask,
             NotifyingFireParameters? cmds)
@@ -1174,7 +1174,7 @@ namespace Mutagen.Internals
                 item,
                 rhs,
                 def,
-                doErrorMask,
+                doMasks,
                 errorMask,
                 copyMask,
                 cmds);

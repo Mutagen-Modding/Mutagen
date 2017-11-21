@@ -1046,7 +1046,7 @@ namespace Mutagen
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
-                doErrorMask: false,
+                doMasks: false,
                 errorMask: null,
                 cmds: null,
                 def: def);
@@ -1517,7 +1517,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: false,
+                doMasks: false,
                 errorMask: null,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -1535,7 +1535,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: true,
+                doMasks: true,
                 errorMask: out errorMask,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -1545,7 +1545,7 @@ namespace Mutagen.Internals
             this IRaceData item,
             IRaceDataGetter rhs,
             IRaceDataGetter def,
-            bool doErrorMask,
+            bool doMasks,
             out RaceData_ErrorMask errorMask,
             RaceData_CopyMask copyMask,
             NotifyingFireParameters? cmds)
@@ -1563,7 +1563,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: true,
+                doMasks: true,
                 errorMask: maskGetter,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -1574,7 +1574,7 @@ namespace Mutagen.Internals
             this IRaceData item,
             IRaceDataGetter rhs,
             IRaceDataGetter def,
-            bool doErrorMask,
+            bool doMasks,
             Func<RaceData_ErrorMask> errorMask,
             RaceData_CopyMask copyMask,
             NotifyingFireParameters? cmds)
@@ -1606,7 +1606,7 @@ namespace Mutagen.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)RaceData_FieldIndex.SkillBoosts, ex);
                 }
@@ -1621,7 +1621,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)RaceData_FieldIndex.Fluff, ex);
                 }
@@ -1636,7 +1636,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)RaceData_FieldIndex.MaleHeight, ex);
                 }
@@ -1651,7 +1651,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)RaceData_FieldIndex.FemaleHeight, ex);
                 }
@@ -1666,7 +1666,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)RaceData_FieldIndex.MaleWeight, ex);
                 }
@@ -1681,7 +1681,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)RaceData_FieldIndex.FemaleWeight, ex);
                 }
@@ -1696,7 +1696,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)RaceData_FieldIndex.Flags, ex);
                 }

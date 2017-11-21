@@ -746,7 +746,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: false,
+                doMasks: false,
                 errorMask: null,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -764,7 +764,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: true,
+                doMasks: true,
                 errorMask: out errorMask,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -774,7 +774,7 @@ namespace Mutagen.Internals
             this INamedMajorRecord item,
             INamedMajorRecordGetter rhs,
             INamedMajorRecordGetter def,
-            bool doErrorMask,
+            bool doMasks,
             out NamedMajorRecord_ErrorMask errorMask,
             NamedMajorRecord_CopyMask copyMask,
             NotifyingFireParameters? cmds)
@@ -792,7 +792,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: true,
+                doMasks: true,
                 errorMask: maskGetter,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -803,7 +803,7 @@ namespace Mutagen.Internals
             this INamedMajorRecord item,
             INamedMajorRecordGetter rhs,
             INamedMajorRecordGetter def,
-            bool doErrorMask,
+            bool doMasks,
             Func<NamedMajorRecord_ErrorMask> errorMask,
             NamedMajorRecord_CopyMask copyMask,
             NotifyingFireParameters? cmds)
@@ -812,7 +812,7 @@ namespace Mutagen.Internals
                 item,
                 rhs,
                 def,
-                doErrorMask,
+                doMasks,
                 errorMask,
                 copyMask,
                 cmds);
@@ -826,7 +826,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)NamedMajorRecord_FieldIndex.Name, ex);
                 }

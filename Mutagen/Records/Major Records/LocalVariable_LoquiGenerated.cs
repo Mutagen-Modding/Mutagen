@@ -849,7 +849,7 @@ namespace Mutagen
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
-                doErrorMask: false,
+                doMasks: false,
                 errorMask: null,
                 cmds: null,
                 def: def);
@@ -1131,6 +1131,7 @@ namespace Mutagen.Internals
 
         public static readonly RecordType SLSD_HEADER = new RecordType("SLSD");
         public static readonly RecordType SCVR_HEADER = new RecordType("SCVR");
+        public static readonly RecordType TRIGGERING_RECORD_TYPE = SLSD_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 2;
         #region Interface
@@ -1177,7 +1178,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: false,
+                doMasks: false,
                 errorMask: null,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -1195,7 +1196,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: true,
+                doMasks: true,
                 errorMask: out errorMask,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -1205,7 +1206,7 @@ namespace Mutagen.Internals
             this ILocalVariable item,
             ILocalVariableGetter rhs,
             ILocalVariableGetter def,
-            bool doErrorMask,
+            bool doMasks,
             out LocalVariable_ErrorMask errorMask,
             LocalVariable_CopyMask copyMask,
             NotifyingFireParameters? cmds)
@@ -1223,7 +1224,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: true,
+                doMasks: true,
                 errorMask: maskGetter,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -1234,7 +1235,7 @@ namespace Mutagen.Internals
             this ILocalVariable item,
             ILocalVariableGetter rhs,
             ILocalVariableGetter def,
-            bool doErrorMask,
+            bool doMasks,
             Func<LocalVariable_ErrorMask> errorMask,
             LocalVariable_CopyMask copyMask,
             NotifyingFireParameters? cmds)
@@ -1258,8 +1259,8 @@ namespace Mutagen.Internals
                                         item: item.Data,
                                         rhs: rhs.Data,
                                         def: def?.Data,
-                                        doErrorMask: doErrorMask,
-                                        errorMask: (doErrorMask ? new Func<LocalVariableData_ErrorMask>(() =>
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<LocalVariableData_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
                                             if (baseMask.Data.Specific == null)
@@ -1285,7 +1286,7 @@ namespace Mutagen.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)LocalVariable_FieldIndex.Data, ex);
                 }
@@ -1300,7 +1301,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)LocalVariable_FieldIndex.Name, ex);
                 }

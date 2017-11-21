@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>753a2094653d8614198e6d4b23feb9456f73e69a</Sha>
+         <Sha>4247db6a478f535da4e60b631cfa8941bb44366c</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>11-14-2017 21:46:54</CommitDate>
-         <Description>ObjectGeneration.ExportWithIGetter.  TypeGeneration.GenerateTypicalItems -&gt; IntegrateField.  Constants work.</Description>
+         <CommitDate>11-21-2017 16:25:34</CommitDate>
+         <Description>doMask parameter renaming</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

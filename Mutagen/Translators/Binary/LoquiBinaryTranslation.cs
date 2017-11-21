@@ -86,7 +86,8 @@ namespace Mutagen.Binary
             copyIn(fields, item);
             mask = maskObj;
         }
-        
+
+        #region Parse
         public static CREATE_FUNC GetCreateFunc()
         {
             var tType = typeof(T);
@@ -121,30 +122,6 @@ namespace Mutagen.Binary
                 errorMask = ret.mask;
                 return ret.item;
             };
-        }
-
-        [DebuggerStepThrough]
-        public static WRITE_FUNC GetWriteFunc()
-        {
-            var method = typeof(T).GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
-                .Where((methodInfo) => methodInfo.Name.Equals("Write_Binary_Internal"))
-                .First();
-            if (!method.IsGenericMethod)
-            {
-                var f = DelegateBuilder.BuildDelegate<Func<T, MutagenWriter, bool, object>>(method);
-                return (MutagenWriter writer, T item, bool doMasks, out M errorMask) =>
-                {
-                    errorMask = (M)f(item, writer, doMasks);
-                };
-            }
-            else
-            {
-                var f = DelegateBuilder.BuildGenericDelegate<Func<T, MutagenWriter, bool, object>>(typeof(T), new Type[] { typeof(M).GenericTypeArguments[0] }, method);
-                return (MutagenWriter writer, T item, bool doMasks, out M errorMask) =>
-                {
-                    errorMask = (M)f(item, writer, doMasks);
-                };
-            }
         }
 
         [DebuggerStepThrough]
@@ -199,6 +176,42 @@ namespace Mutagen.Binary
             }
             mask = subMask?.Specific;
             return ret;
+        }
+
+        public TryGet<T> Parse(MutagenFrame reader, ContentLength length, bool doMasks, out M maskObj)
+        {
+            throw new NotImplementedException();
+        }
+
+        public TryGet<T> Parse(MutagenFrame reader, RecordType header, ContentLength lengthLength, bool doMasks, out M maskObj)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
+
+        #region Write
+        [DebuggerStepThrough]
+        public static WRITE_FUNC GetWriteFunc()
+        {
+            var method = typeof(T).GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
+                .Where((methodInfo) => methodInfo.Name.Equals("Write_Binary_Internal"))
+                .First();
+            if (!method.IsGenericMethod)
+            {
+                var f = DelegateBuilder.BuildDelegate<Func<T, MutagenWriter, bool, object>>(method);
+                return (MutagenWriter writer, T item, bool doMasks, out M errorMask) =>
+                {
+                    errorMask = (M)f(item, writer, doMasks);
+                };
+            }
+            else
+            {
+                var f = DelegateBuilder.BuildGenericDelegate<Func<T, MutagenWriter, bool, object>>(typeof(T), new Type[] { typeof(M).GenericTypeArguments[0] }, method);
+                return (MutagenWriter writer, T item, bool doMasks, out M errorMask) =>
+                {
+                    errorMask = (M)f(item, writer, doMasks);
+                };
+            }
         }
 
         void IBinaryTranslation<T, M>.Write(MutagenWriter writer, T item, ContentLength length, bool doMasks, out M mask)
@@ -294,15 +307,6 @@ namespace Mutagen.Binary
                 doMasks,
                 errorMask);
         }
-
-        public TryGet<T> Parse(MutagenFrame reader, ContentLength length, bool doMasks, out M maskObj)
-        {
-            throw new NotImplementedException();
-        }
-
-        public TryGet<T> Parse(MutagenFrame reader, RecordType header, ContentLength lengthLength, bool doMasks, out M maskObj)
-        {
-            throw new NotImplementedException();
-        }
+        #endregion
     }
 }

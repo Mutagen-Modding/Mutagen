@@ -1580,7 +1580,7 @@ namespace Mutagen
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
-                doErrorMask: false,
+                doMasks: false,
                 errorMask: null,
                 cmds: null,
                 def: def);
@@ -2299,7 +2299,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: false,
+                doMasks: false,
                 errorMask: null,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -2317,7 +2317,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: true,
+                doMasks: true,
                 errorMask: out errorMask,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -2327,7 +2327,7 @@ namespace Mutagen.Internals
             this IRace item,
             IRaceGetter rhs,
             IRaceGetter def,
-            bool doErrorMask,
+            bool doMasks,
             out Race_ErrorMask errorMask,
             Race_CopyMask copyMask,
             NotifyingFireParameters? cmds)
@@ -2345,7 +2345,7 @@ namespace Mutagen.Internals
                 item: item,
                 rhs: rhs,
                 def: def,
-                doErrorMask: true,
+                doMasks: true,
                 errorMask: maskGetter,
                 copyMask: copyMask,
                 cmds: cmds);
@@ -2356,7 +2356,7 @@ namespace Mutagen.Internals
             this IRace item,
             IRaceGetter rhs,
             IRaceGetter def,
-            bool doErrorMask,
+            bool doMasks,
             Func<Race_ErrorMask> errorMask,
             Race_CopyMask copyMask,
             NotifyingFireParameters? cmds)
@@ -2365,7 +2365,7 @@ namespace Mutagen.Internals
                 item,
                 rhs,
                 def,
-                doErrorMask,
+                doMasks,
                 errorMask,
                 copyMask,
                 cmds);
@@ -2379,7 +2379,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)Race_FieldIndex.Description, ex);
                 }
@@ -2394,7 +2394,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)Race_FieldIndex.Spells, ex);
                 }
@@ -2426,7 +2426,7 @@ namespace Mutagen.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)Race_FieldIndex.Relations, ex);
                 }
@@ -2450,8 +2450,8 @@ namespace Mutagen.Internals
                                         item: item.Data,
                                         rhs: rhs.Data,
                                         def: def?.Data,
-                                        doErrorMask: doErrorMask,
-                                        errorMask: (doErrorMask ? new Func<RaceData_ErrorMask>(() =>
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<RaceData_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
                                             if (baseMask.Data.Specific == null)
@@ -2477,7 +2477,7 @@ namespace Mutagen.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)Race_FieldIndex.Data, ex);
                 }
@@ -2501,8 +2501,8 @@ namespace Mutagen.Internals
                                         item: item.Voices,
                                         rhs: rhs.Voices,
                                         def: def?.Voices,
-                                        doErrorMask: doErrorMask,
-                                        errorMask: (doErrorMask ? new Func<RaceVoices_ErrorMask>(() =>
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<RaceVoices_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
                                             if (baseMask.Voices.Specific == null)
@@ -2528,7 +2528,7 @@ namespace Mutagen.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)Race_FieldIndex.Voices, ex);
                 }
@@ -2552,8 +2552,8 @@ namespace Mutagen.Internals
                                         item: item.DefaultHair,
                                         rhs: rhs.DefaultHair,
                                         def: def?.DefaultHair,
-                                        doErrorMask: doErrorMask,
-                                        errorMask: (doErrorMask ? new Func<RaceHair_ErrorMask>(() =>
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<RaceHair_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
                                             if (baseMask.DefaultHair.Specific == null)
@@ -2579,7 +2579,7 @@ namespace Mutagen.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)Race_FieldIndex.DefaultHair, ex);
                 }
@@ -2594,7 +2594,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)Race_FieldIndex.DefaultHairColor, ex);
                 }
@@ -2609,7 +2609,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)Race_FieldIndex.FaceGenMainClamp, ex);
                 }
@@ -2624,7 +2624,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)Race_FieldIndex.FaceGenFaceClamp, ex);
                 }
@@ -2648,8 +2648,8 @@ namespace Mutagen.Internals
                                         item: item.RaceStats,
                                         rhs: rhs.RaceStats,
                                         def: def?.RaceStats,
-                                        doErrorMask: doErrorMask,
-                                        errorMask: (doErrorMask ? new Func<RaceStatsGendered_ErrorMask>(() =>
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<RaceStatsGendered_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
                                             if (baseMask.RaceStats.Specific == null)
@@ -2675,7 +2675,7 @@ namespace Mutagen.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)Race_FieldIndex.RaceStats, ex);
                 }
@@ -2707,7 +2707,7 @@ namespace Mutagen.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)Race_FieldIndex.FaceData, ex);
                 }
@@ -2731,8 +2731,8 @@ namespace Mutagen.Internals
                                         item: item.BodyData,
                                         rhs: rhs.BodyData,
                                         def: def?.BodyData,
-                                        doErrorMask: doErrorMask,
-                                        errorMask: (doErrorMask ? new Func<GenderedBodyData_ErrorMask>(() =>
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<GenderedBodyData_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
                                             if (baseMask.BodyData.Specific == null)
@@ -2758,7 +2758,7 @@ namespace Mutagen.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)Race_FieldIndex.BodyData, ex);
                 }
@@ -2773,7 +2773,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)Race_FieldIndex.Hairs, ex);
                 }
@@ -2788,7 +2788,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)Race_FieldIndex.Eyes, ex);
                 }
@@ -2812,8 +2812,8 @@ namespace Mutagen.Internals
                                         item: item.FaceGenData,
                                         rhs: rhs.FaceGenData,
                                         def: def?.FaceGenData,
-                                        doErrorMask: doErrorMask,
-                                        errorMask: (doErrorMask ? new Func<FaceGenData_ErrorMask>(() =>
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<FaceGenData_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
                                             if (baseMask.FaceGenData.Specific == null)
@@ -2839,7 +2839,7 @@ namespace Mutagen.Internals
                         );
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)Race_FieldIndex.FaceGenData, ex);
                 }
@@ -2854,7 +2854,7 @@ namespace Mutagen.Internals
                         cmds);
                 }
                 catch (Exception ex)
-                when (doErrorMask)
+                when (doMasks)
                 {
                     errorMask().SetNthException((int)Race_FieldIndex.Unknown, ex);
                 }
