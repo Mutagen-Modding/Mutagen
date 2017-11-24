@@ -213,7 +213,6 @@ namespace Mutagen
             ClassTraining_ErrorMask errMaskRet = null;
             var ret = Create_XML_Internal(
                 root: root,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new ClassTraining_ErrorMask()) : default(Func<ClassTraining_ErrorMask>));
             return (ret, errMaskRet);
         }
@@ -424,7 +423,6 @@ namespace Mutagen
 
         private static ClassTraining Create_XML_Internal(
             XElement root,
-            bool doMasks,
             Func<ClassTraining_ErrorMask> errorMask)
         {
             var ret = new ClassTraining();
@@ -436,12 +434,11 @@ namespace Mutagen
                         item: ret,
                         root: elem,
                         name: elem.Name.LocalName,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -452,7 +449,6 @@ namespace Mutagen
             ClassTraining item,
             XElement root,
             string name,
-            bool doMasks,
             Func<ClassTraining_ErrorMask> errorMask)
         {
             switch (name)
@@ -463,12 +459,11 @@ namespace Mutagen
                         var tryGet = EnumXmlTranslation<Skill>.Instance.Parse(
                             root,
                             nullable: false,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._TrainedSkill.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)ClassTraining_FieldIndex.TrainedSkill,
                             subMask);
                     }
@@ -478,12 +473,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = ByteXmlTranslation.Instance.ParseNonNull(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._MaximumTrainingLevel.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)ClassTraining_FieldIndex.MaximumTrainingLevel,
                             subMask);
                     }
@@ -493,12 +487,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = ByteArrayXmlTranslation.Instance.Parse(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._Fluff.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)ClassTraining_FieldIndex.Fluff,
                             subMask);
                     }
@@ -553,7 +546,6 @@ namespace Mutagen
             ClassTraining_ErrorMask errMaskRet = null;
             var ret = Create_Binary_Internal(
                 frame: frame,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new ClassTraining_ErrorMask()) : default(Func<ClassTraining_ErrorMask>));
             return (ret, errMaskRet);
         }
@@ -762,7 +754,6 @@ namespace Mutagen
 
         private static ClassTraining Create_Binary_Internal(
             MutagenFrame frame,
-            bool doMasks,
             Func<ClassTraining_ErrorMask> errorMask)
         {
             var ret = new ClassTraining();
@@ -773,12 +764,11 @@ namespace Mutagen
                     Fill_Binary_Structs(
                         item: ret,
                         frame: frame,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -788,27 +778,23 @@ namespace Mutagen
         protected static void Fill_Binary_Structs(
             ClassTraining item,
             MutagenFrame frame,
-            bool doMasks,
             Func<ClassTraining_ErrorMask> errorMask)
         {
             if (frame.Complete) return;
             var TrainedSkilltryGet = Mutagen.Binary.EnumBinaryTranslation<Skill>.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(1)),
                 fieldIndex: (int)ClassTraining_FieldIndex.TrainedSkill,
-                doMasks: doMasks,
                 errorMask: errorMask);
             item._TrainedSkill.SetIfSucceeded(TrainedSkilltryGet);
             if (frame.Complete) return;
             item._MaximumTrainingLevel.SetIfSucceeded(Mutagen.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
-                doMasks: doMasks,
                 fieldIndex: (int)ClassTraining_FieldIndex.MaximumTrainingLevel,
                 errorMask: errorMask));
             if (frame.Complete) return;
             var FlufftryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(2)),
                 fieldIndex: (int)ClassTraining_FieldIndex.Fluff,
-                doMasks: doMasks,
                 errorMask: errorMask);
             item._Fluff.SetIfSucceeded(FlufftryGet);
         }
@@ -1516,7 +1502,6 @@ namespace Mutagen.Internals
                 writer: writer,
                 name: name,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new ClassTraining_ErrorMask()) : default(Func<ClassTraining_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -1524,7 +1509,6 @@ namespace Mutagen.Internals
         private static void Write_XML_Internal(
             XmlWriter writer,
             IClassTrainingGetter item,
-            bool doMasks,
             Func<ClassTraining_ErrorMask> errorMask,
             string name = null)
         {
@@ -1543,11 +1527,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.TrainedSkill),
                             item.TrainedSkill,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)ClassTraining_FieldIndex.TrainedSkill,
                             subMask);
                     }
@@ -1558,11 +1541,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.MaximumTrainingLevel),
                             item.MaximumTrainingLevel,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)ClassTraining_FieldIndex.MaximumTrainingLevel,
                             subMask);
                     }
@@ -1573,18 +1555,17 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.Fluff),
                             item.Fluff,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)ClassTraining_FieldIndex.Fluff,
                             subMask);
                     }
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -1605,7 +1586,6 @@ namespace Mutagen.Internals
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new ClassTraining_ErrorMask()) : default(Func<ClassTraining_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -1613,7 +1593,6 @@ namespace Mutagen.Internals
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             IClassTrainingGetter item,
-            bool doMasks,
             Func<ClassTraining_ErrorMask> errorMask)
         {
             try
@@ -1621,11 +1600,10 @@ namespace Mutagen.Internals
                 Write_Binary_Embedded(
                     item: item,
                     writer: writer,
-                    doMasks: doMasks,
                     errorMask: errorMask);
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -1635,26 +1613,22 @@ namespace Mutagen.Internals
         public static void Write_Binary_Embedded(
             IClassTrainingGetter item,
             MutagenWriter writer,
-            bool doMasks,
             Func<ClassTraining_ErrorMask> errorMask)
         {
             Mutagen.Binary.EnumBinaryTranslation<Skill>.Instance.Write(
                 writer,
                 item.TrainedSkill_Property,
-                doMasks: doMasks,
                 length: new ContentLength(1),
                 fieldIndex: (int)ClassTraining_FieldIndex.TrainedSkill,
                 errorMask: errorMask);
             Mutagen.Binary.ByteBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.MaximumTrainingLevel_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)ClassTraining_FieldIndex.MaximumTrainingLevel,
                 errorMask: errorMask);
             Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Fluff_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)ClassTraining_FieldIndex.Fluff,
                 errorMask: errorMask);
         }

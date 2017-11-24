@@ -210,7 +210,6 @@ namespace Mutagen
             FaceGenData_ErrorMask errMaskRet = null;
             var ret = Create_XML_Internal(
                 root: root,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new FaceGenData_ErrorMask()) : default(Func<FaceGenData_ErrorMask>));
             return (ret, errMaskRet);
         }
@@ -421,7 +420,6 @@ namespace Mutagen
 
         private static FaceGenData Create_XML_Internal(
             XElement root,
-            bool doMasks,
             Func<FaceGenData_ErrorMask> errorMask)
         {
             var ret = new FaceGenData();
@@ -433,12 +431,11 @@ namespace Mutagen
                         item: ret,
                         root: elem,
                         name: elem.Name.LocalName,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -449,7 +446,6 @@ namespace Mutagen
             FaceGenData item,
             XElement root,
             string name,
-            bool doMasks,
             Func<FaceGenData_ErrorMask> errorMask)
         {
             switch (name)
@@ -459,12 +455,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = ByteArrayXmlTranslation.Instance.Parse(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._SymmetricGeometry.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)FaceGenData_FieldIndex.SymmetricGeometry,
                             subMask);
                     }
@@ -474,12 +469,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = ByteArrayXmlTranslation.Instance.Parse(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._AsymmetricGeometry.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)FaceGenData_FieldIndex.AsymmetricGeometry,
                             subMask);
                     }
@@ -489,12 +483,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = ByteArrayXmlTranslation.Instance.Parse(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._SymmetricTexture.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)FaceGenData_FieldIndex.SymmetricTexture,
                             subMask);
                     }
@@ -549,7 +542,6 @@ namespace Mutagen
             FaceGenData_ErrorMask errMaskRet = null;
             var ret = Create_Binary_Internal(
                 frame: frame,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new FaceGenData_ErrorMask()) : default(Func<FaceGenData_ErrorMask>));
             return (ret, errMaskRet);
         }
@@ -758,7 +750,6 @@ namespace Mutagen
 
         private static FaceGenData Create_Binary_Internal(
             MutagenFrame frame,
-            bool doMasks,
             Func<FaceGenData_ErrorMask> errorMask)
         {
             var ret = new FaceGenData();
@@ -769,7 +760,6 @@ namespace Mutagen
                     Fill_Binary_Structs(
                         item: ret,
                         frame: frame,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     bool first = true;
                     while (!frame.Complete)
@@ -778,14 +768,13 @@ namespace Mutagen
                             item: ret,
                             frame: frame,
                             first: first,
-                            doMasks: doMasks,
                             errorMask: errorMask)) break;
                         first = false;
                     }
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -795,7 +784,6 @@ namespace Mutagen
         protected static void Fill_Binary_Structs(
             FaceGenData item,
             MutagenFrame frame,
-            bool doMasks,
             Func<FaceGenData_ErrorMask> errorMask)
         {
         }
@@ -804,7 +792,6 @@ namespace Mutagen
             FaceGenData item,
             MutagenFrame frame,
             bool first,
-            bool doMasks,
             Func<FaceGenData_ErrorMask> errorMask)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -818,7 +805,6 @@ namespace Mutagen
                     var SymmetricGeometrytryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                         frame.Spawn(contentLength),
                         fieldIndex: (int)FaceGenData_FieldIndex.SymmetricGeometry,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     item._SymmetricGeometry.SetIfSucceeded(SymmetricGeometrytryGet);
                     break;
@@ -827,7 +813,6 @@ namespace Mutagen
                     var AsymmetricGeometrytryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                         frame.Spawn(contentLength),
                         fieldIndex: (int)FaceGenData_FieldIndex.AsymmetricGeometry,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     item._AsymmetricGeometry.SetIfSucceeded(AsymmetricGeometrytryGet);
                     break;
@@ -836,7 +821,6 @@ namespace Mutagen
                     var SymmetricTexturetryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                         frame.Spawn(contentLength),
                         fieldIndex: (int)FaceGenData_FieldIndex.SymmetricTexture,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     item._SymmetricTexture.SetIfSucceeded(SymmetricTexturetryGet);
                     break;
@@ -1553,7 +1537,6 @@ namespace Mutagen.Internals
                 writer: writer,
                 name: name,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new FaceGenData_ErrorMask()) : default(Func<FaceGenData_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -1561,7 +1544,6 @@ namespace Mutagen.Internals
         private static void Write_XML_Internal(
             XmlWriter writer,
             IFaceGenDataGetter item,
-            bool doMasks,
             Func<FaceGenData_ErrorMask> errorMask,
             string name = null)
         {
@@ -1580,11 +1562,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.SymmetricGeometry),
                             item.SymmetricGeometry,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)FaceGenData_FieldIndex.SymmetricGeometry,
                             subMask);
                     }
@@ -1595,11 +1576,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.AsymmetricGeometry),
                             item.AsymmetricGeometry,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)FaceGenData_FieldIndex.AsymmetricGeometry,
                             subMask);
                     }
@@ -1610,18 +1590,17 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.SymmetricTexture),
                             item.SymmetricTexture,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)FaceGenData_FieldIndex.SymmetricTexture,
                             subMask);
                     }
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -1642,7 +1621,6 @@ namespace Mutagen.Internals
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new FaceGenData_ErrorMask()) : default(Func<FaceGenData_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -1650,7 +1628,6 @@ namespace Mutagen.Internals
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             IFaceGenDataGetter item,
-            bool doMasks,
             Func<FaceGenData_ErrorMask> errorMask)
         {
             try
@@ -1658,11 +1635,10 @@ namespace Mutagen.Internals
                 Write_Binary_RecordTypes(
                     item: item,
                     writer: writer,
-                    doMasks: doMasks,
                     errorMask: errorMask);
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -1672,13 +1648,11 @@ namespace Mutagen.Internals
         public static void Write_Binary_RecordTypes(
             IFaceGenDataGetter item,
             MutagenWriter writer,
-            bool doMasks,
             Func<FaceGenData_ErrorMask> errorMask)
         {
             Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.SymmetricGeometry_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)FaceGenData_FieldIndex.SymmetricGeometry,
                 errorMask: errorMask,
                 header: FaceGenData_Registration.FGGS_HEADER,
@@ -1686,7 +1660,6 @@ namespace Mutagen.Internals
             Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.AsymmetricGeometry_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)FaceGenData_FieldIndex.AsymmetricGeometry,
                 errorMask: errorMask,
                 header: FaceGenData_Registration.FGGA_HEADER,
@@ -1694,7 +1667,6 @@ namespace Mutagen.Internals
             Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.SymmetricTexture_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)FaceGenData_FieldIndex.SymmetricTexture,
                 errorMask: errorMask,
                 header: FaceGenData_Registration.FGTS_HEADER,

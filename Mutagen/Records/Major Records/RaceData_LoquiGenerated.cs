@@ -290,7 +290,6 @@ namespace Mutagen
             RaceData_ErrorMask errMaskRet = null;
             var ret = Create_XML_Internal(
                 root: root,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new RaceData_ErrorMask()) : default(Func<RaceData_ErrorMask>));
             return (ret, errMaskRet);
         }
@@ -501,7 +500,6 @@ namespace Mutagen
 
         private static RaceData Create_XML_Internal(
             XElement root,
-            bool doMasks,
             Func<RaceData_ErrorMask> errorMask)
         {
             var ret = new RaceData();
@@ -513,12 +511,11 @@ namespace Mutagen
                         item: ret,
                         root: elem,
                         name: elem.Name.LocalName,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -529,7 +526,6 @@ namespace Mutagen
             RaceData item,
             XElement root,
             string name,
-            bool doMasks,
             Func<RaceData_ErrorMask> errorMask)
         {
             switch (name)
@@ -539,7 +535,7 @@ namespace Mutagen
                         MaskItem<Exception, IEnumerable<MaskItem<Exception, SkillBoost_ErrorMask>>> subMask;
                         var listTryGet = ListXmlTranslation<SkillBoost, MaskItem<Exception, SkillBoost_ErrorMask>>.Instance.Parse(
                             root: root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             maskObj: out subMask,
                             transl: (XElement r, bool listDoMasks, out MaskItem<Exception, SkillBoost_ErrorMask> listSubMask) =>
                             {
@@ -552,7 +548,6 @@ namespace Mutagen
                         item._SkillBoosts.SetIfSucceeded(listTryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)RaceData_FieldIndex.SkillBoosts,
                             subMask);
                     }
@@ -562,12 +557,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = ByteArrayXmlTranslation.Instance.Parse(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._Fluff.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)RaceData_FieldIndex.Fluff,
                             subMask);
                     }
@@ -577,12 +571,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = FloatXmlTranslation.Instance.ParseNonNull(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._MaleHeight.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)RaceData_FieldIndex.MaleHeight,
                             subMask);
                     }
@@ -592,12 +585,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = FloatXmlTranslation.Instance.ParseNonNull(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._FemaleHeight.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)RaceData_FieldIndex.FemaleHeight,
                             subMask);
                     }
@@ -607,12 +599,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = FloatXmlTranslation.Instance.ParseNonNull(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._MaleWeight.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)RaceData_FieldIndex.MaleWeight,
                             subMask);
                     }
@@ -622,12 +613,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = FloatXmlTranslation.Instance.ParseNonNull(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._FemaleWeight.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)RaceData_FieldIndex.FemaleWeight,
                             subMask);
                     }
@@ -638,12 +628,11 @@ namespace Mutagen
                         var tryGet = EnumXmlTranslation<Race.Flag>.Instance.Parse(
                             root,
                             nullable: false,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._Flags.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)RaceData_FieldIndex.Flags,
                             subMask);
                     }
@@ -698,7 +687,6 @@ namespace Mutagen
             RaceData_ErrorMask errMaskRet = null;
             var ret = Create_Binary_Internal(
                 frame: frame,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new RaceData_ErrorMask()) : default(Func<RaceData_ErrorMask>));
             return (ret, errMaskRet);
         }
@@ -907,7 +895,6 @@ namespace Mutagen
 
         private static RaceData Create_Binary_Internal(
             MutagenFrame frame,
-            bool doMasks,
             Func<RaceData_ErrorMask> errorMask)
         {
             var ret = new RaceData();
@@ -921,12 +908,11 @@ namespace Mutagen
                     Fill_Binary_Structs(
                         item: ret,
                         frame: frame,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -936,7 +922,6 @@ namespace Mutagen
         protected static void Fill_Binary_Structs(
             RaceData item,
             MutagenFrame frame,
-            bool doMasks,
             Func<RaceData_ErrorMask> errorMask)
         {
             if (frame.Complete) return;
@@ -944,7 +929,6 @@ namespace Mutagen
                 frame: frame,
                 amount: 7,
                 fieldIndex: (int)RaceData_FieldIndex.SkillBoosts,
-                doMasks: doMasks,
                 errorMask: errorMask,
                 transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, SkillBoost_ErrorMask> listSubMask) =>
                 {
@@ -959,38 +943,32 @@ namespace Mutagen
             var FlufftryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(4)),
                 fieldIndex: (int)RaceData_FieldIndex.Fluff,
-                doMasks: doMasks,
                 errorMask: errorMask);
             item._Fluff.SetIfSucceeded(FlufftryGet);
             if (frame.Complete) return;
             item._MaleHeight.SetIfSucceeded(Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
-                doMasks: doMasks,
                 fieldIndex: (int)RaceData_FieldIndex.MaleHeight,
                 errorMask: errorMask));
             if (frame.Complete) return;
             item._FemaleHeight.SetIfSucceeded(Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
-                doMasks: doMasks,
                 fieldIndex: (int)RaceData_FieldIndex.FemaleHeight,
                 errorMask: errorMask));
             if (frame.Complete) return;
             item._MaleWeight.SetIfSucceeded(Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
-                doMasks: doMasks,
                 fieldIndex: (int)RaceData_FieldIndex.MaleWeight,
                 errorMask: errorMask));
             if (frame.Complete) return;
             item._FemaleWeight.SetIfSucceeded(Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
-                doMasks: doMasks,
                 fieldIndex: (int)RaceData_FieldIndex.FemaleWeight,
                 errorMask: errorMask));
             if (frame.Complete) return;
             var FlagstryGet = Mutagen.Binary.EnumBinaryTranslation<Race.Flag>.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(2)),
                 fieldIndex: (int)RaceData_FieldIndex.Flags,
-                doMasks: doMasks,
                 errorMask: errorMask);
             item._Flags.SetIfSucceeded(FlagstryGet);
         }
@@ -2001,7 +1979,6 @@ namespace Mutagen.Internals
                 writer: writer,
                 name: name,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new RaceData_ErrorMask()) : default(Func<RaceData_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -2009,7 +1986,6 @@ namespace Mutagen.Internals
         private static void Write_XML_Internal(
             XmlWriter writer,
             IRaceDataGetter item,
-            bool doMasks,
             Func<RaceData_ErrorMask> errorMask,
             string name = null)
         {
@@ -2028,7 +2004,7 @@ namespace Mutagen.Internals
                             writer: writer,
                             name: nameof(item.SkillBoosts),
                             item: item.SkillBoosts,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             maskObj: out subMask,
                             transl: (SkillBoost subItem, bool listDoMasks, out MaskItem<Exception, SkillBoost_ErrorMask> listSubMask) =>
                             {
@@ -2036,14 +2012,13 @@ namespace Mutagen.Internals
                                     writer: writer,
                                     item: subItem,
                                     name: "Item",
-                                    doMasks: doMasks,
+                                    doMasks: errorMask != null,
                                     mask: out SkillBoost_ErrorMask loquiMask);
                                 listSubMask = loquiMask == null ? null : new MaskItem<Exception, SkillBoost_ErrorMask>(null, loquiMask);
                             }
                             );
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)RaceData_FieldIndex.SkillBoosts,
                             subMask);
                     }
@@ -2054,11 +2029,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.Fluff),
                             item.Fluff,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)RaceData_FieldIndex.Fluff,
                             subMask);
                     }
@@ -2069,11 +2043,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.MaleHeight),
                             item.MaleHeight,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)RaceData_FieldIndex.MaleHeight,
                             subMask);
                     }
@@ -2084,11 +2057,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.FemaleHeight),
                             item.FemaleHeight,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)RaceData_FieldIndex.FemaleHeight,
                             subMask);
                     }
@@ -2099,11 +2071,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.MaleWeight),
                             item.MaleWeight,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)RaceData_FieldIndex.MaleWeight,
                             subMask);
                     }
@@ -2114,11 +2085,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.FemaleWeight),
                             item.FemaleWeight,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)RaceData_FieldIndex.FemaleWeight,
                             subMask);
                     }
@@ -2129,18 +2099,17 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.Flags),
                             item.Flags,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)RaceData_FieldIndex.Flags,
                             subMask);
                     }
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -2161,7 +2130,6 @@ namespace Mutagen.Internals
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new RaceData_ErrorMask()) : default(Func<RaceData_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -2169,7 +2137,6 @@ namespace Mutagen.Internals
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             IRaceDataGetter item,
-            bool doMasks,
             Func<RaceData_ErrorMask> errorMask)
         {
             try
@@ -2182,12 +2149,11 @@ namespace Mutagen.Internals
                     Write_Binary_Embedded(
                         item: item,
                         writer: writer,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -2197,58 +2163,50 @@ namespace Mutagen.Internals
         public static void Write_Binary_Embedded(
             IRaceDataGetter item,
             MutagenWriter writer,
-            bool doMasks,
             Func<RaceData_ErrorMask> errorMask)
         {
             Mutagen.Binary.ListBinaryTranslation<SkillBoost, MaskItem<Exception, SkillBoost_ErrorMask>>.Instance.Write(
                 writer: writer,
                 item: item.SkillBoosts,
                 fieldIndex: (int)RaceData_FieldIndex.SkillBoosts,
-                doMasks: doMasks,
                 errorMask: errorMask,
                 transl: (SkillBoost subItem, bool listDoMasks, out MaskItem<Exception, SkillBoost_ErrorMask> listSubMask) =>
                 {
                     LoquiBinaryTranslation<SkillBoost, SkillBoost_ErrorMask>.Instance.Write(
                         writer: writer,
                         item: subItem,
-                        doMasks: doMasks,
+                        doMasks: listDoMasks,
                         errorMask: out listSubMask);
                 }
                 );
             Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Fluff_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)RaceData_FieldIndex.Fluff,
                 errorMask: errorMask);
             Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.MaleHeight_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)RaceData_FieldIndex.MaleHeight,
                 errorMask: errorMask);
             Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FemaleHeight_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)RaceData_FieldIndex.FemaleHeight,
                 errorMask: errorMask);
             Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.MaleWeight_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)RaceData_FieldIndex.MaleWeight,
                 errorMask: errorMask);
             Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FemaleWeight_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)RaceData_FieldIndex.FemaleWeight,
                 errorMask: errorMask);
             Mutagen.Binary.EnumBinaryTranslation<Race.Flag>.Instance.Write(
                 writer,
                 item.Flags_Property,
-                doMasks: doMasks,
                 length: new ContentLength(2),
                 fieldIndex: (int)RaceData_FieldIndex.Flags,
                 errorMask: errorMask);

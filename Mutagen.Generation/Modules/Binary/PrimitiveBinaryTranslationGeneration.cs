@@ -35,7 +35,6 @@ namespace Mutagen.Generation
             {
                 args.Add($"writer: {writerAccessor}");
                 args.Add($"item: {itemAccessor.PropertyOrDirectAccess}");
-                args.Add($"doMasks: {doMaskAccessor}");
                 if (typeGen.HasIndex)
                 {
                     args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
@@ -43,6 +42,7 @@ namespace Mutagen.Generation
                 }
                 else
                 {
+                    args.Add($"doMasks: {doMaskAccessor}");
                     args.Add($"errorMask: out {maskAccessor}");
                 }
                 if (data.TriggeringRecordAccessor != null)
@@ -87,7 +87,6 @@ namespace Mutagen.Generation
                 {
                     args.Add($"frame: {nodeAccessor}");
                 }
-                args.Add($"doMasks: {doMaskAccessor}");
                 if (typeGen.HasIndex)
                 {
                     args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
@@ -95,6 +94,7 @@ namespace Mutagen.Generation
                 }
                 else
                 {
+                    args.Add($"doMasks: {doMaskAccessor}");
                     args.Add($"errorMask: out {maskAccessor}");
                 }
             }

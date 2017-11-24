@@ -298,7 +298,6 @@ namespace Mutagen
             TES4_ErrorMask errMaskRet = null;
             var ret = Create_XML_Internal(
                 root: root,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new TES4_ErrorMask()) : default(Func<TES4_ErrorMask>));
             return (ret, errMaskRet);
         }
@@ -509,7 +508,6 @@ namespace Mutagen
 
         private static TES4 Create_XML_Internal(
             XElement root,
-            bool doMasks,
             Func<TES4_ErrorMask> errorMask)
         {
             var ret = new TES4();
@@ -521,12 +519,11 @@ namespace Mutagen
                         item: ret,
                         root: elem,
                         name: elem.Name.LocalName,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -537,7 +534,6 @@ namespace Mutagen
             TES4 item,
             XElement root,
             string name,
-            bool doMasks,
             Func<TES4_ErrorMask> errorMask)
         {
             switch (name)
@@ -547,12 +543,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = ByteArrayXmlTranslation.Instance.Parse(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._Fluff.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)TES4_FieldIndex.Fluff,
                             subMask);
                     }
@@ -562,12 +557,11 @@ namespace Mutagen
                         MaskItem<Exception, Header_ErrorMask> subMask;
                         var tryGet = LoquiXmlTranslation<Header, Header_ErrorMask>.Instance.Parse(
                             root: root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             mask: out subMask);
                         item._Header.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)TES4_FieldIndex.Header,
                             subMask);
                     }
@@ -577,12 +571,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = ByteArrayXmlTranslation.Instance.Parse(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._TypeOffsets.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)TES4_FieldIndex.TypeOffsets,
                             subMask);
                     }
@@ -592,12 +585,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = ByteArrayXmlTranslation.Instance.Parse(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._Deleted.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)TES4_FieldIndex.Deleted,
                             subMask);
                     }
@@ -607,12 +599,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = StringXmlTranslation.Instance.Parse(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._Author.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)TES4_FieldIndex.Author,
                             subMask);
                     }
@@ -622,12 +613,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = StringXmlTranslation.Instance.Parse(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._Description.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)TES4_FieldIndex.Description,
                             subMask);
                     }
@@ -637,7 +627,7 @@ namespace Mutagen
                         MaskItem<Exception, IEnumerable<MaskItem<Exception, MasterReference_ErrorMask>>> subMask;
                         var listTryGet = ListXmlTranslation<MasterReference, MaskItem<Exception, MasterReference_ErrorMask>>.Instance.Parse(
                             root: root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             maskObj: out subMask,
                             transl: (XElement r, bool listDoMasks, out MaskItem<Exception, MasterReference_ErrorMask> listSubMask) =>
                             {
@@ -650,7 +640,6 @@ namespace Mutagen
                         item._MasterReferences.SetIfSucceeded(listTryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)TES4_FieldIndex.MasterReferences,
                             subMask);
                     }
@@ -705,7 +694,6 @@ namespace Mutagen
             TES4_ErrorMask errMaskRet = null;
             var ret = Create_Binary_Internal(
                 frame: frame,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new TES4_ErrorMask()) : default(Func<TES4_ErrorMask>));
             return (ret, errMaskRet);
         }
@@ -914,7 +902,6 @@ namespace Mutagen
 
         private static TES4 Create_Binary_Internal(
             MutagenFrame frame,
-            bool doMasks,
             Func<TES4_ErrorMask> errorMask)
         {
             var ret = new TES4();
@@ -928,20 +915,18 @@ namespace Mutagen
                     Fill_Binary_Structs(
                         item: ret,
                         frame: frame,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     while (!frame.Complete)
                     {
                         if (!Fill_Binary_RecordTypes(
                             item: ret,
                             frame: frame,
-                            doMasks: doMasks,
                             errorMask: errorMask)) break;
                     }
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -951,14 +936,12 @@ namespace Mutagen
         protected static void Fill_Binary_Structs(
             TES4 item,
             MutagenFrame frame,
-            bool doMasks,
             Func<TES4_ErrorMask> errorMask)
         {
             if (frame.Complete) return;
             var FlufftryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(12)),
                 fieldIndex: (int)TES4_FieldIndex.Fluff,
-                doMasks: doMasks,
                 errorMask: errorMask);
             item._Fluff.SetIfSucceeded(FlufftryGet);
         }
@@ -966,7 +949,6 @@ namespace Mutagen
         protected static bool Fill_Binary_RecordTypes(
             TES4 item,
             MutagenFrame frame,
-            bool doMasks,
             Func<TES4_ErrorMask> errorMask)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -977,7 +959,6 @@ namespace Mutagen
                 case "HEDR":
                     item._Header.SetIfSucceeded(LoquiBinaryTranslation<Header, Header_ErrorMask>.Instance.Parse(
                         frame: frame,
-                        doMasks: doMasks,
                         fieldIndex: (int)TES4_FieldIndex.Header,
                         errorMask: errorMask));
                     break;
@@ -986,7 +967,6 @@ namespace Mutagen
                     var TypeOffsetstryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                         frame.Spawn(contentLength),
                         fieldIndex: (int)TES4_FieldIndex.TypeOffsets,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     item._TypeOffsets.SetIfSucceeded(TypeOffsetstryGet);
                     break;
@@ -995,7 +975,6 @@ namespace Mutagen
                     var DeletedtryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                         frame.Spawn(contentLength),
                         fieldIndex: (int)TES4_FieldIndex.Deleted,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     item._Deleted.SetIfSucceeded(DeletedtryGet);
                     break;
@@ -1004,7 +983,6 @@ namespace Mutagen
                     var AuthortryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)TES4_FieldIndex.Author,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     item._Author.SetIfSucceeded(AuthortryGet);
                     break;
@@ -1013,7 +991,6 @@ namespace Mutagen
                     var DescriptiontryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)TES4_FieldIndex.Description,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     item._Description.SetIfSucceeded(DescriptiontryGet);
                     break;
@@ -1022,7 +999,6 @@ namespace Mutagen
                         frame: frame,
                         triggeringRecord: TES4_Registration.MAST_HEADER,
                         fieldIndex: (int)TES4_FieldIndex.MasterReferences,
-                        doMasks: doMasks,
                         objType: ObjectType.Subrecord,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, MasterReference_ErrorMask> listSubMask) =>
@@ -2092,7 +2068,6 @@ namespace Mutagen.Internals
                 writer: writer,
                 name: name,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new TES4_ErrorMask()) : default(Func<TES4_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -2100,7 +2075,6 @@ namespace Mutagen.Internals
         private static void Write_XML_Internal(
             XmlWriter writer,
             ITES4Getter item,
-            bool doMasks,
             Func<TES4_ErrorMask> errorMask,
             string name = null)
         {
@@ -2119,11 +2093,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.Fluff),
                             item.Fluff,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)TES4_FieldIndex.Fluff,
                             subMask);
                     }
@@ -2134,12 +2107,11 @@ namespace Mutagen.Internals
                             writer: writer,
                             item: item.Header,
                             name: nameof(item.Header),
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             mask: out Header_ErrorMask loquiMask);
                         subMask = loquiMask == null ? null : new MaskItem<Exception, Header_ErrorMask>(null, loquiMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)TES4_FieldIndex.Header,
                             subMask);
                     }
@@ -2150,11 +2122,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.TypeOffsets),
                             item.TypeOffsets,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)TES4_FieldIndex.TypeOffsets,
                             subMask);
                     }
@@ -2165,11 +2136,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.Deleted),
                             item.Deleted,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)TES4_FieldIndex.Deleted,
                             subMask);
                     }
@@ -2180,11 +2150,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.Author),
                             item.Author,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)TES4_FieldIndex.Author,
                             subMask);
                     }
@@ -2195,11 +2164,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.Description),
                             item.Description,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)TES4_FieldIndex.Description,
                             subMask);
                     }
@@ -2210,7 +2178,7 @@ namespace Mutagen.Internals
                             writer: writer,
                             name: nameof(item.MasterReferences),
                             item: item.MasterReferences,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             maskObj: out subMask,
                             transl: (MasterReference subItem, bool listDoMasks, out MaskItem<Exception, MasterReference_ErrorMask> listSubMask) =>
                             {
@@ -2218,21 +2186,20 @@ namespace Mutagen.Internals
                                     writer: writer,
                                     item: subItem,
                                     name: "Item",
-                                    doMasks: doMasks,
+                                    doMasks: errorMask != null,
                                     mask: out MasterReference_ErrorMask loquiMask);
                                 listSubMask = loquiMask == null ? null : new MaskItem<Exception, MasterReference_ErrorMask>(null, loquiMask);
                             }
                             );
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)TES4_FieldIndex.MasterReferences,
                             subMask);
                     }
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -2253,7 +2220,6 @@ namespace Mutagen.Internals
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new TES4_ErrorMask()) : default(Func<TES4_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -2261,7 +2227,6 @@ namespace Mutagen.Internals
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             ITES4Getter item,
-            bool doMasks,
             Func<TES4_ErrorMask> errorMask)
         {
             try
@@ -2274,17 +2239,15 @@ namespace Mutagen.Internals
                     Write_Binary_Embedded(
                         item: item,
                         writer: writer,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     Write_Binary_RecordTypes(
                         item: item,
                         writer: writer,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -2294,13 +2257,11 @@ namespace Mutagen.Internals
         public static void Write_Binary_Embedded(
             ITES4Getter item,
             MutagenWriter writer,
-            bool doMasks,
             Func<TES4_ErrorMask> errorMask)
         {
             Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Fluff_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)TES4_FieldIndex.Fluff,
                 errorMask: errorMask);
         }
@@ -2308,19 +2269,16 @@ namespace Mutagen.Internals
         public static void Write_Binary_RecordTypes(
             ITES4Getter item,
             MutagenWriter writer,
-            bool doMasks,
             Func<TES4_ErrorMask> errorMask)
         {
             LoquiBinaryTranslation<Header, Header_ErrorMask>.Instance.Write(
                 writer: writer,
                 item: item.Header_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)TES4_FieldIndex.Header,
                 errorMask: errorMask);
             Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.TypeOffsets_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)TES4_FieldIndex.TypeOffsets,
                 errorMask: errorMask,
                 header: TES4_Registration.OFST_HEADER,
@@ -2328,7 +2286,6 @@ namespace Mutagen.Internals
             Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Deleted_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)TES4_FieldIndex.Deleted,
                 errorMask: errorMask,
                 header: TES4_Registration.DELE_HEADER,
@@ -2336,7 +2293,6 @@ namespace Mutagen.Internals
             Mutagen.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Author_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)TES4_FieldIndex.Author,
                 errorMask: errorMask,
                 header: TES4_Registration.CNAM_HEADER,
@@ -2344,7 +2300,6 @@ namespace Mutagen.Internals
             Mutagen.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Description_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)TES4_FieldIndex.Description,
                 errorMask: errorMask,
                 header: TES4_Registration.SNAM_HEADER,
@@ -2353,14 +2308,13 @@ namespace Mutagen.Internals
                 writer: writer,
                 item: item.MasterReferences,
                 fieldIndex: (int)TES4_FieldIndex.MasterReferences,
-                doMasks: doMasks,
                 errorMask: errorMask,
                 transl: (MasterReference subItem, bool listDoMasks, out MaskItem<Exception, MasterReference_ErrorMask> listSubMask) =>
                 {
                     LoquiBinaryTranslation<MasterReference, MasterReference_ErrorMask>.Instance.Write(
                         writer: writer,
                         item: subItem,
-                        doMasks: doMasks,
+                        doMasks: listDoMasks,
                         errorMask: out listSubMask);
                 }
                 );

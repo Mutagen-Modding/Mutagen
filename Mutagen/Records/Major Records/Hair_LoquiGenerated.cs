@@ -206,7 +206,6 @@ namespace Mutagen
             Hair_ErrorMask errMaskRet = null;
             var ret = Create_XML_Internal(
                 root: root,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Hair_ErrorMask()) : default(Func<Hair_ErrorMask>));
             return (ret, errMaskRet);
         }
@@ -441,7 +440,6 @@ namespace Mutagen
 
         private static Hair Create_XML_Internal(
             XElement root,
-            bool doMasks,
             Func<Hair_ErrorMask> errorMask)
         {
             var ret = new Hair();
@@ -453,12 +451,11 @@ namespace Mutagen
                         item: ret,
                         root: elem,
                         name: elem.Name.LocalName,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -469,7 +466,6 @@ namespace Mutagen
             Hair item,
             XElement root,
             string name,
-            bool doMasks,
             Func<Hair_ErrorMask> errorMask)
         {
             switch (name)
@@ -479,12 +475,11 @@ namespace Mutagen
                         MaskItem<Exception, Model_ErrorMask> subMask;
                         var tryGet = LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
                             root: root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             mask: out subMask);
                         item._Model.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)Hair_FieldIndex.Model,
                             subMask);
                     }
@@ -494,12 +489,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = FilePathXmlTranslation.Instance.ParseNonNull(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._Icon.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)Hair_FieldIndex.Icon,
                             subMask);
                     }
@@ -510,12 +504,11 @@ namespace Mutagen
                         var tryGet = EnumXmlTranslation<Hair.HairFlag>.Instance.Parse(
                             root,
                             nullable: false,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._Flags.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)Hair_FieldIndex.Flags,
                             subMask);
                     }
@@ -525,7 +518,6 @@ namespace Mutagen
                         item: item,
                         root: root,
                         name: name,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     break;
             }
@@ -576,7 +568,6 @@ namespace Mutagen
             Hair_ErrorMask errMaskRet = null;
             var ret = Create_Binary_Internal(
                 frame: frame,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Hair_ErrorMask()) : default(Func<Hair_ErrorMask>));
             return (ret, errMaskRet);
         }
@@ -809,7 +800,6 @@ namespace Mutagen
 
         private static Hair Create_Binary_Internal(
             MutagenFrame frame,
-            bool doMasks,
             Func<Hair_ErrorMask> errorMask)
         {
             var ret = new Hair();
@@ -823,20 +813,18 @@ namespace Mutagen
                     Fill_Binary_Structs(
                         item: ret,
                         frame: frame,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     while (!frame.Complete)
                     {
                         if (!Fill_Binary_RecordTypes(
                             item: ret,
                             frame: frame,
-                            doMasks: doMasks,
                             errorMask: errorMask)) break;
                     }
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -846,20 +834,17 @@ namespace Mutagen
         protected static void Fill_Binary_Structs(
             Hair item,
             MutagenFrame frame,
-            bool doMasks,
             Func<Hair_ErrorMask> errorMask)
         {
             NamedMajorRecord.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
-                doMasks: doMasks,
                 errorMask: errorMask);
         }
 
         protected static bool Fill_Binary_RecordTypes(
             Hair item,
             MutagenFrame frame,
-            bool doMasks,
             Func<Hair_ErrorMask> errorMask)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -870,7 +855,6 @@ namespace Mutagen
                 case "MODL":
                     item._Model.SetIfSucceeded(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         frame: frame.Spawn(snapToFinalPosition: false),
-                        doMasks: doMasks,
                         fieldIndex: (int)Hair_FieldIndex.Model,
                         errorMask: errorMask));
                     break;
@@ -878,7 +862,6 @@ namespace Mutagen
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var tryGet = Mutagen.Binary.FilePathBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
-                        doMasks: doMasks,
                         fieldIndex: (int)Hair_FieldIndex.Icon,
                         errorMask: errorMask);
                     item._Icon.SetIfSucceeded(tryGet);
@@ -888,7 +871,6 @@ namespace Mutagen
                     var FlagstryGet = Mutagen.Binary.EnumBinaryTranslation<Hair.HairFlag>.Instance.Parse(
                         frame.Spawn(contentLength),
                         fieldIndex: (int)Hair_FieldIndex.Flags,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     item._Flags.SetIfSucceeded(FlagstryGet);
                     break;
@@ -896,7 +878,6 @@ namespace Mutagen
                     NamedMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     break;
             }
@@ -1653,7 +1634,6 @@ namespace Mutagen.Internals
                 writer: writer,
                 name: name,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Hair_ErrorMask()) : default(Func<Hair_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -1661,7 +1641,6 @@ namespace Mutagen.Internals
         private static void Write_XML_Internal(
             XmlWriter writer,
             IHairGetter item,
-            bool doMasks,
             Func<Hair_ErrorMask> errorMask,
             string name = null)
         {
@@ -1680,12 +1659,11 @@ namespace Mutagen.Internals
                             writer: writer,
                             item: item.Model,
                             name: nameof(item.Model),
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             mask: out Model_ErrorMask loquiMask);
                         subMask = loquiMask == null ? null : new MaskItem<Exception, Model_ErrorMask>(null, loquiMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)Hair_FieldIndex.Model,
                             subMask);
                     }
@@ -1696,11 +1674,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.Icon),
                             item.Icon,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)Hair_FieldIndex.Icon,
                             subMask);
                     }
@@ -1711,18 +1688,17 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.Flags),
                             item.Flags,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)Hair_FieldIndex.Flags,
                             subMask);
                     }
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -1743,7 +1719,6 @@ namespace Mutagen.Internals
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Hair_ErrorMask()) : default(Func<Hair_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -1751,7 +1726,6 @@ namespace Mutagen.Internals
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             IHairGetter item,
-            bool doMasks,
             Func<Hair_ErrorMask> errorMask)
         {
             try
@@ -1764,17 +1738,15 @@ namespace Mutagen.Internals
                     MajorRecordCommon.Write_Binary_Embedded(
                         item: item,
                         writer: writer,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     Write_Binary_RecordTypes(
                         item: item,
                         writer: writer,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -1784,32 +1756,27 @@ namespace Mutagen.Internals
         public static void Write_Binary_RecordTypes(
             IHairGetter item,
             MutagenWriter writer,
-            bool doMasks,
             Func<Hair_ErrorMask> errorMask)
         {
             NamedMajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
                 writer: writer,
-                doMasks: doMasks,
                 errorMask: errorMask);
             LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Write(
                 writer: writer,
                 item: item.Model_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)Hair_FieldIndex.Model,
                 errorMask: errorMask);
             Mutagen.Binary.FilePathBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Icon_Property,
                 fieldIndex: (int)Hair_FieldIndex.Icon,
-                doMasks: doMasks,
                 errorMask: errorMask,
                 header: Hair_Registration.ICON_HEADER,
                 nullable: false);
             Mutagen.Binary.EnumBinaryTranslation<Hair.HairFlag>.Instance.Write(
                 writer,
                 item.Flags_Property,
-                doMasks: doMasks,
                 length: new ContentLength(1),
                 fieldIndex: (int)Hair_FieldIndex.Flags,
                 errorMask: errorMask,

@@ -356,7 +356,6 @@ namespace Mutagen
             MajorRecord item,
             XElement root,
             string name,
-            bool doMasks,
             Func<MajorRecord_ErrorMask> errorMask)
         {
             switch (name)
@@ -366,12 +365,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = ByteArrayXmlTranslation.Instance.Parse(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._MajorRecordFlags.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)MajorRecord_FieldIndex.MajorRecordFlags,
                             subMask);
                     }
@@ -381,12 +379,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = FormIDXmlTranslation.Instance.ParseNonNull(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._FormID.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)MajorRecord_FieldIndex.FormID,
                             subMask);
                     }
@@ -396,12 +393,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = ByteArrayXmlTranslation.Instance.Parse(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._Version.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)MajorRecord_FieldIndex.Version,
                             subMask);
                     }
@@ -411,12 +407,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = StringXmlTranslation.Instance.Parse(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._EditorID.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)MajorRecord_FieldIndex.EditorID,
                             subMask);
                     }
@@ -426,12 +421,11 @@ namespace Mutagen
                         object subMask;
                         var tryGet = WildcardXmlTranslation.Instance.Parse(
                             root: root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             maskObj: out subMask);
                         item._RecordType.SetIfSucceeded(tryGet.Bubble<RecordType>(i => (RecordType)i));
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)MajorRecord_FieldIndex.RecordType,
                             subMask);
                     }
@@ -584,27 +578,23 @@ namespace Mutagen
         protected static void Fill_Binary_Structs(
             MajorRecord item,
             MutagenFrame frame,
-            bool doMasks,
             Func<MajorRecord_ErrorMask> errorMask)
         {
             if (frame.Complete) return;
             var MajorRecordFlagstryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(4)),
                 fieldIndex: (int)MajorRecord_FieldIndex.MajorRecordFlags,
-                doMasks: doMasks,
                 errorMask: errorMask);
             item._MajorRecordFlags.SetIfSucceeded(MajorRecordFlagstryGet);
             if (frame.Complete) return;
             item._FormID.SetIfSucceeded(Mutagen.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
-                doMasks: doMasks,
                 fieldIndex: (int)MajorRecord_FieldIndex.FormID,
                 errorMask: errorMask));
             if (frame.Complete) return;
             var VersiontryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(4)),
                 fieldIndex: (int)MajorRecord_FieldIndex.Version,
-                doMasks: doMasks,
                 errorMask: errorMask);
             item._Version.SetIfSucceeded(VersiontryGet);
         }
@@ -612,7 +602,6 @@ namespace Mutagen
         protected static bool Fill_Binary_RecordTypes(
             MajorRecord item,
             MutagenFrame frame,
-            bool doMasks,
             Func<MajorRecord_ErrorMask> errorMask)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -625,7 +614,6 @@ namespace Mutagen
                     var EditorIDtryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)MajorRecord_FieldIndex.EditorID,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     item._EditorID.SetIfSucceeded(EditorIDtryGet);
                     break;
@@ -1340,7 +1328,6 @@ namespace Mutagen.Internals
                 writer: writer,
                 name: name,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new MajorRecord_ErrorMask()) : default(Func<MajorRecord_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -1348,7 +1335,6 @@ namespace Mutagen.Internals
         private static void Write_XML_Internal(
             XmlWriter writer,
             IMajorRecordGetter item,
-            bool doMasks,
             Func<MajorRecord_ErrorMask> errorMask,
             string name = null)
         {
@@ -1367,11 +1353,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.MajorRecordFlags),
                             item.MajorRecordFlags,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)MajorRecord_FieldIndex.MajorRecordFlags,
                             subMask);
                     }
@@ -1382,11 +1367,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.FormID),
                             item.FormID,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)MajorRecord_FieldIndex.FormID,
                             subMask);
                     }
@@ -1397,11 +1381,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.Version),
                             item.Version,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)MajorRecord_FieldIndex.Version,
                             subMask);
                     }
@@ -1412,18 +1395,17 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.EditorID),
                             item.EditorID,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)MajorRecord_FieldIndex.EditorID,
                             subMask);
                     }
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -1444,7 +1426,6 @@ namespace Mutagen.Internals
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new MajorRecord_ErrorMask()) : default(Func<MajorRecord_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -1452,7 +1433,6 @@ namespace Mutagen.Internals
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             IMajorRecordGetter item,
-            bool doMasks,
             Func<MajorRecord_ErrorMask> errorMask)
         {
             try
@@ -1460,16 +1440,14 @@ namespace Mutagen.Internals
                 Write_Binary_Embedded(
                     item: item,
                     writer: writer,
-                    doMasks: doMasks,
                     errorMask: errorMask);
                 Write_Binary_RecordTypes(
                     item: item,
                     writer: writer,
-                    doMasks: doMasks,
                     errorMask: errorMask);
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -1479,25 +1457,21 @@ namespace Mutagen.Internals
         public static void Write_Binary_Embedded(
             IMajorRecordGetter item,
             MutagenWriter writer,
-            bool doMasks,
             Func<MajorRecord_ErrorMask> errorMask)
         {
             Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.MajorRecordFlags_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)MajorRecord_FieldIndex.MajorRecordFlags,
                 errorMask: errorMask);
             Mutagen.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FormID_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)MajorRecord_FieldIndex.FormID,
                 errorMask: errorMask);
             Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Version_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)MajorRecord_FieldIndex.Version,
                 errorMask: errorMask);
         }
@@ -1505,13 +1479,11 @@ namespace Mutagen.Internals
         public static void Write_Binary_RecordTypes(
             IMajorRecordGetter item,
             MutagenWriter writer,
-            bool doMasks,
             Func<MajorRecord_ErrorMask> errorMask)
         {
             Mutagen.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.EditorID_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)MajorRecord_FieldIndex.EditorID,
                 errorMask: errorMask,
                 header: MajorRecord_Registration.EDID_HEADER,

@@ -16,7 +16,6 @@ namespace Mutagen
         static partial void FillBinary_ContainedRecordType_Custom<T_ErrMask>(
             MutagenFrame frame, 
             IGroup<T> item,
-            bool doMasks, 
             int fieldIndex,
             Func<Group_ErrorMask<T_ErrMask>> errorMask)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
@@ -27,7 +26,6 @@ namespace Mutagen
         static partial void WriteBinary_ContainedRecordType_Custom<T_ErrMask>(
             MutagenWriter writer, 
             IGroupGetter<T> item,
-            bool doMasks, 
             int fieldIndex, 
             Func<Group_ErrorMask<T_ErrMask>> errorMask)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
@@ -35,12 +33,11 @@ namespace Mutagen
             Mutagen.Binary.StringBinaryTranslation.Instance.Write(
                 writer,
                 T_RecordType.Type,
-                doMasks: doMasks,
+                doMasks: errorMask != null,
                 nullTerminate: false,
                 errorMask: out var err);
             ErrorMask.HandleErrorMask(
                 errorMask,
-                doMasks,
                 fieldIndex,
                 err);
         }

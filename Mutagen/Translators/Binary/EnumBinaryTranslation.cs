@@ -33,17 +33,15 @@ namespace Mutagen.Binary
         public TryGet<E> Parse<M>(
             MutagenFrame frame,
             int fieldIndex,
-            bool doMasks,
             Func<M> errorMask)
             where M : IErrorMask
         {
             var ret = this.Parse(
                 frame,
-                doMasks,
+                errorMask != null,
                 out var ex);
             ErrorMask.HandleErrorMask(
                 errorMask,
-                doMasks,
                 fieldIndex,
                 ex);
             return ret;
@@ -78,7 +76,6 @@ namespace Mutagen.Binary
             E? item,
             ContentLength length,
             int fieldIndex,
-            bool doMasks,
             Func<M> errorMask)
             where M : IErrorMask
         {
@@ -91,7 +88,6 @@ namespace Mutagen.Binary
             {
                 ErrorMask.HandleException(
                     errorMask,
-                    doMasks,
                     fieldIndex,
                     ex);
             }
@@ -102,7 +98,6 @@ namespace Mutagen.Binary
             IHasBeenSetItemGetter<E?> item,
             ContentLength length,
             int fieldIndex,
-            bool doMasks,
             Func<M> errorMask)
             where M : IErrorMask
         {
@@ -112,7 +107,6 @@ namespace Mutagen.Binary
                 item.Item,
                 length,
                 fieldIndex,
-                doMasks,
                 errorMask);
         }
 
@@ -121,7 +115,6 @@ namespace Mutagen.Binary
             IHasBeenSetItemGetter<E> item,
             ContentLength length,
             int fieldIndex,
-            bool doMasks,
             Func<M> errorMask)
             where M : IErrorMask
         {
@@ -131,7 +124,6 @@ namespace Mutagen.Binary
                 item.Item,
                 length,
                 fieldIndex,
-                doMasks,
                 errorMask);
         }
 
@@ -189,7 +181,6 @@ namespace Mutagen.Binary
                 out var subMask);
             ErrorMask.HandleException(
                 errorMask,
-                doMasks,
                 fieldIndex,
                 subMask);
         }
@@ -201,7 +192,6 @@ namespace Mutagen.Binary
             ContentLength length,
             int fieldIndex,
             bool nullable,
-            bool doMasks,
             Func<M> errorMask)
             where M : IErrorMask
         {
@@ -213,7 +203,7 @@ namespace Mutagen.Binary
                 length,
                 fieldIndex,
                 nullable,
-                doMasks,
+                errorMask != null,
                 errorMask);
         }
 
@@ -224,7 +214,6 @@ namespace Mutagen.Binary
             ContentLength length,
             int fieldIndex,
             bool nullable,
-            bool doMasks,
             Func<M> errorMask)
             where M : IErrorMask
         {
@@ -236,7 +225,7 @@ namespace Mutagen.Binary
                 length,
                 fieldIndex,
                 nullable,
-                doMasks,
+                errorMask != null,
                 errorMask);
         }
 

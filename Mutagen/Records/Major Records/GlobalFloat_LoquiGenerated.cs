@@ -167,7 +167,6 @@ namespace Mutagen
             GlobalFloat_ErrorMask errMaskRet = null;
             var ret = Create_XML_Internal(
                 root: root,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new GlobalFloat_ErrorMask()) : default(Func<GlobalFloat_ErrorMask>));
             return (ret, errMaskRet);
         }
@@ -402,7 +401,6 @@ namespace Mutagen
 
         private static GlobalFloat Create_XML_Internal(
             XElement root,
-            bool doMasks,
             Func<GlobalFloat_ErrorMask> errorMask)
         {
             var ret = new GlobalFloat();
@@ -414,12 +412,11 @@ namespace Mutagen
                         item: ret,
                         root: elem,
                         name: elem.Name.LocalName,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -430,7 +427,6 @@ namespace Mutagen
             GlobalFloat item,
             XElement root,
             string name,
-            bool doMasks,
             Func<GlobalFloat_ErrorMask> errorMask)
         {
             switch (name)
@@ -440,12 +436,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = FloatXmlTranslation.Instance.ParseNonNull(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._Data.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)GlobalFloat_FieldIndex.Data,
                             subMask);
                     }
@@ -455,7 +450,6 @@ namespace Mutagen
                         item: item,
                         root: root,
                         name: name,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     break;
             }
@@ -506,7 +500,6 @@ namespace Mutagen
             GlobalFloat_ErrorMask errMaskRet = null;
             var ret = Create_Binary_Internal(
                 frame: frame,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new GlobalFloat_ErrorMask()) : default(Func<GlobalFloat_ErrorMask>));
             return (ret, errMaskRet);
         }
@@ -739,7 +732,6 @@ namespace Mutagen
 
         private static GlobalFloat Create_Binary_Internal(
             MutagenFrame frame,
-            bool doMasks,
             Func<GlobalFloat_ErrorMask> errorMask)
         {
             var ret = new GlobalFloat();
@@ -753,12 +745,11 @@ namespace Mutagen
                     Fill_Binary_Structs(
                         item: ret,
                         frame: frame,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -768,13 +759,11 @@ namespace Mutagen
         protected static void Fill_Binary_Structs(
             GlobalFloat item,
             MutagenFrame frame,
-            bool doMasks,
             Func<GlobalFloat_ErrorMask> errorMask)
         {
             Global.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
-                doMasks: doMasks,
                 errorMask: errorMask);
         }
 
@@ -1332,7 +1321,6 @@ namespace Mutagen.Internals
                 writer: writer,
                 name: name,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new GlobalFloat_ErrorMask()) : default(Func<GlobalFloat_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -1340,7 +1328,6 @@ namespace Mutagen.Internals
         private static void Write_XML_Internal(
             XmlWriter writer,
             IGlobalFloatGetter item,
-            bool doMasks,
             Func<GlobalFloat_ErrorMask> errorMask,
             string name = null)
         {
@@ -1355,7 +1342,7 @@ namespace Mutagen.Internals
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -1376,7 +1363,6 @@ namespace Mutagen.Internals
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new GlobalFloat_ErrorMask()) : default(Func<GlobalFloat_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -1384,7 +1370,6 @@ namespace Mutagen.Internals
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             IGlobalFloatGetter item,
-            bool doMasks,
             Func<GlobalFloat_ErrorMask> errorMask)
         {
             try
@@ -1397,17 +1382,15 @@ namespace Mutagen.Internals
                     Write_Binary_Embedded(
                         item: item,
                         writer: writer,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     GlobalCommon.Write_Binary_RecordTypes(
                         item: item,
                         writer: writer,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -1417,13 +1400,11 @@ namespace Mutagen.Internals
         public static void Write_Binary_Embedded(
             IGlobalFloatGetter item,
             MutagenWriter writer,
-            bool doMasks,
             Func<GlobalFloat_ErrorMask> errorMask)
         {
             MajorRecordCommon.Write_Binary_Embedded(
                 item: item,
                 writer: writer,
-                doMasks: doMasks,
                 errorMask: errorMask);
         }
 

@@ -348,7 +348,6 @@ namespace Mutagen
             OblivionMod_ErrorMask errMaskRet = null;
             var ret = Create_XML_Internal(
                 root: root,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new OblivionMod_ErrorMask()) : default(Func<OblivionMod_ErrorMask>));
             return (ret, errMaskRet);
         }
@@ -559,7 +558,6 @@ namespace Mutagen
 
         private static OblivionMod Create_XML_Internal(
             XElement root,
-            bool doMasks,
             Func<OblivionMod_ErrorMask> errorMask)
         {
             var ret = new OblivionMod();
@@ -571,12 +569,11 @@ namespace Mutagen
                         item: ret,
                         root: elem,
                         name: elem.Name.LocalName,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -587,7 +584,6 @@ namespace Mutagen
             OblivionMod item,
             XElement root,
             string name,
-            bool doMasks,
             Func<OblivionMod_ErrorMask> errorMask)
         {
             switch (name)
@@ -597,12 +593,11 @@ namespace Mutagen
                         MaskItem<Exception, TES4_ErrorMask> subMask;
                         var tryGet = LoquiXmlTranslation<TES4, TES4_ErrorMask>.Instance.Parse(
                             root: root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             mask: out subMask);
                         item._TES4.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)OblivionMod_FieldIndex.TES4,
                             subMask);
                     }
@@ -612,12 +607,11 @@ namespace Mutagen
                         MaskItem<Exception, Group_ErrorMask<GameSetting_ErrorMask>> subMask;
                         var tryGet = LoquiXmlTranslation<Group<GameSetting>, Group_ErrorMask<GameSetting_ErrorMask>>.Instance.Parse(
                             root: root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             mask: out subMask);
                         item._GameSettings.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)OblivionMod_FieldIndex.GameSettings,
                             subMask);
                     }
@@ -627,12 +621,11 @@ namespace Mutagen
                         MaskItem<Exception, Group_ErrorMask<Global_ErrorMask>> subMask;
                         var tryGet = LoquiXmlTranslation<Group<Global>, Group_ErrorMask<Global_ErrorMask>>.Instance.Parse(
                             root: root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             mask: out subMask);
                         item._Globals.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)OblivionMod_FieldIndex.Globals,
                             subMask);
                     }
@@ -642,12 +635,11 @@ namespace Mutagen
                         MaskItem<Exception, Group_ErrorMask<Class_ErrorMask>> subMask;
                         var tryGet = LoquiXmlTranslation<Group<Class>, Group_ErrorMask<Class_ErrorMask>>.Instance.Parse(
                             root: root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             mask: out subMask);
                         item._Classes.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)OblivionMod_FieldIndex.Classes,
                             subMask);
                     }
@@ -657,12 +649,11 @@ namespace Mutagen
                         MaskItem<Exception, Group_ErrorMask<Faction_ErrorMask>> subMask;
                         var tryGet = LoquiXmlTranslation<Group<Faction>, Group_ErrorMask<Faction_ErrorMask>>.Instance.Parse(
                             root: root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             mask: out subMask);
                         item._Factions.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)OblivionMod_FieldIndex.Factions,
                             subMask);
                     }
@@ -672,12 +663,11 @@ namespace Mutagen
                         MaskItem<Exception, Group_ErrorMask<Hair_ErrorMask>> subMask;
                         var tryGet = LoquiXmlTranslation<Group<Hair>, Group_ErrorMask<Hair_ErrorMask>>.Instance.Parse(
                             root: root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             mask: out subMask);
                         item._Hairs.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)OblivionMod_FieldIndex.Hairs,
                             subMask);
                     }
@@ -687,12 +677,11 @@ namespace Mutagen
                         MaskItem<Exception, Group_ErrorMask<Eye_ErrorMask>> subMask;
                         var tryGet = LoquiXmlTranslation<Group<Eye>, Group_ErrorMask<Eye_ErrorMask>>.Instance.Parse(
                             root: root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             mask: out subMask);
                         item._Eyes.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)OblivionMod_FieldIndex.Eyes,
                             subMask);
                     }
@@ -702,12 +691,11 @@ namespace Mutagen
                         MaskItem<Exception, Group_ErrorMask<Race_ErrorMask>> subMask;
                         var tryGet = LoquiXmlTranslation<Group<Race>, Group_ErrorMask<Race_ErrorMask>>.Instance.Parse(
                             root: root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             mask: out subMask);
                         item._Races.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)OblivionMod_FieldIndex.Races,
                             subMask);
                     }
@@ -717,12 +705,11 @@ namespace Mutagen
                         MaskItem<Exception, Group_ErrorMask<Sound_ErrorMask>> subMask;
                         var tryGet = LoquiXmlTranslation<Group<Sound>, Group_ErrorMask<Sound_ErrorMask>>.Instance.Parse(
                             root: root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             mask: out subMask);
                         item._Sounds.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)OblivionMod_FieldIndex.Sounds,
                             subMask);
                     }
@@ -732,12 +719,11 @@ namespace Mutagen
                         MaskItem<Exception, Group_ErrorMask<SkillRecord_ErrorMask>> subMask;
                         var tryGet = LoquiXmlTranslation<Group<SkillRecord>, Group_ErrorMask<SkillRecord_ErrorMask>>.Instance.Parse(
                             root: root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             mask: out subMask);
                         item._Skills.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)OblivionMod_FieldIndex.Skills,
                             subMask);
                     }
@@ -747,12 +733,11 @@ namespace Mutagen
                         MaskItem<Exception, Group_ErrorMask<MagicEffect_ErrorMask>> subMask;
                         var tryGet = LoquiXmlTranslation<Group<MagicEffect>, Group_ErrorMask<MagicEffect_ErrorMask>>.Instance.Parse(
                             root: root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             mask: out subMask);
                         item._MagicEffects.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)OblivionMod_FieldIndex.MagicEffects,
                             subMask);
                     }
@@ -807,7 +792,6 @@ namespace Mutagen
             OblivionMod_ErrorMask errMaskRet = null;
             var ret = Create_Binary_Internal(
                 frame: frame,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new OblivionMod_ErrorMask()) : default(Func<OblivionMod_ErrorMask>));
             return (ret, errMaskRet);
         }
@@ -1016,7 +1000,6 @@ namespace Mutagen
 
         private static OblivionMod Create_Binary_Internal(
             MutagenFrame frame,
-            bool doMasks,
             Func<OblivionMod_ErrorMask> errorMask)
         {
             var ret = new OblivionMod();
@@ -1027,20 +1010,18 @@ namespace Mutagen
                     Fill_Binary_Structs(
                         item: ret,
                         frame: frame,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     while (!frame.Complete)
                     {
                         if (!Fill_Binary_RecordTypes(
                             item: ret,
                             frame: frame,
-                            doMasks: doMasks,
                             errorMask: errorMask)) break;
                     }
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -1050,7 +1031,6 @@ namespace Mutagen
         protected static void Fill_Binary_Structs(
             OblivionMod item,
             MutagenFrame frame,
-            bool doMasks,
             Func<OblivionMod_ErrorMask> errorMask)
         {
         }
@@ -1058,7 +1038,6 @@ namespace Mutagen
         protected static bool Fill_Binary_RecordTypes(
             OblivionMod item,
             MutagenFrame frame,
-            bool doMasks,
             Func<OblivionMod_ErrorMask> errorMask)
         {
             var nextRecordType = HeaderTranslation.GetNextType(
@@ -1069,77 +1048,66 @@ namespace Mutagen
                 case "TES4":
                     item._TES4.SetIfSucceeded(LoquiBinaryTranslation<TES4, TES4_ErrorMask>.Instance.Parse(
                         frame: frame,
-                        doMasks: doMasks,
                         fieldIndex: (int)OblivionMod_FieldIndex.TES4,
                         errorMask: errorMask));
                     break;
                 case "GMST":
                     item._GameSettings.SetIfSucceeded(LoquiBinaryTranslation<Group<GameSetting>, Group_ErrorMask<GameSetting_ErrorMask>>.Instance.Parse(
                         frame: frame,
-                        doMasks: doMasks,
                         fieldIndex: (int)OblivionMod_FieldIndex.GameSettings,
                         errorMask: errorMask));
                     break;
                 case "GLOB":
                     item._Globals.SetIfSucceeded(LoquiBinaryTranslation<Group<Global>, Group_ErrorMask<Global_ErrorMask>>.Instance.Parse(
                         frame: frame,
-                        doMasks: doMasks,
                         fieldIndex: (int)OblivionMod_FieldIndex.Globals,
                         errorMask: errorMask));
                     break;
                 case "CLAS":
                     item._Classes.SetIfSucceeded(LoquiBinaryTranslation<Group<Class>, Group_ErrorMask<Class_ErrorMask>>.Instance.Parse(
                         frame: frame,
-                        doMasks: doMasks,
                         fieldIndex: (int)OblivionMod_FieldIndex.Classes,
                         errorMask: errorMask));
                     break;
                 case "FACT":
                     item._Factions.SetIfSucceeded(LoquiBinaryTranslation<Group<Faction>, Group_ErrorMask<Faction_ErrorMask>>.Instance.Parse(
                         frame: frame,
-                        doMasks: doMasks,
                         fieldIndex: (int)OblivionMod_FieldIndex.Factions,
                         errorMask: errorMask));
                     break;
                 case "HAIR":
                     item._Hairs.SetIfSucceeded(LoquiBinaryTranslation<Group<Hair>, Group_ErrorMask<Hair_ErrorMask>>.Instance.Parse(
                         frame: frame,
-                        doMasks: doMasks,
                         fieldIndex: (int)OblivionMod_FieldIndex.Hairs,
                         errorMask: errorMask));
                     break;
                 case "EYES":
                     item._Eyes.SetIfSucceeded(LoquiBinaryTranslation<Group<Eye>, Group_ErrorMask<Eye_ErrorMask>>.Instance.Parse(
                         frame: frame,
-                        doMasks: doMasks,
                         fieldIndex: (int)OblivionMod_FieldIndex.Eyes,
                         errorMask: errorMask));
                     break;
                 case "RACE":
                     item._Races.SetIfSucceeded(LoquiBinaryTranslation<Group<Race>, Group_ErrorMask<Race_ErrorMask>>.Instance.Parse(
                         frame: frame,
-                        doMasks: doMasks,
                         fieldIndex: (int)OblivionMod_FieldIndex.Races,
                         errorMask: errorMask));
                     break;
                 case "SOUN":
                     item._Sounds.SetIfSucceeded(LoquiBinaryTranslation<Group<Sound>, Group_ErrorMask<Sound_ErrorMask>>.Instance.Parse(
                         frame: frame,
-                        doMasks: doMasks,
                         fieldIndex: (int)OblivionMod_FieldIndex.Sounds,
                         errorMask: errorMask));
                     break;
                 case "SKIL":
                     item._Skills.SetIfSucceeded(LoquiBinaryTranslation<Group<SkillRecord>, Group_ErrorMask<SkillRecord_ErrorMask>>.Instance.Parse(
                         frame: frame,
-                        doMasks: doMasks,
                         fieldIndex: (int)OblivionMod_FieldIndex.Skills,
                         errorMask: errorMask));
                     break;
                 case "MGEF":
                     item._MagicEffects.SetIfSucceeded(LoquiBinaryTranslation<Group<MagicEffect>, Group_ErrorMask<MagicEffect_ErrorMask>>.Instance.Parse(
                         frame: frame,
-                        doMasks: doMasks,
                         fieldIndex: (int)OblivionMod_FieldIndex.MagicEffects,
                         errorMask: errorMask));
                     break;
@@ -2776,7 +2744,6 @@ namespace Mutagen.Internals
                 writer: writer,
                 name: name,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new OblivionMod_ErrorMask()) : default(Func<OblivionMod_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -2784,7 +2751,6 @@ namespace Mutagen.Internals
         private static void Write_XML_Internal(
             XmlWriter writer,
             IOblivionModGetter item,
-            bool doMasks,
             Func<OblivionMod_ErrorMask> errorMask,
             string name = null)
         {
@@ -2803,12 +2769,11 @@ namespace Mutagen.Internals
                             writer: writer,
                             item: item.TES4,
                             name: nameof(item.TES4),
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             mask: out TES4_ErrorMask loquiMask);
                         subMask = loquiMask == null ? null : new MaskItem<Exception, TES4_ErrorMask>(null, loquiMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)OblivionMod_FieldIndex.TES4,
                             subMask);
                     }
@@ -2819,12 +2784,11 @@ namespace Mutagen.Internals
                             writer: writer,
                             item: item.GameSettings,
                             name: nameof(item.GameSettings),
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             mask: out Group_ErrorMask<GameSetting_ErrorMask> loquiMask);
                         subMask = loquiMask == null ? null : new MaskItem<Exception, Group_ErrorMask<GameSetting_ErrorMask>>(null, loquiMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)OblivionMod_FieldIndex.GameSettings,
                             subMask);
                     }
@@ -2835,12 +2799,11 @@ namespace Mutagen.Internals
                             writer: writer,
                             item: item.Globals,
                             name: nameof(item.Globals),
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             mask: out Group_ErrorMask<Global_ErrorMask> loquiMask);
                         subMask = loquiMask == null ? null : new MaskItem<Exception, Group_ErrorMask<Global_ErrorMask>>(null, loquiMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)OblivionMod_FieldIndex.Globals,
                             subMask);
                     }
@@ -2851,12 +2814,11 @@ namespace Mutagen.Internals
                             writer: writer,
                             item: item.Classes,
                             name: nameof(item.Classes),
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             mask: out Group_ErrorMask<Class_ErrorMask> loquiMask);
                         subMask = loquiMask == null ? null : new MaskItem<Exception, Group_ErrorMask<Class_ErrorMask>>(null, loquiMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)OblivionMod_FieldIndex.Classes,
                             subMask);
                     }
@@ -2867,12 +2829,11 @@ namespace Mutagen.Internals
                             writer: writer,
                             item: item.Factions,
                             name: nameof(item.Factions),
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             mask: out Group_ErrorMask<Faction_ErrorMask> loquiMask);
                         subMask = loquiMask == null ? null : new MaskItem<Exception, Group_ErrorMask<Faction_ErrorMask>>(null, loquiMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)OblivionMod_FieldIndex.Factions,
                             subMask);
                     }
@@ -2883,12 +2844,11 @@ namespace Mutagen.Internals
                             writer: writer,
                             item: item.Hairs,
                             name: nameof(item.Hairs),
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             mask: out Group_ErrorMask<Hair_ErrorMask> loquiMask);
                         subMask = loquiMask == null ? null : new MaskItem<Exception, Group_ErrorMask<Hair_ErrorMask>>(null, loquiMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)OblivionMod_FieldIndex.Hairs,
                             subMask);
                     }
@@ -2899,12 +2859,11 @@ namespace Mutagen.Internals
                             writer: writer,
                             item: item.Eyes,
                             name: nameof(item.Eyes),
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             mask: out Group_ErrorMask<Eye_ErrorMask> loquiMask);
                         subMask = loquiMask == null ? null : new MaskItem<Exception, Group_ErrorMask<Eye_ErrorMask>>(null, loquiMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)OblivionMod_FieldIndex.Eyes,
                             subMask);
                     }
@@ -2915,12 +2874,11 @@ namespace Mutagen.Internals
                             writer: writer,
                             item: item.Races,
                             name: nameof(item.Races),
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             mask: out Group_ErrorMask<Race_ErrorMask> loquiMask);
                         subMask = loquiMask == null ? null : new MaskItem<Exception, Group_ErrorMask<Race_ErrorMask>>(null, loquiMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)OblivionMod_FieldIndex.Races,
                             subMask);
                     }
@@ -2931,12 +2889,11 @@ namespace Mutagen.Internals
                             writer: writer,
                             item: item.Sounds,
                             name: nameof(item.Sounds),
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             mask: out Group_ErrorMask<Sound_ErrorMask> loquiMask);
                         subMask = loquiMask == null ? null : new MaskItem<Exception, Group_ErrorMask<Sound_ErrorMask>>(null, loquiMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)OblivionMod_FieldIndex.Sounds,
                             subMask);
                     }
@@ -2947,12 +2904,11 @@ namespace Mutagen.Internals
                             writer: writer,
                             item: item.Skills,
                             name: nameof(item.Skills),
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             mask: out Group_ErrorMask<SkillRecord_ErrorMask> loquiMask);
                         subMask = loquiMask == null ? null : new MaskItem<Exception, Group_ErrorMask<SkillRecord_ErrorMask>>(null, loquiMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)OblivionMod_FieldIndex.Skills,
                             subMask);
                     }
@@ -2963,19 +2919,18 @@ namespace Mutagen.Internals
                             writer: writer,
                             item: item.MagicEffects,
                             name: nameof(item.MagicEffects),
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             mask: out Group_ErrorMask<MagicEffect_ErrorMask> loquiMask);
                         subMask = loquiMask == null ? null : new MaskItem<Exception, Group_ErrorMask<MagicEffect_ErrorMask>>(null, loquiMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)OblivionMod_FieldIndex.MagicEffects,
                             subMask);
                     }
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -2996,7 +2951,6 @@ namespace Mutagen.Internals
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new OblivionMod_ErrorMask()) : default(Func<OblivionMod_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -3004,7 +2958,6 @@ namespace Mutagen.Internals
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             IOblivionModGetter item,
-            bool doMasks,
             Func<OblivionMod_ErrorMask> errorMask)
         {
             try
@@ -3012,11 +2965,10 @@ namespace Mutagen.Internals
                 Write_Binary_RecordTypes(
                     item: item,
                     writer: writer,
-                    doMasks: doMasks,
                     errorMask: errorMask);
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -3026,73 +2978,61 @@ namespace Mutagen.Internals
         public static void Write_Binary_RecordTypes(
             IOblivionModGetter item,
             MutagenWriter writer,
-            bool doMasks,
             Func<OblivionMod_ErrorMask> errorMask)
         {
             LoquiBinaryTranslation<TES4, TES4_ErrorMask>.Instance.Write(
                 writer: writer,
                 item: item.TES4_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)OblivionMod_FieldIndex.TES4,
                 errorMask: errorMask);
             LoquiBinaryTranslation<Group<GameSetting>, Group_ErrorMask<GameSetting_ErrorMask>>.Instance.Write(
                 writer: writer,
                 item: item.GameSettings_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)OblivionMod_FieldIndex.GameSettings,
                 errorMask: errorMask);
             LoquiBinaryTranslation<Group<Global>, Group_ErrorMask<Global_ErrorMask>>.Instance.Write(
                 writer: writer,
                 item: item.Globals_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)OblivionMod_FieldIndex.Globals,
                 errorMask: errorMask);
             LoquiBinaryTranslation<Group<Class>, Group_ErrorMask<Class_ErrorMask>>.Instance.Write(
                 writer: writer,
                 item: item.Classes_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)OblivionMod_FieldIndex.Classes,
                 errorMask: errorMask);
             LoquiBinaryTranslation<Group<Faction>, Group_ErrorMask<Faction_ErrorMask>>.Instance.Write(
                 writer: writer,
                 item: item.Factions_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)OblivionMod_FieldIndex.Factions,
                 errorMask: errorMask);
             LoquiBinaryTranslation<Group<Hair>, Group_ErrorMask<Hair_ErrorMask>>.Instance.Write(
                 writer: writer,
                 item: item.Hairs_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)OblivionMod_FieldIndex.Hairs,
                 errorMask: errorMask);
             LoquiBinaryTranslation<Group<Eye>, Group_ErrorMask<Eye_ErrorMask>>.Instance.Write(
                 writer: writer,
                 item: item.Eyes_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)OblivionMod_FieldIndex.Eyes,
                 errorMask: errorMask);
             LoquiBinaryTranslation<Group<Race>, Group_ErrorMask<Race_ErrorMask>>.Instance.Write(
                 writer: writer,
                 item: item.Races_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)OblivionMod_FieldIndex.Races,
                 errorMask: errorMask);
             LoquiBinaryTranslation<Group<Sound>, Group_ErrorMask<Sound_ErrorMask>>.Instance.Write(
                 writer: writer,
                 item: item.Sounds_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)OblivionMod_FieldIndex.Sounds,
                 errorMask: errorMask);
             LoquiBinaryTranslation<Group<SkillRecord>, Group_ErrorMask<SkillRecord_ErrorMask>>.Instance.Write(
                 writer: writer,
                 item: item.Skills_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)OblivionMod_FieldIndex.Skills,
                 errorMask: errorMask);
             LoquiBinaryTranslation<Group<MagicEffect>, Group_ErrorMask<MagicEffect_ErrorMask>>.Instance.Write(
                 writer: writer,
                 item: item.MagicEffects_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)OblivionMod_FieldIndex.MagicEffects,
                 errorMask: errorMask);
         }

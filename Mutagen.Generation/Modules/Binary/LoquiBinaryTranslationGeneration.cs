@@ -39,7 +39,6 @@ namespace Mutagen.Generation
                 {
                     args.Add($"writer: {writerAccessor}");
                     args.Add($"item: {itemAccessor.PropertyOrDirectAccess}");
-                    args.Add($"doMasks: {doMaskAccessor}");
                     if (loquiGen.HasIndex)
                     {
                         args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
@@ -47,6 +46,7 @@ namespace Mutagen.Generation
                     }
                     else
                     {
+                        args.Add($"doMasks: {doMaskAccessor}");
                         args.Add($"errorMask: out {maskAccessor}");
                     }
                 }
@@ -83,7 +83,7 @@ namespace Mutagen.Generation
                         $"var tmp = {loquiGen.TargetObjectGeneration.Name}.Create_{ModNickname}"))
                     {
                         args.Add($"frame: {frameAccessor}");
-                        args.Add($"doMasks: {doMaskAccessor}");
+                        args.Add($"doMasks: errorMask != null");
                         args.Add($"errorMask: out {loquiGen.MaskItemString(MaskType.Error)} {loquiGen.Name}createMask");
                     }
                     using (var args = new ArgsWrapper(fg,
@@ -94,14 +94,13 @@ namespace Mutagen.Generation
                         args.Add("def: null");
                         args.Add("cmds: null");
                         args.Add("copyMask: null");
-                        args.Add("doMasks: doMasks");
+                        args.Add("doMasks: errorMask != null");
                         args.Add($"errorMask: out var {loquiGen.Name}errorMask");
                     }
                     using (var args = new ArgsWrapper(fg,
                         $"ErrorMask.HandleErrorMask"))
                     {
                         args.Add($"creator: {maskAccessor}");
-                        args.Add($"doMasks: doMasks");
                         args.Add($"index: (int){typeGen.IndexEnumName}");
                         args.Add($"errMaskObj: {loquiGen.MaskItemString(MaskType.Error)}.Combine({loquiGen.Name}createMask, {loquiGen.Name}errorMask)");
                     }
@@ -127,7 +126,6 @@ namespace Mutagen.Generation
                     using (args)
                     {
                         args.Add($"frame: {frameAccessor}{(loquiGen.TargetObjectGeneration.HasRecordType() ? null : ".Spawn(snapToFinalPosition: false)")}");
-                        args.Add($"doMasks: {doMaskAccessor}");
                         if (loquiGen.HasIndex)
                         {
                             args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
@@ -135,6 +133,7 @@ namespace Mutagen.Generation
                         }
                         else
                         {
+                            args.Add($"doMasks: {doMaskAccessor}");
                             args.Add($"errorMask: out {maskAccessor}");
                         }
                     }
@@ -181,7 +180,6 @@ namespace Mutagen.Generation
                     $"{retAccessor}LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}, {loquiGen.MaskItemString(MaskType.Error)}>.Instance.Parse"))
                 {
                     args.Add($"frame: {readerAccessor}{(loquiGen.TargetObjectGeneration.GetObjectType() == ObjectType.Subrecord ? ".Spawn(snapToFinalPosition: false)" : null)}");
-                    args.Add($"doMasks: {doMaskAccessor}");
                     if (loquiGen.HasIndex)
                     {
                         args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
@@ -189,6 +187,7 @@ namespace Mutagen.Generation
                     }
                     else
                     {
+                        args.Add($"doMasks: {doMaskAccessor}");
                         args.Add($"errorMask: out {maskAccessor}");
                     }
                 }

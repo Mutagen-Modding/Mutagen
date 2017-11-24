@@ -230,7 +230,6 @@ namespace Mutagen
             SoundData_ErrorMask errMaskRet = null;
             var ret = Create_XML_Internal(
                 root: root,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new SoundData_ErrorMask()) : default(Func<SoundData_ErrorMask>));
             return (ret, errMaskRet);
         }
@@ -441,7 +440,6 @@ namespace Mutagen
 
         private static SoundData Create_XML_Internal(
             XElement root,
-            bool doMasks,
             Func<SoundData_ErrorMask> errorMask)
         {
             var ret = new SoundData();
@@ -453,12 +451,11 @@ namespace Mutagen
                         item: ret,
                         root: elem,
                         name: elem.Name.LocalName,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -469,7 +466,6 @@ namespace Mutagen
             SoundData item,
             XElement root,
             string name,
-            bool doMasks,
             Func<SoundData_ErrorMask> errorMask)
         {
             switch (name)
@@ -479,12 +475,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = UInt16XmlTranslation.Instance.ParseNonNull(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._MinimumAttenuationDistance.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)SoundData_FieldIndex.MinimumAttenuationDistance,
                             subMask);
                     }
@@ -494,12 +489,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = UInt16XmlTranslation.Instance.ParseNonNull(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._MaximumAttenuationDistance.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)SoundData_FieldIndex.MaximumAttenuationDistance,
                             subMask);
                     }
@@ -509,12 +503,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = Int8XmlTranslation.Instance.ParseNonNull(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._FrequencyAdjustment.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)SoundData_FieldIndex.FrequencyAdjustment,
                             subMask);
                     }
@@ -525,12 +518,11 @@ namespace Mutagen
                         var tryGet = EnumXmlTranslation<SoundData.Flag>.Instance.Parse(
                             root,
                             nullable: false,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._Flags.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)SoundData_FieldIndex.Flags,
                             subMask);
                     }
@@ -585,7 +577,6 @@ namespace Mutagen
             SoundData_ErrorMask errMaskRet = null;
             var ret = Create_Binary_Internal(
                 frame: frame,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new SoundData_ErrorMask()) : default(Func<SoundData_ErrorMask>));
             return (ret, errMaskRet);
         }
@@ -795,28 +786,24 @@ namespace Mutagen
         static partial void FillBinary_MinimumAttenuationDistance_Custom(
             MutagenFrame frame,
             ISoundData item,
-            bool doMasks,
             int fieldIndex,
             Func<SoundData_ErrorMask> errorMask);
 
         static partial void WriteBinary_MinimumAttenuationDistance_Custom(
             MutagenWriter writer,
             ISoundDataGetter item,
-            bool doMasks,
             int fieldIndex,
             Func<SoundData_ErrorMask> errorMask);
 
         public static void WriteBinary_MinimumAttenuationDistance(
             MutagenWriter writer,
             ISoundDataGetter item,
-            bool doMasks,
             int fieldIndex,
             Func<SoundData_ErrorMask> errorMask)
         {
             WriteBinary_MinimumAttenuationDistance_Custom(
                 writer: writer,
                 item: item,
-                doMasks: doMasks,
                 fieldIndex: fieldIndex,
                 errorMask: errorMask);
         }
@@ -824,35 +811,30 @@ namespace Mutagen
         static partial void FillBinary_MaximumAttenuationDistance_Custom(
             MutagenFrame frame,
             ISoundData item,
-            bool doMasks,
             int fieldIndex,
             Func<SoundData_ErrorMask> errorMask);
 
         static partial void WriteBinary_MaximumAttenuationDistance_Custom(
             MutagenWriter writer,
             ISoundDataGetter item,
-            bool doMasks,
             int fieldIndex,
             Func<SoundData_ErrorMask> errorMask);
 
         public static void WriteBinary_MaximumAttenuationDistance(
             MutagenWriter writer,
             ISoundDataGetter item,
-            bool doMasks,
             int fieldIndex,
             Func<SoundData_ErrorMask> errorMask)
         {
             WriteBinary_MaximumAttenuationDistance_Custom(
                 writer: writer,
                 item: item,
-                doMasks: doMasks,
                 fieldIndex: fieldIndex,
                 errorMask: errorMask);
         }
 
         private static SoundData Create_Binary_Internal(
             MutagenFrame frame,
-            bool doMasks,
             Func<SoundData_ErrorMask> errorMask)
         {
             var ret = new SoundData();
@@ -866,12 +848,11 @@ namespace Mutagen
                     Fill_Binary_Structs(
                         item: ret,
                         frame: frame,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -881,27 +862,23 @@ namespace Mutagen
         protected static void Fill_Binary_Structs(
             SoundData item,
             MutagenFrame frame,
-            bool doMasks,
             Func<SoundData_ErrorMask> errorMask)
         {
             if (frame.Complete) return;
             FillBinary_MinimumAttenuationDistance_Custom(
                 frame: frame,
                 item: item,
-                doMasks: doMasks,
                 fieldIndex: (int)SoundData_FieldIndex.MinimumAttenuationDistance,
                 errorMask: errorMask);
             if (frame.Complete) return;
             FillBinary_MaximumAttenuationDistance_Custom(
                 frame: frame,
                 item: item,
-                doMasks: doMasks,
                 fieldIndex: (int)SoundData_FieldIndex.MaximumAttenuationDistance,
                 errorMask: errorMask);
             if (frame.Complete) return;
             item._FrequencyAdjustment.SetIfSucceeded(Mutagen.Binary.Int8BinaryTranslation.Instance.Parse(
                 frame: frame,
-                doMasks: doMasks,
                 fieldIndex: (int)SoundData_FieldIndex.FrequencyAdjustment,
                 errorMask: errorMask));
             if (frame.Complete) return;
@@ -910,7 +887,6 @@ namespace Mutagen
             var FlagstryGet = Mutagen.Binary.EnumBinaryTranslation<SoundData.Flag>.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(4)),
                 fieldIndex: (int)SoundData_FieldIndex.Flags,
-                doMasks: doMasks,
                 errorMask: errorMask);
             item._Flags.SetIfSucceeded(FlagstryGet);
         }
@@ -1683,7 +1659,6 @@ namespace Mutagen.Internals
                 writer: writer,
                 name: name,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new SoundData_ErrorMask()) : default(Func<SoundData_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -1691,7 +1666,6 @@ namespace Mutagen.Internals
         private static void Write_XML_Internal(
             XmlWriter writer,
             SoundData item,
-            bool doMasks,
             Func<SoundData_ErrorMask> errorMask,
             string name = null)
         {
@@ -1710,11 +1684,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.MinimumAttenuationDistance),
                             item.MinimumAttenuationDistance,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)SoundData_FieldIndex.MinimumAttenuationDistance,
                             subMask);
                     }
@@ -1725,11 +1698,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.MaximumAttenuationDistance),
                             item.MaximumAttenuationDistance,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)SoundData_FieldIndex.MaximumAttenuationDistance,
                             subMask);
                     }
@@ -1740,11 +1712,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.FrequencyAdjustment),
                             item.FrequencyAdjustment,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)SoundData_FieldIndex.FrequencyAdjustment,
                             subMask);
                     }
@@ -1755,18 +1726,17 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.Flags),
                             item.Flags,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)SoundData_FieldIndex.Flags,
                             subMask);
                     }
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -1787,7 +1757,6 @@ namespace Mutagen.Internals
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new SoundData_ErrorMask()) : default(Func<SoundData_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -1795,7 +1764,6 @@ namespace Mutagen.Internals
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             SoundData item,
-            bool doMasks,
             Func<SoundData_ErrorMask> errorMask)
         {
             try
@@ -1808,12 +1776,11 @@ namespace Mutagen.Internals
                     Write_Binary_Embedded(
                         item: item,
                         writer: writer,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -1823,25 +1790,21 @@ namespace Mutagen.Internals
         public static void Write_Binary_Embedded(
             SoundData item,
             MutagenWriter writer,
-            bool doMasks,
             Func<SoundData_ErrorMask> errorMask)
         {
             SoundData.WriteBinary_MinimumAttenuationDistance(
                 writer: writer,
                 item: item,
                 fieldIndex: (int)SoundData_FieldIndex.MinimumAttenuationDistance,
-                doMasks: doMasks,
                 errorMask: errorMask);
             SoundData.WriteBinary_MaximumAttenuationDistance(
                 writer: writer,
                 item: item,
                 fieldIndex: (int)SoundData_FieldIndex.MaximumAttenuationDistance,
-                doMasks: doMasks,
                 errorMask: errorMask);
             Mutagen.Binary.Int8BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FrequencyAdjustment_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)SoundData_FieldIndex.FrequencyAdjustment,
                 errorMask: errorMask);
             Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
@@ -1850,7 +1813,6 @@ namespace Mutagen.Internals
             Mutagen.Binary.EnumBinaryTranslation<SoundData.Flag>.Instance.Write(
                 writer,
                 item.Flags_Property,
-                doMasks: doMasks,
                 length: new ContentLength(4),
                 fieldIndex: (int)SoundData_FieldIndex.Flags,
                 errorMask: errorMask);

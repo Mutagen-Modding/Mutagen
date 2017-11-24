@@ -210,7 +210,6 @@ namespace Mutagen
             Header_ErrorMask errMaskRet = null;
             var ret = Create_XML_Internal(
                 root: root,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Header_ErrorMask()) : default(Func<Header_ErrorMask>));
             return (ret, errMaskRet);
         }
@@ -421,7 +420,6 @@ namespace Mutagen
 
         private static Header Create_XML_Internal(
             XElement root,
-            bool doMasks,
             Func<Header_ErrorMask> errorMask)
         {
             var ret = new Header();
@@ -433,12 +431,11 @@ namespace Mutagen
                         item: ret,
                         root: elem,
                         name: elem.Name.LocalName,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -449,7 +446,6 @@ namespace Mutagen
             Header item,
             XElement root,
             string name,
-            bool doMasks,
             Func<Header_ErrorMask> errorMask)
         {
             switch (name)
@@ -459,12 +455,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = FloatXmlTranslation.Instance.ParseNonNull(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._Version.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)Header_FieldIndex.Version,
                             subMask);
                     }
@@ -474,12 +469,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = Int32XmlTranslation.Instance.ParseNonNull(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._NumRecords.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)Header_FieldIndex.NumRecords,
                             subMask);
                     }
@@ -489,12 +483,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = UInt32XmlTranslation.Instance.ParseNonNull(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._NextObjectID.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)Header_FieldIndex.NextObjectID,
                             subMask);
                     }
@@ -549,7 +542,6 @@ namespace Mutagen
             Header_ErrorMask errMaskRet = null;
             var ret = Create_Binary_Internal(
                 frame: frame,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Header_ErrorMask()) : default(Func<Header_ErrorMask>));
             return (ret, errMaskRet);
         }
@@ -758,7 +750,6 @@ namespace Mutagen
 
         private static Header Create_Binary_Internal(
             MutagenFrame frame,
-            bool doMasks,
             Func<Header_ErrorMask> errorMask)
         {
             var ret = new Header();
@@ -772,12 +763,11 @@ namespace Mutagen
                     Fill_Binary_Structs(
                         item: ret,
                         frame: frame,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -787,25 +777,21 @@ namespace Mutagen
         protected static void Fill_Binary_Structs(
             Header item,
             MutagenFrame frame,
-            bool doMasks,
             Func<Header_ErrorMask> errorMask)
         {
             if (frame.Complete) return;
             item._Version.SetIfSucceeded(Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
-                doMasks: doMasks,
                 fieldIndex: (int)Header_FieldIndex.Version,
                 errorMask: errorMask));
             if (frame.Complete) return;
             item._NumRecords.SetIfSucceeded(Mutagen.Binary.Int32BinaryTranslation.Instance.Parse(
                 frame: frame,
-                doMasks: doMasks,
                 fieldIndex: (int)Header_FieldIndex.NumRecords,
                 errorMask: errorMask));
             if (frame.Complete) return;
             item._NextObjectID.SetIfSucceeded(Mutagen.Binary.UInt32BinaryTranslation.Instance.Parse(
                 frame: frame,
-                doMasks: doMasks,
                 fieldIndex: (int)Header_FieldIndex.NextObjectID,
                 errorMask: errorMask));
         }
@@ -1515,7 +1501,6 @@ namespace Mutagen.Internals
                 writer: writer,
                 name: name,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Header_ErrorMask()) : default(Func<Header_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -1523,7 +1508,6 @@ namespace Mutagen.Internals
         private static void Write_XML_Internal(
             XmlWriter writer,
             IHeaderGetter item,
-            bool doMasks,
             Func<Header_ErrorMask> errorMask,
             string name = null)
         {
@@ -1542,11 +1526,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.Version),
                             item.Version,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)Header_FieldIndex.Version,
                             subMask);
                     }
@@ -1557,11 +1540,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.NumRecords),
                             item.NumRecords,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)Header_FieldIndex.NumRecords,
                             subMask);
                     }
@@ -1572,18 +1554,17 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.NextObjectID),
                             item.NextObjectID,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)Header_FieldIndex.NextObjectID,
                             subMask);
                     }
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -1604,7 +1585,6 @@ namespace Mutagen.Internals
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Header_ErrorMask()) : default(Func<Header_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -1612,7 +1592,6 @@ namespace Mutagen.Internals
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             IHeaderGetter item,
-            bool doMasks,
             Func<Header_ErrorMask> errorMask)
         {
             try
@@ -1625,12 +1604,11 @@ namespace Mutagen.Internals
                     Write_Binary_Embedded(
                         item: item,
                         writer: writer,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -1640,25 +1618,21 @@ namespace Mutagen.Internals
         public static void Write_Binary_Embedded(
             IHeaderGetter item,
             MutagenWriter writer,
-            bool doMasks,
             Func<Header_ErrorMask> errorMask)
         {
             Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Version_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)Header_FieldIndex.Version,
                 errorMask: errorMask);
             Mutagen.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.NumRecords_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)Header_FieldIndex.NumRecords,
                 errorMask: errorMask);
             Mutagen.Binary.UInt32BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.NextObjectID_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)Header_FieldIndex.NextObjectID,
                 errorMask: errorMask);
         }

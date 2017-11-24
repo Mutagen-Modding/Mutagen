@@ -230,7 +230,6 @@ namespace Mutagen
             Rank_ErrorMask errMaskRet = null;
             var ret = Create_XML_Internal(
                 root: root,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Rank_ErrorMask()) : default(Func<Rank_ErrorMask>));
             return (ret, errMaskRet);
         }
@@ -441,7 +440,6 @@ namespace Mutagen
 
         private static Rank Create_XML_Internal(
             XElement root,
-            bool doMasks,
             Func<Rank_ErrorMask> errorMask)
         {
             var ret = new Rank();
@@ -453,12 +451,11 @@ namespace Mutagen
                         item: ret,
                         root: elem,
                         name: elem.Name.LocalName,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -469,7 +466,6 @@ namespace Mutagen
             Rank item,
             XElement root,
             string name,
-            bool doMasks,
             Func<Rank_ErrorMask> errorMask)
         {
             switch (name)
@@ -479,12 +475,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = Int32XmlTranslation.Instance.ParseNonNull(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._RankNumber.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)Rank_FieldIndex.RankNumber,
                             subMask);
                     }
@@ -494,12 +489,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = StringXmlTranslation.Instance.Parse(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._MaleName.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)Rank_FieldIndex.MaleName,
                             subMask);
                     }
@@ -509,12 +503,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = StringXmlTranslation.Instance.Parse(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._FemaleName.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)Rank_FieldIndex.FemaleName,
                             subMask);
                     }
@@ -524,12 +517,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = FilePathXmlTranslation.Instance.ParseNonNull(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._Insignia.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)Rank_FieldIndex.Insignia,
                             subMask);
                     }
@@ -584,7 +576,6 @@ namespace Mutagen
             Rank_ErrorMask errMaskRet = null;
             var ret = Create_Binary_Internal(
                 frame: frame,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Rank_ErrorMask()) : default(Func<Rank_ErrorMask>));
             return (ret, errMaskRet);
         }
@@ -793,7 +784,6 @@ namespace Mutagen
 
         private static Rank Create_Binary_Internal(
             MutagenFrame frame,
-            bool doMasks,
             Func<Rank_ErrorMask> errorMask)
         {
             var ret = new Rank();
@@ -804,7 +794,6 @@ namespace Mutagen
                     Fill_Binary_Structs(
                         item: ret,
                         frame: frame,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     bool first = true;
                     while (!frame.Complete)
@@ -813,14 +802,13 @@ namespace Mutagen
                             item: ret,
                             frame: frame,
                             first: first,
-                            doMasks: doMasks,
                             errorMask: errorMask)) break;
                         first = false;
                     }
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -830,7 +818,6 @@ namespace Mutagen
         protected static void Fill_Binary_Structs(
             Rank item,
             MutagenFrame frame,
-            bool doMasks,
             Func<Rank_ErrorMask> errorMask)
         {
         }
@@ -839,7 +826,6 @@ namespace Mutagen
             Rank item,
             MutagenFrame frame,
             bool first,
-            bool doMasks,
             Func<Rank_ErrorMask> errorMask)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -852,7 +838,6 @@ namespace Mutagen
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._RankNumber.SetIfSucceeded(Mutagen.Binary.Int32BinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
-                        doMasks: doMasks,
                         fieldIndex: (int)Rank_FieldIndex.RankNumber,
                         errorMask: errorMask));
                     break;
@@ -861,7 +846,6 @@ namespace Mutagen
                     var MaleNametryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)Rank_FieldIndex.MaleName,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     item._MaleName.SetIfSucceeded(MaleNametryGet);
                     break;
@@ -870,7 +854,6 @@ namespace Mutagen
                     var FemaleNametryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)Rank_FieldIndex.FemaleName,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     item._FemaleName.SetIfSucceeded(FemaleNametryGet);
                     break;
@@ -878,7 +861,6 @@ namespace Mutagen
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var tryGet = Mutagen.Binary.FilePathBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
-                        doMasks: doMasks,
                         fieldIndex: (int)Rank_FieldIndex.Insignia,
                         errorMask: errorMask);
                     item._Insignia.SetIfSucceeded(tryGet);
@@ -1660,7 +1642,6 @@ namespace Mutagen.Internals
                 writer: writer,
                 name: name,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Rank_ErrorMask()) : default(Func<Rank_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -1668,7 +1649,6 @@ namespace Mutagen.Internals
         private static void Write_XML_Internal(
             XmlWriter writer,
             IRankGetter item,
-            bool doMasks,
             Func<Rank_ErrorMask> errorMask,
             string name = null)
         {
@@ -1687,11 +1667,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.RankNumber),
                             item.RankNumber,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)Rank_FieldIndex.RankNumber,
                             subMask);
                     }
@@ -1702,11 +1681,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.MaleName),
                             item.MaleName,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)Rank_FieldIndex.MaleName,
                             subMask);
                     }
@@ -1717,11 +1695,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.FemaleName),
                             item.FemaleName,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)Rank_FieldIndex.FemaleName,
                             subMask);
                     }
@@ -1732,18 +1709,17 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.Insignia),
                             item.Insignia,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)Rank_FieldIndex.Insignia,
                             subMask);
                     }
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -1764,7 +1740,6 @@ namespace Mutagen.Internals
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Rank_ErrorMask()) : default(Func<Rank_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -1772,7 +1747,6 @@ namespace Mutagen.Internals
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             IRankGetter item,
-            bool doMasks,
             Func<Rank_ErrorMask> errorMask)
         {
             try
@@ -1780,11 +1754,10 @@ namespace Mutagen.Internals
                 Write_Binary_RecordTypes(
                     item: item,
                     writer: writer,
-                    doMasks: doMasks,
                     errorMask: errorMask);
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -1794,13 +1767,11 @@ namespace Mutagen.Internals
         public static void Write_Binary_RecordTypes(
             IRankGetter item,
             MutagenWriter writer,
-            bool doMasks,
             Func<Rank_ErrorMask> errorMask)
         {
             Mutagen.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.RankNumber_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)Rank_FieldIndex.RankNumber,
                 errorMask: errorMask,
                 header: Rank_Registration.RNAM_HEADER,
@@ -1808,7 +1779,6 @@ namespace Mutagen.Internals
             Mutagen.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.MaleName_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)Rank_FieldIndex.MaleName,
                 errorMask: errorMask,
                 header: Rank_Registration.MNAM_HEADER,
@@ -1816,7 +1786,6 @@ namespace Mutagen.Internals
             Mutagen.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FemaleName_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)Rank_FieldIndex.FemaleName,
                 errorMask: errorMask,
                 header: Rank_Registration.FNAM_HEADER,
@@ -1825,7 +1794,6 @@ namespace Mutagen.Internals
                 writer: writer,
                 item: item.Insignia_Property,
                 fieldIndex: (int)Rank_FieldIndex.Insignia,
-                doMasks: doMasks,
                 errorMask: errorMask,
                 header: Rank_Registration.INAM_HEADER,
                 nullable: false);

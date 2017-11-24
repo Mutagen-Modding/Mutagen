@@ -293,7 +293,6 @@ namespace Mutagen
             Global item,
             XElement root,
             string name,
-            bool doMasks,
             Func<Global_ErrorMask> errorMask)
         {
             switch (name)
@@ -303,12 +302,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = CharXmlTranslation.Instance.ParseNonNull(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._TypeChar.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)Global_FieldIndex.TypeChar,
                             subMask);
                     }
@@ -318,12 +316,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = FloatXmlTranslation.Instance.ParseNonNull(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._RawFloat.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)Global_FieldIndex.RawFloat,
                             subMask);
                     }
@@ -333,7 +330,6 @@ namespace Mutagen
                         item: item,
                         root: root,
                         name: name,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     break;
             }
@@ -490,28 +486,24 @@ namespace Mutagen
         static partial void FillBinary_TypeChar_Custom(
             MutagenFrame frame,
             IGlobal item,
-            bool doMasks,
             int fieldIndex,
             Func<Global_ErrorMask> errorMask);
 
         static partial void WriteBinary_TypeChar_Custom(
             MutagenWriter writer,
             IGlobalGetter item,
-            bool doMasks,
             int fieldIndex,
             Func<Global_ErrorMask> errorMask);
 
         public static void WriteBinary_TypeChar(
             MutagenWriter writer,
             IGlobalGetter item,
-            bool doMasks,
             int fieldIndex,
             Func<Global_ErrorMask> errorMask)
         {
             WriteBinary_TypeChar_Custom(
                 writer: writer,
                 item: item,
-                doMasks: doMasks,
                 fieldIndex: fieldIndex,
                 errorMask: errorMask);
         }
@@ -519,7 +511,6 @@ namespace Mutagen
         protected static bool Fill_Binary_RecordTypes(
             Global item,
             MutagenFrame frame,
-            bool doMasks,
             Func<Global_ErrorMask> errorMask)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -533,7 +524,6 @@ namespace Mutagen
                         FillBinary_TypeChar_Custom(
                             frame: subFrame,
                             item: item,
-                            doMasks: doMasks,
                             fieldIndex: (int)Global_FieldIndex.TypeChar,
                             errorMask: errorMask);
                     }
@@ -542,7 +532,6 @@ namespace Mutagen
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._RawFloat.SetIfSucceeded(Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
-                        doMasks: doMasks,
                         fieldIndex: (int)Global_FieldIndex.RawFloat,
                         errorMask: errorMask));
                     break;
@@ -550,7 +539,6 @@ namespace Mutagen
                     MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     break;
             }
@@ -1099,7 +1087,6 @@ namespace Mutagen.Internals
                 writer: writer,
                 name: name,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Global_ErrorMask()) : default(Func<Global_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -1107,7 +1094,6 @@ namespace Mutagen.Internals
         private static void Write_XML_Internal(
             XmlWriter writer,
             IGlobalGetter item,
-            bool doMasks,
             Func<Global_ErrorMask> errorMask,
             string name = null)
         {
@@ -1126,18 +1112,17 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.RawFloat),
                             item.RawFloat,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)Global_FieldIndex.RawFloat,
                             subMask);
                     }
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -1158,7 +1143,6 @@ namespace Mutagen.Internals
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Global_ErrorMask()) : default(Func<Global_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -1166,7 +1150,6 @@ namespace Mutagen.Internals
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             IGlobalGetter item,
-            bool doMasks,
             Func<Global_ErrorMask> errorMask)
         {
             try
@@ -1179,17 +1162,15 @@ namespace Mutagen.Internals
                     MajorRecordCommon.Write_Binary_Embedded(
                         item: item,
                         writer: writer,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     Write_Binary_RecordTypes(
                         item: item,
                         writer: writer,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -1199,24 +1180,20 @@ namespace Mutagen.Internals
         public static void Write_Binary_RecordTypes(
             IGlobalGetter item,
             MutagenWriter writer,
-            bool doMasks,
             Func<Global_ErrorMask> errorMask)
         {
             MajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
                 writer: writer,
-                doMasks: doMasks,
                 errorMask: errorMask);
             Global.WriteBinary_TypeChar(
                 writer: writer,
                 item: item,
                 fieldIndex: (int)Global_FieldIndex.TypeChar,
-                doMasks: doMasks,
                 errorMask: errorMask);
             Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.RawFloat_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)Global_FieldIndex.RawFloat,
                 errorMask: errorMask,
                 header: Global_Registration.FLTV_HEADER,

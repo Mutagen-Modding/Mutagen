@@ -145,7 +145,6 @@ namespace Mutagen.Binary
             int fieldIndex,
             RecordType triggeringRecord,
             ObjectType objType,
-            bool doMasks,
             Func<Mask> errorMask,
             BinarySubParseDelegate<T, M> transl)
             where Mask : IErrorMask
@@ -153,13 +152,12 @@ namespace Mutagen.Binary
             var ret = this.ParseRepeatedItem(
                 frame: frame,
                 triggeringRecord: triggeringRecord,
-                doMasks: doMasks,
+                doMasks: errorMask != null,
                 objType: objType,
                 errorMask: out var err,
                 transl: transl);
             ErrorMask.HandleErrorMask(
                 errorMask,
-                doMasks,
                 fieldIndex,
                 err);
             return ret;
@@ -169,20 +167,18 @@ namespace Mutagen.Binary
             MutagenFrame frame,
             int fieldIndex,
             ObjectType objType,
-            bool doMasks,
             Func<Mask> errorMask,
             BinarySubParseDelegate<T, M> transl)
             where Mask : IErrorMask
         {
             var ret = this.ParseRepeatedItem(
                 frame: frame,
-                doMasks: doMasks,
+                doMasks: errorMask != null,
                 objType: objType,
                 errorMask: out var err,
                 transl: transl);
             ErrorMask.HandleErrorMask(
                 errorMask,
-                doMasks,
                 fieldIndex,
                 err);
             return ret;
@@ -233,7 +229,6 @@ namespace Mutagen.Binary
         public TryGet<IEnumerable<T>> ParseRepeatedItem<Mask>(
             MutagenFrame frame,
             int fieldIndex,
-            bool doMasks,
             int amount,
             Func<Mask> errorMask,
             BinarySubParseDelegate<T, M> transl)
@@ -242,12 +237,11 @@ namespace Mutagen.Binary
             var ret = this.ParseRepeatedItem(
                 frame: frame,
                 amount: amount,
-                doMasks: doMasks,
+                doMasks: errorMask != null,
                 errorMask: out var err,
                 transl: transl);
             ErrorMask.HandleErrorMask(
                 errorMask,
-                doMasks,
                 fieldIndex,
                 err);
             return ret;
@@ -328,12 +322,12 @@ namespace Mutagen.Binary
         public void Write<Mask>(
             MutagenWriter writer,
             IEnumerable<T> item,
-            bool doMasks,
             int fieldIndex,
             Func<Mask> errorMask,
             BinarySubWriteDelegate<T, M> transl)
             where Mask : IErrorMask
         {
+            bool doMasks = errorMask != null;
             try
             {
                 List<M> maskList = null;
@@ -353,16 +347,15 @@ namespace Mutagen.Binary
                 {
                     ErrorMask.HandleErrorMask(
                         errorMask,
-                        doMasks,
                         fieldIndex,
                         new MaskItem<Exception, IEnumerable<M>>(null, maskList));
                 }
             }
             catch (Exception ex)
+            when (doMasks)
             {
                 ErrorMask.HandleException(
                     errorMask,
-                    doMasks,
                     fieldIndex,
                     ex);
             }
@@ -371,7 +364,6 @@ namespace Mutagen.Binary
         public void Write<Mask>(
             MutagenWriter writer,
             IHasBeenSetItemGetter<IEnumerable<T>> item,
-            bool doMasks,
             int fieldIndex,
             RecordType recordType,
             Func<Mask> errorMask,
@@ -382,7 +374,6 @@ namespace Mutagen.Binary
             this.Write(
                 writer: writer,
                 item: item.Item,
-                doMasks: doMasks,
                 fieldIndex: fieldIndex,
                 recordType: recordType,
                 errorMask: errorMask,
@@ -392,7 +383,6 @@ namespace Mutagen.Binary
         private void Write<Mask>(
             MutagenWriter writer,
             IEnumerable<T> item,
-            bool doMasks,
             int fieldIndex,
             RecordType recordType,
             Func<Mask> errorMask,
@@ -401,6 +391,7 @@ namespace Mutagen.Binary
         {
             try
             {
+                bool doMasks = errorMask != null;
                 List<M> maskList = null;
                 using (HeaderExport.ExportHeader(writer, recordType, ObjectType.Subrecord))
                 {
@@ -422,7 +413,6 @@ namespace Mutagen.Binary
                 {
                     ErrorMask.HandleErrorMask(
                         errorMask,
-                        doMasks,
                         fieldIndex,
                         new MaskItem<Exception, IEnumerable<M>>(null, maskList));
                 }
@@ -431,7 +421,6 @@ namespace Mutagen.Binary
             {
                 ErrorMask.HandleException(
                     errorMask,
-                    doMasks,
                     fieldIndex,
                     ex);
             }

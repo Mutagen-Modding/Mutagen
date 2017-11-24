@@ -105,7 +105,6 @@ namespace Mutagen
         static partial void WriteBinary_TypeChar_Custom(
             MutagenWriter writer, 
             IGlobalGetter item, 
-            bool doMasks, 
             int fieldIndex,
             Func<Global_ErrorMask> errorMask)
         {
@@ -115,7 +114,6 @@ namespace Mutagen
                 header: Global_Registration.FNAM_HEADER,
                 fieldIndex: fieldIndex,
                 nullable: false,
-                doMasks: doMasks,
                 errorMask: errorMask);
         }
     }

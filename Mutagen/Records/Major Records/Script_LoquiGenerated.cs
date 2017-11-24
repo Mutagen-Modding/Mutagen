@@ -245,7 +245,6 @@ namespace Mutagen
             Script_ErrorMask errMaskRet = null;
             var ret = Create_XML_Internal(
                 root: root,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Script_ErrorMask()) : default(Func<Script_ErrorMask>));
             return (ret, errMaskRet);
         }
@@ -468,7 +467,6 @@ namespace Mutagen
 
         private static Script Create_XML_Internal(
             XElement root,
-            bool doMasks,
             Func<Script_ErrorMask> errorMask)
         {
             var ret = new Script();
@@ -480,12 +478,11 @@ namespace Mutagen
                         item: ret,
                         root: elem,
                         name: elem.Name.LocalName,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -496,7 +493,6 @@ namespace Mutagen
             Script item,
             XElement root,
             string name,
-            bool doMasks,
             Func<Script_ErrorMask> errorMask)
         {
             switch (name)
@@ -506,7 +502,7 @@ namespace Mutagen
                         MaskItem<Exception, ScriptMetaSummary_ErrorMask> subMask;
                         var tmp = ScriptMetaSummary.Create_XML(
                             root: root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out ScriptMetaSummary_ErrorMask createMask);
                         ScriptMetaSummaryCommon.CopyFieldsFrom(
                             item: item._MetadataSummary_Object,
@@ -514,13 +510,12 @@ namespace Mutagen
                             def: null,
                             cmds: null,
                             copyMask: null,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out ScriptMetaSummary_ErrorMask copyMask);
                         var loquiMask = ScriptMetaSummary_ErrorMask.Combine(createMask, copyMask);
                         subMask = loquiMask == null ? null : new MaskItem<Exception, ScriptMetaSummary_ErrorMask>(null, loquiMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)Script_FieldIndex.MetadataSummary,
                             subMask);
                     }
@@ -530,12 +525,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = ByteArrayXmlTranslation.Instance.Parse(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._CompiledScript.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)Script_FieldIndex.CompiledScript,
                             subMask);
                     }
@@ -545,12 +539,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = StringXmlTranslation.Instance.Parse(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._SourceCode.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)Script_FieldIndex.SourceCode,
                             subMask);
                     }
@@ -560,7 +553,7 @@ namespace Mutagen
                         MaskItem<Exception, IEnumerable<MaskItem<Exception, LocalVariable_ErrorMask>>> subMask;
                         var listTryGet = ListXmlTranslation<LocalVariable, MaskItem<Exception, LocalVariable_ErrorMask>>.Instance.Parse(
                             root: root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             maskObj: out subMask,
                             transl: (XElement r, bool listDoMasks, out MaskItem<Exception, LocalVariable_ErrorMask> listSubMask) =>
                             {
@@ -573,7 +566,6 @@ namespace Mutagen
                         item._LocalVariables.SetIfSucceeded(listTryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)Script_FieldIndex.LocalVariables,
                             subMask);
                     }
@@ -583,7 +575,7 @@ namespace Mutagen
                         MaskItem<Exception, IEnumerable<Exception>> subMask;
                         var listTryGet = ListXmlTranslation<FormID, Exception>.Instance.Parse(
                             root: root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             maskObj: out subMask,
                             transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
                             {
@@ -597,7 +589,6 @@ namespace Mutagen
                         item._References.SetIfSucceeded(listTryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)Script_FieldIndex.References,
                             subMask);
                     }
@@ -607,7 +598,6 @@ namespace Mutagen
                         item: item,
                         root: root,
                         name: name,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     break;
             }
@@ -658,7 +648,6 @@ namespace Mutagen
             Script_ErrorMask errMaskRet = null;
             var ret = Create_Binary_Internal(
                 frame: frame,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Script_ErrorMask()) : default(Func<Script_ErrorMask>));
             return (ret, errMaskRet);
         }
@@ -879,7 +868,6 @@ namespace Mutagen
 
         private static Script Create_Binary_Internal(
             MutagenFrame frame,
-            bool doMasks,
             Func<Script_ErrorMask> errorMask)
         {
             var ret = new Script();
@@ -893,20 +881,18 @@ namespace Mutagen
                     Fill_Binary_Structs(
                         item: ret,
                         frame: frame,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     while (!frame.Complete)
                     {
                         if (!Fill_Binary_RecordTypes(
                             item: ret,
                             frame: frame,
-                            doMasks: doMasks,
                             errorMask: errorMask)) break;
                     }
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -916,20 +902,17 @@ namespace Mutagen
         protected static void Fill_Binary_Structs(
             Script item,
             MutagenFrame frame,
-            bool doMasks,
             Func<Script_ErrorMask> errorMask)
         {
             MajorRecord.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
-                doMasks: doMasks,
                 errorMask: errorMask);
         }
 
         protected static bool Fill_Binary_RecordTypes(
             Script item,
             MutagenFrame frame,
-            bool doMasks,
             Func<Script_ErrorMask> errorMask)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -941,7 +924,7 @@ namespace Mutagen
                     frame.Position -= Constants.SUBRECORD_LENGTH;
                     var tmp = ScriptMetaSummary.Create_Binary(
                         frame: frame,
-                        doMasks: doMasks,
+                        doMasks: errorMask != null,
                         errorMask: out ScriptMetaSummary_ErrorMask MetadataSummarycreateMask);
                     ScriptMetaSummaryCommon.CopyFieldsFrom(
                         item: item._MetadataSummary_Object,
@@ -949,11 +932,10 @@ namespace Mutagen
                         def: null,
                         cmds: null,
                         copyMask: null,
-                        doMasks: doMasks,
+                        doMasks: errorMask != null,
                         errorMask: out var MetadataSummaryerrorMask);
                     ErrorMask.HandleErrorMask(
                         creator: errorMask,
-                        doMasks: doMasks,
                         index: (int)Script_FieldIndex.MetadataSummary,
                         errMaskObj: ScriptMetaSummary_ErrorMask.Combine(MetadataSummarycreateMask, MetadataSummaryerrorMask));
                     break;
@@ -962,7 +944,6 @@ namespace Mutagen
                     var CompiledScripttryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                         frame.Spawn(contentLength),
                         fieldIndex: (int)Script_FieldIndex.CompiledScript,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     item._CompiledScript.SetIfSucceeded(CompiledScripttryGet);
                     break;
@@ -971,7 +952,6 @@ namespace Mutagen
                     var SourceCodetryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)Script_FieldIndex.SourceCode,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     item._SourceCode.SetIfSucceeded(SourceCodetryGet);
                     break;
@@ -980,7 +960,6 @@ namespace Mutagen
                         frame: frame,
                         triggeringRecord: Script_Registration.SLSD_HEADER,
                         fieldIndex: (int)Script_FieldIndex.LocalVariables,
-                        doMasks: doMasks,
                         objType: ObjectType.Subrecord,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, LocalVariable_ErrorMask> listSubMask) =>
@@ -998,7 +977,6 @@ namespace Mutagen
                         frame: frame,
                         triggeringRecord: Script_Registration.SCRO_HEADER,
                         fieldIndex: (int)Script_FieldIndex.References,
-                        doMasks: doMasks,
                         objType: ObjectType.Subrecord,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
@@ -1016,7 +994,6 @@ namespace Mutagen
                     MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     break;
             }
@@ -1942,7 +1919,6 @@ namespace Mutagen.Internals
                 writer: writer,
                 name: name,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Script_ErrorMask()) : default(Func<Script_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -1950,7 +1926,6 @@ namespace Mutagen.Internals
         private static void Write_XML_Internal(
             XmlWriter writer,
             IScriptGetter item,
-            bool doMasks,
             Func<Script_ErrorMask> errorMask,
             string name = null)
         {
@@ -1969,12 +1944,11 @@ namespace Mutagen.Internals
                             writer: writer,
                             item: item.MetadataSummary,
                             name: nameof(item.MetadataSummary),
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             mask: out ScriptMetaSummary_ErrorMask loquiMask);
                         subMask = loquiMask == null ? null : new MaskItem<Exception, ScriptMetaSummary_ErrorMask>(null, loquiMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)Script_FieldIndex.MetadataSummary,
                             subMask);
                     }
@@ -1985,11 +1959,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.CompiledScript),
                             item.CompiledScript,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)Script_FieldIndex.CompiledScript,
                             subMask);
                     }
@@ -2000,11 +1973,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.SourceCode),
                             item.SourceCode,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)Script_FieldIndex.SourceCode,
                             subMask);
                     }
@@ -2015,7 +1987,7 @@ namespace Mutagen.Internals
                             writer: writer,
                             name: nameof(item.LocalVariables),
                             item: item.LocalVariables,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             maskObj: out subMask,
                             transl: (LocalVariable subItem, bool listDoMasks, out MaskItem<Exception, LocalVariable_ErrorMask> listSubMask) =>
                             {
@@ -2023,14 +1995,13 @@ namespace Mutagen.Internals
                                     writer: writer,
                                     item: subItem,
                                     name: "Item",
-                                    doMasks: doMasks,
+                                    doMasks: errorMask != null,
                                     mask: out LocalVariable_ErrorMask loquiMask);
                                 listSubMask = loquiMask == null ? null : new MaskItem<Exception, LocalVariable_ErrorMask>(null, loquiMask);
                             }
                             );
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)Script_FieldIndex.LocalVariables,
                             subMask);
                     }
@@ -2041,7 +2012,7 @@ namespace Mutagen.Internals
                             writer: writer,
                             name: nameof(item.References),
                             item: item.References,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             maskObj: out subMask,
                             transl: (FormID subItem, bool listDoMasks, out Exception listSubMask) =>
                             {
@@ -2049,20 +2020,19 @@ namespace Mutagen.Internals
                                     writer,
                                     "Item",
                                     subItem,
-                                    doMasks: doMasks,
+                                    doMasks: errorMask != null,
                                     errorMask: out listSubMask);
                             }
                             );
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)Script_FieldIndex.References,
                             subMask);
                     }
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -2083,7 +2053,6 @@ namespace Mutagen.Internals
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Script_ErrorMask()) : default(Func<Script_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -2091,7 +2060,6 @@ namespace Mutagen.Internals
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             IScriptGetter item,
-            bool doMasks,
             Func<Script_ErrorMask> errorMask)
         {
             try
@@ -2104,17 +2072,15 @@ namespace Mutagen.Internals
                     MajorRecordCommon.Write_Binary_Embedded(
                         item: item,
                         writer: writer,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     Write_Binary_RecordTypes(
                         item: item,
                         writer: writer,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -2124,24 +2090,20 @@ namespace Mutagen.Internals
         public static void Write_Binary_RecordTypes(
             IScriptGetter item,
             MutagenWriter writer,
-            bool doMasks,
             Func<Script_ErrorMask> errorMask)
         {
             MajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
                 writer: writer,
-                doMasks: doMasks,
                 errorMask: errorMask);
             LoquiBinaryTranslation<ScriptMetaSummary, ScriptMetaSummary_ErrorMask>.Instance.Write(
                 writer: writer,
                 item: item.MetadataSummary_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)Script_FieldIndex.MetadataSummary,
                 errorMask: errorMask);
             Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.CompiledScript_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)Script_FieldIndex.CompiledScript,
                 errorMask: errorMask,
                 header: Script_Registration.SCDA_HEADER,
@@ -2149,7 +2111,6 @@ namespace Mutagen.Internals
             Mutagen.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.SourceCode_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)Script_FieldIndex.SourceCode,
                 errorMask: errorMask,
                 header: Script_Registration.SCTX_HEADER,
@@ -2158,14 +2119,13 @@ namespace Mutagen.Internals
                 writer: writer,
                 item: item.LocalVariables,
                 fieldIndex: (int)Script_FieldIndex.LocalVariables,
-                doMasks: doMasks,
                 errorMask: errorMask,
                 transl: (LocalVariable subItem, bool listDoMasks, out MaskItem<Exception, LocalVariable_ErrorMask> listSubMask) =>
                 {
                     LoquiBinaryTranslation<LocalVariable, LocalVariable_ErrorMask>.Instance.Write(
                         writer: writer,
                         item: subItem,
-                        doMasks: doMasks,
+                        doMasks: listDoMasks,
                         errorMask: out listSubMask);
                 }
                 );
@@ -2173,14 +2133,13 @@ namespace Mutagen.Internals
                 writer: writer,
                 item: item.References,
                 fieldIndex: (int)Script_FieldIndex.References,
-                doMasks: doMasks,
                 errorMask: errorMask,
                 transl: (FormID subItem, bool listDoMasks, out Exception listSubMask) =>
                 {
                     Mutagen.Binary.FormIDBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: subItem,
-                        doMasks: doMasks,
+                        doMasks: listDoMasks,
                         errorMask: out listSubMask,
                         header: Script_Registration.SCRO_HEADER,
                         nullable: false);

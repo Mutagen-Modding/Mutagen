@@ -208,7 +208,6 @@ namespace Mutagen
             FacePart_ErrorMask errMaskRet = null;
             var ret = Create_XML_Internal(
                 root: root,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new FacePart_ErrorMask()) : default(Func<FacePart_ErrorMask>));
             return (ret, errMaskRet);
         }
@@ -419,7 +418,6 @@ namespace Mutagen
 
         private static FacePart Create_XML_Internal(
             XElement root,
-            bool doMasks,
             Func<FacePart_ErrorMask> errorMask)
         {
             var ret = new FacePart();
@@ -431,12 +429,11 @@ namespace Mutagen
                         item: ret,
                         root: elem,
                         name: elem.Name.LocalName,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -447,7 +444,6 @@ namespace Mutagen
             FacePart item,
             XElement root,
             string name,
-            bool doMasks,
             Func<FacePart_ErrorMask> errorMask)
         {
             switch (name)
@@ -458,12 +454,11 @@ namespace Mutagen
                         var tryGet = EnumXmlTranslation<Race.FaceIndex>.Instance.Parse(
                             root,
                             nullable: false,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._Index.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)FacePart_FieldIndex.Index,
                             subMask);
                     }
@@ -473,12 +468,11 @@ namespace Mutagen
                         MaskItem<Exception, Model_ErrorMask> subMask;
                         var tryGet = LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
                             root: root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             mask: out subMask);
                         item._Model.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)FacePart_FieldIndex.Model,
                             subMask);
                     }
@@ -488,12 +482,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = FilePathXmlTranslation.Instance.ParseNonNull(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._Icon.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)FacePart_FieldIndex.Icon,
                             subMask);
                     }
@@ -548,7 +541,6 @@ namespace Mutagen
             FacePart_ErrorMask errMaskRet = null;
             var ret = Create_Binary_Internal(
                 frame: frame,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new FacePart_ErrorMask()) : default(Func<FacePart_ErrorMask>));
             return (ret, errMaskRet);
         }
@@ -757,7 +749,6 @@ namespace Mutagen
 
         private static FacePart Create_Binary_Internal(
             MutagenFrame frame,
-            bool doMasks,
             Func<FacePart_ErrorMask> errorMask)
         {
             var ret = new FacePart();
@@ -768,7 +759,6 @@ namespace Mutagen
                     Fill_Binary_Structs(
                         item: ret,
                         frame: frame,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     bool first = true;
                     while (!frame.Complete)
@@ -777,14 +767,13 @@ namespace Mutagen
                             item: ret,
                             frame: frame,
                             first: first,
-                            doMasks: doMasks,
                             errorMask: errorMask)) break;
                         first = false;
                     }
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -794,7 +783,6 @@ namespace Mutagen
         protected static void Fill_Binary_Structs(
             FacePart item,
             MutagenFrame frame,
-            bool doMasks,
             Func<FacePart_ErrorMask> errorMask)
         {
         }
@@ -803,7 +791,6 @@ namespace Mutagen
             FacePart item,
             MutagenFrame frame,
             bool first,
-            bool doMasks,
             Func<FacePart_ErrorMask> errorMask)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -817,14 +804,12 @@ namespace Mutagen
                     var IndextryGet = Mutagen.Binary.EnumBinaryTranslation<Race.FaceIndex>.Instance.Parse(
                         frame.Spawn(contentLength),
                         fieldIndex: (int)FacePart_FieldIndex.Index,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     item._Index.SetIfSucceeded(IndextryGet);
                     break;
                 case "MODL":
                     item._Model.SetIfSucceeded(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         frame: frame.Spawn(snapToFinalPosition: false),
-                        doMasks: doMasks,
                         fieldIndex: (int)FacePart_FieldIndex.Model,
                         errorMask: errorMask));
                     break;
@@ -832,7 +817,6 @@ namespace Mutagen
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var tryGet = Mutagen.Binary.FilePathBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
-                        doMasks: doMasks,
                         fieldIndex: (int)FacePart_FieldIndex.Icon,
                         errorMask: errorMask);
                     item._Icon.SetIfSucceeded(tryGet);
@@ -1588,7 +1572,6 @@ namespace Mutagen.Internals
                 writer: writer,
                 name: name,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new FacePart_ErrorMask()) : default(Func<FacePart_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -1596,7 +1579,6 @@ namespace Mutagen.Internals
         private static void Write_XML_Internal(
             XmlWriter writer,
             IFacePartGetter item,
-            bool doMasks,
             Func<FacePart_ErrorMask> errorMask,
             string name = null)
         {
@@ -1615,11 +1597,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.Index),
                             item.Index,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)FacePart_FieldIndex.Index,
                             subMask);
                     }
@@ -1630,12 +1611,11 @@ namespace Mutagen.Internals
                             writer: writer,
                             item: item.Model,
                             name: nameof(item.Model),
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             mask: out Model_ErrorMask loquiMask);
                         subMask = loquiMask == null ? null : new MaskItem<Exception, Model_ErrorMask>(null, loquiMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)FacePart_FieldIndex.Model,
                             subMask);
                     }
@@ -1646,18 +1626,17 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.Icon),
                             item.Icon,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)FacePart_FieldIndex.Icon,
                             subMask);
                     }
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -1678,7 +1657,6 @@ namespace Mutagen.Internals
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new FacePart_ErrorMask()) : default(Func<FacePart_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -1686,7 +1664,6 @@ namespace Mutagen.Internals
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             IFacePartGetter item,
-            bool doMasks,
             Func<FacePart_ErrorMask> errorMask)
         {
             try
@@ -1694,11 +1671,10 @@ namespace Mutagen.Internals
                 Write_Binary_RecordTypes(
                     item: item,
                     writer: writer,
-                    doMasks: doMasks,
                     errorMask: errorMask);
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -1708,13 +1684,11 @@ namespace Mutagen.Internals
         public static void Write_Binary_RecordTypes(
             IFacePartGetter item,
             MutagenWriter writer,
-            bool doMasks,
             Func<FacePart_ErrorMask> errorMask)
         {
             Mutagen.Binary.EnumBinaryTranslation<Race.FaceIndex>.Instance.Write(
                 writer,
                 item.Index_Property,
-                doMasks: doMasks,
                 length: new ContentLength(4),
                 fieldIndex: (int)FacePart_FieldIndex.Index,
                 errorMask: errorMask,
@@ -1723,14 +1697,12 @@ namespace Mutagen.Internals
             LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Write(
                 writer: writer,
                 item: item.Model_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)FacePart_FieldIndex.Model,
                 errorMask: errorMask);
             Mutagen.Binary.FilePathBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Icon_Property,
                 fieldIndex: (int)FacePart_FieldIndex.Icon,
-                doMasks: doMasks,
                 errorMask: errorMask,
                 header: FacePart_Registration.ICON_HEADER,
                 nullable: false);

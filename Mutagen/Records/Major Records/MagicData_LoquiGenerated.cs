@@ -472,7 +472,6 @@ namespace Mutagen
             MagicData_ErrorMask errMaskRet = null;
             var ret = Create_XML_Internal(
                 root: root,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new MagicData_ErrorMask()) : default(Func<MagicData_ErrorMask>));
             return (ret, errMaskRet);
         }
@@ -683,7 +682,6 @@ namespace Mutagen
 
         private static MagicData Create_XML_Internal(
             XElement root,
-            bool doMasks,
             Func<MagicData_ErrorMask> errorMask)
         {
             var ret = new MagicData();
@@ -695,12 +693,11 @@ namespace Mutagen
                         item: ret,
                         root: elem,
                         name: elem.Name.LocalName,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -711,7 +708,6 @@ namespace Mutagen
             MagicData item,
             XElement root,
             string name,
-            bool doMasks,
             Func<MagicData_ErrorMask> errorMask)
         {
             switch (name)
@@ -722,12 +718,11 @@ namespace Mutagen
                         var tryGet = EnumXmlTranslation<MagicEffect.MagicFlag>.Instance.Parse(
                             root,
                             nullable: false,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._Flags.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)MagicData_FieldIndex.Flags,
                             subMask);
                     }
@@ -737,12 +732,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = FloatXmlTranslation.Instance.ParseNonNull(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._BaseCost.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)MagicData_FieldIndex.BaseCost,
                             subMask);
                     }
@@ -752,12 +746,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = ByteArrayXmlTranslation.Instance.Parse(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._Unused.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)MagicData_FieldIndex.Unused,
                             subMask);
                     }
@@ -768,12 +761,11 @@ namespace Mutagen
                         var tryGet = EnumXmlTranslation<MagicSchool>.Instance.Parse(
                             root,
                             nullable: false,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._MagicSchool.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)MagicData_FieldIndex.MagicSchool,
                             subMask);
                     }
@@ -784,12 +776,11 @@ namespace Mutagen
                         var tryGet = EnumXmlTranslation<Resistance>.Instance.Parse(
                             root,
                             nullable: false,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._Resistance.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)MagicData_FieldIndex.Resistance,
                             subMask);
                     }
@@ -799,12 +790,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = UInt32XmlTranslation.Instance.ParseNonNull(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._CounterEffectCount.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)MagicData_FieldIndex.CounterEffectCount,
                             subMask);
                     }
@@ -814,12 +804,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = FormIDXmlTranslation.Instance.ParseNonNull(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._Light.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)MagicData_FieldIndex.Light,
                             subMask);
                     }
@@ -829,12 +818,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = FloatXmlTranslation.Instance.ParseNonNull(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._ProjectileSpeed.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)MagicData_FieldIndex.ProjectileSpeed,
                             subMask);
                     }
@@ -844,12 +832,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = FormIDXmlTranslation.Instance.ParseNonNull(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._EffectShader.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)MagicData_FieldIndex.EffectShader,
                             subMask);
                     }
@@ -859,12 +846,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = FormIDXmlTranslation.Instance.ParseNonNull(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._EnchantEffect.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)MagicData_FieldIndex.EnchantEffect,
                             subMask);
                     }
@@ -874,12 +860,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = FormIDXmlTranslation.Instance.ParseNonNull(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._CastingSound.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)MagicData_FieldIndex.CastingSound,
                             subMask);
                     }
@@ -889,12 +874,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = FormIDXmlTranslation.Instance.ParseNonNull(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._BoltSound.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)MagicData_FieldIndex.BoltSound,
                             subMask);
                     }
@@ -904,12 +888,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = FormIDXmlTranslation.Instance.ParseNonNull(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._HitSound.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)MagicData_FieldIndex.HitSound,
                             subMask);
                     }
@@ -919,12 +902,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = FormIDXmlTranslation.Instance.ParseNonNull(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._AreaSound.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)MagicData_FieldIndex.AreaSound,
                             subMask);
                     }
@@ -934,12 +916,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = FloatXmlTranslation.Instance.ParseNonNull(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._ConstantEffectEnchantmentFactor.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)MagicData_FieldIndex.ConstantEffectEnchantmentFactor,
                             subMask);
                     }
@@ -949,12 +930,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = FloatXmlTranslation.Instance.ParseNonNull(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._ConstantEffectBarterFactor.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)MagicData_FieldIndex.ConstantEffectBarterFactor,
                             subMask);
                     }
@@ -1009,7 +989,6 @@ namespace Mutagen
             MagicData_ErrorMask errMaskRet = null;
             var ret = Create_Binary_Internal(
                 frame: frame,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new MagicData_ErrorMask()) : default(Func<MagicData_ErrorMask>));
             return (ret, errMaskRet);
         }
@@ -1218,7 +1197,6 @@ namespace Mutagen
 
         private static MagicData Create_Binary_Internal(
             MutagenFrame frame,
-            bool doMasks,
             Func<MagicData_ErrorMask> errorMask)
         {
             var ret = new MagicData();
@@ -1232,12 +1210,11 @@ namespace Mutagen
                     Fill_Binary_Structs(
                         item: ret,
                         frame: frame,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -1247,107 +1224,90 @@ namespace Mutagen
         protected static void Fill_Binary_Structs(
             MagicData item,
             MutagenFrame frame,
-            bool doMasks,
             Func<MagicData_ErrorMask> errorMask)
         {
             if (frame.Complete) return;
             var FlagstryGet = Mutagen.Binary.EnumBinaryTranslation<MagicEffect.MagicFlag>.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(4)),
                 fieldIndex: (int)MagicData_FieldIndex.Flags,
-                doMasks: doMasks,
                 errorMask: errorMask);
             item._Flags.SetIfSucceeded(FlagstryGet);
             if (frame.Complete) return;
             item._BaseCost.SetIfSucceeded(Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
-                doMasks: doMasks,
                 fieldIndex: (int)MagicData_FieldIndex.BaseCost,
                 errorMask: errorMask));
             if (frame.Complete) return;
             var UnusedtryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(4)),
                 fieldIndex: (int)MagicData_FieldIndex.Unused,
-                doMasks: doMasks,
                 errorMask: errorMask);
             item._Unused.SetIfSucceeded(UnusedtryGet);
             if (frame.Complete) return;
             var MagicSchooltryGet = Mutagen.Binary.EnumBinaryTranslation<MagicSchool>.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(4)),
                 fieldIndex: (int)MagicData_FieldIndex.MagicSchool,
-                doMasks: doMasks,
                 errorMask: errorMask);
             item._MagicSchool.SetIfSucceeded(MagicSchooltryGet);
             if (frame.Complete) return;
             var ResistancetryGet = Mutagen.Binary.EnumBinaryTranslation<Resistance>.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(4)),
                 fieldIndex: (int)MagicData_FieldIndex.Resistance,
-                doMasks: doMasks,
                 errorMask: errorMask);
             item._Resistance.SetIfSucceeded(ResistancetryGet);
             if (frame.Complete) return;
             item._CounterEffectCount.SetIfSucceeded(Mutagen.Binary.UInt32BinaryTranslation.Instance.Parse(
                 frame: frame,
-                doMasks: doMasks,
                 fieldIndex: (int)MagicData_FieldIndex.CounterEffectCount,
                 errorMask: errorMask));
             if (frame.Complete) return;
             item._Light.SetIfSucceeded(Mutagen.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
-                doMasks: doMasks,
                 fieldIndex: (int)MagicData_FieldIndex.Light,
                 errorMask: errorMask));
             if (frame.Complete) return;
             item._ProjectileSpeed.SetIfSucceeded(Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
-                doMasks: doMasks,
                 fieldIndex: (int)MagicData_FieldIndex.ProjectileSpeed,
                 errorMask: errorMask));
             if (frame.Complete) return;
             item._EffectShader.SetIfSucceeded(Mutagen.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
-                doMasks: doMasks,
                 fieldIndex: (int)MagicData_FieldIndex.EffectShader,
                 errorMask: errorMask));
             if (frame.Complete) return;
             item._EnchantEffect.SetIfSucceeded(Mutagen.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
-                doMasks: doMasks,
                 fieldIndex: (int)MagicData_FieldIndex.EnchantEffect,
                 errorMask: errorMask));
             if (frame.Complete) return;
             item._CastingSound.SetIfSucceeded(Mutagen.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
-                doMasks: doMasks,
                 fieldIndex: (int)MagicData_FieldIndex.CastingSound,
                 errorMask: errorMask));
             if (frame.Complete) return;
             item._BoltSound.SetIfSucceeded(Mutagen.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
-                doMasks: doMasks,
                 fieldIndex: (int)MagicData_FieldIndex.BoltSound,
                 errorMask: errorMask));
             if (frame.Complete) return;
             item._HitSound.SetIfSucceeded(Mutagen.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
-                doMasks: doMasks,
                 fieldIndex: (int)MagicData_FieldIndex.HitSound,
                 errorMask: errorMask));
             if (frame.Complete) return;
             item._AreaSound.SetIfSucceeded(Mutagen.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
-                doMasks: doMasks,
                 fieldIndex: (int)MagicData_FieldIndex.AreaSound,
                 errorMask: errorMask));
             if (frame.Complete) return;
             item._ConstantEffectEnchantmentFactor.SetIfSucceeded(Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
-                doMasks: doMasks,
                 fieldIndex: (int)MagicData_FieldIndex.ConstantEffectEnchantmentFactor,
                 errorMask: errorMask));
             if (frame.Complete) return;
             item._ConstantEffectBarterFactor.SetIfSucceeded(Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
-                doMasks: doMasks,
                 fieldIndex: (int)MagicData_FieldIndex.ConstantEffectBarterFactor,
                 errorMask: errorMask));
         }
@@ -2876,7 +2836,6 @@ namespace Mutagen.Internals
                 writer: writer,
                 name: name,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new MagicData_ErrorMask()) : default(Func<MagicData_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -2884,7 +2843,6 @@ namespace Mutagen.Internals
         private static void Write_XML_Internal(
             XmlWriter writer,
             IMagicDataGetter item,
-            bool doMasks,
             Func<MagicData_ErrorMask> errorMask,
             string name = null)
         {
@@ -2903,11 +2861,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.Flags),
                             item.Flags,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)MagicData_FieldIndex.Flags,
                             subMask);
                     }
@@ -2918,11 +2875,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.BaseCost),
                             item.BaseCost,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)MagicData_FieldIndex.BaseCost,
                             subMask);
                     }
@@ -2933,11 +2889,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.Unused),
                             item.Unused,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)MagicData_FieldIndex.Unused,
                             subMask);
                     }
@@ -2948,11 +2903,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.MagicSchool),
                             item.MagicSchool,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)MagicData_FieldIndex.MagicSchool,
                             subMask);
                     }
@@ -2963,11 +2917,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.Resistance),
                             item.Resistance,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)MagicData_FieldIndex.Resistance,
                             subMask);
                     }
@@ -2978,11 +2931,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.CounterEffectCount),
                             item.CounterEffectCount,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)MagicData_FieldIndex.CounterEffectCount,
                             subMask);
                     }
@@ -2993,11 +2945,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.Light),
                             item.Light,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)MagicData_FieldIndex.Light,
                             subMask);
                     }
@@ -3008,11 +2959,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.ProjectileSpeed),
                             item.ProjectileSpeed,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)MagicData_FieldIndex.ProjectileSpeed,
                             subMask);
                     }
@@ -3023,11 +2973,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.EffectShader),
                             item.EffectShader,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)MagicData_FieldIndex.EffectShader,
                             subMask);
                     }
@@ -3038,11 +2987,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.EnchantEffect),
                             item.EnchantEffect,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)MagicData_FieldIndex.EnchantEffect,
                             subMask);
                     }
@@ -3053,11 +3001,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.CastingSound),
                             item.CastingSound,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)MagicData_FieldIndex.CastingSound,
                             subMask);
                     }
@@ -3068,11 +3015,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.BoltSound),
                             item.BoltSound,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)MagicData_FieldIndex.BoltSound,
                             subMask);
                     }
@@ -3083,11 +3029,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.HitSound),
                             item.HitSound,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)MagicData_FieldIndex.HitSound,
                             subMask);
                     }
@@ -3098,11 +3043,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.AreaSound),
                             item.AreaSound,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)MagicData_FieldIndex.AreaSound,
                             subMask);
                     }
@@ -3113,11 +3057,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.ConstantEffectEnchantmentFactor),
                             item.ConstantEffectEnchantmentFactor,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)MagicData_FieldIndex.ConstantEffectEnchantmentFactor,
                             subMask);
                     }
@@ -3128,18 +3071,17 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.ConstantEffectBarterFactor),
                             item.ConstantEffectBarterFactor,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)MagicData_FieldIndex.ConstantEffectBarterFactor,
                             subMask);
                     }
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -3160,7 +3102,6 @@ namespace Mutagen.Internals
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new MagicData_ErrorMask()) : default(Func<MagicData_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -3168,7 +3109,6 @@ namespace Mutagen.Internals
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             IMagicDataGetter item,
-            bool doMasks,
             Func<MagicData_ErrorMask> errorMask)
         {
             try
@@ -3181,12 +3121,11 @@ namespace Mutagen.Internals
                     Write_Binary_Embedded(
                         item: item,
                         writer: writer,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -3196,106 +3135,89 @@ namespace Mutagen.Internals
         public static void Write_Binary_Embedded(
             IMagicDataGetter item,
             MutagenWriter writer,
-            bool doMasks,
             Func<MagicData_ErrorMask> errorMask)
         {
             Mutagen.Binary.EnumBinaryTranslation<MagicEffect.MagicFlag>.Instance.Write(
                 writer,
                 item.Flags_Property,
-                doMasks: doMasks,
                 length: new ContentLength(4),
                 fieldIndex: (int)MagicData_FieldIndex.Flags,
                 errorMask: errorMask);
             Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.BaseCost_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)MagicData_FieldIndex.BaseCost,
                 errorMask: errorMask);
             Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Unused_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)MagicData_FieldIndex.Unused,
                 errorMask: errorMask);
             Mutagen.Binary.EnumBinaryTranslation<MagicSchool>.Instance.Write(
                 writer,
                 item.MagicSchool_Property,
-                doMasks: doMasks,
                 length: new ContentLength(4),
                 fieldIndex: (int)MagicData_FieldIndex.MagicSchool,
                 errorMask: errorMask);
             Mutagen.Binary.EnumBinaryTranslation<Resistance>.Instance.Write(
                 writer,
                 item.Resistance_Property,
-                doMasks: doMasks,
                 length: new ContentLength(4),
                 fieldIndex: (int)MagicData_FieldIndex.Resistance,
                 errorMask: errorMask);
             Mutagen.Binary.UInt32BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.CounterEffectCount_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)MagicData_FieldIndex.CounterEffectCount,
                 errorMask: errorMask);
             Mutagen.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Light_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)MagicData_FieldIndex.Light,
                 errorMask: errorMask);
             Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.ProjectileSpeed_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)MagicData_FieldIndex.ProjectileSpeed,
                 errorMask: errorMask);
             Mutagen.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.EffectShader_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)MagicData_FieldIndex.EffectShader,
                 errorMask: errorMask);
             Mutagen.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.EnchantEffect_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)MagicData_FieldIndex.EnchantEffect,
                 errorMask: errorMask);
             Mutagen.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.CastingSound_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)MagicData_FieldIndex.CastingSound,
                 errorMask: errorMask);
             Mutagen.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.BoltSound_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)MagicData_FieldIndex.BoltSound,
                 errorMask: errorMask);
             Mutagen.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.HitSound_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)MagicData_FieldIndex.HitSound,
                 errorMask: errorMask);
             Mutagen.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.AreaSound_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)MagicData_FieldIndex.AreaSound,
                 errorMask: errorMask);
             Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.ConstantEffectEnchantmentFactor_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)MagicData_FieldIndex.ConstantEffectEnchantmentFactor,
                 errorMask: errorMask);
             Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.ConstantEffectBarterFactor_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)MagicData_FieldIndex.ConstantEffectBarterFactor,
                 errorMask: errorMask);
         }

@@ -190,7 +190,6 @@ namespace Mutagen
             SkillBoost_ErrorMask errMaskRet = null;
             var ret = Create_XML_Internal(
                 root: root,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new SkillBoost_ErrorMask()) : default(Func<SkillBoost_ErrorMask>));
             return (ret, errMaskRet);
         }
@@ -401,7 +400,6 @@ namespace Mutagen
 
         private static SkillBoost Create_XML_Internal(
             XElement root,
-            bool doMasks,
             Func<SkillBoost_ErrorMask> errorMask)
         {
             var ret = new SkillBoost();
@@ -413,12 +411,11 @@ namespace Mutagen
                         item: ret,
                         root: elem,
                         name: elem.Name.LocalName,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -429,7 +426,6 @@ namespace Mutagen
             SkillBoost item,
             XElement root,
             string name,
-            bool doMasks,
             Func<SkillBoost_ErrorMask> errorMask)
         {
             switch (name)
@@ -440,12 +436,11 @@ namespace Mutagen
                         var tryGet = EnumXmlTranslation<ActorValue>.Instance.Parse(
                             root,
                             nullable: false,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._Skill.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)SkillBoost_FieldIndex.Skill,
                             subMask);
                     }
@@ -455,12 +450,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = Int8XmlTranslation.Instance.ParseNonNull(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._Boost.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)SkillBoost_FieldIndex.Boost,
                             subMask);
                     }
@@ -515,7 +509,6 @@ namespace Mutagen
             SkillBoost_ErrorMask errMaskRet = null;
             var ret = Create_Binary_Internal(
                 frame: frame,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new SkillBoost_ErrorMask()) : default(Func<SkillBoost_ErrorMask>));
             return (ret, errMaskRet);
         }
@@ -724,7 +717,6 @@ namespace Mutagen
 
         private static SkillBoost Create_Binary_Internal(
             MutagenFrame frame,
-            bool doMasks,
             Func<SkillBoost_ErrorMask> errorMask)
         {
             var ret = new SkillBoost();
@@ -735,12 +727,11 @@ namespace Mutagen
                     Fill_Binary_Structs(
                         item: ret,
                         frame: frame,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -750,20 +741,17 @@ namespace Mutagen
         protected static void Fill_Binary_Structs(
             SkillBoost item,
             MutagenFrame frame,
-            bool doMasks,
             Func<SkillBoost_ErrorMask> errorMask)
         {
             if (frame.Complete) return;
             var SkilltryGet = Mutagen.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(1)),
                 fieldIndex: (int)SkillBoost_FieldIndex.Skill,
-                doMasks: doMasks,
                 errorMask: errorMask);
             item._Skill.SetIfSucceeded(SkilltryGet);
             if (frame.Complete) return;
             item._Boost.SetIfSucceeded(Mutagen.Binary.Int8BinaryTranslation.Instance.Parse(
                 frame: frame,
-                doMasks: doMasks,
                 fieldIndex: (int)SkillBoost_FieldIndex.Boost,
                 errorMask: errorMask));
         }
@@ -1408,7 +1396,6 @@ namespace Mutagen.Internals
                 writer: writer,
                 name: name,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new SkillBoost_ErrorMask()) : default(Func<SkillBoost_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -1416,7 +1403,6 @@ namespace Mutagen.Internals
         private static void Write_XML_Internal(
             XmlWriter writer,
             ISkillBoostGetter item,
-            bool doMasks,
             Func<SkillBoost_ErrorMask> errorMask,
             string name = null)
         {
@@ -1435,11 +1421,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.Skill),
                             item.Skill,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)SkillBoost_FieldIndex.Skill,
                             subMask);
                     }
@@ -1450,18 +1435,17 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.Boost),
                             item.Boost,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)SkillBoost_FieldIndex.Boost,
                             subMask);
                     }
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -1482,7 +1466,6 @@ namespace Mutagen.Internals
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new SkillBoost_ErrorMask()) : default(Func<SkillBoost_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -1490,7 +1473,6 @@ namespace Mutagen.Internals
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             ISkillBoostGetter item,
-            bool doMasks,
             Func<SkillBoost_ErrorMask> errorMask)
         {
             try
@@ -1498,11 +1480,10 @@ namespace Mutagen.Internals
                 Write_Binary_Embedded(
                     item: item,
                     writer: writer,
-                    doMasks: doMasks,
                     errorMask: errorMask);
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -1512,20 +1493,17 @@ namespace Mutagen.Internals
         public static void Write_Binary_Embedded(
             ISkillBoostGetter item,
             MutagenWriter writer,
-            bool doMasks,
             Func<SkillBoost_ErrorMask> errorMask)
         {
             Mutagen.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
                 writer,
                 item.Skill_Property,
-                doMasks: doMasks,
                 length: new ContentLength(1),
                 fieldIndex: (int)SkillBoost_FieldIndex.Skill,
                 errorMask: errorMask);
             Mutagen.Binary.Int8BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Boost_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)SkillBoost_FieldIndex.Boost,
                 errorMask: errorMask);
         }

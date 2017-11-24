@@ -135,7 +135,6 @@ namespace Mutagen.Generation
                 {
                     args.Add($"{nameof(MutagenFrame)} frame");
                     args.Add($"{obj.InterfaceStr} item");
-                    args.Add("bool doMasks");
                     if (field.HasIndex)
                     {
                         args.Add($"int fieldIndex");
@@ -143,6 +142,7 @@ namespace Mutagen.Generation
                     }
                     else
                     {
+                        args.Add("bool doMasks");
                         args.Add($"out {obj.Mask(MaskType.Error)} errorMask");
                     }
                 }
@@ -156,7 +156,6 @@ namespace Mutagen.Generation
                 {
                     args.Add($"{nameof(MutagenWriter)} writer");
                     args.Add($"{obj.Getter_InterfaceStr} item");
-                    args.Add("bool doMasks");
                     if (field.HasIndex)
                     {
                         args.Add($"int fieldIndex");
@@ -164,6 +163,7 @@ namespace Mutagen.Generation
                     }
                     else
                     {
+                        args.Add("bool doMasks");
                         args.Add($"out {obj.Mask(MaskType.Error)} errorMask");
                     }
                 }
@@ -174,7 +174,6 @@ namespace Mutagen.Generation
                 {
                     args.Add($"{nameof(MutagenWriter)} writer");
                     args.Add($"{obj.Getter_InterfaceStr} item");
-                    args.Add("bool doMasks");
                     if (field.HasIndex)
                     {
                         args.Add($"int fieldIndex");
@@ -182,6 +181,7 @@ namespace Mutagen.Generation
                     }
                     else
                     {
+                        args.Add("bool doMasks");
                         args.Add($"out {obj.Mask(MaskType.Error)} errorMask");
                     }
                 }
@@ -192,7 +192,6 @@ namespace Mutagen.Generation
                     {
                         args.Add("writer: writer");
                         args.Add("item: item");
-                        args.Add("doMasks: doMasks");
                         if (field.HasIndex)
                         {
                             args.Add($"fieldIndex: fieldIndex");
@@ -200,6 +199,7 @@ namespace Mutagen.Generation
                         }
                         else
                         {
+                            args.Add("doMasks: doMasks");
                             args.Add($"errorMask: out errorMask");
                         }
                     }
@@ -246,7 +246,6 @@ namespace Mutagen.Generation
                     wheres: obj.GenericTypes_ErrorMaskWheres))
                 {
                     args.Add("MutagenFrame frame");
-                    args.Add("bool doMasks");
                     args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
                 }
                 using (new BraceWrapper(fg))
@@ -304,7 +303,6 @@ namespace Mutagen.Generation
                             {
                                 args.Add("item: ret");
                                 args.Add("frame: frame");
-                                args.Add("doMasks: doMasks");
                                 args.Add("errorMask: errorMask");
                             }
                             if (HasRecordTypeFields(obj))
@@ -326,7 +324,6 @@ namespace Mutagen.Generation
                                         {
                                             args.Add("first: first");
                                         }
-                                        args.Add("doMasks: doMasks");
                                         args.Add("errorMask: errorMask");
                                     }
                                     if (typelessStruct)
@@ -338,7 +335,7 @@ namespace Mutagen.Generation
                         }
                     }
                     fg.AppendLine("catch (Exception ex)");
-                    fg.AppendLine("when (doMasks)");
+                    fg.AppendLine("when (errorMask != null)");
                     using (new BraceWrapper(fg))
                     {
                         fg.AppendLine("errorMask().Overall = ex;");
@@ -356,7 +353,6 @@ namespace Mutagen.Generation
                 {
                     args.Add($"{obj.ObjectName} item");
                     args.Add("MutagenFrame frame");
-                    args.Add("bool doMasks");
                     args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
                 }
                 using (new BraceWrapper(fg))
@@ -368,7 +364,6 @@ namespace Mutagen.Generation
                         {
                             args.Add("item: item");
                             args.Add("frame: frame");
-                            args.Add("doMasks: doMasks");
                             args.Add("errorMask: errorMask");
                         }
                     }
@@ -400,7 +395,6 @@ namespace Mutagen.Generation
                     {
                         args.Add($"bool first");
                     }
-                    args.Add("bool doMasks");
                     args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
                 }
                 using (new BraceWrapper(fg))
@@ -492,7 +486,6 @@ namespace Mutagen.Generation
                                 {
                                     args.Add("item: item");
                                     args.Add("frame: frame");
-                                    args.Add("doMasks: doMasks");
                                     args.Add($"errorMask: errorMask");
                                 }
                                 fg.AppendLine("break;");
@@ -555,7 +548,6 @@ namespace Mutagen.Generation
                     {
                         args.Add($"frame: {(data.HasTrigger ? "subFrame" : "frame")}");
                         args.Add("item: item");
-                        args.Add("doMasks: doMasks");
                         if (field.HasIndex)
                         {
                             if (field.IntegrateField)
@@ -566,6 +558,7 @@ namespace Mutagen.Generation
                         }
                         else
                         {
+                            args.Add("doMasks: doMasks");
                             args.Add($"errorMask: out errorMask");
                         }
                     }
@@ -638,7 +631,6 @@ namespace Mutagen.Generation
                 $"var ret = Create_{ModuleNickname}_Internal"))
             {
                 args.Add("frame: frame");
-                args.Add("doMasks: doMasks");
                 args.Add($"errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new {obj.Mask(MaskType.Error)}()) : default(Func<{obj.Mask(MaskType.Error)}>)");
             }
             fg.AppendLine($"return (ret, errMaskRet);");
@@ -668,7 +660,6 @@ namespace Mutagen.Generation
                     {
                         args.Add($"item: item");
                         args.Add($"writer: writer");
-                        args.Add($"doMasks: doMasks");
                         args.Add($"errorMask: errorMask");
                     }
                 }
@@ -682,7 +673,6 @@ namespace Mutagen.Generation
                         {
                             args.Add($"item: item");
                             args.Add($"writer: writer");
-                            args.Add($"doMasks: doMasks");
                             args.Add($"errorMask: errorMask");
                         }
                     }
@@ -694,7 +684,6 @@ namespace Mutagen.Generation
                     {
                         args.Add($"item: item");
                         args.Add($"writer: writer");
-                        args.Add($"doMasks: doMasks");
                         args.Add($"errorMask: errorMask");
                     }
                 }
@@ -708,7 +697,6 @@ namespace Mutagen.Generation
                         {
                             args.Add($"item: item");
                             args.Add($"writer: writer");
-                            args.Add($"doMasks: doMasks");
                             args.Add($"errorMask: errorMask");
                         }
                     }
@@ -733,7 +721,6 @@ namespace Mutagen.Generation
                         args.Add($"{obj.ObjectName} item");
                     }
                     args.Add("MutagenWriter writer");
-                    args.Add("bool doMasks");
                     args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
                 }
                 using (new BraceWrapper(fg))
@@ -748,7 +735,6 @@ namespace Mutagen.Generation
                             {
                                 args.Add("item: item");
                                 args.Add("writer: writer");
-                                args.Add("doMasks: doMasks");
                                 args.Add("errorMask: errorMask");
                             }
                         }
@@ -767,7 +753,6 @@ namespace Mutagen.Generation
                                 args.Add("writer: writer");
                                 args.Add("item: item");
                                 args.Add($"fieldIndex: (int){field.IndexEnumName}");
-                                args.Add("doMasks: doMasks");
                                 args.Add("errorMask: errorMask");
                             }
                             continue;
@@ -782,7 +767,7 @@ namespace Mutagen.Generation
                             typeGen: field,
                             writerAccessor: "writer",
                             itemAccessor: new Accessor(field, "item."),
-                            doMaskAccessor: "doMasks",
+                            doMaskAccessor: null,
                             maskAccessor: "errorMask");
                     }
                 }
@@ -804,7 +789,6 @@ namespace Mutagen.Generation
                         args.Add($"{obj.ObjectName} item");
                     }
                     args.Add("MutagenWriter writer");
-                    args.Add("bool doMasks");
                     args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
                 }
                 using (new BraceWrapper(fg))
@@ -819,7 +803,6 @@ namespace Mutagen.Generation
                             {
                                 args.Add($"item: item");
                                 args.Add("writer: writer");
-                                args.Add("doMasks: doMasks");
                                 args.Add($"errorMask: errorMask");
                             }
                         }
@@ -838,7 +821,6 @@ namespace Mutagen.Generation
                                 args.Add("writer: writer");
                                 args.Add("item: item");
                                 args.Add($"fieldIndex: (int){field.IndexEnumName}");
-                                args.Add("doMasks: doMasks");
                                 args.Add("errorMask: errorMask");
                             }
                             continue;
@@ -856,7 +838,7 @@ namespace Mutagen.Generation
                             typeGen: field,
                             writerAccessor: "writer",
                             itemAccessor: new Accessor(field, "item."),
-                            doMaskAccessor: "doMasks",
+                            doMaskAccessor: "errorMask != null",
                             maskAccessor: $"errorMask");
                     }
                 }

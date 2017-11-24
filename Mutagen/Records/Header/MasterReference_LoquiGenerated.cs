@@ -190,7 +190,6 @@ namespace Mutagen
             MasterReference_ErrorMask errMaskRet = null;
             var ret = Create_XML_Internal(
                 root: root,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new MasterReference_ErrorMask()) : default(Func<MasterReference_ErrorMask>));
             return (ret, errMaskRet);
         }
@@ -401,7 +400,6 @@ namespace Mutagen
 
         private static MasterReference Create_XML_Internal(
             XElement root,
-            bool doMasks,
             Func<MasterReference_ErrorMask> errorMask)
         {
             var ret = new MasterReference();
@@ -413,12 +411,11 @@ namespace Mutagen
                         item: ret,
                         root: elem,
                         name: elem.Name.LocalName,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -429,7 +426,6 @@ namespace Mutagen
             MasterReference item,
             XElement root,
             string name,
-            bool doMasks,
             Func<MasterReference_ErrorMask> errorMask)
         {
             switch (name)
@@ -439,12 +435,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = StringXmlTranslation.Instance.Parse(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._Master.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)MasterReference_FieldIndex.Master,
                             subMask);
                     }
@@ -454,12 +449,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = UInt64XmlTranslation.Instance.ParseNonNull(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._FileSize.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)MasterReference_FieldIndex.FileSize,
                             subMask);
                     }
@@ -514,7 +508,6 @@ namespace Mutagen
             MasterReference_ErrorMask errMaskRet = null;
             var ret = Create_Binary_Internal(
                 frame: frame,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new MasterReference_ErrorMask()) : default(Func<MasterReference_ErrorMask>));
             return (ret, errMaskRet);
         }
@@ -723,7 +716,6 @@ namespace Mutagen
 
         private static MasterReference Create_Binary_Internal(
             MutagenFrame frame,
-            bool doMasks,
             Func<MasterReference_ErrorMask> errorMask)
         {
             var ret = new MasterReference();
@@ -734,7 +726,6 @@ namespace Mutagen
                     Fill_Binary_Structs(
                         item: ret,
                         frame: frame,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     bool first = true;
                     while (!frame.Complete)
@@ -743,14 +734,13 @@ namespace Mutagen
                             item: ret,
                             frame: frame,
                             first: first,
-                            doMasks: doMasks,
                             errorMask: errorMask)) break;
                         first = false;
                     }
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -760,7 +750,6 @@ namespace Mutagen
         protected static void Fill_Binary_Structs(
             MasterReference item,
             MutagenFrame frame,
-            bool doMasks,
             Func<MasterReference_ErrorMask> errorMask)
         {
         }
@@ -769,7 +758,6 @@ namespace Mutagen
             MasterReference item,
             MutagenFrame frame,
             bool first,
-            bool doMasks,
             Func<MasterReference_ErrorMask> errorMask)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -783,7 +771,6 @@ namespace Mutagen
                     var MastertryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)MasterReference_FieldIndex.Master,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     item._Master.SetIfSucceeded(MastertryGet);
                     break;
@@ -791,7 +778,6 @@ namespace Mutagen
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._FileSize.SetIfSucceeded(Mutagen.Binary.UInt64BinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
-                        doMasks: doMasks,
                         fieldIndex: (int)MasterReference_FieldIndex.FileSize,
                         errorMask: errorMask));
                     break;
@@ -1444,7 +1430,6 @@ namespace Mutagen.Internals
                 writer: writer,
                 name: name,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new MasterReference_ErrorMask()) : default(Func<MasterReference_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -1452,7 +1437,6 @@ namespace Mutagen.Internals
         private static void Write_XML_Internal(
             XmlWriter writer,
             IMasterReferenceGetter item,
-            bool doMasks,
             Func<MasterReference_ErrorMask> errorMask,
             string name = null)
         {
@@ -1471,11 +1455,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.Master),
                             item.Master,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)MasterReference_FieldIndex.Master,
                             subMask);
                     }
@@ -1486,18 +1469,17 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.FileSize),
                             item.FileSize,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)MasterReference_FieldIndex.FileSize,
                             subMask);
                     }
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -1518,7 +1500,6 @@ namespace Mutagen.Internals
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new MasterReference_ErrorMask()) : default(Func<MasterReference_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -1526,7 +1507,6 @@ namespace Mutagen.Internals
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             IMasterReferenceGetter item,
-            bool doMasks,
             Func<MasterReference_ErrorMask> errorMask)
         {
             try
@@ -1534,11 +1514,10 @@ namespace Mutagen.Internals
                 Write_Binary_RecordTypes(
                     item: item,
                     writer: writer,
-                    doMasks: doMasks,
                     errorMask: errorMask);
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -1548,13 +1527,11 @@ namespace Mutagen.Internals
         public static void Write_Binary_RecordTypes(
             IMasterReferenceGetter item,
             MutagenWriter writer,
-            bool doMasks,
             Func<MasterReference_ErrorMask> errorMask)
         {
             Mutagen.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Master_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)MasterReference_FieldIndex.Master,
                 errorMask: errorMask,
                 header: MasterReference_Registration.MAST_HEADER,
@@ -1562,7 +1539,6 @@ namespace Mutagen.Internals
             Mutagen.Binary.UInt64BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FileSize_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)MasterReference_FieldIndex.FileSize,
                 errorMask: errorMask,
                 header: MasterReference_Registration.DATA_HEADER,

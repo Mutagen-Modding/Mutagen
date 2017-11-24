@@ -65,7 +65,6 @@ namespace Mutagen.Generation
                 {
                     args.Add($"recordType: {data.TriggeringRecordAccessor}");
                 }
-                args.Add($"doMasks: {doMaskAccessor}");
                 args.Add($"errorMask: {maskAccessor}");
                 args.Add((gen) =>
                 {
@@ -78,7 +77,7 @@ namespace Mutagen.Generation
                             typeGen: list.SubTypeGeneration, 
                             writerAccessor: "writer", 
                             itemAccessor: new Accessor($"subItem"), 
-                            doMaskAccessor: doMaskAccessor,
+                            doMaskAccessor: $"listDoMasks",
                             maskAccessor: $"listSubMask");
                     }
                 });
@@ -172,7 +171,6 @@ namespace Mutagen.Generation
                     throw new NotImplementedException();
                 }
                 args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
-                args.Add($"doMasks: {doMaskAccessor}");
                 if (!list.MaxValue.HasValue)
                 {
                     if (list.SubTypeGeneration is LoquiType loqui)

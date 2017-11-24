@@ -254,7 +254,6 @@ namespace Mutagen
             GameSetting item,
             XElement root,
             string name,
-            bool doMasks,
             Func<GameSetting_ErrorMask> errorMask)
         {
             switch (name)
@@ -264,7 +263,6 @@ namespace Mutagen
                         item: item,
                         root: root,
                         name: name,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     break;
             }
@@ -854,7 +852,6 @@ namespace Mutagen.Internals
                 writer: writer,
                 name: name,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new GameSetting_ErrorMask()) : default(Func<GameSetting_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -862,7 +859,6 @@ namespace Mutagen.Internals
         private static void Write_XML_Internal(
             XmlWriter writer,
             IGameSettingGetter item,
-            bool doMasks,
             Func<GameSetting_ErrorMask> errorMask,
             string name = null)
         {
@@ -877,7 +873,7 @@ namespace Mutagen.Internals
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -898,7 +894,6 @@ namespace Mutagen.Internals
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new GameSetting_ErrorMask()) : default(Func<GameSetting_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -906,7 +901,6 @@ namespace Mutagen.Internals
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             IGameSettingGetter item,
-            bool doMasks,
             Func<GameSetting_ErrorMask> errorMask)
         {
             try
@@ -919,17 +913,15 @@ namespace Mutagen.Internals
                     MajorRecordCommon.Write_Binary_Embedded(
                         item: item,
                         writer: writer,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     MajorRecordCommon.Write_Binary_RecordTypes(
                         item: item,
                         writer: writer,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }

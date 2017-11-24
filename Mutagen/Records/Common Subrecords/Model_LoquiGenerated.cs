@@ -190,7 +190,6 @@ namespace Mutagen
             Model_ErrorMask errMaskRet = null;
             var ret = Create_XML_Internal(
                 root: root,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Model_ErrorMask()) : default(Func<Model_ErrorMask>));
             return (ret, errMaskRet);
         }
@@ -401,7 +400,6 @@ namespace Mutagen
 
         private static Model Create_XML_Internal(
             XElement root,
-            bool doMasks,
             Func<Model_ErrorMask> errorMask)
         {
             var ret = new Model();
@@ -413,12 +411,11 @@ namespace Mutagen
                         item: ret,
                         root: elem,
                         name: elem.Name.LocalName,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -429,7 +426,6 @@ namespace Mutagen
             Model item,
             XElement root,
             string name,
-            bool doMasks,
             Func<Model_ErrorMask> errorMask)
         {
             switch (name)
@@ -439,12 +435,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = FilePathXmlTranslation.Instance.ParseNonNull(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._File.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)Model_FieldIndex.File,
                             subMask);
                     }
@@ -454,12 +449,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = FloatXmlTranslation.Instance.ParseNonNull(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._BoundRadius.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)Model_FieldIndex.BoundRadius,
                             subMask);
                     }
@@ -514,7 +508,6 @@ namespace Mutagen
             Model_ErrorMask errMaskRet = null;
             var ret = Create_Binary_Internal(
                 frame: frame,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Model_ErrorMask()) : default(Func<Model_ErrorMask>));
             return (ret, errMaskRet);
         }
@@ -723,7 +716,6 @@ namespace Mutagen
 
         private static Model Create_Binary_Internal(
             MutagenFrame frame,
-            bool doMasks,
             Func<Model_ErrorMask> errorMask)
         {
             var ret = new Model();
@@ -734,7 +726,6 @@ namespace Mutagen
                     Fill_Binary_Structs(
                         item: ret,
                         frame: frame,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     bool first = true;
                     while (!frame.Complete)
@@ -743,14 +734,13 @@ namespace Mutagen
                             item: ret,
                             frame: frame,
                             first: first,
-                            doMasks: doMasks,
                             errorMask: errorMask)) break;
                         first = false;
                     }
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -760,7 +750,6 @@ namespace Mutagen
         protected static void Fill_Binary_Structs(
             Model item,
             MutagenFrame frame,
-            bool doMasks,
             Func<Model_ErrorMask> errorMask)
         {
         }
@@ -769,7 +758,6 @@ namespace Mutagen
             Model item,
             MutagenFrame frame,
             bool first,
-            bool doMasks,
             Func<Model_ErrorMask> errorMask)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -782,7 +770,6 @@ namespace Mutagen
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var tryGet = Mutagen.Binary.FilePathBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
-                        doMasks: doMasks,
                         fieldIndex: (int)Model_FieldIndex.File,
                         errorMask: errorMask);
                     item._File.SetIfSucceeded(tryGet);
@@ -791,7 +778,6 @@ namespace Mutagen
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._BoundRadius.SetIfSucceeded(Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
-                        doMasks: doMasks,
                         fieldIndex: (int)Model_FieldIndex.BoundRadius,
                         errorMask: errorMask));
                     break;
@@ -1444,7 +1430,6 @@ namespace Mutagen.Internals
                 writer: writer,
                 name: name,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Model_ErrorMask()) : default(Func<Model_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -1452,7 +1437,6 @@ namespace Mutagen.Internals
         private static void Write_XML_Internal(
             XmlWriter writer,
             IModelGetter item,
-            bool doMasks,
             Func<Model_ErrorMask> errorMask,
             string name = null)
         {
@@ -1471,11 +1455,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.File),
                             item.File,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)Model_FieldIndex.File,
                             subMask);
                     }
@@ -1486,18 +1469,17 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.BoundRadius),
                             item.BoundRadius,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)Model_FieldIndex.BoundRadius,
                             subMask);
                     }
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -1518,7 +1500,6 @@ namespace Mutagen.Internals
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Model_ErrorMask()) : default(Func<Model_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -1526,7 +1507,6 @@ namespace Mutagen.Internals
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             IModelGetter item,
-            bool doMasks,
             Func<Model_ErrorMask> errorMask)
         {
             try
@@ -1534,11 +1514,10 @@ namespace Mutagen.Internals
                 Write_Binary_RecordTypes(
                     item: item,
                     writer: writer,
-                    doMasks: doMasks,
                     errorMask: errorMask);
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -1548,21 +1527,18 @@ namespace Mutagen.Internals
         public static void Write_Binary_RecordTypes(
             IModelGetter item,
             MutagenWriter writer,
-            bool doMasks,
             Func<Model_ErrorMask> errorMask)
         {
             Mutagen.Binary.FilePathBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.File_Property,
                 fieldIndex: (int)Model_FieldIndex.File,
-                doMasks: doMasks,
                 errorMask: errorMask,
                 header: Model_Registration.MODL_HEADER,
                 nullable: false);
             Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.BoundRadius_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)Model_FieldIndex.BoundRadius,
                 errorMask: errorMask,
                 header: Model_Registration.MODB_HEADER,

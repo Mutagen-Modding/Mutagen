@@ -230,7 +230,6 @@ namespace Mutagen
             ScriptMetaSummary_ErrorMask errMaskRet = null;
             var ret = Create_XML_Internal(
                 root: root,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new ScriptMetaSummary_ErrorMask()) : default(Func<ScriptMetaSummary_ErrorMask>));
             return (ret, errMaskRet);
         }
@@ -441,7 +440,6 @@ namespace Mutagen
 
         private static ScriptMetaSummary Create_XML_Internal(
             XElement root,
-            bool doMasks,
             Func<ScriptMetaSummary_ErrorMask> errorMask)
         {
             var ret = new ScriptMetaSummary();
@@ -453,12 +451,11 @@ namespace Mutagen
                         item: ret,
                         root: elem,
                         name: elem.Name.LocalName,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -469,7 +466,6 @@ namespace Mutagen
             ScriptMetaSummary item,
             XElement root,
             string name,
-            bool doMasks,
             Func<ScriptMetaSummary_ErrorMask> errorMask)
         {
             switch (name)
@@ -479,12 +475,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = ByteArrayXmlTranslation.Instance.Parse(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._Fluff.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)ScriptMetaSummary_FieldIndex.Fluff,
                             subMask);
                     }
@@ -494,12 +489,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = UInt32XmlTranslation.Instance.ParseNonNull(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._RefCount.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)ScriptMetaSummary_FieldIndex.RefCount,
                             subMask);
                     }
@@ -509,12 +503,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = Int32XmlTranslation.Instance.ParseNonNull(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._CompiledSize.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)ScriptMetaSummary_FieldIndex.CompiledSize,
                             subMask);
                     }
@@ -524,12 +517,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = UInt32XmlTranslation.Instance.ParseNonNull(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._VariableCount.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)ScriptMetaSummary_FieldIndex.VariableCount,
                             subMask);
                     }
@@ -584,7 +576,6 @@ namespace Mutagen
             ScriptMetaSummary_ErrorMask errMaskRet = null;
             var ret = Create_Binary_Internal(
                 frame: frame,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new ScriptMetaSummary_ErrorMask()) : default(Func<ScriptMetaSummary_ErrorMask>));
             return (ret, errMaskRet);
         }
@@ -794,28 +785,24 @@ namespace Mutagen
         static partial void FillBinary_CompiledSize_Custom(
             MutagenFrame frame,
             IScriptMetaSummary item,
-            bool doMasks,
             int fieldIndex,
             Func<ScriptMetaSummary_ErrorMask> errorMask);
 
         static partial void WriteBinary_CompiledSize_Custom(
             MutagenWriter writer,
             IScriptMetaSummaryGetter item,
-            bool doMasks,
             int fieldIndex,
             Func<ScriptMetaSummary_ErrorMask> errorMask);
 
         public static void WriteBinary_CompiledSize(
             MutagenWriter writer,
             IScriptMetaSummaryGetter item,
-            bool doMasks,
             int fieldIndex,
             Func<ScriptMetaSummary_ErrorMask> errorMask)
         {
             WriteBinary_CompiledSize_Custom(
                 writer: writer,
                 item: item,
-                doMasks: doMasks,
                 fieldIndex: fieldIndex,
                 errorMask: errorMask);
         }
@@ -823,35 +810,30 @@ namespace Mutagen
         static partial void FillBinary_VariableCount_Custom(
             MutagenFrame frame,
             IScriptMetaSummary item,
-            bool doMasks,
             int fieldIndex,
             Func<ScriptMetaSummary_ErrorMask> errorMask);
 
         static partial void WriteBinary_VariableCount_Custom(
             MutagenWriter writer,
             IScriptMetaSummaryGetter item,
-            bool doMasks,
             int fieldIndex,
             Func<ScriptMetaSummary_ErrorMask> errorMask);
 
         public static void WriteBinary_VariableCount(
             MutagenWriter writer,
             IScriptMetaSummaryGetter item,
-            bool doMasks,
             int fieldIndex,
             Func<ScriptMetaSummary_ErrorMask> errorMask)
         {
             WriteBinary_VariableCount_Custom(
                 writer: writer,
                 item: item,
-                doMasks: doMasks,
                 fieldIndex: fieldIndex,
                 errorMask: errorMask);
         }
 
         private static ScriptMetaSummary Create_Binary_Internal(
             MutagenFrame frame,
-            bool doMasks,
             Func<ScriptMetaSummary_ErrorMask> errorMask)
         {
             var ret = new ScriptMetaSummary();
@@ -865,12 +847,11 @@ namespace Mutagen
                     Fill_Binary_Structs(
                         item: ret,
                         frame: frame,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -880,34 +861,29 @@ namespace Mutagen
         protected static void Fill_Binary_Structs(
             ScriptMetaSummary item,
             MutagenFrame frame,
-            bool doMasks,
             Func<ScriptMetaSummary_ErrorMask> errorMask)
         {
             if (frame.Complete) return;
             var FlufftryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(4)),
                 fieldIndex: (int)ScriptMetaSummary_FieldIndex.Fluff,
-                doMasks: doMasks,
                 errorMask: errorMask);
             item._Fluff.SetIfSucceeded(FlufftryGet);
             if (frame.Complete) return;
             item._RefCount.SetIfSucceeded(Mutagen.Binary.UInt32BinaryTranslation.Instance.Parse(
                 frame: frame,
-                doMasks: doMasks,
                 fieldIndex: (int)ScriptMetaSummary_FieldIndex.RefCount,
                 errorMask: errorMask));
             if (frame.Complete) return;
             FillBinary_CompiledSize_Custom(
                 frame: frame,
                 item: item,
-                doMasks: doMasks,
                 fieldIndex: (int)ScriptMetaSummary_FieldIndex.CompiledSize,
                 errorMask: errorMask);
             if (frame.Complete) return;
             FillBinary_VariableCount_Custom(
                 frame: frame,
                 item: item,
-                doMasks: doMasks,
                 fieldIndex: (int)ScriptMetaSummary_FieldIndex.VariableCount,
                 errorMask: errorMask);
         }
@@ -1621,7 +1597,6 @@ namespace Mutagen.Internals
                 writer: writer,
                 name: name,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new ScriptMetaSummary_ErrorMask()) : default(Func<ScriptMetaSummary_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -1629,7 +1604,6 @@ namespace Mutagen.Internals
         private static void Write_XML_Internal(
             XmlWriter writer,
             IScriptMetaSummaryGetter item,
-            bool doMasks,
             Func<ScriptMetaSummary_ErrorMask> errorMask,
             string name = null)
         {
@@ -1648,11 +1622,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.Fluff),
                             item.Fluff,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)ScriptMetaSummary_FieldIndex.Fluff,
                             subMask);
                     }
@@ -1663,18 +1636,17 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.RefCount),
                             item.RefCount,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)ScriptMetaSummary_FieldIndex.RefCount,
                             subMask);
                     }
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -1695,7 +1667,6 @@ namespace Mutagen.Internals
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new ScriptMetaSummary_ErrorMask()) : default(Func<ScriptMetaSummary_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -1703,7 +1674,6 @@ namespace Mutagen.Internals
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             IScriptMetaSummaryGetter item,
-            bool doMasks,
             Func<ScriptMetaSummary_ErrorMask> errorMask)
         {
             try
@@ -1716,12 +1686,11 @@ namespace Mutagen.Internals
                     Write_Binary_Embedded(
                         item: item,
                         writer: writer,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -1731,32 +1700,27 @@ namespace Mutagen.Internals
         public static void Write_Binary_Embedded(
             IScriptMetaSummaryGetter item,
             MutagenWriter writer,
-            bool doMasks,
             Func<ScriptMetaSummary_ErrorMask> errorMask)
         {
             Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Fluff_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)ScriptMetaSummary_FieldIndex.Fluff,
                 errorMask: errorMask);
             Mutagen.Binary.UInt32BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.RefCount_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)ScriptMetaSummary_FieldIndex.RefCount,
                 errorMask: errorMask);
             ScriptMetaSummary.WriteBinary_CompiledSize(
                 writer: writer,
                 item: item,
                 fieldIndex: (int)ScriptMetaSummary_FieldIndex.CompiledSize,
-                doMasks: doMasks,
                 errorMask: errorMask);
             ScriptMetaSummary.WriteBinary_VariableCount(
                 writer: writer,
                 item: item,
                 fieldIndex: (int)ScriptMetaSummary_FieldIndex.VariableCount,
-                doMasks: doMasks,
                 errorMask: errorMask);
         }
 

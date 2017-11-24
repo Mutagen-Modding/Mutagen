@@ -306,7 +306,6 @@ namespace Mutagen
             SkillRecord_ErrorMask errMaskRet = null;
             var ret = Create_XML_Internal(
                 root: root,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new SkillRecord_ErrorMask()) : default(Func<SkillRecord_ErrorMask>));
             return (ret, errMaskRet);
         }
@@ -529,7 +528,6 @@ namespace Mutagen
 
         private static SkillRecord Create_XML_Internal(
             XElement root,
-            bool doMasks,
             Func<SkillRecord_ErrorMask> errorMask)
         {
             var ret = new SkillRecord();
@@ -541,12 +539,11 @@ namespace Mutagen
                         item: ret,
                         root: elem,
                         name: elem.Name.LocalName,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -557,7 +554,6 @@ namespace Mutagen
             SkillRecord item,
             XElement root,
             string name,
-            bool doMasks,
             Func<SkillRecord_ErrorMask> errorMask)
         {
             switch (name)
@@ -568,12 +564,11 @@ namespace Mutagen
                         var tryGet = EnumXmlTranslation<ActorValue>.Instance.Parse(
                             root,
                             nullable: false,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._Skill.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)SkillRecord_FieldIndex.Skill,
                             subMask);
                     }
@@ -583,12 +578,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = StringXmlTranslation.Instance.Parse(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._Description.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)SkillRecord_FieldIndex.Description,
                             subMask);
                     }
@@ -598,12 +592,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = FilePathXmlTranslation.Instance.ParseNonNull(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._Icon.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)SkillRecord_FieldIndex.Icon,
                             subMask);
                     }
@@ -613,12 +606,11 @@ namespace Mutagen
                         MaskItem<Exception, SkillData_ErrorMask> subMask;
                         var tryGet = LoquiXmlTranslation<SkillData, SkillData_ErrorMask>.Instance.Parse(
                             root: root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             mask: out subMask);
                         item._Data.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)SkillRecord_FieldIndex.Data,
                             subMask);
                     }
@@ -628,12 +620,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = StringXmlTranslation.Instance.Parse(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._ApprenticeText.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)SkillRecord_FieldIndex.ApprenticeText,
                             subMask);
                     }
@@ -643,12 +634,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = StringXmlTranslation.Instance.Parse(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._JourneymanText.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)SkillRecord_FieldIndex.JourneymanText,
                             subMask);
                     }
@@ -658,12 +648,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = StringXmlTranslation.Instance.Parse(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._ExpertText.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)SkillRecord_FieldIndex.ExpertText,
                             subMask);
                     }
@@ -673,12 +662,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = StringXmlTranslation.Instance.Parse(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._MasterText.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)SkillRecord_FieldIndex.MasterText,
                             subMask);
                     }
@@ -688,7 +676,6 @@ namespace Mutagen
                         item: item,
                         root: root,
                         name: name,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     break;
             }
@@ -739,7 +726,6 @@ namespace Mutagen
             SkillRecord_ErrorMask errMaskRet = null;
             var ret = Create_Binary_Internal(
                 frame: frame,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new SkillRecord_ErrorMask()) : default(Func<SkillRecord_ErrorMask>));
             return (ret, errMaskRet);
         }
@@ -960,7 +946,6 @@ namespace Mutagen
 
         private static SkillRecord Create_Binary_Internal(
             MutagenFrame frame,
-            bool doMasks,
             Func<SkillRecord_ErrorMask> errorMask)
         {
             var ret = new SkillRecord();
@@ -974,20 +959,18 @@ namespace Mutagen
                     Fill_Binary_Structs(
                         item: ret,
                         frame: frame,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     while (!frame.Complete)
                     {
                         if (!Fill_Binary_RecordTypes(
                             item: ret,
                             frame: frame,
-                            doMasks: doMasks,
                             errorMask: errorMask)) break;
                     }
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -997,20 +980,17 @@ namespace Mutagen
         protected static void Fill_Binary_Structs(
             SkillRecord item,
             MutagenFrame frame,
-            bool doMasks,
             Func<SkillRecord_ErrorMask> errorMask)
         {
             MajorRecord.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
-                doMasks: doMasks,
                 errorMask: errorMask);
         }
 
         protected static bool Fill_Binary_RecordTypes(
             SkillRecord item,
             MutagenFrame frame,
-            bool doMasks,
             Func<SkillRecord_ErrorMask> errorMask)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -1023,7 +1003,6 @@ namespace Mutagen
                     var SkilltryGet = Mutagen.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
                         frame.Spawn(contentLength),
                         fieldIndex: (int)SkillRecord_FieldIndex.Skill,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     item._Skill.SetIfSucceeded(SkilltryGet);
                     break;
@@ -1032,7 +1011,6 @@ namespace Mutagen
                     var DescriptiontryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)SkillRecord_FieldIndex.Description,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     item._Description.SetIfSucceeded(DescriptiontryGet);
                     break;
@@ -1040,7 +1018,6 @@ namespace Mutagen
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var tryGet = Mutagen.Binary.FilePathBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
-                        doMasks: doMasks,
                         fieldIndex: (int)SkillRecord_FieldIndex.Icon,
                         errorMask: errorMask);
                     item._Icon.SetIfSucceeded(tryGet);
@@ -1048,7 +1025,6 @@ namespace Mutagen
                 case "DATA":
                     item._Data.SetIfSucceeded(LoquiBinaryTranslation<SkillData, SkillData_ErrorMask>.Instance.Parse(
                         frame: frame,
-                        doMasks: doMasks,
                         fieldIndex: (int)SkillRecord_FieldIndex.Data,
                         errorMask: errorMask));
                     break;
@@ -1057,7 +1033,6 @@ namespace Mutagen
                     var ApprenticeTexttryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)SkillRecord_FieldIndex.ApprenticeText,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     item._ApprenticeText.SetIfSucceeded(ApprenticeTexttryGet);
                     break;
@@ -1066,7 +1041,6 @@ namespace Mutagen
                     var JourneymanTexttryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)SkillRecord_FieldIndex.JourneymanText,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     item._JourneymanText.SetIfSucceeded(JourneymanTexttryGet);
                     break;
@@ -1075,7 +1049,6 @@ namespace Mutagen
                     var ExpertTexttryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)SkillRecord_FieldIndex.ExpertText,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     item._ExpertText.SetIfSucceeded(ExpertTexttryGet);
                     break;
@@ -1084,7 +1057,6 @@ namespace Mutagen
                     var MasterTexttryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)SkillRecord_FieldIndex.MasterText,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     item._MasterText.SetIfSucceeded(MasterTexttryGet);
                     break;
@@ -1092,7 +1064,6 @@ namespace Mutagen
                     MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     break;
             }
@@ -2169,7 +2140,6 @@ namespace Mutagen.Internals
                 writer: writer,
                 name: name,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new SkillRecord_ErrorMask()) : default(Func<SkillRecord_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -2177,7 +2147,6 @@ namespace Mutagen.Internals
         private static void Write_XML_Internal(
             XmlWriter writer,
             ISkillRecordGetter item,
-            bool doMasks,
             Func<SkillRecord_ErrorMask> errorMask,
             string name = null)
         {
@@ -2196,11 +2165,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.Skill),
                             item.Skill,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)SkillRecord_FieldIndex.Skill,
                             subMask);
                     }
@@ -2211,11 +2179,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.Description),
                             item.Description,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)SkillRecord_FieldIndex.Description,
                             subMask);
                     }
@@ -2226,11 +2193,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.Icon),
                             item.Icon,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)SkillRecord_FieldIndex.Icon,
                             subMask);
                     }
@@ -2241,12 +2207,11 @@ namespace Mutagen.Internals
                             writer: writer,
                             item: item.Data,
                             name: nameof(item.Data),
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             mask: out SkillData_ErrorMask loquiMask);
                         subMask = loquiMask == null ? null : new MaskItem<Exception, SkillData_ErrorMask>(null, loquiMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)SkillRecord_FieldIndex.Data,
                             subMask);
                     }
@@ -2257,11 +2222,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.ApprenticeText),
                             item.ApprenticeText,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)SkillRecord_FieldIndex.ApprenticeText,
                             subMask);
                     }
@@ -2272,11 +2236,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.JourneymanText),
                             item.JourneymanText,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)SkillRecord_FieldIndex.JourneymanText,
                             subMask);
                     }
@@ -2287,11 +2250,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.ExpertText),
                             item.ExpertText,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)SkillRecord_FieldIndex.ExpertText,
                             subMask);
                     }
@@ -2302,18 +2264,17 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.MasterText),
                             item.MasterText,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)SkillRecord_FieldIndex.MasterText,
                             subMask);
                     }
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -2334,7 +2295,6 @@ namespace Mutagen.Internals
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new SkillRecord_ErrorMask()) : default(Func<SkillRecord_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -2342,7 +2302,6 @@ namespace Mutagen.Internals
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             ISkillRecordGetter item,
-            bool doMasks,
             Func<SkillRecord_ErrorMask> errorMask)
         {
             try
@@ -2355,17 +2314,15 @@ namespace Mutagen.Internals
                     MajorRecordCommon.Write_Binary_Embedded(
                         item: item,
                         writer: writer,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     Write_Binary_RecordTypes(
                         item: item,
                         writer: writer,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -2375,18 +2332,15 @@ namespace Mutagen.Internals
         public static void Write_Binary_RecordTypes(
             ISkillRecordGetter item,
             MutagenWriter writer,
-            bool doMasks,
             Func<SkillRecord_ErrorMask> errorMask)
         {
             MajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
                 writer: writer,
-                doMasks: doMasks,
                 errorMask: errorMask);
             Mutagen.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
                 writer,
                 item.Skill_Property,
-                doMasks: doMasks,
                 length: new ContentLength(4),
                 fieldIndex: (int)SkillRecord_FieldIndex.Skill,
                 errorMask: errorMask,
@@ -2395,7 +2349,6 @@ namespace Mutagen.Internals
             Mutagen.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Description_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)SkillRecord_FieldIndex.Description,
                 errorMask: errorMask,
                 header: SkillRecord_Registration.DESC_HEADER,
@@ -2404,20 +2357,17 @@ namespace Mutagen.Internals
                 writer: writer,
                 item: item.Icon_Property,
                 fieldIndex: (int)SkillRecord_FieldIndex.Icon,
-                doMasks: doMasks,
                 errorMask: errorMask,
                 header: SkillRecord_Registration.ICON_HEADER,
                 nullable: false);
             LoquiBinaryTranslation<SkillData, SkillData_ErrorMask>.Instance.Write(
                 writer: writer,
                 item: item.Data_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)SkillRecord_FieldIndex.Data,
                 errorMask: errorMask);
             Mutagen.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.ApprenticeText_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)SkillRecord_FieldIndex.ApprenticeText,
                 errorMask: errorMask,
                 header: SkillRecord_Registration.ANAM_HEADER,
@@ -2425,7 +2375,6 @@ namespace Mutagen.Internals
             Mutagen.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.JourneymanText_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)SkillRecord_FieldIndex.JourneymanText,
                 errorMask: errorMask,
                 header: SkillRecord_Registration.JNAM_HEADER,
@@ -2433,7 +2382,6 @@ namespace Mutagen.Internals
             Mutagen.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.ExpertText_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)SkillRecord_FieldIndex.ExpertText,
                 errorMask: errorMask,
                 header: SkillRecord_Registration.ENAM_HEADER,
@@ -2441,7 +2389,6 @@ namespace Mutagen.Internals
             Mutagen.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.MasterText_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)SkillRecord_FieldIndex.MasterText,
                 errorMask: errorMask,
                 header: SkillRecord_Registration.MNAM_HEADER,

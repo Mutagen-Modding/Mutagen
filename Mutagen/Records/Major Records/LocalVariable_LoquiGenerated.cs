@@ -188,7 +188,6 @@ namespace Mutagen
             LocalVariable_ErrorMask errMaskRet = null;
             var ret = Create_XML_Internal(
                 root: root,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new LocalVariable_ErrorMask()) : default(Func<LocalVariable_ErrorMask>));
             return (ret, errMaskRet);
         }
@@ -399,7 +398,6 @@ namespace Mutagen
 
         private static LocalVariable Create_XML_Internal(
             XElement root,
-            bool doMasks,
             Func<LocalVariable_ErrorMask> errorMask)
         {
             var ret = new LocalVariable();
@@ -411,12 +409,11 @@ namespace Mutagen
                         item: ret,
                         root: elem,
                         name: elem.Name.LocalName,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -427,7 +424,6 @@ namespace Mutagen
             LocalVariable item,
             XElement root,
             string name,
-            bool doMasks,
             Func<LocalVariable_ErrorMask> errorMask)
         {
             switch (name)
@@ -437,12 +433,11 @@ namespace Mutagen
                         MaskItem<Exception, LocalVariableData_ErrorMask> subMask;
                         var tryGet = LoquiXmlTranslation<LocalVariableData, LocalVariableData_ErrorMask>.Instance.Parse(
                             root: root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             mask: out subMask);
                         item._Data.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)LocalVariable_FieldIndex.Data,
                             subMask);
                     }
@@ -452,12 +447,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = StringXmlTranslation.Instance.Parse(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._Name.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)LocalVariable_FieldIndex.Name,
                             subMask);
                     }
@@ -512,7 +506,6 @@ namespace Mutagen
             LocalVariable_ErrorMask errMaskRet = null;
             var ret = Create_Binary_Internal(
                 frame: frame,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new LocalVariable_ErrorMask()) : default(Func<LocalVariable_ErrorMask>));
             return (ret, errMaskRet);
         }
@@ -721,7 +714,6 @@ namespace Mutagen
 
         private static LocalVariable Create_Binary_Internal(
             MutagenFrame frame,
-            bool doMasks,
             Func<LocalVariable_ErrorMask> errorMask)
         {
             var ret = new LocalVariable();
@@ -732,7 +724,6 @@ namespace Mutagen
                     Fill_Binary_Structs(
                         item: ret,
                         frame: frame,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     bool first = true;
                     while (!frame.Complete)
@@ -741,14 +732,13 @@ namespace Mutagen
                             item: ret,
                             frame: frame,
                             first: first,
-                            doMasks: doMasks,
                             errorMask: errorMask)) break;
                         first = false;
                     }
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -758,7 +748,6 @@ namespace Mutagen
         protected static void Fill_Binary_Structs(
             LocalVariable item,
             MutagenFrame frame,
-            bool doMasks,
             Func<LocalVariable_ErrorMask> errorMask)
         {
         }
@@ -767,7 +756,6 @@ namespace Mutagen
             LocalVariable item,
             MutagenFrame frame,
             bool first,
-            bool doMasks,
             Func<LocalVariable_ErrorMask> errorMask)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -779,7 +767,6 @@ namespace Mutagen
                     if (!first) return false;
                     item._Data.SetIfSucceeded(LoquiBinaryTranslation<LocalVariableData, LocalVariableData_ErrorMask>.Instance.Parse(
                         frame: frame,
-                        doMasks: doMasks,
                         fieldIndex: (int)LocalVariable_FieldIndex.Data,
                         errorMask: errorMask));
                     break;
@@ -788,7 +775,6 @@ namespace Mutagen
                     var NametryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)LocalVariable_FieldIndex.Name,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     item._Name.SetIfSucceeded(NametryGet);
                     break;
@@ -1479,7 +1465,6 @@ namespace Mutagen.Internals
                 writer: writer,
                 name: name,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new LocalVariable_ErrorMask()) : default(Func<LocalVariable_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -1487,7 +1472,6 @@ namespace Mutagen.Internals
         private static void Write_XML_Internal(
             XmlWriter writer,
             ILocalVariableGetter item,
-            bool doMasks,
             Func<LocalVariable_ErrorMask> errorMask,
             string name = null)
         {
@@ -1506,12 +1490,11 @@ namespace Mutagen.Internals
                             writer: writer,
                             item: item.Data,
                             name: nameof(item.Data),
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             mask: out LocalVariableData_ErrorMask loquiMask);
                         subMask = loquiMask == null ? null : new MaskItem<Exception, LocalVariableData_ErrorMask>(null, loquiMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)LocalVariable_FieldIndex.Data,
                             subMask);
                     }
@@ -1522,18 +1505,17 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.Name),
                             item.Name,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)LocalVariable_FieldIndex.Name,
                             subMask);
                     }
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -1554,7 +1536,6 @@ namespace Mutagen.Internals
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new LocalVariable_ErrorMask()) : default(Func<LocalVariable_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -1562,7 +1543,6 @@ namespace Mutagen.Internals
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             ILocalVariableGetter item,
-            bool doMasks,
             Func<LocalVariable_ErrorMask> errorMask)
         {
             try
@@ -1570,11 +1550,10 @@ namespace Mutagen.Internals
                 Write_Binary_RecordTypes(
                     item: item,
                     writer: writer,
-                    doMasks: doMasks,
                     errorMask: errorMask);
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -1584,19 +1563,16 @@ namespace Mutagen.Internals
         public static void Write_Binary_RecordTypes(
             ILocalVariableGetter item,
             MutagenWriter writer,
-            bool doMasks,
             Func<LocalVariable_ErrorMask> errorMask)
         {
             LoquiBinaryTranslation<LocalVariableData, LocalVariableData_ErrorMask>.Instance.Write(
                 writer: writer,
                 item: item.Data_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)LocalVariable_FieldIndex.Data,
                 errorMask: errorMask);
             Mutagen.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Name_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)LocalVariable_FieldIndex.Name,
                 errorMask: errorMask,
                 header: LocalVariable_Registration.SCVR_HEADER,

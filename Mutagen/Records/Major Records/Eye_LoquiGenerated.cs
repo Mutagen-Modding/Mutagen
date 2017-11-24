@@ -188,7 +188,6 @@ namespace Mutagen
             Eye_ErrorMask errMaskRet = null;
             var ret = Create_XML_Internal(
                 root: root,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Eye_ErrorMask()) : default(Func<Eye_ErrorMask>));
             return (ret, errMaskRet);
         }
@@ -423,7 +422,6 @@ namespace Mutagen
 
         private static Eye Create_XML_Internal(
             XElement root,
-            bool doMasks,
             Func<Eye_ErrorMask> errorMask)
         {
             var ret = new Eye();
@@ -435,12 +433,11 @@ namespace Mutagen
                         item: ret,
                         root: elem,
                         name: elem.Name.LocalName,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -451,7 +448,6 @@ namespace Mutagen
             Eye item,
             XElement root,
             string name,
-            bool doMasks,
             Func<Eye_ErrorMask> errorMask)
         {
             switch (name)
@@ -461,12 +457,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = FilePathXmlTranslation.Instance.ParseNonNull(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._Icon.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)Eye_FieldIndex.Icon,
                             subMask);
                     }
@@ -477,12 +472,11 @@ namespace Mutagen
                         var tryGet = EnumXmlTranslation<Eye.Flag>.Instance.Parse(
                             root,
                             nullable: false,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._Flags.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)Eye_FieldIndex.Flags,
                             subMask);
                     }
@@ -492,7 +486,6 @@ namespace Mutagen
                         item: item,
                         root: root,
                         name: name,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     break;
             }
@@ -543,7 +536,6 @@ namespace Mutagen
             Eye_ErrorMask errMaskRet = null;
             var ret = Create_Binary_Internal(
                 frame: frame,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Eye_ErrorMask()) : default(Func<Eye_ErrorMask>));
             return (ret, errMaskRet);
         }
@@ -776,7 +768,6 @@ namespace Mutagen
 
         private static Eye Create_Binary_Internal(
             MutagenFrame frame,
-            bool doMasks,
             Func<Eye_ErrorMask> errorMask)
         {
             var ret = new Eye();
@@ -790,20 +781,18 @@ namespace Mutagen
                     Fill_Binary_Structs(
                         item: ret,
                         frame: frame,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     while (!frame.Complete)
                     {
                         if (!Fill_Binary_RecordTypes(
                             item: ret,
                             frame: frame,
-                            doMasks: doMasks,
                             errorMask: errorMask)) break;
                     }
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -813,20 +802,17 @@ namespace Mutagen
         protected static void Fill_Binary_Structs(
             Eye item,
             MutagenFrame frame,
-            bool doMasks,
             Func<Eye_ErrorMask> errorMask)
         {
             NamedMajorRecord.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
-                doMasks: doMasks,
                 errorMask: errorMask);
         }
 
         protected static bool Fill_Binary_RecordTypes(
             Eye item,
             MutagenFrame frame,
-            bool doMasks,
             Func<Eye_ErrorMask> errorMask)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -838,7 +824,6 @@ namespace Mutagen
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var tryGet = Mutagen.Binary.FilePathBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
-                        doMasks: doMasks,
                         fieldIndex: (int)Eye_FieldIndex.Icon,
                         errorMask: errorMask);
                     item._Icon.SetIfSucceeded(tryGet);
@@ -848,7 +833,6 @@ namespace Mutagen
                     var FlagstryGet = Mutagen.Binary.EnumBinaryTranslation<Eye.Flag>.Instance.Parse(
                         frame.Spawn(contentLength),
                         fieldIndex: (int)Eye_FieldIndex.Flags,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     item._Flags.SetIfSucceeded(FlagstryGet);
                     break;
@@ -856,7 +840,6 @@ namespace Mutagen
                     NamedMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     break;
             }
@@ -1511,7 +1494,6 @@ namespace Mutagen.Internals
                 writer: writer,
                 name: name,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Eye_ErrorMask()) : default(Func<Eye_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -1519,7 +1501,6 @@ namespace Mutagen.Internals
         private static void Write_XML_Internal(
             XmlWriter writer,
             IEyeGetter item,
-            bool doMasks,
             Func<Eye_ErrorMask> errorMask,
             string name = null)
         {
@@ -1538,11 +1519,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.Icon),
                             item.Icon,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)Eye_FieldIndex.Icon,
                             subMask);
                     }
@@ -1553,18 +1533,17 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.Flags),
                             item.Flags,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)Eye_FieldIndex.Flags,
                             subMask);
                     }
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -1585,7 +1564,6 @@ namespace Mutagen.Internals
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Eye_ErrorMask()) : default(Func<Eye_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -1593,7 +1571,6 @@ namespace Mutagen.Internals
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             IEyeGetter item,
-            bool doMasks,
             Func<Eye_ErrorMask> errorMask)
         {
             try
@@ -1606,17 +1583,15 @@ namespace Mutagen.Internals
                     MajorRecordCommon.Write_Binary_Embedded(
                         item: item,
                         writer: writer,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     Write_Binary_RecordTypes(
                         item: item,
                         writer: writer,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -1626,26 +1601,22 @@ namespace Mutagen.Internals
         public static void Write_Binary_RecordTypes(
             IEyeGetter item,
             MutagenWriter writer,
-            bool doMasks,
             Func<Eye_ErrorMask> errorMask)
         {
             NamedMajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
                 writer: writer,
-                doMasks: doMasks,
                 errorMask: errorMask);
             Mutagen.Binary.FilePathBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Icon_Property,
                 fieldIndex: (int)Eye_FieldIndex.Icon,
-                doMasks: doMasks,
                 errorMask: errorMask,
                 header: Eye_Registration.ICON_HEADER,
                 nullable: false);
             Mutagen.Binary.EnumBinaryTranslation<Eye.Flag>.Instance.Write(
                 writer,
                 item.Flags_Property,
-                doMasks: doMasks,
                 length: new ContentLength(1),
                 fieldIndex: (int)Eye_FieldIndex.Flags,
                 errorMask: errorMask,

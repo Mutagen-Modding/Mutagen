@@ -49,12 +49,11 @@ namespace Mutagen
             });
         }
 
-        static partial void FillBinary_MinimumAttenuationDistance_Custom(MutagenFrame frame, ISoundData item, bool doMasks, int fieldIndex, Func<SoundData_ErrorMask> errorMask)
+        static partial void FillBinary_MinimumAttenuationDistance_Custom(MutagenFrame frame, ISoundData item, int fieldIndex, Func<SoundData_ErrorMask> errorMask)
         {
             var ret = ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
-                fieldIndex: fieldIndex, 
-                doMasks: doMasks,
+                fieldIndex: fieldIndex,
                 errorMask: errorMask);
             if (ret.Succeeded)
             {
@@ -62,23 +61,21 @@ namespace Mutagen
             }
         }
 
-        static partial void WriteBinary_MinimumAttenuationDistance_Custom(MutagenWriter writer, ISoundDataGetter item, bool doMasks, int fieldIndex, Func<SoundData_ErrorMask> errorMask)
+        static partial void WriteBinary_MinimumAttenuationDistance_Custom(MutagenWriter writer, ISoundDataGetter item, int fieldIndex, Func<SoundData_ErrorMask> errorMask)
         {
             var val = (byte)(item.MinimumAttenuationDistance / MinAttenuationDistanceMultiplier);
             ByteBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: val,
                 fieldIndex: fieldIndex,
-                doMasks: doMasks,
                 errorMask: errorMask);
         }
 
-        static partial void FillBinary_MaximumAttenuationDistance_Custom(MutagenFrame frame, ISoundData item, bool doMasks, int fieldIndex, Func<SoundData_ErrorMask> errorMask)
+        static partial void FillBinary_MaximumAttenuationDistance_Custom(MutagenFrame frame, ISoundData item, int fieldIndex, Func<SoundData_ErrorMask> errorMask)
         {
             var ret = ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: fieldIndex,
-                doMasks: doMasks,
                 errorMask: errorMask);
             if (ret.Succeeded)
             {
@@ -86,14 +83,13 @@ namespace Mutagen
             }
         }
 
-        static partial void WriteBinary_MaximumAttenuationDistance_Custom(MutagenWriter writer, ISoundDataGetter item, bool doMasks, int fieldIndex, Func<SoundData_ErrorMask> errorMask)
+        static partial void WriteBinary_MaximumAttenuationDistance_Custom(MutagenWriter writer, ISoundDataGetter item, int fieldIndex, Func<SoundData_ErrorMask> errorMask)
         {
             var val = (byte)(item.MaximumAttenuationDistance / MaxAttenuationDistanceMultiplier);
             ByteBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: val,
                 fieldIndex: fieldIndex,
-                doMasks: doMasks,
                 errorMask: errorMask);
         }
     }

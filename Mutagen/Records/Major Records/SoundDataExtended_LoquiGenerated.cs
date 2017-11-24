@@ -208,7 +208,6 @@ namespace Mutagen
             SoundDataExtended_ErrorMask errMaskRet = null;
             var ret = Create_XML_Internal(
                 root: root,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new SoundDataExtended_ErrorMask()) : default(Func<SoundDataExtended_ErrorMask>));
             return (ret, errMaskRet);
         }
@@ -432,7 +431,6 @@ namespace Mutagen
 
         private static SoundDataExtended Create_XML_Internal(
             XElement root,
-            bool doMasks,
             Func<SoundDataExtended_ErrorMask> errorMask)
         {
             var ret = new SoundDataExtended();
@@ -444,12 +442,11 @@ namespace Mutagen
                         item: ret,
                         root: elem,
                         name: elem.Name.LocalName,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -460,7 +457,6 @@ namespace Mutagen
             SoundDataExtended item,
             XElement root,
             string name,
-            bool doMasks,
             Func<SoundDataExtended_ErrorMask> errorMask)
         {
             switch (name)
@@ -470,12 +466,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = FloatXmlTranslation.Instance.ParseNonNull(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._StaticAttenuation.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)SoundDataExtended_FieldIndex.StaticAttenuation,
                             subMask);
                     }
@@ -485,12 +480,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = ByteXmlTranslation.Instance.ParseNonNull(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._StopTime.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)SoundDataExtended_FieldIndex.StopTime,
                             subMask);
                     }
@@ -500,12 +494,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = ByteXmlTranslation.Instance.ParseNonNull(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._StartTime.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)SoundDataExtended_FieldIndex.StartTime,
                             subMask);
                     }
@@ -515,7 +508,6 @@ namespace Mutagen
                         item: item,
                         root: root,
                         name: name,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                     break;
             }
@@ -566,7 +558,6 @@ namespace Mutagen
             SoundDataExtended_ErrorMask errMaskRet = null;
             var ret = Create_Binary_Internal(
                 frame: frame,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new SoundDataExtended_ErrorMask()) : default(Func<SoundDataExtended_ErrorMask>));
             return (ret, errMaskRet);
         }
@@ -797,7 +788,6 @@ namespace Mutagen
 
         private static SoundDataExtended Create_Binary_Internal(
             MutagenFrame frame,
-            bool doMasks,
             Func<SoundDataExtended_ErrorMask> errorMask)
         {
             var ret = new SoundDataExtended();
@@ -811,12 +801,11 @@ namespace Mutagen
                     Fill_Binary_Structs(
                         item: ret,
                         frame: frame,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -826,30 +815,25 @@ namespace Mutagen
         protected static void Fill_Binary_Structs(
             SoundDataExtended item,
             MutagenFrame frame,
-            bool doMasks,
             Func<SoundDataExtended_ErrorMask> errorMask)
         {
             SoundData.Fill_Binary_Structs(
                 item: item,
                 frame: frame,
-                doMasks: doMasks,
                 errorMask: errorMask);
             if (frame.Complete) return;
             item._StaticAttenuation.SetIfSucceeded(Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
-                doMasks: doMasks,
                 fieldIndex: (int)SoundDataExtended_FieldIndex.StaticAttenuation,
                 errorMask: errorMask));
             if (frame.Complete) return;
             item._StopTime.SetIfSucceeded(Mutagen.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
-                doMasks: doMasks,
                 fieldIndex: (int)SoundDataExtended_FieldIndex.StopTime,
                 errorMask: errorMask));
             if (frame.Complete) return;
             item._StartTime.SetIfSucceeded(Mutagen.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
-                doMasks: doMasks,
                 fieldIndex: (int)SoundDataExtended_FieldIndex.StartTime,
                 errorMask: errorMask));
         }
@@ -1563,7 +1547,6 @@ namespace Mutagen.Internals
                 writer: writer,
                 name: name,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new SoundDataExtended_ErrorMask()) : default(Func<SoundDataExtended_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -1571,7 +1554,6 @@ namespace Mutagen.Internals
         private static void Write_XML_Internal(
             XmlWriter writer,
             SoundDataExtended item,
-            bool doMasks,
             Func<SoundDataExtended_ErrorMask> errorMask,
             string name = null)
         {
@@ -1590,11 +1572,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.StaticAttenuation),
                             item.StaticAttenuation,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)SoundDataExtended_FieldIndex.StaticAttenuation,
                             subMask);
                     }
@@ -1605,11 +1586,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.StopTime),
                             item.StopTime,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)SoundDataExtended_FieldIndex.StopTime,
                             subMask);
                     }
@@ -1620,18 +1600,17 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.StartTime),
                             item.StartTime,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)SoundDataExtended_FieldIndex.StartTime,
                             subMask);
                     }
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -1652,7 +1631,6 @@ namespace Mutagen.Internals
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new SoundDataExtended_ErrorMask()) : default(Func<SoundDataExtended_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -1660,7 +1638,6 @@ namespace Mutagen.Internals
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             SoundDataExtended item,
-            bool doMasks,
             Func<SoundDataExtended_ErrorMask> errorMask)
         {
             try
@@ -1673,12 +1650,11 @@ namespace Mutagen.Internals
                     Write_Binary_Embedded(
                         item: item,
                         writer: writer,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -1688,30 +1664,25 @@ namespace Mutagen.Internals
         public static void Write_Binary_Embedded(
             SoundDataExtended item,
             MutagenWriter writer,
-            bool doMasks,
             Func<SoundDataExtended_ErrorMask> errorMask)
         {
             SoundDataCommon.Write_Binary_Embedded(
                 item: item,
                 writer: writer,
-                doMasks: doMasks,
                 errorMask: errorMask);
             Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.StaticAttenuation_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)SoundDataExtended_FieldIndex.StaticAttenuation,
                 errorMask: errorMask);
             Mutagen.Binary.ByteBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.StopTime_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)SoundDataExtended_FieldIndex.StopTime,
                 errorMask: errorMask);
             Mutagen.Binary.ByteBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.StartTime_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)SoundDataExtended_FieldIndex.StartTime,
                 errorMask: errorMask);
         }

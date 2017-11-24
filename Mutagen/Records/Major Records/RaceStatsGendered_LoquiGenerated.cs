@@ -185,7 +185,6 @@ namespace Mutagen
             RaceStatsGendered_ErrorMask errMaskRet = null;
             var ret = Create_XML_Internal(
                 root: root,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new RaceStatsGendered_ErrorMask()) : default(Func<RaceStatsGendered_ErrorMask>));
             return (ret, errMaskRet);
         }
@@ -396,7 +395,6 @@ namespace Mutagen
 
         private static RaceStatsGendered Create_XML_Internal(
             XElement root,
-            bool doMasks,
             Func<RaceStatsGendered_ErrorMask> errorMask)
         {
             var ret = new RaceStatsGendered();
@@ -408,12 +406,11 @@ namespace Mutagen
                         item: ret,
                         root: elem,
                         name: elem.Name.LocalName,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -424,7 +421,6 @@ namespace Mutagen
             RaceStatsGendered item,
             XElement root,
             string name,
-            bool doMasks,
             Func<RaceStatsGendered_ErrorMask> errorMask)
         {
             switch (name)
@@ -434,12 +430,11 @@ namespace Mutagen
                         MaskItem<Exception, RaceStats_ErrorMask> subMask;
                         var tryGet = LoquiXmlTranslation<RaceStats, RaceStats_ErrorMask>.Instance.Parse(
                             root: root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             mask: out subMask);
                         item._Male.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)RaceStatsGendered_FieldIndex.Male,
                             subMask);
                     }
@@ -449,12 +444,11 @@ namespace Mutagen
                         MaskItem<Exception, RaceStats_ErrorMask> subMask;
                         var tryGet = LoquiXmlTranslation<RaceStats, RaceStats_ErrorMask>.Instance.Parse(
                             root: root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             mask: out subMask);
                         item._Female.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)RaceStatsGendered_FieldIndex.Female,
                             subMask);
                     }
@@ -509,7 +503,6 @@ namespace Mutagen
             RaceStatsGendered_ErrorMask errMaskRet = null;
             var ret = Create_Binary_Internal(
                 frame: frame,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new RaceStatsGendered_ErrorMask()) : default(Func<RaceStatsGendered_ErrorMask>));
             return (ret, errMaskRet);
         }
@@ -718,7 +711,6 @@ namespace Mutagen
 
         private static RaceStatsGendered Create_Binary_Internal(
             MutagenFrame frame,
-            bool doMasks,
             Func<RaceStatsGendered_ErrorMask> errorMask)
         {
             var ret = new RaceStatsGendered();
@@ -732,12 +724,11 @@ namespace Mutagen
                     Fill_Binary_Structs(
                         item: ret,
                         frame: frame,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -747,19 +738,16 @@ namespace Mutagen
         protected static void Fill_Binary_Structs(
             RaceStatsGendered item,
             MutagenFrame frame,
-            bool doMasks,
             Func<RaceStatsGendered_ErrorMask> errorMask)
         {
             if (frame.Complete) return;
             item._Male.SetIfSucceeded(LoquiBinaryTranslation<RaceStats, RaceStats_ErrorMask>.Instance.Parse(
                 frame: frame.Spawn(snapToFinalPosition: false),
-                doMasks: doMasks,
                 fieldIndex: (int)RaceStatsGendered_FieldIndex.Male,
                 errorMask: errorMask));
             if (frame.Complete) return;
             item._Female.SetIfSucceeded(LoquiBinaryTranslation<RaceStats, RaceStats_ErrorMask>.Instance.Parse(
                 frame: frame.Spawn(snapToFinalPosition: false),
-                doMasks: doMasks,
                 fieldIndex: (int)RaceStatsGendered_FieldIndex.Female,
                 errorMask: errorMask));
         }
@@ -1480,7 +1468,6 @@ namespace Mutagen.Internals
                 writer: writer,
                 name: name,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new RaceStatsGendered_ErrorMask()) : default(Func<RaceStatsGendered_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -1488,7 +1475,6 @@ namespace Mutagen.Internals
         private static void Write_XML_Internal(
             XmlWriter writer,
             IRaceStatsGenderedGetter item,
-            bool doMasks,
             Func<RaceStatsGendered_ErrorMask> errorMask,
             string name = null)
         {
@@ -1507,12 +1493,11 @@ namespace Mutagen.Internals
                             writer: writer,
                             item: item.Male,
                             name: nameof(item.Male),
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             mask: out RaceStats_ErrorMask loquiMask);
                         subMask = loquiMask == null ? null : new MaskItem<Exception, RaceStats_ErrorMask>(null, loquiMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)RaceStatsGendered_FieldIndex.Male,
                             subMask);
                     }
@@ -1523,19 +1508,18 @@ namespace Mutagen.Internals
                             writer: writer,
                             item: item.Female,
                             name: nameof(item.Female),
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             mask: out RaceStats_ErrorMask loquiMask);
                         subMask = loquiMask == null ? null : new MaskItem<Exception, RaceStats_ErrorMask>(null, loquiMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)RaceStatsGendered_FieldIndex.Female,
                             subMask);
                     }
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -1556,7 +1540,6 @@ namespace Mutagen.Internals
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new RaceStatsGendered_ErrorMask()) : default(Func<RaceStatsGendered_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -1564,7 +1547,6 @@ namespace Mutagen.Internals
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             IRaceStatsGenderedGetter item,
-            bool doMasks,
             Func<RaceStatsGendered_ErrorMask> errorMask)
         {
             try
@@ -1577,12 +1559,11 @@ namespace Mutagen.Internals
                     Write_Binary_Embedded(
                         item: item,
                         writer: writer,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -1592,19 +1573,16 @@ namespace Mutagen.Internals
         public static void Write_Binary_Embedded(
             IRaceStatsGenderedGetter item,
             MutagenWriter writer,
-            bool doMasks,
             Func<RaceStatsGendered_ErrorMask> errorMask)
         {
             LoquiBinaryTranslation<RaceStats, RaceStats_ErrorMask>.Instance.Write(
                 writer: writer,
                 item: item.Male_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)RaceStatsGendered_FieldIndex.Male,
                 errorMask: errorMask);
             LoquiBinaryTranslation<RaceStats, RaceStats_ErrorMask>.Instance.Write(
                 writer: writer,
                 item: item.Female_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)RaceStatsGendered_FieldIndex.Female,
                 errorMask: errorMask);
         }

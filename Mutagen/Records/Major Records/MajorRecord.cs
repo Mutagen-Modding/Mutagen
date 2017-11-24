@@ -29,14 +29,12 @@ namespace Mutagen
             Fill_Binary_Structs(
                 record,
                 frame,
-                doMasks,
                 errorMaskCreator);
             for (int i = 0; i < MajorRecord_Registration.NumTypedFields; i++)
             {
                 Fill_Binary_RecordTypes(
                     record,
                     frame,
-                    doMasks,
                     errorMaskCreator);
             }
             errorMask = errMask;

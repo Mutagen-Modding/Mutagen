@@ -190,7 +190,6 @@ namespace Mutagen
             Relation_ErrorMask errMaskRet = null;
             var ret = Create_XML_Internal(
                 root: root,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Relation_ErrorMask()) : default(Func<Relation_ErrorMask>));
             return (ret, errMaskRet);
         }
@@ -401,7 +400,6 @@ namespace Mutagen
 
         private static Relation Create_XML_Internal(
             XElement root,
-            bool doMasks,
             Func<Relation_ErrorMask> errorMask)
         {
             var ret = new Relation();
@@ -413,12 +411,11 @@ namespace Mutagen
                         item: ret,
                         root: elem,
                         name: elem.Name.LocalName,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -429,7 +426,6 @@ namespace Mutagen
             Relation item,
             XElement root,
             string name,
-            bool doMasks,
             Func<Relation_ErrorMask> errorMask)
         {
             switch (name)
@@ -439,12 +435,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = FormIDXmlTranslation.Instance.ParseNonNull(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._Faction.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)Relation_FieldIndex.Faction,
                             subMask);
                     }
@@ -454,12 +449,11 @@ namespace Mutagen
                         Exception subMask;
                         var tryGet = Int32XmlTranslation.Instance.ParseNonNull(
                             root,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         item._Modifier.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)Relation_FieldIndex.Modifier,
                             subMask);
                     }
@@ -514,7 +508,6 @@ namespace Mutagen
             Relation_ErrorMask errMaskRet = null;
             var ret = Create_Binary_Internal(
                 frame: frame,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Relation_ErrorMask()) : default(Func<Relation_ErrorMask>));
             return (ret, errMaskRet);
         }
@@ -723,7 +716,6 @@ namespace Mutagen
 
         private static Relation Create_Binary_Internal(
             MutagenFrame frame,
-            bool doMasks,
             Func<Relation_ErrorMask> errorMask)
         {
             var ret = new Relation();
@@ -737,12 +729,11 @@ namespace Mutagen
                     Fill_Binary_Structs(
                         item: ret,
                         frame: frame,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -752,19 +743,16 @@ namespace Mutagen
         protected static void Fill_Binary_Structs(
             Relation item,
             MutagenFrame frame,
-            bool doMasks,
             Func<Relation_ErrorMask> errorMask)
         {
             if (frame.Complete) return;
             item._Faction.SetIfSucceeded(Mutagen.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
-                doMasks: doMasks,
                 fieldIndex: (int)Relation_FieldIndex.Faction,
                 errorMask: errorMask));
             if (frame.Complete) return;
             item._Modifier.SetIfSucceeded(Mutagen.Binary.Int32BinaryTranslation.Instance.Parse(
                 frame: frame,
-                doMasks: doMasks,
                 fieldIndex: (int)Relation_FieldIndex.Modifier,
                 errorMask: errorMask));
         }
@@ -1411,7 +1399,6 @@ namespace Mutagen.Internals
                 writer: writer,
                 name: name,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Relation_ErrorMask()) : default(Func<Relation_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -1419,7 +1406,6 @@ namespace Mutagen.Internals
         private static void Write_XML_Internal(
             XmlWriter writer,
             IRelationGetter item,
-            bool doMasks,
             Func<Relation_ErrorMask> errorMask,
             string name = null)
         {
@@ -1438,11 +1424,10 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.Faction),
                             item.Faction,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)Relation_FieldIndex.Faction,
                             subMask);
                     }
@@ -1453,18 +1438,17 @@ namespace Mutagen.Internals
                             writer,
                             nameof(item.Modifier),
                             item.Modifier,
-                            doMasks: doMasks,
+                            doMasks: errorMask != null,
                             errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            doMasks,
                             (int)Relation_FieldIndex.Modifier,
                             subMask);
                     }
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -1485,7 +1469,6 @@ namespace Mutagen.Internals
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
-                doMasks: doMasks,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Relation_ErrorMask()) : default(Func<Relation_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -1493,7 +1476,6 @@ namespace Mutagen.Internals
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             IRelationGetter item,
-            bool doMasks,
             Func<Relation_ErrorMask> errorMask)
         {
             try
@@ -1506,12 +1488,11 @@ namespace Mutagen.Internals
                     Write_Binary_Embedded(
                         item: item,
                         writer: writer,
-                        doMasks: doMasks,
                         errorMask: errorMask);
                 }
             }
             catch (Exception ex)
-            when (doMasks)
+            when (errorMask != null)
             {
                 errorMask().Overall = ex;
             }
@@ -1521,19 +1502,16 @@ namespace Mutagen.Internals
         public static void Write_Binary_Embedded(
             IRelationGetter item,
             MutagenWriter writer,
-            bool doMasks,
             Func<Relation_ErrorMask> errorMask)
         {
             Mutagen.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Faction_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)Relation_FieldIndex.Faction,
                 errorMask: errorMask);
             Mutagen.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Modifier_Property,
-                doMasks: doMasks,
                 fieldIndex: (int)Relation_FieldIndex.Modifier,
                 errorMask: errorMask);
         }

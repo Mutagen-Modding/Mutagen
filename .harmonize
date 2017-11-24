@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>4247db6a478f535da4e60b631cfa8941bb44366c</Sha>
+         <Sha>88c381c46c04a57a41e370bd5436fc10f3af4809</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>11-21-2017 16:25:34</CommitDate>
-         <Description>doMask parameter renaming</Description>
+         <CommitDate>11-24-2017 12:39:59</CommitDate>
+         <Description>bool doMask parameters removed in favor of error mask creator null checks</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

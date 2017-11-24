@@ -151,17 +151,15 @@ namespace Mutagen.Binary
         public TryGet<T> Parse<Mask>(
             MutagenFrame frame,
             int fieldIndex,
-            bool doMasks,
             Func<Mask> errorMask)
             where Mask : IErrorMask
         {
             var ret = this.Parse(
                 frame,
-                doMasks,
+                errorMask != null,
                 out MaskItem<Exception, M> ex);
             ErrorMask.HandleErrorMask(
                 errorMask,
-                doMasks,
                 fieldIndex,
                 ex);
             return ret;
@@ -245,7 +243,6 @@ namespace Mutagen.Binary
             MutagenWriter writer,
             T item,
             int fieldIndex,
-            bool doMasks,
             Func<M> errorMask)
         {
             try
@@ -253,19 +250,18 @@ namespace Mutagen.Binary
                 WRITE.Value(
                     writer: writer,
                     item: item,
-                    doMasks: doMasks,
+                    doMasks: errorMask != null,
                     errorMask: out var subMask);
                 ErrorMask.HandleErrorMask(
                     errorMask,
-                    doMasks,
                     fieldIndex,
                     subMask == null ? null : new MaskItem<Exception, M>(null, subMask));
             }
             catch (Exception ex)
+            when (errorMask != null)
             {
                 ErrorMask.HandleException(
                     errorMask,
-                    doMasks,
                     fieldIndex,
                     ex);
             }
@@ -275,18 +271,16 @@ namespace Mutagen.Binary
             MutagenWriter writer,
             T item,
             int fieldIndex,
-            bool doMasks,
             Func<Mask> errorMask)
             where Mask : IErrorMask
         {
             this.Write(
                 writer,
                 item,
-                doMasks,
+                errorMask != null,
                 out var subMask);
             ErrorMask.HandleErrorMask(
                 errorMask,
-                doMasks,
                 fieldIndex,
                 subMask);
         }
@@ -295,7 +289,6 @@ namespace Mutagen.Binary
             MutagenWriter writer,
             IHasBeenSetItemGetter<T> item,
             int fieldIndex,
-            bool doMasks,
             Func<Mask> errorMask)
             where Mask : IErrorMask
         {
@@ -304,7 +297,6 @@ namespace Mutagen.Binary
                 writer,
                 item.Item,
                 fieldIndex,
-                doMasks,
                 errorMask);
         }
         #endregion
