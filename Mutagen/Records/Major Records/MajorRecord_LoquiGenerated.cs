@@ -1638,23 +1638,23 @@ namespace Mutagen.Internals
             {
                 if (printMask?.MajorRecordFlags ?? true)
                 {
-                    fg.AppendLine($"MajorRecordFlags => {MajorRecordFlags.ToStringSafe()}");
+                    fg.AppendLine($"MajorRecordFlags => {MajorRecordFlags}");
                 }
                 if (printMask?.FormID ?? true)
                 {
-                    fg.AppendLine($"FormID => {FormID.ToStringSafe()}");
+                    fg.AppendLine($"FormID => {FormID}");
                 }
                 if (printMask?.Version ?? true)
                 {
-                    fg.AppendLine($"Version => {Version.ToStringSafe()}");
+                    fg.AppendLine($"Version => {Version}");
                 }
                 if (printMask?.EditorID ?? true)
                 {
-                    fg.AppendLine($"EditorID => {EditorID.ToStringSafe()}");
+                    fg.AppendLine($"EditorID => {EditorID}");
                 }
                 if (printMask?.RecordType ?? true)
                 {
-                    fg.AppendLine($"RecordType => {RecordType.ToStringSafe()}");
+                    fg.AppendLine($"RecordType => {RecordType}");
                 }
             }
             fg.AppendLine("]");
@@ -1768,26 +1768,11 @@ namespace Mutagen.Internals
         }
         protected virtual void ToString_FillInternal(FileGeneration fg)
         {
-            if (MajorRecordFlags != null)
-            {
-                fg.AppendLine($"MajorRecordFlags => {MajorRecordFlags.ToStringSafe()}");
-            }
-            if (FormID != null)
-            {
-                fg.AppendLine($"FormID => {FormID.ToStringSafe()}");
-            }
-            if (Version != null)
-            {
-                fg.AppendLine($"Version => {Version.ToStringSafe()}");
-            }
-            if (EditorID != null)
-            {
-                fg.AppendLine($"EditorID => {EditorID.ToStringSafe()}");
-            }
-            if (RecordType != null)
-            {
-                fg.AppendLine($"RecordType => {RecordType.ToStringSafe()}");
-            }
+            fg.AppendLine($"MajorRecordFlags => {MajorRecordFlags}");
+            fg.AppendLine($"FormID => {FormID}");
+            fg.AppendLine($"Version => {Version}");
+            fg.AppendLine($"EditorID => {EditorID}");
+            fg.AppendLine($"RecordType => {RecordType}");
         }
         #endregion
 

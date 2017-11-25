@@ -24,7 +24,6 @@ namespace Loqui
             LoquiRegistration.Register(Mutagen.Internals.GlobalFloat_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Internals.Class_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Internals.NamedMajorRecord_Registration.Instance);
-            LoquiRegistration.Register(Mutagen.Internals.ClassData_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Internals.ClassTraining_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Internals.Model_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Internals.Hair_Registration.Instance);
@@ -32,7 +31,6 @@ namespace Loqui
             LoquiRegistration.Register(Mutagen.Internals.Relation_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Internals.Rank_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Internals.Race_Registration.Instance);
-            LoquiRegistration.Register(Mutagen.Internals.RaceData_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Internals.SkillBoost_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Internals.Spell_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Internals.Eye_Registration.Instance);
@@ -49,7 +47,7 @@ namespace Loqui
             LoquiRegistration.Register(Mutagen.Internals.SoundData_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Internals.SoundDataExtended_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Internals.SkillRecord_Registration.Instance);
-            LoquiRegistration.Register(Mutagen.Internals.SkillData_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Internals.MagicEffect_Registration.Instance);
         }
     }
 }

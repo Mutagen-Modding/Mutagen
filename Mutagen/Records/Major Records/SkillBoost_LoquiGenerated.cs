@@ -1632,11 +1632,11 @@ namespace Mutagen.Internals
             {
                 if (printMask?.Skill ?? true)
                 {
-                    fg.AppendLine($"Skill => {Skill.ToStringSafe()}");
+                    fg.AppendLine($"Skill => {Skill}");
                 }
                 if (printMask?.Boost ?? true)
                 {
-                    fg.AppendLine($"Boost => {Boost.ToStringSafe()}");
+                    fg.AppendLine($"Boost => {Boost}");
                 }
             }
             fg.AppendLine("]");
@@ -1729,14 +1729,8 @@ namespace Mutagen.Internals
         }
         protected void ToString_FillInternal(FileGeneration fg)
         {
-            if (Skill != null)
-            {
-                fg.AppendLine($"Skill => {Skill.ToStringSafe()}");
-            }
-            if (Boost != null)
-            {
-                fg.AppendLine($"Boost => {Boost.ToStringSafe()}");
-            }
+            fg.AppendLine($"Skill => {Skill}");
+            fg.AppendLine($"Boost => {Boost}");
         }
         #endregion
 

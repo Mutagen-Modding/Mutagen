@@ -1767,15 +1767,15 @@ namespace Mutagen.Internals
             {
                 if (printMask?.TrainedSkill ?? true)
                 {
-                    fg.AppendLine($"TrainedSkill => {TrainedSkill.ToStringSafe()}");
+                    fg.AppendLine($"TrainedSkill => {TrainedSkill}");
                 }
                 if (printMask?.MaximumTrainingLevel ?? true)
                 {
-                    fg.AppendLine($"MaximumTrainingLevel => {MaximumTrainingLevel.ToStringSafe()}");
+                    fg.AppendLine($"MaximumTrainingLevel => {MaximumTrainingLevel}");
                 }
                 if (printMask?.Fluff ?? true)
                 {
-                    fg.AppendLine($"Fluff => {Fluff.ToStringSafe()}");
+                    fg.AppendLine($"Fluff => {Fluff}");
                 }
             }
             fg.AppendLine("]");
@@ -1875,18 +1875,9 @@ namespace Mutagen.Internals
         }
         protected void ToString_FillInternal(FileGeneration fg)
         {
-            if (TrainedSkill != null)
-            {
-                fg.AppendLine($"TrainedSkill => {TrainedSkill.ToStringSafe()}");
-            }
-            if (MaximumTrainingLevel != null)
-            {
-                fg.AppendLine($"MaximumTrainingLevel => {MaximumTrainingLevel.ToStringSafe()}");
-            }
-            if (Fluff != null)
-            {
-                fg.AppendLine($"Fluff => {Fluff.ToStringSafe()}");
-            }
+            fg.AppendLine($"TrainedSkill => {TrainedSkill}");
+            fg.AppendLine($"MaximumTrainingLevel => {MaximumTrainingLevel}");
+            fg.AppendLine($"Fluff => {Fluff}");
         }
         #endregion
 

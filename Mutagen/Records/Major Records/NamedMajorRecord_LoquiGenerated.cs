@@ -1201,7 +1201,7 @@ namespace Mutagen.Internals
             {
                 if (printMask?.Name ?? true)
                 {
-                    fg.AppendLine($"Name => {Name.ToStringSafe()}");
+                    fg.AppendLine($"Name => {Name}");
                 }
             }
             fg.AppendLine("]");
@@ -1277,10 +1277,7 @@ namespace Mutagen.Internals
         protected override void ToString_FillInternal(FileGeneration fg)
         {
             base.ToString_FillInternal(fg);
-            if (Name != null)
-            {
-                fg.AppendLine($"Name => {Name.ToStringSafe()}");
-            }
+            fg.AppendLine($"Name => {Name}");
         }
         #endregion
 

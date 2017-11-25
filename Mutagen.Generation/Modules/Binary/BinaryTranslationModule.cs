@@ -54,6 +54,7 @@ namespace Mutagen.Generation
             this._typeGenerations[typeof(ListType)] = new ListBinaryTranslationGeneration();
             this._typeGenerations[typeof(ByteArrayType)] = new ByteArrayTranslationGeneration();
             this._typeGenerations[typeof(BufferType)] = new BufferBinaryTranslationGeneration();
+            this._typeGenerations[typeof(DataType)] = new DataBinaryTranslationModule();
             this.MainAPI = new TranslationModuleAPI(
                 writerAPI: new MethodAPI("MutagenWriter writer"),
                 readerAPI: new MethodAPI("MutagenFrame frame"));
@@ -122,7 +123,7 @@ namespace Mutagen.Generation
 
         private void GenerateCustomPartials(ObjectGeneration obj, FileGeneration fg)
         {
-            foreach (var field in obj.Fields)
+            foreach (var field in obj.IterateFields())
             {
                 if (!field.TryGetFieldData(out var mutaData)) continue;
                 if (!mutaData.CustomBinary) continue;
@@ -216,7 +217,7 @@ namespace Mutagen.Generation
 
         private bool HasRecordTypeFields(ObjectGeneration obj)
         {
-            foreach (var field in obj.Fields)
+            foreach (var field in obj.IterateFields())
             {
                 if (field.TryGetFieldData(out var data)
                     && data.TriggeringRecordAccessor != null) return true;
@@ -226,8 +227,9 @@ namespace Mutagen.Generation
 
         private bool HasEmbeddedFields(ObjectGeneration obj)
         {
-            foreach (var field in obj.Fields)
+            foreach (var field in obj.IterateFields())
             {
+                if (field is SetMarkerType) continue;
                 if (!field.TryGetFieldData(out var data)
                     || data.TriggeringRecordAccessor == null) return true;
             }
@@ -372,8 +374,11 @@ namespace Mutagen.Generation
                             args.Add("errorMask: errorMask");
                         }
                     }
-                    foreach (var field in obj.Fields)
+                    foreach (var field in obj.IterateFields(
+                        nonIntegrated: true,
+                        expandSets: false))
                     {
+                        if (field is SetMarkerType) continue;
                         if (field.TryGetFieldData(out var data)
                             && data.TriggeringRecordAccessor != null) continue;
                         if (field.Derivative && !data.CustomBinary) continue;
@@ -431,7 +436,9 @@ namespace Mutagen.Generation
                     fg.AppendLine("switch (nextRecordType.Type)");
                     using (new BraceWrapper(fg))
                     {
-                        foreach (var field in obj.IterateFields())
+                        foreach (var field in obj.IterateFieldIndices(
+                            expandSets: false,
+                            nonIntegrated: true))
                         {
                             if (!field.Field.TryGetFieldData(out var data)
                                 || data.TriggeringRecordAccessor == null
@@ -452,6 +459,7 @@ namespace Mutagen.Generation
                                     {
                                         fg.AppendLine($"if (!first) return false;");
                                     }
+
                                     GenerateFillSnippet(obj, fg, gen.Value, generator);
                                     fg.AppendLine("break;");
                                 }
@@ -462,7 +470,7 @@ namespace Mutagen.Generation
                         {
                             bool first = true;
                             // Generic options
-                            foreach (var field in obj.IterateFields())
+                            foreach (var field in obj.IterateFieldIndices())
                             {
                                 if (!field.Field.TryGetFieldData(out var data)
                                     || data.TriggeringRecordAccessor == null
@@ -541,6 +549,22 @@ namespace Mutagen.Generation
 
         private void GenerateFillSnippet(ObjectGeneration obj, FileGeneration fg, TypeGeneration field, BinaryTranslationGeneration generator)
         {
+            if (field is SetMarkerType set)
+            {
+                fg.AppendLine("frame.Position += Constants.SUBRECORD_LENGTH;");
+                foreach (var subfield in set.SubFields)
+                {
+                    if (!this.TryGetTypeGeneration(subfield.GetType(), out var subGenerator))
+                    {
+                        throw new ArgumentException("Unsupported type generator: " + subfield);
+                    }
+
+                    if (!subGenerator.ShouldGenerateCopyIn(subfield)) continue;
+                    GenerateFillSnippet(obj, fg, subfield, subGenerator);
+                }
+                return;
+            }
+            
             var data = field.GetFieldData();
             if (data.CustomBinary)
             {
@@ -753,7 +777,7 @@ namespace Mutagen.Generation
                             }
                         }
                     }
-                    foreach (var field in obj.Fields)
+                    foreach (var field in obj.IterateFields(nonIntegrated: true, expandSets: false))
                     {
                         if (field.TryGetFieldData(out var data)
                             && data.TriggeringRecordAccessor != null) continue;
@@ -824,12 +848,11 @@ namespace Mutagen.Generation
                             }
                         }
                     }
-                    foreach (var field in obj.Fields)
+                    foreach (var field in obj.IterateFields(expandSets: false, nonIntegrated: true))
                     {
                         if (!field.TryGetFieldData(out var data)
                             || data.TriggeringRecordAccessor == null) continue;
                         if (field.Derivative && !data.CustomBinary) continue;
-                        var maskType = this.Gen.MaskModule.GetMaskModule(field.GetType()).GetErrorMaskTypeStr(field);
                         if (data.CustomBinary)
                         {
                             using (var args = new ArgsWrapper(fg,
@@ -848,16 +871,42 @@ namespace Mutagen.Generation
                             throw new ArgumentException("Unsupported type generator: " + field);
                         }
 
-                        if (!generator.ShouldGenerateWrite(field)) continue;
+                        if (field is SetMarkerType set)
+                        {
+                            fg.AppendLine($"using (HeaderExport.ExportSubRecordHeader(writer, {obj.RegistrationName}.{set.GetFieldData().TriggeringRecordType.Value.HeaderName}))");
+                            using (new BraceWrapper(fg))
+                            {
+                                foreach (var subfield in set.SubFields)
+                                {
+                                    if (!this.TryGetTypeGeneration(subfield.GetType(), out var subGenerator))
+                                    {
+                                        throw new ArgumentException("Unsupported type generator: " + subfield);
+                                    }
 
-                        generator.GenerateWrite(
-                            fg: fg,
-                            objGen: obj,
-                            typeGen: field,
-                            writerAccessor: "writer",
-                            itemAccessor: new Accessor(field, "item."),
-                            doMaskAccessor: "doMasks",
-                            maskAccessor: $"errorMask");
+                                    if (!subGenerator.ShouldGenerateCopyIn(subfield)) continue;
+                                    subGenerator.GenerateWrite(
+                                        fg: fg,
+                                        objGen: obj,
+                                        typeGen: subfield,
+                                        writerAccessor: "writer",
+                                        itemAccessor: new Accessor(subfield, "item."),
+                                        doMaskAccessor: "doMasks",
+                                        maskAccessor: $"errorMask");
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (!generator.ShouldGenerateWrite(field)) continue;
+                            generator.GenerateWrite(
+                                fg: fg,
+                                objGen: obj,
+                                typeGen: field,
+                                writerAccessor: "writer",
+                                itemAccessor: new Accessor(field, "item."),
+                                doMaskAccessor: "doMasks",
+                                maskAccessor: $"errorMask");
+                        }
                     }
                 }
                 fg.AppendLine();

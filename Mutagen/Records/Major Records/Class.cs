@@ -8,7 +8,7 @@ namespace Mutagen
 {
     public partial class Class
     {
-        public enum Specialization
+        public enum SpecializationFlag
         {
             Combat = 0,
             Magic = 1,

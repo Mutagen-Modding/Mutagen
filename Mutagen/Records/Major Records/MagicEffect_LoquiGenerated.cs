@@ -12,6 +12,7 @@ using Loqui;
 using Noggog;
 using Noggog.Notifying;
 using Mutagen.Internals;
+using Mutagen;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -36,6 +37,36 @@ namespace Mutagen
         partial void CustomCtor();
         #endregion
 
+        #region Description
+        protected readonly INotifyingItem<String> _Description = NotifyingItem.Factory<String>(markAsSet: false);
+        public INotifyingItem<String> Description_Property => _Description;
+        public String Description
+        {
+            get => this._Description.Item;
+            set => this._Description.Set(value);
+        }
+        INotifyingItem<String> IMagicEffect.Description_Property => this.Description_Property;
+        INotifyingItemGetter<String> IMagicEffectGetter.Description_Property => this.Description_Property;
+        #endregion
+        #region Icon
+        protected readonly INotifyingItem<FilePath> _Icon = NotifyingItem.Factory<FilePath>(markAsSet: false);
+        public INotifyingItem<FilePath> Icon_Property => _Icon;
+        public FilePath Icon
+        {
+            get => this._Icon.Item;
+            set => this._Icon.Set(value);
+        }
+        INotifyingItem<FilePath> IMagicEffect.Icon_Property => this.Icon_Property;
+        INotifyingItemGetter<FilePath> IMagicEffectGetter.Icon_Property => this.Icon_Property;
+        #endregion
+        #region Model
+        private readonly INotifyingItem<Model> _Model = new NotifyingItem<Model>();
+        public INotifyingItem<Model> Model_Property => this._Model;
+        Model IMagicEffectGetter.Model => this.Model;
+        public Model Model { get => _Model.Item; set => _Model.Item = value; }
+        INotifyingItem<Model> IMagicEffect.Model_Property => this.Model_Property;
+        INotifyingItemGetter<Model> IMagicEffectGetter.Model_Property => this.Model_Property;
+        #endregion
 
         #region Loqui Getter Interface
 
@@ -92,12 +123,39 @@ namespace Mutagen
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (Description_Property.HasBeenSet != rhs.Description_Property.HasBeenSet) return false;
+            if (Description_Property.HasBeenSet)
+            {
+                if (!object.Equals(Description, rhs.Description)) return false;
+            }
+            if (Icon_Property.HasBeenSet != rhs.Icon_Property.HasBeenSet) return false;
+            if (Icon_Property.HasBeenSet)
+            {
+                if (!object.Equals(Icon, rhs.Icon)) return false;
+            }
+            if (Model_Property.HasBeenSet != rhs.Model_Property.HasBeenSet) return false;
+            if (Model_Property.HasBeenSet)
+            {
+                if (!object.Equals(Model, rhs.Model)) return false;
+            }
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
+            if (Description_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Description).CombineHashCode(ret);
+            }
+            if (Icon_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Icon).CombineHashCode(ret);
+            }
+            if (Model_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Model).CombineHashCode(ret);
+            }
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -416,6 +474,51 @@ namespace Mutagen
         {
             switch (name)
             {
+                case "Description":
+                    {
+                        Exception subMask;
+                        var tryGet = StringXmlTranslation.Instance.Parse(
+                            root,
+                            doMasks: doMasks,
+                            errorMask: out subMask);
+                        item._Description.SetIfSucceeded(tryGet);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)MagicEffect_FieldIndex.Description,
+                            subMask);
+                    }
+                    break;
+                case "Icon":
+                    {
+                        Exception subMask;
+                        var tryGet = FilePathXmlTranslation.Instance.ParseNonNull(
+                            root,
+                            doMasks: doMasks,
+                            errorMask: out subMask);
+                        item._Icon.SetIfSucceeded(tryGet);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)MagicEffect_FieldIndex.Icon,
+                            subMask);
+                    }
+                    break;
+                case "Model":
+                    {
+                        MaskItem<Exception, Model_ErrorMask> subMask;
+                        var tryGet = LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                            root: root,
+                            doMasks: doMasks,
+                            mask: out subMask);
+                        item._Model.SetIfSucceeded(tryGet);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)MagicEffect_FieldIndex.Model,
+                            subMask);
+                    }
+                    break;
                 default:
                     NamedMajorRecord.Fill_XML_Internal(
                         item: item,
@@ -721,6 +824,14 @@ namespace Mutagen
                         frame: frame,
                         doMasks: doMasks,
                         errorMask: errorMask);
+                    while (!frame.Complete)
+                    {
+                        if (!Fill_Binary_RecordTypes(
+                            item: ret,
+                            frame: frame,
+                            doMasks: doMasks,
+                            errorMask: errorMask)) break;
+                    }
                 }
             }
             catch (Exception ex)
@@ -742,6 +853,53 @@ namespace Mutagen
                 frame: frame,
                 doMasks: doMasks,
                 errorMask: errorMask);
+        }
+
+        protected static bool Fill_Binary_RecordTypes(
+            MagicEffect item,
+            MutagenFrame frame,
+            bool doMasks,
+            Func<MagicEffect_ErrorMask> errorMask)
+        {
+            var nextRecordType = HeaderTranslation.GetNextSubRecordType(
+                frame: frame,
+                contentLength: out var contentLength);
+            switch (nextRecordType.Type)
+            {
+                case "DESC":
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    var DescriptiontryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.Spawn(contentLength),
+                        fieldIndex: (int)MagicEffect_FieldIndex.Description,
+                        doMasks: doMasks,
+                        errorMask: errorMask);
+                    item._Description.SetIfSucceeded(DescriptiontryGet);
+                    break;
+                case "ICON":
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    var tryGet = Mutagen.Binary.FilePathBinaryTranslation.Instance.Parse(
+                        frame: frame.Spawn(contentLength),
+                        doMasks: doMasks,
+                        fieldIndex: (int)MagicEffect_FieldIndex.Icon,
+                        errorMask: errorMask);
+                    item._Icon.SetIfSucceeded(tryGet);
+                    break;
+                case "MODL":
+                    item._Model.SetIfSucceeded(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                        frame: frame.Spawn(snapToFinalPosition: false),
+                        doMasks: doMasks,
+                        fieldIndex: (int)MagicEffect_FieldIndex.Model,
+                        errorMask: errorMask));
+                    break;
+                default:
+                    NamedMajorRecord.Fill_Binary_RecordTypes(
+                        item: item,
+                        frame: frame,
+                        doMasks: doMasks,
+                        errorMask: errorMask);
+                    break;
+            }
+            return true;
         }
 
         #endregion
@@ -820,6 +978,21 @@ namespace Mutagen
             MagicEffect_FieldIndex enu = (MagicEffect_FieldIndex)index;
             switch (enu)
             {
+                case MagicEffect_FieldIndex.Description:
+                    this._Description.Set(
+                        (String)obj,
+                        cmds);
+                    break;
+                case MagicEffect_FieldIndex.Icon:
+                    this._Icon.Set(
+                        (FilePath)obj,
+                        cmds);
+                    break;
+                case MagicEffect_FieldIndex.Model:
+                    this._Model.Set(
+                        (Model)obj,
+                        cmds);
+                    break;
                 default:
                     base.SetNthObject(index, obj, cmds);
                     break;
@@ -851,6 +1024,21 @@ namespace Mutagen
             }
             switch (enu)
             {
+                case MagicEffect_FieldIndex.Description:
+                    obj._Description.Set(
+                        (String)pair.Value,
+                        null);
+                    break;
+                case MagicEffect_FieldIndex.Icon:
+                    obj._Icon.Set(
+                        (FilePath)pair.Value,
+                        null);
+                    break;
+                case MagicEffect_FieldIndex.Model:
+                    obj._Model.Set(
+                        (Model)pair.Value,
+                        null);
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -866,10 +1054,34 @@ namespace Mutagen
     #region Interface
     public interface IMagicEffect : IMagicEffectGetter, INamedMajorRecord, ILoquiClass<IMagicEffect, IMagicEffectGetter>, ILoquiClass<MagicEffect, IMagicEffectGetter>
     {
+        new String Description { get; set; }
+        new INotifyingItem<String> Description_Property { get; }
+
+        new FilePath Icon { get; set; }
+        new INotifyingItem<FilePath> Icon_Property { get; }
+
+        new Model Model { get; set; }
+        new INotifyingItem<Model> Model_Property { get; }
+
     }
 
     public interface IMagicEffectGetter : INamedMajorRecordGetter
     {
+        #region Description
+        String Description { get; }
+        INotifyingItemGetter<String> Description_Property { get; }
+
+        #endregion
+        #region Icon
+        FilePath Icon { get; }
+        INotifyingItemGetter<FilePath> Icon_Property { get; }
+
+        #endregion
+        #region Model
+        Model Model { get; }
+        INotifyingItemGetter<Model> Model_Property { get; }
+
+        #endregion
 
     }
 
@@ -882,6 +1094,9 @@ namespace Mutagen.Internals
     #region Field Index
     public enum MagicEffect_FieldIndex
     {
+        Description = 6,
+        Icon = 7,
+        Model = 8,
     }
     #endregion
 
@@ -899,7 +1114,7 @@ namespace Mutagen.Internals
 
         public const string GUID = "57a9087c-140b-4152-8b1e-0508d36a2df4";
 
-        public const ushort FieldCount = 0;
+        public const ushort FieldCount = 3;
 
         public static readonly Type MaskType = typeof(MagicEffect_Mask<>);
 
@@ -927,6 +1142,12 @@ namespace Mutagen.Internals
         {
             switch (str.Upper)
             {
+                case "DESCRIPTION":
+                    return (ushort)MagicEffect_FieldIndex.Description;
+                case "ICON":
+                    return (ushort)MagicEffect_FieldIndex.Icon;
+                case "MODEL":
+                    return (ushort)MagicEffect_FieldIndex.Model;
                 default:
                     return null;
             }
@@ -937,6 +1158,10 @@ namespace Mutagen.Internals
             MagicEffect_FieldIndex enu = (MagicEffect_FieldIndex)index;
             switch (enu)
             {
+                case MagicEffect_FieldIndex.Description:
+                case MagicEffect_FieldIndex.Icon:
+                case MagicEffect_FieldIndex.Model:
+                    return false;
                 default:
                     return NamedMajorRecord_Registration.GetNthIsEnumerable(index);
             }
@@ -947,6 +1172,11 @@ namespace Mutagen.Internals
             MagicEffect_FieldIndex enu = (MagicEffect_FieldIndex)index;
             switch (enu)
             {
+                case MagicEffect_FieldIndex.Model:
+                    return true;
+                case MagicEffect_FieldIndex.Description:
+                case MagicEffect_FieldIndex.Icon:
+                    return false;
                 default:
                     return NamedMajorRecord_Registration.GetNthIsLoqui(index);
             }
@@ -957,6 +1187,10 @@ namespace Mutagen.Internals
             MagicEffect_FieldIndex enu = (MagicEffect_FieldIndex)index;
             switch (enu)
             {
+                case MagicEffect_FieldIndex.Description:
+                case MagicEffect_FieldIndex.Icon:
+                case MagicEffect_FieldIndex.Model:
+                    return false;
                 default:
                     return NamedMajorRecord_Registration.GetNthIsSingleton(index);
             }
@@ -967,6 +1201,12 @@ namespace Mutagen.Internals
             MagicEffect_FieldIndex enu = (MagicEffect_FieldIndex)index;
             switch (enu)
             {
+                case MagicEffect_FieldIndex.Description:
+                    return "Description";
+                case MagicEffect_FieldIndex.Icon:
+                    return "Icon";
+                case MagicEffect_FieldIndex.Model:
+                    return "Model";
                 default:
                     return NamedMajorRecord_Registration.GetNthName(index);
             }
@@ -977,6 +1217,10 @@ namespace Mutagen.Internals
             MagicEffect_FieldIndex enu = (MagicEffect_FieldIndex)index;
             switch (enu)
             {
+                case MagicEffect_FieldIndex.Description:
+                case MagicEffect_FieldIndex.Icon:
+                case MagicEffect_FieldIndex.Model:
+                    return false;
                 default:
                     return NamedMajorRecord_Registration.IsNthDerivative(index);
             }
@@ -987,6 +1231,10 @@ namespace Mutagen.Internals
             MagicEffect_FieldIndex enu = (MagicEffect_FieldIndex)index;
             switch (enu)
             {
+                case MagicEffect_FieldIndex.Description:
+                case MagicEffect_FieldIndex.Icon:
+                case MagicEffect_FieldIndex.Model:
+                    return false;
                 default:
                     return NamedMajorRecord_Registration.IsProtected(index);
             }
@@ -997,15 +1245,24 @@ namespace Mutagen.Internals
             MagicEffect_FieldIndex enu = (MagicEffect_FieldIndex)index;
             switch (enu)
             {
+                case MagicEffect_FieldIndex.Description:
+                    return typeof(String);
+                case MagicEffect_FieldIndex.Icon:
+                    return typeof(FilePath);
+                case MagicEffect_FieldIndex.Model:
+                    return typeof(Model);
                 default:
                     return NamedMajorRecord_Registration.GetNthType(index);
             }
         }
 
         public static readonly RecordType MGEF_HEADER = new RecordType("MGEF");
+        public static readonly RecordType DESC_HEADER = new RecordType("DESC");
+        public static readonly RecordType ICON_HEADER = new RecordType("ICON");
+        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = MGEF_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 0;
+        public const int NumTypedFields = 3;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1120,6 +1377,87 @@ namespace Mutagen.Internals
                 errorMask,
                 copyMask,
                 cmds);
+            if (copyMask?.Description ?? true)
+            {
+                try
+                {
+                    item.Description_Property.SetToWithDefault(
+                        rhs.Description_Property,
+                        def?.Description_Property,
+                        cmds);
+                }
+                catch (Exception ex)
+                when (doErrorMask)
+                {
+                    errorMask().SetNthException((int)MagicEffect_FieldIndex.Description, ex);
+                }
+            }
+            if (copyMask?.Icon ?? true)
+            {
+                try
+                {
+                    item.Icon_Property.SetToWithDefault(
+                        rhs.Icon_Property,
+                        def?.Icon_Property,
+                        cmds);
+                }
+                catch (Exception ex)
+                when (doErrorMask)
+                {
+                    errorMask().SetNthException((int)MagicEffect_FieldIndex.Icon, ex);
+                }
+            }
+            if (copyMask?.Model.Overall != CopyOption.Skip)
+            {
+                try
+                {
+                    item.Model_Property.SetToWithDefault(
+                        rhs.Model_Property,
+                        def?.Model_Property,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.Model.Overall ?? CopyOption.Reference)
+                            {
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    ModelCommon.CopyFieldsFrom(
+                                        item: item.Model,
+                                        rhs: rhs.Model,
+                                        def: def?.Model,
+                                        doErrorMask: doErrorMask,
+                                        errorMask: (doErrorMask ? new Func<Model_ErrorMask>(() =>
+                                        {
+                                            var baseMask = errorMask();
+                                            if (baseMask.Model.Specific == null)
+                                            {
+                                                baseMask.Model = new MaskItem<Exception, Model_ErrorMask>(null, new Model_ErrorMask());
+                                            }
+                                            return baseMask.Model.Specific;
+                                        }
+                                        ) : null),
+                                        copyMask: copyMask?.Model.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(Model);
+                                    return Model.Copy(
+                                        r,
+                                        copyMask?.Model?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Model?.Overall}. Cannot execute copy.");
+                            }
+                        }
+                        );
+                }
+                catch (Exception ex)
+                when (doErrorMask)
+                {
+                    errorMask().SetNthException((int)MagicEffect_FieldIndex.Model, ex);
+                }
+            }
         }
 
         #endregion
@@ -1133,6 +1471,15 @@ namespace Mutagen.Internals
             MagicEffect_FieldIndex enu = (MagicEffect_FieldIndex)index;
             switch (enu)
             {
+                case MagicEffect_FieldIndex.Description:
+                    obj.Description_Property.HasBeenSet = on;
+                    break;
+                case MagicEffect_FieldIndex.Icon:
+                    obj.Icon_Property.HasBeenSet = on;
+                    break;
+                case MagicEffect_FieldIndex.Model:
+                    obj.Model_Property.HasBeenSet = on;
+                    break;
                 default:
                     NamedMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
@@ -1147,6 +1494,15 @@ namespace Mutagen.Internals
             MagicEffect_FieldIndex enu = (MagicEffect_FieldIndex)index;
             switch (enu)
             {
+                case MagicEffect_FieldIndex.Description:
+                    obj.Description_Property.Unset(cmds);
+                    break;
+                case MagicEffect_FieldIndex.Icon:
+                    obj.Icon_Property.Unset(cmds);
+                    break;
+                case MagicEffect_FieldIndex.Model:
+                    obj.Model_Property.Unset(cmds);
+                    break;
                 default:
                     NamedMajorRecordCommon.UnsetNthObject(index, obj);
                     break;
@@ -1160,6 +1516,12 @@ namespace Mutagen.Internals
             MagicEffect_FieldIndex enu = (MagicEffect_FieldIndex)index;
             switch (enu)
             {
+                case MagicEffect_FieldIndex.Description:
+                    return obj.Description_Property.HasBeenSet;
+                case MagicEffect_FieldIndex.Icon:
+                    return obj.Icon_Property.HasBeenSet;
+                case MagicEffect_FieldIndex.Model:
+                    return obj.Model_Property.HasBeenSet;
                 default:
                     return NamedMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -1172,6 +1534,12 @@ namespace Mutagen.Internals
             MagicEffect_FieldIndex enu = (MagicEffect_FieldIndex)index;
             switch (enu)
             {
+                case MagicEffect_FieldIndex.Description:
+                    return obj.Description;
+                case MagicEffect_FieldIndex.Icon:
+                    return obj.Icon;
+                case MagicEffect_FieldIndex.Model:
+                    return obj.Model;
                 default:
                     return NamedMajorRecordCommon.GetNthObject(index, obj);
             }
@@ -1181,6 +1549,9 @@ namespace Mutagen.Internals
             IMagicEffect item,
             NotifyingUnsetParameters? cmds = null)
         {
+            item.Description_Property.Unset(cmds.ToUnsetParams());
+            item.Icon_Property.Unset(cmds.ToUnsetParams());
+            item.Model_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static MagicEffect_Mask<bool> GetEqualsMask(
@@ -1198,6 +1569,9 @@ namespace Mutagen.Internals
             MagicEffect_Mask<bool> ret)
         {
             if (rhs == null) return;
+            ret.Description = item.Description_Property.Equals(rhs.Description_Property, (l, r) => object.Equals(l, r));
+            ret.Icon = item.Icon_Property.Equals(rhs.Icon_Property, (l, r) => object.Equals(l, r));
+            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs));
             NamedMajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -1228,6 +1602,18 @@ namespace Mutagen.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
+                if (printMask?.Description ?? true)
+                {
+                    fg.AppendLine($"Description => {item.Description}");
+                }
+                if (printMask?.Icon ?? true)
+                {
+                    fg.AppendLine($"Icon => {item.Icon}");
+                }
+                if (printMask?.Model?.Overall ?? true)
+                {
+                    item.Model?.ToString(fg, "Model");
+                }
             }
             fg.AppendLine("]");
         }
@@ -1236,12 +1622,19 @@ namespace Mutagen.Internals
             this IMagicEffectGetter item,
             MagicEffect_Mask<bool?> checkMask)
         {
+            if (checkMask.Description.HasValue && checkMask.Description.Value != item.Description_Property.HasBeenSet) return false;
+            if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_Property.HasBeenSet) return false;
+            if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_Property.HasBeenSet) return false;
+            if (checkMask.Model.Specific != null && (item.Model_Property.Item == null || !item.Model_Property.Item.HasBeenSet(checkMask.Model.Specific))) return false;
             return true;
         }
 
         public static MagicEffect_Mask<bool> GetHasBeenSetMask(IMagicEffectGetter item)
         {
             var ret = new MagicEffect_Mask<bool>();
+            ret.Description = item.Description_Property.HasBeenSet;
+            ret.Icon = item.Icon_Property.HasBeenSet;
+            ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_Property.HasBeenSet, ModelCommon.GetHasBeenSetMask(item.Model_Property.Item));
             return ret;
         }
 
@@ -1278,6 +1671,52 @@ namespace Mutagen.Internals
                     if (name != null)
                     {
                         writer.WriteAttributeString("type", "Mutagen.MagicEffect");
+                    }
+                    if (item.Description_Property.HasBeenSet)
+                    {
+                        Exception subMask;
+                        StringXmlTranslation.Instance.Write(
+                            writer,
+                            nameof(item.Description),
+                            item.Description,
+                            doMasks: doMasks,
+                            errorMask: out subMask);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)MagicEffect_FieldIndex.Description,
+                            subMask);
+                    }
+                    if (item.Icon_Property.HasBeenSet)
+                    {
+                        Exception subMask;
+                        FilePathXmlTranslation.Instance.Write(
+                            writer,
+                            nameof(item.Icon),
+                            item.Icon,
+                            doMasks: doMasks,
+                            errorMask: out subMask);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)MagicEffect_FieldIndex.Icon,
+                            subMask);
+                    }
+                    if (item.Model_Property.HasBeenSet)
+                    {
+                        MaskItem<Exception, Model_ErrorMask> subMask;
+                        LoquiXmlTranslation<IModelGetter, Model_ErrorMask>.Instance.Write(
+                            writer: writer,
+                            item: item.Model,
+                            name: nameof(item.Model),
+                            doMasks: doMasks,
+                            mask: out Model_ErrorMask loquiMask);
+                        subMask = loquiMask == null ? null : new MaskItem<Exception, Model_ErrorMask>(null, loquiMask);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            doMasks,
+                            (int)MagicEffect_FieldIndex.Model,
+                            subMask);
                     }
                 }
             }
@@ -1326,7 +1765,7 @@ namespace Mutagen.Internals
                         writer: writer,
                         doMasks: doMasks,
                         errorMask: errorMask);
-                    NamedMajorRecordCommon.Write_Binary_RecordTypes(
+                    Write_Binary_RecordTypes(
                         item: item,
                         writer: writer,
                         doMasks: doMasks,
@@ -1340,6 +1779,41 @@ namespace Mutagen.Internals
             }
         }
         #endregion
+
+        public static void Write_Binary_RecordTypes(
+            IMagicEffectGetter item,
+            MutagenWriter writer,
+            bool doMasks,
+            Func<MagicEffect_ErrorMask> errorMask)
+        {
+            NamedMajorRecordCommon.Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                doMasks: doMasks,
+                errorMask: errorMask);
+            Mutagen.Binary.StringBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Description_Property,
+                doMasks: doMasks,
+                fieldIndex: (int)MagicEffect_FieldIndex.Description,
+                errorMask: errorMask,
+                header: MagicEffect_Registration.DESC_HEADER,
+                nullable: false);
+            Mutagen.Binary.FilePathBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Icon_Property,
+                fieldIndex: (int)MagicEffect_FieldIndex.Icon,
+                doMasks: doMasks,
+                errorMask: errorMask,
+                header: MagicEffect_Registration.ICON_HEADER,
+                nullable: false);
+            LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Write(
+                writer: writer,
+                item: item.Model_Property,
+                doMasks: doMasks,
+                fieldIndex: (int)MagicEffect_FieldIndex.Model,
+                errorMask: errorMask);
+        }
 
         #endregion
 
@@ -1358,7 +1832,16 @@ namespace Mutagen.Internals
 
         public MagicEffect_Mask(T initialValue)
         {
+            this.Description = initialValue;
+            this.Icon = initialValue;
+            this.Model = new MaskItem<T, Model_Mask<T>>(initialValue, new Model_Mask<T>(initialValue));
         }
+        #endregion
+
+        #region Members
+        public T Description;
+        public T Icon;
+        public MaskItem<T, Model_Mask<T>> Model { get; set; }
         #endregion
 
         #region Equals
@@ -1372,11 +1855,17 @@ namespace Mutagen.Internals
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!object.Equals(this.Description, rhs.Description)) return false;
+            if (!object.Equals(this.Icon, rhs.Icon)) return false;
+            if (!object.Equals(this.Model, rhs.Model)) return false;
             return true;
         }
         public override int GetHashCode()
         {
             int ret = 0;
+            ret = ret.CombineHashCode(this.Description?.GetHashCode());
+            ret = ret.CombineHashCode(this.Icon?.GetHashCode());
+            ret = ret.CombineHashCode(this.Model?.GetHashCode());
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -1387,6 +1876,13 @@ namespace Mutagen.Internals
         public override bool AllEqual(Func<T, bool> eval)
         {
             if (!base.AllEqual(eval)) return false;
+            if (!eval(this.Description)) return false;
+            if (!eval(this.Icon)) return false;
+            if (Model != null)
+            {
+                if (!eval(this.Model.Overall)) return false;
+                if (Model.Specific != null && !Model.Specific.AllEqual(eval)) return false;
+            }
             return true;
         }
         #endregion
@@ -1402,6 +1898,17 @@ namespace Mutagen.Internals
         protected void Translate_InternalFill<R>(MagicEffect_Mask<R> obj, Func<T, R> eval)
         {
             base.Translate_InternalFill(obj, eval);
+            obj.Description = eval(this.Description);
+            obj.Icon = eval(this.Icon);
+            if (this.Model != null)
+            {
+                obj.Model = new MaskItem<R, Model_Mask<R>>();
+                obj.Model.Overall = eval(this.Model.Overall);
+                if (this.Model.Specific != null)
+                {
+                    obj.Model.Specific = this.Model.Specific.Translate(eval);
+                }
+            }
         }
         #endregion
 
@@ -1431,6 +1938,18 @@ namespace Mutagen.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
+                if (printMask?.Description ?? true)
+                {
+                    fg.AppendLine($"Description => {Description}");
+                }
+                if (printMask?.Icon ?? true)
+                {
+                    fg.AppendLine($"Icon => {Icon}");
+                }
+                if (printMask?.Model?.Overall ?? true)
+                {
+                    Model?.ToString(fg);
+                }
             }
             fg.AppendLine("]");
         }
@@ -1440,12 +1959,27 @@ namespace Mutagen.Internals
 
     public class MagicEffect_ErrorMask : NamedMajorRecord_ErrorMask, IErrorMask<MagicEffect_ErrorMask>
     {
+        #region Members
+        public Exception Description;
+        public Exception Icon;
+        public MaskItem<Exception, Model_ErrorMask> Model;
+        #endregion
+
         #region IErrorMask
         public override void SetNthException(int index, Exception ex)
         {
             MagicEffect_FieldIndex enu = (MagicEffect_FieldIndex)index;
             switch (enu)
             {
+                case MagicEffect_FieldIndex.Description:
+                    this.Description = ex;
+                    break;
+                case MagicEffect_FieldIndex.Icon:
+                    this.Icon = ex;
+                    break;
+                case MagicEffect_FieldIndex.Model:
+                    this.Model = new MaskItem<Exception, Model_ErrorMask>(ex, null);
+                    break;
                 default:
                     base.SetNthException(index, ex);
                     break;
@@ -1457,6 +1991,15 @@ namespace Mutagen.Internals
             MagicEffect_FieldIndex enu = (MagicEffect_FieldIndex)index;
             switch (enu)
             {
+                case MagicEffect_FieldIndex.Description:
+                    this.Description = (Exception)obj;
+                    break;
+                case MagicEffect_FieldIndex.Icon:
+                    this.Icon = (Exception)obj;
+                    break;
+                case MagicEffect_FieldIndex.Model:
+                    this.Model = (MaskItem<Exception, Model_ErrorMask>)obj;
+                    break;
                 default:
                     base.SetNthMask(index, obj);
                     break;
@@ -1495,6 +2038,9 @@ namespace Mutagen.Internals
         protected override void ToString_FillInternal(FileGeneration fg)
         {
             base.ToString_FillInternal(fg);
+            fg.AppendLine($"Description => {Description}");
+            fg.AppendLine($"Icon => {Icon}");
+            Model?.ToString(fg);
         }
         #endregion
 
@@ -1502,6 +2048,9 @@ namespace Mutagen.Internals
         public MagicEffect_ErrorMask Combine(MagicEffect_ErrorMask rhs)
         {
             var ret = new MagicEffect_ErrorMask();
+            ret.Description = this.Description.Combine(rhs.Description);
+            ret.Icon = this.Icon.Combine(rhs.Icon);
+            ret.Model = new MaskItem<Exception, Model_ErrorMask>(this.Model.Overall.Combine(rhs.Model.Overall), ((IErrorMask<Model_ErrorMask>)this.Model.Specific).Combine(rhs.Model.Specific));
             return ret;
         }
         public static MagicEffect_ErrorMask Combine(MagicEffect_ErrorMask lhs, MagicEffect_ErrorMask rhs)
@@ -1514,6 +2063,12 @@ namespace Mutagen.Internals
     }
     public class MagicEffect_CopyMask : NamedMajorRecord_CopyMask
     {
+        #region Members
+        public bool Description;
+        public bool Icon;
+        public MaskItem<CopyOption, Model_CopyMask> Model;
+        #endregion
+
     }
     #endregion
 

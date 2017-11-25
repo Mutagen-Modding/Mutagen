@@ -1640,11 +1640,11 @@ namespace Mutagen.Internals
             {
                 if (printMask?.Male ?? true)
                 {
-                    fg.AppendLine($"Male => {Male.ToStringSafe()}");
+                    fg.AppendLine($"Male => {Male}");
                 }
                 if (printMask?.Female ?? true)
                 {
-                    fg.AppendLine($"Female => {Female.ToStringSafe()}");
+                    fg.AppendLine($"Female => {Female}");
                 }
             }
             fg.AppendLine("]");
@@ -1737,14 +1737,8 @@ namespace Mutagen.Internals
         }
         protected void ToString_FillInternal(FileGeneration fg)
         {
-            if (Male != null)
-            {
-                fg.AppendLine($"Male => {Male.ToStringSafe()}");
-            }
-            if (Female != null)
-            {
-                fg.AppendLine($"Female => {Female.ToStringSafe()}");
-            }
+            fg.AppendLine($"Male => {Male}");
+            fg.AppendLine($"Female => {Female}");
         }
         #endregion
 

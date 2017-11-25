@@ -3205,43 +3205,43 @@ namespace Mutagen.Internals
             {
                 if (printMask?.TES4?.Overall ?? true)
                 {
-                    TES4.ToString(fg);
+                    TES4?.ToString(fg);
                 }
                 if (printMask?.GameSettings?.Overall ?? true)
                 {
-                    GameSettings.ToString(fg);
+                    GameSettings?.ToString(fg);
                 }
                 if (printMask?.Globals?.Overall ?? true)
                 {
-                    Globals.ToString(fg);
+                    Globals?.ToString(fg);
                 }
                 if (printMask?.Classes?.Overall ?? true)
                 {
-                    Classes.ToString(fg);
+                    Classes?.ToString(fg);
                 }
                 if (printMask?.Factions?.Overall ?? true)
                 {
-                    Factions.ToString(fg);
+                    Factions?.ToString(fg);
                 }
                 if (printMask?.Hairs?.Overall ?? true)
                 {
-                    Hairs.ToString(fg);
+                    Hairs?.ToString(fg);
                 }
                 if (printMask?.Eyes?.Overall ?? true)
                 {
-                    Eyes.ToString(fg);
+                    Eyes?.ToString(fg);
                 }
                 if (printMask?.Races?.Overall ?? true)
                 {
-                    Races.ToString(fg);
+                    Races?.ToString(fg);
                 }
                 if (printMask?.Sounds?.Overall ?? true)
                 {
-                    Sounds.ToString(fg);
+                    Sounds?.ToString(fg);
                 }
                 if (printMask?.Skills?.Overall ?? true)
                 {
-                    Skills.ToString(fg);
+                    Skills?.ToString(fg);
                 }
             }
             fg.AppendLine("]");
@@ -3390,46 +3390,16 @@ namespace Mutagen.Internals
         }
         protected void ToString_FillInternal(FileGeneration fg)
         {
-            if (TES4 != null)
-            {
-                TES4.ToString(fg);
-            }
-            if (GameSettings != null)
-            {
-                GameSettings.ToString(fg);
-            }
-            if (Globals != null)
-            {
-                Globals.ToString(fg);
-            }
-            if (Classes != null)
-            {
-                Classes.ToString(fg);
-            }
-            if (Factions != null)
-            {
-                Factions.ToString(fg);
-            }
-            if (Hairs != null)
-            {
-                Hairs.ToString(fg);
-            }
-            if (Eyes != null)
-            {
-                Eyes.ToString(fg);
-            }
-            if (Races != null)
-            {
-                Races.ToString(fg);
-            }
-            if (Sounds != null)
-            {
-                Sounds.ToString(fg);
-            }
-            if (Skills != null)
-            {
-                Skills.ToString(fg);
-            }
+            TES4?.ToString(fg);
+            GameSettings?.ToString(fg);
+            Globals?.ToString(fg);
+            Classes?.ToString(fg);
+            Factions?.ToString(fg);
+            Hairs?.ToString(fg);
+            Eyes?.ToString(fg);
+            Races?.ToString(fg);
+            Sounds?.ToString(fg);
+            Skills?.ToString(fg);
         }
         #endregion
 

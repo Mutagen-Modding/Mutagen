@@ -1735,11 +1735,11 @@ namespace Mutagen.Internals
             {
                 if (printMask?.Male?.Overall ?? true)
                 {
-                    Male.ToString(fg);
+                    Male?.ToString(fg);
                 }
                 if (printMask?.Female?.Overall ?? true)
                 {
-                    Female.ToString(fg);
+                    Female?.ToString(fg);
                 }
             }
             fg.AppendLine("]");
@@ -1832,14 +1832,8 @@ namespace Mutagen.Internals
         }
         protected void ToString_FillInternal(FileGeneration fg)
         {
-            if (Male != null)
-            {
-                Male.ToString(fg);
-            }
-            if (Female != null)
-            {
-                Female.ToString(fg);
-            }
+            Male?.ToString(fg);
+            Female?.ToString(fg);
         }
         #endregion
 

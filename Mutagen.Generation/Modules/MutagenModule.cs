@@ -21,14 +21,19 @@ namespace Mutagen.Generation
         public override void GenerateInRegistration(ObjectGeneration obj, FileGeneration fg)
         {
             GenerateKnownRecordTypes(obj, fg);
-            fg.AppendLine($"public const int NumStructFields = {obj.Fields.Where((f) => f.IntegrateField && f.GetFieldData().TriggeringRecordAccessor == null).Count()};");
-            fg.AppendLine($"public const int NumTypedFields = {obj.Fields.Where((f) => f.IntegrateField && f.GetFieldData().TriggeringRecordAccessor != null).Count()};");
+            fg.AppendLine($"public const int NumStructFields = {obj.IterateFields(expandSets: false).Where((f) => f.GetFieldData().TriggeringRecordAccessor == null).Count()};");
+            var typedFields = obj.IterateFields().Where((f) => f.GetFieldData().TriggeringRecordAccessor != null).Sum((f) =>
+            {
+                if (!(f is SetMarkerType set)) return 1;
+                return set.IterateFields().Count();
+            });
+            fg.AppendLine($"public const int NumTypedFields = {typedFields};");
         }
 
         private IEnumerable<string> GetGenerics(ObjectGeneration obj, FileGeneration fg)
         {
             HashSet<string> genericNames = new HashSet<string>();
-            foreach (var field in obj.Fields)
+            foreach (var field in obj.IterateFields())
             {
                 if (!(field is LoquiType loquiType))
                 {
@@ -61,7 +66,7 @@ namespace Mutagen.Generation
                 triggeringRecType = recType;
                 recordTypes.Add(recType);
             }
-            foreach (var field in obj.Fields)
+            foreach (var field in obj.IterateFields(expandSets: false, nonIntegrated: true))
             {
                 var data = field.GetFieldData();
                 if (data.RecordType.HasValue)
@@ -207,7 +212,7 @@ namespace Mutagen.Generation
         {
             base.PostLoad(obj);
             Dictionary<string, TypeGeneration> triggerMapping = new Dictionary<string, TypeGeneration>();
-            foreach (var field in obj.Fields)
+            foreach (var field in obj.IterateFields())
             {
                 if (!field.TryGetFieldData(out var mutaData)) continue;
                 if (mutaData.TriggeringRecordAccessor == null) continue;
@@ -221,7 +226,7 @@ namespace Mutagen.Generation
 
         public override async Task Resolve(ObjectGeneration obj)
         {
-            foreach (var field in obj.Fields)
+            foreach (var field in obj.IterateFields())
             {
                 if (!(field is LoquiType loqui)) continue;
                 if (loqui.TargetObjectGeneration == null) continue;

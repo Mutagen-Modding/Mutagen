@@ -2280,7 +2280,7 @@ namespace Mutagen.Internals
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
                                 {
-                                    subItem.ToString(fg);
+                                    subItem?.ToString(fg);
                                 }
                                 fg.AppendLine("]");
                             }
@@ -2290,11 +2290,11 @@ namespace Mutagen.Internals
                 }
                 if (printMask?.Flags ?? true)
                 {
-                    fg.AppendLine($"Flags => {Flags.ToStringSafe()}");
+                    fg.AppendLine($"Flags => {Flags}");
                 }
                 if (printMask?.CrimeGoldMultiplier ?? true)
                 {
-                    fg.AppendLine($"CrimeGoldMultiplier => {CrimeGoldMultiplier.ToStringSafe()}");
+                    fg.AppendLine($"CrimeGoldMultiplier => {CrimeGoldMultiplier}");
                 }
                 if (printMask?.Ranks?.Overall ?? true)
                 {
@@ -2313,7 +2313,7 @@ namespace Mutagen.Internals
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
                                 {
-                                    subItem.ToString(fg);
+                                    subItem?.ToString(fg);
                                 }
                                 fg.AppendLine("]");
                             }
@@ -2416,64 +2416,52 @@ namespace Mutagen.Internals
         protected override void ToString_FillInternal(FileGeneration fg)
         {
             base.ToString_FillInternal(fg);
-            if (Relations != null)
+            fg.AppendLine("Relations =>");
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
             {
-                fg.AppendLine("Relations =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                if (Relations.Overall != null)
                 {
-                    if (Relations.Overall != null)
+                    fg.AppendLine(Relations.Overall.ToString());
+                }
+                if (Relations.Specific != null)
+                {
+                    foreach (var subItem in Relations.Specific)
                     {
-                        fg.AppendLine(Relations.Overall.ToString());
-                    }
-                    if (Relations.Specific != null)
-                    {
-                        foreach (var subItem in Relations.Specific)
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem.ToString(fg);
-                            }
-                            fg.AppendLine("]");
+                            subItem?.ToString(fg);
                         }
+                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
-            if (Flags != null)
+            fg.AppendLine("]");
+            fg.AppendLine($"Flags => {Flags}");
+            fg.AppendLine($"CrimeGoldMultiplier => {CrimeGoldMultiplier}");
+            fg.AppendLine("Ranks =>");
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
             {
-                fg.AppendLine($"Flags => {Flags.ToStringSafe()}");
-            }
-            if (CrimeGoldMultiplier != null)
-            {
-                fg.AppendLine($"CrimeGoldMultiplier => {CrimeGoldMultiplier.ToStringSafe()}");
-            }
-            if (Ranks != null)
-            {
-                fg.AppendLine("Ranks =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                if (Ranks.Overall != null)
                 {
-                    if (Ranks.Overall != null)
+                    fg.AppendLine(Ranks.Overall.ToString());
+                }
+                if (Ranks.Specific != null)
+                {
+                    foreach (var subItem in Ranks.Specific)
                     {
-                        fg.AppendLine(Ranks.Overall.ToString());
-                    }
-                    if (Ranks.Specific != null)
-                    {
-                        foreach (var subItem in Ranks.Specific)
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem.ToString(fg);
-                            }
-                            fg.AppendLine("]");
+                            subItem?.ToString(fg);
                         }
+                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
+            fg.AppendLine("]");
         }
         #endregion
 

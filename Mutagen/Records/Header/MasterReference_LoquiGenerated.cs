@@ -1671,11 +1671,11 @@ namespace Mutagen.Internals
             {
                 if (printMask?.Master ?? true)
                 {
-                    fg.AppendLine($"Master => {Master.ToStringSafe()}");
+                    fg.AppendLine($"Master => {Master}");
                 }
                 if (printMask?.FileSize ?? true)
                 {
-                    fg.AppendLine($"FileSize => {FileSize.ToStringSafe()}");
+                    fg.AppendLine($"FileSize => {FileSize}");
                 }
             }
             fg.AppendLine("]");
@@ -1768,14 +1768,8 @@ namespace Mutagen.Internals
         }
         protected void ToString_FillInternal(FileGeneration fg)
         {
-            if (Master != null)
-            {
-                fg.AppendLine($"Master => {Master.ToStringSafe()}");
-            }
-            if (FileSize != null)
-            {
-                fg.AppendLine($"FileSize => {FileSize.ToStringSafe()}");
-            }
+            fg.AppendLine($"Master => {Master}");
+            fg.AppendLine($"FileSize => {FileSize}");
         }
         #endregion
 

@@ -1046,9 +1046,9 @@ namespace Mutagen.Internals
     #region Field Index
     public enum SoundDataExtended_FieldIndex
     {
-        StaticAttenuation = 5,
-        StopTime = 6,
-        StartTime = 7,
+        StaticAttenuation = 4,
+        StopTime = 5,
+        StartTime = 6,
     }
     #endregion
 
@@ -1829,15 +1829,15 @@ namespace Mutagen.Internals
             {
                 if (printMask?.StaticAttenuation ?? true)
                 {
-                    fg.AppendLine($"StaticAttenuation => {StaticAttenuation.ToStringSafe()}");
+                    fg.AppendLine($"StaticAttenuation => {StaticAttenuation}");
                 }
                 if (printMask?.StopTime ?? true)
                 {
-                    fg.AppendLine($"StopTime => {StopTime.ToStringSafe()}");
+                    fg.AppendLine($"StopTime => {StopTime}");
                 }
                 if (printMask?.StartTime ?? true)
                 {
-                    fg.AppendLine($"StartTime => {StartTime.ToStringSafe()}");
+                    fg.AppendLine($"StartTime => {StartTime}");
                 }
             }
             fg.AppendLine("]");
@@ -1927,18 +1927,9 @@ namespace Mutagen.Internals
         protected override void ToString_FillInternal(FileGeneration fg)
         {
             base.ToString_FillInternal(fg);
-            if (StaticAttenuation != null)
-            {
-                fg.AppendLine($"StaticAttenuation => {StaticAttenuation.ToStringSafe()}");
-            }
-            if (StopTime != null)
-            {
-                fg.AppendLine($"StopTime => {StopTime.ToStringSafe()}");
-            }
-            if (StartTime != null)
-            {
-                fg.AppendLine($"StartTime => {StartTime.ToStringSafe()}");
-            }
+            fg.AppendLine($"StaticAttenuation => {StaticAttenuation}");
+            fg.AppendLine($"StopTime => {StopTime}");
+            fg.AppendLine($"StartTime => {StartTime}");
         }
         #endregion
 

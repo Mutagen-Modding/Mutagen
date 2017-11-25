@@ -2415,35 +2415,35 @@ namespace Mutagen.Internals
             {
                 if (printMask?.Strength ?? true)
                 {
-                    fg.AppendLine($"Strength => {Strength.ToStringSafe()}");
+                    fg.AppendLine($"Strength => {Strength}");
                 }
                 if (printMask?.Intelligence ?? true)
                 {
-                    fg.AppendLine($"Intelligence => {Intelligence.ToStringSafe()}");
+                    fg.AppendLine($"Intelligence => {Intelligence}");
                 }
                 if (printMask?.Willpower ?? true)
                 {
-                    fg.AppendLine($"Willpower => {Willpower.ToStringSafe()}");
+                    fg.AppendLine($"Willpower => {Willpower}");
                 }
                 if (printMask?.Agility ?? true)
                 {
-                    fg.AppendLine($"Agility => {Agility.ToStringSafe()}");
+                    fg.AppendLine($"Agility => {Agility}");
                 }
                 if (printMask?.Speed ?? true)
                 {
-                    fg.AppendLine($"Speed => {Speed.ToStringSafe()}");
+                    fg.AppendLine($"Speed => {Speed}");
                 }
                 if (printMask?.Endurance ?? true)
                 {
-                    fg.AppendLine($"Endurance => {Endurance.ToStringSafe()}");
+                    fg.AppendLine($"Endurance => {Endurance}");
                 }
                 if (printMask?.Personality ?? true)
                 {
-                    fg.AppendLine($"Personality => {Personality.ToStringSafe()}");
+                    fg.AppendLine($"Personality => {Personality}");
                 }
                 if (printMask?.Luck ?? true)
                 {
-                    fg.AppendLine($"Luck => {Luck.ToStringSafe()}");
+                    fg.AppendLine($"Luck => {Luck}");
                 }
             }
             fg.AppendLine("]");
@@ -2578,38 +2578,14 @@ namespace Mutagen.Internals
         }
         protected void ToString_FillInternal(FileGeneration fg)
         {
-            if (Strength != null)
-            {
-                fg.AppendLine($"Strength => {Strength.ToStringSafe()}");
-            }
-            if (Intelligence != null)
-            {
-                fg.AppendLine($"Intelligence => {Intelligence.ToStringSafe()}");
-            }
-            if (Willpower != null)
-            {
-                fg.AppendLine($"Willpower => {Willpower.ToStringSafe()}");
-            }
-            if (Agility != null)
-            {
-                fg.AppendLine($"Agility => {Agility.ToStringSafe()}");
-            }
-            if (Speed != null)
-            {
-                fg.AppendLine($"Speed => {Speed.ToStringSafe()}");
-            }
-            if (Endurance != null)
-            {
-                fg.AppendLine($"Endurance => {Endurance.ToStringSafe()}");
-            }
-            if (Personality != null)
-            {
-                fg.AppendLine($"Personality => {Personality.ToStringSafe()}");
-            }
-            if (Luck != null)
-            {
-                fg.AppendLine($"Luck => {Luck.ToStringSafe()}");
-            }
+            fg.AppendLine($"Strength => {Strength}");
+            fg.AppendLine($"Intelligence => {Intelligence}");
+            fg.AppendLine($"Willpower => {Willpower}");
+            fg.AppendLine($"Agility => {Agility}");
+            fg.AppendLine($"Speed => {Speed}");
+            fg.AppendLine($"Endurance => {Endurance}");
+            fg.AppendLine($"Personality => {Personality}");
+            fg.AppendLine($"Luck => {Luck}");
         }
         #endregion
 
