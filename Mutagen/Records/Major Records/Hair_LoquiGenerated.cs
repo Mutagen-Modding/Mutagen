@@ -1909,15 +1909,15 @@ namespace Mutagen.Internals
             {
                 if (printMask?.Model?.Overall ?? true)
                 {
-                    Model.ToString(fg);
+                    Model?.ToString(fg);
                 }
                 if (printMask?.Icon ?? true)
                 {
-                    fg.AppendLine($"Icon => {Icon.ToStringSafe()}");
+                    fg.AppendLine($"Icon => {Icon}");
                 }
                 if (printMask?.Flags ?? true)
                 {
-                    fg.AppendLine($"Flags => {Flags.ToStringSafe()}");
+                    fg.AppendLine($"Flags => {Flags}");
                 }
             }
             fg.AppendLine("]");
@@ -2007,18 +2007,9 @@ namespace Mutagen.Internals
         protected override void ToString_FillInternal(FileGeneration fg)
         {
             base.ToString_FillInternal(fg);
-            if (Model != null)
-            {
-                Model.ToString(fg);
-            }
-            if (Icon != null)
-            {
-                fg.AppendLine($"Icon => {Icon.ToStringSafe()}");
-            }
-            if (Flags != null)
-            {
-                fg.AppendLine($"Flags => {Flags.ToStringSafe()}");
-            }
+            Model?.ToString(fg);
+            fg.AppendLine($"Icon => {Icon}");
+            fg.AppendLine($"Flags => {Flags}");
         }
         #endregion
 

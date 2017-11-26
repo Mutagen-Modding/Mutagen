@@ -1745,15 +1745,15 @@ namespace Mutagen.Internals
             {
                 if (printMask?.Version ?? true)
                 {
-                    fg.AppendLine($"Version => {Version.ToStringSafe()}");
+                    fg.AppendLine($"Version => {Version}");
                 }
                 if (printMask?.NumRecords ?? true)
                 {
-                    fg.AppendLine($"NumRecords => {NumRecords.ToStringSafe()}");
+                    fg.AppendLine($"NumRecords => {NumRecords}");
                 }
                 if (printMask?.NextObjectID ?? true)
                 {
-                    fg.AppendLine($"NextObjectID => {NextObjectID.ToStringSafe()}");
+                    fg.AppendLine($"NextObjectID => {NextObjectID}");
                 }
             }
             fg.AppendLine("]");
@@ -1853,18 +1853,9 @@ namespace Mutagen.Internals
         }
         protected void ToString_FillInternal(FileGeneration fg)
         {
-            if (Version != null)
-            {
-                fg.AppendLine($"Version => {Version.ToStringSafe()}");
-            }
-            if (NumRecords != null)
-            {
-                fg.AppendLine($"NumRecords => {NumRecords.ToStringSafe()}");
-            }
-            if (NextObjectID != null)
-            {
-                fg.AppendLine($"NextObjectID => {NextObjectID.ToStringSafe()}");
-            }
+            fg.AppendLine($"Version => {Version}");
+            fg.AppendLine($"NumRecords => {NumRecords}");
+            fg.AppendLine($"NextObjectID => {NextObjectID}");
         }
         #endregion
 

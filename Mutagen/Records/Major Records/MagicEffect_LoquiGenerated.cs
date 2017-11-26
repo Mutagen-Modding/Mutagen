@@ -2301,19 +2301,19 @@ namespace Mutagen.Internals
             {
                 if (printMask?.Description ?? true)
                 {
-                    fg.AppendLine($"Description => {Description.ToStringSafe()}");
+                    fg.AppendLine($"Description => {Description}");
                 }
                 if (printMask?.Icon ?? true)
                 {
-                    fg.AppendLine($"Icon => {Icon.ToStringSafe()}");
+                    fg.AppendLine($"Icon => {Icon}");
                 }
                 if (printMask?.Model?.Overall ?? true)
                 {
-                    Model.ToString(fg);
+                    Model?.ToString(fg);
                 }
                 if (printMask?.Data?.Overall ?? true)
                 {
-                    Data.ToString(fg);
+                    Data?.ToString(fg);
                 }
                 if (printMask?.CounterEffects?.Overall ?? true)
                 {
@@ -2332,7 +2332,7 @@ namespace Mutagen.Internals
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
                                 {
-                                    fg.AppendLine($" => {subItem.ToStringSafe()}");
+                                    fg.AppendLine($" => {subItem}");
                                 }
                                 fg.AppendLine("]");
                             }
@@ -2442,47 +2442,32 @@ namespace Mutagen.Internals
         protected override void ToString_FillInternal(FileGeneration fg)
         {
             base.ToString_FillInternal(fg);
-            if (Description != null)
+            fg.AppendLine($"Description => {Description}");
+            fg.AppendLine($"Icon => {Icon}");
+            Model?.ToString(fg);
+            Data?.ToString(fg);
+            fg.AppendLine("CounterEffects =>");
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
             {
-                fg.AppendLine($"Description => {Description.ToStringSafe()}");
-            }
-            if (Icon != null)
-            {
-                fg.AppendLine($"Icon => {Icon.ToStringSafe()}");
-            }
-            if (Model != null)
-            {
-                Model.ToString(fg);
-            }
-            if (Data != null)
-            {
-                Data.ToString(fg);
-            }
-            if (CounterEffects != null)
-            {
-                fg.AppendLine("CounterEffects =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                if (CounterEffects.Overall != null)
                 {
-                    if (CounterEffects.Overall != null)
+                    fg.AppendLine(CounterEffects.Overall.ToString());
+                }
+                if (CounterEffects.Specific != null)
+                {
+                    foreach (var subItem in CounterEffects.Specific)
                     {
-                        fg.AppendLine(CounterEffects.Overall.ToString());
-                    }
-                    if (CounterEffects.Specific != null)
-                    {
-                        foreach (var subItem in CounterEffects.Specific)
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                fg.AppendLine($" => {subItem.ToStringSafe()}");
-                            }
-                            fg.AppendLine("]");
+                            fg.AppendLine($" => {subItem}");
                         }
+                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
+            fg.AppendLine("]");
         }
         #endregion
 

@@ -1913,19 +1913,19 @@ namespace Mutagen.Internals
             {
                 if (printMask?.RankNumber ?? true)
                 {
-                    fg.AppendLine($"RankNumber => {RankNumber.ToStringSafe()}");
+                    fg.AppendLine($"RankNumber => {RankNumber}");
                 }
                 if (printMask?.MaleName ?? true)
                 {
-                    fg.AppendLine($"MaleName => {MaleName.ToStringSafe()}");
+                    fg.AppendLine($"MaleName => {MaleName}");
                 }
                 if (printMask?.FemaleName ?? true)
                 {
-                    fg.AppendLine($"FemaleName => {FemaleName.ToStringSafe()}");
+                    fg.AppendLine($"FemaleName => {FemaleName}");
                 }
                 if (printMask?.Insignia ?? true)
                 {
-                    fg.AppendLine($"Insignia => {Insignia.ToStringSafe()}");
+                    fg.AppendLine($"Insignia => {Insignia}");
                 }
             }
             fg.AppendLine("]");
@@ -2032,22 +2032,10 @@ namespace Mutagen.Internals
         }
         protected void ToString_FillInternal(FileGeneration fg)
         {
-            if (RankNumber != null)
-            {
-                fg.AppendLine($"RankNumber => {RankNumber.ToStringSafe()}");
-            }
-            if (MaleName != null)
-            {
-                fg.AppendLine($"MaleName => {MaleName.ToStringSafe()}");
-            }
-            if (FemaleName != null)
-            {
-                fg.AppendLine($"FemaleName => {FemaleName.ToStringSafe()}");
-            }
-            if (Insignia != null)
-            {
-                fg.AppendLine($"Insignia => {Insignia.ToStringSafe()}");
-            }
+            fg.AppendLine($"RankNumber => {RankNumber}");
+            fg.AppendLine($"MaleName => {MaleName}");
+            fg.AppendLine($"FemaleName => {FemaleName}");
+            fg.AppendLine($"Insignia => {Insignia}");
         }
         #endregion
 

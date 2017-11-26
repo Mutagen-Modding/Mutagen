@@ -120,6 +120,7 @@
         <xs:group ref="NamedFieldOptions"/>
         <xs:element name="FormID" type="NFormID"/>
         <xs:element name="Buffer" type="NBuffer"/>
+        <xs:element name="Data" type="DataType" />
       </xs:choice>
     </xs:group>
 
@@ -141,14 +142,6 @@
     </xs:restriction>
   </xs:simpleType>
 
-  <xs:complexType name="FormID" >
-    <xs:complexContent>
-      <xs:extension base="Field">
-        <xs:attribute name="length" type="xs:int" />
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
   <xs:complexType name="Buffer" >
     <xs:complexContent>
       <xs:extension base="Nothing">
@@ -166,10 +159,25 @@
     </xs:complexContent>
   </xs:complexType>
 
+  <xs:complexType name="FormID" >
+    <xs:complexContent>
+      <xs:extension base="Field">
+        <xs:attribute name="length" type="xs:int" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
   <xs:complexType name="NFormID" >
     <xs:complexContent>
       <xs:extension base="FormID">
         <xs:attribute name="name" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="DataType" >
+    <xs:complexContent>
+      <xs:extension base="MarkerSet">
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>

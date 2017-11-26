@@ -1647,11 +1647,11 @@ namespace Mutagen.Internals
             {
                 if (printMask?.File ?? true)
                 {
-                    fg.AppendLine($"File => {File.ToStringSafe()}");
+                    fg.AppendLine($"File => {File}");
                 }
                 if (printMask?.BoundRadius ?? true)
                 {
-                    fg.AppendLine($"BoundRadius => {BoundRadius.ToStringSafe()}");
+                    fg.AppendLine($"BoundRadius => {BoundRadius}");
                 }
             }
             fg.AppendLine("]");
@@ -1744,14 +1744,8 @@ namespace Mutagen.Internals
         }
         protected void ToString_FillInternal(FileGeneration fg)
         {
-            if (File != null)
-            {
-                fg.AppendLine($"File => {File.ToStringSafe()}");
-            }
-            if (BoundRadius != null)
-            {
-                fg.AppendLine($"BoundRadius => {BoundRadius.ToStringSafe()}");
-            }
+            fg.AppendLine($"File => {File}");
+            fg.AppendLine($"BoundRadius => {BoundRadius}");
         }
         #endregion
 

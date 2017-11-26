@@ -1807,7 +1807,7 @@ namespace Mutagen.Internals
             {
                 if (printMask?.Model?.Overall ?? true)
                 {
-                    Model.ToString(fg);
+                    Model?.ToString(fg);
                 }
                 if (printMask?.BodyParts?.Overall ?? true)
                 {
@@ -1826,7 +1826,7 @@ namespace Mutagen.Internals
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
                                 {
-                                    subItem.ToString(fg);
+                                    subItem?.ToString(fg);
                                 }
                                 fg.AppendLine("]");
                             }
@@ -1925,35 +1925,29 @@ namespace Mutagen.Internals
         }
         protected void ToString_FillInternal(FileGeneration fg)
         {
-            if (Model != null)
+            Model?.ToString(fg);
+            fg.AppendLine("BodyParts =>");
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
             {
-                Model.ToString(fg);
-            }
-            if (BodyParts != null)
-            {
-                fg.AppendLine("BodyParts =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                if (BodyParts.Overall != null)
                 {
-                    if (BodyParts.Overall != null)
+                    fg.AppendLine(BodyParts.Overall.ToString());
+                }
+                if (BodyParts.Specific != null)
+                {
+                    foreach (var subItem in BodyParts.Specific)
                     {
-                        fg.AppendLine(BodyParts.Overall.ToString());
-                    }
-                    if (BodyParts.Specific != null)
-                    {
-                        foreach (var subItem in BodyParts.Specific)
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem.ToString(fg);
-                            }
-                            fg.AppendLine("]");
+                            subItem?.ToString(fg);
                         }
+                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
+            fg.AppendLine("]");
         }
         #endregion
 

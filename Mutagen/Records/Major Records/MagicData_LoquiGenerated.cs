@@ -3408,67 +3408,67 @@ namespace Mutagen.Internals
             {
                 if (printMask?.Flags ?? true)
                 {
-                    fg.AppendLine($"Flags => {Flags.ToStringSafe()}");
+                    fg.AppendLine($"Flags => {Flags}");
                 }
                 if (printMask?.BaseCost ?? true)
                 {
-                    fg.AppendLine($"BaseCost => {BaseCost.ToStringSafe()}");
+                    fg.AppendLine($"BaseCost => {BaseCost}");
                 }
                 if (printMask?.Unused ?? true)
                 {
-                    fg.AppendLine($"Unused => {Unused.ToStringSafe()}");
+                    fg.AppendLine($"Unused => {Unused}");
                 }
                 if (printMask?.MagicSchool ?? true)
                 {
-                    fg.AppendLine($"MagicSchool => {MagicSchool.ToStringSafe()}");
+                    fg.AppendLine($"MagicSchool => {MagicSchool}");
                 }
                 if (printMask?.Resistance ?? true)
                 {
-                    fg.AppendLine($"Resistance => {Resistance.ToStringSafe()}");
+                    fg.AppendLine($"Resistance => {Resistance}");
                 }
                 if (printMask?.CounterEffectCount ?? true)
                 {
-                    fg.AppendLine($"CounterEffectCount => {CounterEffectCount.ToStringSafe()}");
+                    fg.AppendLine($"CounterEffectCount => {CounterEffectCount}");
                 }
                 if (printMask?.Light ?? true)
                 {
-                    fg.AppendLine($"Light => {Light.ToStringSafe()}");
+                    fg.AppendLine($"Light => {Light}");
                 }
                 if (printMask?.ProjectileSpeed ?? true)
                 {
-                    fg.AppendLine($"ProjectileSpeed => {ProjectileSpeed.ToStringSafe()}");
+                    fg.AppendLine($"ProjectileSpeed => {ProjectileSpeed}");
                 }
                 if (printMask?.EffectShader ?? true)
                 {
-                    fg.AppendLine($"EffectShader => {EffectShader.ToStringSafe()}");
+                    fg.AppendLine($"EffectShader => {EffectShader}");
                 }
                 if (printMask?.EnchantEffect ?? true)
                 {
-                    fg.AppendLine($"EnchantEffect => {EnchantEffect.ToStringSafe()}");
+                    fg.AppendLine($"EnchantEffect => {EnchantEffect}");
                 }
                 if (printMask?.CastingSound ?? true)
                 {
-                    fg.AppendLine($"CastingSound => {CastingSound.ToStringSafe()}");
+                    fg.AppendLine($"CastingSound => {CastingSound}");
                 }
                 if (printMask?.BoltSound ?? true)
                 {
-                    fg.AppendLine($"BoltSound => {BoltSound.ToStringSafe()}");
+                    fg.AppendLine($"BoltSound => {BoltSound}");
                 }
                 if (printMask?.HitSound ?? true)
                 {
-                    fg.AppendLine($"HitSound => {HitSound.ToStringSafe()}");
+                    fg.AppendLine($"HitSound => {HitSound}");
                 }
                 if (printMask?.AreaSound ?? true)
                 {
-                    fg.AppendLine($"AreaSound => {AreaSound.ToStringSafe()}");
+                    fg.AppendLine($"AreaSound => {AreaSound}");
                 }
                 if (printMask?.ConstantEffectEnchantmentFactor ?? true)
                 {
-                    fg.AppendLine($"ConstantEffectEnchantmentFactor => {ConstantEffectEnchantmentFactor.ToStringSafe()}");
+                    fg.AppendLine($"ConstantEffectEnchantmentFactor => {ConstantEffectEnchantmentFactor}");
                 }
                 if (printMask?.ConstantEffectBarterFactor ?? true)
                 {
-                    fg.AppendLine($"ConstantEffectBarterFactor => {ConstantEffectBarterFactor.ToStringSafe()}");
+                    fg.AppendLine($"ConstantEffectBarterFactor => {ConstantEffectBarterFactor}");
                 }
             }
             fg.AppendLine("]");
@@ -3659,70 +3659,22 @@ namespace Mutagen.Internals
         }
         protected void ToString_FillInternal(FileGeneration fg)
         {
-            if (Flags != null)
-            {
-                fg.AppendLine($"Flags => {Flags.ToStringSafe()}");
-            }
-            if (BaseCost != null)
-            {
-                fg.AppendLine($"BaseCost => {BaseCost.ToStringSafe()}");
-            }
-            if (Unused != null)
-            {
-                fg.AppendLine($"Unused => {Unused.ToStringSafe()}");
-            }
-            if (MagicSchool != null)
-            {
-                fg.AppendLine($"MagicSchool => {MagicSchool.ToStringSafe()}");
-            }
-            if (Resistance != null)
-            {
-                fg.AppendLine($"Resistance => {Resistance.ToStringSafe()}");
-            }
-            if (CounterEffectCount != null)
-            {
-                fg.AppendLine($"CounterEffectCount => {CounterEffectCount.ToStringSafe()}");
-            }
-            if (Light != null)
-            {
-                fg.AppendLine($"Light => {Light.ToStringSafe()}");
-            }
-            if (ProjectileSpeed != null)
-            {
-                fg.AppendLine($"ProjectileSpeed => {ProjectileSpeed.ToStringSafe()}");
-            }
-            if (EffectShader != null)
-            {
-                fg.AppendLine($"EffectShader => {EffectShader.ToStringSafe()}");
-            }
-            if (EnchantEffect != null)
-            {
-                fg.AppendLine($"EnchantEffect => {EnchantEffect.ToStringSafe()}");
-            }
-            if (CastingSound != null)
-            {
-                fg.AppendLine($"CastingSound => {CastingSound.ToStringSafe()}");
-            }
-            if (BoltSound != null)
-            {
-                fg.AppendLine($"BoltSound => {BoltSound.ToStringSafe()}");
-            }
-            if (HitSound != null)
-            {
-                fg.AppendLine($"HitSound => {HitSound.ToStringSafe()}");
-            }
-            if (AreaSound != null)
-            {
-                fg.AppendLine($"AreaSound => {AreaSound.ToStringSafe()}");
-            }
-            if (ConstantEffectEnchantmentFactor != null)
-            {
-                fg.AppendLine($"ConstantEffectEnchantmentFactor => {ConstantEffectEnchantmentFactor.ToStringSafe()}");
-            }
-            if (ConstantEffectBarterFactor != null)
-            {
-                fg.AppendLine($"ConstantEffectBarterFactor => {ConstantEffectBarterFactor.ToStringSafe()}");
-            }
+            fg.AppendLine($"Flags => {Flags}");
+            fg.AppendLine($"BaseCost => {BaseCost}");
+            fg.AppendLine($"Unused => {Unused}");
+            fg.AppendLine($"MagicSchool => {MagicSchool}");
+            fg.AppendLine($"Resistance => {Resistance}");
+            fg.AppendLine($"CounterEffectCount => {CounterEffectCount}");
+            fg.AppendLine($"Light => {Light}");
+            fg.AppendLine($"ProjectileSpeed => {ProjectileSpeed}");
+            fg.AppendLine($"EffectShader => {EffectShader}");
+            fg.AppendLine($"EnchantEffect => {EnchantEffect}");
+            fg.AppendLine($"CastingSound => {CastingSound}");
+            fg.AppendLine($"BoltSound => {BoltSound}");
+            fg.AppendLine($"HitSound => {HitSound}");
+            fg.AppendLine($"AreaSound => {AreaSound}");
+            fg.AppendLine($"ConstantEffectEnchantmentFactor => {ConstantEffectEnchantmentFactor}");
+            fg.AppendLine($"ConstantEffectBarterFactor => {ConstantEffectBarterFactor}");
         }
         #endregion
 

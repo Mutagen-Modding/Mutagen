@@ -59,23 +59,64 @@ namespace Mutagen
         INotifyingItem<FilePath> IClass.Icon_Property => this.Icon_Property;
         INotifyingItemGetter<FilePath> IClassGetter.Icon_Property => this.Icon_Property;
         #endregion
-        #region ClassData
-        private readonly INotifyingItem<ClassData> _ClassData = new NotifyingItemConvertWrapper<ClassData>(
-            defaultVal: new ClassData(),
-            incomingConverter: (change) =>
-            {
-                if (change.New == null)
-                {
-                    return TryGet<ClassData>.Succeed(new ClassData());
-                }
-                return TryGet<ClassData>.Succeed(change.New);
-            }
-        );
-        public INotifyingItem<ClassData> ClassData_Property => this._ClassData;
-        ClassData IClassGetter.ClassData => this.ClassData;
-        public ClassData ClassData { get => _ClassData.Item; set => _ClassData.Item = value; }
-        INotifyingItem<ClassData> IClass.ClassData_Property => this.ClassData_Property;
-        INotifyingItemGetter<ClassData> IClassGetter.ClassData_Property => this.ClassData_Property;
+        #region PrimaryAttributes
+        private readonly INotifyingList<ActorValue> _PrimaryAttributes = new NotifyingListBounded<ActorValue>(max: 2);
+        public INotifyingList<ActorValue> PrimaryAttributes => _PrimaryAttributes;
+        #region Interface Members
+        INotifyingList<ActorValue> IClass.PrimaryAttributes => _PrimaryAttributes;
+        INotifyingListGetter<ActorValue> IClassGetter.PrimaryAttributes => _PrimaryAttributes;
+        #endregion
+
+        #endregion
+        #region Specialization
+        protected readonly INotifyingItem<Class.SpecializationFlag> _Specialization = NotifyingItem.Factory<Class.SpecializationFlag>(markAsSet: false);
+        public INotifyingItem<Class.SpecializationFlag> Specialization_Property => _Specialization;
+        public Class.SpecializationFlag Specialization
+        {
+            get => this._Specialization.Item;
+            set => this._Specialization.Set(value);
+        }
+        INotifyingItem<Class.SpecializationFlag> IClass.Specialization_Property => this.Specialization_Property;
+        INotifyingItemGetter<Class.SpecializationFlag> IClassGetter.Specialization_Property => this.Specialization_Property;
+        #endregion
+        #region SecondaryAttributes
+        private readonly INotifyingList<ActorValue> _SecondaryAttributes = new NotifyingListBounded<ActorValue>(max: 7);
+        public INotifyingList<ActorValue> SecondaryAttributes => _SecondaryAttributes;
+        #region Interface Members
+        INotifyingList<ActorValue> IClass.SecondaryAttributes => _SecondaryAttributes;
+        INotifyingListGetter<ActorValue> IClassGetter.SecondaryAttributes => _SecondaryAttributes;
+        #endregion
+
+        #endregion
+        #region Flags
+        protected readonly INotifyingItem<ClassFlag> _Flags = NotifyingItem.Factory<ClassFlag>(markAsSet: false);
+        public INotifyingItem<ClassFlag> Flags_Property => _Flags;
+        public ClassFlag Flags
+        {
+            get => this._Flags.Item;
+            set => this._Flags.Set(value);
+        }
+        INotifyingItem<ClassFlag> IClass.Flags_Property => this.Flags_Property;
+        INotifyingItemGetter<ClassFlag> IClassGetter.Flags_Property => this.Flags_Property;
+        #endregion
+        #region ClassServices
+        protected readonly INotifyingItem<ClassService> _ClassServices = NotifyingItem.Factory<ClassService>(markAsSet: false);
+        public INotifyingItem<ClassService> ClassServices_Property => _ClassServices;
+        public ClassService ClassServices
+        {
+            get => this._ClassServices.Item;
+            set => this._ClassServices.Set(value);
+        }
+        INotifyingItem<ClassService> IClass.ClassServices_Property => this.ClassServices_Property;
+        INotifyingItemGetter<ClassService> IClassGetter.ClassServices_Property => this.ClassServices_Property;
+        #endregion
+        #region Training
+        private readonly INotifyingItem<ClassTraining> _Training = new NotifyingItem<ClassTraining>();
+        public INotifyingItem<ClassTraining> Training_Property => this._Training;
+        ClassTraining IClassGetter.Training => this.Training;
+        public ClassTraining Training { get => _Training.Item; set => _Training.Item = value; }
+        INotifyingItem<ClassTraining> IClass.Training_Property => this.Training_Property;
+        INotifyingItemGetter<ClassTraining> IClassGetter.Training_Property => this.Training_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -143,10 +184,35 @@ namespace Mutagen
             {
                 if (!object.Equals(Icon, rhs.Icon)) return false;
             }
-            if (ClassData_Property.HasBeenSet != rhs.ClassData_Property.HasBeenSet) return false;
-            if (ClassData_Property.HasBeenSet)
+            if (PrimaryAttributes.HasBeenSet != rhs.PrimaryAttributes.HasBeenSet) return false;
+            if (PrimaryAttributes.HasBeenSet)
             {
-                if (!object.Equals(ClassData, rhs.ClassData)) return false;
+                if (!PrimaryAttributes.SequenceEqual(rhs.PrimaryAttributes)) return false;
+            }
+            if (Specialization_Property.HasBeenSet != rhs.Specialization_Property.HasBeenSet) return false;
+            if (Specialization_Property.HasBeenSet)
+            {
+                if (Specialization != rhs.Specialization) return false;
+            }
+            if (SecondaryAttributes.HasBeenSet != rhs.SecondaryAttributes.HasBeenSet) return false;
+            if (SecondaryAttributes.HasBeenSet)
+            {
+                if (!SecondaryAttributes.SequenceEqual(rhs.SecondaryAttributes)) return false;
+            }
+            if (Flags_Property.HasBeenSet != rhs.Flags_Property.HasBeenSet) return false;
+            if (Flags_Property.HasBeenSet)
+            {
+                if (Flags != rhs.Flags) return false;
+            }
+            if (ClassServices_Property.HasBeenSet != rhs.ClassServices_Property.HasBeenSet) return false;
+            if (ClassServices_Property.HasBeenSet)
+            {
+                if (ClassServices != rhs.ClassServices) return false;
+            }
+            if (Training_Property.HasBeenSet != rhs.Training_Property.HasBeenSet) return false;
+            if (Training_Property.HasBeenSet)
+            {
+                if (!object.Equals(Training, rhs.Training)) return false;
             }
             return true;
         }
@@ -162,9 +228,29 @@ namespace Mutagen
             {
                 ret = HashHelper.GetHashCode(Icon).CombineHashCode(ret);
             }
-            if (ClassData_Property.HasBeenSet)
+            if (PrimaryAttributes.HasBeenSet)
             {
-                ret = HashHelper.GetHashCode(ClassData).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(PrimaryAttributes).CombineHashCode(ret);
+            }
+            if (Specialization_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Specialization).CombineHashCode(ret);
+            }
+            if (SecondaryAttributes.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(SecondaryAttributes).CombineHashCode(ret);
+            }
+            if (Flags_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
+            }
+            if (ClassServices_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(ClassServices).CombineHashCode(ret);
+            }
+            if (Training_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Training).CombineHashCode(ret);
             }
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
@@ -508,17 +594,106 @@ namespace Mutagen
                             subMask);
                     }
                     break;
-                case "ClassData":
+                case "PrimaryAttributes":
                     {
-                        MaskItem<Exception, ClassData_ErrorMask> subMask;
-                        var tryGet = LoquiXmlTranslation<ClassData, ClassData_ErrorMask>.Instance.Parse(
+                        MaskItem<Exception, IEnumerable<Exception>> subMask;
+                        var listTryGet = ListXmlTranslation<ActorValue, Exception>.Instance.Parse(
+                            root: root,
+                            doMasks: errorMask != null,
+                            maskObj: out subMask,
+                            transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
+                            {
+                                return EnumXmlTranslation<ActorValue>.Instance.ParseNonNull(
+                                    r,
+                                    doMasks: listDoMasks,
+                                    errorMask: out listSubMask);
+                            }
+                            );
+                        item._PrimaryAttributes.SetIfSucceeded(listTryGet);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            (int)Class_FieldIndex.PrimaryAttributes,
+                            subMask);
+                    }
+                    break;
+                case "Specialization":
+                    {
+                        Exception subMask;
+                        var tryGet = EnumXmlTranslation<Class.SpecializationFlag>.Instance.Parse(
+                            root,
+                            nullable: false,
+                            doMasks: errorMask != null,
+                            errorMask: out subMask);
+                        item._Specialization.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            (int)Class_FieldIndex.Specialization,
+                            subMask);
+                    }
+                    break;
+                case "SecondaryAttributes":
+                    {
+                        MaskItem<Exception, IEnumerable<Exception>> subMask;
+                        var listTryGet = ListXmlTranslation<ActorValue, Exception>.Instance.Parse(
+                            root: root,
+                            doMasks: errorMask != null,
+                            maskObj: out subMask,
+                            transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
+                            {
+                                return EnumXmlTranslation<ActorValue>.Instance.ParseNonNull(
+                                    r,
+                                    doMasks: listDoMasks,
+                                    errorMask: out listSubMask);
+                            }
+                            );
+                        item._SecondaryAttributes.SetIfSucceeded(listTryGet);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            (int)Class_FieldIndex.SecondaryAttributes,
+                            subMask);
+                    }
+                    break;
+                case "Flags":
+                    {
+                        Exception subMask;
+                        var tryGet = EnumXmlTranslation<ClassFlag>.Instance.Parse(
+                            root,
+                            nullable: false,
+                            doMasks: errorMask != null,
+                            errorMask: out subMask);
+                        item._Flags.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            (int)Class_FieldIndex.Flags,
+                            subMask);
+                    }
+                    break;
+                case "ClassServices":
+                    {
+                        Exception subMask;
+                        var tryGet = EnumXmlTranslation<ClassService>.Instance.Parse(
+                            root,
+                            nullable: false,
+                            doMasks: errorMask != null,
+                            errorMask: out subMask);
+                        item._ClassServices.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            (int)Class_FieldIndex.ClassServices,
+                            subMask);
+                    }
+                    break;
+                case "Training":
+                    {
+                        MaskItem<Exception, ClassTraining_ErrorMask> subMask;
+                        var tryGet = LoquiXmlTranslation<ClassTraining, ClassTraining_ErrorMask>.Instance.Parse(
                             root: root,
                             doMasks: errorMask != null,
                             mask: out subMask);
-                        item._ClassData.SetIfSucceeded(tryGet);
+                        item._Training.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            (int)Class_FieldIndex.ClassData,
+                            (int)Class_FieldIndex.Training,
                             subMask);
                     }
                     break;
@@ -878,9 +1053,53 @@ namespace Mutagen
                     item._Icon.SetIfSucceeded(tryGet);
                     break;
                 case "DATA":
-                    item._ClassData.SetIfSucceeded(LoquiBinaryTranslation<ClassData, ClassData_ErrorMask>.Instance.Parse(
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    var PrimaryAttributestryGet = Mutagen.Binary.ListBinaryTranslation<ActorValue, Exception>.Instance.ParseRepeatedItem(
                         frame: frame,
-                        fieldIndex: (int)Class_FieldIndex.ClassData,
+                        amount: 2,
+                        fieldIndex: (int)Class_FieldIndex.PrimaryAttributes,
+                        errorMask: errorMask,
+                        transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
+                        {
+                            return Mutagen.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
+                                frame: r.Spawn(new ContentLength(4)),
+                                doMasks: listDoMasks,
+                                errorMask: out listSubMask);
+                        }
+                        );
+                    item._PrimaryAttributes.SetIfSucceeded(PrimaryAttributestryGet);
+                    var SpecializationtryGet = Mutagen.Binary.EnumBinaryTranslation<Class.SpecializationFlag>.Instance.Parse(
+                        frame: frame.Spawn(new ContentLength(4)),
+                        fieldIndex: (int)Class_FieldIndex.Specialization,
+                        errorMask: errorMask);
+                    item._Specialization.SetIfSucceeded(SpecializationtryGet);
+                    var SecondaryAttributestryGet = Mutagen.Binary.ListBinaryTranslation<ActorValue, Exception>.Instance.ParseRepeatedItem(
+                        frame: frame,
+                        amount: 7,
+                        fieldIndex: (int)Class_FieldIndex.SecondaryAttributes,
+                        errorMask: errorMask,
+                        transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
+                        {
+                            return Mutagen.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
+                                frame: r.Spawn(new ContentLength(4)),
+                                doMasks: listDoMasks,
+                                errorMask: out listSubMask);
+                        }
+                        );
+                    item._SecondaryAttributes.SetIfSucceeded(SecondaryAttributestryGet);
+                    var FlagstryGet = Mutagen.Binary.EnumBinaryTranslation<ClassFlag>.Instance.Parse(
+                        frame: frame.Spawn(new ContentLength(4)),
+                        fieldIndex: (int)Class_FieldIndex.Flags,
+                        errorMask: errorMask);
+                    item._Flags.SetIfSucceeded(FlagstryGet);
+                    var ClassServicestryGet = Mutagen.Binary.EnumBinaryTranslation<ClassService>.Instance.Parse(
+                        frame: frame.Spawn(new ContentLength(4)),
+                        fieldIndex: (int)Class_FieldIndex.ClassServices,
+                        errorMask: errorMask);
+                    item._ClassServices.SetIfSucceeded(ClassServicestryGet);
+                    item._Training.SetIfSucceeded(LoquiBinaryTranslation<ClassTraining, ClassTraining_ErrorMask>.Instance.Parse(
+                        frame: frame.Spawn(snapToFinalPosition: false),
+                        fieldIndex: (int)Class_FieldIndex.Training,
                         errorMask: errorMask));
                     break;
                 default:
@@ -979,9 +1198,30 @@ namespace Mutagen
                         (FilePath)obj,
                         cmds);
                     break;
-                case Class_FieldIndex.ClassData:
-                    this._ClassData.Set(
-                        (ClassData)obj,
+                case Class_FieldIndex.PrimaryAttributes:
+                    this._PrimaryAttributes.SetTo((IEnumerable<ActorValue>)obj, cmds);
+                    break;
+                case Class_FieldIndex.Specialization:
+                    this._Specialization.Set(
+                        (Class.SpecializationFlag)obj,
+                        cmds);
+                    break;
+                case Class_FieldIndex.SecondaryAttributes:
+                    this._SecondaryAttributes.SetTo((IEnumerable<ActorValue>)obj, cmds);
+                    break;
+                case Class_FieldIndex.Flags:
+                    this._Flags.Set(
+                        (ClassFlag)obj,
+                        cmds);
+                    break;
+                case Class_FieldIndex.ClassServices:
+                    this._ClassServices.Set(
+                        (ClassService)obj,
+                        cmds);
+                    break;
+                case Class_FieldIndex.Training:
+                    this._Training.Set(
+                        (ClassTraining)obj,
                         cmds);
                     break;
                 default:
@@ -1025,9 +1265,30 @@ namespace Mutagen
                         (FilePath)pair.Value,
                         null);
                     break;
-                case Class_FieldIndex.ClassData:
-                    obj._ClassData.Set(
-                        (ClassData)pair.Value,
+                case Class_FieldIndex.PrimaryAttributes:
+                    obj._PrimaryAttributes.SetTo((IEnumerable<ActorValue>)pair.Value, null);
+                    break;
+                case Class_FieldIndex.Specialization:
+                    obj._Specialization.Set(
+                        (Class.SpecializationFlag)pair.Value,
+                        null);
+                    break;
+                case Class_FieldIndex.SecondaryAttributes:
+                    obj._SecondaryAttributes.SetTo((IEnumerable<ActorValue>)pair.Value, null);
+                    break;
+                case Class_FieldIndex.Flags:
+                    obj._Flags.Set(
+                        (ClassFlag)pair.Value,
+                        null);
+                    break;
+                case Class_FieldIndex.ClassServices:
+                    obj._ClassServices.Set(
+                        (ClassService)pair.Value,
+                        null);
+                    break;
+                case Class_FieldIndex.Training:
+                    obj._Training.Set(
+                        (ClassTraining)pair.Value,
                         null);
                     break;
                 default:
@@ -1051,8 +1312,19 @@ namespace Mutagen
         new FilePath Icon { get; set; }
         new INotifyingItem<FilePath> Icon_Property { get; }
 
-        new ClassData ClassData { get; set; }
-        new INotifyingItem<ClassData> ClassData_Property { get; }
+        new INotifyingList<ActorValue> PrimaryAttributes { get; }
+        new Class.SpecializationFlag Specialization { get; set; }
+        new INotifyingItem<Class.SpecializationFlag> Specialization_Property { get; }
+
+        new INotifyingList<ActorValue> SecondaryAttributes { get; }
+        new ClassFlag Flags { get; set; }
+        new INotifyingItem<ClassFlag> Flags_Property { get; }
+
+        new ClassService ClassServices { get; set; }
+        new INotifyingItem<ClassService> ClassServices_Property { get; }
+
+        new ClassTraining Training { get; set; }
+        new INotifyingItem<ClassTraining> Training_Property { get; }
 
     }
 
@@ -1068,9 +1340,30 @@ namespace Mutagen
         INotifyingItemGetter<FilePath> Icon_Property { get; }
 
         #endregion
-        #region ClassData
-        ClassData ClassData { get; }
-        INotifyingItemGetter<ClassData> ClassData_Property { get; }
+        #region PrimaryAttributes
+        INotifyingListGetter<ActorValue> PrimaryAttributes { get; }
+        #endregion
+        #region Specialization
+        Class.SpecializationFlag Specialization { get; }
+        INotifyingItemGetter<Class.SpecializationFlag> Specialization_Property { get; }
+
+        #endregion
+        #region SecondaryAttributes
+        INotifyingListGetter<ActorValue> SecondaryAttributes { get; }
+        #endregion
+        #region Flags
+        ClassFlag Flags { get; }
+        INotifyingItemGetter<ClassFlag> Flags_Property { get; }
+
+        #endregion
+        #region ClassServices
+        ClassService ClassServices { get; }
+        INotifyingItemGetter<ClassService> ClassServices_Property { get; }
+
+        #endregion
+        #region Training
+        ClassTraining Training { get; }
+        INotifyingItemGetter<ClassTraining> Training_Property { get; }
 
         #endregion
 
@@ -1087,7 +1380,12 @@ namespace Mutagen.Internals
     {
         Description = 6,
         Icon = 7,
-        ClassData = 8,
+        PrimaryAttributes = 8,
+        Specialization = 9,
+        SecondaryAttributes = 10,
+        Flags = 11,
+        ClassServices = 12,
+        Training = 13,
     }
     #endregion
 
@@ -1105,7 +1403,7 @@ namespace Mutagen.Internals
 
         public const string GUID = "3f2e301a-e8f4-42db-875c-3e760e4eff31";
 
-        public const ushort FieldCount = 3;
+        public const ushort FieldCount = 8;
 
         public static readonly Type MaskType = typeof(Class_Mask<>);
 
@@ -1137,8 +1435,18 @@ namespace Mutagen.Internals
                     return (ushort)Class_FieldIndex.Description;
                 case "ICON":
                     return (ushort)Class_FieldIndex.Icon;
-                case "CLASSDATA":
-                    return (ushort)Class_FieldIndex.ClassData;
+                case "PRIMARYATTRIBUTES":
+                    return (ushort)Class_FieldIndex.PrimaryAttributes;
+                case "SPECIALIZATION":
+                    return (ushort)Class_FieldIndex.Specialization;
+                case "SECONDARYATTRIBUTES":
+                    return (ushort)Class_FieldIndex.SecondaryAttributes;
+                case "FLAGS":
+                    return (ushort)Class_FieldIndex.Flags;
+                case "CLASSSERVICES":
+                    return (ushort)Class_FieldIndex.ClassServices;
+                case "TRAINING":
+                    return (ushort)Class_FieldIndex.Training;
                 default:
                     return null;
             }
@@ -1149,9 +1457,15 @@ namespace Mutagen.Internals
             Class_FieldIndex enu = (Class_FieldIndex)index;
             switch (enu)
             {
+                case Class_FieldIndex.PrimaryAttributes:
+                case Class_FieldIndex.SecondaryAttributes:
+                    return true;
                 case Class_FieldIndex.Description:
                 case Class_FieldIndex.Icon:
-                case Class_FieldIndex.ClassData:
+                case Class_FieldIndex.Specialization:
+                case Class_FieldIndex.Flags:
+                case Class_FieldIndex.ClassServices:
+                case Class_FieldIndex.Training:
                     return false;
                 default:
                     return NamedMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -1163,10 +1477,15 @@ namespace Mutagen.Internals
             Class_FieldIndex enu = (Class_FieldIndex)index;
             switch (enu)
             {
-                case Class_FieldIndex.ClassData:
+                case Class_FieldIndex.Training:
                     return true;
                 case Class_FieldIndex.Description:
                 case Class_FieldIndex.Icon:
+                case Class_FieldIndex.PrimaryAttributes:
+                case Class_FieldIndex.Specialization:
+                case Class_FieldIndex.SecondaryAttributes:
+                case Class_FieldIndex.Flags:
+                case Class_FieldIndex.ClassServices:
                     return false;
                 default:
                     return NamedMajorRecord_Registration.GetNthIsLoqui(index);
@@ -1180,7 +1499,12 @@ namespace Mutagen.Internals
             {
                 case Class_FieldIndex.Description:
                 case Class_FieldIndex.Icon:
-                case Class_FieldIndex.ClassData:
+                case Class_FieldIndex.PrimaryAttributes:
+                case Class_FieldIndex.Specialization:
+                case Class_FieldIndex.SecondaryAttributes:
+                case Class_FieldIndex.Flags:
+                case Class_FieldIndex.ClassServices:
+                case Class_FieldIndex.Training:
                     return false;
                 default:
                     return NamedMajorRecord_Registration.GetNthIsSingleton(index);
@@ -1196,8 +1520,18 @@ namespace Mutagen.Internals
                     return "Description";
                 case Class_FieldIndex.Icon:
                     return "Icon";
-                case Class_FieldIndex.ClassData:
-                    return "ClassData";
+                case Class_FieldIndex.PrimaryAttributes:
+                    return "PrimaryAttributes";
+                case Class_FieldIndex.Specialization:
+                    return "Specialization";
+                case Class_FieldIndex.SecondaryAttributes:
+                    return "SecondaryAttributes";
+                case Class_FieldIndex.Flags:
+                    return "Flags";
+                case Class_FieldIndex.ClassServices:
+                    return "ClassServices";
+                case Class_FieldIndex.Training:
+                    return "Training";
                 default:
                     return NamedMajorRecord_Registration.GetNthName(index);
             }
@@ -1210,7 +1544,12 @@ namespace Mutagen.Internals
             {
                 case Class_FieldIndex.Description:
                 case Class_FieldIndex.Icon:
-                case Class_FieldIndex.ClassData:
+                case Class_FieldIndex.PrimaryAttributes:
+                case Class_FieldIndex.Specialization:
+                case Class_FieldIndex.SecondaryAttributes:
+                case Class_FieldIndex.Flags:
+                case Class_FieldIndex.ClassServices:
+                case Class_FieldIndex.Training:
                     return false;
                 default:
                     return NamedMajorRecord_Registration.IsNthDerivative(index);
@@ -1224,7 +1563,12 @@ namespace Mutagen.Internals
             {
                 case Class_FieldIndex.Description:
                 case Class_FieldIndex.Icon:
-                case Class_FieldIndex.ClassData:
+                case Class_FieldIndex.PrimaryAttributes:
+                case Class_FieldIndex.Specialization:
+                case Class_FieldIndex.SecondaryAttributes:
+                case Class_FieldIndex.Flags:
+                case Class_FieldIndex.ClassServices:
+                case Class_FieldIndex.Training:
                     return false;
                 default:
                     return NamedMajorRecord_Registration.IsProtected(index);
@@ -1240,8 +1584,18 @@ namespace Mutagen.Internals
                     return typeof(String);
                 case Class_FieldIndex.Icon:
                     return typeof(FilePath);
-                case Class_FieldIndex.ClassData:
-                    return typeof(ClassData);
+                case Class_FieldIndex.PrimaryAttributes:
+                    return typeof(NotifyingList<ActorValue>);
+                case Class_FieldIndex.Specialization:
+                    return typeof(Class.SpecializationFlag);
+                case Class_FieldIndex.SecondaryAttributes:
+                    return typeof(NotifyingList<ActorValue>);
+                case Class_FieldIndex.Flags:
+                    return typeof(ClassFlag);
+                case Class_FieldIndex.ClassServices:
+                    return typeof(ClassService);
+                case Class_FieldIndex.Training:
+                    return typeof(ClassTraining);
                 default:
                     return NamedMajorRecord_Registration.GetNthType(index);
             }
@@ -1253,7 +1607,7 @@ namespace Mutagen.Internals
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = CLAS_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 3;
+        public const int NumTypedFields = 2;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1398,47 +1752,122 @@ namespace Mutagen.Internals
                     errorMask().SetNthException((int)Class_FieldIndex.Icon, ex);
                 }
             }
-            if (copyMask?.ClassData.Overall != CopyOption.Skip)
+            if (copyMask?.PrimaryAttributes != CopyOption.Skip)
             {
                 try
                 {
-                    item.ClassData_Property.SetToWithDefault(
-                        rhs.ClassData_Property,
-                        def?.ClassData_Property,
+                    item.PrimaryAttributes.SetToWithDefault(
+                        rhs.PrimaryAttributes,
+                        def?.PrimaryAttributes,
+                        cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Class_FieldIndex.PrimaryAttributes, ex);
+                }
+            }
+            if (copyMask?.Specialization ?? true)
+            {
+                try
+                {
+                    item.Specialization_Property.SetToWithDefault(
+                        rhs.Specialization_Property,
+                        def?.Specialization_Property,
+                        cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Class_FieldIndex.Specialization, ex);
+                }
+            }
+            if (copyMask?.SecondaryAttributes != CopyOption.Skip)
+            {
+                try
+                {
+                    item.SecondaryAttributes.SetToWithDefault(
+                        rhs.SecondaryAttributes,
+                        def?.SecondaryAttributes,
+                        cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Class_FieldIndex.SecondaryAttributes, ex);
+                }
+            }
+            if (copyMask?.Flags ?? true)
+            {
+                try
+                {
+                    item.Flags_Property.SetToWithDefault(
+                        rhs.Flags_Property,
+                        def?.Flags_Property,
+                        cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Class_FieldIndex.Flags, ex);
+                }
+            }
+            if (copyMask?.ClassServices ?? true)
+            {
+                try
+                {
+                    item.ClassServices_Property.SetToWithDefault(
+                        rhs.ClassServices_Property,
+                        def?.ClassServices_Property,
+                        cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Class_FieldIndex.ClassServices, ex);
+                }
+            }
+            if (copyMask?.Training.Overall != CopyOption.Skip)
+            {
+                try
+                {
+                    item.Training_Property.SetToWithDefault(
+                        rhs.Training_Property,
+                        def?.Training_Property,
                         cmds,
                         (r, d) =>
                         {
-                            switch (copyMask?.ClassData.Overall ?? CopyOption.Reference)
+                            switch (copyMask?.Training.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
                                     return r;
                                 case CopyOption.CopyIn:
-                                    ClassDataCommon.CopyFieldsFrom(
-                                        item: item.ClassData,
-                                        rhs: rhs.ClassData,
-                                        def: def?.ClassData,
+                                    ClassTrainingCommon.CopyFieldsFrom(
+                                        item: item.Training,
+                                        rhs: rhs.Training,
+                                        def: def?.Training,
                                         doMasks: doMasks,
-                                        errorMask: (doMasks ? new Func<ClassData_ErrorMask>(() =>
+                                        errorMask: (doMasks ? new Func<ClassTraining_ErrorMask>(() =>
                                         {
                                             var baseMask = errorMask();
-                                            if (baseMask.ClassData.Specific == null)
+                                            if (baseMask.Training.Specific == null)
                                             {
-                                                baseMask.ClassData = new MaskItem<Exception, ClassData_ErrorMask>(null, new ClassData_ErrorMask());
+                                                baseMask.Training = new MaskItem<Exception, ClassTraining_ErrorMask>(null, new ClassTraining_ErrorMask());
                                             }
-                                            return baseMask.ClassData.Specific;
+                                            return baseMask.Training.Specific;
                                         }
                                         ) : null),
-                                        copyMask: copyMask?.ClassData.Specific,
+                                        copyMask: copyMask?.Training.Specific,
                                         cmds: cmds);
                                     return r;
                                 case CopyOption.MakeCopy:
-                                    if (r == null) return default(ClassData);
-                                    return ClassData.Copy(
+                                    if (r == null) return default(ClassTraining);
+                                    return ClassTraining.Copy(
                                         r,
-                                        copyMask?.ClassData?.Specific,
+                                        copyMask?.Training?.Specific,
                                         def: d);
                                 default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.ClassData?.Overall}. Cannot execute copy.");
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Training?.Overall}. Cannot execute copy.");
                             }
                         }
                         );
@@ -1446,7 +1875,7 @@ namespace Mutagen.Internals
                 catch (Exception ex)
                 when (doMasks)
                 {
-                    errorMask().SetNthException((int)Class_FieldIndex.ClassData, ex);
+                    errorMask().SetNthException((int)Class_FieldIndex.Training, ex);
                 }
             }
         }
@@ -1468,8 +1897,23 @@ namespace Mutagen.Internals
                 case Class_FieldIndex.Icon:
                     obj.Icon_Property.HasBeenSet = on;
                     break;
-                case Class_FieldIndex.ClassData:
-                    obj.ClassData_Property.HasBeenSet = on;
+                case Class_FieldIndex.PrimaryAttributes:
+                    obj.PrimaryAttributes.HasBeenSet = on;
+                    break;
+                case Class_FieldIndex.Specialization:
+                    obj.Specialization_Property.HasBeenSet = on;
+                    break;
+                case Class_FieldIndex.SecondaryAttributes:
+                    obj.SecondaryAttributes.HasBeenSet = on;
+                    break;
+                case Class_FieldIndex.Flags:
+                    obj.Flags_Property.HasBeenSet = on;
+                    break;
+                case Class_FieldIndex.ClassServices:
+                    obj.ClassServices_Property.HasBeenSet = on;
+                    break;
+                case Class_FieldIndex.Training:
+                    obj.Training_Property.HasBeenSet = on;
                     break;
                 default:
                     NamedMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
@@ -1491,8 +1935,23 @@ namespace Mutagen.Internals
                 case Class_FieldIndex.Icon:
                     obj.Icon_Property.Unset(cmds);
                     break;
-                case Class_FieldIndex.ClassData:
-                    obj.ClassData_Property.Unset(cmds);
+                case Class_FieldIndex.PrimaryAttributes:
+                    obj.PrimaryAttributes.Unset(cmds);
+                    break;
+                case Class_FieldIndex.Specialization:
+                    obj.Specialization_Property.Unset(cmds);
+                    break;
+                case Class_FieldIndex.SecondaryAttributes:
+                    obj.SecondaryAttributes.Unset(cmds);
+                    break;
+                case Class_FieldIndex.Flags:
+                    obj.Flags_Property.Unset(cmds);
+                    break;
+                case Class_FieldIndex.ClassServices:
+                    obj.ClassServices_Property.Unset(cmds);
+                    break;
+                case Class_FieldIndex.Training:
+                    obj.Training_Property.Unset(cmds);
                     break;
                 default:
                     NamedMajorRecordCommon.UnsetNthObject(index, obj);
@@ -1511,8 +1970,18 @@ namespace Mutagen.Internals
                     return obj.Description_Property.HasBeenSet;
                 case Class_FieldIndex.Icon:
                     return obj.Icon_Property.HasBeenSet;
-                case Class_FieldIndex.ClassData:
-                    return obj.ClassData_Property.HasBeenSet;
+                case Class_FieldIndex.PrimaryAttributes:
+                    return obj.PrimaryAttributes.HasBeenSet;
+                case Class_FieldIndex.Specialization:
+                    return obj.Specialization_Property.HasBeenSet;
+                case Class_FieldIndex.SecondaryAttributes:
+                    return obj.SecondaryAttributes.HasBeenSet;
+                case Class_FieldIndex.Flags:
+                    return obj.Flags_Property.HasBeenSet;
+                case Class_FieldIndex.ClassServices:
+                    return obj.ClassServices_Property.HasBeenSet;
+                case Class_FieldIndex.Training:
+                    return obj.Training_Property.HasBeenSet;
                 default:
                     return NamedMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -1529,8 +1998,18 @@ namespace Mutagen.Internals
                     return obj.Description;
                 case Class_FieldIndex.Icon:
                     return obj.Icon;
-                case Class_FieldIndex.ClassData:
-                    return obj.ClassData;
+                case Class_FieldIndex.PrimaryAttributes:
+                    return obj.PrimaryAttributes;
+                case Class_FieldIndex.Specialization:
+                    return obj.Specialization;
+                case Class_FieldIndex.SecondaryAttributes:
+                    return obj.SecondaryAttributes;
+                case Class_FieldIndex.Flags:
+                    return obj.Flags;
+                case Class_FieldIndex.ClassServices:
+                    return obj.ClassServices;
+                case Class_FieldIndex.Training:
+                    return obj.Training;
                 default:
                     return NamedMajorRecordCommon.GetNthObject(index, obj);
             }
@@ -1542,7 +2021,12 @@ namespace Mutagen.Internals
         {
             item.Description_Property.Unset(cmds.ToUnsetParams());
             item.Icon_Property.Unset(cmds.ToUnsetParams());
-            item.ClassData_Property.Unset(cmds.ToUnsetParams());
+            item.PrimaryAttributes.Unset(cmds.ToUnsetParams());
+            item.Specialization_Property.Unset(cmds.ToUnsetParams());
+            item.SecondaryAttributes.Unset(cmds.ToUnsetParams());
+            item.Flags_Property.Unset(cmds.ToUnsetParams());
+            item.ClassServices_Property.Unset(cmds.ToUnsetParams());
+            item.Training_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static Class_Mask<bool> GetEqualsMask(
@@ -1562,7 +2046,48 @@ namespace Mutagen.Internals
             if (rhs == null) return;
             ret.Description = item.Description_Property.Equals(rhs.Description_Property, (l, r) => object.Equals(l, r));
             ret.Icon = item.Icon_Property.Equals(rhs.Icon_Property, (l, r) => object.Equals(l, r));
-            ret.ClassData = item.ClassData_Property.LoquiEqualsHelper(rhs.ClassData_Property, (loqLhs, loqRhs) => ClassDataCommon.GetEqualsMask(loqLhs, loqRhs));
+            if (item.PrimaryAttributes.HasBeenSet == rhs.PrimaryAttributes.HasBeenSet)
+            {
+                if (item.PrimaryAttributes.HasBeenSet)
+                {
+                    ret.PrimaryAttributes = new MaskItem<bool, IEnumerable<bool>>();
+                    ret.PrimaryAttributes.Specific = item.PrimaryAttributes.SelectAgainst<ActorValue, bool>(rhs.PrimaryAttributes, ((l, r) => object.Equals(l, r)), out ret.PrimaryAttributes.Overall);
+                    ret.PrimaryAttributes.Overall = ret.PrimaryAttributes.Overall && ret.PrimaryAttributes.Specific.All((b) => b);
+                }
+                else
+                {
+                    ret.PrimaryAttributes = new MaskItem<bool, IEnumerable<bool>>();
+                    ret.PrimaryAttributes.Overall = true;
+                }
+            }
+            else
+            {
+                ret.PrimaryAttributes = new MaskItem<bool, IEnumerable<bool>>();
+                ret.PrimaryAttributes.Overall = false;
+            }
+            ret.Specialization = item.Specialization_Property.Equals(rhs.Specialization_Property, (l, r) => l == r);
+            if (item.SecondaryAttributes.HasBeenSet == rhs.SecondaryAttributes.HasBeenSet)
+            {
+                if (item.SecondaryAttributes.HasBeenSet)
+                {
+                    ret.SecondaryAttributes = new MaskItem<bool, IEnumerable<bool>>();
+                    ret.SecondaryAttributes.Specific = item.SecondaryAttributes.SelectAgainst<ActorValue, bool>(rhs.SecondaryAttributes, ((l, r) => object.Equals(l, r)), out ret.SecondaryAttributes.Overall);
+                    ret.SecondaryAttributes.Overall = ret.SecondaryAttributes.Overall && ret.SecondaryAttributes.Specific.All((b) => b);
+                }
+                else
+                {
+                    ret.SecondaryAttributes = new MaskItem<bool, IEnumerable<bool>>();
+                    ret.SecondaryAttributes.Overall = true;
+                }
+            }
+            else
+            {
+                ret.SecondaryAttributes = new MaskItem<bool, IEnumerable<bool>>();
+                ret.SecondaryAttributes.Overall = false;
+            }
+            ret.Flags = item.Flags_Property.Equals(rhs.Flags_Property, (l, r) => l == r);
+            ret.ClassServices = item.ClassServices_Property.Equals(rhs.ClassServices_Property, (l, r) => l == r);
+            ret.Training = item.Training_Property.LoquiEqualsHelper(rhs.Training_Property, (loqLhs, loqRhs) => ClassTrainingCommon.GetEqualsMask(loqLhs, loqRhs));
             NamedMajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -1601,9 +2126,57 @@ namespace Mutagen.Internals
                 {
                     fg.AppendLine($"Icon => {item.Icon}");
                 }
-                if (printMask?.ClassData?.Overall ?? true)
+                if (printMask?.PrimaryAttributes?.Overall ?? true)
                 {
-                    item.ClassData?.ToString(fg, "ClassData");
+                    fg.AppendLine("PrimaryAttributes =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        foreach (var subItem in item.PrimaryAttributes)
+                        {
+                            fg.AppendLine("[");
+                            using (new DepthWrapper(fg))
+                            {
+                                fg.AppendLine($"Item => {subItem}");
+                            }
+                            fg.AppendLine("]");
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (printMask?.Specialization ?? true)
+                {
+                    fg.AppendLine($"Specialization => {item.Specialization}");
+                }
+                if (printMask?.SecondaryAttributes?.Overall ?? true)
+                {
+                    fg.AppendLine("SecondaryAttributes =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        foreach (var subItem in item.SecondaryAttributes)
+                        {
+                            fg.AppendLine("[");
+                            using (new DepthWrapper(fg))
+                            {
+                                fg.AppendLine($"Item => {subItem}");
+                            }
+                            fg.AppendLine("]");
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (printMask?.Flags ?? true)
+                {
+                    fg.AppendLine($"Flags => {item.Flags}");
+                }
+                if (printMask?.ClassServices ?? true)
+                {
+                    fg.AppendLine($"ClassServices => {item.ClassServices}");
+                }
+                if (printMask?.Training?.Overall ?? true)
+                {
+                    item.Training?.ToString(fg, "Training");
                 }
             }
             fg.AppendLine("]");
@@ -1615,8 +2188,13 @@ namespace Mutagen.Internals
         {
             if (checkMask.Description.HasValue && checkMask.Description.Value != item.Description_Property.HasBeenSet) return false;
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_Property.HasBeenSet) return false;
-            if (checkMask.ClassData.Overall.HasValue && checkMask.ClassData.Overall.Value != item.ClassData_Property.HasBeenSet) return false;
-            if (checkMask.ClassData.Specific != null && (item.ClassData_Property.Item == null || !item.ClassData_Property.Item.HasBeenSet(checkMask.ClassData.Specific))) return false;
+            if (checkMask.PrimaryAttributes.Overall.HasValue && checkMask.PrimaryAttributes.Overall.Value != item.PrimaryAttributes.HasBeenSet) return false;
+            if (checkMask.Specialization.HasValue && checkMask.Specialization.Value != item.Specialization_Property.HasBeenSet) return false;
+            if (checkMask.SecondaryAttributes.Overall.HasValue && checkMask.SecondaryAttributes.Overall.Value != item.SecondaryAttributes.HasBeenSet) return false;
+            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_Property.HasBeenSet) return false;
+            if (checkMask.ClassServices.HasValue && checkMask.ClassServices.Value != item.ClassServices_Property.HasBeenSet) return false;
+            if (checkMask.Training.Overall.HasValue && checkMask.Training.Overall.Value != item.Training_Property.HasBeenSet) return false;
+            if (checkMask.Training.Specific != null && (item.Training_Property.Item == null || !item.Training_Property.Item.HasBeenSet(checkMask.Training.Specific))) return false;
             return true;
         }
 
@@ -1625,7 +2203,12 @@ namespace Mutagen.Internals
             var ret = new Class_Mask<bool>();
             ret.Description = item.Description_Property.HasBeenSet;
             ret.Icon = item.Icon_Property.HasBeenSet;
-            ret.ClassData = new MaskItem<bool, ClassData_Mask<bool>>(item.ClassData_Property.HasBeenSet, ClassDataCommon.GetHasBeenSetMask(item.ClassData_Property.Item));
+            ret.PrimaryAttributes = new MaskItem<bool, IEnumerable<bool>>(item.PrimaryAttributes.HasBeenSet, null);
+            ret.Specialization = item.Specialization_Property.HasBeenSet;
+            ret.SecondaryAttributes = new MaskItem<bool, IEnumerable<bool>>(item.SecondaryAttributes.HasBeenSet, null);
+            ret.Flags = item.Flags_Property.HasBeenSet;
+            ret.ClassServices = item.ClassServices_Property.HasBeenSet;
+            ret.Training = new MaskItem<bool, ClassTraining_Mask<bool>>(item.Training_Property.HasBeenSet, ClassTrainingCommon.GetHasBeenSetMask(item.Training_Property.Item));
             return ret;
         }
 
@@ -1689,19 +2272,109 @@ namespace Mutagen.Internals
                             (int)Class_FieldIndex.Icon,
                             subMask);
                     }
-                    if (item.ClassData_Property.HasBeenSet)
+                    if (item.PrimaryAttributes.HasBeenSet)
                     {
-                        MaskItem<Exception, ClassData_ErrorMask> subMask;
-                        LoquiXmlTranslation<IClassDataGetter, ClassData_ErrorMask>.Instance.Write(
+                        MaskItem<Exception, IEnumerable<Exception>> subMask;
+                        ListXmlTranslation<ActorValue, Exception>.Instance.Write(
                             writer: writer,
-                            item: item.ClassData,
-                            name: nameof(item.ClassData),
+                            name: nameof(item.PrimaryAttributes),
+                            item: item.PrimaryAttributes,
                             doMasks: errorMask != null,
-                            mask: out ClassData_ErrorMask loquiMask);
-                        subMask = loquiMask == null ? null : new MaskItem<Exception, ClassData_ErrorMask>(null, loquiMask);
+                            maskObj: out subMask,
+                            transl: (ActorValue subItem, bool listDoMasks, out Exception listSubMask) =>
+                            {
+                                EnumXmlTranslation<ActorValue>.Instance.Write(
+                                    writer,
+                                    "Item",
+                                    subItem,
+                                    doMasks: errorMask != null,
+                                    errorMask: out listSubMask);
+                            }
+                            );
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            (int)Class_FieldIndex.ClassData,
+                            (int)Class_FieldIndex.PrimaryAttributes,
+                            subMask);
+                    }
+                    if (item.Specialization_Property.HasBeenSet)
+                    {
+                        Exception subMask;
+                        EnumXmlTranslation<Class.SpecializationFlag>.Instance.Write(
+                            writer,
+                            nameof(item.Specialization),
+                            item.Specialization,
+                            doMasks: errorMask != null,
+                            errorMask: out subMask);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            (int)Class_FieldIndex.Specialization,
+                            subMask);
+                    }
+                    if (item.SecondaryAttributes.HasBeenSet)
+                    {
+                        MaskItem<Exception, IEnumerable<Exception>> subMask;
+                        ListXmlTranslation<ActorValue, Exception>.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.SecondaryAttributes),
+                            item: item.SecondaryAttributes,
+                            doMasks: errorMask != null,
+                            maskObj: out subMask,
+                            transl: (ActorValue subItem, bool listDoMasks, out Exception listSubMask) =>
+                            {
+                                EnumXmlTranslation<ActorValue>.Instance.Write(
+                                    writer,
+                                    "Item",
+                                    subItem,
+                                    doMasks: errorMask != null,
+                                    errorMask: out listSubMask);
+                            }
+                            );
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            (int)Class_FieldIndex.SecondaryAttributes,
+                            subMask);
+                    }
+                    if (item.Flags_Property.HasBeenSet)
+                    {
+                        Exception subMask;
+                        EnumXmlTranslation<ClassFlag>.Instance.Write(
+                            writer,
+                            nameof(item.Flags),
+                            item.Flags,
+                            doMasks: errorMask != null,
+                            errorMask: out subMask);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            (int)Class_FieldIndex.Flags,
+                            subMask);
+                    }
+                    if (item.ClassServices_Property.HasBeenSet)
+                    {
+                        Exception subMask;
+                        EnumXmlTranslation<ClassService>.Instance.Write(
+                            writer,
+                            nameof(item.ClassServices),
+                            item.ClassServices,
+                            doMasks: errorMask != null,
+                            errorMask: out subMask);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            (int)Class_FieldIndex.ClassServices,
+                            subMask);
+                    }
+                    if (item.Training_Property.HasBeenSet)
+                    {
+                        MaskItem<Exception, ClassTraining_ErrorMask> subMask;
+                        LoquiXmlTranslation<IClassTrainingGetter, ClassTraining_ErrorMask>.Instance.Write(
+                            writer: writer,
+                            item: item.Training,
+                            name: nameof(item.Training),
+                            doMasks: errorMask != null,
+                            mask: out ClassTraining_ErrorMask loquiMask);
+                        subMask = loquiMask == null ? null : new MaskItem<Exception, ClassTraining_ErrorMask>(null, loquiMask);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            (int)Class_FieldIndex.Training,
                             subMask);
                     }
                 }
@@ -1744,7 +2417,7 @@ namespace Mutagen.Internals
                     record: Class_Registration.CLAS_HEADER,
                     type: ObjectType.Record))
                 {
-                    MajorRecordCommon.Write_Binary_Embedded(
+                    Write_Binary_Embedded(
                         item: item,
                         writer: writer,
                         errorMask: errorMask);
@@ -1761,6 +2434,17 @@ namespace Mutagen.Internals
             }
         }
         #endregion
+
+        public static void Write_Binary_Embedded(
+            IClassGetter item,
+            MutagenWriter writer,
+            Func<Class_ErrorMask> errorMask)
+        {
+            MajorRecordCommon.Write_Binary_Embedded(
+                item: item,
+                writer: writer,
+                errorMask: errorMask);
+        }
 
         public static void Write_Binary_RecordTypes(
             IClassGetter item,
@@ -1785,11 +2469,62 @@ namespace Mutagen.Internals
                 errorMask: errorMask,
                 header: Class_Registration.ICON_HEADER,
                 nullable: false);
-            LoquiBinaryTranslation<ClassData, ClassData_ErrorMask>.Instance.Write(
-                writer: writer,
-                item: item.ClassData_Property,
-                fieldIndex: (int)Class_FieldIndex.ClassData,
-                errorMask: errorMask);
+            using (HeaderExport.ExportSubRecordHeader(writer, Class_Registration.DATA_HEADER))
+            {
+                Mutagen.Binary.ListBinaryTranslation<ActorValue, Exception>.Instance.Write(
+                    writer: writer,
+                    item: item.PrimaryAttributes,
+                    fieldIndex: (int)Class_FieldIndex.PrimaryAttributes,
+                    errorMask: errorMask,
+                    transl: (ActorValue subItem, bool listDoMasks, out Exception listSubMask) =>
+                    {
+                        Mutagen.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
+                            writer,
+                            subItem,
+                            length: new ContentLength(4),
+                            doMasks: listDoMasks,
+                            errorMask: out listSubMask);
+                    }
+                    );
+                Mutagen.Binary.EnumBinaryTranslation<Class.SpecializationFlag>.Instance.Write(
+                    writer,
+                    item.Specialization_Property,
+                    length: new ContentLength(4),
+                    fieldIndex: (int)Class_FieldIndex.Specialization,
+                    errorMask: errorMask);
+                Mutagen.Binary.ListBinaryTranslation<ActorValue, Exception>.Instance.Write(
+                    writer: writer,
+                    item: item.SecondaryAttributes,
+                    fieldIndex: (int)Class_FieldIndex.SecondaryAttributes,
+                    errorMask: errorMask,
+                    transl: (ActorValue subItem, bool listDoMasks, out Exception listSubMask) =>
+                    {
+                        Mutagen.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
+                            writer,
+                            subItem,
+                            length: new ContentLength(4),
+                            doMasks: listDoMasks,
+                            errorMask: out listSubMask);
+                    }
+                    );
+                Mutagen.Binary.EnumBinaryTranslation<ClassFlag>.Instance.Write(
+                    writer,
+                    item.Flags_Property,
+                    length: new ContentLength(4),
+                    fieldIndex: (int)Class_FieldIndex.Flags,
+                    errorMask: errorMask);
+                Mutagen.Binary.EnumBinaryTranslation<ClassService>.Instance.Write(
+                    writer,
+                    item.ClassServices_Property,
+                    length: new ContentLength(4),
+                    fieldIndex: (int)Class_FieldIndex.ClassServices,
+                    errorMask: errorMask);
+                LoquiBinaryTranslation<ClassTraining, ClassTraining_ErrorMask>.Instance.Write(
+                    writer: writer,
+                    item: item.Training_Property,
+                    fieldIndex: (int)Class_FieldIndex.Training,
+                    errorMask: errorMask);
+            }
         }
 
         #endregion
@@ -1811,14 +2546,24 @@ namespace Mutagen.Internals
         {
             this.Description = initialValue;
             this.Icon = initialValue;
-            this.ClassData = new MaskItem<T, ClassData_Mask<T>>(initialValue, new ClassData_Mask<T>(initialValue));
+            this.PrimaryAttributes = new MaskItem<T, IEnumerable<T>>(initialValue, null);
+            this.Specialization = initialValue;
+            this.SecondaryAttributes = new MaskItem<T, IEnumerable<T>>(initialValue, null);
+            this.Flags = initialValue;
+            this.ClassServices = initialValue;
+            this.Training = new MaskItem<T, ClassTraining_Mask<T>>(initialValue, new ClassTraining_Mask<T>(initialValue));
         }
         #endregion
 
         #region Members
         public T Description;
         public T Icon;
-        public MaskItem<T, ClassData_Mask<T>> ClassData { get; set; }
+        public MaskItem<T, IEnumerable<T>> PrimaryAttributes;
+        public T Specialization;
+        public MaskItem<T, IEnumerable<T>> SecondaryAttributes;
+        public T Flags;
+        public T ClassServices;
+        public MaskItem<T, ClassTraining_Mask<T>> Training { get; set; }
         #endregion
 
         #region Equals
@@ -1834,7 +2579,12 @@ namespace Mutagen.Internals
             if (!base.Equals(rhs)) return false;
             if (!object.Equals(this.Description, rhs.Description)) return false;
             if (!object.Equals(this.Icon, rhs.Icon)) return false;
-            if (!object.Equals(this.ClassData, rhs.ClassData)) return false;
+            if (!object.Equals(this.PrimaryAttributes, rhs.PrimaryAttributes)) return false;
+            if (!object.Equals(this.Specialization, rhs.Specialization)) return false;
+            if (!object.Equals(this.SecondaryAttributes, rhs.SecondaryAttributes)) return false;
+            if (!object.Equals(this.Flags, rhs.Flags)) return false;
+            if (!object.Equals(this.ClassServices, rhs.ClassServices)) return false;
+            if (!object.Equals(this.Training, rhs.Training)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -1842,7 +2592,12 @@ namespace Mutagen.Internals
             int ret = 0;
             ret = ret.CombineHashCode(this.Description?.GetHashCode());
             ret = ret.CombineHashCode(this.Icon?.GetHashCode());
-            ret = ret.CombineHashCode(this.ClassData?.GetHashCode());
+            ret = ret.CombineHashCode(this.PrimaryAttributes?.GetHashCode());
+            ret = ret.CombineHashCode(this.Specialization?.GetHashCode());
+            ret = ret.CombineHashCode(this.SecondaryAttributes?.GetHashCode());
+            ret = ret.CombineHashCode(this.Flags?.GetHashCode());
+            ret = ret.CombineHashCode(this.ClassServices?.GetHashCode());
+            ret = ret.CombineHashCode(this.Training?.GetHashCode());
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -1855,10 +2610,35 @@ namespace Mutagen.Internals
             if (!base.AllEqual(eval)) return false;
             if (!eval(this.Description)) return false;
             if (!eval(this.Icon)) return false;
-            if (ClassData != null)
+            if (PrimaryAttributes != null)
             {
-                if (!eval(this.ClassData.Overall)) return false;
-                if (ClassData.Specific != null && !ClassData.Specific.AllEqual(eval)) return false;
+                if (!eval(this.PrimaryAttributes.Overall)) return false;
+                if (PrimaryAttributes.Specific != null)
+                {
+                    foreach (var item in PrimaryAttributes.Specific)
+                    {
+                        if (!eval(item)) return false;
+                    }
+                }
+            }
+            if (!eval(this.Specialization)) return false;
+            if (SecondaryAttributes != null)
+            {
+                if (!eval(this.SecondaryAttributes.Overall)) return false;
+                if (SecondaryAttributes.Specific != null)
+                {
+                    foreach (var item in SecondaryAttributes.Specific)
+                    {
+                        if (!eval(item)) return false;
+                    }
+                }
+            }
+            if (!eval(this.Flags)) return false;
+            if (!eval(this.ClassServices)) return false;
+            if (Training != null)
+            {
+                if (!eval(this.Training.Overall)) return false;
+                if (Training.Specific != null && !Training.Specific.AllEqual(eval)) return false;
             }
             return true;
         }
@@ -1877,13 +2657,48 @@ namespace Mutagen.Internals
             base.Translate_InternalFill(obj, eval);
             obj.Description = eval(this.Description);
             obj.Icon = eval(this.Icon);
-            if (this.ClassData != null)
+            if (PrimaryAttributes != null)
             {
-                obj.ClassData = new MaskItem<R, ClassData_Mask<R>>();
-                obj.ClassData.Overall = eval(this.ClassData.Overall);
-                if (this.ClassData.Specific != null)
+                obj.PrimaryAttributes = new MaskItem<R, IEnumerable<R>>();
+                obj.PrimaryAttributes.Overall = eval(this.PrimaryAttributes.Overall);
+                if (PrimaryAttributes.Specific != null)
                 {
-                    obj.ClassData.Specific = this.ClassData.Specific.Translate(eval);
+                    List<R> l = new List<R>();
+                    obj.PrimaryAttributes.Specific = l;
+                    foreach (var item in PrimaryAttributes.Specific)
+                    {
+                        R mask = default(R);
+                        mask = eval(item);
+                        l.Add(mask);
+                    }
+                }
+            }
+            obj.Specialization = eval(this.Specialization);
+            if (SecondaryAttributes != null)
+            {
+                obj.SecondaryAttributes = new MaskItem<R, IEnumerable<R>>();
+                obj.SecondaryAttributes.Overall = eval(this.SecondaryAttributes.Overall);
+                if (SecondaryAttributes.Specific != null)
+                {
+                    List<R> l = new List<R>();
+                    obj.SecondaryAttributes.Specific = l;
+                    foreach (var item in SecondaryAttributes.Specific)
+                    {
+                        R mask = default(R);
+                        mask = eval(item);
+                        l.Add(mask);
+                    }
+                }
+            }
+            obj.Flags = eval(this.Flags);
+            obj.ClassServices = eval(this.ClassServices);
+            if (this.Training != null)
+            {
+                obj.Training = new MaskItem<R, ClassTraining_Mask<R>>();
+                obj.Training.Overall = eval(this.Training.Overall);
+                if (this.Training.Specific != null)
+                {
+                    obj.Training.Specific = this.Training.Specific.Translate(eval);
                 }
             }
         }
@@ -1893,6 +2708,8 @@ namespace Mutagen.Internals
         public override void ClearEnumerables()
         {
             base.ClearEnumerables();
+            this.PrimaryAttributes.Specific = null;
+            this.SecondaryAttributes.Specific = null;
         }
         #endregion
 
@@ -1917,15 +2734,77 @@ namespace Mutagen.Internals
             {
                 if (printMask?.Description ?? true)
                 {
-                    fg.AppendLine($"Description => {Description.ToStringSafe()}");
+                    fg.AppendLine($"Description => {Description}");
                 }
                 if (printMask?.Icon ?? true)
                 {
-                    fg.AppendLine($"Icon => {Icon.ToStringSafe()}");
+                    fg.AppendLine($"Icon => {Icon}");
                 }
-                if (printMask?.ClassData?.Overall ?? true)
+                if (printMask?.PrimaryAttributes?.Overall ?? true)
                 {
-                    ClassData.ToString(fg);
+                    fg.AppendLine("PrimaryAttributes =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        if (PrimaryAttributes.Overall != null)
+                        {
+                            fg.AppendLine(PrimaryAttributes.Overall.ToString());
+                        }
+                        if (PrimaryAttributes.Specific != null)
+                        {
+                            foreach (var subItem in PrimaryAttributes.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLine($" => {subItem}");
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (printMask?.Specialization ?? true)
+                {
+                    fg.AppendLine($"Specialization => {Specialization}");
+                }
+                if (printMask?.SecondaryAttributes?.Overall ?? true)
+                {
+                    fg.AppendLine("SecondaryAttributes =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        if (SecondaryAttributes.Overall != null)
+                        {
+                            fg.AppendLine(SecondaryAttributes.Overall.ToString());
+                        }
+                        if (SecondaryAttributes.Specific != null)
+                        {
+                            foreach (var subItem in SecondaryAttributes.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLine($" => {subItem}");
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (printMask?.Flags ?? true)
+                {
+                    fg.AppendLine($"Flags => {Flags}");
+                }
+                if (printMask?.ClassServices ?? true)
+                {
+                    fg.AppendLine($"ClassServices => {ClassServices}");
+                }
+                if (printMask?.Training?.Overall ?? true)
+                {
+                    Training?.ToString(fg);
                 }
             }
             fg.AppendLine("]");
@@ -1939,7 +2818,12 @@ namespace Mutagen.Internals
         #region Members
         public Exception Description;
         public Exception Icon;
-        public MaskItem<Exception, ClassData_ErrorMask> ClassData;
+        public MaskItem<Exception, IEnumerable<Exception>> PrimaryAttributes;
+        public Exception Specialization;
+        public MaskItem<Exception, IEnumerable<Exception>> SecondaryAttributes;
+        public Exception Flags;
+        public Exception ClassServices;
+        public MaskItem<Exception, ClassTraining_ErrorMask> Training;
         #endregion
 
         #region IErrorMask
@@ -1954,8 +2838,23 @@ namespace Mutagen.Internals
                 case Class_FieldIndex.Icon:
                     this.Icon = ex;
                     break;
-                case Class_FieldIndex.ClassData:
-                    this.ClassData = new MaskItem<Exception, ClassData_ErrorMask>(ex, null);
+                case Class_FieldIndex.PrimaryAttributes:
+                    this.PrimaryAttributes = new MaskItem<Exception, IEnumerable<Exception>>(ex, null);
+                    break;
+                case Class_FieldIndex.Specialization:
+                    this.Specialization = ex;
+                    break;
+                case Class_FieldIndex.SecondaryAttributes:
+                    this.SecondaryAttributes = new MaskItem<Exception, IEnumerable<Exception>>(ex, null);
+                    break;
+                case Class_FieldIndex.Flags:
+                    this.Flags = ex;
+                    break;
+                case Class_FieldIndex.ClassServices:
+                    this.ClassServices = ex;
+                    break;
+                case Class_FieldIndex.Training:
+                    this.Training = new MaskItem<Exception, ClassTraining_ErrorMask>(ex, null);
                     break;
                 default:
                     base.SetNthException(index, ex);
@@ -1974,8 +2873,23 @@ namespace Mutagen.Internals
                 case Class_FieldIndex.Icon:
                     this.Icon = (Exception)obj;
                     break;
-                case Class_FieldIndex.ClassData:
-                    this.ClassData = (MaskItem<Exception, ClassData_ErrorMask>)obj;
+                case Class_FieldIndex.PrimaryAttributes:
+                    this.PrimaryAttributes = (MaskItem<Exception, IEnumerable<Exception>>)obj;
+                    break;
+                case Class_FieldIndex.Specialization:
+                    this.Specialization = (Exception)obj;
+                    break;
+                case Class_FieldIndex.SecondaryAttributes:
+                    this.SecondaryAttributes = (MaskItem<Exception, IEnumerable<Exception>>)obj;
+                    break;
+                case Class_FieldIndex.Flags:
+                    this.Flags = (Exception)obj;
+                    break;
+                case Class_FieldIndex.ClassServices:
+                    this.ClassServices = (Exception)obj;
+                    break;
+                case Class_FieldIndex.Training:
+                    this.Training = (MaskItem<Exception, ClassTraining_ErrorMask>)obj;
                     break;
                 default:
                     base.SetNthMask(index, obj);
@@ -2015,18 +2929,56 @@ namespace Mutagen.Internals
         protected override void ToString_FillInternal(FileGeneration fg)
         {
             base.ToString_FillInternal(fg);
-            if (Description != null)
+            fg.AppendLine($"Description => {Description}");
+            fg.AppendLine($"Icon => {Icon}");
+            fg.AppendLine("PrimaryAttributes =>");
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
             {
-                fg.AppendLine($"Description => {Description.ToStringSafe()}");
+                if (PrimaryAttributes.Overall != null)
+                {
+                    fg.AppendLine(PrimaryAttributes.Overall.ToString());
+                }
+                if (PrimaryAttributes.Specific != null)
+                {
+                    foreach (var subItem in PrimaryAttributes.Specific)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($" => {subItem}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
             }
-            if (Icon != null)
+            fg.AppendLine("]");
+            fg.AppendLine($"Specialization => {Specialization}");
+            fg.AppendLine("SecondaryAttributes =>");
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
             {
-                fg.AppendLine($"Icon => {Icon.ToStringSafe()}");
+                if (SecondaryAttributes.Overall != null)
+                {
+                    fg.AppendLine(SecondaryAttributes.Overall.ToString());
+                }
+                if (SecondaryAttributes.Specific != null)
+                {
+                    foreach (var subItem in SecondaryAttributes.Specific)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($" => {subItem}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
             }
-            if (ClassData != null)
-            {
-                ClassData.ToString(fg);
-            }
+            fg.AppendLine("]");
+            fg.AppendLine($"Flags => {Flags}");
+            fg.AppendLine($"ClassServices => {ClassServices}");
+            Training?.ToString(fg);
         }
         #endregion
 
@@ -2036,7 +2988,12 @@ namespace Mutagen.Internals
             var ret = new Class_ErrorMask();
             ret.Description = this.Description.Combine(rhs.Description);
             ret.Icon = this.Icon.Combine(rhs.Icon);
-            ret.ClassData = new MaskItem<Exception, ClassData_ErrorMask>(this.ClassData.Overall.Combine(rhs.ClassData.Overall), ((IErrorMask<ClassData_ErrorMask>)this.ClassData.Specific).Combine(rhs.ClassData.Specific));
+            ret.PrimaryAttributes = new MaskItem<Exception, IEnumerable<Exception>>(this.PrimaryAttributes.Overall.Combine(rhs.PrimaryAttributes.Overall), new List<Exception>(this.PrimaryAttributes.Specific.And(rhs.PrimaryAttributes.Specific)));
+            ret.Specialization = this.Specialization.Combine(rhs.Specialization);
+            ret.SecondaryAttributes = new MaskItem<Exception, IEnumerable<Exception>>(this.SecondaryAttributes.Overall.Combine(rhs.SecondaryAttributes.Overall), new List<Exception>(this.SecondaryAttributes.Specific.And(rhs.SecondaryAttributes.Specific)));
+            ret.Flags = this.Flags.Combine(rhs.Flags);
+            ret.ClassServices = this.ClassServices.Combine(rhs.ClassServices);
+            ret.Training = new MaskItem<Exception, ClassTraining_ErrorMask>(this.Training.Overall.Combine(rhs.Training.Overall), ((IErrorMask<ClassTraining_ErrorMask>)this.Training.Specific).Combine(rhs.Training.Specific));
             return ret;
         }
         public static Class_ErrorMask Combine(Class_ErrorMask lhs, Class_ErrorMask rhs)
@@ -2052,7 +3009,12 @@ namespace Mutagen.Internals
         #region Members
         public bool Description;
         public bool Icon;
-        public MaskItem<CopyOption, ClassData_CopyMask> ClassData;
+        public CopyOption PrimaryAttributes;
+        public bool Specialization;
+        public CopyOption SecondaryAttributes;
+        public bool Flags;
+        public bool ClassServices;
+        public MaskItem<CopyOption, ClassTraining_CopyMask> Training;
         #endregion
 
     }

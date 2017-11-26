@@ -1781,15 +1781,15 @@ namespace Mutagen.Internals
             {
                 if (printMask?.SymmetricGeometry ?? true)
                 {
-                    fg.AppendLine($"SymmetricGeometry => {SymmetricGeometry.ToStringSafe()}");
+                    fg.AppendLine($"SymmetricGeometry => {SymmetricGeometry}");
                 }
                 if (printMask?.AsymmetricGeometry ?? true)
                 {
-                    fg.AppendLine($"AsymmetricGeometry => {AsymmetricGeometry.ToStringSafe()}");
+                    fg.AppendLine($"AsymmetricGeometry => {AsymmetricGeometry}");
                 }
                 if (printMask?.SymmetricTexture ?? true)
                 {
-                    fg.AppendLine($"SymmetricTexture => {SymmetricTexture.ToStringSafe()}");
+                    fg.AppendLine($"SymmetricTexture => {SymmetricTexture}");
                 }
             }
             fg.AppendLine("]");
@@ -1889,18 +1889,9 @@ namespace Mutagen.Internals
         }
         protected void ToString_FillInternal(FileGeneration fg)
         {
-            if (SymmetricGeometry != null)
-            {
-                fg.AppendLine($"SymmetricGeometry => {SymmetricGeometry.ToStringSafe()}");
-            }
-            if (AsymmetricGeometry != null)
-            {
-                fg.AppendLine($"AsymmetricGeometry => {AsymmetricGeometry.ToStringSafe()}");
-            }
-            if (SymmetricTexture != null)
-            {
-                fg.AppendLine($"SymmetricTexture => {SymmetricTexture.ToStringSafe()}");
-            }
+            fg.AppendLine($"SymmetricGeometry => {SymmetricGeometry}");
+            fg.AppendLine($"AsymmetricGeometry => {AsymmetricGeometry}");
+            fg.AppendLine($"SymmetricTexture => {SymmetricTexture}");
         }
         #endregion
 

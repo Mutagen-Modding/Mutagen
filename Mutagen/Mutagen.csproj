@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="us-ascii"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -199,9 +199,6 @@
     <Compile Include="Records\Major Records\NamedMajorRecord_LoquiGenerated.cs">
       <DependentUpon>NamedMajorRecord.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\ClassData_LoquiGenerated.cs">
-      <DependentUpon>Class.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\ClassTraining_LoquiGenerated.cs">
       <DependentUpon>Class.xml</DependentUpon>
     </Compile>
@@ -218,9 +215,6 @@
       <DependentUpon>Faction.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Race_LoquiGenerated.cs">
-      <DependentUpon>Race.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\RaceData_LoquiGenerated.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\SkillBoost_LoquiGenerated.cs">
@@ -270,9 +264,6 @@
     </Compile>
     <Compile Include="Records\Major Records\SoundDataExtended_LoquiGenerated.cs">
       <DependentUpon>Sound.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\SkillData_LoquiGenerated.cs">
-      <DependentUpon>SkillRecord.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\SkillRecord_LoquiGenerated.cs">
       <DependentUpon>SkillRecord.xml</DependentUpon>

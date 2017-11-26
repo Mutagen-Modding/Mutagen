@@ -1307,11 +1307,11 @@ namespace Mutagen.Internals
             {
                 if (printMask?.TypeChar ?? true)
                 {
-                    fg.AppendLine($"TypeChar => {TypeChar.ToStringSafe()}");
+                    fg.AppendLine($"TypeChar => {TypeChar}");
                 }
                 if (printMask?.RawFloat ?? true)
                 {
-                    fg.AppendLine($"RawFloat => {RawFloat.ToStringSafe()}");
+                    fg.AppendLine($"RawFloat => {RawFloat}");
                 }
             }
             fg.AppendLine("]");
@@ -1394,14 +1394,8 @@ namespace Mutagen.Internals
         protected override void ToString_FillInternal(FileGeneration fg)
         {
             base.ToString_FillInternal(fg);
-            if (TypeChar != null)
-            {
-                fg.AppendLine($"TypeChar => {TypeChar.ToStringSafe()}");
-            }
-            if (RawFloat != null)
-            {
-                fg.AppendLine($"RawFloat => {RawFloat.ToStringSafe()}");
-            }
+            fg.AppendLine($"TypeChar => {TypeChar}");
+            fg.AppendLine($"RawFloat => {RawFloat}");
         }
         #endregion
 

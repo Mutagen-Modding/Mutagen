@@ -1838,19 +1838,19 @@ namespace Mutagen.Internals
             {
                 if (printMask?.Fluff ?? true)
                 {
-                    fg.AppendLine($"Fluff => {Fluff.ToStringSafe()}");
+                    fg.AppendLine($"Fluff => {Fluff}");
                 }
                 if (printMask?.RefCount ?? true)
                 {
-                    fg.AppendLine($"RefCount => {RefCount.ToStringSafe()}");
+                    fg.AppendLine($"RefCount => {RefCount}");
                 }
                 if (printMask?.CompiledSize ?? true)
                 {
-                    fg.AppendLine($"CompiledSize => {CompiledSize.ToStringSafe()}");
+                    fg.AppendLine($"CompiledSize => {CompiledSize}");
                 }
                 if (printMask?.VariableCount ?? true)
                 {
-                    fg.AppendLine($"VariableCount => {VariableCount.ToStringSafe()}");
+                    fg.AppendLine($"VariableCount => {VariableCount}");
                 }
             }
             fg.AppendLine("]");
@@ -1957,22 +1957,10 @@ namespace Mutagen.Internals
         }
         protected void ToString_FillInternal(FileGeneration fg)
         {
-            if (Fluff != null)
-            {
-                fg.AppendLine($"Fluff => {Fluff.ToStringSafe()}");
-            }
-            if (RefCount != null)
-            {
-                fg.AppendLine($"RefCount => {RefCount.ToStringSafe()}");
-            }
-            if (CompiledSize != null)
-            {
-                fg.AppendLine($"CompiledSize => {CompiledSize.ToStringSafe()}");
-            }
-            if (VariableCount != null)
-            {
-                fg.AppendLine($"VariableCount => {VariableCount.ToStringSafe()}");
-            }
+            fg.AppendLine($"Fluff => {Fluff}");
+            fg.AppendLine($"RefCount => {RefCount}");
+            fg.AppendLine($"CompiledSize => {CompiledSize}");
+            fg.AppendLine($"VariableCount => {VariableCount}");
         }
         #endregion
 

@@ -1618,11 +1618,11 @@ namespace Mutagen.Internals
             {
                 if (printMask?.Faction ?? true)
                 {
-                    fg.AppendLine($"Faction => {Faction.ToStringSafe()}");
+                    fg.AppendLine($"Faction => {Faction}");
                 }
                 if (printMask?.Modifier ?? true)
                 {
-                    fg.AppendLine($"Modifier => {Modifier.ToStringSafe()}");
+                    fg.AppendLine($"Modifier => {Modifier}");
                 }
             }
             fg.AppendLine("]");
@@ -1715,14 +1715,8 @@ namespace Mutagen.Internals
         }
         protected void ToString_FillInternal(FileGeneration fg)
         {
-            if (Faction != null)
-            {
-                fg.AppendLine($"Faction => {Faction.ToStringSafe()}");
-            }
-            if (Modifier != null)
-            {
-                fg.AppendLine($"Modifier => {Modifier.ToStringSafe()}");
-            }
+            fg.AppendLine($"Faction => {Faction}");
+            fg.AppendLine($"Modifier => {Modifier}");
         }
         #endregion
 

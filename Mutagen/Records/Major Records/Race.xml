@@ -7,7 +7,17 @@
         <FormID recordType="SPLO" />
       </List>
       <RefList name="Relations" refName="Relation" />
-      <RefDirect name="Data" refName="RaceData" />
+      <Data>
+        <Fields>
+          <RefList name="SkillBoosts" maxSize="7" refName="SkillBoost" />
+          <ByteArray name="Fluff" length="4" nullable="false" />
+          <Float name="MaleHeight" />
+          <Float name="FemaleHeight" />
+          <Float name="MaleWeight" />
+          <Float name="FemaleWeight" />
+          <Enum name="Flags" enumName="Race.Flag" byteLength="2" />
+        </Fields>
+      </Data>
       <RefDirect name="Voices" refName="RaceVoices" />
       <RefDirect name="DefaultHair" refName="RaceHair" />
       <UInt8 name="DefaultHairColor" recordType="CNAM" />
@@ -24,17 +34,6 @@
       </List>
       <RefDirect name="FaceGenData" refName="FaceGenData" />
       <ByteArray name="Unknown" recordType="SNAM" length="2" nullable="false" />
-    </Fields>
-  </Object>
-  <Object name="RaceData" objType="Subrecord" recordType="DATA" GUID="0f6434d7-0cdc-430d-bd2a-9f7a099425f2" ID="26">
-    <Fields>
-      <RefList name="SkillBoosts" maxSize="7" refName="SkillBoost" />
-      <ByteArray name="Fluff" length="4" nullable="false" />
-      <Float name="MaleHeight" />
-      <Float name="FemaleHeight" />
-      <Float name="MaleWeight" />
-      <Float name="FemaleWeight" />
-      <Enum name="Flags" enumName="Race.Flag" byteLength="2" />
     </Fields>
   </Object>
   <Object name="SkillBoost" objType="Subrecord" GUID="5b28ecc2-3bf5-495e-9f6f-db9ce344e94e" ID="27">

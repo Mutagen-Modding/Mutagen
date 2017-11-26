@@ -2134,15 +2134,15 @@ namespace Mutagen.Internals
             {
                 if (printMask?.ContainedRecordType ?? true)
                 {
-                    fg.AppendLine($"ContainedRecordType => {ContainedRecordType.ToStringSafe()}");
+                    fg.AppendLine($"ContainedRecordType => {ContainedRecordType}");
                 }
                 if (printMask?.GroupType ?? true)
                 {
-                    fg.AppendLine($"GroupType => {GroupType.ToStringSafe()}");
+                    fg.AppendLine($"GroupType => {GroupType}");
                 }
                 if (printMask?.LastModified ?? true)
                 {
-                    fg.AppendLine($"LastModified => {LastModified.ToStringSafe()}");
+                    fg.AppendLine($"LastModified => {LastModified}");
                 }
                 if (printMask?.Items?.Overall ?? true)
                 {
@@ -2161,7 +2161,7 @@ namespace Mutagen.Internals
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
                                 {
-                                    subItem.ToString(fg);
+                                    subItem?.ToString(fg);
                                 }
                                 fg.AppendLine("]");
                             }
@@ -2275,43 +2275,31 @@ namespace Mutagen.Internals
         }
         protected void ToString_FillInternal(FileGeneration fg)
         {
-            if (ContainedRecordType != null)
+            fg.AppendLine($"ContainedRecordType => {ContainedRecordType}");
+            fg.AppendLine($"GroupType => {GroupType}");
+            fg.AppendLine($"LastModified => {LastModified}");
+            fg.AppendLine("Items =>");
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
             {
-                fg.AppendLine($"ContainedRecordType => {ContainedRecordType.ToStringSafe()}");
-            }
-            if (GroupType != null)
-            {
-                fg.AppendLine($"GroupType => {GroupType.ToStringSafe()}");
-            }
-            if (LastModified != null)
-            {
-                fg.AppendLine($"LastModified => {LastModified.ToStringSafe()}");
-            }
-            if (Items != null)
-            {
-                fg.AppendLine("Items =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                if (Items.Overall != null)
                 {
-                    if (Items.Overall != null)
+                    fg.AppendLine(Items.Overall.ToString());
+                }
+                if (Items.Specific != null)
+                {
+                    foreach (var subItem in Items.Specific)
                     {
-                        fg.AppendLine(Items.Overall.ToString());
-                    }
-                    if (Items.Specific != null)
-                    {
-                        foreach (var subItem in Items.Specific)
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem.ToString(fg);
-                            }
-                            fg.AppendLine("]");
+                            subItem?.ToString(fg);
                         }
+                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
+            fg.AppendLine("]");
         }
         #endregion
 

@@ -12,7 +12,6 @@ using Loqui;
 using Noggog;
 using Noggog.Notifying;
 using Mutagen.Internals;
-using Mutagen;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -70,13 +69,60 @@ namespace Mutagen
         INotifyingItem<FilePath> ISkillRecord.Icon_Property => this.Icon_Property;
         INotifyingItemGetter<FilePath> ISkillRecordGetter.Icon_Property => this.Icon_Property;
         #endregion
-        #region Data
-        private readonly INotifyingItem<SkillData> _Data = new NotifyingItem<SkillData>();
-        public INotifyingItem<SkillData> Data_Property => this._Data;
-        SkillData ISkillRecordGetter.Data => this.Data;
-        public SkillData Data { get => _Data.Item; set => _Data.Item = value; }
-        INotifyingItem<SkillData> ISkillRecord.Data_Property => this.Data_Property;
-        INotifyingItemGetter<SkillData> ISkillRecordGetter.Data_Property => this.Data_Property;
+        #region Action
+        protected readonly INotifyingItem<ActorValue> _Action = NotifyingItem.Factory<ActorValue>(markAsSet: false);
+        public INotifyingItem<ActorValue> Action_Property => _Action;
+        public ActorValue Action
+        {
+            get => this._Action.Item;
+            set => this._Action.Set(value);
+        }
+        INotifyingItem<ActorValue> ISkillRecord.Action_Property => this.Action_Property;
+        INotifyingItemGetter<ActorValue> ISkillRecordGetter.Action_Property => this.Action_Property;
+        #endregion
+        #region Attribute
+        protected readonly INotifyingItem<ActorValue> _Attribute = NotifyingItem.Factory<ActorValue>(markAsSet: false);
+        public INotifyingItem<ActorValue> Attribute_Property => _Attribute;
+        public ActorValue Attribute
+        {
+            get => this._Attribute.Item;
+            set => this._Attribute.Set(value);
+        }
+        INotifyingItem<ActorValue> ISkillRecord.Attribute_Property => this.Attribute_Property;
+        INotifyingItemGetter<ActorValue> ISkillRecordGetter.Attribute_Property => this.Attribute_Property;
+        #endregion
+        #region Specialization
+        protected readonly INotifyingItem<Specialization> _Specialization = NotifyingItem.Factory<Specialization>(markAsSet: false);
+        public INotifyingItem<Specialization> Specialization_Property => _Specialization;
+        public Specialization Specialization
+        {
+            get => this._Specialization.Item;
+            set => this._Specialization.Set(value);
+        }
+        INotifyingItem<Specialization> ISkillRecord.Specialization_Property => this.Specialization_Property;
+        INotifyingItemGetter<Specialization> ISkillRecordGetter.Specialization_Property => this.Specialization_Property;
+        #endregion
+        #region UseValueFirst
+        protected readonly INotifyingItem<Single> _UseValueFirst = NotifyingItem.Factory<Single>(markAsSet: false);
+        public INotifyingItem<Single> UseValueFirst_Property => _UseValueFirst;
+        public Single UseValueFirst
+        {
+            get => this._UseValueFirst.Item;
+            set => this._UseValueFirst.Set(value);
+        }
+        INotifyingItem<Single> ISkillRecord.UseValueFirst_Property => this.UseValueFirst_Property;
+        INotifyingItemGetter<Single> ISkillRecordGetter.UseValueFirst_Property => this.UseValueFirst_Property;
+        #endregion
+        #region UseValueSecond
+        protected readonly INotifyingItem<Single> _UseValueSecond = NotifyingItem.Factory<Single>(markAsSet: false);
+        public INotifyingItem<Single> UseValueSecond_Property => _UseValueSecond;
+        public Single UseValueSecond
+        {
+            get => this._UseValueSecond.Item;
+            set => this._UseValueSecond.Set(value);
+        }
+        INotifyingItem<Single> ISkillRecord.UseValueSecond_Property => this.UseValueSecond_Property;
+        INotifyingItemGetter<Single> ISkillRecordGetter.UseValueSecond_Property => this.UseValueSecond_Property;
         #endregion
         #region ApprenticeText
         protected readonly INotifyingItem<String> _ApprenticeText = NotifyingItem.Factory<String>(markAsSet: false);
@@ -193,10 +239,30 @@ namespace Mutagen
             {
                 if (!object.Equals(Icon, rhs.Icon)) return false;
             }
-            if (Data_Property.HasBeenSet != rhs.Data_Property.HasBeenSet) return false;
-            if (Data_Property.HasBeenSet)
+            if (Action_Property.HasBeenSet != rhs.Action_Property.HasBeenSet) return false;
+            if (Action_Property.HasBeenSet)
             {
-                if (!object.Equals(Data, rhs.Data)) return false;
+                if (Action != rhs.Action) return false;
+            }
+            if (Attribute_Property.HasBeenSet != rhs.Attribute_Property.HasBeenSet) return false;
+            if (Attribute_Property.HasBeenSet)
+            {
+                if (Attribute != rhs.Attribute) return false;
+            }
+            if (Specialization_Property.HasBeenSet != rhs.Specialization_Property.HasBeenSet) return false;
+            if (Specialization_Property.HasBeenSet)
+            {
+                if (Specialization != rhs.Specialization) return false;
+            }
+            if (UseValueFirst_Property.HasBeenSet != rhs.UseValueFirst_Property.HasBeenSet) return false;
+            if (UseValueFirst_Property.HasBeenSet)
+            {
+                if (UseValueFirst != rhs.UseValueFirst) return false;
+            }
+            if (UseValueSecond_Property.HasBeenSet != rhs.UseValueSecond_Property.HasBeenSet) return false;
+            if (UseValueSecond_Property.HasBeenSet)
+            {
+                if (UseValueSecond != rhs.UseValueSecond) return false;
             }
             if (ApprenticeText_Property.HasBeenSet != rhs.ApprenticeText_Property.HasBeenSet) return false;
             if (ApprenticeText_Property.HasBeenSet)
@@ -236,9 +302,25 @@ namespace Mutagen
             {
                 ret = HashHelper.GetHashCode(Icon).CombineHashCode(ret);
             }
-            if (Data_Property.HasBeenSet)
+            if (Action_Property.HasBeenSet)
             {
-                ret = HashHelper.GetHashCode(Data).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(Action).CombineHashCode(ret);
+            }
+            if (Attribute_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Attribute).CombineHashCode(ret);
+            }
+            if (Specialization_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Specialization).CombineHashCode(ret);
+            }
+            if (UseValueFirst_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(UseValueFirst).CombineHashCode(ret);
+            }
+            if (UseValueSecond_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(UseValueSecond).CombineHashCode(ret);
             }
             if (ApprenticeText_Property.HasBeenSet)
             {
@@ -601,17 +683,76 @@ namespace Mutagen
                             subMask);
                     }
                     break;
-                case "Data":
+                case "Action":
                     {
-                        MaskItem<Exception, SkillData_ErrorMask> subMask;
-                        var tryGet = LoquiXmlTranslation<SkillData, SkillData_ErrorMask>.Instance.Parse(
-                            root: root,
+                        Exception subMask;
+                        var tryGet = EnumXmlTranslation<ActorValue>.Instance.Parse(
+                            root,
+                            nullable: false,
                             doMasks: errorMask != null,
-                            mask: out subMask);
-                        item._Data.SetIfSucceeded(tryGet);
+                            errorMask: out subMask);
+                        item._Action.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            (int)SkillRecord_FieldIndex.Data,
+                            (int)SkillRecord_FieldIndex.Action,
+                            subMask);
+                    }
+                    break;
+                case "Attribute":
+                    {
+                        Exception subMask;
+                        var tryGet = EnumXmlTranslation<ActorValue>.Instance.Parse(
+                            root,
+                            nullable: false,
+                            doMasks: errorMask != null,
+                            errorMask: out subMask);
+                        item._Attribute.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            (int)SkillRecord_FieldIndex.Attribute,
+                            subMask);
+                    }
+                    break;
+                case "Specialization":
+                    {
+                        Exception subMask;
+                        var tryGet = EnumXmlTranslation<Specialization>.Instance.Parse(
+                            root,
+                            nullable: false,
+                            doMasks: errorMask != null,
+                            errorMask: out subMask);
+                        item._Specialization.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            (int)SkillRecord_FieldIndex.Specialization,
+                            subMask);
+                    }
+                    break;
+                case "UseValueFirst":
+                    {
+                        Exception subMask;
+                        var tryGet = FloatXmlTranslation.Instance.ParseNonNull(
+                            root,
+                            doMasks: errorMask != null,
+                            errorMask: out subMask);
+                        item._UseValueFirst.SetIfSucceeded(tryGet);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            (int)SkillRecord_FieldIndex.UseValueFirst,
+                            subMask);
+                    }
+                    break;
+                case "UseValueSecond":
+                    {
+                        Exception subMask;
+                        var tryGet = FloatXmlTranslation.Instance.ParseNonNull(
+                            root,
+                            doMasks: errorMask != null,
+                            errorMask: out subMask);
+                        item._UseValueSecond.SetIfSucceeded(tryGet);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            (int)SkillRecord_FieldIndex.UseValueSecond,
                             subMask);
                     }
                     break;
@@ -1023,9 +1164,29 @@ namespace Mutagen
                     item._Icon.SetIfSucceeded(tryGet);
                     break;
                 case "DATA":
-                    item._Data.SetIfSucceeded(LoquiBinaryTranslation<SkillData, SkillData_ErrorMask>.Instance.Parse(
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    var ActiontryGet = Mutagen.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
+                        frame: frame.Spawn(new ContentLength(4)),
+                        fieldIndex: (int)SkillRecord_FieldIndex.Action,
+                        errorMask: errorMask);
+                    item._Action.SetIfSucceeded(ActiontryGet);
+                    var AttributetryGet = Mutagen.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
+                        frame: frame.Spawn(new ContentLength(4)),
+                        fieldIndex: (int)SkillRecord_FieldIndex.Attribute,
+                        errorMask: errorMask);
+                    item._Attribute.SetIfSucceeded(AttributetryGet);
+                    var SpecializationtryGet = Mutagen.Binary.EnumBinaryTranslation<Specialization>.Instance.Parse(
+                        frame: frame.Spawn(new ContentLength(4)),
+                        fieldIndex: (int)SkillRecord_FieldIndex.Specialization,
+                        errorMask: errorMask);
+                    item._Specialization.SetIfSucceeded(SpecializationtryGet);
+                    item._UseValueFirst.SetIfSucceeded(Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: frame,
-                        fieldIndex: (int)SkillRecord_FieldIndex.Data,
+                        fieldIndex: (int)SkillRecord_FieldIndex.UseValueFirst,
+                        errorMask: errorMask));
+                    item._UseValueSecond.SetIfSucceeded(Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: frame,
+                        fieldIndex: (int)SkillRecord_FieldIndex.UseValueSecond,
                         errorMask: errorMask));
                     break;
                 case "ANAM":
@@ -1161,9 +1322,29 @@ namespace Mutagen
                         (FilePath)obj,
                         cmds);
                     break;
-                case SkillRecord_FieldIndex.Data:
-                    this._Data.Set(
-                        (SkillData)obj,
+                case SkillRecord_FieldIndex.Action:
+                    this._Action.Set(
+                        (ActorValue)obj,
+                        cmds);
+                    break;
+                case SkillRecord_FieldIndex.Attribute:
+                    this._Attribute.Set(
+                        (ActorValue)obj,
+                        cmds);
+                    break;
+                case SkillRecord_FieldIndex.Specialization:
+                    this._Specialization.Set(
+                        (Specialization)obj,
+                        cmds);
+                    break;
+                case SkillRecord_FieldIndex.UseValueFirst:
+                    this._UseValueFirst.Set(
+                        (Single)obj,
+                        cmds);
+                    break;
+                case SkillRecord_FieldIndex.UseValueSecond:
+                    this._UseValueSecond.Set(
+                        (Single)obj,
                         cmds);
                     break;
                 case SkillRecord_FieldIndex.ApprenticeText:
@@ -1232,9 +1413,29 @@ namespace Mutagen
                         (FilePath)pair.Value,
                         null);
                     break;
-                case SkillRecord_FieldIndex.Data:
-                    obj._Data.Set(
-                        (SkillData)pair.Value,
+                case SkillRecord_FieldIndex.Action:
+                    obj._Action.Set(
+                        (ActorValue)pair.Value,
+                        null);
+                    break;
+                case SkillRecord_FieldIndex.Attribute:
+                    obj._Attribute.Set(
+                        (ActorValue)pair.Value,
+                        null);
+                    break;
+                case SkillRecord_FieldIndex.Specialization:
+                    obj._Specialization.Set(
+                        (Specialization)pair.Value,
+                        null);
+                    break;
+                case SkillRecord_FieldIndex.UseValueFirst:
+                    obj._UseValueFirst.Set(
+                        (Single)pair.Value,
+                        null);
+                    break;
+                case SkillRecord_FieldIndex.UseValueSecond:
+                    obj._UseValueSecond.Set(
+                        (Single)pair.Value,
                         null);
                     break;
                 case SkillRecord_FieldIndex.ApprenticeText:
@@ -1281,8 +1482,20 @@ namespace Mutagen
         new FilePath Icon { get; set; }
         new INotifyingItem<FilePath> Icon_Property { get; }
 
-        new SkillData Data { get; set; }
-        new INotifyingItem<SkillData> Data_Property { get; }
+        new ActorValue Action { get; set; }
+        new INotifyingItem<ActorValue> Action_Property { get; }
+
+        new ActorValue Attribute { get; set; }
+        new INotifyingItem<ActorValue> Attribute_Property { get; }
+
+        new Specialization Specialization { get; set; }
+        new INotifyingItem<Specialization> Specialization_Property { get; }
+
+        new Single UseValueFirst { get; set; }
+        new INotifyingItem<Single> UseValueFirst_Property { get; }
+
+        new Single UseValueSecond { get; set; }
+        new INotifyingItem<Single> UseValueSecond_Property { get; }
 
         new String ApprenticeText { get; set; }
         new INotifyingItem<String> ApprenticeText_Property { get; }
@@ -1315,9 +1528,29 @@ namespace Mutagen
         INotifyingItemGetter<FilePath> Icon_Property { get; }
 
         #endregion
-        #region Data
-        SkillData Data { get; }
-        INotifyingItemGetter<SkillData> Data_Property { get; }
+        #region Action
+        ActorValue Action { get; }
+        INotifyingItemGetter<ActorValue> Action_Property { get; }
+
+        #endregion
+        #region Attribute
+        ActorValue Attribute { get; }
+        INotifyingItemGetter<ActorValue> Attribute_Property { get; }
+
+        #endregion
+        #region Specialization
+        Specialization Specialization { get; }
+        INotifyingItemGetter<Specialization> Specialization_Property { get; }
+
+        #endregion
+        #region UseValueFirst
+        Single UseValueFirst { get; }
+        INotifyingItemGetter<Single> UseValueFirst_Property { get; }
+
+        #endregion
+        #region UseValueSecond
+        Single UseValueSecond { get; }
+        INotifyingItemGetter<Single> UseValueSecond_Property { get; }
 
         #endregion
         #region ApprenticeText
@@ -1355,11 +1588,15 @@ namespace Mutagen.Internals
         Skill = 5,
         Description = 6,
         Icon = 7,
-        Data = 8,
-        ApprenticeText = 9,
-        JourneymanText = 10,
-        ExpertText = 11,
-        MasterText = 12,
+        Action = 8,
+        Attribute = 9,
+        Specialization = 10,
+        UseValueFirst = 11,
+        UseValueSecond = 12,
+        ApprenticeText = 13,
+        JourneymanText = 14,
+        ExpertText = 15,
+        MasterText = 16,
     }
     #endregion
 
@@ -1377,7 +1614,7 @@ namespace Mutagen.Internals
 
         public const string GUID = "d6afa219-e0d6-4f44-83d4-2d0298897f4d";
 
-        public const ushort FieldCount = 8;
+        public const ushort FieldCount = 12;
 
         public static readonly Type MaskType = typeof(SkillRecord_Mask<>);
 
@@ -1411,8 +1648,16 @@ namespace Mutagen.Internals
                     return (ushort)SkillRecord_FieldIndex.Description;
                 case "ICON":
                     return (ushort)SkillRecord_FieldIndex.Icon;
-                case "DATA":
-                    return (ushort)SkillRecord_FieldIndex.Data;
+                case "ACTION":
+                    return (ushort)SkillRecord_FieldIndex.Action;
+                case "ATTRIBUTE":
+                    return (ushort)SkillRecord_FieldIndex.Attribute;
+                case "SPECIALIZATION":
+                    return (ushort)SkillRecord_FieldIndex.Specialization;
+                case "USEVALUEFIRST":
+                    return (ushort)SkillRecord_FieldIndex.UseValueFirst;
+                case "USEVALUESECOND":
+                    return (ushort)SkillRecord_FieldIndex.UseValueSecond;
                 case "APPRENTICETEXT":
                     return (ushort)SkillRecord_FieldIndex.ApprenticeText;
                 case "JOURNEYMANTEXT":
@@ -1434,7 +1679,11 @@ namespace Mutagen.Internals
                 case SkillRecord_FieldIndex.Skill:
                 case SkillRecord_FieldIndex.Description:
                 case SkillRecord_FieldIndex.Icon:
-                case SkillRecord_FieldIndex.Data:
+                case SkillRecord_FieldIndex.Action:
+                case SkillRecord_FieldIndex.Attribute:
+                case SkillRecord_FieldIndex.Specialization:
+                case SkillRecord_FieldIndex.UseValueFirst:
+                case SkillRecord_FieldIndex.UseValueSecond:
                 case SkillRecord_FieldIndex.ApprenticeText:
                 case SkillRecord_FieldIndex.JourneymanText:
                 case SkillRecord_FieldIndex.ExpertText:
@@ -1450,11 +1699,14 @@ namespace Mutagen.Internals
             SkillRecord_FieldIndex enu = (SkillRecord_FieldIndex)index;
             switch (enu)
             {
-                case SkillRecord_FieldIndex.Data:
-                    return true;
                 case SkillRecord_FieldIndex.Skill:
                 case SkillRecord_FieldIndex.Description:
                 case SkillRecord_FieldIndex.Icon:
+                case SkillRecord_FieldIndex.Action:
+                case SkillRecord_FieldIndex.Attribute:
+                case SkillRecord_FieldIndex.Specialization:
+                case SkillRecord_FieldIndex.UseValueFirst:
+                case SkillRecord_FieldIndex.UseValueSecond:
                 case SkillRecord_FieldIndex.ApprenticeText:
                 case SkillRecord_FieldIndex.JourneymanText:
                 case SkillRecord_FieldIndex.ExpertText:
@@ -1473,7 +1725,11 @@ namespace Mutagen.Internals
                 case SkillRecord_FieldIndex.Skill:
                 case SkillRecord_FieldIndex.Description:
                 case SkillRecord_FieldIndex.Icon:
-                case SkillRecord_FieldIndex.Data:
+                case SkillRecord_FieldIndex.Action:
+                case SkillRecord_FieldIndex.Attribute:
+                case SkillRecord_FieldIndex.Specialization:
+                case SkillRecord_FieldIndex.UseValueFirst:
+                case SkillRecord_FieldIndex.UseValueSecond:
                 case SkillRecord_FieldIndex.ApprenticeText:
                 case SkillRecord_FieldIndex.JourneymanText:
                 case SkillRecord_FieldIndex.ExpertText:
@@ -1495,8 +1751,16 @@ namespace Mutagen.Internals
                     return "Description";
                 case SkillRecord_FieldIndex.Icon:
                     return "Icon";
-                case SkillRecord_FieldIndex.Data:
-                    return "Data";
+                case SkillRecord_FieldIndex.Action:
+                    return "Action";
+                case SkillRecord_FieldIndex.Attribute:
+                    return "Attribute";
+                case SkillRecord_FieldIndex.Specialization:
+                    return "Specialization";
+                case SkillRecord_FieldIndex.UseValueFirst:
+                    return "UseValueFirst";
+                case SkillRecord_FieldIndex.UseValueSecond:
+                    return "UseValueSecond";
                 case SkillRecord_FieldIndex.ApprenticeText:
                     return "ApprenticeText";
                 case SkillRecord_FieldIndex.JourneymanText:
@@ -1518,7 +1782,11 @@ namespace Mutagen.Internals
                 case SkillRecord_FieldIndex.Skill:
                 case SkillRecord_FieldIndex.Description:
                 case SkillRecord_FieldIndex.Icon:
-                case SkillRecord_FieldIndex.Data:
+                case SkillRecord_FieldIndex.Action:
+                case SkillRecord_FieldIndex.Attribute:
+                case SkillRecord_FieldIndex.Specialization:
+                case SkillRecord_FieldIndex.UseValueFirst:
+                case SkillRecord_FieldIndex.UseValueSecond:
                 case SkillRecord_FieldIndex.ApprenticeText:
                 case SkillRecord_FieldIndex.JourneymanText:
                 case SkillRecord_FieldIndex.ExpertText:
@@ -1537,7 +1805,11 @@ namespace Mutagen.Internals
                 case SkillRecord_FieldIndex.Skill:
                 case SkillRecord_FieldIndex.Description:
                 case SkillRecord_FieldIndex.Icon:
-                case SkillRecord_FieldIndex.Data:
+                case SkillRecord_FieldIndex.Action:
+                case SkillRecord_FieldIndex.Attribute:
+                case SkillRecord_FieldIndex.Specialization:
+                case SkillRecord_FieldIndex.UseValueFirst:
+                case SkillRecord_FieldIndex.UseValueSecond:
                 case SkillRecord_FieldIndex.ApprenticeText:
                 case SkillRecord_FieldIndex.JourneymanText:
                 case SkillRecord_FieldIndex.ExpertText:
@@ -1559,8 +1831,16 @@ namespace Mutagen.Internals
                     return typeof(String);
                 case SkillRecord_FieldIndex.Icon:
                     return typeof(FilePath);
-                case SkillRecord_FieldIndex.Data:
-                    return typeof(SkillData);
+                case SkillRecord_FieldIndex.Action:
+                    return typeof(ActorValue);
+                case SkillRecord_FieldIndex.Attribute:
+                    return typeof(ActorValue);
+                case SkillRecord_FieldIndex.Specialization:
+                    return typeof(Specialization);
+                case SkillRecord_FieldIndex.UseValueFirst:
+                    return typeof(Single);
+                case SkillRecord_FieldIndex.UseValueSecond:
+                    return typeof(Single);
                 case SkillRecord_FieldIndex.ApprenticeText:
                     return typeof(String);
                 case SkillRecord_FieldIndex.JourneymanText:
@@ -1585,7 +1865,7 @@ namespace Mutagen.Internals
         public static readonly RecordType MNAM_HEADER = new RecordType("MNAM");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = SKIL_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 8;
+        public const int NumTypedFields = 7;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1745,55 +2025,79 @@ namespace Mutagen.Internals
                     errorMask().SetNthException((int)SkillRecord_FieldIndex.Icon, ex);
                 }
             }
-            if (copyMask?.Data.Overall != CopyOption.Skip)
+            if (copyMask?.Action ?? true)
             {
                 try
                 {
-                    item.Data_Property.SetToWithDefault(
-                        rhs.Data_Property,
-                        def?.Data_Property,
-                        cmds,
-                        (r, d) =>
-                        {
-                            switch (copyMask?.Data.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return r;
-                                case CopyOption.CopyIn:
-                                    SkillDataCommon.CopyFieldsFrom(
-                                        item: item.Data,
-                                        rhs: rhs.Data,
-                                        def: def?.Data,
-                                        doMasks: doMasks,
-                                        errorMask: (doMasks ? new Func<SkillData_ErrorMask>(() =>
-                                        {
-                                            var baseMask = errorMask();
-                                            if (baseMask.Data.Specific == null)
-                                            {
-                                                baseMask.Data = new MaskItem<Exception, SkillData_ErrorMask>(null, new SkillData_ErrorMask());
-                                            }
-                                            return baseMask.Data.Specific;
-                                        }
-                                        ) : null),
-                                        copyMask: copyMask?.Data.Specific,
-                                        cmds: cmds);
-                                    return r;
-                                case CopyOption.MakeCopy:
-                                    if (r == null) return default(SkillData);
-                                    return SkillData.Copy(
-                                        r,
-                                        copyMask?.Data?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Data?.Overall}. Cannot execute copy.");
-                            }
-                        }
-                        );
+                    item.Action_Property.SetToWithDefault(
+                        rhs.Action_Property,
+                        def?.Action_Property,
+                        cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
                 {
-                    errorMask().SetNthException((int)SkillRecord_FieldIndex.Data, ex);
+                    errorMask().SetNthException((int)SkillRecord_FieldIndex.Action, ex);
+                }
+            }
+            if (copyMask?.Attribute ?? true)
+            {
+                try
+                {
+                    item.Attribute_Property.SetToWithDefault(
+                        rhs.Attribute_Property,
+                        def?.Attribute_Property,
+                        cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)SkillRecord_FieldIndex.Attribute, ex);
+                }
+            }
+            if (copyMask?.Specialization ?? true)
+            {
+                try
+                {
+                    item.Specialization_Property.SetToWithDefault(
+                        rhs.Specialization_Property,
+                        def?.Specialization_Property,
+                        cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)SkillRecord_FieldIndex.Specialization, ex);
+                }
+            }
+            if (copyMask?.UseValueFirst ?? true)
+            {
+                try
+                {
+                    item.UseValueFirst_Property.SetToWithDefault(
+                        rhs.UseValueFirst_Property,
+                        def?.UseValueFirst_Property,
+                        cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)SkillRecord_FieldIndex.UseValueFirst, ex);
+                }
+            }
+            if (copyMask?.UseValueSecond ?? true)
+            {
+                try
+                {
+                    item.UseValueSecond_Property.SetToWithDefault(
+                        rhs.UseValueSecond_Property,
+                        def?.UseValueSecond_Property,
+                        cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)SkillRecord_FieldIndex.UseValueSecond, ex);
                 }
             }
             if (copyMask?.ApprenticeText ?? true)
@@ -1878,8 +2182,20 @@ namespace Mutagen.Internals
                 case SkillRecord_FieldIndex.Icon:
                     obj.Icon_Property.HasBeenSet = on;
                     break;
-                case SkillRecord_FieldIndex.Data:
-                    obj.Data_Property.HasBeenSet = on;
+                case SkillRecord_FieldIndex.Action:
+                    obj.Action_Property.HasBeenSet = on;
+                    break;
+                case SkillRecord_FieldIndex.Attribute:
+                    obj.Attribute_Property.HasBeenSet = on;
+                    break;
+                case SkillRecord_FieldIndex.Specialization:
+                    obj.Specialization_Property.HasBeenSet = on;
+                    break;
+                case SkillRecord_FieldIndex.UseValueFirst:
+                    obj.UseValueFirst_Property.HasBeenSet = on;
+                    break;
+                case SkillRecord_FieldIndex.UseValueSecond:
+                    obj.UseValueSecond_Property.HasBeenSet = on;
                     break;
                 case SkillRecord_FieldIndex.ApprenticeText:
                     obj.ApprenticeText_Property.HasBeenSet = on;
@@ -1916,8 +2232,20 @@ namespace Mutagen.Internals
                 case SkillRecord_FieldIndex.Icon:
                     obj.Icon_Property.Unset(cmds);
                     break;
-                case SkillRecord_FieldIndex.Data:
-                    obj.Data_Property.Unset(cmds);
+                case SkillRecord_FieldIndex.Action:
+                    obj.Action_Property.Unset(cmds);
+                    break;
+                case SkillRecord_FieldIndex.Attribute:
+                    obj.Attribute_Property.Unset(cmds);
+                    break;
+                case SkillRecord_FieldIndex.Specialization:
+                    obj.Specialization_Property.Unset(cmds);
+                    break;
+                case SkillRecord_FieldIndex.UseValueFirst:
+                    obj.UseValueFirst_Property.Unset(cmds);
+                    break;
+                case SkillRecord_FieldIndex.UseValueSecond:
+                    obj.UseValueSecond_Property.Unset(cmds);
                     break;
                 case SkillRecord_FieldIndex.ApprenticeText:
                     obj.ApprenticeText_Property.Unset(cmds);
@@ -1950,8 +2278,16 @@ namespace Mutagen.Internals
                     return obj.Description_Property.HasBeenSet;
                 case SkillRecord_FieldIndex.Icon:
                     return obj.Icon_Property.HasBeenSet;
-                case SkillRecord_FieldIndex.Data:
-                    return obj.Data_Property.HasBeenSet;
+                case SkillRecord_FieldIndex.Action:
+                    return obj.Action_Property.HasBeenSet;
+                case SkillRecord_FieldIndex.Attribute:
+                    return obj.Attribute_Property.HasBeenSet;
+                case SkillRecord_FieldIndex.Specialization:
+                    return obj.Specialization_Property.HasBeenSet;
+                case SkillRecord_FieldIndex.UseValueFirst:
+                    return obj.UseValueFirst_Property.HasBeenSet;
+                case SkillRecord_FieldIndex.UseValueSecond:
+                    return obj.UseValueSecond_Property.HasBeenSet;
                 case SkillRecord_FieldIndex.ApprenticeText:
                     return obj.ApprenticeText_Property.HasBeenSet;
                 case SkillRecord_FieldIndex.JourneymanText:
@@ -1978,8 +2314,16 @@ namespace Mutagen.Internals
                     return obj.Description;
                 case SkillRecord_FieldIndex.Icon:
                     return obj.Icon;
-                case SkillRecord_FieldIndex.Data:
-                    return obj.Data;
+                case SkillRecord_FieldIndex.Action:
+                    return obj.Action;
+                case SkillRecord_FieldIndex.Attribute:
+                    return obj.Attribute;
+                case SkillRecord_FieldIndex.Specialization:
+                    return obj.Specialization;
+                case SkillRecord_FieldIndex.UseValueFirst:
+                    return obj.UseValueFirst;
+                case SkillRecord_FieldIndex.UseValueSecond:
+                    return obj.UseValueSecond;
                 case SkillRecord_FieldIndex.ApprenticeText:
                     return obj.ApprenticeText;
                 case SkillRecord_FieldIndex.JourneymanText:
@@ -2000,7 +2344,11 @@ namespace Mutagen.Internals
             item.Skill_Property.Unset(cmds.ToUnsetParams());
             item.Description_Property.Unset(cmds.ToUnsetParams());
             item.Icon_Property.Unset(cmds.ToUnsetParams());
-            item.Data_Property.Unset(cmds.ToUnsetParams());
+            item.Action_Property.Unset(cmds.ToUnsetParams());
+            item.Attribute_Property.Unset(cmds.ToUnsetParams());
+            item.Specialization_Property.Unset(cmds.ToUnsetParams());
+            item.UseValueFirst_Property.Unset(cmds.ToUnsetParams());
+            item.UseValueSecond_Property.Unset(cmds.ToUnsetParams());
             item.ApprenticeText_Property.Unset(cmds.ToUnsetParams());
             item.JourneymanText_Property.Unset(cmds.ToUnsetParams());
             item.ExpertText_Property.Unset(cmds.ToUnsetParams());
@@ -2025,7 +2373,11 @@ namespace Mutagen.Internals
             ret.Skill = item.Skill_Property.Equals(rhs.Skill_Property, (l, r) => l == r);
             ret.Description = item.Description_Property.Equals(rhs.Description_Property, (l, r) => object.Equals(l, r));
             ret.Icon = item.Icon_Property.Equals(rhs.Icon_Property, (l, r) => object.Equals(l, r));
-            ret.Data = item.Data_Property.LoquiEqualsHelper(rhs.Data_Property, (loqLhs, loqRhs) => SkillDataCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Action = item.Action_Property.Equals(rhs.Action_Property, (l, r) => l == r);
+            ret.Attribute = item.Attribute_Property.Equals(rhs.Attribute_Property, (l, r) => l == r);
+            ret.Specialization = item.Specialization_Property.Equals(rhs.Specialization_Property, (l, r) => l == r);
+            ret.UseValueFirst = item.UseValueFirst_Property.Equals(rhs.UseValueFirst_Property, (l, r) => l == r);
+            ret.UseValueSecond = item.UseValueSecond_Property.Equals(rhs.UseValueSecond_Property, (l, r) => l == r);
             ret.ApprenticeText = item.ApprenticeText_Property.Equals(rhs.ApprenticeText_Property, (l, r) => object.Equals(l, r));
             ret.JourneymanText = item.JourneymanText_Property.Equals(rhs.JourneymanText_Property, (l, r) => object.Equals(l, r));
             ret.ExpertText = item.ExpertText_Property.Equals(rhs.ExpertText_Property, (l, r) => object.Equals(l, r));
@@ -2072,9 +2424,25 @@ namespace Mutagen.Internals
                 {
                     fg.AppendLine($"Icon => {item.Icon}");
                 }
-                if (printMask?.Data?.Overall ?? true)
+                if (printMask?.Action ?? true)
                 {
-                    item.Data?.ToString(fg, "Data");
+                    fg.AppendLine($"Action => {item.Action}");
+                }
+                if (printMask?.Attribute ?? true)
+                {
+                    fg.AppendLine($"Attribute => {item.Attribute}");
+                }
+                if (printMask?.Specialization ?? true)
+                {
+                    fg.AppendLine($"Specialization => {item.Specialization}");
+                }
+                if (printMask?.UseValueFirst ?? true)
+                {
+                    fg.AppendLine($"UseValueFirst => {item.UseValueFirst}");
+                }
+                if (printMask?.UseValueSecond ?? true)
+                {
+                    fg.AppendLine($"UseValueSecond => {item.UseValueSecond}");
                 }
                 if (printMask?.ApprenticeText ?? true)
                 {
@@ -2103,8 +2471,11 @@ namespace Mutagen.Internals
             if (checkMask.Skill.HasValue && checkMask.Skill.Value != item.Skill_Property.HasBeenSet) return false;
             if (checkMask.Description.HasValue && checkMask.Description.Value != item.Description_Property.HasBeenSet) return false;
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_Property.HasBeenSet) return false;
-            if (checkMask.Data.Overall.HasValue && checkMask.Data.Overall.Value != item.Data_Property.HasBeenSet) return false;
-            if (checkMask.Data.Specific != null && (item.Data_Property.Item == null || !item.Data_Property.Item.HasBeenSet(checkMask.Data.Specific))) return false;
+            if (checkMask.Action.HasValue && checkMask.Action.Value != item.Action_Property.HasBeenSet) return false;
+            if (checkMask.Attribute.HasValue && checkMask.Attribute.Value != item.Attribute_Property.HasBeenSet) return false;
+            if (checkMask.Specialization.HasValue && checkMask.Specialization.Value != item.Specialization_Property.HasBeenSet) return false;
+            if (checkMask.UseValueFirst.HasValue && checkMask.UseValueFirst.Value != item.UseValueFirst_Property.HasBeenSet) return false;
+            if (checkMask.UseValueSecond.HasValue && checkMask.UseValueSecond.Value != item.UseValueSecond_Property.HasBeenSet) return false;
             if (checkMask.ApprenticeText.HasValue && checkMask.ApprenticeText.Value != item.ApprenticeText_Property.HasBeenSet) return false;
             if (checkMask.JourneymanText.HasValue && checkMask.JourneymanText.Value != item.JourneymanText_Property.HasBeenSet) return false;
             if (checkMask.ExpertText.HasValue && checkMask.ExpertText.Value != item.ExpertText_Property.HasBeenSet) return false;
@@ -2118,7 +2489,11 @@ namespace Mutagen.Internals
             ret.Skill = item.Skill_Property.HasBeenSet;
             ret.Description = item.Description_Property.HasBeenSet;
             ret.Icon = item.Icon_Property.HasBeenSet;
-            ret.Data = new MaskItem<bool, SkillData_Mask<bool>>(item.Data_Property.HasBeenSet, SkillDataCommon.GetHasBeenSetMask(item.Data_Property.Item));
+            ret.Action = item.Action_Property.HasBeenSet;
+            ret.Attribute = item.Attribute_Property.HasBeenSet;
+            ret.Specialization = item.Specialization_Property.HasBeenSet;
+            ret.UseValueFirst = item.UseValueFirst_Property.HasBeenSet;
+            ret.UseValueSecond = item.UseValueSecond_Property.HasBeenSet;
             ret.ApprenticeText = item.ApprenticeText_Property.HasBeenSet;
             ret.JourneymanText = item.JourneymanText_Property.HasBeenSet;
             ret.ExpertText = item.ExpertText_Property.HasBeenSet;
@@ -2200,19 +2575,74 @@ namespace Mutagen.Internals
                             (int)SkillRecord_FieldIndex.Icon,
                             subMask);
                     }
-                    if (item.Data_Property.HasBeenSet)
+                    if (item.Action_Property.HasBeenSet)
                     {
-                        MaskItem<Exception, SkillData_ErrorMask> subMask;
-                        LoquiXmlTranslation<ISkillDataGetter, SkillData_ErrorMask>.Instance.Write(
-                            writer: writer,
-                            item: item.Data,
-                            name: nameof(item.Data),
+                        Exception subMask;
+                        EnumXmlTranslation<ActorValue>.Instance.Write(
+                            writer,
+                            nameof(item.Action),
+                            item.Action,
                             doMasks: errorMask != null,
-                            mask: out SkillData_ErrorMask loquiMask);
-                        subMask = loquiMask == null ? null : new MaskItem<Exception, SkillData_ErrorMask>(null, loquiMask);
+                            errorMask: out subMask);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            (int)SkillRecord_FieldIndex.Data,
+                            (int)SkillRecord_FieldIndex.Action,
+                            subMask);
+                    }
+                    if (item.Attribute_Property.HasBeenSet)
+                    {
+                        Exception subMask;
+                        EnumXmlTranslation<ActorValue>.Instance.Write(
+                            writer,
+                            nameof(item.Attribute),
+                            item.Attribute,
+                            doMasks: errorMask != null,
+                            errorMask: out subMask);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            (int)SkillRecord_FieldIndex.Attribute,
+                            subMask);
+                    }
+                    if (item.Specialization_Property.HasBeenSet)
+                    {
+                        Exception subMask;
+                        EnumXmlTranslation<Specialization>.Instance.Write(
+                            writer,
+                            nameof(item.Specialization),
+                            item.Specialization,
+                            doMasks: errorMask != null,
+                            errorMask: out subMask);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            (int)SkillRecord_FieldIndex.Specialization,
+                            subMask);
+                    }
+                    if (item.UseValueFirst_Property.HasBeenSet)
+                    {
+                        Exception subMask;
+                        FloatXmlTranslation.Instance.Write(
+                            writer,
+                            nameof(item.UseValueFirst),
+                            item.UseValueFirst,
+                            doMasks: errorMask != null,
+                            errorMask: out subMask);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            (int)SkillRecord_FieldIndex.UseValueFirst,
+                            subMask);
+                    }
+                    if (item.UseValueSecond_Property.HasBeenSet)
+                    {
+                        Exception subMask;
+                        FloatXmlTranslation.Instance.Write(
+                            writer,
+                            nameof(item.UseValueSecond),
+                            item.UseValueSecond,
+                            doMasks: errorMask != null,
+                            errorMask: out subMask);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            (int)SkillRecord_FieldIndex.UseValueSecond,
                             subMask);
                     }
                     if (item.ApprenticeText_Property.HasBeenSet)
@@ -2311,7 +2741,7 @@ namespace Mutagen.Internals
                     record: SkillRecord_Registration.SKIL_HEADER,
                     type: ObjectType.Record))
                 {
-                    MajorRecordCommon.Write_Binary_Embedded(
+                    Write_Binary_Embedded(
                         item: item,
                         writer: writer,
                         errorMask: errorMask);
@@ -2328,6 +2758,17 @@ namespace Mutagen.Internals
             }
         }
         #endregion
+
+        public static void Write_Binary_Embedded(
+            ISkillRecordGetter item,
+            MutagenWriter writer,
+            Func<SkillRecord_ErrorMask> errorMask)
+        {
+            MajorRecordCommon.Write_Binary_Embedded(
+                item: item,
+                writer: writer,
+                errorMask: errorMask);
+        }
 
         public static void Write_Binary_RecordTypes(
             ISkillRecordGetter item,
@@ -2360,11 +2801,37 @@ namespace Mutagen.Internals
                 errorMask: errorMask,
                 header: SkillRecord_Registration.ICON_HEADER,
                 nullable: false);
-            LoquiBinaryTranslation<SkillData, SkillData_ErrorMask>.Instance.Write(
-                writer: writer,
-                item: item.Data_Property,
-                fieldIndex: (int)SkillRecord_FieldIndex.Data,
-                errorMask: errorMask);
+            using (HeaderExport.ExportSubRecordHeader(writer, SkillRecord_Registration.DATA_HEADER))
+            {
+                Mutagen.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
+                    writer,
+                    item.Action_Property,
+                    length: new ContentLength(4),
+                    fieldIndex: (int)SkillRecord_FieldIndex.Action,
+                    errorMask: errorMask);
+                Mutagen.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
+                    writer,
+                    item.Attribute_Property,
+                    length: new ContentLength(4),
+                    fieldIndex: (int)SkillRecord_FieldIndex.Attribute,
+                    errorMask: errorMask);
+                Mutagen.Binary.EnumBinaryTranslation<Specialization>.Instance.Write(
+                    writer,
+                    item.Specialization_Property,
+                    length: new ContentLength(4),
+                    fieldIndex: (int)SkillRecord_FieldIndex.Specialization,
+                    errorMask: errorMask);
+                Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.UseValueFirst_Property,
+                    fieldIndex: (int)SkillRecord_FieldIndex.UseValueFirst,
+                    errorMask: errorMask);
+                Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.UseValueSecond_Property,
+                    fieldIndex: (int)SkillRecord_FieldIndex.UseValueSecond,
+                    errorMask: errorMask);
+            }
             Mutagen.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.ApprenticeText_Property,
@@ -2415,7 +2882,11 @@ namespace Mutagen.Internals
             this.Skill = initialValue;
             this.Description = initialValue;
             this.Icon = initialValue;
-            this.Data = new MaskItem<T, SkillData_Mask<T>>(initialValue, new SkillData_Mask<T>(initialValue));
+            this.Action = initialValue;
+            this.Attribute = initialValue;
+            this.Specialization = initialValue;
+            this.UseValueFirst = initialValue;
+            this.UseValueSecond = initialValue;
             this.ApprenticeText = initialValue;
             this.JourneymanText = initialValue;
             this.ExpertText = initialValue;
@@ -2427,7 +2898,11 @@ namespace Mutagen.Internals
         public T Skill;
         public T Description;
         public T Icon;
-        public MaskItem<T, SkillData_Mask<T>> Data { get; set; }
+        public T Action;
+        public T Attribute;
+        public T Specialization;
+        public T UseValueFirst;
+        public T UseValueSecond;
         public T ApprenticeText;
         public T JourneymanText;
         public T ExpertText;
@@ -2448,7 +2923,11 @@ namespace Mutagen.Internals
             if (!object.Equals(this.Skill, rhs.Skill)) return false;
             if (!object.Equals(this.Description, rhs.Description)) return false;
             if (!object.Equals(this.Icon, rhs.Icon)) return false;
-            if (!object.Equals(this.Data, rhs.Data)) return false;
+            if (!object.Equals(this.Action, rhs.Action)) return false;
+            if (!object.Equals(this.Attribute, rhs.Attribute)) return false;
+            if (!object.Equals(this.Specialization, rhs.Specialization)) return false;
+            if (!object.Equals(this.UseValueFirst, rhs.UseValueFirst)) return false;
+            if (!object.Equals(this.UseValueSecond, rhs.UseValueSecond)) return false;
             if (!object.Equals(this.ApprenticeText, rhs.ApprenticeText)) return false;
             if (!object.Equals(this.JourneymanText, rhs.JourneymanText)) return false;
             if (!object.Equals(this.ExpertText, rhs.ExpertText)) return false;
@@ -2461,7 +2940,11 @@ namespace Mutagen.Internals
             ret = ret.CombineHashCode(this.Skill?.GetHashCode());
             ret = ret.CombineHashCode(this.Description?.GetHashCode());
             ret = ret.CombineHashCode(this.Icon?.GetHashCode());
-            ret = ret.CombineHashCode(this.Data?.GetHashCode());
+            ret = ret.CombineHashCode(this.Action?.GetHashCode());
+            ret = ret.CombineHashCode(this.Attribute?.GetHashCode());
+            ret = ret.CombineHashCode(this.Specialization?.GetHashCode());
+            ret = ret.CombineHashCode(this.UseValueFirst?.GetHashCode());
+            ret = ret.CombineHashCode(this.UseValueSecond?.GetHashCode());
             ret = ret.CombineHashCode(this.ApprenticeText?.GetHashCode());
             ret = ret.CombineHashCode(this.JourneymanText?.GetHashCode());
             ret = ret.CombineHashCode(this.ExpertText?.GetHashCode());
@@ -2479,11 +2962,11 @@ namespace Mutagen.Internals
             if (!eval(this.Skill)) return false;
             if (!eval(this.Description)) return false;
             if (!eval(this.Icon)) return false;
-            if (Data != null)
-            {
-                if (!eval(this.Data.Overall)) return false;
-                if (Data.Specific != null && !Data.Specific.AllEqual(eval)) return false;
-            }
+            if (!eval(this.Action)) return false;
+            if (!eval(this.Attribute)) return false;
+            if (!eval(this.Specialization)) return false;
+            if (!eval(this.UseValueFirst)) return false;
+            if (!eval(this.UseValueSecond)) return false;
             if (!eval(this.ApprenticeText)) return false;
             if (!eval(this.JourneymanText)) return false;
             if (!eval(this.ExpertText)) return false;
@@ -2506,15 +2989,11 @@ namespace Mutagen.Internals
             obj.Skill = eval(this.Skill);
             obj.Description = eval(this.Description);
             obj.Icon = eval(this.Icon);
-            if (this.Data != null)
-            {
-                obj.Data = new MaskItem<R, SkillData_Mask<R>>();
-                obj.Data.Overall = eval(this.Data.Overall);
-                if (this.Data.Specific != null)
-                {
-                    obj.Data.Specific = this.Data.Specific.Translate(eval);
-                }
-            }
+            obj.Action = eval(this.Action);
+            obj.Attribute = eval(this.Attribute);
+            obj.Specialization = eval(this.Specialization);
+            obj.UseValueFirst = eval(this.UseValueFirst);
+            obj.UseValueSecond = eval(this.UseValueSecond);
             obj.ApprenticeText = eval(this.ApprenticeText);
             obj.JourneymanText = eval(this.JourneymanText);
             obj.ExpertText = eval(this.ExpertText);
@@ -2550,35 +3029,51 @@ namespace Mutagen.Internals
             {
                 if (printMask?.Skill ?? true)
                 {
-                    fg.AppendLine($"Skill => {Skill.ToStringSafe()}");
+                    fg.AppendLine($"Skill => {Skill}");
                 }
                 if (printMask?.Description ?? true)
                 {
-                    fg.AppendLine($"Description => {Description.ToStringSafe()}");
+                    fg.AppendLine($"Description => {Description}");
                 }
                 if (printMask?.Icon ?? true)
                 {
-                    fg.AppendLine($"Icon => {Icon.ToStringSafe()}");
+                    fg.AppendLine($"Icon => {Icon}");
                 }
-                if (printMask?.Data?.Overall ?? true)
+                if (printMask?.Action ?? true)
                 {
-                    Data.ToString(fg);
+                    fg.AppendLine($"Action => {Action}");
+                }
+                if (printMask?.Attribute ?? true)
+                {
+                    fg.AppendLine($"Attribute => {Attribute}");
+                }
+                if (printMask?.Specialization ?? true)
+                {
+                    fg.AppendLine($"Specialization => {Specialization}");
+                }
+                if (printMask?.UseValueFirst ?? true)
+                {
+                    fg.AppendLine($"UseValueFirst => {UseValueFirst}");
+                }
+                if (printMask?.UseValueSecond ?? true)
+                {
+                    fg.AppendLine($"UseValueSecond => {UseValueSecond}");
                 }
                 if (printMask?.ApprenticeText ?? true)
                 {
-                    fg.AppendLine($"ApprenticeText => {ApprenticeText.ToStringSafe()}");
+                    fg.AppendLine($"ApprenticeText => {ApprenticeText}");
                 }
                 if (printMask?.JourneymanText ?? true)
                 {
-                    fg.AppendLine($"JourneymanText => {JourneymanText.ToStringSafe()}");
+                    fg.AppendLine($"JourneymanText => {JourneymanText}");
                 }
                 if (printMask?.ExpertText ?? true)
                 {
-                    fg.AppendLine($"ExpertText => {ExpertText.ToStringSafe()}");
+                    fg.AppendLine($"ExpertText => {ExpertText}");
                 }
                 if (printMask?.MasterText ?? true)
                 {
-                    fg.AppendLine($"MasterText => {MasterText.ToStringSafe()}");
+                    fg.AppendLine($"MasterText => {MasterText}");
                 }
             }
             fg.AppendLine("]");
@@ -2593,7 +3088,11 @@ namespace Mutagen.Internals
         public Exception Skill;
         public Exception Description;
         public Exception Icon;
-        public MaskItem<Exception, SkillData_ErrorMask> Data;
+        public Exception Action;
+        public Exception Attribute;
+        public Exception Specialization;
+        public Exception UseValueFirst;
+        public Exception UseValueSecond;
         public Exception ApprenticeText;
         public Exception JourneymanText;
         public Exception ExpertText;
@@ -2615,8 +3114,20 @@ namespace Mutagen.Internals
                 case SkillRecord_FieldIndex.Icon:
                     this.Icon = ex;
                     break;
-                case SkillRecord_FieldIndex.Data:
-                    this.Data = new MaskItem<Exception, SkillData_ErrorMask>(ex, null);
+                case SkillRecord_FieldIndex.Action:
+                    this.Action = ex;
+                    break;
+                case SkillRecord_FieldIndex.Attribute:
+                    this.Attribute = ex;
+                    break;
+                case SkillRecord_FieldIndex.Specialization:
+                    this.Specialization = ex;
+                    break;
+                case SkillRecord_FieldIndex.UseValueFirst:
+                    this.UseValueFirst = ex;
+                    break;
+                case SkillRecord_FieldIndex.UseValueSecond:
+                    this.UseValueSecond = ex;
                     break;
                 case SkillRecord_FieldIndex.ApprenticeText:
                     this.ApprenticeText = ex;
@@ -2650,8 +3161,20 @@ namespace Mutagen.Internals
                 case SkillRecord_FieldIndex.Icon:
                     this.Icon = (Exception)obj;
                     break;
-                case SkillRecord_FieldIndex.Data:
-                    this.Data = (MaskItem<Exception, SkillData_ErrorMask>)obj;
+                case SkillRecord_FieldIndex.Action:
+                    this.Action = (Exception)obj;
+                    break;
+                case SkillRecord_FieldIndex.Attribute:
+                    this.Attribute = (Exception)obj;
+                    break;
+                case SkillRecord_FieldIndex.Specialization:
+                    this.Specialization = (Exception)obj;
+                    break;
+                case SkillRecord_FieldIndex.UseValueFirst:
+                    this.UseValueFirst = (Exception)obj;
+                    break;
+                case SkillRecord_FieldIndex.UseValueSecond:
+                    this.UseValueSecond = (Exception)obj;
                     break;
                 case SkillRecord_FieldIndex.ApprenticeText:
                     this.ApprenticeText = (Exception)obj;
@@ -2703,38 +3226,18 @@ namespace Mutagen.Internals
         protected override void ToString_FillInternal(FileGeneration fg)
         {
             base.ToString_FillInternal(fg);
-            if (Skill != null)
-            {
-                fg.AppendLine($"Skill => {Skill.ToStringSafe()}");
-            }
-            if (Description != null)
-            {
-                fg.AppendLine($"Description => {Description.ToStringSafe()}");
-            }
-            if (Icon != null)
-            {
-                fg.AppendLine($"Icon => {Icon.ToStringSafe()}");
-            }
-            if (Data != null)
-            {
-                Data.ToString(fg);
-            }
-            if (ApprenticeText != null)
-            {
-                fg.AppendLine($"ApprenticeText => {ApprenticeText.ToStringSafe()}");
-            }
-            if (JourneymanText != null)
-            {
-                fg.AppendLine($"JourneymanText => {JourneymanText.ToStringSafe()}");
-            }
-            if (ExpertText != null)
-            {
-                fg.AppendLine($"ExpertText => {ExpertText.ToStringSafe()}");
-            }
-            if (MasterText != null)
-            {
-                fg.AppendLine($"MasterText => {MasterText.ToStringSafe()}");
-            }
+            fg.AppendLine($"Skill => {Skill}");
+            fg.AppendLine($"Description => {Description}");
+            fg.AppendLine($"Icon => {Icon}");
+            fg.AppendLine($"Action => {Action}");
+            fg.AppendLine($"Attribute => {Attribute}");
+            fg.AppendLine($"Specialization => {Specialization}");
+            fg.AppendLine($"UseValueFirst => {UseValueFirst}");
+            fg.AppendLine($"UseValueSecond => {UseValueSecond}");
+            fg.AppendLine($"ApprenticeText => {ApprenticeText}");
+            fg.AppendLine($"JourneymanText => {JourneymanText}");
+            fg.AppendLine($"ExpertText => {ExpertText}");
+            fg.AppendLine($"MasterText => {MasterText}");
         }
         #endregion
 
@@ -2745,7 +3248,11 @@ namespace Mutagen.Internals
             ret.Skill = this.Skill.Combine(rhs.Skill);
             ret.Description = this.Description.Combine(rhs.Description);
             ret.Icon = this.Icon.Combine(rhs.Icon);
-            ret.Data = new MaskItem<Exception, SkillData_ErrorMask>(this.Data.Overall.Combine(rhs.Data.Overall), ((IErrorMask<SkillData_ErrorMask>)this.Data.Specific).Combine(rhs.Data.Specific));
+            ret.Action = this.Action.Combine(rhs.Action);
+            ret.Attribute = this.Attribute.Combine(rhs.Attribute);
+            ret.Specialization = this.Specialization.Combine(rhs.Specialization);
+            ret.UseValueFirst = this.UseValueFirst.Combine(rhs.UseValueFirst);
+            ret.UseValueSecond = this.UseValueSecond.Combine(rhs.UseValueSecond);
             ret.ApprenticeText = this.ApprenticeText.Combine(rhs.ApprenticeText);
             ret.JourneymanText = this.JourneymanText.Combine(rhs.JourneymanText);
             ret.ExpertText = this.ExpertText.Combine(rhs.ExpertText);
@@ -2766,7 +3273,11 @@ namespace Mutagen.Internals
         public bool Skill;
         public bool Description;
         public bool Icon;
-        public MaskItem<CopyOption, SkillData_CopyMask> Data;
+        public bool Action;
+        public bool Attribute;
+        public bool Specialization;
+        public bool UseValueFirst;
+        public bool UseValueSecond;
         public bool ApprenticeText;
         public bool JourneymanText;
         public bool ExpertText;

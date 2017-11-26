@@ -865,6 +865,16 @@ namespace Mutagen.Generation
                                         throw new ArgumentException("Unsupported type generator: " + subfield);
                                     }
 
+<<<<<<< HEAD
+                        generator.GenerateWrite(
+                            fg: fg,
+                            objGen: obj,
+                            typeGen: field,
+                            writerAccessor: "writer",
+                            itemAccessor: new Accessor(field, "item."),
+                            doMaskAccessor: "errorMask != null",
+                            maskAccessor: $"errorMask");
+=======
                                     if (!subGenerator.ShouldGenerateCopyIn(subfield)) continue;
                                     subGenerator.GenerateWrite(
                                         fg: fg,
@@ -872,7 +882,7 @@ namespace Mutagen.Generation
                                         typeGen: subfield,
                                         writerAccessor: "writer",
                                         itemAccessor: new Accessor(subfield, "item."),
-                                        doMaskAccessor: "errorMask != null",
+                                        doMaskAccessor: "doMasks",
                                         maskAccessor: $"errorMask");
                                 }
                             }
@@ -886,9 +896,10 @@ namespace Mutagen.Generation
                                 typeGen: field,
                                 writerAccessor: "writer",
                                 itemAccessor: new Accessor(field, "item."),
-                                doMaskAccessor: "errorMask != null",
+                                doMaskAccessor: "doMasks",
                                 maskAccessor: $"errorMask");
                         }
+>>>>>>> DataContainer
                     }
                 }
                 fg.AppendLine();

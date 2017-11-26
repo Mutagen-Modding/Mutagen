@@ -1650,11 +1650,11 @@ namespace Mutagen.Internals
             {
                 if (printMask?.Index ?? true)
                 {
-                    fg.AppendLine($"Index => {Index.ToStringSafe()}");
+                    fg.AppendLine($"Index => {Index}");
                 }
                 if (printMask?.Icon ?? true)
                 {
-                    fg.AppendLine($"Icon => {Icon.ToStringSafe()}");
+                    fg.AppendLine($"Icon => {Icon}");
                 }
             }
             fg.AppendLine("]");
@@ -1747,14 +1747,8 @@ namespace Mutagen.Internals
         }
         protected void ToString_FillInternal(FileGeneration fg)
         {
-            if (Index != null)
-            {
-                fg.AppendLine($"Index => {Index.ToStringSafe()}");
-            }
-            if (Icon != null)
-            {
-                fg.AppendLine($"Icon => {Icon.ToStringSafe()}");
-            }
+            fg.AppendLine($"Index => {Index}");
+            fg.AppendLine($"Icon => {Icon}");
         }
         #endregion
 

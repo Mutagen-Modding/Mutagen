@@ -2345,15 +2345,15 @@ namespace Mutagen.Internals
             {
                 if (printMask?.MetadataSummary?.Overall ?? true)
                 {
-                    MetadataSummary.ToString(fg);
+                    MetadataSummary?.ToString(fg);
                 }
                 if (printMask?.CompiledScript ?? true)
                 {
-                    fg.AppendLine($"CompiledScript => {CompiledScript.ToStringSafe()}");
+                    fg.AppendLine($"CompiledScript => {CompiledScript}");
                 }
                 if (printMask?.SourceCode ?? true)
                 {
-                    fg.AppendLine($"SourceCode => {SourceCode.ToStringSafe()}");
+                    fg.AppendLine($"SourceCode => {SourceCode}");
                 }
                 if (printMask?.LocalVariables?.Overall ?? true)
                 {
@@ -2372,7 +2372,7 @@ namespace Mutagen.Internals
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
                                 {
-                                    subItem.ToString(fg);
+                                    subItem?.ToString(fg);
                                 }
                                 fg.AppendLine("]");
                             }
@@ -2397,7 +2397,7 @@ namespace Mutagen.Internals
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
                                 {
-                                    fg.AppendLine($" => {subItem.ToStringSafe()}");
+                                    fg.AppendLine($" => {subItem}");
                                 }
                                 fg.AppendLine("]");
                             }
@@ -2507,68 +2507,53 @@ namespace Mutagen.Internals
         protected override void ToString_FillInternal(FileGeneration fg)
         {
             base.ToString_FillInternal(fg);
-            if (MetadataSummary != null)
+            MetadataSummary?.ToString(fg);
+            fg.AppendLine($"CompiledScript => {CompiledScript}");
+            fg.AppendLine($"SourceCode => {SourceCode}");
+            fg.AppendLine("LocalVariables =>");
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
             {
-                MetadataSummary.ToString(fg);
-            }
-            if (CompiledScript != null)
-            {
-                fg.AppendLine($"CompiledScript => {CompiledScript.ToStringSafe()}");
-            }
-            if (SourceCode != null)
-            {
-                fg.AppendLine($"SourceCode => {SourceCode.ToStringSafe()}");
-            }
-            if (LocalVariables != null)
-            {
-                fg.AppendLine("LocalVariables =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                if (LocalVariables.Overall != null)
                 {
-                    if (LocalVariables.Overall != null)
+                    fg.AppendLine(LocalVariables.Overall.ToString());
+                }
+                if (LocalVariables.Specific != null)
+                {
+                    foreach (var subItem in LocalVariables.Specific)
                     {
-                        fg.AppendLine(LocalVariables.Overall.ToString());
-                    }
-                    if (LocalVariables.Specific != null)
-                    {
-                        foreach (var subItem in LocalVariables.Specific)
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem.ToString(fg);
-                            }
-                            fg.AppendLine("]");
+                            subItem?.ToString(fg);
                         }
+                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
-            if (References != null)
+            fg.AppendLine("]");
+            fg.AppendLine("References =>");
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
             {
-                fg.AppendLine("References =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                if (References.Overall != null)
                 {
-                    if (References.Overall != null)
+                    fg.AppendLine(References.Overall.ToString());
+                }
+                if (References.Specific != null)
+                {
+                    foreach (var subItem in References.Specific)
                     {
-                        fg.AppendLine(References.Overall.ToString());
-                    }
-                    if (References.Specific != null)
-                    {
-                        foreach (var subItem in References.Specific)
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                fg.AppendLine($" => {subItem.ToStringSafe()}");
-                            }
-                            fg.AppendLine("]");
+                            fg.AppendLine($" => {subItem}");
                         }
+                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
+            fg.AppendLine("]");
         }
         #endregion
 

@@ -1932,19 +1932,19 @@ namespace Mutagen.Internals
             {
                 if (printMask?.MinimumAttenuationDistance ?? true)
                 {
-                    fg.AppendLine($"MinimumAttenuationDistance => {MinimumAttenuationDistance.ToStringSafe()}");
+                    fg.AppendLine($"MinimumAttenuationDistance => {MinimumAttenuationDistance}");
                 }
                 if (printMask?.MaximumAttenuationDistance ?? true)
                 {
-                    fg.AppendLine($"MaximumAttenuationDistance => {MaximumAttenuationDistance.ToStringSafe()}");
+                    fg.AppendLine($"MaximumAttenuationDistance => {MaximumAttenuationDistance}");
                 }
                 if (printMask?.FrequencyAdjustment ?? true)
                 {
-                    fg.AppendLine($"FrequencyAdjustment => {FrequencyAdjustment.ToStringSafe()}");
+                    fg.AppendLine($"FrequencyAdjustment => {FrequencyAdjustment}");
                 }
                 if (printMask?.Flags ?? true)
                 {
-                    fg.AppendLine($"Flags => {Flags.ToStringSafe()}");
+                    fg.AppendLine($"Flags => {Flags}");
                 }
             }
             fg.AppendLine("]");
@@ -2051,22 +2051,10 @@ namespace Mutagen.Internals
         }
         protected virtual void ToString_FillInternal(FileGeneration fg)
         {
-            if (MinimumAttenuationDistance != null)
-            {
-                fg.AppendLine($"MinimumAttenuationDistance => {MinimumAttenuationDistance.ToStringSafe()}");
-            }
-            if (MaximumAttenuationDistance != null)
-            {
-                fg.AppendLine($"MaximumAttenuationDistance => {MaximumAttenuationDistance.ToStringSafe()}");
-            }
-            if (FrequencyAdjustment != null)
-            {
-                fg.AppendLine($"FrequencyAdjustment => {FrequencyAdjustment.ToStringSafe()}");
-            }
-            if (Flags != null)
-            {
-                fg.AppendLine($"Flags => {Flags.ToStringSafe()}");
-            }
+            fg.AppendLine($"MinimumAttenuationDistance => {MinimumAttenuationDistance}");
+            fg.AppendLine($"MaximumAttenuationDistance => {MaximumAttenuationDistance}");
+            fg.AppendLine($"FrequencyAdjustment => {FrequencyAdjustment}");
+            fg.AppendLine($"Flags => {Flags}");
         }
         #endregion
 

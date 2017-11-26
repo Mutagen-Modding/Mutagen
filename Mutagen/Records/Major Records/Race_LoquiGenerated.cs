@@ -66,13 +66,82 @@ namespace Mutagen
         #endregion
 
         #endregion
-        #region Data
-        private readonly INotifyingItem<RaceData> _Data = new NotifyingItem<RaceData>();
-        public INotifyingItem<RaceData> Data_Property => this._Data;
-        RaceData IRaceGetter.Data => this.Data;
-        public RaceData Data { get => _Data.Item; set => _Data.Item = value; }
-        INotifyingItem<RaceData> IRace.Data_Property => this.Data_Property;
-        INotifyingItemGetter<RaceData> IRaceGetter.Data_Property => this.Data_Property;
+        #region SkillBoosts
+        private readonly INotifyingList<SkillBoost> _SkillBoosts = new NotifyingListBounded<SkillBoost>(max: 7);
+        public INotifyingList<SkillBoost> SkillBoosts => _SkillBoosts;
+        #region Interface Members
+        INotifyingList<SkillBoost> IRace.SkillBoosts => _SkillBoosts;
+        INotifyingListGetter<SkillBoost> IRaceGetter.SkillBoosts => _SkillBoosts;
+        #endregion
+
+        #endregion
+        #region Fluff
+        protected readonly INotifyingItem<Byte[]> _Fluff = NotifyingItem.Factory<Byte[]>(
+            markAsSet: false,
+            noNullFallback: () => new byte[4]);
+        public INotifyingItem<Byte[]> Fluff_Property => _Fluff;
+        public Byte[] Fluff
+        {
+            get => this._Fluff.Item;
+            set => this._Fluff.Set(value);
+        }
+        INotifyingItem<Byte[]> IRace.Fluff_Property => this.Fluff_Property;
+        INotifyingItemGetter<Byte[]> IRaceGetter.Fluff_Property => this.Fluff_Property;
+        #endregion
+        #region MaleHeight
+        protected readonly INotifyingItem<Single> _MaleHeight = NotifyingItem.Factory<Single>(markAsSet: false);
+        public INotifyingItem<Single> MaleHeight_Property => _MaleHeight;
+        public Single MaleHeight
+        {
+            get => this._MaleHeight.Item;
+            set => this._MaleHeight.Set(value);
+        }
+        INotifyingItem<Single> IRace.MaleHeight_Property => this.MaleHeight_Property;
+        INotifyingItemGetter<Single> IRaceGetter.MaleHeight_Property => this.MaleHeight_Property;
+        #endregion
+        #region FemaleHeight
+        protected readonly INotifyingItem<Single> _FemaleHeight = NotifyingItem.Factory<Single>(markAsSet: false);
+        public INotifyingItem<Single> FemaleHeight_Property => _FemaleHeight;
+        public Single FemaleHeight
+        {
+            get => this._FemaleHeight.Item;
+            set => this._FemaleHeight.Set(value);
+        }
+        INotifyingItem<Single> IRace.FemaleHeight_Property => this.FemaleHeight_Property;
+        INotifyingItemGetter<Single> IRaceGetter.FemaleHeight_Property => this.FemaleHeight_Property;
+        #endregion
+        #region MaleWeight
+        protected readonly INotifyingItem<Single> _MaleWeight = NotifyingItem.Factory<Single>(markAsSet: false);
+        public INotifyingItem<Single> MaleWeight_Property => _MaleWeight;
+        public Single MaleWeight
+        {
+            get => this._MaleWeight.Item;
+            set => this._MaleWeight.Set(value);
+        }
+        INotifyingItem<Single> IRace.MaleWeight_Property => this.MaleWeight_Property;
+        INotifyingItemGetter<Single> IRaceGetter.MaleWeight_Property => this.MaleWeight_Property;
+        #endregion
+        #region FemaleWeight
+        protected readonly INotifyingItem<Single> _FemaleWeight = NotifyingItem.Factory<Single>(markAsSet: false);
+        public INotifyingItem<Single> FemaleWeight_Property => _FemaleWeight;
+        public Single FemaleWeight
+        {
+            get => this._FemaleWeight.Item;
+            set => this._FemaleWeight.Set(value);
+        }
+        INotifyingItem<Single> IRace.FemaleWeight_Property => this.FemaleWeight_Property;
+        INotifyingItemGetter<Single> IRaceGetter.FemaleWeight_Property => this.FemaleWeight_Property;
+        #endregion
+        #region Flags
+        protected readonly INotifyingItem<Race.Flag> _Flags = NotifyingItem.Factory<Race.Flag>(markAsSet: false);
+        public INotifyingItem<Race.Flag> Flags_Property => _Flags;
+        public Race.Flag Flags
+        {
+            get => this._Flags.Item;
+            set => this._Flags.Set(value);
+        }
+        INotifyingItem<Race.Flag> IRace.Flags_Property => this.Flags_Property;
+        INotifyingItemGetter<Race.Flag> IRaceGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region Voices
         private readonly INotifyingItem<RaceVoices> _Voices = new NotifyingItem<RaceVoices>();
@@ -258,10 +327,40 @@ namespace Mutagen
             {
                 if (!Relations.SequenceEqual(rhs.Relations)) return false;
             }
-            if (Data_Property.HasBeenSet != rhs.Data_Property.HasBeenSet) return false;
-            if (Data_Property.HasBeenSet)
+            if (SkillBoosts.HasBeenSet != rhs.SkillBoosts.HasBeenSet) return false;
+            if (SkillBoosts.HasBeenSet)
             {
-                if (!object.Equals(Data, rhs.Data)) return false;
+                if (!SkillBoosts.SequenceEqual(rhs.SkillBoosts)) return false;
+            }
+            if (Fluff_Property.HasBeenSet != rhs.Fluff_Property.HasBeenSet) return false;
+            if (Fluff_Property.HasBeenSet)
+            {
+                if (!Fluff.EqualsFast(rhs.Fluff)) return false;
+            }
+            if (MaleHeight_Property.HasBeenSet != rhs.MaleHeight_Property.HasBeenSet) return false;
+            if (MaleHeight_Property.HasBeenSet)
+            {
+                if (MaleHeight != rhs.MaleHeight) return false;
+            }
+            if (FemaleHeight_Property.HasBeenSet != rhs.FemaleHeight_Property.HasBeenSet) return false;
+            if (FemaleHeight_Property.HasBeenSet)
+            {
+                if (FemaleHeight != rhs.FemaleHeight) return false;
+            }
+            if (MaleWeight_Property.HasBeenSet != rhs.MaleWeight_Property.HasBeenSet) return false;
+            if (MaleWeight_Property.HasBeenSet)
+            {
+                if (MaleWeight != rhs.MaleWeight) return false;
+            }
+            if (FemaleWeight_Property.HasBeenSet != rhs.FemaleWeight_Property.HasBeenSet) return false;
+            if (FemaleWeight_Property.HasBeenSet)
+            {
+                if (FemaleWeight != rhs.FemaleWeight) return false;
+            }
+            if (Flags_Property.HasBeenSet != rhs.Flags_Property.HasBeenSet) return false;
+            if (Flags_Property.HasBeenSet)
+            {
+                if (Flags != rhs.Flags) return false;
             }
             if (Voices_Property.HasBeenSet != rhs.Voices_Property.HasBeenSet) return false;
             if (Voices_Property.HasBeenSet)
@@ -341,9 +440,33 @@ namespace Mutagen
             {
                 ret = HashHelper.GetHashCode(Relations).CombineHashCode(ret);
             }
-            if (Data_Property.HasBeenSet)
+            if (SkillBoosts.HasBeenSet)
             {
-                ret = HashHelper.GetHashCode(Data).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(SkillBoosts).CombineHashCode(ret);
+            }
+            if (Fluff_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Fluff).CombineHashCode(ret);
+            }
+            if (MaleHeight_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(MaleHeight).CombineHashCode(ret);
+            }
+            if (FemaleHeight_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(FemaleHeight).CombineHashCode(ret);
+            }
+            if (MaleWeight_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(MaleWeight).CombineHashCode(ret);
+            }
+            if (FemaleWeight_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(FemaleWeight).CombineHashCode(ret);
+            }
+            if (Flags_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
             }
             if (Voices_Property.HasBeenSet)
             {
@@ -766,17 +889,110 @@ namespace Mutagen
                             subMask);
                     }
                     break;
-                case "Data":
+                case "SkillBoosts":
                     {
-                        MaskItem<Exception, RaceData_ErrorMask> subMask;
-                        var tryGet = LoquiXmlTranslation<RaceData, RaceData_ErrorMask>.Instance.Parse(
+                        MaskItem<Exception, IEnumerable<MaskItem<Exception, SkillBoost_ErrorMask>>> subMask;
+                        var listTryGet = ListXmlTranslation<SkillBoost, MaskItem<Exception, SkillBoost_ErrorMask>>.Instance.Parse(
                             root: root,
                             doMasks: errorMask != null,
-                            mask: out subMask);
-                        item._Data.SetIfSucceeded(tryGet);
+                            maskObj: out subMask,
+                            transl: (XElement r, bool listDoMasks, out MaskItem<Exception, SkillBoost_ErrorMask> listSubMask) =>
+                            {
+                                return LoquiXmlTranslation<SkillBoost, SkillBoost_ErrorMask>.Instance.Parse(
+                                    root: r,
+                                    doMasks: listDoMasks,
+                                    mask: out listSubMask);
+                            }
+                            );
+                        item._SkillBoosts.SetIfSucceeded(listTryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            (int)Race_FieldIndex.Data,
+                            (int)Race_FieldIndex.SkillBoosts,
+                            subMask);
+                    }
+                    break;
+                case "Fluff":
+                    {
+                        Exception subMask;
+                        var tryGet = ByteArrayXmlTranslation.Instance.Parse(
+                            root,
+                            doMasks: errorMask != null,
+                            errorMask: out subMask);
+                        item._Fluff.SetIfSucceeded(tryGet);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            (int)Race_FieldIndex.Fluff,
+                            subMask);
+                    }
+                    break;
+                case "MaleHeight":
+                    {
+                        Exception subMask;
+                        var tryGet = FloatXmlTranslation.Instance.ParseNonNull(
+                            root,
+                            doMasks: errorMask != null,
+                            errorMask: out subMask);
+                        item._MaleHeight.SetIfSucceeded(tryGet);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            (int)Race_FieldIndex.MaleHeight,
+                            subMask);
+                    }
+                    break;
+                case "FemaleHeight":
+                    {
+                        Exception subMask;
+                        var tryGet = FloatXmlTranslation.Instance.ParseNonNull(
+                            root,
+                            doMasks: errorMask != null,
+                            errorMask: out subMask);
+                        item._FemaleHeight.SetIfSucceeded(tryGet);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            (int)Race_FieldIndex.FemaleHeight,
+                            subMask);
+                    }
+                    break;
+                case "MaleWeight":
+                    {
+                        Exception subMask;
+                        var tryGet = FloatXmlTranslation.Instance.ParseNonNull(
+                            root,
+                            doMasks: errorMask != null,
+                            errorMask: out subMask);
+                        item._MaleWeight.SetIfSucceeded(tryGet);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            (int)Race_FieldIndex.MaleWeight,
+                            subMask);
+                    }
+                    break;
+                case "FemaleWeight":
+                    {
+                        Exception subMask;
+                        var tryGet = FloatXmlTranslation.Instance.ParseNonNull(
+                            root,
+                            doMasks: errorMask != null,
+                            errorMask: out subMask);
+                        item._FemaleWeight.SetIfSucceeded(tryGet);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            (int)Race_FieldIndex.FemaleWeight,
+                            subMask);
+                    }
+                    break;
+                case "Flags":
+                    {
+                        Exception subMask;
+                        var tryGet = EnumXmlTranslation<Race.Flag>.Instance.Parse(
+                            root,
+                            nullable: false,
+                            doMasks: errorMask != null,
+                            errorMask: out subMask);
+                        item._Flags.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            (int)Race_FieldIndex.Flags,
                             subMask);
                     }
                     break;
@@ -1357,10 +1573,47 @@ namespace Mutagen
                     item._Relations.SetIfSucceeded(RelationstryGet);
                     break;
                 case "DATA":
-                    item._Data.SetIfSucceeded(LoquiBinaryTranslation<RaceData, RaceData_ErrorMask>.Instance.Parse(
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    var SkillBooststryGet = Mutagen.Binary.ListBinaryTranslation<SkillBoost, MaskItem<Exception, SkillBoost_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
-                        fieldIndex: (int)Race_FieldIndex.Data,
+                        amount: 7,
+                        fieldIndex: (int)Race_FieldIndex.SkillBoosts,
+                        errorMask: errorMask,
+                        transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, SkillBoost_ErrorMask> listSubMask) =>
+                        {
+                            return LoquiBinaryTranslation<SkillBoost, SkillBoost_ErrorMask>.Instance.Parse(
+                                frame: r.Spawn(snapToFinalPosition: false),
+                                doMasks: listDoMasks,
+                                errorMask: out listSubMask);
+                        }
+                        );
+                    item._SkillBoosts.SetIfSucceeded(SkillBooststryGet);
+                    var FlufftryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                        frame: frame.Spawn(new ContentLength(4)),
+                        fieldIndex: (int)Race_FieldIndex.Fluff,
+                        errorMask: errorMask);
+                    item._Fluff.SetIfSucceeded(FlufftryGet);
+                    item._MaleHeight.SetIfSucceeded(Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: frame,
+                        fieldIndex: (int)Race_FieldIndex.MaleHeight,
                         errorMask: errorMask));
+                    item._FemaleHeight.SetIfSucceeded(Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: frame,
+                        fieldIndex: (int)Race_FieldIndex.FemaleHeight,
+                        errorMask: errorMask));
+                    item._MaleWeight.SetIfSucceeded(Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: frame,
+                        fieldIndex: (int)Race_FieldIndex.MaleWeight,
+                        errorMask: errorMask));
+                    item._FemaleWeight.SetIfSucceeded(Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: frame,
+                        fieldIndex: (int)Race_FieldIndex.FemaleWeight,
+                        errorMask: errorMask));
+                    var FlagstryGet = Mutagen.Binary.EnumBinaryTranslation<Race.Flag>.Instance.Parse(
+                        frame: frame.Spawn(new ContentLength(2)),
+                        fieldIndex: (int)Race_FieldIndex.Flags,
+                        errorMask: errorMask);
+                    item._Flags.SetIfSucceeded(FlagstryGet);
                     break;
                 case "VNAM":
                     item._Voices.SetIfSucceeded(LoquiBinaryTranslation<RaceVoices, RaceVoices_ErrorMask>.Instance.Parse(
@@ -1571,9 +1824,37 @@ namespace Mutagen
                 case Race_FieldIndex.Relations:
                     this._Relations.SetTo((IEnumerable<Relation>)obj, cmds);
                     break;
-                case Race_FieldIndex.Data:
-                    this._Data.Set(
-                        (RaceData)obj,
+                case Race_FieldIndex.SkillBoosts:
+                    this._SkillBoosts.SetTo((IEnumerable<SkillBoost>)obj, cmds);
+                    break;
+                case Race_FieldIndex.Fluff:
+                    this._Fluff.Set(
+                        (Byte[])obj,
+                        cmds);
+                    break;
+                case Race_FieldIndex.MaleHeight:
+                    this._MaleHeight.Set(
+                        (Single)obj,
+                        cmds);
+                    break;
+                case Race_FieldIndex.FemaleHeight:
+                    this._FemaleHeight.Set(
+                        (Single)obj,
+                        cmds);
+                    break;
+                case Race_FieldIndex.MaleWeight:
+                    this._MaleWeight.Set(
+                        (Single)obj,
+                        cmds);
+                    break;
+                case Race_FieldIndex.FemaleWeight:
+                    this._FemaleWeight.Set(
+                        (Single)obj,
+                        cmds);
+                    break;
+                case Race_FieldIndex.Flags:
+                    this._Flags.Set(
+                        (Race.Flag)obj,
                         cmds);
                     break;
                 case Race_FieldIndex.Voices:
@@ -1672,9 +1953,37 @@ namespace Mutagen
                 case Race_FieldIndex.Relations:
                     obj._Relations.SetTo((IEnumerable<Relation>)pair.Value, null);
                     break;
-                case Race_FieldIndex.Data:
-                    obj._Data.Set(
-                        (RaceData)pair.Value,
+                case Race_FieldIndex.SkillBoosts:
+                    obj._SkillBoosts.SetTo((IEnumerable<SkillBoost>)pair.Value, null);
+                    break;
+                case Race_FieldIndex.Fluff:
+                    obj._Fluff.Set(
+                        (Byte[])pair.Value,
+                        null);
+                    break;
+                case Race_FieldIndex.MaleHeight:
+                    obj._MaleHeight.Set(
+                        (Single)pair.Value,
+                        null);
+                    break;
+                case Race_FieldIndex.FemaleHeight:
+                    obj._FemaleHeight.Set(
+                        (Single)pair.Value,
+                        null);
+                    break;
+                case Race_FieldIndex.MaleWeight:
+                    obj._MaleWeight.Set(
+                        (Single)pair.Value,
+                        null);
+                    break;
+                case Race_FieldIndex.FemaleWeight:
+                    obj._FemaleWeight.Set(
+                        (Single)pair.Value,
+                        null);
+                    break;
+                case Race_FieldIndex.Flags:
+                    obj._Flags.Set(
+                        (Race.Flag)pair.Value,
                         null);
                     break;
                 case Race_FieldIndex.Voices:
@@ -1751,8 +2060,24 @@ namespace Mutagen
 
         new INotifyingList<FormID> Spells { get; }
         new INotifyingList<Relation> Relations { get; }
-        new RaceData Data { get; set; }
-        new INotifyingItem<RaceData> Data_Property { get; }
+        new INotifyingList<SkillBoost> SkillBoosts { get; }
+        new Byte[] Fluff { get; set; }
+        new INotifyingItem<Byte[]> Fluff_Property { get; }
+
+        new Single MaleHeight { get; set; }
+        new INotifyingItem<Single> MaleHeight_Property { get; }
+
+        new Single FemaleHeight { get; set; }
+        new INotifyingItem<Single> FemaleHeight_Property { get; }
+
+        new Single MaleWeight { get; set; }
+        new INotifyingItem<Single> MaleWeight_Property { get; }
+
+        new Single FemaleWeight { get; set; }
+        new INotifyingItem<Single> FemaleWeight_Property { get; }
+
+        new Race.Flag Flags { get; set; }
+        new INotifyingItem<Race.Flag> Flags_Property { get; }
 
         new RaceVoices Voices { get; set; }
         new INotifyingItem<RaceVoices> Voices_Property { get; }
@@ -1799,9 +2124,37 @@ namespace Mutagen
         #region Relations
         INotifyingListGetter<Relation> Relations { get; }
         #endregion
-        #region Data
-        RaceData Data { get; }
-        INotifyingItemGetter<RaceData> Data_Property { get; }
+        #region SkillBoosts
+        INotifyingListGetter<SkillBoost> SkillBoosts { get; }
+        #endregion
+        #region Fluff
+        Byte[] Fluff { get; }
+        INotifyingItemGetter<Byte[]> Fluff_Property { get; }
+
+        #endregion
+        #region MaleHeight
+        Single MaleHeight { get; }
+        INotifyingItemGetter<Single> MaleHeight_Property { get; }
+
+        #endregion
+        #region FemaleHeight
+        Single FemaleHeight { get; }
+        INotifyingItemGetter<Single> FemaleHeight_Property { get; }
+
+        #endregion
+        #region MaleWeight
+        Single MaleWeight { get; }
+        INotifyingItemGetter<Single> MaleWeight_Property { get; }
+
+        #endregion
+        #region FemaleWeight
+        Single FemaleWeight { get; }
+        INotifyingItemGetter<Single> FemaleWeight_Property { get; }
+
+        #endregion
+        #region Flags
+        Race.Flag Flags { get; }
+        INotifyingItemGetter<Race.Flag> Flags_Property { get; }
 
         #endregion
         #region Voices
@@ -1873,19 +2226,25 @@ namespace Mutagen.Internals
         Description = 6,
         Spells = 7,
         Relations = 8,
-        Data = 9,
-        Voices = 10,
-        DefaultHair = 11,
-        DefaultHairColor = 12,
-        FaceGenMainClamp = 13,
-        FaceGenFaceClamp = 14,
-        RaceStats = 15,
-        FaceData = 16,
-        BodyData = 17,
-        Hairs = 18,
-        Eyes = 19,
-        FaceGenData = 20,
-        Unknown = 21,
+        SkillBoosts = 9,
+        Fluff = 10,
+        MaleHeight = 11,
+        FemaleHeight = 12,
+        MaleWeight = 13,
+        FemaleWeight = 14,
+        Flags = 15,
+        Voices = 16,
+        DefaultHair = 17,
+        DefaultHairColor = 18,
+        FaceGenMainClamp = 19,
+        FaceGenFaceClamp = 20,
+        RaceStats = 21,
+        FaceData = 22,
+        BodyData = 23,
+        Hairs = 24,
+        Eyes = 25,
+        FaceGenData = 26,
+        Unknown = 27,
     }
     #endregion
 
@@ -1903,7 +2262,7 @@ namespace Mutagen.Internals
 
         public const string GUID = "265136e6-60a6-4ade-a7c4-b31197fb95e5";
 
-        public const ushort FieldCount = 16;
+        public const ushort FieldCount = 22;
 
         public static readonly Type MaskType = typeof(Race_Mask<>);
 
@@ -1937,8 +2296,20 @@ namespace Mutagen.Internals
                     return (ushort)Race_FieldIndex.Spells;
                 case "RELATIONS":
                     return (ushort)Race_FieldIndex.Relations;
-                case "DATA":
-                    return (ushort)Race_FieldIndex.Data;
+                case "SKILLBOOSTS":
+                    return (ushort)Race_FieldIndex.SkillBoosts;
+                case "FLUFF":
+                    return (ushort)Race_FieldIndex.Fluff;
+                case "MALEHEIGHT":
+                    return (ushort)Race_FieldIndex.MaleHeight;
+                case "FEMALEHEIGHT":
+                    return (ushort)Race_FieldIndex.FemaleHeight;
+                case "MALEWEIGHT":
+                    return (ushort)Race_FieldIndex.MaleWeight;
+                case "FEMALEWEIGHT":
+                    return (ushort)Race_FieldIndex.FemaleWeight;
+                case "FLAGS":
+                    return (ushort)Race_FieldIndex.Flags;
                 case "VOICES":
                     return (ushort)Race_FieldIndex.Voices;
                 case "DEFAULTHAIR":
@@ -1975,12 +2346,18 @@ namespace Mutagen.Internals
             {
                 case Race_FieldIndex.Spells:
                 case Race_FieldIndex.Relations:
+                case Race_FieldIndex.SkillBoosts:
                 case Race_FieldIndex.FaceData:
                 case Race_FieldIndex.Hairs:
                 case Race_FieldIndex.Eyes:
                     return true;
                 case Race_FieldIndex.Description:
-                case Race_FieldIndex.Data:
+                case Race_FieldIndex.Fluff:
+                case Race_FieldIndex.MaleHeight:
+                case Race_FieldIndex.FemaleHeight:
+                case Race_FieldIndex.MaleWeight:
+                case Race_FieldIndex.FemaleWeight:
+                case Race_FieldIndex.Flags:
                 case Race_FieldIndex.Voices:
                 case Race_FieldIndex.DefaultHair:
                 case Race_FieldIndex.DefaultHairColor:
@@ -2002,7 +2379,7 @@ namespace Mutagen.Internals
             switch (enu)
             {
                 case Race_FieldIndex.Relations:
-                case Race_FieldIndex.Data:
+                case Race_FieldIndex.SkillBoosts:
                 case Race_FieldIndex.Voices:
                 case Race_FieldIndex.DefaultHair:
                 case Race_FieldIndex.RaceStats:
@@ -2012,6 +2389,12 @@ namespace Mutagen.Internals
                     return true;
                 case Race_FieldIndex.Description:
                 case Race_FieldIndex.Spells:
+                case Race_FieldIndex.Fluff:
+                case Race_FieldIndex.MaleHeight:
+                case Race_FieldIndex.FemaleHeight:
+                case Race_FieldIndex.MaleWeight:
+                case Race_FieldIndex.FemaleWeight:
+                case Race_FieldIndex.Flags:
                 case Race_FieldIndex.DefaultHairColor:
                 case Race_FieldIndex.FaceGenMainClamp:
                 case Race_FieldIndex.FaceGenFaceClamp:
@@ -2032,7 +2415,13 @@ namespace Mutagen.Internals
                 case Race_FieldIndex.Description:
                 case Race_FieldIndex.Spells:
                 case Race_FieldIndex.Relations:
-                case Race_FieldIndex.Data:
+                case Race_FieldIndex.SkillBoosts:
+                case Race_FieldIndex.Fluff:
+                case Race_FieldIndex.MaleHeight:
+                case Race_FieldIndex.FemaleHeight:
+                case Race_FieldIndex.MaleWeight:
+                case Race_FieldIndex.FemaleWeight:
+                case Race_FieldIndex.Flags:
                 case Race_FieldIndex.Voices:
                 case Race_FieldIndex.DefaultHair:
                 case Race_FieldIndex.DefaultHairColor:
@@ -2062,8 +2451,20 @@ namespace Mutagen.Internals
                     return "Spells";
                 case Race_FieldIndex.Relations:
                     return "Relations";
-                case Race_FieldIndex.Data:
-                    return "Data";
+                case Race_FieldIndex.SkillBoosts:
+                    return "SkillBoosts";
+                case Race_FieldIndex.Fluff:
+                    return "Fluff";
+                case Race_FieldIndex.MaleHeight:
+                    return "MaleHeight";
+                case Race_FieldIndex.FemaleHeight:
+                    return "FemaleHeight";
+                case Race_FieldIndex.MaleWeight:
+                    return "MaleWeight";
+                case Race_FieldIndex.FemaleWeight:
+                    return "FemaleWeight";
+                case Race_FieldIndex.Flags:
+                    return "Flags";
                 case Race_FieldIndex.Voices:
                     return "Voices";
                 case Race_FieldIndex.DefaultHair:
@@ -2101,7 +2502,13 @@ namespace Mutagen.Internals
                 case Race_FieldIndex.Description:
                 case Race_FieldIndex.Spells:
                 case Race_FieldIndex.Relations:
-                case Race_FieldIndex.Data:
+                case Race_FieldIndex.SkillBoosts:
+                case Race_FieldIndex.Fluff:
+                case Race_FieldIndex.MaleHeight:
+                case Race_FieldIndex.FemaleHeight:
+                case Race_FieldIndex.MaleWeight:
+                case Race_FieldIndex.FemaleWeight:
+                case Race_FieldIndex.Flags:
                 case Race_FieldIndex.Voices:
                 case Race_FieldIndex.DefaultHair:
                 case Race_FieldIndex.DefaultHairColor:
@@ -2128,7 +2535,13 @@ namespace Mutagen.Internals
                 case Race_FieldIndex.Description:
                 case Race_FieldIndex.Spells:
                 case Race_FieldIndex.Relations:
-                case Race_FieldIndex.Data:
+                case Race_FieldIndex.SkillBoosts:
+                case Race_FieldIndex.Fluff:
+                case Race_FieldIndex.MaleHeight:
+                case Race_FieldIndex.FemaleHeight:
+                case Race_FieldIndex.MaleWeight:
+                case Race_FieldIndex.FemaleWeight:
+                case Race_FieldIndex.Flags:
                 case Race_FieldIndex.Voices:
                 case Race_FieldIndex.DefaultHair:
                 case Race_FieldIndex.DefaultHairColor:
@@ -2158,8 +2571,20 @@ namespace Mutagen.Internals
                     return typeof(NotifyingList<FormID>);
                 case Race_FieldIndex.Relations:
                     return typeof(NotifyingList<Relation>);
-                case Race_FieldIndex.Data:
-                    return typeof(RaceData);
+                case Race_FieldIndex.SkillBoosts:
+                    return typeof(NotifyingList<SkillBoost>);
+                case Race_FieldIndex.Fluff:
+                    return typeof(Byte[]);
+                case Race_FieldIndex.MaleHeight:
+                    return typeof(Single);
+                case Race_FieldIndex.FemaleHeight:
+                    return typeof(Single);
+                case Race_FieldIndex.MaleWeight:
+                    return typeof(Single);
+                case Race_FieldIndex.FemaleWeight:
+                    return typeof(Single);
+                case Race_FieldIndex.Flags:
+                    return typeof(Race.Flag);
                 case Race_FieldIndex.Voices:
                     return typeof(RaceVoices);
                 case Race_FieldIndex.DefaultHair:
@@ -2209,7 +2634,7 @@ namespace Mutagen.Internals
         public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = RACE_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 16;
+        public const int NumTypedFields = 15;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -2386,47 +2811,28 @@ namespace Mutagen.Internals
                     errorMask().SetNthException((int)Race_FieldIndex.Relations, ex);
                 }
             }
-            if (copyMask?.Data.Overall != CopyOption.Skip)
+            if (copyMask?.SkillBoosts.Overall != CopyOption.Skip)
             {
                 try
                 {
-                    item.Data_Property.SetToWithDefault(
-                        rhs.Data_Property,
-                        def?.Data_Property,
+                    item.SkillBoosts.SetToWithDefault(
+                        rhs.SkillBoosts,
+                        def?.SkillBoosts,
                         cmds,
                         (r, d) =>
                         {
-                            switch (copyMask?.Data.Overall ?? CopyOption.Reference)
+                            switch (copyMask?.SkillBoosts.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
                                     return r;
-                                case CopyOption.CopyIn:
-                                    RaceDataCommon.CopyFieldsFrom(
-                                        item: item.Data,
-                                        rhs: rhs.Data,
-                                        def: def?.Data,
-                                        doMasks: doMasks,
-                                        errorMask: (doMasks ? new Func<RaceData_ErrorMask>(() =>
-                                        {
-                                            var baseMask = errorMask();
-                                            if (baseMask.Data.Specific == null)
-                                            {
-                                                baseMask.Data = new MaskItem<Exception, RaceData_ErrorMask>(null, new RaceData_ErrorMask());
-                                            }
-                                            return baseMask.Data.Specific;
-                                        }
-                                        ) : null),
-                                        copyMask: copyMask?.Data.Specific,
-                                        cmds: cmds);
-                                    return r;
                                 case CopyOption.MakeCopy:
-                                    if (r == null) return default(RaceData);
-                                    return RaceData.Copy(
+                                    if (r == null) return default(SkillBoost);
+                                    return SkillBoost.Copy(
                                         r,
-                                        copyMask?.Data?.Specific,
+                                        copyMask?.SkillBoosts?.Specific,
                                         def: d);
                                 default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Data?.Overall}. Cannot execute copy.");
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.SkillBoosts.Overall}. Cannot execute copy.");
                             }
                         }
                         );
@@ -2434,7 +2840,97 @@ namespace Mutagen.Internals
                 catch (Exception ex)
                 when (doMasks)
                 {
-                    errorMask().SetNthException((int)Race_FieldIndex.Data, ex);
+                    errorMask().SetNthException((int)Race_FieldIndex.SkillBoosts, ex);
+                }
+            }
+            if (copyMask?.Fluff ?? true)
+            {
+                try
+                {
+                    item.Fluff_Property.SetToWithDefault(
+                        rhs.Fluff_Property,
+                        def?.Fluff_Property,
+                        cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Race_FieldIndex.Fluff, ex);
+                }
+            }
+            if (copyMask?.MaleHeight ?? true)
+            {
+                try
+                {
+                    item.MaleHeight_Property.SetToWithDefault(
+                        rhs.MaleHeight_Property,
+                        def?.MaleHeight_Property,
+                        cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Race_FieldIndex.MaleHeight, ex);
+                }
+            }
+            if (copyMask?.FemaleHeight ?? true)
+            {
+                try
+                {
+                    item.FemaleHeight_Property.SetToWithDefault(
+                        rhs.FemaleHeight_Property,
+                        def?.FemaleHeight_Property,
+                        cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Race_FieldIndex.FemaleHeight, ex);
+                }
+            }
+            if (copyMask?.MaleWeight ?? true)
+            {
+                try
+                {
+                    item.MaleWeight_Property.SetToWithDefault(
+                        rhs.MaleWeight_Property,
+                        def?.MaleWeight_Property,
+                        cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Race_FieldIndex.MaleWeight, ex);
+                }
+            }
+            if (copyMask?.FemaleWeight ?? true)
+            {
+                try
+                {
+                    item.FemaleWeight_Property.SetToWithDefault(
+                        rhs.FemaleWeight_Property,
+                        def?.FemaleWeight_Property,
+                        cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Race_FieldIndex.FemaleWeight, ex);
+                }
+            }
+            if (copyMask?.Flags ?? true)
+            {
+                try
+                {
+                    item.Flags_Property.SetToWithDefault(
+                        rhs.Flags_Property,
+                        def?.Flags_Property,
+                        cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Race_FieldIndex.Flags, ex);
                 }
             }
             if (copyMask?.Voices.Overall != CopyOption.Skip)
@@ -2836,8 +3332,26 @@ namespace Mutagen.Internals
                 case Race_FieldIndex.Relations:
                     obj.Relations.HasBeenSet = on;
                     break;
-                case Race_FieldIndex.Data:
-                    obj.Data_Property.HasBeenSet = on;
+                case Race_FieldIndex.SkillBoosts:
+                    obj.SkillBoosts.HasBeenSet = on;
+                    break;
+                case Race_FieldIndex.Fluff:
+                    obj.Fluff_Property.HasBeenSet = on;
+                    break;
+                case Race_FieldIndex.MaleHeight:
+                    obj.MaleHeight_Property.HasBeenSet = on;
+                    break;
+                case Race_FieldIndex.FemaleHeight:
+                    obj.FemaleHeight_Property.HasBeenSet = on;
+                    break;
+                case Race_FieldIndex.MaleWeight:
+                    obj.MaleWeight_Property.HasBeenSet = on;
+                    break;
+                case Race_FieldIndex.FemaleWeight:
+                    obj.FemaleWeight_Property.HasBeenSet = on;
+                    break;
+                case Race_FieldIndex.Flags:
+                    obj.Flags_Property.HasBeenSet = on;
                     break;
                 case Race_FieldIndex.Voices:
                     obj.Voices_Property.HasBeenSet = on;
@@ -2898,8 +3412,26 @@ namespace Mutagen.Internals
                 case Race_FieldIndex.Relations:
                     obj.Relations.Unset(cmds);
                     break;
-                case Race_FieldIndex.Data:
-                    obj.Data_Property.Unset(cmds);
+                case Race_FieldIndex.SkillBoosts:
+                    obj.SkillBoosts.Unset(cmds);
+                    break;
+                case Race_FieldIndex.Fluff:
+                    obj.Fluff_Property.Unset(cmds);
+                    break;
+                case Race_FieldIndex.MaleHeight:
+                    obj.MaleHeight_Property.Unset(cmds);
+                    break;
+                case Race_FieldIndex.FemaleHeight:
+                    obj.FemaleHeight_Property.Unset(cmds);
+                    break;
+                case Race_FieldIndex.MaleWeight:
+                    obj.MaleWeight_Property.Unset(cmds);
+                    break;
+                case Race_FieldIndex.FemaleWeight:
+                    obj.FemaleWeight_Property.Unset(cmds);
+                    break;
+                case Race_FieldIndex.Flags:
+                    obj.Flags_Property.Unset(cmds);
                     break;
                 case Race_FieldIndex.Voices:
                     obj.Voices_Property.Unset(cmds);
@@ -2956,8 +3488,20 @@ namespace Mutagen.Internals
                     return obj.Spells.HasBeenSet;
                 case Race_FieldIndex.Relations:
                     return obj.Relations.HasBeenSet;
-                case Race_FieldIndex.Data:
-                    return obj.Data_Property.HasBeenSet;
+                case Race_FieldIndex.SkillBoosts:
+                    return obj.SkillBoosts.HasBeenSet;
+                case Race_FieldIndex.Fluff:
+                    return obj.Fluff_Property.HasBeenSet;
+                case Race_FieldIndex.MaleHeight:
+                    return obj.MaleHeight_Property.HasBeenSet;
+                case Race_FieldIndex.FemaleHeight:
+                    return obj.FemaleHeight_Property.HasBeenSet;
+                case Race_FieldIndex.MaleWeight:
+                    return obj.MaleWeight_Property.HasBeenSet;
+                case Race_FieldIndex.FemaleWeight:
+                    return obj.FemaleWeight_Property.HasBeenSet;
+                case Race_FieldIndex.Flags:
+                    return obj.Flags_Property.HasBeenSet;
                 case Race_FieldIndex.Voices:
                     return obj.Voices_Property.HasBeenSet;
                 case Race_FieldIndex.DefaultHair:
@@ -3000,8 +3544,20 @@ namespace Mutagen.Internals
                     return obj.Spells;
                 case Race_FieldIndex.Relations:
                     return obj.Relations;
-                case Race_FieldIndex.Data:
-                    return obj.Data;
+                case Race_FieldIndex.SkillBoosts:
+                    return obj.SkillBoosts;
+                case Race_FieldIndex.Fluff:
+                    return obj.Fluff;
+                case Race_FieldIndex.MaleHeight:
+                    return obj.MaleHeight;
+                case Race_FieldIndex.FemaleHeight:
+                    return obj.FemaleHeight;
+                case Race_FieldIndex.MaleWeight:
+                    return obj.MaleWeight;
+                case Race_FieldIndex.FemaleWeight:
+                    return obj.FemaleWeight;
+                case Race_FieldIndex.Flags:
+                    return obj.Flags;
                 case Race_FieldIndex.Voices:
                     return obj.Voices;
                 case Race_FieldIndex.DefaultHair:
@@ -3038,7 +3594,13 @@ namespace Mutagen.Internals
             item.Description_Property.Unset(cmds.ToUnsetParams());
             item.Spells.Unset(cmds.ToUnsetParams());
             item.Relations.Unset(cmds.ToUnsetParams());
-            item.Data_Property.Unset(cmds.ToUnsetParams());
+            item.SkillBoosts.Unset(cmds.ToUnsetParams());
+            item.Fluff_Property.Unset(cmds.ToUnsetParams());
+            item.MaleHeight_Property.Unset(cmds.ToUnsetParams());
+            item.FemaleHeight_Property.Unset(cmds.ToUnsetParams());
+            item.MaleWeight_Property.Unset(cmds.ToUnsetParams());
+            item.FemaleWeight_Property.Unset(cmds.ToUnsetParams());
+            item.Flags_Property.Unset(cmds.ToUnsetParams());
             item.Voices_Property.Unset(cmds.ToUnsetParams());
             item.DefaultHair_Property.Unset(cmds.ToUnsetParams());
             item.DefaultHairColor_Property.Unset(cmds.ToUnsetParams());
@@ -3113,7 +3675,37 @@ namespace Mutagen.Internals
                 ret.Relations = new MaskItem<bool, IEnumerable<MaskItem<bool, Relation_Mask<bool>>>>();
                 ret.Relations.Overall = false;
             }
-            ret.Data = item.Data_Property.LoquiEqualsHelper(rhs.Data_Property, (loqLhs, loqRhs) => RaceDataCommon.GetEqualsMask(loqLhs, loqRhs));
+            if (item.SkillBoosts.HasBeenSet == rhs.SkillBoosts.HasBeenSet)
+            {
+                if (item.SkillBoosts.HasBeenSet)
+                {
+                    ret.SkillBoosts = new MaskItem<bool, IEnumerable<MaskItem<bool, SkillBoost_Mask<bool>>>>();
+                    ret.SkillBoosts.Specific = item.SkillBoosts.SelectAgainst<SkillBoost, MaskItem<bool, SkillBoost_Mask<bool>>>(rhs.SkillBoosts, ((l, r) =>
+                    {
+                        MaskItem<bool, SkillBoost_Mask<bool>> itemRet;
+                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => SkillBoostCommon.GetEqualsMask(loqLhs, loqRhs));
+                        return itemRet;
+                    }
+                    ), out ret.SkillBoosts.Overall);
+                    ret.SkillBoosts.Overall = ret.SkillBoosts.Overall && ret.SkillBoosts.Specific.All((b) => b.Overall);
+                }
+                else
+                {
+                    ret.SkillBoosts = new MaskItem<bool, IEnumerable<MaskItem<bool, SkillBoost_Mask<bool>>>>();
+                    ret.SkillBoosts.Overall = true;
+                }
+            }
+            else
+            {
+                ret.SkillBoosts = new MaskItem<bool, IEnumerable<MaskItem<bool, SkillBoost_Mask<bool>>>>();
+                ret.SkillBoosts.Overall = false;
+            }
+            ret.Fluff = item.Fluff_Property.Equals(rhs.Fluff_Property, (l, r) => l.EqualsFast(r));
+            ret.MaleHeight = item.MaleHeight_Property.Equals(rhs.MaleHeight_Property, (l, r) => l == r);
+            ret.FemaleHeight = item.FemaleHeight_Property.Equals(rhs.FemaleHeight_Property, (l, r) => l == r);
+            ret.MaleWeight = item.MaleWeight_Property.Equals(rhs.MaleWeight_Property, (l, r) => l == r);
+            ret.FemaleWeight = item.FemaleWeight_Property.Equals(rhs.FemaleWeight_Property, (l, r) => l == r);
+            ret.Flags = item.Flags_Property.Equals(rhs.Flags_Property, (l, r) => l == r);
             ret.Voices = item.Voices_Property.LoquiEqualsHelper(rhs.Voices_Property, (loqLhs, loqRhs) => RaceVoicesCommon.GetEqualsMask(loqLhs, loqRhs));
             ret.DefaultHair = item.DefaultHair_Property.LoquiEqualsHelper(rhs.DefaultHair_Property, (loqLhs, loqRhs) => RaceHairCommon.GetEqualsMask(loqLhs, loqRhs));
             ret.DefaultHairColor = item.DefaultHairColor_Property.Equals(rhs.DefaultHairColor_Property, (l, r) => l == r);
@@ -3256,9 +3848,47 @@ namespace Mutagen.Internals
                     }
                     fg.AppendLine("]");
                 }
-                if (printMask?.Data?.Overall ?? true)
+                if (printMask?.SkillBoosts?.Overall ?? true)
                 {
-                    item.Data?.ToString(fg, "Data");
+                    fg.AppendLine("SkillBoosts =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        foreach (var subItem in item.SkillBoosts)
+                        {
+                            fg.AppendLine("[");
+                            using (new DepthWrapper(fg))
+                            {
+                                subItem?.ToString(fg, "Item");
+                            }
+                            fg.AppendLine("]");
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (printMask?.Fluff ?? true)
+                {
+                    fg.AppendLine($"Fluff => {item.Fluff}");
+                }
+                if (printMask?.MaleHeight ?? true)
+                {
+                    fg.AppendLine($"MaleHeight => {item.MaleHeight}");
+                }
+                if (printMask?.FemaleHeight ?? true)
+                {
+                    fg.AppendLine($"FemaleHeight => {item.FemaleHeight}");
+                }
+                if (printMask?.MaleWeight ?? true)
+                {
+                    fg.AppendLine($"MaleWeight => {item.MaleWeight}");
+                }
+                if (printMask?.FemaleWeight ?? true)
+                {
+                    fg.AppendLine($"FemaleWeight => {item.FemaleWeight}");
+                }
+                if (printMask?.Flags ?? true)
+                {
+                    fg.AppendLine($"Flags => {item.Flags}");
                 }
                 if (printMask?.Voices?.Overall ?? true)
                 {
@@ -3361,8 +3991,13 @@ namespace Mutagen.Internals
             if (checkMask.Description.HasValue && checkMask.Description.Value != item.Description_Property.HasBeenSet) return false;
             if (checkMask.Spells.Overall.HasValue && checkMask.Spells.Overall.Value != item.Spells.HasBeenSet) return false;
             if (checkMask.Relations.Overall.HasValue && checkMask.Relations.Overall.Value != item.Relations.HasBeenSet) return false;
-            if (checkMask.Data.Overall.HasValue && checkMask.Data.Overall.Value != item.Data_Property.HasBeenSet) return false;
-            if (checkMask.Data.Specific != null && (item.Data_Property.Item == null || !item.Data_Property.Item.HasBeenSet(checkMask.Data.Specific))) return false;
+            if (checkMask.SkillBoosts.Overall.HasValue && checkMask.SkillBoosts.Overall.Value != item.SkillBoosts.HasBeenSet) return false;
+            if (checkMask.Fluff.HasValue && checkMask.Fluff.Value != item.Fluff_Property.HasBeenSet) return false;
+            if (checkMask.MaleHeight.HasValue && checkMask.MaleHeight.Value != item.MaleHeight_Property.HasBeenSet) return false;
+            if (checkMask.FemaleHeight.HasValue && checkMask.FemaleHeight.Value != item.FemaleHeight_Property.HasBeenSet) return false;
+            if (checkMask.MaleWeight.HasValue && checkMask.MaleWeight.Value != item.MaleWeight_Property.HasBeenSet) return false;
+            if (checkMask.FemaleWeight.HasValue && checkMask.FemaleWeight.Value != item.FemaleWeight_Property.HasBeenSet) return false;
+            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_Property.HasBeenSet) return false;
             if (checkMask.Voices.Overall.HasValue && checkMask.Voices.Overall.Value != item.Voices_Property.HasBeenSet) return false;
             if (checkMask.Voices.Specific != null && (item.Voices_Property.Item == null || !item.Voices_Property.Item.HasBeenSet(checkMask.Voices.Specific))) return false;
             if (checkMask.DefaultHair.Overall.HasValue && checkMask.DefaultHair.Overall.Value != item.DefaultHair_Property.HasBeenSet) return false;
@@ -3389,7 +4024,13 @@ namespace Mutagen.Internals
             ret.Description = item.Description_Property.HasBeenSet;
             ret.Spells = new MaskItem<bool, IEnumerable<bool>>(item.Spells.HasBeenSet, null);
             ret.Relations = new MaskItem<bool, IEnumerable<MaskItem<bool, Relation_Mask<bool>>>>(item.Relations.HasBeenSet, item.Relations.Select((i) => new MaskItem<bool, Relation_Mask<bool>>(true, i.GetHasBeenSetMask())));
-            ret.Data = new MaskItem<bool, RaceData_Mask<bool>>(item.Data_Property.HasBeenSet, RaceDataCommon.GetHasBeenSetMask(item.Data_Property.Item));
+            ret.SkillBoosts = new MaskItem<bool, IEnumerable<MaskItem<bool, SkillBoost_Mask<bool>>>>(item.SkillBoosts.HasBeenSet, item.SkillBoosts.Select((i) => new MaskItem<bool, SkillBoost_Mask<bool>>(true, i.GetHasBeenSetMask())));
+            ret.Fluff = item.Fluff_Property.HasBeenSet;
+            ret.MaleHeight = item.MaleHeight_Property.HasBeenSet;
+            ret.FemaleHeight = item.FemaleHeight_Property.HasBeenSet;
+            ret.MaleWeight = item.MaleWeight_Property.HasBeenSet;
+            ret.FemaleWeight = item.FemaleWeight_Property.HasBeenSet;
+            ret.Flags = item.Flags_Property.HasBeenSet;
             ret.Voices = new MaskItem<bool, RaceVoices_Mask<bool>>(item.Voices_Property.HasBeenSet, RaceVoicesCommon.GetHasBeenSetMask(item.Voices_Property.Item));
             ret.DefaultHair = new MaskItem<bool, RaceHair_Mask<bool>>(item.DefaultHair_Property.HasBeenSet, RaceHairCommon.GetHasBeenSetMask(item.DefaultHair_Property.Item));
             ret.DefaultHairColor = item.DefaultHairColor_Property.HasBeenSet;
@@ -3500,19 +4141,113 @@ namespace Mutagen.Internals
                             (int)Race_FieldIndex.Relations,
                             subMask);
                     }
-                    if (item.Data_Property.HasBeenSet)
+                    if (item.SkillBoosts.HasBeenSet)
                     {
-                        MaskItem<Exception, RaceData_ErrorMask> subMask;
-                        LoquiXmlTranslation<IRaceDataGetter, RaceData_ErrorMask>.Instance.Write(
+                        MaskItem<Exception, IEnumerable<MaskItem<Exception, SkillBoost_ErrorMask>>> subMask;
+                        ListXmlTranslation<SkillBoost, MaskItem<Exception, SkillBoost_ErrorMask>>.Instance.Write(
                             writer: writer,
-                            item: item.Data,
-                            name: nameof(item.Data),
+                            name: nameof(item.SkillBoosts),
+                            item: item.SkillBoosts,
                             doMasks: errorMask != null,
-                            mask: out RaceData_ErrorMask loquiMask);
-                        subMask = loquiMask == null ? null : new MaskItem<Exception, RaceData_ErrorMask>(null, loquiMask);
+                            maskObj: out subMask,
+                            transl: (SkillBoost subItem, bool listDoMasks, out MaskItem<Exception, SkillBoost_ErrorMask> listSubMask) =>
+                            {
+                                LoquiXmlTranslation<ISkillBoostGetter, SkillBoost_ErrorMask>.Instance.Write(
+                                    writer: writer,
+                                    item: subItem,
+                                    name: "Item",
+                                    doMasks: errorMask != null,
+                                    mask: out SkillBoost_ErrorMask loquiMask);
+                                listSubMask = loquiMask == null ? null : new MaskItem<Exception, SkillBoost_ErrorMask>(null, loquiMask);
+                            }
+                            );
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            (int)Race_FieldIndex.Data,
+                            (int)Race_FieldIndex.SkillBoosts,
+                            subMask);
+                    }
+                    if (item.Fluff_Property.HasBeenSet)
+                    {
+                        Exception subMask;
+                        ByteArrayXmlTranslation.Instance.Write(
+                            writer,
+                            nameof(item.Fluff),
+                            item.Fluff,
+                            doMasks: errorMask != null,
+                            errorMask: out subMask);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            (int)Race_FieldIndex.Fluff,
+                            subMask);
+                    }
+                    if (item.MaleHeight_Property.HasBeenSet)
+                    {
+                        Exception subMask;
+                        FloatXmlTranslation.Instance.Write(
+                            writer,
+                            nameof(item.MaleHeight),
+                            item.MaleHeight,
+                            doMasks: errorMask != null,
+                            errorMask: out subMask);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            (int)Race_FieldIndex.MaleHeight,
+                            subMask);
+                    }
+                    if (item.FemaleHeight_Property.HasBeenSet)
+                    {
+                        Exception subMask;
+                        FloatXmlTranslation.Instance.Write(
+                            writer,
+                            nameof(item.FemaleHeight),
+                            item.FemaleHeight,
+                            doMasks: errorMask != null,
+                            errorMask: out subMask);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            (int)Race_FieldIndex.FemaleHeight,
+                            subMask);
+                    }
+                    if (item.MaleWeight_Property.HasBeenSet)
+                    {
+                        Exception subMask;
+                        FloatXmlTranslation.Instance.Write(
+                            writer,
+                            nameof(item.MaleWeight),
+                            item.MaleWeight,
+                            doMasks: errorMask != null,
+                            errorMask: out subMask);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            (int)Race_FieldIndex.MaleWeight,
+                            subMask);
+                    }
+                    if (item.FemaleWeight_Property.HasBeenSet)
+                    {
+                        Exception subMask;
+                        FloatXmlTranslation.Instance.Write(
+                            writer,
+                            nameof(item.FemaleWeight),
+                            item.FemaleWeight,
+                            doMasks: errorMask != null,
+                            errorMask: out subMask);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            (int)Race_FieldIndex.FemaleWeight,
+                            subMask);
+                    }
+                    if (item.Flags_Property.HasBeenSet)
+                    {
+                        Exception subMask;
+                        EnumXmlTranslation<Race.Flag>.Instance.Write(
+                            writer,
+                            nameof(item.Flags),
+                            item.Flags,
+                            doMasks: errorMask != null,
+                            errorMask: out subMask);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            (int)Race_FieldIndex.Flags,
                             subMask);
                     }
                     if (item.Voices_Property.HasBeenSet)
@@ -3759,7 +4494,7 @@ namespace Mutagen.Internals
                     record: Race_Registration.RACE_HEADER,
                     type: ObjectType.Record))
                 {
-                    MajorRecordCommon.Write_Binary_Embedded(
+                    Write_Binary_Embedded(
                         item: item,
                         writer: writer,
                         errorMask: errorMask);
@@ -3776,6 +4511,17 @@ namespace Mutagen.Internals
             }
         }
         #endregion
+
+        public static void Write_Binary_Embedded(
+            IRaceGetter item,
+            MutagenWriter writer,
+            Func<Race_ErrorMask> errorMask)
+        {
+            MajorRecordCommon.Write_Binary_Embedded(
+                item: item,
+                writer: writer,
+                errorMask: errorMask);
+        }
 
         public static void Write_Binary_RecordTypes(
             IRaceGetter item,
@@ -3823,11 +4569,54 @@ namespace Mutagen.Internals
                         errorMask: out listSubMask);
                 }
                 );
-            LoquiBinaryTranslation<RaceData, RaceData_ErrorMask>.Instance.Write(
-                writer: writer,
-                item: item.Data_Property,
-                fieldIndex: (int)Race_FieldIndex.Data,
-                errorMask: errorMask);
+            using (HeaderExport.ExportSubRecordHeader(writer, Race_Registration.DATA_HEADER))
+            {
+                Mutagen.Binary.ListBinaryTranslation<SkillBoost, MaskItem<Exception, SkillBoost_ErrorMask>>.Instance.Write(
+                    writer: writer,
+                    item: item.SkillBoosts,
+                    fieldIndex: (int)Race_FieldIndex.SkillBoosts,
+                    errorMask: errorMask,
+                    transl: (SkillBoost subItem, bool listDoMasks, out MaskItem<Exception, SkillBoost_ErrorMask> listSubMask) =>
+                    {
+                        LoquiBinaryTranslation<SkillBoost, SkillBoost_ErrorMask>.Instance.Write(
+                            writer: writer,
+                            item: subItem,
+                            doMasks: listDoMasks,
+                            errorMask: out listSubMask);
+                    }
+                    );
+                Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Fluff_Property,
+                    fieldIndex: (int)Race_FieldIndex.Fluff,
+                    errorMask: errorMask);
+                Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.MaleHeight_Property,
+                    fieldIndex: (int)Race_FieldIndex.MaleHeight,
+                    errorMask: errorMask);
+                Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.FemaleHeight_Property,
+                    fieldIndex: (int)Race_FieldIndex.FemaleHeight,
+                    errorMask: errorMask);
+                Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.MaleWeight_Property,
+                    fieldIndex: (int)Race_FieldIndex.MaleWeight,
+                    errorMask: errorMask);
+                Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.FemaleWeight_Property,
+                    fieldIndex: (int)Race_FieldIndex.FemaleWeight,
+                    errorMask: errorMask);
+                Mutagen.Binary.EnumBinaryTranslation<Race.Flag>.Instance.Write(
+                    writer,
+                    item.Flags_Property,
+                    length: new ContentLength(2),
+                    fieldIndex: (int)Race_FieldIndex.Flags,
+                    errorMask: errorMask);
+            }
             LoquiBinaryTranslation<RaceVoices, RaceVoices_ErrorMask>.Instance.Write(
                 writer: writer,
                 item: item.Voices_Property,
@@ -3949,7 +4738,13 @@ namespace Mutagen.Internals
             this.Description = initialValue;
             this.Spells = new MaskItem<T, IEnumerable<T>>(initialValue, null);
             this.Relations = new MaskItem<T, IEnumerable<MaskItem<T, Relation_Mask<T>>>>(initialValue, null);
-            this.Data = new MaskItem<T, RaceData_Mask<T>>(initialValue, new RaceData_Mask<T>(initialValue));
+            this.SkillBoosts = new MaskItem<T, IEnumerable<MaskItem<T, SkillBoost_Mask<T>>>>(initialValue, null);
+            this.Fluff = initialValue;
+            this.MaleHeight = initialValue;
+            this.FemaleHeight = initialValue;
+            this.MaleWeight = initialValue;
+            this.FemaleWeight = initialValue;
+            this.Flags = initialValue;
             this.Voices = new MaskItem<T, RaceVoices_Mask<T>>(initialValue, new RaceVoices_Mask<T>(initialValue));
             this.DefaultHair = new MaskItem<T, RaceHair_Mask<T>>(initialValue, new RaceHair_Mask<T>(initialValue));
             this.DefaultHairColor = initialValue;
@@ -3969,7 +4764,13 @@ namespace Mutagen.Internals
         public T Description;
         public MaskItem<T, IEnumerable<T>> Spells;
         public MaskItem<T, IEnumerable<MaskItem<T, Relation_Mask<T>>>> Relations;
-        public MaskItem<T, RaceData_Mask<T>> Data { get; set; }
+        public MaskItem<T, IEnumerable<MaskItem<T, SkillBoost_Mask<T>>>> SkillBoosts;
+        public T Fluff;
+        public T MaleHeight;
+        public T FemaleHeight;
+        public T MaleWeight;
+        public T FemaleWeight;
+        public T Flags;
         public MaskItem<T, RaceVoices_Mask<T>> Voices { get; set; }
         public MaskItem<T, RaceHair_Mask<T>> DefaultHair { get; set; }
         public T DefaultHairColor;
@@ -3998,7 +4799,13 @@ namespace Mutagen.Internals
             if (!object.Equals(this.Description, rhs.Description)) return false;
             if (!object.Equals(this.Spells, rhs.Spells)) return false;
             if (!object.Equals(this.Relations, rhs.Relations)) return false;
-            if (!object.Equals(this.Data, rhs.Data)) return false;
+            if (!object.Equals(this.SkillBoosts, rhs.SkillBoosts)) return false;
+            if (!object.Equals(this.Fluff, rhs.Fluff)) return false;
+            if (!object.Equals(this.MaleHeight, rhs.MaleHeight)) return false;
+            if (!object.Equals(this.FemaleHeight, rhs.FemaleHeight)) return false;
+            if (!object.Equals(this.MaleWeight, rhs.MaleWeight)) return false;
+            if (!object.Equals(this.FemaleWeight, rhs.FemaleWeight)) return false;
+            if (!object.Equals(this.Flags, rhs.Flags)) return false;
             if (!object.Equals(this.Voices, rhs.Voices)) return false;
             if (!object.Equals(this.DefaultHair, rhs.DefaultHair)) return false;
             if (!object.Equals(this.DefaultHairColor, rhs.DefaultHairColor)) return false;
@@ -4019,7 +4826,13 @@ namespace Mutagen.Internals
             ret = ret.CombineHashCode(this.Description?.GetHashCode());
             ret = ret.CombineHashCode(this.Spells?.GetHashCode());
             ret = ret.CombineHashCode(this.Relations?.GetHashCode());
-            ret = ret.CombineHashCode(this.Data?.GetHashCode());
+            ret = ret.CombineHashCode(this.SkillBoosts?.GetHashCode());
+            ret = ret.CombineHashCode(this.Fluff?.GetHashCode());
+            ret = ret.CombineHashCode(this.MaleHeight?.GetHashCode());
+            ret = ret.CombineHashCode(this.FemaleHeight?.GetHashCode());
+            ret = ret.CombineHashCode(this.MaleWeight?.GetHashCode());
+            ret = ret.CombineHashCode(this.FemaleWeight?.GetHashCode());
+            ret = ret.CombineHashCode(this.Flags?.GetHashCode());
             ret = ret.CombineHashCode(this.Voices?.GetHashCode());
             ret = ret.CombineHashCode(this.DefaultHair?.GetHashCode());
             ret = ret.CombineHashCode(this.DefaultHairColor?.GetHashCode());
@@ -4066,11 +4879,24 @@ namespace Mutagen.Internals
                     }
                 }
             }
-            if (Data != null)
+            if (SkillBoosts != null)
             {
-                if (!eval(this.Data.Overall)) return false;
-                if (Data.Specific != null && !Data.Specific.AllEqual(eval)) return false;
+                if (!eval(this.SkillBoosts.Overall)) return false;
+                if (SkillBoosts.Specific != null)
+                {
+                    foreach (var item in SkillBoosts.Specific)
+                    {
+                        if (!eval(item.Overall)) return false;
+                        if (!item.Specific?.AllEqual(eval) ?? false) return false;
+                    }
+                }
             }
+            if (!eval(this.Fluff)) return false;
+            if (!eval(this.MaleHeight)) return false;
+            if (!eval(this.FemaleHeight)) return false;
+            if (!eval(this.MaleWeight)) return false;
+            if (!eval(this.FemaleWeight)) return false;
+            if (!eval(this.Flags)) return false;
             if (Voices != null)
             {
                 if (!eval(this.Voices.Overall)) return false;
@@ -4190,15 +5016,36 @@ namespace Mutagen.Internals
                     }
                 }
             }
-            if (this.Data != null)
+            if (SkillBoosts != null)
             {
-                obj.Data = new MaskItem<R, RaceData_Mask<R>>();
-                obj.Data.Overall = eval(this.Data.Overall);
-                if (this.Data.Specific != null)
+                obj.SkillBoosts = new MaskItem<R, IEnumerable<MaskItem<R, SkillBoost_Mask<R>>>>();
+                obj.SkillBoosts.Overall = eval(this.SkillBoosts.Overall);
+                if (SkillBoosts.Specific != null)
                 {
-                    obj.Data.Specific = this.Data.Specific.Translate(eval);
+                    List<MaskItem<R, SkillBoost_Mask<R>>> l = new List<MaskItem<R, SkillBoost_Mask<R>>>();
+                    obj.SkillBoosts.Specific = l;
+                    foreach (var item in SkillBoosts.Specific)
+                    {
+                        MaskItem<R, SkillBoost_Mask<R>> mask = default(MaskItem<R, SkillBoost_Mask<R>>);
+                        if (item != null)
+                        {
+                            mask = new MaskItem<R, SkillBoost_Mask<R>>();
+                            mask.Overall = eval(item.Overall);
+                            if (item.Specific != null)
+                            {
+                                mask.Specific = item.Specific.Translate(eval);
+                            }
+                        }
+                        l.Add(mask);
+                    }
                 }
             }
+            obj.Fluff = eval(this.Fluff);
+            obj.MaleHeight = eval(this.MaleHeight);
+            obj.FemaleHeight = eval(this.FemaleHeight);
+            obj.MaleWeight = eval(this.MaleWeight);
+            obj.FemaleWeight = eval(this.FemaleWeight);
+            obj.Flags = eval(this.Flags);
             if (this.Voices != null)
             {
                 obj.Voices = new MaskItem<R, RaceVoices_Mask<R>>();
@@ -4313,6 +5160,7 @@ namespace Mutagen.Internals
             base.ClearEnumerables();
             this.Spells.Specific = null;
             this.Relations.Specific = null;
+            this.SkillBoosts.Specific = null;
             this.FaceData.Specific = null;
             this.Hairs.Specific = null;
             this.Eyes.Specific = null;
@@ -4340,7 +5188,7 @@ namespace Mutagen.Internals
             {
                 if (printMask?.Description ?? true)
                 {
-                    fg.AppendLine($"Description => {Description.ToStringSafe()}");
+                    fg.AppendLine($"Description => {Description}");
                 }
                 if (printMask?.Spells?.Overall ?? true)
                 {
@@ -4359,7 +5207,7 @@ namespace Mutagen.Internals
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
                                 {
-                                    fg.AppendLine($" => {subItem.ToStringSafe()}");
+                                    fg.AppendLine($" => {subItem}");
                                 }
                                 fg.AppendLine("]");
                             }
@@ -4384,7 +5232,7 @@ namespace Mutagen.Internals
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
                                 {
-                                    subItem.ToString(fg);
+                                    subItem?.ToString(fg);
                                 }
                                 fg.AppendLine("]");
                             }
@@ -4392,33 +5240,78 @@ namespace Mutagen.Internals
                     }
                     fg.AppendLine("]");
                 }
-                if (printMask?.Data?.Overall ?? true)
+                if (printMask?.SkillBoosts?.Overall ?? true)
                 {
-                    Data.ToString(fg);
+                    fg.AppendLine("SkillBoosts =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        if (SkillBoosts.Overall != null)
+                        {
+                            fg.AppendLine(SkillBoosts.Overall.ToString());
+                        }
+                        if (SkillBoosts.Specific != null)
+                        {
+                            foreach (var subItem in SkillBoosts.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (printMask?.Fluff ?? true)
+                {
+                    fg.AppendLine($"Fluff => {Fluff}");
+                }
+                if (printMask?.MaleHeight ?? true)
+                {
+                    fg.AppendLine($"MaleHeight => {MaleHeight}");
+                }
+                if (printMask?.FemaleHeight ?? true)
+                {
+                    fg.AppendLine($"FemaleHeight => {FemaleHeight}");
+                }
+                if (printMask?.MaleWeight ?? true)
+                {
+                    fg.AppendLine($"MaleWeight => {MaleWeight}");
+                }
+                if (printMask?.FemaleWeight ?? true)
+                {
+                    fg.AppendLine($"FemaleWeight => {FemaleWeight}");
+                }
+                if (printMask?.Flags ?? true)
+                {
+                    fg.AppendLine($"Flags => {Flags}");
                 }
                 if (printMask?.Voices?.Overall ?? true)
                 {
-                    Voices.ToString(fg);
+                    Voices?.ToString(fg);
                 }
                 if (printMask?.DefaultHair?.Overall ?? true)
                 {
-                    DefaultHair.ToString(fg);
+                    DefaultHair?.ToString(fg);
                 }
                 if (printMask?.DefaultHairColor ?? true)
                 {
-                    fg.AppendLine($"DefaultHairColor => {DefaultHairColor.ToStringSafe()}");
+                    fg.AppendLine($"DefaultHairColor => {DefaultHairColor}");
                 }
                 if (printMask?.FaceGenMainClamp ?? true)
                 {
-                    fg.AppendLine($"FaceGenMainClamp => {FaceGenMainClamp.ToStringSafe()}");
+                    fg.AppendLine($"FaceGenMainClamp => {FaceGenMainClamp}");
                 }
                 if (printMask?.FaceGenFaceClamp ?? true)
                 {
-                    fg.AppendLine($"FaceGenFaceClamp => {FaceGenFaceClamp.ToStringSafe()}");
+                    fg.AppendLine($"FaceGenFaceClamp => {FaceGenFaceClamp}");
                 }
                 if (printMask?.RaceStats?.Overall ?? true)
                 {
-                    RaceStats.ToString(fg);
+                    RaceStats?.ToString(fg);
                 }
                 if (printMask?.FaceData?.Overall ?? true)
                 {
@@ -4437,7 +5330,7 @@ namespace Mutagen.Internals
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
                                 {
-                                    subItem.ToString(fg);
+                                    subItem?.ToString(fg);
                                 }
                                 fg.AppendLine("]");
                             }
@@ -4447,7 +5340,7 @@ namespace Mutagen.Internals
                 }
                 if (printMask?.BodyData?.Overall ?? true)
                 {
-                    BodyData.ToString(fg);
+                    BodyData?.ToString(fg);
                 }
                 if (printMask?.Hairs?.Overall ?? true)
                 {
@@ -4466,7 +5359,7 @@ namespace Mutagen.Internals
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
                                 {
-                                    fg.AppendLine($" => {subItem.ToStringSafe()}");
+                                    fg.AppendLine($" => {subItem}");
                                 }
                                 fg.AppendLine("]");
                             }
@@ -4491,7 +5384,7 @@ namespace Mutagen.Internals
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
                                 {
-                                    fg.AppendLine($" => {subItem.ToStringSafe()}");
+                                    fg.AppendLine($" => {subItem}");
                                 }
                                 fg.AppendLine("]");
                             }
@@ -4501,11 +5394,11 @@ namespace Mutagen.Internals
                 }
                 if (printMask?.FaceGenData?.Overall ?? true)
                 {
-                    FaceGenData.ToString(fg);
+                    FaceGenData?.ToString(fg);
                 }
                 if (printMask?.Unknown ?? true)
                 {
-                    fg.AppendLine($"Unknown => {Unknown.ToStringSafe()}");
+                    fg.AppendLine($"Unknown => {Unknown}");
                 }
             }
             fg.AppendLine("]");
@@ -4520,7 +5413,13 @@ namespace Mutagen.Internals
         public Exception Description;
         public MaskItem<Exception, IEnumerable<Exception>> Spells;
         public MaskItem<Exception, IEnumerable<MaskItem<Exception, Relation_ErrorMask>>> Relations;
-        public MaskItem<Exception, RaceData_ErrorMask> Data;
+        public MaskItem<Exception, IEnumerable<MaskItem<Exception, SkillBoost_ErrorMask>>> SkillBoosts;
+        public Exception Fluff;
+        public Exception MaleHeight;
+        public Exception FemaleHeight;
+        public Exception MaleWeight;
+        public Exception FemaleWeight;
+        public Exception Flags;
         public MaskItem<Exception, RaceVoices_ErrorMask> Voices;
         public MaskItem<Exception, RaceHair_ErrorMask> DefaultHair;
         public Exception DefaultHairColor;
@@ -4550,8 +5449,26 @@ namespace Mutagen.Internals
                 case Race_FieldIndex.Relations:
                     this.Relations = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Relation_ErrorMask>>>(ex, null);
                     break;
-                case Race_FieldIndex.Data:
-                    this.Data = new MaskItem<Exception, RaceData_ErrorMask>(ex, null);
+                case Race_FieldIndex.SkillBoosts:
+                    this.SkillBoosts = new MaskItem<Exception, IEnumerable<MaskItem<Exception, SkillBoost_ErrorMask>>>(ex, null);
+                    break;
+                case Race_FieldIndex.Fluff:
+                    this.Fluff = ex;
+                    break;
+                case Race_FieldIndex.MaleHeight:
+                    this.MaleHeight = ex;
+                    break;
+                case Race_FieldIndex.FemaleHeight:
+                    this.FemaleHeight = ex;
+                    break;
+                case Race_FieldIndex.MaleWeight:
+                    this.MaleWeight = ex;
+                    break;
+                case Race_FieldIndex.FemaleWeight:
+                    this.FemaleWeight = ex;
+                    break;
+                case Race_FieldIndex.Flags:
+                    this.Flags = ex;
                     break;
                 case Race_FieldIndex.Voices:
                     this.Voices = new MaskItem<Exception, RaceVoices_ErrorMask>(ex, null);
@@ -4609,8 +5526,26 @@ namespace Mutagen.Internals
                 case Race_FieldIndex.Relations:
                     this.Relations = (MaskItem<Exception, IEnumerable<MaskItem<Exception, Relation_ErrorMask>>>)obj;
                     break;
-                case Race_FieldIndex.Data:
-                    this.Data = (MaskItem<Exception, RaceData_ErrorMask>)obj;
+                case Race_FieldIndex.SkillBoosts:
+                    this.SkillBoosts = (MaskItem<Exception, IEnumerable<MaskItem<Exception, SkillBoost_ErrorMask>>>)obj;
+                    break;
+                case Race_FieldIndex.Fluff:
+                    this.Fluff = (Exception)obj;
+                    break;
+                case Race_FieldIndex.MaleHeight:
+                    this.MaleHeight = (Exception)obj;
+                    break;
+                case Race_FieldIndex.FemaleHeight:
+                    this.FemaleHeight = (Exception)obj;
+                    break;
+                case Race_FieldIndex.MaleWeight:
+                    this.MaleWeight = (Exception)obj;
+                    break;
+                case Race_FieldIndex.FemaleWeight:
+                    this.FemaleWeight = (Exception)obj;
+                    break;
+                case Race_FieldIndex.Flags:
+                    this.Flags = (Exception)obj;
                     break;
                 case Race_FieldIndex.Voices:
                     this.Voices = (MaskItem<Exception, RaceVoices_ErrorMask>)obj;
@@ -4686,175 +5621,154 @@ namespace Mutagen.Internals
         protected override void ToString_FillInternal(FileGeneration fg)
         {
             base.ToString_FillInternal(fg);
-            if (Description != null)
+            fg.AppendLine($"Description => {Description}");
+            fg.AppendLine("Spells =>");
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
             {
-                fg.AppendLine($"Description => {Description.ToStringSafe()}");
-            }
-            if (Spells != null)
-            {
-                fg.AppendLine("Spells =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                if (Spells.Overall != null)
                 {
-                    if (Spells.Overall != null)
+                    fg.AppendLine(Spells.Overall.ToString());
+                }
+                if (Spells.Specific != null)
+                {
+                    foreach (var subItem in Spells.Specific)
                     {
-                        fg.AppendLine(Spells.Overall.ToString());
-                    }
-                    if (Spells.Specific != null)
-                    {
-                        foreach (var subItem in Spells.Specific)
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                fg.AppendLine($" => {subItem.ToStringSafe()}");
-                            }
-                            fg.AppendLine("]");
+                            fg.AppendLine($" => {subItem}");
                         }
+                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
-            if (Relations != null)
+            fg.AppendLine("]");
+            fg.AppendLine("Relations =>");
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
             {
-                fg.AppendLine("Relations =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                if (Relations.Overall != null)
                 {
-                    if (Relations.Overall != null)
+                    fg.AppendLine(Relations.Overall.ToString());
+                }
+                if (Relations.Specific != null)
+                {
+                    foreach (var subItem in Relations.Specific)
                     {
-                        fg.AppendLine(Relations.Overall.ToString());
-                    }
-                    if (Relations.Specific != null)
-                    {
-                        foreach (var subItem in Relations.Specific)
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem.ToString(fg);
-                            }
-                            fg.AppendLine("]");
+                            subItem?.ToString(fg);
                         }
+                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
-            if (Data != null)
+            fg.AppendLine("]");
+            fg.AppendLine("SkillBoosts =>");
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
             {
-                Data.ToString(fg);
-            }
-            if (Voices != null)
-            {
-                Voices.ToString(fg);
-            }
-            if (DefaultHair != null)
-            {
-                DefaultHair.ToString(fg);
-            }
-            if (DefaultHairColor != null)
-            {
-                fg.AppendLine($"DefaultHairColor => {DefaultHairColor.ToStringSafe()}");
-            }
-            if (FaceGenMainClamp != null)
-            {
-                fg.AppendLine($"FaceGenMainClamp => {FaceGenMainClamp.ToStringSafe()}");
-            }
-            if (FaceGenFaceClamp != null)
-            {
-                fg.AppendLine($"FaceGenFaceClamp => {FaceGenFaceClamp.ToStringSafe()}");
-            }
-            if (RaceStats != null)
-            {
-                RaceStats.ToString(fg);
-            }
-            if (FaceData != null)
-            {
-                fg.AppendLine("FaceData =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                if (SkillBoosts.Overall != null)
                 {
-                    if (FaceData.Overall != null)
+                    fg.AppendLine(SkillBoosts.Overall.ToString());
+                }
+                if (SkillBoosts.Specific != null)
+                {
+                    foreach (var subItem in SkillBoosts.Specific)
                     {
-                        fg.AppendLine(FaceData.Overall.ToString());
-                    }
-                    if (FaceData.Specific != null)
-                    {
-                        foreach (var subItem in FaceData.Specific)
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem.ToString(fg);
-                            }
-                            fg.AppendLine("]");
+                            subItem?.ToString(fg);
                         }
+                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
-            if (BodyData != null)
+            fg.AppendLine("]");
+            fg.AppendLine($"Fluff => {Fluff}");
+            fg.AppendLine($"MaleHeight => {MaleHeight}");
+            fg.AppendLine($"FemaleHeight => {FemaleHeight}");
+            fg.AppendLine($"MaleWeight => {MaleWeight}");
+            fg.AppendLine($"FemaleWeight => {FemaleWeight}");
+            fg.AppendLine($"Flags => {Flags}");
+            Voices?.ToString(fg);
+            DefaultHair?.ToString(fg);
+            fg.AppendLine($"DefaultHairColor => {DefaultHairColor}");
+            fg.AppendLine($"FaceGenMainClamp => {FaceGenMainClamp}");
+            fg.AppendLine($"FaceGenFaceClamp => {FaceGenFaceClamp}");
+            RaceStats?.ToString(fg);
+            fg.AppendLine("FaceData =>");
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
             {
-                BodyData.ToString(fg);
-            }
-            if (Hairs != null)
-            {
-                fg.AppendLine("Hairs =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                if (FaceData.Overall != null)
                 {
-                    if (Hairs.Overall != null)
+                    fg.AppendLine(FaceData.Overall.ToString());
+                }
+                if (FaceData.Specific != null)
+                {
+                    foreach (var subItem in FaceData.Specific)
                     {
-                        fg.AppendLine(Hairs.Overall.ToString());
-                    }
-                    if (Hairs.Specific != null)
-                    {
-                        foreach (var subItem in Hairs.Specific)
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                fg.AppendLine($" => {subItem.ToStringSafe()}");
-                            }
-                            fg.AppendLine("]");
+                            subItem?.ToString(fg);
                         }
+                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
-            if (Eyes != null)
+            fg.AppendLine("]");
+            BodyData?.ToString(fg);
+            fg.AppendLine("Hairs =>");
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
             {
-                fg.AppendLine("Eyes =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                if (Hairs.Overall != null)
                 {
-                    if (Eyes.Overall != null)
+                    fg.AppendLine(Hairs.Overall.ToString());
+                }
+                if (Hairs.Specific != null)
+                {
+                    foreach (var subItem in Hairs.Specific)
                     {
-                        fg.AppendLine(Eyes.Overall.ToString());
-                    }
-                    if (Eyes.Specific != null)
-                    {
-                        foreach (var subItem in Eyes.Specific)
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                fg.AppendLine($" => {subItem.ToStringSafe()}");
-                            }
-                            fg.AppendLine("]");
+                            fg.AppendLine($" => {subItem}");
                         }
+                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
-            if (FaceGenData != null)
+            fg.AppendLine("]");
+            fg.AppendLine("Eyes =>");
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
             {
-                FaceGenData.ToString(fg);
+                if (Eyes.Overall != null)
+                {
+                    fg.AppendLine(Eyes.Overall.ToString());
+                }
+                if (Eyes.Specific != null)
+                {
+                    foreach (var subItem in Eyes.Specific)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($" => {subItem}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
             }
-            if (Unknown != null)
-            {
-                fg.AppendLine($"Unknown => {Unknown.ToStringSafe()}");
-            }
+            fg.AppendLine("]");
+            FaceGenData?.ToString(fg);
+            fg.AppendLine($"Unknown => {Unknown}");
         }
         #endregion
 
@@ -4865,7 +5779,13 @@ namespace Mutagen.Internals
             ret.Description = this.Description.Combine(rhs.Description);
             ret.Spells = new MaskItem<Exception, IEnumerable<Exception>>(this.Spells.Overall.Combine(rhs.Spells.Overall), new List<Exception>(this.Spells.Specific.And(rhs.Spells.Specific)));
             ret.Relations = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Relation_ErrorMask>>>(this.Relations.Overall.Combine(rhs.Relations.Overall), new List<MaskItem<Exception, Relation_ErrorMask>>(this.Relations.Specific.And(rhs.Relations.Specific)));
-            ret.Data = new MaskItem<Exception, RaceData_ErrorMask>(this.Data.Overall.Combine(rhs.Data.Overall), ((IErrorMask<RaceData_ErrorMask>)this.Data.Specific).Combine(rhs.Data.Specific));
+            ret.SkillBoosts = new MaskItem<Exception, IEnumerable<MaskItem<Exception, SkillBoost_ErrorMask>>>(this.SkillBoosts.Overall.Combine(rhs.SkillBoosts.Overall), new List<MaskItem<Exception, SkillBoost_ErrorMask>>(this.SkillBoosts.Specific.And(rhs.SkillBoosts.Specific)));
+            ret.Fluff = this.Fluff.Combine(rhs.Fluff);
+            ret.MaleHeight = this.MaleHeight.Combine(rhs.MaleHeight);
+            ret.FemaleHeight = this.FemaleHeight.Combine(rhs.FemaleHeight);
+            ret.MaleWeight = this.MaleWeight.Combine(rhs.MaleWeight);
+            ret.FemaleWeight = this.FemaleWeight.Combine(rhs.FemaleWeight);
+            ret.Flags = this.Flags.Combine(rhs.Flags);
             ret.Voices = new MaskItem<Exception, RaceVoices_ErrorMask>(this.Voices.Overall.Combine(rhs.Voices.Overall), ((IErrorMask<RaceVoices_ErrorMask>)this.Voices.Specific).Combine(rhs.Voices.Specific));
             ret.DefaultHair = new MaskItem<Exception, RaceHair_ErrorMask>(this.DefaultHair.Overall.Combine(rhs.DefaultHair.Overall), ((IErrorMask<RaceHair_ErrorMask>)this.DefaultHair.Specific).Combine(rhs.DefaultHair.Specific));
             ret.DefaultHairColor = this.DefaultHairColor.Combine(rhs.DefaultHairColor);
@@ -4894,7 +5814,13 @@ namespace Mutagen.Internals
         public bool Description;
         public CopyOption Spells;
         public MaskItem<CopyOption, Relation_CopyMask> Relations;
-        public MaskItem<CopyOption, RaceData_CopyMask> Data;
+        public MaskItem<CopyOption, SkillBoost_CopyMask> SkillBoosts;
+        public bool Fluff;
+        public bool MaleHeight;
+        public bool FemaleHeight;
+        public bool MaleWeight;
+        public bool FemaleWeight;
+        public bool Flags;
         public MaskItem<CopyOption, RaceVoices_CopyMask> Voices;
         public MaskItem<CopyOption, RaceHair_CopyMask> DefaultHair;
         public bool DefaultHairColor;

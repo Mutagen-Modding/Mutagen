@@ -2499,27 +2499,27 @@ namespace Mutagen.Internals
             {
                 if (printMask?.Fluff ?? true)
                 {
-                    fg.AppendLine($"Fluff => {Fluff.ToStringSafe()}");
+                    fg.AppendLine($"Fluff => {Fluff}");
                 }
                 if (printMask?.Header?.Overall ?? true)
                 {
-                    Header.ToString(fg);
+                    Header?.ToString(fg);
                 }
                 if (printMask?.TypeOffsets ?? true)
                 {
-                    fg.AppendLine($"TypeOffsets => {TypeOffsets.ToStringSafe()}");
+                    fg.AppendLine($"TypeOffsets => {TypeOffsets}");
                 }
                 if (printMask?.Deleted ?? true)
                 {
-                    fg.AppendLine($"Deleted => {Deleted.ToStringSafe()}");
+                    fg.AppendLine($"Deleted => {Deleted}");
                 }
                 if (printMask?.Author ?? true)
                 {
-                    fg.AppendLine($"Author => {Author.ToStringSafe()}");
+                    fg.AppendLine($"Author => {Author}");
                 }
                 if (printMask?.Description ?? true)
                 {
-                    fg.AppendLine($"Description => {Description.ToStringSafe()}");
+                    fg.AppendLine($"Description => {Description}");
                 }
                 if (printMask?.MasterReferences?.Overall ?? true)
                 {
@@ -2538,7 +2538,7 @@ namespace Mutagen.Internals
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
                                 {
-                                    subItem.ToString(fg);
+                                    subItem?.ToString(fg);
                                 }
                                 fg.AppendLine("]");
                             }
@@ -2672,55 +2672,34 @@ namespace Mutagen.Internals
         }
         protected void ToString_FillInternal(FileGeneration fg)
         {
-            if (Fluff != null)
+            fg.AppendLine($"Fluff => {Fluff}");
+            Header?.ToString(fg);
+            fg.AppendLine($"TypeOffsets => {TypeOffsets}");
+            fg.AppendLine($"Deleted => {Deleted}");
+            fg.AppendLine($"Author => {Author}");
+            fg.AppendLine($"Description => {Description}");
+            fg.AppendLine("MasterReferences =>");
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
             {
-                fg.AppendLine($"Fluff => {Fluff.ToStringSafe()}");
-            }
-            if (Header != null)
-            {
-                Header.ToString(fg);
-            }
-            if (TypeOffsets != null)
-            {
-                fg.AppendLine($"TypeOffsets => {TypeOffsets.ToStringSafe()}");
-            }
-            if (Deleted != null)
-            {
-                fg.AppendLine($"Deleted => {Deleted.ToStringSafe()}");
-            }
-            if (Author != null)
-            {
-                fg.AppendLine($"Author => {Author.ToStringSafe()}");
-            }
-            if (Description != null)
-            {
-                fg.AppendLine($"Description => {Description.ToStringSafe()}");
-            }
-            if (MasterReferences != null)
-            {
-                fg.AppendLine("MasterReferences =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
+                if (MasterReferences.Overall != null)
                 {
-                    if (MasterReferences.Overall != null)
+                    fg.AppendLine(MasterReferences.Overall.ToString());
+                }
+                if (MasterReferences.Specific != null)
+                {
+                    foreach (var subItem in MasterReferences.Specific)
                     {
-                        fg.AppendLine(MasterReferences.Overall.ToString());
-                    }
-                    if (MasterReferences.Specific != null)
-                    {
-                        foreach (var subItem in MasterReferences.Specific)
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem.ToString(fg);
-                            }
-                            fg.AppendLine("]");
+                            subItem?.ToString(fg);
                         }
+                        fg.AppendLine("]");
                     }
                 }
-                fg.AppendLine("]");
             }
+            fg.AppendLine("]");
         }
         #endregion
 
