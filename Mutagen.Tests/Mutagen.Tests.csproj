@@ -77,6 +77,10 @@
       <Project>{91f19c1e-adf8-4b84-9452-04c2cd8f46d4}</Project>
       <Name>Loqui</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Mutagen.Oblivion\Mutagen.Oblivion.csproj">
+      <Project>{c9fc687d-7da3-4bfc-b49a-d66c0f1c1774}</Project>
+      <Name>Mutagen.Oblivion</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Mutagen\Mutagen.csproj">
       <Project>{6e69a8c5-20c7-4564-9870-4cbed49b99bb}</Project>
       <Name>Mutagen</Name>

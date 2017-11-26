@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 using Mutagen;
 using Noggog.Utility;
 using Xunit;
-using Mutagen.Internals;
+using Mutagen.Oblivion;
+using Mutagen.Oblivion.Internals;
 using Noggog;
 
 namespace Mutagen.Tests

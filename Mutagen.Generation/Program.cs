@@ -14,11 +14,11 @@ namespace Mutagen.Generation
         static void Main(string[] args)
         {
             LoquiGenerator gen = new LoquiGenerator(
-                new DirectoryInfo("../../../Mutagen"))
+                new DirectoryInfo("../../../Mutagen.Oblivion"))
             {
-                DefaultNamespace = "Mutagen",
+                DefaultNamespace = "Mutagen.Oblivion",
                 RaisePropertyChangedDefault = false,
-                ProtocolDefault = new ProtocolKey("Mutagen"),
+                ProtocolDefault = new ProtocolKey("Oblivion"),
                 NotifyingDefault = NotifyingOption.Notifying
             };
             gen.XmlTranslation.ShouldGenerateXSD = false;
@@ -32,12 +32,12 @@ namespace Mutagen.Generation
 
             // Add Projects
             gen.AddProjectToModify(
-                new FileInfo(Path.Combine(gen.CommonGenerationFolder.FullName, "Mutagen.csproj")));
+                new FileInfo(Path.Combine(gen.CommonGenerationFolder.FullName, "Mutagen.Oblivion.csproj")));
 
             gen.AddProtocol(
                 new ProtocolGeneration(
                     gen,
-                    new ProtocolKey("Mutagen")));
+                    new ProtocolKey("Oblivion")));
 
             gen.Generate().Wait();
         }

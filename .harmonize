@@ -1,3 +1,20 @@
 <HarmonizeConfig Version="1">
-   <ParentRepos />
+   <ParentRepos>
+      <RepoListing>
+         <Nickname>CSharpExt</Nickname>
+         <Sha>0d6bd0cf8f81a91f21a2d18339138eadf28e23c6</Sha>
+         <Path>../CSharpExt</Path>
+         <CommitDate>11-03-2017 18:44:56</CommitDate>
+         <Description>IterateMarkLast</Description>
+         <Author>Justin Swanson</Author>
+      </RepoListing>
+      <RepoListing>
+         <Nickname>Loqui</Nickname>
+         <Sha>1c9e8cbe3c31a3d39af7cc0a466176eb9e091eff</Sha>
+         <Path>../Loqui</Path>
+         <CommitDate>11-25-2017 18:04:27</CommitDate>
+         <Description>Regeneration</Description>
+         <Author>Justin Swanson</Author>
+      </RepoListing>
+   </ParentRepos>
 </HarmonizeConfig>

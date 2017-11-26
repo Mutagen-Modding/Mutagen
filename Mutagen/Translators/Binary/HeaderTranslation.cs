@@ -10,6 +10,8 @@ namespace Mutagen.Binary
 {
     public class HeaderTranslation
     {
+        public static readonly RecordType GRUP_HEADER = new RecordType("GRUP");
+
         public static bool TryParse(
             MutagenFrame frame,
             RecordType expectedHeader,
@@ -114,11 +116,11 @@ namespace Mutagen.Binary
         {
             if (!TryParse(
                 frame,
-                Mutagen.Internals.Group_Registration.GRUP_HEADER,
+                GRUP_HEADER,
                 out var contentLength,
                 Constants.RECORD_LENGTHLENGTH))
             {
-                throw new ArgumentException($"Expected header was not read in: {Mutagen.Internals.Group_Registration.GRUP_HEADER}");
+                throw new ArgumentException($"Expected header was not read in: {GRUP_HEADER}");
             }
             return frame.Reader.Position + contentLength - Constants.HEADER_LENGTH - Constants.RECORD_LENGTHLENGTH;
         }
@@ -273,7 +275,7 @@ namespace Mutagen.Binary
             frame.CheckUpcomingRead(Constants.HEADER_LENGTH + Constants.RECORD_LENGTHLENGTH);
             var ret = ReadNextRecordType(frame);
             contentLength = ReadContentLength(frame.Reader, Constants.RECORD_LENGTHLENGTH);
-            if (ret.Equals(Mutagen.Internals.Group_Registration.GRUP_HEADER))
+            if (ret.Equals(GRUP_HEADER))
             {
                 return ReadNextRecordType(frame);
             }
@@ -287,7 +289,7 @@ namespace Mutagen.Binary
             frame.CheckUpcomingRead(Constants.HEADER_LENGTH + Constants.RECORD_LENGTHLENGTH);
             var ret = ReadNextRecordType(frame);
             contentLength = ReadContentLength(frame.Reader, Constants.RECORD_LENGTHLENGTH);
-            if (ret.Equals(Mutagen.Internals.Group_Registration.GRUP_HEADER))
+            if (ret.Equals(GRUP_HEADER))
             {
                 ret = GetNextRecordType(frame);
             }

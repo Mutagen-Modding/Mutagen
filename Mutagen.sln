@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.16
+VisualStudioVersion = 15.0.27004.2009
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen", "Mutagen\Mutagen.csproj", "{6E69A8C5-20C7-4564-9870-4CBED49B99BB}"
 EndProject
@@ -20,6 +20,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpExt.Tests", "..\CSharpExt\CSharpExt.Tests\CSharpExt.Tests.csproj", "{7445A66B-6B75-4B65-BB6D-D7DA88318985}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Tester", "Mutagen.Tester\Mutagen.Tester.csproj", "{7E9B22E1-1C07-4277-93AB-C986E9BAEF66}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Oblivion", "Mutagen.Oblivion\Mutagen.Oblivion.csproj", "{C9FC687D-7DA3-4BFC-B49A-D66C0F1C1774}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,6 +61,10 @@ Global
 		{7E9B22E1-1C07-4277-93AB-C986E9BAEF66}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E9B22E1-1C07-4277-93AB-C986E9BAEF66}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7E9B22E1-1C07-4277-93AB-C986E9BAEF66}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9FC687D-7DA3-4BFC-B49A-D66C0F1C1774}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9FC687D-7DA3-4BFC-B49A-D66C0F1C1774}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9FC687D-7DA3-4BFC-B49A-D66C0F1C1774}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9FC687D-7DA3-4BFC-B49A-D66C0F1C1774}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
