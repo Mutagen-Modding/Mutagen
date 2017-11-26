@@ -921,7 +921,6 @@ namespace Mutagen.Oblivion
             switch (nextRecordType.Type)
             {
                 case "SCHR":
-                    frame.Position -= Constants.SUBRECORD_LENGTH;
                     var tmp = ScriptMetaSummary.Create_Binary(
                         frame: frame,
                         doMasks: errorMask != null,
@@ -933,11 +932,12 @@ namespace Mutagen.Oblivion
                         cmds: null,
                         copyMask: null,
                         doMasks: errorMask != null,
-                        errorMask: out var MetadataSummaryerrorMask);
+                        errorMask: out ScriptMetaSummary_ErrorMask MetadataSummaryerrorMask);
+                    var combined = ScriptMetaSummary_ErrorMask.Combine(MetadataSummarycreateMask, MetadataSummaryerrorMask);
                     ErrorMask.HandleErrorMask(
                         creator: errorMask,
                         index: (int)Script_FieldIndex.MetadataSummary,
-                        errMaskObj: ScriptMetaSummary_ErrorMask.Combine(MetadataSummarycreateMask, MetadataSummaryerrorMask));
+                        errMaskObj: combined == null ? null : new MaskItem<Exception, ScriptMetaSummary_ErrorMask>(null, combined));
                     break;
                 case "SCDA":
                     frame.Position += Constants.SUBRECORD_LENGTH;

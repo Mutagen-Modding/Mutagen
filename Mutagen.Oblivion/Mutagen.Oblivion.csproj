@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="Windows-1252"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -207,6 +207,12 @@
     </Compile>
     <Compile Include="Records\Major Records\Rank_LoquiGenerated.cs">
       <DependentUpon>Faction.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Script.cs">
+      <DependentUpon>Script.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ScriptMetaSummary.cs">
+      <DependentUpon>Script.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\ScriptMetaSummary_LoquiGenerated.cs">
       <DependentUpon>Script.xml</DependentUpon>

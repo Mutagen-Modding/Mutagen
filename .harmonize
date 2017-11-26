@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>0d6bd0cf8f81a91f21a2d18339138eadf28e23c6</Sha>
+         <Sha>60a1f76f19244792648f1b0544af251f18026ba0</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>11-03-2017 18:44:56</CommitDate>
-         <Description>IterateMarkLast</Description>
+         <CommitDate>11-26-2017 13:34:41</CommitDate>
+         <Description>NotifyingList subscribe API refactoring</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

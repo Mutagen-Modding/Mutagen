@@ -80,6 +80,17 @@ namespace Mutagen.Oblivion
         }
         INotifyingItemGetter<UInt32> IScriptMetaSummaryGetter.VariableCount_Property => this.VariableCount_Property;
         #endregion
+        #region Type
+        protected readonly INotifyingItem<Script.ScriptType> _Type = NotifyingItem.Factory<Script.ScriptType>(markAsSet: false);
+        public INotifyingItem<Script.ScriptType> Type_Property => _Type;
+        public Script.ScriptType Type
+        {
+            get => this._Type.Item;
+            set => this._Type.Set(value);
+        }
+        INotifyingItem<Script.ScriptType> IScriptMetaSummary.Type_Property => this.Type_Property;
+        INotifyingItemGetter<Script.ScriptType> IScriptMetaSummaryGetter.Type_Property => this.Type_Property;
+        #endregion
 
         #region Loqui Getter Interface
 
@@ -159,6 +170,11 @@ namespace Mutagen.Oblivion
             {
                 if (VariableCount != rhs.VariableCount) return false;
             }
+            if (Type_Property.HasBeenSet != rhs.Type_Property.HasBeenSet) return false;
+            if (Type_Property.HasBeenSet)
+            {
+                if (Type != rhs.Type) return false;
+            }
             return true;
         }
 
@@ -180,6 +196,10 @@ namespace Mutagen.Oblivion
             if (VariableCount_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(VariableCount).CombineHashCode(ret);
+            }
+            if (Type_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Type).CombineHashCode(ret);
             }
             return ret;
         }
@@ -523,6 +543,21 @@ namespace Mutagen.Oblivion
                         ErrorMask.HandleErrorMask(
                             errorMask,
                             (int)ScriptMetaSummary_FieldIndex.VariableCount,
+                            subMask);
+                    }
+                    break;
+                case "Type":
+                    {
+                        Exception subMask;
+                        var tryGet = EnumXmlTranslation<Script.ScriptType>.Instance.Parse(
+                            root,
+                            nullable: false,
+                            doMasks: errorMask != null,
+                            errorMask: out subMask);
+                        item._Type.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            (int)ScriptMetaSummary_FieldIndex.Type,
                             subMask);
                     }
                     break;
@@ -886,6 +921,12 @@ namespace Mutagen.Oblivion
                 item: item,
                 fieldIndex: (int)ScriptMetaSummary_FieldIndex.VariableCount,
                 errorMask: errorMask);
+            if (frame.Complete) return;
+            var TypetryGet = Mutagen.Binary.EnumBinaryTranslation<Script.ScriptType>.Instance.Parse(
+                frame: frame.Spawn(new ContentLength(4)),
+                fieldIndex: (int)ScriptMetaSummary_FieldIndex.Type,
+                errorMask: errorMask);
+            item._Type.SetIfSucceeded(TypetryGet);
         }
 
         #endregion
@@ -978,6 +1019,11 @@ namespace Mutagen.Oblivion
                         (UInt32)obj,
                         cmds);
                     break;
+                case ScriptMetaSummary_FieldIndex.Type:
+                    this._Type.Set(
+                        (Script.ScriptType)obj,
+                        cmds);
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1025,6 +1071,11 @@ namespace Mutagen.Oblivion
                         (UInt32)pair.Value,
                         null);
                     break;
+                case ScriptMetaSummary_FieldIndex.Type:
+                    obj._Type.Set(
+                        (Script.ScriptType)pair.Value,
+                        null);
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -1045,6 +1096,9 @@ namespace Mutagen.Oblivion
 
         new UInt32 RefCount { get; set; }
         new INotifyingItem<UInt32> RefCount_Property { get; }
+
+        new Script.ScriptType Type { get; set; }
+        new INotifyingItem<Script.ScriptType> Type_Property { get; }
 
     }
 
@@ -1070,6 +1124,11 @@ namespace Mutagen.Oblivion
         INotifyingItemGetter<UInt32> VariableCount_Property { get; }
 
         #endregion
+        #region Type
+        Script.ScriptType Type { get; }
+        INotifyingItemGetter<Script.ScriptType> Type_Property { get; }
+
+        #endregion
 
     }
 
@@ -1086,6 +1145,7 @@ namespace Mutagen.Oblivion.Internals
         RefCount = 1,
         CompiledSize = 2,
         VariableCount = 3,
+        Type = 4,
     }
     #endregion
 
@@ -1103,7 +1163,7 @@ namespace Mutagen.Oblivion.Internals
 
         public const string GUID = "80c1bfa2-bdf3-4bc9-aeb7-306536cdbc91";
 
-        public const ushort FieldCount = 4;
+        public const ushort FieldCount = 5;
 
         public static readonly Type MaskType = typeof(ScriptMetaSummary_Mask<>);
 
@@ -1139,6 +1199,8 @@ namespace Mutagen.Oblivion.Internals
                     return (ushort)ScriptMetaSummary_FieldIndex.CompiledSize;
                 case "VARIABLECOUNT":
                     return (ushort)ScriptMetaSummary_FieldIndex.VariableCount;
+                case "TYPE":
+                    return (ushort)ScriptMetaSummary_FieldIndex.Type;
                 default:
                     return null;
             }
@@ -1153,6 +1215,7 @@ namespace Mutagen.Oblivion.Internals
                 case ScriptMetaSummary_FieldIndex.RefCount:
                 case ScriptMetaSummary_FieldIndex.CompiledSize:
                 case ScriptMetaSummary_FieldIndex.VariableCount:
+                case ScriptMetaSummary_FieldIndex.Type:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1168,6 +1231,7 @@ namespace Mutagen.Oblivion.Internals
                 case ScriptMetaSummary_FieldIndex.RefCount:
                 case ScriptMetaSummary_FieldIndex.CompiledSize:
                 case ScriptMetaSummary_FieldIndex.VariableCount:
+                case ScriptMetaSummary_FieldIndex.Type:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1183,6 +1247,7 @@ namespace Mutagen.Oblivion.Internals
                 case ScriptMetaSummary_FieldIndex.RefCount:
                 case ScriptMetaSummary_FieldIndex.CompiledSize:
                 case ScriptMetaSummary_FieldIndex.VariableCount:
+                case ScriptMetaSummary_FieldIndex.Type:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1202,6 +1267,8 @@ namespace Mutagen.Oblivion.Internals
                     return "CompiledSize";
                 case ScriptMetaSummary_FieldIndex.VariableCount:
                     return "VariableCount";
+                case ScriptMetaSummary_FieldIndex.Type:
+                    return "Type";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1217,6 +1284,7 @@ namespace Mutagen.Oblivion.Internals
                     return true;
                 case ScriptMetaSummary_FieldIndex.Fluff:
                 case ScriptMetaSummary_FieldIndex.RefCount:
+                case ScriptMetaSummary_FieldIndex.Type:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1233,6 +1301,7 @@ namespace Mutagen.Oblivion.Internals
                     return true;
                 case ScriptMetaSummary_FieldIndex.Fluff:
                 case ScriptMetaSummary_FieldIndex.RefCount:
+                case ScriptMetaSummary_FieldIndex.Type:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1252,6 +1321,8 @@ namespace Mutagen.Oblivion.Internals
                     return typeof(Int32);
                 case ScriptMetaSummary_FieldIndex.VariableCount:
                     return typeof(UInt32);
+                case ScriptMetaSummary_FieldIndex.Type:
+                    return typeof(Script.ScriptType);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1259,7 +1330,7 @@ namespace Mutagen.Oblivion.Internals
 
         public static readonly RecordType SCHR_HEADER = new RecordType("SCHR");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = SCHR_HEADER;
-        public const int NumStructFields = 4;
+        public const int NumStructFields = 5;
         public const int NumTypedFields = 0;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1397,6 +1468,21 @@ namespace Mutagen.Oblivion.Internals
                     errorMask().SetNthException((int)ScriptMetaSummary_FieldIndex.RefCount, ex);
                 }
             }
+            if (copyMask?.Type ?? true)
+            {
+                try
+                {
+                    item.Type_Property.SetToWithDefault(
+                        rhs.Type_Property,
+                        def?.Type_Property,
+                        cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)ScriptMetaSummary_FieldIndex.Type, ex);
+                }
+            }
         }
 
         #endregion
@@ -1418,6 +1504,9 @@ namespace Mutagen.Oblivion.Internals
                     break;
                 case ScriptMetaSummary_FieldIndex.RefCount:
                     obj.RefCount_Property.HasBeenSet = on;
+                    break;
+                case ScriptMetaSummary_FieldIndex.Type:
+                    obj.Type_Property.HasBeenSet = on;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1441,6 +1530,9 @@ namespace Mutagen.Oblivion.Internals
                 case ScriptMetaSummary_FieldIndex.RefCount:
                     obj.RefCount_Property.Unset(cmds);
                     break;
+                case ScriptMetaSummary_FieldIndex.Type:
+                    obj.Type_Property.Unset(cmds);
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1461,6 +1553,8 @@ namespace Mutagen.Oblivion.Internals
                     return obj.CompiledSize_Property.HasBeenSet;
                 case ScriptMetaSummary_FieldIndex.VariableCount:
                     return obj.VariableCount_Property.HasBeenSet;
+                case ScriptMetaSummary_FieldIndex.Type:
+                    return obj.Type_Property.HasBeenSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1481,6 +1575,8 @@ namespace Mutagen.Oblivion.Internals
                     return obj.CompiledSize;
                 case ScriptMetaSummary_FieldIndex.VariableCount:
                     return obj.VariableCount;
+                case ScriptMetaSummary_FieldIndex.Type:
+                    return obj.Type;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1492,6 +1588,7 @@ namespace Mutagen.Oblivion.Internals
         {
             item.Fluff_Property.Unset(cmds.ToUnsetParams());
             item.RefCount_Property.Unset(cmds.ToUnsetParams());
+            item.Type_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static ScriptMetaSummary_Mask<bool> GetEqualsMask(
@@ -1513,6 +1610,7 @@ namespace Mutagen.Oblivion.Internals
             ret.RefCount = item.RefCount_Property.Equals(rhs.RefCount_Property, (l, r) => l == r);
             ret.CompiledSize = item.CompiledSize_Property.Equals(rhs.CompiledSize_Property, (l, r) => l == r);
             ret.VariableCount = item.VariableCount_Property.Equals(rhs.VariableCount_Property, (l, r) => l == r);
+            ret.Type = item.Type_Property.Equals(rhs.Type_Property, (l, r) => l == r);
         }
 
         public static string ToString(
@@ -1558,6 +1656,10 @@ namespace Mutagen.Oblivion.Internals
                 {
                     fg.AppendLine($"VariableCount => {item.VariableCount}");
                 }
+                if (printMask?.Type ?? true)
+                {
+                    fg.AppendLine($"Type => {item.Type}");
+                }
             }
             fg.AppendLine("]");
         }
@@ -1570,6 +1672,7 @@ namespace Mutagen.Oblivion.Internals
             if (checkMask.RefCount.HasValue && checkMask.RefCount.Value != item.RefCount_Property.HasBeenSet) return false;
             if (checkMask.CompiledSize.HasValue && checkMask.CompiledSize.Value != item.CompiledSize_Property.HasBeenSet) return false;
             if (checkMask.VariableCount.HasValue && checkMask.VariableCount.Value != item.VariableCount_Property.HasBeenSet) return false;
+            if (checkMask.Type.HasValue && checkMask.Type.Value != item.Type_Property.HasBeenSet) return false;
             return true;
         }
 
@@ -1580,6 +1683,7 @@ namespace Mutagen.Oblivion.Internals
             ret.RefCount = item.RefCount_Property.HasBeenSet;
             ret.CompiledSize = item.CompiledSize_Property.HasBeenSet;
             ret.VariableCount = item.VariableCount_Property.HasBeenSet;
+            ret.Type = item.Type_Property.HasBeenSet;
             return ret;
         }
 
@@ -1641,6 +1745,20 @@ namespace Mutagen.Oblivion.Internals
                         ErrorMask.HandleErrorMask(
                             errorMask,
                             (int)ScriptMetaSummary_FieldIndex.RefCount,
+                            subMask);
+                    }
+                    if (item.Type_Property.HasBeenSet)
+                    {
+                        Exception subMask;
+                        EnumXmlTranslation<Script.ScriptType>.Instance.Write(
+                            writer,
+                            nameof(item.Type),
+                            item.Type,
+                            doMasks: errorMask != null,
+                            errorMask: out subMask);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            (int)ScriptMetaSummary_FieldIndex.Type,
                             subMask);
                     }
                 }
@@ -1722,6 +1840,12 @@ namespace Mutagen.Oblivion.Internals
                 item: item,
                 fieldIndex: (int)ScriptMetaSummary_FieldIndex.VariableCount,
                 errorMask: errorMask);
+            Mutagen.Binary.EnumBinaryTranslation<Script.ScriptType>.Instance.Write(
+                writer,
+                item.Type_Property,
+                length: new ContentLength(4),
+                fieldIndex: (int)ScriptMetaSummary_FieldIndex.Type,
+                errorMask: errorMask);
         }
 
         #endregion
@@ -1745,6 +1869,7 @@ namespace Mutagen.Oblivion.Internals
             this.RefCount = initialValue;
             this.CompiledSize = initialValue;
             this.VariableCount = initialValue;
+            this.Type = initialValue;
         }
         #endregion
 
@@ -1753,6 +1878,7 @@ namespace Mutagen.Oblivion.Internals
         public T RefCount;
         public T CompiledSize;
         public T VariableCount;
+        public T Type;
         #endregion
 
         #region Equals
@@ -1769,6 +1895,7 @@ namespace Mutagen.Oblivion.Internals
             if (!object.Equals(this.RefCount, rhs.RefCount)) return false;
             if (!object.Equals(this.CompiledSize, rhs.CompiledSize)) return false;
             if (!object.Equals(this.VariableCount, rhs.VariableCount)) return false;
+            if (!object.Equals(this.Type, rhs.Type)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -1778,6 +1905,7 @@ namespace Mutagen.Oblivion.Internals
             ret = ret.CombineHashCode(this.RefCount?.GetHashCode());
             ret = ret.CombineHashCode(this.CompiledSize?.GetHashCode());
             ret = ret.CombineHashCode(this.VariableCount?.GetHashCode());
+            ret = ret.CombineHashCode(this.Type?.GetHashCode());
             return ret;
         }
 
@@ -1790,6 +1918,7 @@ namespace Mutagen.Oblivion.Internals
             if (!eval(this.RefCount)) return false;
             if (!eval(this.CompiledSize)) return false;
             if (!eval(this.VariableCount)) return false;
+            if (!eval(this.Type)) return false;
             return true;
         }
         #endregion
@@ -1808,6 +1937,7 @@ namespace Mutagen.Oblivion.Internals
             obj.RefCount = eval(this.RefCount);
             obj.CompiledSize = eval(this.CompiledSize);
             obj.VariableCount = eval(this.VariableCount);
+            obj.Type = eval(this.Type);
         }
         #endregion
 
@@ -1852,6 +1982,10 @@ namespace Mutagen.Oblivion.Internals
                 {
                     fg.AppendLine($"VariableCount => {VariableCount}");
                 }
+                if (printMask?.Type ?? true)
+                {
+                    fg.AppendLine($"Type => {Type}");
+                }
             }
             fg.AppendLine("]");
         }
@@ -1879,6 +2013,7 @@ namespace Mutagen.Oblivion.Internals
         public Exception RefCount;
         public Exception CompiledSize;
         public Exception VariableCount;
+        public Exception Type;
         #endregion
 
         #region IErrorMask
@@ -1898,6 +2033,9 @@ namespace Mutagen.Oblivion.Internals
                     break;
                 case ScriptMetaSummary_FieldIndex.VariableCount:
                     this.VariableCount = ex;
+                    break;
+                case ScriptMetaSummary_FieldIndex.Type:
+                    this.Type = ex;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1920,6 +2058,9 @@ namespace Mutagen.Oblivion.Internals
                     break;
                 case ScriptMetaSummary_FieldIndex.VariableCount:
                     this.VariableCount = (Exception)obj;
+                    break;
+                case ScriptMetaSummary_FieldIndex.Type:
+                    this.Type = (Exception)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1961,6 +2102,7 @@ namespace Mutagen.Oblivion.Internals
             fg.AppendLine($"RefCount => {RefCount}");
             fg.AppendLine($"CompiledSize => {CompiledSize}");
             fg.AppendLine($"VariableCount => {VariableCount}");
+            fg.AppendLine($"Type => {Type}");
         }
         #endregion
 
@@ -1972,6 +2114,7 @@ namespace Mutagen.Oblivion.Internals
             ret.RefCount = this.RefCount.Combine(rhs.RefCount);
             ret.CompiledSize = this.CompiledSize.Combine(rhs.CompiledSize);
             ret.VariableCount = this.VariableCount.Combine(rhs.VariableCount);
+            ret.Type = this.Type.Combine(rhs.Type);
             return ret;
         }
         public static ScriptMetaSummary_ErrorMask Combine(ScriptMetaSummary_ErrorMask lhs, ScriptMetaSummary_ErrorMask rhs)
@@ -1989,6 +2132,7 @@ namespace Mutagen.Oblivion.Internals
         public bool RefCount;
         public bool CompiledSize;
         public bool VariableCount;
+        public bool Type;
         #endregion
 
     }

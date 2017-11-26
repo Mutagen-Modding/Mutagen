@@ -135,6 +135,14 @@ namespace Mutagen.Oblivion
         INotifyingItem<Group<MagicEffect>> IOblivionMod.MagicEffects_Property => this.MagicEffects_Property;
         INotifyingItemGetter<Group<MagicEffect>> IOblivionModGetter.MagicEffects_Property => this.MagicEffects_Property;
         #endregion
+        #region Scripts
+        private readonly INotifyingItem<Group<Script>> _Scripts = new NotifyingItem<Group<Script>>();
+        public INotifyingItem<Group<Script>> Scripts_Property => this._Scripts;
+        Group<Script> IOblivionModGetter.Scripts => this.Scripts;
+        public Group<Script> Scripts { get => _Scripts.Item; set => _Scripts.Item = value; }
+        INotifyingItem<Group<Script>> IOblivionMod.Scripts_Property => this.Scripts_Property;
+        INotifyingItemGetter<Group<Script>> IOblivionModGetter.Scripts_Property => this.Scripts_Property;
+        #endregion
 
         #region Loqui Getter Interface
 
@@ -249,6 +257,11 @@ namespace Mutagen.Oblivion
             {
                 if (!object.Equals(MagicEffects, rhs.MagicEffects)) return false;
             }
+            if (Scripts_Property.HasBeenSet != rhs.Scripts_Property.HasBeenSet) return false;
+            if (Scripts_Property.HasBeenSet)
+            {
+                if (!object.Equals(Scripts, rhs.Scripts)) return false;
+            }
             return true;
         }
 
@@ -298,6 +311,10 @@ namespace Mutagen.Oblivion
             if (MagicEffects_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(MagicEffects).CombineHashCode(ret);
+            }
+            if (Scripts_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Scripts).CombineHashCode(ret);
             }
             return ret;
         }
@@ -742,6 +759,20 @@ namespace Mutagen.Oblivion
                             subMask);
                     }
                     break;
+                case "Scripts":
+                    {
+                        MaskItem<Exception, Group_ErrorMask<Script_ErrorMask>> subMask;
+                        var tryGet = LoquiXmlTranslation<Group<Script>, Group_ErrorMask<Script_ErrorMask>>.Instance.Parse(
+                            root: root,
+                            doMasks: errorMask != null,
+                            mask: out subMask);
+                        item._Scripts.SetIfSucceeded(tryGet);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            (int)OblivionMod_FieldIndex.Scripts,
+                            subMask);
+                    }
+                    break;
                 default:
                     break;
             }
@@ -1111,6 +1142,12 @@ namespace Mutagen.Oblivion
                         fieldIndex: (int)OblivionMod_FieldIndex.MagicEffects,
                         errorMask: errorMask));
                     break;
+                case "SCPT":
+                    item._Scripts.SetIfSucceeded(LoquiBinaryTranslation<Group<Script>, Group_ErrorMask<Script_ErrorMask>>.Instance.Parse(
+                        frame: frame,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Scripts,
+                        errorMask: errorMask));
+                    break;
                 default:
                     errorMask().Warnings.Add($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength;
@@ -1251,6 +1288,11 @@ namespace Mutagen.Oblivion
                         (Group<MagicEffect>)obj,
                         cmds);
                     break;
+                case OblivionMod_FieldIndex.Scripts:
+                    this._Scripts.Set(
+                        (Group<Script>)obj,
+                        cmds);
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1343,6 +1385,11 @@ namespace Mutagen.Oblivion
                         (Group<MagicEffect>)pair.Value,
                         null);
                     break;
+                case OblivionMod_FieldIndex.Scripts:
+                    obj._Scripts.Set(
+                        (Group<Script>)pair.Value,
+                        null);
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -1390,6 +1437,9 @@ namespace Mutagen.Oblivion
 
         new Group<MagicEffect> MagicEffects { get; set; }
         new INotifyingItem<Group<MagicEffect>> MagicEffects_Property { get; }
+
+        new Group<Script> Scripts { get; set; }
+        new INotifyingItem<Group<Script>> Scripts_Property { get; }
 
     }
 
@@ -1450,6 +1500,11 @@ namespace Mutagen.Oblivion
         INotifyingItemGetter<Group<MagicEffect>> MagicEffects_Property { get; }
 
         #endregion
+        #region Scripts
+        Group<Script> Scripts { get; }
+        INotifyingItemGetter<Group<Script>> Scripts_Property { get; }
+
+        #endregion
 
     }
 
@@ -1473,6 +1528,7 @@ namespace Mutagen.Oblivion.Internals
         Sounds = 8,
         Skills = 9,
         MagicEffects = 10,
+        Scripts = 11,
     }
     #endregion
 
@@ -1490,7 +1546,7 @@ namespace Mutagen.Oblivion.Internals
 
         public const string GUID = "b6f626df-b164-466b-960a-1639d88f66bc";
 
-        public const ushort FieldCount = 11;
+        public const ushort FieldCount = 12;
 
         public static readonly Type MaskType = typeof(OblivionMod_Mask<>);
 
@@ -1540,6 +1596,8 @@ namespace Mutagen.Oblivion.Internals
                     return (ushort)OblivionMod_FieldIndex.Skills;
                 case "MAGICEFFECTS":
                     return (ushort)OblivionMod_FieldIndex.MagicEffects;
+                case "SCRIPTS":
+                    return (ushort)OblivionMod_FieldIndex.Scripts;
                 default:
                     return null;
             }
@@ -1561,6 +1619,7 @@ namespace Mutagen.Oblivion.Internals
                 case OblivionMod_FieldIndex.Sounds:
                 case OblivionMod_FieldIndex.Skills:
                 case OblivionMod_FieldIndex.MagicEffects:
+                case OblivionMod_FieldIndex.Scripts:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1583,6 +1642,7 @@ namespace Mutagen.Oblivion.Internals
                 case OblivionMod_FieldIndex.Sounds:
                 case OblivionMod_FieldIndex.Skills:
                 case OblivionMod_FieldIndex.MagicEffects:
+                case OblivionMod_FieldIndex.Scripts:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1605,6 +1665,7 @@ namespace Mutagen.Oblivion.Internals
                 case OblivionMod_FieldIndex.Sounds:
                 case OblivionMod_FieldIndex.Skills:
                 case OblivionMod_FieldIndex.MagicEffects:
+                case OblivionMod_FieldIndex.Scripts:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1638,6 +1699,8 @@ namespace Mutagen.Oblivion.Internals
                     return "Skills";
                 case OblivionMod_FieldIndex.MagicEffects:
                     return "MagicEffects";
+                case OblivionMod_FieldIndex.Scripts:
+                    return "Scripts";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1659,6 +1722,7 @@ namespace Mutagen.Oblivion.Internals
                 case OblivionMod_FieldIndex.Sounds:
                 case OblivionMod_FieldIndex.Skills:
                 case OblivionMod_FieldIndex.MagicEffects:
+                case OblivionMod_FieldIndex.Scripts:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1681,6 +1745,7 @@ namespace Mutagen.Oblivion.Internals
                 case OblivionMod_FieldIndex.Sounds:
                 case OblivionMod_FieldIndex.Skills:
                 case OblivionMod_FieldIndex.MagicEffects:
+                case OblivionMod_FieldIndex.Scripts:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1714,6 +1779,8 @@ namespace Mutagen.Oblivion.Internals
                     return typeof(Group<SkillRecord>);
                 case OblivionMod_FieldIndex.MagicEffects:
                     return typeof(Group<MagicEffect>);
+                case OblivionMod_FieldIndex.Scripts:
+                    return typeof(Group<Script>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1730,8 +1797,9 @@ namespace Mutagen.Oblivion.Internals
         public static readonly RecordType SOUN_HEADER = new RecordType("SOUN");
         public static readonly RecordType SKIL_HEADER = new RecordType("SKIL");
         public static readonly RecordType MGEF_HEADER = new RecordType("MGEF");
+        public static readonly RecordType SCPT_HEADER = new RecordType("SCPT");
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 11;
+        public const int NumTypedFields = 12;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -2399,6 +2467,57 @@ namespace Mutagen.Oblivion.Internals
                     errorMask().SetNthException((int)OblivionMod_FieldIndex.MagicEffects, ex);
                 }
             }
+            if (copyMask?.Scripts.Overall != CopyOption.Skip)
+            {
+                try
+                {
+                    item.Scripts_Property.SetToWithDefault(
+                        rhs.Scripts_Property,
+                        def?.Scripts_Property,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.Scripts.Overall ?? CopyOption.Reference)
+                            {
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    GroupCommon.CopyFieldsFrom(
+                                        item: item.Scripts,
+                                        rhs: rhs.Scripts,
+                                        def: def?.Scripts,
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<Group_ErrorMask<Script_ErrorMask>>(() =>
+                                        {
+                                            var baseMask = errorMask();
+                                            if (baseMask.Scripts.Specific == null)
+                                            {
+                                                baseMask.Scripts = new MaskItem<Exception, Group_ErrorMask<Script_ErrorMask>>(null, new Group_ErrorMask<Script_ErrorMask>());
+                                            }
+                                            return baseMask.Scripts.Specific;
+                                        }
+                                        ) : null),
+                                        copyMask: copyMask?.Scripts.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(Group<Script>);
+                                    return Group<Script>.Copy(
+                                        r,
+                                        copyMask?.Scripts?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Scripts?.Overall}. Cannot execute copy.");
+                            }
+                        }
+                        );
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)OblivionMod_FieldIndex.Scripts, ex);
+                }
+            }
         }
 
         #endregion
@@ -2444,6 +2563,9 @@ namespace Mutagen.Oblivion.Internals
                     break;
                 case OblivionMod_FieldIndex.MagicEffects:
                     obj.MagicEffects_Property.HasBeenSet = on;
+                    break;
+                case OblivionMod_FieldIndex.Scripts:
+                    obj.Scripts_Property.HasBeenSet = on;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2491,6 +2613,9 @@ namespace Mutagen.Oblivion.Internals
                 case OblivionMod_FieldIndex.MagicEffects:
                     obj.MagicEffects_Property.Unset(cmds);
                     break;
+                case OblivionMod_FieldIndex.Scripts:
+                    obj.Scripts_Property.Unset(cmds);
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2525,6 +2650,8 @@ namespace Mutagen.Oblivion.Internals
                     return obj.Skills_Property.HasBeenSet;
                 case OblivionMod_FieldIndex.MagicEffects:
                     return obj.MagicEffects_Property.HasBeenSet;
+                case OblivionMod_FieldIndex.Scripts:
+                    return obj.Scripts_Property.HasBeenSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2559,6 +2686,8 @@ namespace Mutagen.Oblivion.Internals
                     return obj.Skills;
                 case OblivionMod_FieldIndex.MagicEffects:
                     return obj.MagicEffects;
+                case OblivionMod_FieldIndex.Scripts:
+                    return obj.Scripts;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2579,6 +2708,7 @@ namespace Mutagen.Oblivion.Internals
             item.Sounds_Property.Unset(cmds.ToUnsetParams());
             item.Skills_Property.Unset(cmds.ToUnsetParams());
             item.MagicEffects_Property.Unset(cmds.ToUnsetParams());
+            item.Scripts_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static OblivionMod_Mask<bool> GetEqualsMask(
@@ -2607,6 +2737,7 @@ namespace Mutagen.Oblivion.Internals
             ret.Sounds = item.Sounds_Property.LoquiEqualsHelper(rhs.Sounds_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
             ret.Skills = item.Skills_Property.LoquiEqualsHelper(rhs.Skills_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
             ret.MagicEffects = item.MagicEffects_Property.LoquiEqualsHelper(rhs.MagicEffects_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Scripts = item.Scripts_Property.LoquiEqualsHelper(rhs.Scripts_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
         }
 
         public static string ToString(
@@ -2680,6 +2811,10 @@ namespace Mutagen.Oblivion.Internals
                 {
                     item.MagicEffects?.ToString(fg, "MagicEffects");
                 }
+                if (printMask?.Scripts?.Overall ?? true)
+                {
+                    item.Scripts?.ToString(fg, "Scripts");
+                }
             }
             fg.AppendLine("]");
         }
@@ -2710,6 +2845,8 @@ namespace Mutagen.Oblivion.Internals
             if (checkMask.Skills.Specific != null && (item.Skills_Property.Item == null || !item.Skills_Property.Item.HasBeenSet(checkMask.Skills.Specific))) return false;
             if (checkMask.MagicEffects.Overall.HasValue && checkMask.MagicEffects.Overall.Value != item.MagicEffects_Property.HasBeenSet) return false;
             if (checkMask.MagicEffects.Specific != null && (item.MagicEffects_Property.Item == null || !item.MagicEffects_Property.Item.HasBeenSet(checkMask.MagicEffects.Specific))) return false;
+            if (checkMask.Scripts.Overall.HasValue && checkMask.Scripts.Overall.Value != item.Scripts_Property.HasBeenSet) return false;
+            if (checkMask.Scripts.Specific != null && (item.Scripts_Property.Item == null || !item.Scripts_Property.Item.HasBeenSet(checkMask.Scripts.Specific))) return false;
             return true;
         }
 
@@ -2727,6 +2864,7 @@ namespace Mutagen.Oblivion.Internals
             ret.Sounds = new MaskItem<bool, Group_Mask<bool>>(item.Sounds_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.Sounds_Property.Item));
             ret.Skills = new MaskItem<bool, Group_Mask<bool>>(item.Skills_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.Skills_Property.Item));
             ret.MagicEffects = new MaskItem<bool, Group_Mask<bool>>(item.MagicEffects_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.MagicEffects_Property.Item));
+            ret.Scripts = new MaskItem<bool, Group_Mask<bool>>(item.Scripts_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.Scripts_Property.Item));
             return ret;
         }
 
@@ -2927,6 +3065,21 @@ namespace Mutagen.Oblivion.Internals
                             (int)OblivionMod_FieldIndex.MagicEffects,
                             subMask);
                     }
+                    if (item.Scripts_Property.HasBeenSet)
+                    {
+                        MaskItem<Exception, Group_ErrorMask<Script_ErrorMask>> subMask;
+                        LoquiXmlTranslation<IGroupGetter<Script>, Group_ErrorMask<Script_ErrorMask>>.Instance.Write(
+                            writer: writer,
+                            item: item.Scripts,
+                            name: nameof(item.Scripts),
+                            doMasks: errorMask != null,
+                            mask: out Group_ErrorMask<Script_ErrorMask> loquiMask);
+                        subMask = loquiMask == null ? null : new MaskItem<Exception, Group_ErrorMask<Script_ErrorMask>>(null, loquiMask);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            (int)OblivionMod_FieldIndex.Scripts,
+                            subMask);
+                    }
                 }
             }
             catch (Exception ex)
@@ -3035,6 +3188,11 @@ namespace Mutagen.Oblivion.Internals
                 item: item.MagicEffects_Property,
                 fieldIndex: (int)OblivionMod_FieldIndex.MagicEffects,
                 errorMask: errorMask);
+            LoquiBinaryTranslation<Group<Script>, Group_ErrorMask<Script_ErrorMask>>.Instance.Write(
+                writer: writer,
+                item: item.Scripts_Property,
+                fieldIndex: (int)OblivionMod_FieldIndex.Scripts,
+                errorMask: errorMask);
         }
 
         #endregion
@@ -3065,6 +3223,7 @@ namespace Mutagen.Oblivion.Internals
             this.Sounds = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.Skills = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.MagicEffects = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
+            this.Scripts = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
         }
         #endregion
 
@@ -3080,6 +3239,7 @@ namespace Mutagen.Oblivion.Internals
         public MaskItem<T, Group_Mask<T>> Sounds { get; set; }
         public MaskItem<T, Group_Mask<T>> Skills { get; set; }
         public MaskItem<T, Group_Mask<T>> MagicEffects { get; set; }
+        public MaskItem<T, Group_Mask<T>> Scripts { get; set; }
         #endregion
 
         #region Equals
@@ -3103,6 +3263,7 @@ namespace Mutagen.Oblivion.Internals
             if (!object.Equals(this.Sounds, rhs.Sounds)) return false;
             if (!object.Equals(this.Skills, rhs.Skills)) return false;
             if (!object.Equals(this.MagicEffects, rhs.MagicEffects)) return false;
+            if (!object.Equals(this.Scripts, rhs.Scripts)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -3119,6 +3280,7 @@ namespace Mutagen.Oblivion.Internals
             ret = ret.CombineHashCode(this.Sounds?.GetHashCode());
             ret = ret.CombineHashCode(this.Skills?.GetHashCode());
             ret = ret.CombineHashCode(this.MagicEffects?.GetHashCode());
+            ret = ret.CombineHashCode(this.Scripts?.GetHashCode());
             return ret;
         }
 
@@ -3181,6 +3343,11 @@ namespace Mutagen.Oblivion.Internals
             {
                 if (!eval(this.MagicEffects.Overall)) return false;
                 if (MagicEffects.Specific != null && !MagicEffects.Specific.AllEqual(eval)) return false;
+            }
+            if (Scripts != null)
+            {
+                if (!eval(this.Scripts.Overall)) return false;
+                if (Scripts.Specific != null && !Scripts.Specific.AllEqual(eval)) return false;
             }
             return true;
         }
@@ -3295,6 +3462,15 @@ namespace Mutagen.Oblivion.Internals
                     obj.MagicEffects.Specific = this.MagicEffects.Specific.Translate(eval);
                 }
             }
+            if (this.Scripts != null)
+            {
+                obj.Scripts = new MaskItem<R, Group_Mask<R>>();
+                obj.Scripts.Overall = eval(this.Scripts.Overall);
+                if (this.Scripts.Specific != null)
+                {
+                    obj.Scripts.Specific = this.Scripts.Specific.Translate(eval);
+                }
+            }
         }
         #endregion
 
@@ -3367,6 +3543,10 @@ namespace Mutagen.Oblivion.Internals
                 {
                     MagicEffects?.ToString(fg);
                 }
+                if (printMask?.Scripts?.Overall ?? true)
+                {
+                    Scripts?.ToString(fg);
+                }
             }
             fg.AppendLine("]");
         }
@@ -3401,6 +3581,7 @@ namespace Mutagen.Oblivion.Internals
         public MaskItem<Exception, Group_ErrorMask<Sound_ErrorMask>> Sounds;
         public MaskItem<Exception, Group_ErrorMask<SkillRecord_ErrorMask>> Skills;
         public MaskItem<Exception, Group_ErrorMask<MagicEffect_ErrorMask>> MagicEffects;
+        public MaskItem<Exception, Group_ErrorMask<Script_ErrorMask>> Scripts;
         #endregion
 
         #region IErrorMask
@@ -3441,6 +3622,9 @@ namespace Mutagen.Oblivion.Internals
                     break;
                 case OblivionMod_FieldIndex.MagicEffects:
                     this.MagicEffects = new MaskItem<Exception, Group_ErrorMask<MagicEffect_ErrorMask>>(ex, null);
+                    break;
+                case OblivionMod_FieldIndex.Scripts:
+                    this.Scripts = new MaskItem<Exception, Group_ErrorMask<Script_ErrorMask>>(ex, null);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3484,6 +3668,9 @@ namespace Mutagen.Oblivion.Internals
                     break;
                 case OblivionMod_FieldIndex.MagicEffects:
                     this.MagicEffects = (MaskItem<Exception, Group_ErrorMask<MagicEffect_ErrorMask>>)obj;
+                    break;
+                case OblivionMod_FieldIndex.Scripts:
+                    this.Scripts = (MaskItem<Exception, Group_ErrorMask<Script_ErrorMask>>)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3532,6 +3719,7 @@ namespace Mutagen.Oblivion.Internals
             Sounds?.ToString(fg);
             Skills?.ToString(fg);
             MagicEffects?.ToString(fg);
+            Scripts?.ToString(fg);
         }
         #endregion
 
@@ -3550,6 +3738,7 @@ namespace Mutagen.Oblivion.Internals
             ret.Sounds = new MaskItem<Exception, Group_ErrorMask<Sound_ErrorMask>>(this.Sounds.Overall.Combine(rhs.Sounds.Overall), ((IErrorMask<Group_ErrorMask<Sound_ErrorMask>>)this.Sounds.Specific).Combine(rhs.Sounds.Specific));
             ret.Skills = new MaskItem<Exception, Group_ErrorMask<SkillRecord_ErrorMask>>(this.Skills.Overall.Combine(rhs.Skills.Overall), ((IErrorMask<Group_ErrorMask<SkillRecord_ErrorMask>>)this.Skills.Specific).Combine(rhs.Skills.Specific));
             ret.MagicEffects = new MaskItem<Exception, Group_ErrorMask<MagicEffect_ErrorMask>>(this.MagicEffects.Overall.Combine(rhs.MagicEffects.Overall), ((IErrorMask<Group_ErrorMask<MagicEffect_ErrorMask>>)this.MagicEffects.Specific).Combine(rhs.MagicEffects.Specific));
+            ret.Scripts = new MaskItem<Exception, Group_ErrorMask<Script_ErrorMask>>(this.Scripts.Overall.Combine(rhs.Scripts.Overall), ((IErrorMask<Group_ErrorMask<Script_ErrorMask>>)this.Scripts.Specific).Combine(rhs.Scripts.Specific));
             return ret;
         }
         public static OblivionMod_ErrorMask Combine(OblivionMod_ErrorMask lhs, OblivionMod_ErrorMask rhs)
@@ -3574,6 +3763,7 @@ namespace Mutagen.Oblivion.Internals
         public MaskItem<CopyOption, Group_CopyMask<Sound_CopyMask>> Sounds;
         public MaskItem<CopyOption, Group_CopyMask<SkillRecord_CopyMask>> Skills;
         public MaskItem<CopyOption, Group_CopyMask<MagicEffect_CopyMask>> MagicEffects;
+        public MaskItem<CopyOption, Group_CopyMask<Script_CopyMask>> Scripts;
         #endregion
 
     }

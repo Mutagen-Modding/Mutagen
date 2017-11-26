@@ -19,6 +19,7 @@
       <UInt32 name="RefCount" />
       <Int32 name="CompiledSize" derivative="true" customBinary="true" />
       <UInt32 name="VariableCount" derivative="true" customBinary="true" />
+      <Enum name="Type" enumName="Script.ScriptType" byteLength="4" />
     </Fields>
   </Object>
   <Object name="LocalVariable" objType="Subrecord" GUID="b77aa416-b182-4265-8276-44b34bace18f" ID="48">

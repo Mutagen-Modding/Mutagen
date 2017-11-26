@@ -55,6 +55,11 @@
           <GenericSpecification Definition="MagicEffect" TypeToSpecify="T" />
         </Direct>
       </Ref>
+      <Ref name="Scripts">
+        <Direct refName="Group" >
+          <GenericSpecification Definition="Script" TypeToSpecify="T" />
+        </Direct>
+      </Ref>
     </Fields>
   </Object>
 </Loqui>
