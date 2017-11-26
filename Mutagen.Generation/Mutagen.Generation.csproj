@@ -57,6 +57,7 @@
     <Compile Include="Fields\FormIDType.cs" />
     <Compile Include="Fields\MutagenFieldData.cs" />
     <Compile Include="Fields\BufferType.cs" />
+    <Compile Include="Fields\StringType.cs" />
     <Compile Include="Modules\Binary\BinaryTranslationModule.cs" />
     <Compile Include="Modules\Binary\ByteArrayTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\DataBinaryTranslationModule.cs" />

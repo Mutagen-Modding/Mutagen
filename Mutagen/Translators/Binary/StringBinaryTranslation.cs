@@ -48,7 +48,12 @@ namespace Mutagen.Binary
             return ret;
         }
 
-        public void Write(MutagenWriter writer, string item, bool nullTerminate, bool doMasks, out Exception errorMask)
+        public void Write(
+            MutagenWriter writer,
+            string item,
+            bool doMasks, 
+            out Exception errorMask,
+            bool nullTerminate = true)
         {
             try
             {
@@ -66,18 +71,14 @@ namespace Mutagen.Binary
             }
         }
 
-        public void Write(MutagenWriter writer, string item, bool doMasks, out Exception errorMask)
-        {
-            Write(writer, item, doMasks: doMasks, nullTerminate: true, errorMask: out errorMask);
-        }
-
         public void Write(
             MutagenWriter writer, 
             string item, 
             RecordType header,
             bool nullable,
             bool doMasks,
-            out Exception errorMask)
+            out Exception errorMask,
+            bool nullTerminate = true)
         {
             try
             {
@@ -92,7 +93,12 @@ namespace Mutagen.Binary
                 }
                 using (HeaderExport.ExportHeader(writer, header, ObjectType.Subrecord))
                 {
-                    this.Write(writer, item, doMasks, out errorMask);
+                    this.Write(
+                        writer, 
+                        item, 
+                        doMasks, 
+                        out errorMask,
+                        nullTerminate: nullTerminate);
                 }
             }
             catch (Exception ex)
@@ -108,7 +114,8 @@ namespace Mutagen.Binary
             RecordType header,
             int fieldIndex,
             bool nullable,
-            Func<M> errorMask)
+            Func<M> errorMask,
+            bool nullTerminate = true)
             where M : IErrorMask
         {
             this.Write(
@@ -117,7 +124,8 @@ namespace Mutagen.Binary
                 header,
                 nullable,
                 errorMask != null,
-                out var subMask);
+                out var subMask,
+                nullTerminate: nullTerminate);
             ErrorMask.HandleException(
                 errorMask,
                 fieldIndex,
@@ -130,7 +138,8 @@ namespace Mutagen.Binary
             RecordType header,
             int fieldIndex,
             bool nullable,
-            Func<M> errorMask)
+            Func<M> errorMask,
+            bool nullTerminate = true)
             where M : IErrorMask
         {
             if (!item.HasBeenSet) return;
@@ -140,7 +149,8 @@ namespace Mutagen.Binary
                 header,
                 fieldIndex,
                 nullable,
-                errorMask);
+                errorMask,
+                nullTerminate: nullTerminate);
         }
 
         void IBinaryTranslation<string, Exception>.Write(MutagenWriter writer, string item, ContentLength length, bool doMasks, out Exception maskObj)

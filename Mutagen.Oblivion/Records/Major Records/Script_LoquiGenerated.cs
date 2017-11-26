@@ -2114,7 +2114,8 @@ namespace Mutagen.Oblivion.Internals
                 fieldIndex: (int)Script_FieldIndex.SourceCode,
                 errorMask: errorMask,
                 header: Script_Registration.SCTX_HEADER,
-                nullable: false);
+                nullable: false,
+                nullTerminate: false);
             Mutagen.Binary.ListBinaryTranslation<LocalVariable, MaskItem<Exception, LocalVariable_ErrorMask>>.Instance.Write(
                 writer: writer,
                 item: item.LocalVariables,

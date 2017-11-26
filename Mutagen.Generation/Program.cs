@@ -29,6 +29,7 @@ namespace Mutagen.Generation
             gen.AddTypeAssociation<BufferType>("Buffer");
             gen.AddTypeAssociation<DataType>("Data");
             gen.ReplaceTypeAssociation<Loqui.Generation.EnumType, Mutagen.Generation.EnumType>();
+            gen.ReplaceTypeAssociation<Loqui.Generation.StringType, Mutagen.Generation.StringType>();
 
             // Add Projects
             gen.AddProjectToModify(

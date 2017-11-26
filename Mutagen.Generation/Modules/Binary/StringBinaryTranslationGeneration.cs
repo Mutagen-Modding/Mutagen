@@ -24,6 +24,7 @@ namespace Mutagen.Generation
             string doMaskAccessor,
             string maskAccessor)
         {
+            Mutagen.Generation.StringType stringType = typeGen as Mutagen.Generation.StringType;
             var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
             using (var args = new ArgsWrapper(fg,
                 $"{this.Namespace}StringBinaryTranslation.Instance.Write"))
@@ -40,6 +41,10 @@ namespace Mutagen.Generation
                 else
                 {
                     args.Add($"length: {data.Length.Value}");
+                }
+                if (!stringType.NullTerminate)
+                {
+                    args.Add($"nullTerminate: false");
                 }
             }
         }

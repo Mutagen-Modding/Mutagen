@@ -107,6 +107,14 @@
       </xs:complexContent>
     </xs:complexType>
 
+    <xs:complexType name="String">
+      <xs:complexContent>
+        <xs:extension base="String">
+          <xs:attribute name="nullTerminate" type="xs:boolean" />
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+
     <xs:complexType name="Enum">
       <xs:complexContent>
         <xs:extension base="Enum">
