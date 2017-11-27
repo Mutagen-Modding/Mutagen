@@ -8,9 +8,7 @@
       <List name="LocalVariables">
         <RefDirect refName="LocalVariable" />
       </List>
-      <List name="References">
-        <FormID recordType="SCRO" />
-      </List>
+      <RefList name="References" refName="ScriptReference" />
     </Fields>
   </Object>
   <Object name="ScriptMetaSummary" objType="Subrecord" recordType="SCHR" GUID="80c1bfa2-bdf3-4bc9-aeb7-306536cdbc91" ID="47">
@@ -31,6 +29,12 @@
   <Object name="LocalVariableData" objType="Subrecord" recordType="SLSD" GUID="8a8822b6-e11c-400b-827d-6ca21f641629" ID="49">
     <Fields>
       <ByteArray name="Data" length="24" nullable="false" />
+    </Fields>
+  </Object>
+  <Object name="ScriptReference" objType="Subrecord" GUID="5eb6ddcc-5ba8-4da7-87f5-99b6038a61c7" ID="50">
+    <Fields>
+      <Int32 name="VariableIndex" recordType="SCRV" />
+      <FormID name="Reference" recordType="SCRO" />
     </Fields>
   </Object>
 </Loqui>

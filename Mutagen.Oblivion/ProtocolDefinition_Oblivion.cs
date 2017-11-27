@@ -53,6 +53,7 @@ namespace Loqui
             LoquiRegistration.Register(Mutagen.Oblivion.Internals.ScriptMetaSummary_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Oblivion.Internals.LocalVariable_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Oblivion.Internals.LocalVariableData_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Oblivion.Internals.ScriptReference_Registration.Instance);
         }
     }
 }

@@ -80,11 +80,11 @@ namespace Mutagen.Oblivion
 
         #endregion
         #region References
-        private readonly INotifyingList<FormID> _References = new NotifyingList<FormID>();
-        public INotifyingList<FormID> References => _References;
+        private readonly INotifyingList<ScriptReference> _References = new NotifyingList<ScriptReference>();
+        public INotifyingList<ScriptReference> References => _References;
         #region Interface Members
-        INotifyingList<FormID> IScript.References => _References;
-        INotifyingListGetter<FormID> IScriptGetter.References => _References;
+        INotifyingList<ScriptReference> IScript.References => _References;
+        INotifyingListGetter<ScriptReference> IScriptGetter.References => _References;
         #endregion
 
         #endregion
@@ -572,18 +572,17 @@ namespace Mutagen.Oblivion
                     break;
                 case "References":
                     {
-                        MaskItem<Exception, IEnumerable<Exception>> subMask;
-                        var listTryGet = ListXmlTranslation<FormID, Exception>.Instance.Parse(
+                        MaskItem<Exception, IEnumerable<MaskItem<Exception, ScriptReference_ErrorMask>>> subMask;
+                        var listTryGet = ListXmlTranslation<ScriptReference, MaskItem<Exception, ScriptReference_ErrorMask>>.Instance.Parse(
                             root: root,
                             doMasks: errorMask != null,
                             maskObj: out subMask,
-                            transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
+                            transl: (XElement r, bool listDoMasks, out MaskItem<Exception, ScriptReference_ErrorMask> listSubMask) =>
                             {
-                                return FormIDXmlTranslation.Instance.Parse(
-                                    r,
-                                    nullable: false,
+                                return LoquiXmlTranslation<ScriptReference, ScriptReference_ErrorMask>.Instance.Parse(
+                                    root: r,
                                     doMasks: listDoMasks,
-                                    errorMask: out listSubMask).Bubble((o) => o.Value);
+                                    mask: out listSubMask);
                             }
                             );
                         item._References.SetIfSucceeded(listTryGet);
@@ -972,18 +971,17 @@ namespace Mutagen.Oblivion
                         );
                     item._LocalVariables.SetIfSucceeded(LocalVariablestryGet);
                     break;
-                case "SCRO":
-                    var ReferencestryGet = Mutagen.Binary.ListBinaryTranslation<FormID, Exception>.Instance.ParseRepeatedItem(
+                case "SCRV":
+                    var ReferencestryGet = Mutagen.Binary.ListBinaryTranslation<ScriptReference, MaskItem<Exception, ScriptReference_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
-                        triggeringRecord: Script_Registration.SCRO_HEADER,
+                        triggeringRecord: Script_Registration.SCRV_HEADER,
                         fieldIndex: (int)Script_FieldIndex.References,
                         objType: ObjectType.Subrecord,
                         errorMask: errorMask,
-                        transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
+                        transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, ScriptReference_ErrorMask> listSubMask) =>
                         {
-                            r.Position += Constants.SUBRECORD_LENGTH;
-                            return Mutagen.Binary.FormIDBinaryTranslation.Instance.Parse(
-                                r,
+                            return LoquiBinaryTranslation<ScriptReference, ScriptReference_ErrorMask>.Instance.Parse(
+                                frame: r.Spawn(snapToFinalPosition: false),
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask);
                         }
@@ -1093,7 +1091,7 @@ namespace Mutagen.Oblivion
                     this._LocalVariables.SetTo((IEnumerable<LocalVariable>)obj, cmds);
                     break;
                 case Script_FieldIndex.References:
-                    this._References.SetTo((IEnumerable<FormID>)obj, cmds);
+                    this._References.SetTo((IEnumerable<ScriptReference>)obj, cmds);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -1143,7 +1141,7 @@ namespace Mutagen.Oblivion
                     obj._LocalVariables.SetTo((IEnumerable<LocalVariable>)pair.Value, null);
                     break;
                 case Script_FieldIndex.References:
-                    obj._References.SetTo((IEnumerable<FormID>)pair.Value, null);
+                    obj._References.SetTo((IEnumerable<ScriptReference>)pair.Value, null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1167,7 +1165,7 @@ namespace Mutagen.Oblivion
         new INotifyingItem<String> SourceCode_Property { get; }
 
         new INotifyingList<LocalVariable> LocalVariables { get; }
-        new INotifyingList<FormID> References { get; }
+        new INotifyingList<ScriptReference> References { get; }
     }
 
     public interface IScriptGetter : IMajorRecordGetter
@@ -1191,7 +1189,7 @@ namespace Mutagen.Oblivion
         INotifyingListGetter<LocalVariable> LocalVariables { get; }
         #endregion
         #region References
-        INotifyingListGetter<FormID> References { get; }
+        INotifyingListGetter<ScriptReference> References { get; }
         #endregion
 
     }
@@ -1294,10 +1292,10 @@ namespace Mutagen.Oblivion.Internals
             {
                 case Script_FieldIndex.MetadataSummary:
                 case Script_FieldIndex.LocalVariables:
+                case Script_FieldIndex.References:
                     return true;
                 case Script_FieldIndex.CompiledScript:
                 case Script_FieldIndex.SourceCode:
-                case Script_FieldIndex.References:
                     return false;
                 default:
                     return MajorRecord_Registration.GetNthIsLoqui(index);
@@ -1388,7 +1386,7 @@ namespace Mutagen.Oblivion.Internals
                 case Script_FieldIndex.LocalVariables:
                     return typeof(NotifyingList<LocalVariable>);
                 case Script_FieldIndex.References:
-                    return typeof(NotifyingList<FormID>);
+                    return typeof(NotifyingList<ScriptReference>);
                 default:
                     return MajorRecord_Registration.GetNthType(index);
             }
@@ -1399,7 +1397,7 @@ namespace Mutagen.Oblivion.Internals
         public static readonly RecordType SCDA_HEADER = new RecordType("SCDA");
         public static readonly RecordType SCTX_HEADER = new RecordType("SCTX");
         public static readonly RecordType SLSD_HEADER = new RecordType("SLSD");
-        public static readonly RecordType SCRO_HEADER = new RecordType("SCRO");
+        public static readonly RecordType SCRV_HEADER = new RecordType("SCRV");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = SCPT_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 5;
@@ -1607,14 +1605,31 @@ namespace Mutagen.Oblivion.Internals
                     errorMask().SetNthException((int)Script_FieldIndex.LocalVariables, ex);
                 }
             }
-            if (copyMask?.References != CopyOption.Skip)
+            if (copyMask?.References.Overall != CopyOption.Skip)
             {
                 try
                 {
                     item.References.SetToWithDefault(
                         rhs.References,
                         def?.References,
-                        cmds);
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.References.Overall ?? CopyOption.Reference)
+                            {
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(ScriptReference);
+                                    return ScriptReference.Copy(
+                                        r,
+                                        copyMask?.References?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.References.Overall}. Cannot execute copy.");
+                            }
+                        }
+                        );
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1784,19 +1799,25 @@ namespace Mutagen.Oblivion.Internals
             {
                 if (item.References.HasBeenSet)
                 {
-                    ret.References = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.References.Specific = item.References.SelectAgainst<FormID, bool>(rhs.References, ((l, r) => object.Equals(l, r)), out ret.References.Overall);
-                    ret.References.Overall = ret.References.Overall && ret.References.Specific.All((b) => b);
+                    ret.References = new MaskItem<bool, IEnumerable<MaskItem<bool, ScriptReference_Mask<bool>>>>();
+                    ret.References.Specific = item.References.SelectAgainst<ScriptReference, MaskItem<bool, ScriptReference_Mask<bool>>>(rhs.References, ((l, r) =>
+                    {
+                        MaskItem<bool, ScriptReference_Mask<bool>> itemRet;
+                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => ScriptReferenceCommon.GetEqualsMask(loqLhs, loqRhs));
+                        return itemRet;
+                    }
+                    ), out ret.References.Overall);
+                    ret.References.Overall = ret.References.Overall && ret.References.Specific.All((b) => b.Overall);
                 }
                 else
                 {
-                    ret.References = new MaskItem<bool, IEnumerable<bool>>();
+                    ret.References = new MaskItem<bool, IEnumerable<MaskItem<bool, ScriptReference_Mask<bool>>>>();
                     ret.References.Overall = true;
                 }
             }
             else
             {
-                ret.References = new MaskItem<bool, IEnumerable<bool>>();
+                ret.References = new MaskItem<bool, IEnumerable<MaskItem<bool, ScriptReference_Mask<bool>>>>();
                 ret.References.Overall = false;
             }
             MajorRecordCommon.FillEqualsMask(item, rhs, ret);
@@ -1870,7 +1891,7 @@ namespace Mutagen.Oblivion.Internals
                             fg.AppendLine("[");
                             using (new DepthWrapper(fg))
                             {
-                                fg.AppendLine($"Item => {subItem}");
+                                subItem?.ToString(fg, "Item");
                             }
                             fg.AppendLine("]");
                         }
@@ -1901,7 +1922,7 @@ namespace Mutagen.Oblivion.Internals
             ret.CompiledScript = item.CompiledScript_Property.HasBeenSet;
             ret.SourceCode = item.SourceCode_Property.HasBeenSet;
             ret.LocalVariables = new MaskItem<bool, IEnumerable<MaskItem<bool, LocalVariable_Mask<bool>>>>(item.LocalVariables.HasBeenSet, item.LocalVariables.Select((i) => new MaskItem<bool, LocalVariable_Mask<bool>>(true, i.GetHasBeenSetMask())));
-            ret.References = new MaskItem<bool, IEnumerable<bool>>(item.References.HasBeenSet, null);
+            ret.References = new MaskItem<bool, IEnumerable<MaskItem<bool, ScriptReference_Mask<bool>>>>(item.References.HasBeenSet, item.References.Select((i) => new MaskItem<bool, ScriptReference_Mask<bool>>(true, i.GetHasBeenSetMask())));
             return ret;
         }
 
@@ -2007,21 +2028,22 @@ namespace Mutagen.Oblivion.Internals
                     }
                     if (item.References.HasBeenSet)
                     {
-                        MaskItem<Exception, IEnumerable<Exception>> subMask;
-                        ListXmlTranslation<FormID, Exception>.Instance.Write(
+                        MaskItem<Exception, IEnumerable<MaskItem<Exception, ScriptReference_ErrorMask>>> subMask;
+                        ListXmlTranslation<ScriptReference, MaskItem<Exception, ScriptReference_ErrorMask>>.Instance.Write(
                             writer: writer,
                             name: nameof(item.References),
                             item: item.References,
                             doMasks: errorMask != null,
                             maskObj: out subMask,
-                            transl: (FormID subItem, bool listDoMasks, out Exception listSubMask) =>
+                            transl: (ScriptReference subItem, bool listDoMasks, out MaskItem<Exception, ScriptReference_ErrorMask> listSubMask) =>
                             {
-                                FormIDXmlTranslation.Instance.Write(
-                                    writer,
-                                    "Item",
-                                    subItem,
+                                LoquiXmlTranslation<IScriptReferenceGetter, ScriptReference_ErrorMask>.Instance.Write(
+                                    writer: writer,
+                                    item: subItem,
+                                    name: "Item",
                                     doMasks: errorMask != null,
-                                    errorMask: out listSubMask);
+                                    mask: out ScriptReference_ErrorMask loquiMask);
+                                listSubMask = loquiMask == null ? null : new MaskItem<Exception, ScriptReference_ErrorMask>(null, loquiMask);
                             }
                             );
                         ErrorMask.HandleErrorMask(
@@ -2130,20 +2152,18 @@ namespace Mutagen.Oblivion.Internals
                         errorMask: out listSubMask);
                 }
                 );
-            Mutagen.Binary.ListBinaryTranslation<FormID, Exception>.Instance.Write(
+            Mutagen.Binary.ListBinaryTranslation<ScriptReference, MaskItem<Exception, ScriptReference_ErrorMask>>.Instance.Write(
                 writer: writer,
                 item: item.References,
                 fieldIndex: (int)Script_FieldIndex.References,
                 errorMask: errorMask,
-                transl: (FormID subItem, bool listDoMasks, out Exception listSubMask) =>
+                transl: (ScriptReference subItem, bool listDoMasks, out MaskItem<Exception, ScriptReference_ErrorMask> listSubMask) =>
                 {
-                    Mutagen.Binary.FormIDBinaryTranslation.Instance.Write(
+                    LoquiBinaryTranslation<ScriptReference, ScriptReference_ErrorMask>.Instance.Write(
                         writer: writer,
                         item: subItem,
                         doMasks: listDoMasks,
-                        errorMask: out listSubMask,
-                        header: Script_Registration.SCRO_HEADER,
-                        nullable: false);
+                        errorMask: out listSubMask);
                 }
                 );
         }
@@ -2169,7 +2189,7 @@ namespace Mutagen.Oblivion.Internals
             this.CompiledScript = initialValue;
             this.SourceCode = initialValue;
             this.LocalVariables = new MaskItem<T, IEnumerable<MaskItem<T, LocalVariable_Mask<T>>>>(initialValue, null);
-            this.References = new MaskItem<T, IEnumerable<T>>(initialValue, null);
+            this.References = new MaskItem<T, IEnumerable<MaskItem<T, ScriptReference_Mask<T>>>>(initialValue, null);
         }
         #endregion
 
@@ -2178,7 +2198,7 @@ namespace Mutagen.Oblivion.Internals
         public T CompiledScript;
         public T SourceCode;
         public MaskItem<T, IEnumerable<MaskItem<T, LocalVariable_Mask<T>>>> LocalVariables;
-        public MaskItem<T, IEnumerable<T>> References;
+        public MaskItem<T, IEnumerable<MaskItem<T, ScriptReference_Mask<T>>>> References;
         #endregion
 
         #region Equals
@@ -2243,7 +2263,8 @@ namespace Mutagen.Oblivion.Internals
                 {
                     foreach (var item in References.Specific)
                     {
-                        if (!eval(item)) return false;
+                        if (!eval(item.Overall)) return false;
+                        if (!item.Specific?.AllEqual(eval) ?? false) return false;
                     }
                 }
             }
@@ -2299,16 +2320,24 @@ namespace Mutagen.Oblivion.Internals
             }
             if (References != null)
             {
-                obj.References = new MaskItem<R, IEnumerable<R>>();
+                obj.References = new MaskItem<R, IEnumerable<MaskItem<R, ScriptReference_Mask<R>>>>();
                 obj.References.Overall = eval(this.References.Overall);
                 if (References.Specific != null)
                 {
-                    List<R> l = new List<R>();
+                    List<MaskItem<R, ScriptReference_Mask<R>>> l = new List<MaskItem<R, ScriptReference_Mask<R>>>();
                     obj.References.Specific = l;
                     foreach (var item in References.Specific)
                     {
-                        R mask = default(R);
-                        mask = eval(item);
+                        MaskItem<R, ScriptReference_Mask<R>> mask = default(MaskItem<R, ScriptReference_Mask<R>>);
+                        if (item != null)
+                        {
+                            mask = new MaskItem<R, ScriptReference_Mask<R>>();
+                            mask.Overall = eval(item.Overall);
+                            if (item.Specific != null)
+                            {
+                                mask.Specific = item.Specific.Translate(eval);
+                            }
+                        }
                         l.Add(mask);
                     }
                 }
@@ -2398,7 +2427,7 @@ namespace Mutagen.Oblivion.Internals
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
                                 {
-                                    fg.AppendLine($" => {subItem}");
+                                    subItem?.ToString(fg);
                                 }
                                 fg.AppendLine("]");
                             }
@@ -2420,7 +2449,7 @@ namespace Mutagen.Oblivion.Internals
         public Exception CompiledScript;
         public Exception SourceCode;
         public MaskItem<Exception, IEnumerable<MaskItem<Exception, LocalVariable_ErrorMask>>> LocalVariables;
-        public MaskItem<Exception, IEnumerable<Exception>> References;
+        public MaskItem<Exception, IEnumerable<MaskItem<Exception, ScriptReference_ErrorMask>>> References;
         #endregion
 
         #region IErrorMask
@@ -2442,7 +2471,7 @@ namespace Mutagen.Oblivion.Internals
                     this.LocalVariables = new MaskItem<Exception, IEnumerable<MaskItem<Exception, LocalVariable_ErrorMask>>>(ex, null);
                     break;
                 case Script_FieldIndex.References:
-                    this.References = new MaskItem<Exception, IEnumerable<Exception>>(ex, null);
+                    this.References = new MaskItem<Exception, IEnumerable<MaskItem<Exception, ScriptReference_ErrorMask>>>(ex, null);
                     break;
                 default:
                     base.SetNthException(index, ex);
@@ -2468,7 +2497,7 @@ namespace Mutagen.Oblivion.Internals
                     this.LocalVariables = (MaskItem<Exception, IEnumerable<MaskItem<Exception, LocalVariable_ErrorMask>>>)obj;
                     break;
                 case Script_FieldIndex.References:
-                    this.References = (MaskItem<Exception, IEnumerable<Exception>>)obj;
+                    this.References = (MaskItem<Exception, IEnumerable<MaskItem<Exception, ScriptReference_ErrorMask>>>)obj;
                     break;
                 default:
                     base.SetNthMask(index, obj);
@@ -2548,7 +2577,7 @@ namespace Mutagen.Oblivion.Internals
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine($" => {subItem}");
+                            subItem?.ToString(fg);
                         }
                         fg.AppendLine("]");
                     }
@@ -2566,7 +2595,7 @@ namespace Mutagen.Oblivion.Internals
             ret.CompiledScript = this.CompiledScript.Combine(rhs.CompiledScript);
             ret.SourceCode = this.SourceCode.Combine(rhs.SourceCode);
             ret.LocalVariables = new MaskItem<Exception, IEnumerable<MaskItem<Exception, LocalVariable_ErrorMask>>>(this.LocalVariables.Overall.Combine(rhs.LocalVariables.Overall), new List<MaskItem<Exception, LocalVariable_ErrorMask>>(this.LocalVariables.Specific.And(rhs.LocalVariables.Specific)));
-            ret.References = new MaskItem<Exception, IEnumerable<Exception>>(this.References.Overall.Combine(rhs.References.Overall), new List<Exception>(this.References.Specific.And(rhs.References.Specific)));
+            ret.References = new MaskItem<Exception, IEnumerable<MaskItem<Exception, ScriptReference_ErrorMask>>>(this.References.Overall.Combine(rhs.References.Overall), new List<MaskItem<Exception, ScriptReference_ErrorMask>>(this.References.Specific.And(rhs.References.Specific)));
             return ret;
         }
         public static Script_ErrorMask Combine(Script_ErrorMask lhs, Script_ErrorMask rhs)
@@ -2584,7 +2613,7 @@ namespace Mutagen.Oblivion.Internals
         public bool CompiledScript;
         public bool SourceCode;
         public MaskItem<CopyOption, LocalVariable_CopyMask> LocalVariables;
-        public CopyOption References;
+        public MaskItem<CopyOption, ScriptReference_CopyMask> References;
         #endregion
 
     }
