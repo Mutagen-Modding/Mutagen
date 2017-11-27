@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="LandTexture" objType="Record" baseClass="MajorRecord" recordType="LTEX" GUID="c0fe4c0d-9e68-4cfd-bba3-4753c8b6f1c9" ID="50">
+    <Fields>
+      <FilePath name="Icon" recordType="ICON" />
+      <RefDirect name="Havok" refName="HavokData" />
+      <UInt8 name="TextureSpecularExponent" recordType="SNAM" />
+      <List name="PotentialGrass" >
+        <FormID recordType="GNAM" />
+      </List>
+    </Fields>
+  </Object>
+  <Object name="HavokData" objType="Subrecord" recordType="HNAM" GUID="4d0528e4-6b76-4756-aae2-6822b10f7601" ID="51">
+    <Fields>
+      <Enum name="Material" enumName="HavokData.MaterialType" byteLength="1" />
+      <UInt8 name="Friction" />
+      <UInt8 name="Restitution" />
+    </Fields>
+  </Object>
+</Loqui>

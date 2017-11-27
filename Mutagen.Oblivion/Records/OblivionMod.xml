@@ -60,6 +60,11 @@
           <GenericSpecification Definition="Script" TypeToSpecify="T" />
         </Direct>
       </Ref>
+      <Ref name="LandTextures">
+        <Direct refName="Group" >
+          <GenericSpecification Definition="LandTexture" TypeToSpecify="T" />
+        </Direct>
+      </Ref>
     </Fields>
   </Object>
 </Loqui>

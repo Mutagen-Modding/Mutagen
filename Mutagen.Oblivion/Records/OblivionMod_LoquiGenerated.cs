@@ -143,6 +143,14 @@ namespace Mutagen.Oblivion
         INotifyingItem<Group<Script>> IOblivionMod.Scripts_Property => this.Scripts_Property;
         INotifyingItemGetter<Group<Script>> IOblivionModGetter.Scripts_Property => this.Scripts_Property;
         #endregion
+        #region LandTextures
+        private readonly INotifyingItem<Group<LandTexture>> _LandTextures = new NotifyingItem<Group<LandTexture>>();
+        public INotifyingItem<Group<LandTexture>> LandTextures_Property => this._LandTextures;
+        Group<LandTexture> IOblivionModGetter.LandTextures => this.LandTextures;
+        public Group<LandTexture> LandTextures { get => _LandTextures.Item; set => _LandTextures.Item = value; }
+        INotifyingItem<Group<LandTexture>> IOblivionMod.LandTextures_Property => this.LandTextures_Property;
+        INotifyingItemGetter<Group<LandTexture>> IOblivionModGetter.LandTextures_Property => this.LandTextures_Property;
+        #endregion
 
         #region Loqui Getter Interface
 
@@ -262,6 +270,11 @@ namespace Mutagen.Oblivion
             {
                 if (!object.Equals(Scripts, rhs.Scripts)) return false;
             }
+            if (LandTextures_Property.HasBeenSet != rhs.LandTextures_Property.HasBeenSet) return false;
+            if (LandTextures_Property.HasBeenSet)
+            {
+                if (!object.Equals(LandTextures, rhs.LandTextures)) return false;
+            }
             return true;
         }
 
@@ -315,6 +328,10 @@ namespace Mutagen.Oblivion
             if (Scripts_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(Scripts).CombineHashCode(ret);
+            }
+            if (LandTextures_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(LandTextures).CombineHashCode(ret);
             }
             return ret;
         }
@@ -773,6 +790,20 @@ namespace Mutagen.Oblivion
                             subMask);
                     }
                     break;
+                case "LandTextures":
+                    {
+                        MaskItem<Exception, Group_ErrorMask<LandTexture_ErrorMask>> subMask;
+                        var tryGet = LoquiXmlTranslation<Group<LandTexture>, Group_ErrorMask<LandTexture_ErrorMask>>.Instance.Parse(
+                            root: root,
+                            doMasks: errorMask != null,
+                            mask: out subMask);
+                        item._LandTextures.SetIfSucceeded(tryGet);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            (int)OblivionMod_FieldIndex.LandTextures,
+                            subMask);
+                    }
+                    break;
                 default:
                     break;
             }
@@ -1148,6 +1179,12 @@ namespace Mutagen.Oblivion
                         fieldIndex: (int)OblivionMod_FieldIndex.Scripts,
                         errorMask: errorMask));
                     break;
+                case "LTEX":
+                    item._LandTextures.SetIfSucceeded(LoquiBinaryTranslation<Group<LandTexture>, Group_ErrorMask<LandTexture_ErrorMask>>.Instance.Parse(
+                        frame: frame,
+                        fieldIndex: (int)OblivionMod_FieldIndex.LandTextures,
+                        errorMask: errorMask));
+                    break;
                 default:
                     errorMask().Warnings.Add($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength;
@@ -1293,6 +1330,11 @@ namespace Mutagen.Oblivion
                         (Group<Script>)obj,
                         cmds);
                     break;
+                case OblivionMod_FieldIndex.LandTextures:
+                    this._LandTextures.Set(
+                        (Group<LandTexture>)obj,
+                        cmds);
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1390,6 +1432,11 @@ namespace Mutagen.Oblivion
                         (Group<Script>)pair.Value,
                         null);
                     break;
+                case OblivionMod_FieldIndex.LandTextures:
+                    obj._LandTextures.Set(
+                        (Group<LandTexture>)pair.Value,
+                        null);
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -1440,6 +1487,9 @@ namespace Mutagen.Oblivion
 
         new Group<Script> Scripts { get; set; }
         new INotifyingItem<Group<Script>> Scripts_Property { get; }
+
+        new Group<LandTexture> LandTextures { get; set; }
+        new INotifyingItem<Group<LandTexture>> LandTextures_Property { get; }
 
     }
 
@@ -1505,6 +1555,11 @@ namespace Mutagen.Oblivion
         INotifyingItemGetter<Group<Script>> Scripts_Property { get; }
 
         #endregion
+        #region LandTextures
+        Group<LandTexture> LandTextures { get; }
+        INotifyingItemGetter<Group<LandTexture>> LandTextures_Property { get; }
+
+        #endregion
 
     }
 
@@ -1529,6 +1584,7 @@ namespace Mutagen.Oblivion.Internals
         Skills = 9,
         MagicEffects = 10,
         Scripts = 11,
+        LandTextures = 12,
     }
     #endregion
 
@@ -1546,7 +1602,7 @@ namespace Mutagen.Oblivion.Internals
 
         public const string GUID = "b6f626df-b164-466b-960a-1639d88f66bc";
 
-        public const ushort FieldCount = 12;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(OblivionMod_Mask<>);
 
@@ -1598,6 +1654,8 @@ namespace Mutagen.Oblivion.Internals
                     return (ushort)OblivionMod_FieldIndex.MagicEffects;
                 case "SCRIPTS":
                     return (ushort)OblivionMod_FieldIndex.Scripts;
+                case "LANDTEXTURES":
+                    return (ushort)OblivionMod_FieldIndex.LandTextures;
                 default:
                     return null;
             }
@@ -1620,6 +1678,7 @@ namespace Mutagen.Oblivion.Internals
                 case OblivionMod_FieldIndex.Skills:
                 case OblivionMod_FieldIndex.MagicEffects:
                 case OblivionMod_FieldIndex.Scripts:
+                case OblivionMod_FieldIndex.LandTextures:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1643,6 +1702,7 @@ namespace Mutagen.Oblivion.Internals
                 case OblivionMod_FieldIndex.Skills:
                 case OblivionMod_FieldIndex.MagicEffects:
                 case OblivionMod_FieldIndex.Scripts:
+                case OblivionMod_FieldIndex.LandTextures:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1666,6 +1726,7 @@ namespace Mutagen.Oblivion.Internals
                 case OblivionMod_FieldIndex.Skills:
                 case OblivionMod_FieldIndex.MagicEffects:
                 case OblivionMod_FieldIndex.Scripts:
+                case OblivionMod_FieldIndex.LandTextures:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1701,6 +1762,8 @@ namespace Mutagen.Oblivion.Internals
                     return "MagicEffects";
                 case OblivionMod_FieldIndex.Scripts:
                     return "Scripts";
+                case OblivionMod_FieldIndex.LandTextures:
+                    return "LandTextures";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1723,6 +1786,7 @@ namespace Mutagen.Oblivion.Internals
                 case OblivionMod_FieldIndex.Skills:
                 case OblivionMod_FieldIndex.MagicEffects:
                 case OblivionMod_FieldIndex.Scripts:
+                case OblivionMod_FieldIndex.LandTextures:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1746,6 +1810,7 @@ namespace Mutagen.Oblivion.Internals
                 case OblivionMod_FieldIndex.Skills:
                 case OblivionMod_FieldIndex.MagicEffects:
                 case OblivionMod_FieldIndex.Scripts:
+                case OblivionMod_FieldIndex.LandTextures:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1781,6 +1846,8 @@ namespace Mutagen.Oblivion.Internals
                     return typeof(Group<MagicEffect>);
                 case OblivionMod_FieldIndex.Scripts:
                     return typeof(Group<Script>);
+                case OblivionMod_FieldIndex.LandTextures:
+                    return typeof(Group<LandTexture>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1798,8 +1865,9 @@ namespace Mutagen.Oblivion.Internals
         public static readonly RecordType SKIL_HEADER = new RecordType("SKIL");
         public static readonly RecordType MGEF_HEADER = new RecordType("MGEF");
         public static readonly RecordType SCPT_HEADER = new RecordType("SCPT");
+        public static readonly RecordType LTEX_HEADER = new RecordType("LTEX");
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 12;
+        public const int NumTypedFields = 13;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -2518,6 +2586,57 @@ namespace Mutagen.Oblivion.Internals
                     errorMask().SetNthException((int)OblivionMod_FieldIndex.Scripts, ex);
                 }
             }
+            if (copyMask?.LandTextures.Overall != CopyOption.Skip)
+            {
+                try
+                {
+                    item.LandTextures_Property.SetToWithDefault(
+                        rhs.LandTextures_Property,
+                        def?.LandTextures_Property,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.LandTextures.Overall ?? CopyOption.Reference)
+                            {
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    GroupCommon.CopyFieldsFrom(
+                                        item: item.LandTextures,
+                                        rhs: rhs.LandTextures,
+                                        def: def?.LandTextures,
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<Group_ErrorMask<LandTexture_ErrorMask>>(() =>
+                                        {
+                                            var baseMask = errorMask();
+                                            if (baseMask.LandTextures.Specific == null)
+                                            {
+                                                baseMask.LandTextures = new MaskItem<Exception, Group_ErrorMask<LandTexture_ErrorMask>>(null, new Group_ErrorMask<LandTexture_ErrorMask>());
+                                            }
+                                            return baseMask.LandTextures.Specific;
+                                        }
+                                        ) : null),
+                                        copyMask: copyMask?.LandTextures.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(Group<LandTexture>);
+                                    return Group<LandTexture>.Copy(
+                                        r,
+                                        copyMask?.LandTextures?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.LandTextures?.Overall}. Cannot execute copy.");
+                            }
+                        }
+                        );
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)OblivionMod_FieldIndex.LandTextures, ex);
+                }
+            }
         }
 
         #endregion
@@ -2566,6 +2685,9 @@ namespace Mutagen.Oblivion.Internals
                     break;
                 case OblivionMod_FieldIndex.Scripts:
                     obj.Scripts_Property.HasBeenSet = on;
+                    break;
+                case OblivionMod_FieldIndex.LandTextures:
+                    obj.LandTextures_Property.HasBeenSet = on;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2616,6 +2738,9 @@ namespace Mutagen.Oblivion.Internals
                 case OblivionMod_FieldIndex.Scripts:
                     obj.Scripts_Property.Unset(cmds);
                     break;
+                case OblivionMod_FieldIndex.LandTextures:
+                    obj.LandTextures_Property.Unset(cmds);
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2652,6 +2777,8 @@ namespace Mutagen.Oblivion.Internals
                     return obj.MagicEffects_Property.HasBeenSet;
                 case OblivionMod_FieldIndex.Scripts:
                     return obj.Scripts_Property.HasBeenSet;
+                case OblivionMod_FieldIndex.LandTextures:
+                    return obj.LandTextures_Property.HasBeenSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2688,6 +2815,8 @@ namespace Mutagen.Oblivion.Internals
                     return obj.MagicEffects;
                 case OblivionMod_FieldIndex.Scripts:
                     return obj.Scripts;
+                case OblivionMod_FieldIndex.LandTextures:
+                    return obj.LandTextures;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2709,6 +2838,7 @@ namespace Mutagen.Oblivion.Internals
             item.Skills_Property.Unset(cmds.ToUnsetParams());
             item.MagicEffects_Property.Unset(cmds.ToUnsetParams());
             item.Scripts_Property.Unset(cmds.ToUnsetParams());
+            item.LandTextures_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static OblivionMod_Mask<bool> GetEqualsMask(
@@ -2738,6 +2868,7 @@ namespace Mutagen.Oblivion.Internals
             ret.Skills = item.Skills_Property.LoquiEqualsHelper(rhs.Skills_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
             ret.MagicEffects = item.MagicEffects_Property.LoquiEqualsHelper(rhs.MagicEffects_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
             ret.Scripts = item.Scripts_Property.LoquiEqualsHelper(rhs.Scripts_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.LandTextures = item.LandTextures_Property.LoquiEqualsHelper(rhs.LandTextures_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
         }
 
         public static string ToString(
@@ -2815,6 +2946,10 @@ namespace Mutagen.Oblivion.Internals
                 {
                     item.Scripts?.ToString(fg, "Scripts");
                 }
+                if (printMask?.LandTextures?.Overall ?? true)
+                {
+                    item.LandTextures?.ToString(fg, "LandTextures");
+                }
             }
             fg.AppendLine("]");
         }
@@ -2847,6 +2982,8 @@ namespace Mutagen.Oblivion.Internals
             if (checkMask.MagicEffects.Specific != null && (item.MagicEffects_Property.Item == null || !item.MagicEffects_Property.Item.HasBeenSet(checkMask.MagicEffects.Specific))) return false;
             if (checkMask.Scripts.Overall.HasValue && checkMask.Scripts.Overall.Value != item.Scripts_Property.HasBeenSet) return false;
             if (checkMask.Scripts.Specific != null && (item.Scripts_Property.Item == null || !item.Scripts_Property.Item.HasBeenSet(checkMask.Scripts.Specific))) return false;
+            if (checkMask.LandTextures.Overall.HasValue && checkMask.LandTextures.Overall.Value != item.LandTextures_Property.HasBeenSet) return false;
+            if (checkMask.LandTextures.Specific != null && (item.LandTextures_Property.Item == null || !item.LandTextures_Property.Item.HasBeenSet(checkMask.LandTextures.Specific))) return false;
             return true;
         }
 
@@ -2865,6 +3002,7 @@ namespace Mutagen.Oblivion.Internals
             ret.Skills = new MaskItem<bool, Group_Mask<bool>>(item.Skills_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.Skills_Property.Item));
             ret.MagicEffects = new MaskItem<bool, Group_Mask<bool>>(item.MagicEffects_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.MagicEffects_Property.Item));
             ret.Scripts = new MaskItem<bool, Group_Mask<bool>>(item.Scripts_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.Scripts_Property.Item));
+            ret.LandTextures = new MaskItem<bool, Group_Mask<bool>>(item.LandTextures_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.LandTextures_Property.Item));
             return ret;
         }
 
@@ -3080,6 +3218,21 @@ namespace Mutagen.Oblivion.Internals
                             (int)OblivionMod_FieldIndex.Scripts,
                             subMask);
                     }
+                    if (item.LandTextures_Property.HasBeenSet)
+                    {
+                        MaskItem<Exception, Group_ErrorMask<LandTexture_ErrorMask>> subMask;
+                        LoquiXmlTranslation<IGroupGetter<LandTexture>, Group_ErrorMask<LandTexture_ErrorMask>>.Instance.Write(
+                            writer: writer,
+                            item: item.LandTextures,
+                            name: nameof(item.LandTextures),
+                            doMasks: errorMask != null,
+                            mask: out Group_ErrorMask<LandTexture_ErrorMask> loquiMask);
+                        subMask = loquiMask == null ? null : new MaskItem<Exception, Group_ErrorMask<LandTexture_ErrorMask>>(null, loquiMask);
+                        ErrorMask.HandleErrorMask(
+                            errorMask,
+                            (int)OblivionMod_FieldIndex.LandTextures,
+                            subMask);
+                    }
                 }
             }
             catch (Exception ex)
@@ -3193,6 +3346,11 @@ namespace Mutagen.Oblivion.Internals
                 item: item.Scripts_Property,
                 fieldIndex: (int)OblivionMod_FieldIndex.Scripts,
                 errorMask: errorMask);
+            LoquiBinaryTranslation<Group<LandTexture>, Group_ErrorMask<LandTexture_ErrorMask>>.Instance.Write(
+                writer: writer,
+                item: item.LandTextures_Property,
+                fieldIndex: (int)OblivionMod_FieldIndex.LandTextures,
+                errorMask: errorMask);
         }
 
         #endregion
@@ -3224,6 +3382,7 @@ namespace Mutagen.Oblivion.Internals
             this.Skills = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.MagicEffects = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.Scripts = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
+            this.LandTextures = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
         }
         #endregion
 
@@ -3240,6 +3399,7 @@ namespace Mutagen.Oblivion.Internals
         public MaskItem<T, Group_Mask<T>> Skills { get; set; }
         public MaskItem<T, Group_Mask<T>> MagicEffects { get; set; }
         public MaskItem<T, Group_Mask<T>> Scripts { get; set; }
+        public MaskItem<T, Group_Mask<T>> LandTextures { get; set; }
         #endregion
 
         #region Equals
@@ -3264,6 +3424,7 @@ namespace Mutagen.Oblivion.Internals
             if (!object.Equals(this.Skills, rhs.Skills)) return false;
             if (!object.Equals(this.MagicEffects, rhs.MagicEffects)) return false;
             if (!object.Equals(this.Scripts, rhs.Scripts)) return false;
+            if (!object.Equals(this.LandTextures, rhs.LandTextures)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -3281,6 +3442,7 @@ namespace Mutagen.Oblivion.Internals
             ret = ret.CombineHashCode(this.Skills?.GetHashCode());
             ret = ret.CombineHashCode(this.MagicEffects?.GetHashCode());
             ret = ret.CombineHashCode(this.Scripts?.GetHashCode());
+            ret = ret.CombineHashCode(this.LandTextures?.GetHashCode());
             return ret;
         }
 
@@ -3348,6 +3510,11 @@ namespace Mutagen.Oblivion.Internals
             {
                 if (!eval(this.Scripts.Overall)) return false;
                 if (Scripts.Specific != null && !Scripts.Specific.AllEqual(eval)) return false;
+            }
+            if (LandTextures != null)
+            {
+                if (!eval(this.LandTextures.Overall)) return false;
+                if (LandTextures.Specific != null && !LandTextures.Specific.AllEqual(eval)) return false;
             }
             return true;
         }
@@ -3471,6 +3638,15 @@ namespace Mutagen.Oblivion.Internals
                     obj.Scripts.Specific = this.Scripts.Specific.Translate(eval);
                 }
             }
+            if (this.LandTextures != null)
+            {
+                obj.LandTextures = new MaskItem<R, Group_Mask<R>>();
+                obj.LandTextures.Overall = eval(this.LandTextures.Overall);
+                if (this.LandTextures.Specific != null)
+                {
+                    obj.LandTextures.Specific = this.LandTextures.Specific.Translate(eval);
+                }
+            }
         }
         #endregion
 
@@ -3547,6 +3723,10 @@ namespace Mutagen.Oblivion.Internals
                 {
                     Scripts?.ToString(fg);
                 }
+                if (printMask?.LandTextures?.Overall ?? true)
+                {
+                    LandTextures?.ToString(fg);
+                }
             }
             fg.AppendLine("]");
         }
@@ -3582,6 +3762,7 @@ namespace Mutagen.Oblivion.Internals
         public MaskItem<Exception, Group_ErrorMask<SkillRecord_ErrorMask>> Skills;
         public MaskItem<Exception, Group_ErrorMask<MagicEffect_ErrorMask>> MagicEffects;
         public MaskItem<Exception, Group_ErrorMask<Script_ErrorMask>> Scripts;
+        public MaskItem<Exception, Group_ErrorMask<LandTexture_ErrorMask>> LandTextures;
         #endregion
 
         #region IErrorMask
@@ -3625,6 +3806,9 @@ namespace Mutagen.Oblivion.Internals
                     break;
                 case OblivionMod_FieldIndex.Scripts:
                     this.Scripts = new MaskItem<Exception, Group_ErrorMask<Script_ErrorMask>>(ex, null);
+                    break;
+                case OblivionMod_FieldIndex.LandTextures:
+                    this.LandTextures = new MaskItem<Exception, Group_ErrorMask<LandTexture_ErrorMask>>(ex, null);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3671,6 +3855,9 @@ namespace Mutagen.Oblivion.Internals
                     break;
                 case OblivionMod_FieldIndex.Scripts:
                     this.Scripts = (MaskItem<Exception, Group_ErrorMask<Script_ErrorMask>>)obj;
+                    break;
+                case OblivionMod_FieldIndex.LandTextures:
+                    this.LandTextures = (MaskItem<Exception, Group_ErrorMask<LandTexture_ErrorMask>>)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3720,6 +3907,7 @@ namespace Mutagen.Oblivion.Internals
             Skills?.ToString(fg);
             MagicEffects?.ToString(fg);
             Scripts?.ToString(fg);
+            LandTextures?.ToString(fg);
         }
         #endregion
 
@@ -3739,6 +3927,7 @@ namespace Mutagen.Oblivion.Internals
             ret.Skills = new MaskItem<Exception, Group_ErrorMask<SkillRecord_ErrorMask>>(this.Skills.Overall.Combine(rhs.Skills.Overall), ((IErrorMask<Group_ErrorMask<SkillRecord_ErrorMask>>)this.Skills.Specific).Combine(rhs.Skills.Specific));
             ret.MagicEffects = new MaskItem<Exception, Group_ErrorMask<MagicEffect_ErrorMask>>(this.MagicEffects.Overall.Combine(rhs.MagicEffects.Overall), ((IErrorMask<Group_ErrorMask<MagicEffect_ErrorMask>>)this.MagicEffects.Specific).Combine(rhs.MagicEffects.Specific));
             ret.Scripts = new MaskItem<Exception, Group_ErrorMask<Script_ErrorMask>>(this.Scripts.Overall.Combine(rhs.Scripts.Overall), ((IErrorMask<Group_ErrorMask<Script_ErrorMask>>)this.Scripts.Specific).Combine(rhs.Scripts.Specific));
+            ret.LandTextures = new MaskItem<Exception, Group_ErrorMask<LandTexture_ErrorMask>>(this.LandTextures.Overall.Combine(rhs.LandTextures.Overall), ((IErrorMask<Group_ErrorMask<LandTexture_ErrorMask>>)this.LandTextures.Specific).Combine(rhs.LandTextures.Specific));
             return ret;
         }
         public static OblivionMod_ErrorMask Combine(OblivionMod_ErrorMask lhs, OblivionMod_ErrorMask rhs)
@@ -3764,6 +3953,7 @@ namespace Mutagen.Oblivion.Internals
         public MaskItem<CopyOption, Group_CopyMask<SkillRecord_CopyMask>> Skills;
         public MaskItem<CopyOption, Group_CopyMask<MagicEffect_CopyMask>> MagicEffects;
         public MaskItem<CopyOption, Group_CopyMask<Script_CopyMask>> Scripts;
+        public MaskItem<CopyOption, Group_CopyMask<LandTexture_CopyMask>> LandTextures;
         #endregion
 
     }
