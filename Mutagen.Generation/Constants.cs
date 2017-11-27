@@ -13,6 +13,7 @@ namespace Mutagen.Generation
         public readonly static string MARKER_TYPE = "MarkerType";
         public readonly static string OBJECT_TYPE = nameof(ObjectType);
         public readonly static string TRIGGERING_RECORD_TYPE = $"Triggering{nameof(RecordType)}";
+        public readonly static string TRIGGERING_SOURCE = $"TriggeringSource";
         public readonly static string FAIL_ON_UNKNOWN = $"FailOnUnknown";
     }
 }

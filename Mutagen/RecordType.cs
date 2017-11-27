@@ -10,7 +10,6 @@ namespace Mutagen
     {
         public readonly string Type;
         public const byte HEADER_LENGTH = 4;
-        public string HeaderName => $"{Type}_HEADER";
 
         internal RecordType (string type, bool validate)
         {

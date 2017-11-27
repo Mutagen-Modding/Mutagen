@@ -45,9 +45,9 @@ namespace Mutagen.Generation
                     args.Add($"doMasks: {doMaskAccessor}");
                     args.Add($"errorMask: out {maskAccessor}");
                 }
-                if (data.TriggeringRecordAccessor != null)
+                if (data.RecordType.HasValue)
                 {
-                    args.Add($"header: {data.TriggeringRecordAccessor}");
+                    args.Add($"header: {objGen.RecordTypeHeaderName(data.RecordType.Value)}");
                     args.Add($"nullable: {(data.Optional ? "true" : "false")}");
                 }
             }
@@ -63,7 +63,7 @@ namespace Mutagen.Generation
             string maskAccessor)
         {
             var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
-            if (data.TriggeringRecordAccessor != null)
+            if (data.HasTrigger)
             {
                 fg.AppendLine($"{nodeAccessor}.Position += Constants.SUBRECORD_LENGTH;");
             }
@@ -79,7 +79,7 @@ namespace Mutagen.Generation
             }
             using (args)
             {
-                if (data.TriggeringRecordAccessor != null)
+                if (data.HasTrigger)
                 {
                     args.Add($"frame: {nodeAccessor}.Spawn(contentLength)");
                 }
@@ -118,7 +118,7 @@ namespace Mutagen.Generation
             string maskAccessor)
         {
             if (typeGen.TryGetFieldData(out var data)
-                && data.TriggeringRecordType.HasValue)
+                && data.RecordType.HasValue)
             {
                 fg.AppendLine("r.Position += Constants.SUBRECORD_LENGTH;");
             }

@@ -1654,6 +1654,7 @@ namespace Mutagen.Oblivion
                         fieldIndex: (int)Race_FieldIndex.RaceStats,
                         errorMask: errorMask));
                     break;
+                case "INDX":
                 case "NAM0":
                     frame.Position += Constants.SUBRECORD_LENGTH + contentLength; // Skip marker
                     var FaceDatatryGet = Mutagen.Binary.ListBinaryTranslation<FacePart, MaskItem<Exception, FacePart_ErrorMask>>.Instance.ParseRepeatedItem(
@@ -2625,8 +2626,8 @@ namespace Mutagen.Oblivion.Internals
         public static readonly RecordType PNAM_HEADER = new RecordType("PNAM");
         public static readonly RecordType UNAM_HEADER = new RecordType("UNAM");
         public static readonly RecordType ATTR_HEADER = new RecordType("ATTR");
-        public static readonly RecordType NAM0_HEADER = new RecordType("NAM0");
         public static readonly RecordType INDX_HEADER = new RecordType("INDX");
+        public static readonly RecordType NAM0_HEADER = new RecordType("NAM0");
         public static readonly RecordType NAM1_HEADER = new RecordType("NAM1");
         public static readonly RecordType HNAM_HEADER = new RecordType("HNAM");
         public static readonly RecordType ENAM_HEADER = new RecordType("ENAM");

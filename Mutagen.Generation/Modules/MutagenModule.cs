@@ -21,8 +21,8 @@ namespace Mutagen.Generation
         public override void GenerateInRegistration(ObjectGeneration obj, FileGeneration fg)
         {
             GenerateKnownRecordTypes(obj, fg);
-            fg.AppendLine($"public const int NumStructFields = {obj.IterateFields(expandSets: false).Where((f) => f.GetFieldData().TriggeringRecordAccessor == null).Count()};");
-            var typedFields = obj.IterateFields().Where((f) => f.GetFieldData().TriggeringRecordAccessor != null).Sum((f) =>
+            fg.AppendLine($"public const int NumStructFields = {obj.IterateFields(expandSets: false).Where((f) => !f.GetFieldData().HasTrigger).Count()};");
+            var typedFields = obj.IterateFields().Where((f) => f.GetFieldData().HasTrigger).Sum((f) =>
             {
                 if (!(f is SetMarkerType set)) return 1;
                 return set.IterateFields().Count();
@@ -56,15 +56,13 @@ namespace Mutagen.Generation
         private void GenerateKnownRecordTypes(ObjectGeneration obj, FileGeneration fg)
         {
             HashSet<RecordType> recordTypes = new HashSet<RecordType>();
-            RecordType? triggeringRecType = null;
             if (obj.TryGetRecordType(out var recType))
             {
                 recordTypes.Add(recType);
             }
-            if (obj.TryGetTriggeringRecordType(out recType))
+            if (obj.TryGetTriggeringRecordTypes(out var triggeringRecType))
             {
-                triggeringRecType = recType;
-                recordTypes.Add(recType);
+                recordTypes.Add(triggeringRecType);
             }
             foreach (var field in obj.IterateFields(expandSets: false, nonIntegrated: true))
             {
@@ -73,10 +71,7 @@ namespace Mutagen.Generation
                 {
                     recordTypes.Add(data.RecordType.Value);
                 }
-                if (data.TriggeringRecordType.HasValue)
-                {
-                    recordTypes.Add(data.TriggeringRecordType.Value);
-                }
+                recordTypes.Add(data.TriggeringRecordTypes);
                 if (data.MarkerType.HasValue)
                 {
                     recordTypes.Add(data.MarkerType.Value);
@@ -88,17 +83,38 @@ namespace Mutagen.Generation
                 if (field is ContainerType contType)
                 {
                     if (!contType.SubTypeGeneration.TryGetFieldData(out var subData)) continue;
-                    if (!subData.TriggeringRecordType.HasValue) continue;
-                    recordTypes.Add(subData.TriggeringRecordType.Value);
+                    if (!subData.HasTrigger) continue;
+                    recordTypes.Add(subData.TriggeringRecordTypes);
                 }
             }
             foreach (var type in recordTypes)
             {
-                fg.AppendLine($"public static readonly {nameof(RecordType)} {type.HeaderName} = new {nameof(RecordType)}(\"{type.Type}\");");
+                fg.AppendLine($"public static readonly {nameof(RecordType)} {type.Type}_HEADER = new {nameof(RecordType)}(\"{type.Type}\");");
             }
-            if (triggeringRecType.HasValue)
+            var count = triggeringRecType.Count();
+            if (count == 1)
             {
-                fg.AppendLine($"public static readonly {nameof(RecordType)} {Mutagen.Constants.TRIGGERING_RECORDTYPE_MEMBER} = {triggeringRecType.Value.HeaderName};");
+                fg.AppendLine($"public static readonly {nameof(RecordType)} {Mutagen.Constants.TRIGGERING_RECORDTYPE_MEMBER} = {triggeringRecType.First().Type}_HEADER;");
+            }
+            else if (count > 1)
+            {
+                fg.AppendLine($"public static IEnumerable<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;");
+                fg.AppendLine($"private static readonly Lazy<HashSet<RecordType>> _TriggeringRecordTypes = new Lazy<HashSet<RecordType>>(() =>");
+                using (new BraceWrapper(fg))
+                {
+                    fg.AppendLine($"return new HashSet<RecordType>(");
+                    using (new DepthWrapper(fg))
+                    {
+                        fg.AppendLine($"new RecordType[]");
+                        using (new BraceWrapper(fg))
+                        {
+                            foreach (var trigger in triggeringRecType)
+                            {
+                                fg.AppendLine($"{trigger.Type}_HEADER");
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -126,7 +142,7 @@ namespace Mutagen.Generation
             if (record != null && !isGRUP)
             {
                 obj.CustomData[Constants.RECORD_TYPE] = new RecordType(record);
-                obj.CustomData[Constants.TRIGGERING_RECORD_TYPE] = new RecordType(record);
+                obj.CustomData[Constants.TRIGGERING_RECORD_TYPE] = new RecordType[] { new RecordType(record) };
             }
             else
             {
@@ -136,7 +152,7 @@ namespace Mutagen.Generation
                     record = field.GetAttribute("recordType");
                     if (record != null)
                     {
-                        obj.CustomData[Constants.TRIGGERING_RECORD_TYPE] = new RecordType(record);
+                        obj.CustomData[Constants.TRIGGERING_RECORD_TYPE] = new RecordType[] { new RecordType(record) };
                     }
                 }
             }
@@ -145,7 +161,7 @@ namespace Mutagen.Generation
             if (isGRUP)
             {
                 obj.CustomData[Constants.RECORD_TYPE] = new RecordType("GRUP");
-                obj.CustomData[Constants.TRIGGERING_RECORD_TYPE] = new RecordType("GRUP");
+                obj.CustomData[Constants.TRIGGERING_RECORD_TYPE] = new RecordType[] { new RecordType("GRUP") };
             }
 
             var objType = obj.Node.GetAttribute("objType");
@@ -160,7 +176,20 @@ namespace Mutagen.Generation
                 var markerTypeRec = new RecordType(markerType.Value);
                 obj.CustomData[Constants.MARKER_TYPE] = markerTypeRec;
                 obj.CustomData[Constants.RECORD_TYPE] = markerTypeRec;
-                obj.CustomData[Constants.TRIGGERING_RECORD_TYPE] = markerTypeRec;
+                obj.CustomData[Constants.TRIGGERING_RECORD_TYPE] = new RecordType[] { markerTypeRec };
+            }
+
+            if (obj.CustomData.TryGetValue(Constants.TRIGGERING_RECORD_TYPE, out var trigRecTypeObj))
+            {
+                var trigRecTypes = trigRecTypeObj as IEnumerable<RecordType>;
+                if (trigRecTypes.CountGreaterThan(1))
+                {
+                    throw new NotImplementedException();
+                }
+                else
+                {
+                    obj.CustomData[Constants.TRIGGERING_SOURCE] = obj.RecordTypeHeaderName(trigRecTypes.First());
+                }
             }
         }
 
@@ -182,8 +211,8 @@ namespace Mutagen.Generation
             {
                 throw new ArgumentException("Cannot have both record type and marker type defined");
             }
-            SetRecordTrigger(obj, field, data);
             ModifyGRUPRecordTrigger(obj, field, data);
+            SetRecordTrigger(obj, field, data);
 
             data.Optional = node.GetAttribute<bool>("optional", false);
             if (data.Optional && !data.RecordType.HasValue)
@@ -215,12 +244,15 @@ namespace Mutagen.Generation
             foreach (var field in obj.IterateFields())
             {
                 if (!field.TryGetFieldData(out var mutaData)) continue;
-                if (mutaData.TriggeringRecordAccessor == null) continue;
-                if (triggerMapping.TryGetValue(mutaData.TriggeringRecordAccessor, out var existingField))
+                if (!mutaData.HasTrigger) continue;
+                foreach (var trigger in mutaData.TriggeringRecordAccessors)
                 {
-                    throw new ArgumentException($"{obj.Name} cannot have two fields that have the same trigger {mutaData.TriggeringRecordAccessor}: {existingField.Name} AND {field.Name}");
+                    if (triggerMapping.TryGetValue(trigger, out var existingField))
+                    {
+                        throw new ArgumentException($"{obj.Name} cannot have two fields that have the same trigger {trigger}: {existingField.Name} AND {field.Name}");
+                    }
+                    triggerMapping[trigger] = field;
                 }
-                triggerMapping[mutaData.TriggeringRecordAccessor] = field;
             }
         }
 
@@ -234,8 +266,11 @@ namespace Mutagen.Generation
                 var data = loqui.GetFieldData();
                 foreach (var subObj in inheritingObjs)
                 {
-                    if (!subObj.TryGetTriggeringRecordType(out var subRec)) continue;
-                    data.SubLoquiTypes.Add(subRec, subObj);
+                    if (!subObj.TryGetTriggeringRecordTypes(out var subRecs)) continue;
+                    foreach (var subRec in subRecs)
+                    {
+                        data.SubLoquiTypes.Add(subRec, subObj);
+                    }
                 }
             }
         }
@@ -246,40 +281,46 @@ namespace Mutagen.Generation
             MutagenFieldData data)
         {
             RecordType recType;
+            IEnumerable<RecordType> trigRecTypes;
             if (field is LoquiType loqui)
             {
                 if (loqui.TargetObjectGeneration != null
-                    && loqui.TargetObjectGeneration.TryGetTriggeringRecordType(out recType))
+                    && (loqui.TargetObjectGeneration.TryGetTriggeringRecordTypes(out trigRecTypes)
+                        | loqui.TargetObjectGeneration.TryGetRecordType(out recType)))
                 {
                     if (loqui.TargetObjectGeneration.Name.Equals("Group"))
                     {
                         var objName = loqui.GenericSpecification.Specifications["T"];
                         var grupObj = obj.ProtoGen.ObjectGenerationsByName[objName];
                         data.RecordType = grupObj.GetRecordType();
-                        data.TriggeringRecordAccessor = $"{grupObj.RegistrationName}.{data.RecordType.Value.HeaderName}";
-                        data.TriggeringRecordType = data.RecordType;
+                        data.TriggeringRecordAccessors.Add(grupObj.RecordTypeHeaderName(data.RecordType.Value));
+                        data.TriggeringRecordTypes.Add(data.RecordType.Value);
                     }
                     else
                     {
-                        data.RecordType = recType;
+                        if (loqui.TargetObjectGeneration.TryGetRecordType(out recType))
+                        {
+                            data.RecordType = recType;
+                        }
+                        data.TriggeringRecordTypes.Add(trigRecTypes);
                     }
                 }
                 else if (loqui.GenericDef != null)
                 {
-                    data.TriggeringRecordAccessor = $"{loqui.GenericDef.Name}_RecordType";
+                    data.TriggeringRecordAccessors.Add($"{loqui.GenericDef.Name}_RecordType");
                 }
             }
             else if (field is LoquiListType loquiList
                 && !data.RecordType.HasValue)
             {
                 loqui = loquiList.SubTypeGeneration as LoquiType;
-                if (loqui.TargetObjectGeneration.TryGetTriggeringRecordType(out recType))
+                if (loqui.TargetObjectGeneration.TryGetTriggeringRecordTypes(out trigRecTypes))
                 {
-                    data.TriggeringRecordType = recType;
+                    data.TriggeringRecordTypes.Add(trigRecTypes);
                 }
                 else if (loqui.GenericDef != null)
                 {
-                    data.TriggeringRecordAccessor = $"{loqui.GenericDef.Name}_RecordType";
+                    data.TriggeringRecordAccessors.Add($"{loqui.GenericDef.Name}_RecordType");
                 }
             }
             else if (field is ListType listType
@@ -288,28 +329,28 @@ namespace Mutagen.Generation
                 if (listType.SubTypeGeneration is LoquiType subListLoqui)
                 {
                     if (subListLoqui.TargetObjectGeneration != null
-                        && subListLoqui.TargetObjectGeneration.TryGetTriggeringRecordType(out recType))
+                        && subListLoqui.TargetObjectGeneration.TryGetTriggeringRecordTypes(out trigRecTypes))
                     {
-                        data.TriggeringRecordType = recType;
+                        data.TriggeringRecordTypes.Add(trigRecTypes);
                     }
                     else if (subListLoqui.GenericDef != null)
                     {
-                        data.TriggeringRecordAccessor = $"{subListLoqui.GenericDef.Name}_RecordType";
+                        data.TriggeringRecordAccessors.Add($"{subListLoqui.GenericDef.Name}_RecordType");
                     }
                 }
                 else
                 {
                     var subData = listType.SubTypeGeneration.CustomData.TryCreateValue(Constants.DATA_KEY, () => new MutagenFieldData(listType.SubTypeGeneration)) as MutagenFieldData;
-                    if (subData.TriggeringRecordAccessor != null)
+                    if (subData.HasTrigger)
                     {
-                        data.TriggeringRecordAccessor = $"{obj.RegistrationName}.{subData.RecordType.Value.HeaderName}";
-                        data.TriggeringRecordType = subData.RecordType;
+                        data.TriggeringRecordAccessors.Add(obj.RecordTypeHeaderName(subData.RecordType.Value));
+                        data.TriggeringRecordTypes.Add(subData.RecordType.Value);
                         data.RecordType = subData.RecordType;
                     }
                 }
             }
 
-            SetTriggeringRecordAccessors(obj, data);
+            SetTriggeringRecordAccessors(obj, field, data);
 
             if (field is ContainerType contType
                 && contType.SubTypeGeneration is LoquiType contLoqui)
@@ -322,22 +363,46 @@ namespace Mutagen.Generation
             }
         }
 
-        private void SetTriggeringRecordAccessors(ObjectGeneration obj, MutagenFieldData data)
+        private void SetTriggeringRecordAccessors(ObjectGeneration obj, TypeGeneration field, MutagenFieldData data)
         {
-            if (data.TriggeringRecordAccessor != null) return;
-            if (data.MarkerType.HasValue)
+            if (!data.HasTrigger)
             {
-                data.TriggeringRecordAccessor = $"{obj.RegistrationName}.{data.MarkerType.Value.HeaderName}";
-                data.TriggeringRecordType = data.MarkerType;
+                if (data.MarkerType.HasValue)
+                {
+                    data.TriggeringRecordAccessors.Add(obj.RecordTypeHeaderName(data.MarkerType.Value));
+                    data.TriggeringRecordTypes.Add(data.MarkerType.Value);
+                }
+                else if (data.RecordType.HasValue)
+                {
+                    data.TriggeringRecordAccessors.Add(obj.RecordTypeHeaderName(data.RecordType.Value));
+                    data.TriggeringRecordTypes.Add(data.RecordType.Value);
+                }
+                else if (data.TriggeringRecordTypes.Count > 0)
+                {
+                    foreach (var trigger in data.TriggeringRecordTypes)
+                    {
+                        data.TriggeringRecordAccessors.Add(obj.RecordTypeHeaderName(trigger));
+                    }
+                }
             }
-            else if (data.RecordType.HasValue)
+            if (data.RecordType.HasValue)
             {
-                data.TriggeringRecordAccessor = $"{obj.RegistrationName}.{data.RecordType.Value.HeaderName}";
-                data.TriggeringRecordType = data.RecordType;
+                data.TriggeringRecordSetAccessor = obj.RecordTypeHeaderName(data.RecordType.Value);
             }
-            else if (data.TriggeringRecordType.HasValue)
+            else if (data.TriggeringRecordTypes.Count== 1)
             {
-                data.TriggeringRecordAccessor = $"{obj.RegistrationName}.{data.TriggeringRecordType.Value.HeaderName}";
+                data.TriggeringRecordSetAccessor = obj.RecordTypeHeaderName(data.TriggeringRecordTypes.First());
+            }
+            else if (field is LoquiType loqui)
+            {
+                if (loqui.TargetObjectGeneration != null)
+                {
+                    data.TriggeringRecordSetAccessor = $"{loqui.TargetObjectGeneration.RegistrationName}.TriggeringRecordTypes";
+                }
+                else if (data.TriggeringRecordAccessors.Count == 1)
+                {
+                    data.TriggeringRecordSetAccessor = data.TriggeringRecordAccessors.First();
+                }
             }
         }
 
@@ -350,7 +415,7 @@ namespace Mutagen.Generation
             {
                 ListType list = field as ListType;
                 LoquiType loqui = list.SubTypeGeneration as LoquiType;
-                data.TriggeringRecordAccessor = $"Group<T>.T_RecordType";
+                data.TriggeringRecordAccessors.Add($"T_RecordType");
             }
         }
     }

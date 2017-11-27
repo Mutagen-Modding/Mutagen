@@ -971,7 +971,7 @@ namespace Mutagen.Oblivion
             switch (nextRecordType.Type)
             {
                 default:
-                    if (nextRecordType.Equals(Group<T>.T_RecordType))
+                    if (nextRecordType.Equals(T_RecordType))
                     {
                         var ItemstryGet = Mutagen.Binary.ListBinaryTranslation<T, MaskItem<Exception, T_ErrMask>>.Instance.ParseRepeatedItem(
                             frame: frame,

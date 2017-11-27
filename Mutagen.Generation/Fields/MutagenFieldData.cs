@@ -12,33 +12,35 @@ namespace Mutagen.Generation
         public readonly TypeGeneration SourceTypeGeneration;
         public RecordType? MarkerType { get; set; }
         public RecordType? RecordType { get; set; }
-        public RecordType? TriggeringRecordType { get; set; }
-        public string TriggeringRecordAccessor;
-        public bool HasTrigger => !string.IsNullOrWhiteSpace(this.TriggeringRecordAccessor);
+        public HashSet<RecordType> TriggeringRecordTypes { get; } = new HashSet<Mutagen.RecordType>();
+        public HashSet<string> TriggeringRecordAccessors = new HashSet<string>();
+        public string TriggeringRecordSetAccessor;
+        public bool HasTrigger => this.TriggeringRecordAccessors.Count > 0;
         public bool Optional;
         public long? Length;
         public bool IncludeInLength;
         public bool Vestigial;
         public bool CustomBinary;
         public Dictionary<RecordType, ObjectGeneration> SubLoquiTypes = new Dictionary<RecordType, ObjectGeneration>();
-        public IEnumerable<KeyValuePair<RecordType, TypeGeneration>> GenerationTypes => GetGenerationTypes();
+        public IEnumerable<KeyValuePair<IEnumerable<RecordType>, TypeGeneration>> GenerationTypes => GetGenerationTypes();
 
         public MutagenFieldData(TypeGeneration source)
         {
             this.SourceTypeGeneration = source;
         }
 
-        private IEnumerable<KeyValuePair<RecordType, TypeGeneration>> GetGenerationTypes()
+        private IEnumerable<KeyValuePair<IEnumerable<RecordType>, TypeGeneration>> GetGenerationTypes()
         {
-            yield return new KeyValuePair<Mutagen.RecordType, TypeGeneration>(
-                this.TriggeringRecordType.Value,
+            yield return new KeyValuePair<IEnumerable<RecordType>, TypeGeneration>(
+                this.TriggeringRecordTypes,
                 this.SourceTypeGeneration);
             if (!(this.SourceTypeGeneration is LoquiType loqui)) yield break;
-            foreach (var subType in this.SubLoquiTypes)
+            foreach (var subType in this.SubLoquiTypes
+                .GroupBy((g) => g.Value))
             {
-                yield return new KeyValuePair<Mutagen.RecordType, TypeGeneration>(
-                    subType.Key,
-                    loqui.Spawn(subType.Value));
+                yield return new KeyValuePair<IEnumerable<RecordType>, TypeGeneration>(
+                    subType.Select((s) => s.Key),
+                    loqui.Spawn(subType.Key));
             }
         }
     }

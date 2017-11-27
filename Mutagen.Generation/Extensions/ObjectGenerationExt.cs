@@ -34,23 +34,23 @@ namespace Mutagen.Generation
             return TryGetRecordType(objGen, out var recType);
         }
 
-        public static RecordType? GetTriggeringRecordType(this ObjectGeneration objGen)
+        public static IEnumerable<RecordType> GetTriggeringRecordTypes(this ObjectGeneration objGen)
         {
-            if (!TryGetTriggeringRecordType(objGen, out var data))
+            if (!TryGetTriggeringRecordTypes(objGen, out var data))
             {
-                return null;
+                return EnumerableExt<RecordType>.EMPTY;
             }
             return data;
         }
 
-        public static bool TryGetTriggeringRecordType(this ObjectGeneration objGen, out RecordType recType)
+        public static bool TryGetTriggeringRecordTypes(this ObjectGeneration objGen, out IEnumerable<RecordType> recTypes)
         {
             if (objGen.CustomData.TryGetValue(Constants.TRIGGERING_RECORD_TYPE, out var dataObj))
             {
-                recType = (RecordType)dataObj;
+                recTypes = (IEnumerable<RecordType>)dataObj;
                 return true;
             }
-            recType = default(RecordType);
+            recTypes = EnumerableExt<RecordType>.EMPTY;
             return false;
         }
 
@@ -62,5 +62,15 @@ namespace Mutagen.Generation
             }
             throw new ArgumentException($"Object {objGen.Name} did not have object type defined.");
         }
+
+        public static string GetTriggeringSource(this ObjectGeneration objGen)
+        {
+            return objGen.CustomData[Constants.TRIGGERING_SOURCE] as string;
+        }
+
+        public static string RecordTypeHeaderName(this ObjectGeneration objGen, RecordType recType)
+        {
+            return $"{objGen.RegistrationName}.{recType.Type}_HEADER";
+    }
     }
 }

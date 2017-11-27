@@ -17,6 +17,29 @@ namespace Mutagen.Generation
 
     public class ListBinaryTranslationGeneration : BinaryTranslationGeneration
     {
+        private ListBinaryType GetListType(
+            ListType list,
+            MutagenFieldData data,
+            MutagenFieldData subData)
+        {
+            if (list.MaxValue.HasValue)
+            {
+                return ListBinaryType.Amount;
+            }
+            else if (subData.HasTrigger)
+            {
+                return ListBinaryType.Trigger;
+            }
+            else if (data.RecordType.HasValue)
+            {
+                return ListBinaryType.Frame;
+            }
+            else
+            {
+                throw new ArgumentException();
+            }
+        }
+
         public override void GenerateWrite(
             FileGeneration fg,
             ObjectGeneration objGen,
@@ -40,19 +63,7 @@ namespace Mutagen.Generation
 
             var subData = list.SubTypeGeneration.GetFieldData();
 
-            ListBinaryType listBinaryType;
-            if (list.MaxValue.HasValue)
-            {
-                listBinaryType = ListBinaryType.Amount;
-            }
-            else if (!string.IsNullOrWhiteSpace(subData.TriggeringRecordAccessor))
-            {
-                listBinaryType = ListBinaryType.Trigger;
-            }
-            else
-            {
-                listBinaryType = ListBinaryType.Frame;
-            }
+            ListBinaryType listBinaryType = GetListType(list, data, subData);
 
             var subMaskStr = subTransl.MaskModule.GetMaskModule(list.SubTypeGeneration.GetType()).GetErrorMaskTypeStr(list.SubTypeGeneration);
             using (var args = new ArgsWrapper(fg,
@@ -63,7 +74,7 @@ namespace Mutagen.Generation
                 args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
                 if (listBinaryType == ListBinaryType.Frame)
                 {
-                    args.Add($"recordType: {data.TriggeringRecordAccessor}");
+                    args.Add($"recordType: {objGen.RecordTypeHeaderName(data.RecordType.Value)}");
                 }
                 args.Add($"errorMask: {maskAccessor}");
                 args.Add((gen) =>
@@ -125,19 +136,7 @@ namespace Mutagen.Generation
                 throw new ArgumentException("Unsupported type generator: " + list.SubTypeGeneration);
             }
 
-            ListBinaryType listBinaryType;
-            if (list.MaxValue.HasValue)
-            {
-                listBinaryType = ListBinaryType.Amount;
-            }
-            else if (!string.IsNullOrWhiteSpace(subData.TriggeringRecordAccessor))
-            {
-                listBinaryType = ListBinaryType.Trigger;
-            }
-            else
-            {
-                listBinaryType = ListBinaryType.Frame;
-            }
+            ListBinaryType listBinaryType = GetListType(list, data, subData);
 
             if (data.MarkerType.HasValue)
             {
@@ -160,7 +159,7 @@ namespace Mutagen.Generation
                 else if (listBinaryType == ListBinaryType.Trigger)
                 {
                     args.Add($"frame: frame");
-                    args.Add($"triggeringRecord: {subData.TriggeringRecordAccessor}");
+                    args.Add($"triggeringRecord: {subData.TriggeringRecordSetAccessor}");
                 }
                 else if (listBinaryType == ListBinaryType.Frame)
                 {

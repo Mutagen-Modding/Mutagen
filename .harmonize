@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>60a1f76f19244792648f1b0544af251f18026ba0</Sha>
+         <Sha>00aa7c0edcbc8d14fccde9110bb0ec40e117cb49</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>11-26-2017 13:34:41</CommitDate>
-         <Description>NotifyingList subscribe API refactoring</Description>
+         <CommitDate>11-26-2017 13:34:56</CommitDate>
+         <Description>EnumerableExt.EMPTY</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>1c9e8cbe3c31a3d39af7cc0a466176eb9e091eff</Sha>
+         <Sha>a0b46b2a8f6ee8cf13d2e64410e937e2f2f7448f</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>11-25-2017 18:04:27</CommitDate>
-         <Description>Regeneration</Description>
+         <CommitDate>11-26-2017 22:14:31</CommitDate>
+         <Description>IfWrapper</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

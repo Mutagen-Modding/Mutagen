@@ -220,7 +220,7 @@ namespace Mutagen.Generation
             foreach (var field in obj.IterateFields())
             {
                 if (field.TryGetFieldData(out var data)
-                    && data.TriggeringRecordAccessor != null) return true;
+                    && data.HasTrigger) return true;
             }
             return false;
         }
@@ -231,7 +231,7 @@ namespace Mutagen.Generation
             {
                 if (field is SetMarkerType) continue;
                 if (!field.TryGetFieldData(out var data)
-                    || data.TriggeringRecordAccessor == null) return true;
+                    || !data.HasTrigger) return true;
             }
             return false;
         }
@@ -256,8 +256,8 @@ namespace Mutagen.Generation
                     fg.AppendLine("try");
                     using (new BraceWrapper(fg))
                     {
-                        RecordType? recordType = obj.GetTriggeringRecordType();
-                        var frameMod = (objType != ObjectType.Subrecord || recordType.HasValue)
+                        IEnumerable<RecordType> recordTypes = obj.GetTriggeringRecordTypes();
+                        var frameMod = (objType != ObjectType.Subrecord || recordTypes.Any())
                             && objType != ObjectType.Mod;
                         if (frameMod)
                         {
@@ -271,7 +271,7 @@ namespace Mutagen.Generation
                                             suffixLine: ")"))
                                         {
                                             args.Add("frame");
-                                            args.Add($"{obj.RegistrationName}.{recordType.Value.HeaderName}");
+                                            args.Add($"{obj.GetTriggeringSource()}");
                                         }
                                     }
                                     break;
@@ -281,7 +281,7 @@ namespace Mutagen.Generation
                                         suffixLine: ")"))
                                     {
                                         args.Add("frame");
-                                        args.Add($"{obj.RegistrationName}.{recordType.Value.HeaderName}");
+                                        args.Add($"{obj.GetTriggeringSource()}");
                                     }
                                     break;
                                 case ObjectType.Group:
@@ -375,7 +375,7 @@ namespace Mutagen.Generation
                     {
                         if (field is SetMarkerType) continue;
                         if (field.TryGetFieldData(out var data)
-                            && data.TriggeringRecordAccessor != null) continue;
+                            && data.HasTrigger) continue;
                         if (field.Derivative && !data.CustomBinary) continue;
                         if (!this.TryGetTypeGeneration(field.GetType(), out var generator))
                         {
@@ -435,8 +435,8 @@ namespace Mutagen.Generation
                             nonIntegrated: true))
                         {
                             if (!field.Field.TryGetFieldData(out var data)
-                                || data.TriggeringRecordAccessor == null
-                                || !data.TriggeringRecordType.HasValue) continue;
+                                || !data.HasTrigger
+                                || data.TriggeringRecordTypes.Count == 0) continue;
                             if (field.Field.Derivative && !data.CustomBinary) continue;
                             if (!this.TryGetTypeGeneration(field.Field.GetType(), out var generator))
                             {
@@ -446,7 +446,10 @@ namespace Mutagen.Generation
                             if (!generator.ShouldGenerateCopyIn(field.Field)) continue;
                             foreach (var gen in data.GenerationTypes)
                             {
-                                fg.AppendLine($"case \"{gen.Key.Type}\":");
+                                foreach (var trigger in gen.Key)
+                                {
+                                    fg.AppendLine($"case \"{trigger.Type}\":");
+                                }
                                 using (new DepthWrapper(fg))
                                 {
                                     if (typelessStruct && field.Index == 0)
@@ -467,8 +470,8 @@ namespace Mutagen.Generation
                             foreach (var field in obj.IterateFieldIndices())
                             {
                                 if (!field.Field.TryGetFieldData(out var data)
-                                    || data.TriggeringRecordAccessor == null
-                                    || data.TriggeringRecordType.HasValue) continue;
+                                    || !data.HasTrigger
+                                    || data.TriggeringRecordTypes.Count > 0) continue;
                                 if (field.Field.Derivative && !data.CustomBinary) continue;
                                 if (!this.TryGetTypeGeneration(field.Field.GetType(), out var generator))
                                 {
@@ -477,7 +480,14 @@ namespace Mutagen.Generation
 
                                 if (generator.ShouldGenerateCopyIn(field.Field))
                                 {
-                                    fg.AppendLine($"if{(first ? "" : " else")} (nextRecordType.Equals({data.TriggeringRecordAccessor}))");
+                                    using (var args = new IfWrapper(fg, ANDs: true, first: first))
+                                    {
+                                        foreach (var trigger in data.TriggeringRecordAccessors)
+                                        {
+                                            args.Checks.Add($"nextRecordType.Equals({trigger})");
+                                        }
+                                    }
+                                    first = false;
                                     using (new BraceWrapper(fg))
                                     {
                                         GenerateFillSnippet(obj, fg, field.Field, generator);
@@ -671,7 +681,7 @@ namespace Mutagen.Generation
                     semiColon: false))
                 {
                     args.Add("writer: writer");
-                    args.Add($"record: {obj.RegistrationName}.{obj.GetRecordType().HeaderName}");
+                    args.Add($"record: {obj.RecordTypeHeaderName(obj.GetRecordType())}");
                     args.Add($"type: {nameof(ObjectType)}.{obj.GetObjectType()}");
                 }
             }
@@ -766,7 +776,7 @@ namespace Mutagen.Generation
                     foreach (var field in obj.IterateFields(nonIntegrated: true, expandSets: false))
                     {
                         if (field.TryGetFieldData(out var data)
-                            && data.TriggeringRecordAccessor != null) continue;
+                            && data.HasTrigger) continue;
                         if (field.Derivative && !data.CustomBinary) continue;
                         var maskType = this.Gen.MaskModule.GetMaskModule(field.GetType()).GetErrorMaskTypeStr(field);
                         if (data.CustomBinary)
@@ -834,7 +844,7 @@ namespace Mutagen.Generation
                     foreach (var field in obj.IterateFields(expandSets: false, nonIntegrated: true))
                     {
                         if (!field.TryGetFieldData(out var data)
-                            || data.TriggeringRecordAccessor == null) continue;
+                            || !data.HasTrigger) continue;
                         if (field.Derivative && !data.CustomBinary) continue;
                         if (data.CustomBinary)
                         {
@@ -855,7 +865,7 @@ namespace Mutagen.Generation
 
                         if (field is SetMarkerType set)
                         {
-                            fg.AppendLine($"using (HeaderExport.ExportSubRecordHeader(writer, {obj.RegistrationName}.{set.GetFieldData().TriggeringRecordType.Value.HeaderName}))");
+                            fg.AppendLine($"using (HeaderExport.ExportSubRecordHeader(writer, {obj.RecordTypeHeaderName(data.RecordType.Value)}))");
                             using (new BraceWrapper(fg))
                             {
                                 foreach (var subfield in set.SubFields)
