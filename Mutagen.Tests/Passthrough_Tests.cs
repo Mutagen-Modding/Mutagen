@@ -10,6 +10,8 @@ using Xunit;
 using Mutagen.Oblivion;
 using Mutagen.Oblivion.Internals;
 using Noggog;
+using Mutagen.Binary;
+using Mutagen.Internals;
 
 namespace Mutagen.Tests
 {
@@ -117,9 +119,9 @@ namespace Mutagen.Tests
         private void AssertFilesEqual(string prototypePath, string path2, Substitutions substitutions = null)
         {
             List<RangeInt32> errorRanges = new List<RangeInt32>();
-            using (var prototypeReader = new FileStream(prototypePath, FileMode.Open, FileAccess.Read))
+            using (var prototypeReader = new MutagenReader(prototypePath))
             {
-                using (var reader2 = new FileStream(path2, FileMode.Open, FileAccess.Read))
+                using (var reader2 = new MutagenReader(path2))
                 {
                     var errs = ProcessDifferences(
                         RangeInt64.ConstructRanges(
@@ -133,11 +135,11 @@ namespace Mutagen.Tests
                     }
                     if (prototypeReader.Position != prototypeReader.Length)
                     {
-                        throw new ArgumentException($"Stream {prototypePath} had more data past position 0x{prototypeReader.Position.ToString("X")} than {path2}");
+                        throw new ArgumentException($"Stream {prototypePath} had more data past position 0x{prototypeReader.Position} than {path2}");
                     }
                     if (reader2.Position != reader2.Length)
                     {
-                        throw new ArgumentException($"Stream {path2} had more data past position 0x{reader2.Position.ToString("X")} than {prototypePath}");
+                        throw new ArgumentException($"Stream {path2} had more data past position 0x{reader2.Position} than {prototypePath}");
                     }
                 }
             }
@@ -146,7 +148,7 @@ namespace Mutagen.Tests
         private IEnumerable<RangeInt64> ProcessDifferences(
             IEnumerable<RangeInt64> incoming,
             Dictionary<RangeInt64, List<byte[]>> substitutions,
-            FileStream stream)
+            MutagenReader stream)
         {
             foreach (var range in incoming)
             {
@@ -167,12 +169,12 @@ namespace Mutagen.Tests
         private bool TestSub(
             RangeInt64 range,
             IEnumerable<byte[]> subs,
-            FileStream stream)
+            MutagenReader stream)
         {
             var curPos = stream.Position;
-            stream.Position = range.Min;
+            stream.Position = new FileLocation(range.Min);
             var bytes = new byte[range.Width];
-            stream.Read(bytes, 0, bytes.Length);
+            stream.ReadInto(bytes);
             stream.Position = curPos;
             foreach (var sub in subs)
             {
@@ -184,7 +186,7 @@ namespace Mutagen.Tests
             return false;
         }
 
-        private IEnumerable<KeyValuePair<long, bool>> GetDifferences(FileStream reader1, FileStream reader2)
+        private IEnumerable<KeyValuePair<long, bool>> GetDifferences(MutagenReader reader1, MutagenReader reader2)
         {
             while (reader1.Position < reader1.Length
                 && reader2.Position < reader2.Length)

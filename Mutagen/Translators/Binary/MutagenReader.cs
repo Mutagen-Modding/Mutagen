@@ -101,6 +101,11 @@ namespace Mutagen.Binary
             return this.reader.ReadChar();
         }
 
+        public void ReadInto(byte[] b)
+        {
+            this.reader.Read(b, 0, b.Length);
+        }
+
         public void Dispose()
         {
             this.reader.Dispose();
