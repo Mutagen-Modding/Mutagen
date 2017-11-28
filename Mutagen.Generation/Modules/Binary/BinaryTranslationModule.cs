@@ -371,7 +371,7 @@ namespace Mutagen.Generation
                     }
                     foreach (var field in obj.IterateFields(
                         nonIntegrated: true,
-                        expandSets: false))
+                        expandSets: SetMarkerType.ExpandSets.False))
                     {
                         if (field is SetMarkerType) continue;
                         if (field.TryGetFieldData(out var data)
@@ -431,7 +431,7 @@ namespace Mutagen.Generation
                     using (new BraceWrapper(fg))
                     {
                         foreach (var field in obj.IterateFieldIndices(
-                            expandSets: false,
+                            expandSets: SetMarkerType.ExpandSets.FalseAndInclude,
                             nonIntegrated: true))
                         {
                             if (!field.Field.TryGetFieldData(out var data)
@@ -567,7 +567,7 @@ namespace Mutagen.Generation
                 }
                 return;
             }
-            
+
             var data = field.GetFieldData();
             if (data.CustomBinary)
             {
@@ -773,7 +773,7 @@ namespace Mutagen.Generation
                             }
                         }
                     }
-                    foreach (var field in obj.IterateFields(nonIntegrated: true, expandSets: false))
+                    foreach (var field in obj.IterateFields(nonIntegrated: true, expandSets: SetMarkerType.ExpandSets.False))
                     {
                         if (field.TryGetFieldData(out var data)
                             && data.HasTrigger) continue;
@@ -841,7 +841,7 @@ namespace Mutagen.Generation
                             }
                         }
                     }
-                    foreach (var field in obj.IterateFields(expandSets: false, nonIntegrated: true))
+                    foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.FalseAndInclude, nonIntegrated: true))
                     {
                         if (!field.TryGetFieldData(out var data)
                             || !data.HasTrigger) continue;

@@ -21,7 +21,7 @@ namespace Mutagen.Generation
         public override void GenerateInRegistration(ObjectGeneration obj, FileGeneration fg)
         {
             GenerateKnownRecordTypes(obj, fg);
-            fg.AppendLine($"public const int NumStructFields = {obj.IterateFields(expandSets: false).Where((f) => !f.GetFieldData().HasTrigger).Count()};");
+            fg.AppendLine($"public const int NumStructFields = {obj.IterateFields(expandSets: SetMarkerType.ExpandSets.False).Where((f) => !f.GetFieldData().HasTrigger).Count()};");
             var typedFields = obj.IterateFields().Where((f) => f.GetFieldData().HasTrigger).Sum((f) =>
             {
                 if (!(f is SetMarkerType set)) return 1;
@@ -64,7 +64,7 @@ namespace Mutagen.Generation
             {
                 recordTypes.Add(triggeringRecType);
             }
-            foreach (var field in obj.IterateFields(expandSets: false, nonIntegrated: true))
+            foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.FalseAndInclude, nonIntegrated: true))
             {
                 var data = field.GetFieldData();
                 if (data.RecordType.HasValue)
@@ -212,7 +212,6 @@ namespace Mutagen.Generation
                 throw new ArgumentException("Cannot have both record type and marker type defined");
             }
             ModifyGRUPRecordTrigger(obj, field, data);
-            SetRecordTrigger(obj, field, data);
 
             data.Optional = node.GetAttribute<bool>("optional", false);
             if (data.Optional && !data.RecordType.HasValue)
@@ -239,6 +238,10 @@ namespace Mutagen.Generation
 
         public override void PostLoad(ObjectGeneration obj)
         {
+            foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.TrueAndInclude))
+            {
+                SetRecordTrigger(obj, field, field.GetFieldData());
+            }
             base.PostLoad(obj);
             Dictionary<string, TypeGeneration> triggerMapping = new Dictionary<string, TypeGeneration>();
             foreach (var field in obj.IterateFields())
@@ -341,6 +344,7 @@ namespace Mutagen.Generation
                 else
                 {
                     var subData = listType.SubTypeGeneration.CustomData.TryCreateValue(Constants.DATA_KEY, () => new MutagenFieldData(listType.SubTypeGeneration)) as MutagenFieldData;
+                    SetRecordTrigger(obj, listType.SubTypeGeneration, subData);
                     if (subData.HasTrigger)
                     {
                         data.TriggeringRecordAccessors.Add(obj.RecordTypeHeaderName(subData.RecordType.Value));
