@@ -48,7 +48,16 @@ namespace Mutagen.Tests
                     out outputErrMask);
                 substitutions.Add(23192, 0);
                 substitutions.Add(24134, 0);
-                AssertFilesEqual(Properties.Settings.Default.OblivionESM, outputPath, substitutions);
+                RangeCollection sourceSkip = new RangeCollection();
+                sourceSkip.Add(new RangeInt64(0x4F60D, 0x3B810A));
+                RangeCollection targetSkip = new RangeCollection();
+                targetSkip.Add(new RangeInt64(0x4F60D, 0x3B4816));
+                AssertFilesEqual(
+                    Properties.Settings.Default.OblivionESM, 
+                    outputPath, 
+                    substitutions,
+                    sourceSkips: sourceSkip,
+                    targetSkips: targetSkip);
                 Assert.Null(inputErrMask);
                 Assert.Null(outputErrMask);
             }
@@ -116,7 +125,12 @@ namespace Mutagen.Tests
             }
         }
 
-        private void AssertFilesEqual(string prototypePath, string path2, Substitutions substitutions = null)
+        private void AssertFilesEqual(
+            string prototypePath,
+            string path2,
+            Substitutions substitutions = null,
+            RangeCollection sourceSkips = null,
+            RangeCollection targetSkips = null)
         {
             List<RangeInt32> errorRanges = new List<RangeInt32>();
             using (var prototypeReader = new MutagenReader(prototypePath))
@@ -125,7 +139,7 @@ namespace Mutagen.Tests
                 {
                     var errs = ProcessDifferences(
                         RangeInt64.ConstructRanges(
-                            GetDifferences(prototypeReader, reader2),
+                            GetDifferences(prototypeReader, reader2, sourceSkips, targetSkips),
                             b => !b),
                         substitutions.RawSubstitutions,
                         reader2).First(5).ToArray();
@@ -186,11 +200,27 @@ namespace Mutagen.Tests
             return false;
         }
 
-        private IEnumerable<KeyValuePair<long, bool>> GetDifferences(MutagenReader reader1, MutagenReader reader2)
+        private IEnumerable<KeyValuePair<long, bool>> GetDifferences(
+            MutagenReader reader1,
+            MutagenReader reader2,
+            RangeCollection reader1Skips,
+            RangeCollection reader2Skips)
         {
             while (reader1.Position < reader1.Length
                 && reader2.Position < reader2.Length)
             {
+                if (reader1Skips != null
+                    && reader1Skips.TryGetCurrentRange(reader1.Position, out var range1))
+                {
+                    reader1.Position = new FileLocation(range1.Max + 1);
+                    continue;
+                }
+                if (reader2Skips != null
+                    && reader2Skips.TryGetCurrentRange(reader2.Position, out var range2))
+                {
+                    reader2.Position = new FileLocation(range2.Max + 1);
+                    continue;
+                }
                 var b1 = reader1.ReadByte();
                 var b2 = reader2.ReadByte();
                 yield return new KeyValuePair<long, bool>(
