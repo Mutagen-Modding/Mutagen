@@ -65,6 +65,11 @@
           <GenericSpecification Definition="LandTexture" TypeToSpecify="T" />
         </Direct>
       </Ref>
+      <Ref name="Enchantments">
+        <Direct refName="Group" >
+          <GenericSpecification Definition="Enchantment" TypeToSpecify="T" />
+        </Direct>
+      </Ref>
     </Fields>
   </Object>
 </Loqui>

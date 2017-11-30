@@ -88,6 +88,12 @@
     <Compile Include="Records\Major Records\Class_LoquiGenerated.cs">
       <DependentUpon>Class.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Enchantment.cs">
+      <DependentUpon>Enchantment.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\EnchantmentEffect.cs">
+      <DependentUpon>Enchantment.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Eye.cs">
       <DependentUpon>Eye.xml</DependentUpon>
     </Compile>
@@ -214,6 +220,9 @@
     <Compile Include="Records\Major Records\Script.cs">
       <DependentUpon>Script.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\ScriptEffect.cs">
+      <DependentUpon>Enchantment.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\ScriptMetaSummary.cs">
       <DependentUpon>Script.xml</DependentUpon>
     </Compile>
@@ -259,6 +268,15 @@
     <Compile Include="Records\Major Records\HavokData_LoquiGenerated.cs">
       <DependentUpon>LandTexture.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Enchantment_LoquiGenerated.cs">
+      <DependentUpon>Enchantment.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\EnchantmentEffect_LoquiGenerated.cs">
+      <DependentUpon>Enchantment.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ScriptEffect_LoquiGenerated.cs">
+      <DependentUpon>Enchantment.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Records\Common Subrecords\Model.xml">
@@ -280,6 +298,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Class.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\Enchantment.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Eye.xml">
