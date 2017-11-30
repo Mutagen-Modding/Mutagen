@@ -11,10 +11,10 @@ namespace Mutagen.Generation
     {
         public bool NullTerminate;
 
-        public override void Load(XElement node, bool requireName = true)
+        public override async Task Load(XElement node, bool requireName = true)
         {
             this.NullTerminate = node.GetAttribute<bool>("nullTerminate", defaultVal: true);
-            base.Load(node, requireName);
+            await base.Load(node, requireName);
         }
     }
 }

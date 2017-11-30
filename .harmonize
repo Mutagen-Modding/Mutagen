@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>00aa7c0edcbc8d14fccde9110bb0ec40e117cb49</Sha>
+         <Sha>ac54ab7fe6ce902eb8a64cd81119c918a5104b6c</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>11-26-2017 13:34:56</CommitDate>
-         <Description>EnumerableExt.EMPTY</Description>
+         <CommitDate>11-29-2017 17:51:11</CommitDate>
+         <Description>TaskExt.AwaitOrDefault</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>a36ae4fb1831a72111abbd4aa434ac845dab8450</Sha>
+         <Sha>a864360d2f9bc33d88a6034eb77a92d5a07c265b</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>11-27-2017 18:33:53</CommitDate>
-         <Description>IterateFields() enum parameter for set expansion</Description>
+         <CommitDate>11-29-2017 19:28:21</CommitDate>
+         <Description>Async sprinkled around</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

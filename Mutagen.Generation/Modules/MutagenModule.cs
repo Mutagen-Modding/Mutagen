@@ -13,12 +13,12 @@ namespace Mutagen.Generation
     {
         public override string RegionString => "Mutagen";
 
-        public override void GenerateInClass(ObjectGeneration obj, FileGeneration fg)
+        public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
         {
             GenerateGenericRecordTypes(obj, fg);
         }
 
-        public override void GenerateInRegistration(ObjectGeneration obj, FileGeneration fg)
+        public override async Task GenerateInRegistration(ObjectGeneration obj, FileGeneration fg)
         {
             GenerateKnownRecordTypes(obj, fg);
             fg.AppendLine($"public const int NumStructFields = {obj.IterateFields(expandSets: SetMarkerType.ExpandSets.False).Where((f) => !f.GetFieldData().HasTrigger).Count()};");
@@ -118,7 +118,7 @@ namespace Mutagen.Generation
             }
         }
 
-        public override void GenerateInStaticCtor(ObjectGeneration obj, FileGeneration fg)
+        public override async Task GenerateInStaticCtor(ObjectGeneration obj, FileGeneration fg)
         {
             foreach (var genName in GetGenerics(obj, fg))
             {
@@ -135,7 +135,7 @@ namespace Mutagen.Generation
             }
         }
 
-        public override void PreLoad(ObjectGeneration obj)
+        public override async Task PreLoad(ObjectGeneration obj)
         {
             var record = obj.Node.GetAttribute("recordType");
             var isGRUP = obj.Name.Equals("Group");
@@ -193,7 +193,7 @@ namespace Mutagen.Generation
             }
         }
 
-        public override void PostFieldLoad(ObjectGeneration obj, TypeGeneration field, XElement node)
+        public override async Task PostFieldLoad(ObjectGeneration obj, TypeGeneration field, XElement node)
         {
             var data = field.CustomData.TryCreateValue(Constants.DATA_KEY, () => new MutagenFieldData(field)) as MutagenFieldData;
             var recordAttr = node.GetAttribute("recordType");
@@ -236,13 +236,13 @@ namespace Mutagen.Generation
             data.CustomBinary = node.GetAttribute<bool>("customBinary", false);
         }
 
-        public override void PostLoad(ObjectGeneration obj)
+        public override async Task PostLoad(ObjectGeneration obj)
         {
             foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.TrueAndInclude))
             {
                 SetRecordTrigger(obj, field, field.GetFieldData());
             }
-            base.PostLoad(obj);
+            await base.PostLoad(obj);
             Dictionary<string, TypeGeneration> triggerMapping = new Dictionary<string, TypeGeneration>();
             foreach (var field in obj.IterateFields())
             {

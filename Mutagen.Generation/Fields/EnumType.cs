@@ -11,9 +11,9 @@ namespace Mutagen.Generation
     {
         public int ByteLength;
 
-        public override void Load(XElement node, bool requireName = true)
+        public override async Task Load(XElement node, bool requireName = true)
         {
-            base.Load(node, requireName);
+            await base.Load(node, requireName);
             ByteLength = node.GetAttribute<int>("byteLength", 4);
         }
     }

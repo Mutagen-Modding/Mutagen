@@ -76,7 +76,7 @@ namespace Mutagen.Generation
                 });
         }
 
-        public override void PostLoad(ObjectGeneration obj)
+        public override async Task PostLoad(ObjectGeneration obj)
         {
             foreach (var gen in _typeGenerations.Values)
             {
@@ -114,9 +114,9 @@ namespace Mutagen.Generation
             }
         }
 
-        public override void GenerateInClass(ObjectGeneration obj, FileGeneration fg)
+        public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
         {
-            base.GenerateInClass(obj, fg);
+            await base.GenerateInClass(obj, fg);
             GenerateCustomPartials(obj, fg);
             GenerateCreateExtras(obj, fg);
         }
@@ -209,9 +209,9 @@ namespace Mutagen.Generation
             }
         }
 
-        public override void GenerateInCommonExt(ObjectGeneration obj, FileGeneration fg)
+        public override async Task GenerateInCommonExt(ObjectGeneration obj, FileGeneration fg)
         {
-            base.GenerateInCommonExt(obj, fg);
+            await base.GenerateInCommonExt(obj, fg);
             GenerateWriteExtras(obj, fg);
         }
 
