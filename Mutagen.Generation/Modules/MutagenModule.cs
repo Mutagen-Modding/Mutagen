@@ -20,7 +20,7 @@ namespace Mutagen.Generation
 
         public override async Task GenerateInRegistration(ObjectGeneration obj, FileGeneration fg)
         {
-            GenerateKnownRecordTypes(obj, fg);
+            await GenerateKnownRecordTypes(obj, fg);
             fg.AppendLine($"public const int NumStructFields = {obj.IterateFields(expandSets: SetMarkerType.ExpandSets.False).Where((f) => !f.GetFieldData().HasTrigger).Count()};");
             var typedFields = obj.IterateFields().Where((f) => f.GetFieldData().HasTrigger).Sum((f) =>
             {
@@ -53,16 +53,17 @@ namespace Mutagen.Generation
             return genericNames;
         }
 
-        private void GenerateKnownRecordTypes(ObjectGeneration obj, FileGeneration fg)
+        private async Task GenerateKnownRecordTypes(ObjectGeneration obj, FileGeneration fg)
         {
             HashSet<RecordType> recordTypes = new HashSet<RecordType>();
             if (obj.TryGetRecordType(out var recType))
             {
                 recordTypes.Add(recType);
             }
-            if (obj.TryGetTriggeringRecordTypes(out var triggeringRecType))
+            var trigRecType = await obj.TryGetTriggeringRecordTypes();
+            if (trigRecType.Succeeded)
             {
-                recordTypes.Add(triggeringRecType);
+                recordTypes.Add(trigRecType.Value);
             }
             foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.FalseAndInclude, nonIntegrated: true))
             {
@@ -91,10 +92,10 @@ namespace Mutagen.Generation
             {
                 fg.AppendLine($"public static readonly {nameof(RecordType)} {type.Type}_HEADER = new {nameof(RecordType)}(\"{type.Type}\");");
             }
-            var count = triggeringRecType.Count();
+            var count = trigRecType.Value.Count();
             if (count == 1)
             {
-                fg.AppendLine($"public static readonly {nameof(RecordType)} {Mutagen.Constants.TRIGGERING_RECORDTYPE_MEMBER} = {triggeringRecType.First().Type}_HEADER;");
+                fg.AppendLine($"public static readonly {nameof(RecordType)} {Mutagen.Constants.TRIGGERING_RECORDTYPE_MEMBER} = {trigRecType.Value.First().Type}_HEADER;");
             }
             else if (count > 1)
             {
@@ -108,7 +109,7 @@ namespace Mutagen.Generation
                         fg.AppendLine($"new RecordType[]");
                         using (new BraceWrapper(fg))
                         {
-                            foreach (var trigger in triggeringRecType)
+                            foreach (var trigger in trigRecType.Value)
                             {
                                 fg.AppendLine($"{trigger.Type}_HEADER");
                             }
@@ -238,10 +239,9 @@ namespace Mutagen.Generation
 
         public override async Task PostLoad(ObjectGeneration obj)
         {
-            foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.TrueAndInclude))
-            {
-                SetRecordTrigger(obj, field, field.GetFieldData());
-            }
+            await Task.WhenAll(
+                obj.IterateFields(expandSets: SetMarkerType.ExpandSets.TrueAndInclude)
+                    .Select((field) => SetRecordTrigger(obj, field, field.GetFieldData())));
             await base.PostLoad(obj);
             Dictionary<string, TypeGeneration> triggerMapping = new Dictionary<string, TypeGeneration>();
             foreach (var field in obj.IterateFields())
@@ -269,8 +269,9 @@ namespace Mutagen.Generation
                 var data = loqui.GetFieldData();
                 foreach (var subObj in inheritingObjs)
                 {
-                    if (!subObj.TryGetTriggeringRecordTypes(out var subRecs)) continue;
-                    foreach (var subRec in subRecs)
+                    var subRecs = await subObj.TryGetTriggeringRecordTypes();
+                    if (subRecs.Failed) continue;
+                    foreach (var subRec in subRecs.Value)
                     {
                         data.SubLoquiTypes.Add(subRec, subObj);
                     }
@@ -278,18 +279,18 @@ namespace Mutagen.Generation
             }
         }
 
-        private void SetRecordTrigger(
+        private async Task SetRecordTrigger(
             ObjectGeneration obj,
             TypeGeneration field,
             MutagenFieldData data)
         {
             RecordType recType;
-            IEnumerable<RecordType> trigRecTypes;
             if (field is LoquiType loqui)
             {
+                IEnumerable<RecordType> trigRecTypes = await TaskExt.AwaitOrDefaultValue(loqui.TargetObjectGeneration?.TryGetTriggeringRecordTypes());
                 if (loqui.TargetObjectGeneration != null
-                    && (loqui.TargetObjectGeneration.TryGetTriggeringRecordTypes(out trigRecTypes)
-                        | loqui.TargetObjectGeneration.TryGetRecordType(out recType)))
+                    && (loqui.TargetObjectGeneration.TryGetRecordType(out recType)
+                        || trigRecTypes != null))
                 {
                     if (loqui.TargetObjectGeneration.Name.Equals("Group"))
                     {
@@ -317,9 +318,10 @@ namespace Mutagen.Generation
                 && !data.RecordType.HasValue)
             {
                 loqui = loquiList.SubTypeGeneration as LoquiType;
-                if (loqui.TargetObjectGeneration.TryGetTriggeringRecordTypes(out trigRecTypes))
+                var trigRecTypes = await TaskExt.AwaitOrDefault(loqui.TargetObjectGeneration?.TryGetTriggeringRecordTypes());
+                if (trigRecTypes.Succeeded)
                 {
-                    data.TriggeringRecordTypes.Add(trigRecTypes);
+                    data.TriggeringRecordTypes.Add(trigRecTypes.Value);
                 }
                 else if (loqui.GenericDef != null)
                 {
@@ -331,8 +333,8 @@ namespace Mutagen.Generation
             {
                 if (listType.SubTypeGeneration is LoquiType subListLoqui)
                 {
-                    if (subListLoqui.TargetObjectGeneration != null
-                        && subListLoqui.TargetObjectGeneration.TryGetTriggeringRecordTypes(out trigRecTypes))
+                    IEnumerable<RecordType> trigRecTypes = await TaskExt.AwaitOrDefaultValue(subListLoqui.TargetObjectGeneration?.TryGetTriggeringRecordTypes());
+                    if (trigRecTypes != null)
                     {
                         data.TriggeringRecordTypes.Add(trigRecTypes);
                     }
@@ -344,7 +346,7 @@ namespace Mutagen.Generation
                 else
                 {
                     var subData = listType.SubTypeGeneration.CustomData.TryCreateValue(Constants.DATA_KEY, () => new MutagenFieldData(listType.SubTypeGeneration)) as MutagenFieldData;
-                    SetRecordTrigger(obj, listType.SubTypeGeneration, subData);
+                    await SetRecordTrigger(obj, listType.SubTypeGeneration, subData);
                     if (subData.HasTrigger)
                     {
                         data.TriggeringRecordAccessors.Add(obj.RecordTypeHeaderName(subData.RecordType.Value));
@@ -360,7 +362,7 @@ namespace Mutagen.Generation
                 && contType.SubTypeGeneration is LoquiType contLoqui)
             {
                 var subData = contLoqui.CustomData.TryCreateValue(Constants.DATA_KEY, () => new MutagenFieldData(contLoqui)) as MutagenFieldData;
-                SetRecordTrigger(
+                await SetRecordTrigger(
                     obj,
                     contLoqui,
                     subData);
@@ -393,7 +395,7 @@ namespace Mutagen.Generation
             {
                 data.TriggeringRecordSetAccessor = obj.RecordTypeHeaderName(data.RecordType.Value);
             }
-            else if (data.TriggeringRecordTypes.Count== 1)
+            else if (data.TriggeringRecordTypes.Count == 1)
             {
                 data.TriggeringRecordSetAccessor = obj.RecordTypeHeaderName(data.TriggeringRecordTypes.First());
             }
@@ -424,3 +426,4 @@ namespace Mutagen.Generation
         }
     }
 }
+

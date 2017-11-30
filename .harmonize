@@ -2,17 +2,17 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>ac54ab7fe6ce902eb8a64cd81119c918a5104b6c</Sha>
+         <Sha>14ac17ca4f1511c580c5f5dfc6c0f0486813861c</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>11-29-2017 17:51:11</CommitDate>
+         <CommitDate>11-30-2017 17:58:35</CommitDate>
          <Description>TaskExt.AwaitOrDefault</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>a864360d2f9bc33d88a6034eb77a92d5a07c265b</Sha>
+         <Sha>f6a49fa39bc33b73ae30b816ff81fbfb1ffa4d35</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>11-29-2017 19:28:21</CommitDate>
+         <CommitDate>11-30-2017 17:58:53</CommitDate>
          <Description>Async sprinkled around</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>

@@ -118,7 +118,7 @@ namespace Mutagen.Generation
         {
             await base.GenerateInClass(obj, fg);
             GenerateCustomPartials(obj, fg);
-            GenerateCreateExtras(obj, fg);
+            await GenerateCreateExtras(obj, fg);
         }
 
         private void GenerateCustomPartials(ObjectGeneration obj, FileGeneration fg)
@@ -236,7 +236,7 @@ namespace Mutagen.Generation
             return false;
         }
 
-        private void GenerateCreateExtras(ObjectGeneration obj, FileGeneration fg)
+        private async Task GenerateCreateExtras(ObjectGeneration obj, FileGeneration fg)
         {
             bool typelessStruct = obj.GetObjectType() == ObjectType.Subrecord && !obj.HasRecordType();
             if (!obj.Abstract)
@@ -256,7 +256,7 @@ namespace Mutagen.Generation
                     fg.AppendLine("try");
                     using (new BraceWrapper(fg))
                     {
-                        IEnumerable<RecordType> recordTypes = obj.GetTriggeringRecordTypes();
+                        IEnumerable<RecordType> recordTypes = await obj.GetTriggeringRecordTypes();
                         var frameMod = (objType != ObjectType.Subrecord || recordTypes.Any())
                             && objType != ObjectType.Mod;
                         if (frameMod)

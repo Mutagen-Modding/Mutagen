@@ -1,4 +1,5 @@
 ﻿using Loqui.Generation;
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,24 +35,23 @@ namespace Mutagen.Generation
             return TryGetRecordType(objGen, out var recType);
         }
 
-        public static IEnumerable<RecordType> GetTriggeringRecordTypes(this ObjectGeneration objGen)
+        public static async Task<IEnumerable<RecordType>> GetTriggeringRecordTypes(this ObjectGeneration objGen)
         {
-            if (!TryGetTriggeringRecordTypes(objGen, out var data))
+            var data = await TryGetTriggeringRecordTypes(objGen);
+            if (data.Failed)
             {
                 return EnumerableExt<RecordType>.EMPTY;
             }
-            return data;
+            return data.Value;
         }
 
-        public static bool TryGetTriggeringRecordTypes(this ObjectGeneration objGen, out IEnumerable<RecordType> recTypes)
+        public static async Task<TryGet<IEnumerable<RecordType>>> TryGetTriggeringRecordTypes(this ObjectGeneration objGen)
         {
             if (objGen.CustomData.TryGetValue(Constants.TRIGGERING_RECORD_TYPE, out var dataObj))
             {
-                recTypes = (IEnumerable<RecordType>)dataObj;
-                return true;
+                return TryGet<IEnumerable<RecordType>>.Succeed((IEnumerable<RecordType>)dataObj);
             }
-            recTypes = EnumerableExt<RecordType>.EMPTY;
-            return false;
+            return TryGet<IEnumerable<RecordType>>.Fail(EnumerableExt<RecordType>.EMPTY);
         }
 
         public static ObjectType GetObjectType(this ObjectGeneration objGen)
@@ -71,6 +71,7 @@ namespace Mutagen.Generation
         public static string RecordTypeHeaderName(this ObjectGeneration objGen, RecordType recType)
         {
             return $"{objGen.RegistrationName}.{recType.Type}_HEADER";
-    }
+        }
     }
 }
+
