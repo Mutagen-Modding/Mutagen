@@ -50,7 +50,30 @@ namespace Mutagen.Generation
                     args.Add($"header: {objGen.RecordTypeHeaderName(data.RecordType.Value)}");
                     args.Add($"nullable: {(data.Optional ? "true" : "false")}");
                 }
+                foreach (var arg in AdditionWriteParameters(
+                    fg: fg,
+                    objGen: objGen,
+                    typeGen: typeGen,
+                    writerAccessor: writerAccessor,
+                    itemAccessor: itemAccessor,
+                    doMaskAccessor: doMaskAccessor,
+                    maskAccessor: maskAccessor))
+                {
+                    args.Add(arg);
+                }
             }
+        }
+
+        protected virtual IEnumerable<string> AdditionWriteParameters(
+            FileGeneration fg,
+            ObjectGeneration objGen,
+            TypeGeneration typeGen,
+            string writerAccessor,
+            Accessor itemAccessor,
+            string doMaskAccessor,
+            string maskAccessor)
+        {
+            yield break;
         }
 
         public override void GenerateCopyIn(
@@ -97,6 +120,17 @@ namespace Mutagen.Generation
                     args.Add($"doMasks: {doMaskAccessor}");
                     args.Add($"errorMask: out {maskAccessor}");
                 }
+                foreach (var arg in AdditionCopyInParameters(
+                    fg: fg,
+                    objGen: objGen,
+                    typeGen: typeGen,
+                    nodeAccessor: nodeAccessor,
+                    itemAccessor: itemAccessor,
+                    doMaskAccessor: doMaskAccessor,
+                    maskAccessor: maskAccessor))
+                {
+                    args.Add(arg);
+                }
             }
             if (itemAccessor.PropertyAccess == null)
             {
@@ -108,13 +142,25 @@ namespace Mutagen.Generation
             }
         }
 
+        protected virtual IEnumerable<string> AdditionCopyInParameters(
+            FileGeneration fg,
+            ObjectGeneration objGen,
+            TypeGeneration typeGen,
+            string nodeAccessor,
+            Accessor itemAccessor,
+            string doMaskAccessor,
+            string maskAccessor)
+        {
+            yield break;
+        }
+
         public override void GenerateCopyInRet(
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,
             string nodeAccessor,
             string retAccessor,
-            string doMaskAccessor, 
+            string doMaskAccessor,
             string maskAccessor)
         {
             if (typeGen.TryGetFieldData(out var data)
@@ -128,7 +174,30 @@ namespace Mutagen.Generation
                 args.Add(nodeAccessor);
                 args.Add($"doMasks: {doMaskAccessor}");
                 args.Add($"errorMask: out {maskAccessor}");
+                foreach (var arg in AdditionCopyInRetParameters(
+                    fg: fg,
+                    objGen: objGen,
+                    typeGen: typeGen,
+                    nodeAccessor: nodeAccessor,
+                    retAccessor: retAccessor,
+                    doMaskAccessor: doMaskAccessor,
+                    maskAccessor: maskAccessor))
+                {
+                    args.Add(arg);
+                }
             }
+        }
+
+        protected virtual IEnumerable<string> AdditionCopyInRetParameters(
+            FileGeneration fg,
+            ObjectGeneration objGen,
+            TypeGeneration typeGen,
+            string nodeAccessor,
+            string retAccessor,
+            string doMaskAccessor,
+            string maskAccessor)
+        {
+            yield break;
         }
     }
 }
