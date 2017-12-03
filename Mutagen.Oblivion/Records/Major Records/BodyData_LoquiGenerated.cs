@@ -1124,6 +1124,7 @@ namespace Mutagen.Oblivion.Internals
 
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
         public static readonly RecordType INDX_HEADER = new RecordType("INDX");
+        public static readonly RecordType TRIGGERING_RECORD_TYPE = MODL_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 2;
         #region Interface

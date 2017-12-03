@@ -346,7 +346,10 @@ namespace Mutagen.Generation
                         {
                             data.RecordType = recType;
                         }
-                        data.TriggeringRecordTypes.Add(trigRecTypes);
+                        if (trigRecTypes != null)
+                        {
+                            data.TriggeringRecordTypes.Add(trigRecTypes);
+                        }
                     }
                 }
                 else if (loqui.GenericDef != null)
@@ -415,6 +418,7 @@ namespace Mutagen.Generation
             {
                 if (data.MarkerType.HasValue)
                 {
+                    data.TriggeringRecordTypes.Clear();
                     data.TriggeringRecordAccessors.Add(obj.RecordTypeHeaderName(data.MarkerType.Value));
                     data.TriggeringRecordTypes.Add(data.MarkerType.Value);
                 }
@@ -434,6 +438,7 @@ namespace Mutagen.Generation
             if (data.RecordType.HasValue)
             {
                 data.TriggeringRecordSetAccessor = obj.RecordTypeHeaderName(data.RecordType.Value);
+                data.TriggeringRecordTypes.Add(data.RecordType.Value);
             }
             else if (data.TriggeringRecordTypes.Count == 1)
             {

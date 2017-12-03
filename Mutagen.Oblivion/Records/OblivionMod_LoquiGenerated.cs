@@ -1798,6 +1798,7 @@ namespace Mutagen.Oblivion.Internals
         public static readonly RecordType SKIL_HEADER = new RecordType("SKIL");
         public static readonly RecordType MGEF_HEADER = new RecordType("MGEF");
         public static readonly RecordType SCPT_HEADER = new RecordType("SCPT");
+        public static readonly RecordType TRIGGERING_RECORD_TYPE = TES4_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 12;
         #region Interface

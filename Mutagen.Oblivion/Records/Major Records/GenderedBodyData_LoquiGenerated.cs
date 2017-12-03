@@ -1113,6 +1113,7 @@ namespace Mutagen.Oblivion.Internals
 
         public static readonly RecordType MNAM_HEADER = new RecordType("MNAM");
         public static readonly RecordType FNAM_HEADER = new RecordType("FNAM");
+        public static readonly RecordType TRIGGERING_RECORD_TYPE = MNAM_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 2;
         #region Interface
