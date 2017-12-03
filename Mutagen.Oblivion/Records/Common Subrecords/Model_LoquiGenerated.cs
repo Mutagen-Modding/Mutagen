@@ -18,7 +18,8 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
-using Mutagen.Binary;
+using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda;
 
 namespace Mutagen.Oblivion
 {
@@ -768,7 +769,7 @@ namespace Mutagen.Oblivion
                 case "MODL":
                     if (!first) return false;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var tryGet = Mutagen.Binary.FilePathBinaryTranslation.Instance.Parse(
+                    var tryGet = Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)Model_FieldIndex.File,
                         errorMask: errorMask);
@@ -776,7 +777,7 @@ namespace Mutagen.Oblivion
                     break;
                 case "MODB":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._BoundRadius.SetIfSucceeded(Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
+                    item._BoundRadius.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)Model_FieldIndex.BoundRadius,
                         errorMask: errorMask));
@@ -1529,14 +1530,14 @@ namespace Mutagen.Oblivion.Internals
             MutagenWriter writer,
             Func<Model_ErrorMask> errorMask)
         {
-            Mutagen.Binary.FilePathBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.File_Property,
                 fieldIndex: (int)Model_FieldIndex.File,
                 errorMask: errorMask,
                 header: Model_Registration.MODL_HEADER,
                 nullable: false);
-            Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.BoundRadius_Property,
                 fieldIndex: (int)Model_FieldIndex.BoundRadius,

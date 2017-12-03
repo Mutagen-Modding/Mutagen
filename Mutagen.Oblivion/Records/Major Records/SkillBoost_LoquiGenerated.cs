@@ -18,7 +18,8 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
-using Mutagen.Binary;
+using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda;
 
 namespace Mutagen.Oblivion
 {
@@ -744,13 +745,13 @@ namespace Mutagen.Oblivion
             Func<SkillBoost_ErrorMask> errorMask)
         {
             if (frame.Complete) return;
-            var SkilltryGet = Mutagen.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
+            var SkilltryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(1)),
                 fieldIndex: (int)SkillBoost_FieldIndex.Skill,
                 errorMask: errorMask);
             item._Skill.SetIfSucceeded(SkilltryGet);
             if (frame.Complete) return;
-            item._Boost.SetIfSucceeded(Mutagen.Binary.Int8BinaryTranslation.Instance.Parse(
+            item._Boost.SetIfSucceeded(Mutagen.Bethesda.Binary.Int8BinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)SkillBoost_FieldIndex.Boost,
                 errorMask: errorMask));
@@ -1495,13 +1496,13 @@ namespace Mutagen.Oblivion.Internals
             MutagenWriter writer,
             Func<SkillBoost_ErrorMask> errorMask)
         {
-            Mutagen.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
                 writer,
                 item.Skill_Property,
                 length: new ContentLength(1),
                 fieldIndex: (int)SkillBoost_FieldIndex.Skill,
                 errorMask: errorMask);
-            Mutagen.Binary.Int8BinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.Int8BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Boost_Property,
                 fieldIndex: (int)SkillBoost_FieldIndex.Boost,

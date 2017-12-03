@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Mutagen.Binary;
+using Mutagen.Bethesda.Binary;
 using Mutagen.Oblivion.Internals;
 
 namespace Mutagen.Oblivion

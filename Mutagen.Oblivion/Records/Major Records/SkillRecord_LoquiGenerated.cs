@@ -18,7 +18,8 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
-using Mutagen.Binary;
+using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda;
 
 namespace Mutagen.Oblivion
 {
@@ -1141,7 +1142,7 @@ namespace Mutagen.Oblivion
             {
                 case "INDX":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var SkilltryGet = Mutagen.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
+                    var SkilltryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
                         frame.Spawn(contentLength),
                         fieldIndex: (int)SkillRecord_FieldIndex.Skill,
                         errorMask: errorMask);
@@ -1149,7 +1150,7 @@ namespace Mutagen.Oblivion
                     break;
                 case "DESC":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var DescriptiontryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
+                    var DescriptiontryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)SkillRecord_FieldIndex.Description,
                         errorMask: errorMask);
@@ -1157,7 +1158,7 @@ namespace Mutagen.Oblivion
                     break;
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var tryGet = Mutagen.Binary.FilePathBinaryTranslation.Instance.Parse(
+                    var tryGet = Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)SkillRecord_FieldIndex.Icon,
                         errorMask: errorMask);
@@ -1165,33 +1166,33 @@ namespace Mutagen.Oblivion
                     break;
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var ActiontryGet = Mutagen.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
+                    var ActiontryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
                         frame: frame.Spawn(new ContentLength(4)),
                         fieldIndex: (int)SkillRecord_FieldIndex.Action,
                         errorMask: errorMask);
                     item._Action.SetIfSucceeded(ActiontryGet);
-                    var AttributetryGet = Mutagen.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
+                    var AttributetryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
                         frame: frame.Spawn(new ContentLength(4)),
                         fieldIndex: (int)SkillRecord_FieldIndex.Attribute,
                         errorMask: errorMask);
                     item._Attribute.SetIfSucceeded(AttributetryGet);
-                    var SpecializationtryGet = Mutagen.Binary.EnumBinaryTranslation<Specialization>.Instance.Parse(
+                    var SpecializationtryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Specialization>.Instance.Parse(
                         frame: frame.Spawn(new ContentLength(4)),
                         fieldIndex: (int)SkillRecord_FieldIndex.Specialization,
                         errorMask: errorMask);
                     item._Specialization.SetIfSucceeded(SpecializationtryGet);
-                    item._UseValueFirst.SetIfSucceeded(Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
+                    item._UseValueFirst.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: frame,
                         fieldIndex: (int)SkillRecord_FieldIndex.UseValueFirst,
                         errorMask: errorMask));
-                    item._UseValueSecond.SetIfSucceeded(Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
+                    item._UseValueSecond.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: frame,
                         fieldIndex: (int)SkillRecord_FieldIndex.UseValueSecond,
                         errorMask: errorMask));
                     break;
                 case "ANAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var ApprenticeTexttryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
+                    var ApprenticeTexttryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)SkillRecord_FieldIndex.ApprenticeText,
                         errorMask: errorMask);
@@ -1199,7 +1200,7 @@ namespace Mutagen.Oblivion
                     break;
                 case "JNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var JourneymanTexttryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
+                    var JourneymanTexttryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)SkillRecord_FieldIndex.JourneymanText,
                         errorMask: errorMask);
@@ -1207,7 +1208,7 @@ namespace Mutagen.Oblivion
                     break;
                 case "ENAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var ExpertTexttryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
+                    var ExpertTexttryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)SkillRecord_FieldIndex.ExpertText,
                         errorMask: errorMask);
@@ -1215,7 +1216,7 @@ namespace Mutagen.Oblivion
                     break;
                 case "MNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var MasterTexttryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
+                    var MasterTexttryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)SkillRecord_FieldIndex.MasterText,
                         errorMask: errorMask);
@@ -2779,7 +2780,7 @@ namespace Mutagen.Oblivion.Internals
                 item: item,
                 writer: writer,
                 errorMask: errorMask);
-            Mutagen.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
                 writer,
                 item.Skill_Property,
                 length: new ContentLength(4),
@@ -2787,14 +2788,14 @@ namespace Mutagen.Oblivion.Internals
                 errorMask: errorMask,
                 header: SkillRecord_Registration.INDX_HEADER,
                 nullable: false);
-            Mutagen.Binary.StringBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Description_Property,
                 fieldIndex: (int)SkillRecord_FieldIndex.Description,
                 errorMask: errorMask,
                 header: SkillRecord_Registration.DESC_HEADER,
                 nullable: false);
-            Mutagen.Binary.FilePathBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Icon_Property,
                 fieldIndex: (int)SkillRecord_FieldIndex.Icon,
@@ -2803,57 +2804,57 @@ namespace Mutagen.Oblivion.Internals
                 nullable: false);
             using (HeaderExport.ExportSubRecordHeader(writer, SkillRecord_Registration.DATA_HEADER))
             {
-                Mutagen.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
                     writer,
                     item.Action_Property,
                     length: new ContentLength(4),
                     fieldIndex: (int)SkillRecord_FieldIndex.Action,
                     errorMask: errorMask);
-                Mutagen.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
                     writer,
                     item.Attribute_Property,
                     length: new ContentLength(4),
                     fieldIndex: (int)SkillRecord_FieldIndex.Attribute,
                     errorMask: errorMask);
-                Mutagen.Binary.EnumBinaryTranslation<Specialization>.Instance.Write(
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Specialization>.Instance.Write(
                     writer,
                     item.Specialization_Property,
                     length: new ContentLength(4),
                     fieldIndex: (int)SkillRecord_FieldIndex.Specialization,
                     errorMask: errorMask);
-                Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.UseValueFirst_Property,
                     fieldIndex: (int)SkillRecord_FieldIndex.UseValueFirst,
                     errorMask: errorMask);
-                Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.UseValueSecond_Property,
                     fieldIndex: (int)SkillRecord_FieldIndex.UseValueSecond,
                     errorMask: errorMask);
             }
-            Mutagen.Binary.StringBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.ApprenticeText_Property,
                 fieldIndex: (int)SkillRecord_FieldIndex.ApprenticeText,
                 errorMask: errorMask,
                 header: SkillRecord_Registration.ANAM_HEADER,
                 nullable: false);
-            Mutagen.Binary.StringBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.JourneymanText_Property,
                 fieldIndex: (int)SkillRecord_FieldIndex.JourneymanText,
                 errorMask: errorMask,
                 header: SkillRecord_Registration.JNAM_HEADER,
                 nullable: false);
-            Mutagen.Binary.StringBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.ExpertText_Property,
                 fieldIndex: (int)SkillRecord_FieldIndex.ExpertText,
                 errorMask: errorMask,
                 header: SkillRecord_Registration.ENAM_HEADER,
                 nullable: false);
-            Mutagen.Binary.StringBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.MasterText_Property,
                 fieldIndex: (int)SkillRecord_FieldIndex.MasterText,

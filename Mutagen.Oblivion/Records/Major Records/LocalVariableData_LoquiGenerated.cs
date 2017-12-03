@@ -18,7 +18,8 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
-using Mutagen.Binary;
+using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda;
 
 namespace Mutagen.Oblivion
 {
@@ -714,7 +715,7 @@ namespace Mutagen.Oblivion
             Func<LocalVariableData_ErrorMask> errorMask)
         {
             if (frame.Complete) return;
-            var DatatryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+            var DatatryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(24)),
                 fieldIndex: (int)LocalVariableData_FieldIndex.Data,
                 errorMask: errorMask);
@@ -1391,7 +1392,7 @@ namespace Mutagen.Oblivion.Internals
             MutagenWriter writer,
             Func<LocalVariableData_ErrorMask> errorMask)
         {
-            Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Data_Property,
                 fieldIndex: (int)LocalVariableData_FieldIndex.Data,

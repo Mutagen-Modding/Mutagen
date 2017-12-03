@@ -18,7 +18,8 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
-using Mutagen.Binary;
+using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda;
 
 namespace Mutagen.Oblivion
 {
@@ -871,20 +872,20 @@ namespace Mutagen.Oblivion
             {
                 case "SCIT":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Script.SetIfSucceeded(Mutagen.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    item._Script.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame,
                         fieldIndex: (int)ScriptEffect_FieldIndex.Script,
                         errorMask: errorMask));
-                    var MagicSchooltryGet = Mutagen.Binary.EnumBinaryTranslation<MagicSchool>.Instance.Parse(
+                    var MagicSchooltryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicSchool>.Instance.Parse(
                         frame: frame.Spawn(new ContentLength(4)),
                         fieldIndex: (int)ScriptEffect_FieldIndex.MagicSchool,
                         errorMask: errorMask);
                     item._MagicSchool.SetIfSucceeded(MagicSchooltryGet);
-                    item._VisualEffect.SetIfSucceeded(Mutagen.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    item._VisualEffect.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame,
                         fieldIndex: (int)ScriptEffect_FieldIndex.VisualEffect,
                         errorMask: errorMask));
-                    var FlagstryGet = Mutagen.Binary.EnumBinaryTranslation<ScriptEffect.Flag>.Instance.Parse(
+                    var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<ScriptEffect.Flag>.Instance.Parse(
                         frame: frame.Spawn(new ContentLength(4)),
                         fieldIndex: (int)ScriptEffect_FieldIndex.Flags,
                         errorMask: errorMask);
@@ -893,7 +894,7 @@ namespace Mutagen.Oblivion
                 case "FULL":
                     if (!first) return false;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var NametryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
+                    var NametryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)ScriptEffect_FieldIndex.Name,
                         errorMask: errorMask);
@@ -1891,30 +1892,30 @@ namespace Mutagen.Oblivion.Internals
         {
             using (HeaderExport.ExportSubRecordHeader(writer, ScriptEffect_Registration.SCIT_HEADER))
             {
-                Mutagen.Binary.FormIDBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Script_Property,
                     fieldIndex: (int)ScriptEffect_FieldIndex.Script,
                     errorMask: errorMask);
-                Mutagen.Binary.EnumBinaryTranslation<MagicSchool>.Instance.Write(
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicSchool>.Instance.Write(
                     writer,
                     item.MagicSchool_Property,
                     length: new ContentLength(4),
                     fieldIndex: (int)ScriptEffect_FieldIndex.MagicSchool,
                     errorMask: errorMask);
-                Mutagen.Binary.FormIDBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.VisualEffect_Property,
                     fieldIndex: (int)ScriptEffect_FieldIndex.VisualEffect,
                     errorMask: errorMask);
-                Mutagen.Binary.EnumBinaryTranslation<ScriptEffect.Flag>.Instance.Write(
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<ScriptEffect.Flag>.Instance.Write(
                     writer,
                     item.Flags_Property,
                     length: new ContentLength(4),
                     fieldIndex: (int)ScriptEffect_FieldIndex.Flags,
                     errorMask: errorMask);
             }
-            Mutagen.Binary.StringBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Name_Property,
                 fieldIndex: (int)ScriptEffect_FieldIndex.Name,

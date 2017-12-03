@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mutagen.Internals
+namespace Mutagen.Bethesda.Internals
 {
     public class Utility
     {

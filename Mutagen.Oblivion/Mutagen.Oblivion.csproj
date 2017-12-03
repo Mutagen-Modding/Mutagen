@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="us-ascii"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -358,9 +358,9 @@
       <Project>{91f19c1e-adf8-4b84-9452-04c2cd8f46d4}</Project>
       <Name>Loqui</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Mutagen\Mutagen.csproj">
-      <Project>{6e69a8c5-20c7-4564-9870-4cbed49b99bb}</Project>
-      <Name>Mutagen</Name>
+    <ProjectReference Include="..\Mutagen.Bethesda\Mutagen.Bethesda.csproj">
+      <Project>{fe4b569a-c9e5-4a2b-b990-8c5161235c21}</Project>
+      <Name>Mutagen.Bethesda</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -19,7 +19,8 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
-using Mutagen.Binary;
+using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda;
 
 namespace Mutagen.Oblivion
 {
@@ -801,7 +802,7 @@ namespace Mutagen.Oblivion
                 case "INDX":
                     if (!first) return false;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var IndextryGet = Mutagen.Binary.EnumBinaryTranslation<Race.FaceIndex>.Instance.Parse(
+                    var IndextryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Race.FaceIndex>.Instance.Parse(
                         frame.Spawn(contentLength),
                         fieldIndex: (int)FacePart_FieldIndex.Index,
                         errorMask: errorMask);
@@ -815,7 +816,7 @@ namespace Mutagen.Oblivion
                     break;
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var tryGet = Mutagen.Binary.FilePathBinaryTranslation.Instance.Parse(
+                    var tryGet = Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)FacePart_FieldIndex.Icon,
                         errorMask: errorMask);
@@ -1686,7 +1687,7 @@ namespace Mutagen.Oblivion.Internals
             MutagenWriter writer,
             Func<FacePart_ErrorMask> errorMask)
         {
-            Mutagen.Binary.EnumBinaryTranslation<Race.FaceIndex>.Instance.Write(
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Race.FaceIndex>.Instance.Write(
                 writer,
                 item.Index_Property,
                 length: new ContentLength(4),
@@ -1699,7 +1700,7 @@ namespace Mutagen.Oblivion.Internals
                 item: item.Model_Property,
                 fieldIndex: (int)FacePart_FieldIndex.Model,
                 errorMask: errorMask);
-            Mutagen.Binary.FilePathBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Icon_Property,
                 fieldIndex: (int)FacePart_FieldIndex.Icon,

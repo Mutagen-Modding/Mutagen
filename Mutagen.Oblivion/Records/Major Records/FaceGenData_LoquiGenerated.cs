@@ -18,7 +18,8 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
-using Mutagen.Binary;
+using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda;
 
 namespace Mutagen.Oblivion
 {
@@ -802,7 +803,7 @@ namespace Mutagen.Oblivion
                 case "FGGS":
                     if (!first) return false;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var SymmetricGeometrytryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                    var SymmetricGeometrytryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                         frame.Spawn(contentLength),
                         fieldIndex: (int)FaceGenData_FieldIndex.SymmetricGeometry,
                         errorMask: errorMask);
@@ -810,7 +811,7 @@ namespace Mutagen.Oblivion
                     break;
                 case "FGGA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var AsymmetricGeometrytryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                    var AsymmetricGeometrytryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                         frame.Spawn(contentLength),
                         fieldIndex: (int)FaceGenData_FieldIndex.AsymmetricGeometry,
                         errorMask: errorMask);
@@ -818,7 +819,7 @@ namespace Mutagen.Oblivion
                     break;
                 case "FGTS":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var SymmetricTexturetryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                    var SymmetricTexturetryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                         frame.Spawn(contentLength),
                         fieldIndex: (int)FaceGenData_FieldIndex.SymmetricTexture,
                         errorMask: errorMask);
@@ -1650,21 +1651,21 @@ namespace Mutagen.Oblivion.Internals
             MutagenWriter writer,
             Func<FaceGenData_ErrorMask> errorMask)
         {
-            Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.SymmetricGeometry_Property,
                 fieldIndex: (int)FaceGenData_FieldIndex.SymmetricGeometry,
                 errorMask: errorMask,
                 header: FaceGenData_Registration.FGGS_HEADER,
                 nullable: false);
-            Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.AsymmetricGeometry_Property,
                 fieldIndex: (int)FaceGenData_FieldIndex.AsymmetricGeometry,
                 errorMask: errorMask,
                 header: FaceGenData_Registration.FGGA_HEADER,
                 nullable: false);
-            Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.SymmetricTexture_Property,
                 fieldIndex: (int)FaceGenData_FieldIndex.SymmetricTexture,

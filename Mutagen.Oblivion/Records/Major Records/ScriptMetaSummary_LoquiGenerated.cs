@@ -18,7 +18,8 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
-using Mutagen.Binary;
+using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda;
 
 namespace Mutagen.Oblivion
 {
@@ -899,13 +900,13 @@ namespace Mutagen.Oblivion
             Func<ScriptMetaSummary_ErrorMask> errorMask)
         {
             if (frame.Complete) return;
-            var FlufftryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+            var FlufftryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(4)),
                 fieldIndex: (int)ScriptMetaSummary_FieldIndex.Fluff,
                 errorMask: errorMask);
             item._Fluff.SetIfSucceeded(FlufftryGet);
             if (frame.Complete) return;
-            item._RefCount.SetIfSucceeded(Mutagen.Binary.UInt32BinaryTranslation.Instance.Parse(
+            item._RefCount.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)ScriptMetaSummary_FieldIndex.RefCount,
                 errorMask: errorMask));
@@ -922,7 +923,7 @@ namespace Mutagen.Oblivion
                 fieldIndex: (int)ScriptMetaSummary_FieldIndex.VariableCount,
                 errorMask: errorMask);
             if (frame.Complete) return;
-            var TypetryGet = Mutagen.Binary.EnumBinaryTranslation<Script.ScriptType>.Instance.Parse(
+            var TypetryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Script.ScriptType>.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(4)),
                 fieldIndex: (int)ScriptMetaSummary_FieldIndex.Type,
                 errorMask: errorMask);
@@ -1820,12 +1821,12 @@ namespace Mutagen.Oblivion.Internals
             MutagenWriter writer,
             Func<ScriptMetaSummary_ErrorMask> errorMask)
         {
-            Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Fluff_Property,
                 fieldIndex: (int)ScriptMetaSummary_FieldIndex.Fluff,
                 errorMask: errorMask);
-            Mutagen.Binary.UInt32BinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.RefCount_Property,
                 fieldIndex: (int)ScriptMetaSummary_FieldIndex.RefCount,
@@ -1840,7 +1841,7 @@ namespace Mutagen.Oblivion.Internals
                 item: item,
                 fieldIndex: (int)ScriptMetaSummary_FieldIndex.VariableCount,
                 errorMask: errorMask);
-            Mutagen.Binary.EnumBinaryTranslation<Script.ScriptType>.Instance.Write(
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Script.ScriptType>.Instance.Write(
                 writer,
                 item.Type_Property,
                 length: new ContentLength(4),

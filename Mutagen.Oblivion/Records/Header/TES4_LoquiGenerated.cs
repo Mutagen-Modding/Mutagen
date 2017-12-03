@@ -19,7 +19,8 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
-using Mutagen.Binary;
+using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda;
 
 namespace Mutagen.Oblivion
 {
@@ -939,7 +940,7 @@ namespace Mutagen.Oblivion
             Func<TES4_ErrorMask> errorMask)
         {
             if (frame.Complete) return;
-            var FlufftryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+            var FlufftryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(12)),
                 fieldIndex: (int)TES4_FieldIndex.Fluff,
                 errorMask: errorMask);
@@ -964,7 +965,7 @@ namespace Mutagen.Oblivion
                     break;
                 case "OFST":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var TypeOffsetstryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                    var TypeOffsetstryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                         frame.Spawn(contentLength),
                         fieldIndex: (int)TES4_FieldIndex.TypeOffsets,
                         errorMask: errorMask);
@@ -972,7 +973,7 @@ namespace Mutagen.Oblivion
                     break;
                 case "DELE":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var DeletedtryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                    var DeletedtryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                         frame.Spawn(contentLength),
                         fieldIndex: (int)TES4_FieldIndex.Deleted,
                         errorMask: errorMask);
@@ -980,7 +981,7 @@ namespace Mutagen.Oblivion
                     break;
                 case "CNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var AuthortryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
+                    var AuthortryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)TES4_FieldIndex.Author,
                         errorMask: errorMask);
@@ -988,14 +989,14 @@ namespace Mutagen.Oblivion
                     break;
                 case "SNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var DescriptiontryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
+                    var DescriptiontryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)TES4_FieldIndex.Description,
                         errorMask: errorMask);
                     item._Description.SetIfSucceeded(DescriptiontryGet);
                     break;
                 case "MAST":
-                    var MasterReferencestryGet = Mutagen.Binary.ListBinaryTranslation<MasterReference, MaskItem<Exception, MasterReference_ErrorMask>>.Instance.ParseRepeatedItem(
+                    var MasterReferencestryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<MasterReference, MaskItem<Exception, MasterReference_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: TES4_Registration.MAST_HEADER,
                         fieldIndex: (int)TES4_FieldIndex.MasterReferences,
@@ -2259,7 +2260,7 @@ namespace Mutagen.Oblivion.Internals
             MutagenWriter writer,
             Func<TES4_ErrorMask> errorMask)
         {
-            Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Fluff_Property,
                 fieldIndex: (int)TES4_FieldIndex.Fluff,
@@ -2276,35 +2277,35 @@ namespace Mutagen.Oblivion.Internals
                 item: item.Header_Property,
                 fieldIndex: (int)TES4_FieldIndex.Header,
                 errorMask: errorMask);
-            Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.TypeOffsets_Property,
                 fieldIndex: (int)TES4_FieldIndex.TypeOffsets,
                 errorMask: errorMask,
                 header: TES4_Registration.OFST_HEADER,
                 nullable: true);
-            Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Deleted_Property,
                 fieldIndex: (int)TES4_FieldIndex.Deleted,
                 errorMask: errorMask,
                 header: TES4_Registration.DELE_HEADER,
                 nullable: true);
-            Mutagen.Binary.StringBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Author_Property,
                 fieldIndex: (int)TES4_FieldIndex.Author,
                 errorMask: errorMask,
                 header: TES4_Registration.CNAM_HEADER,
                 nullable: true);
-            Mutagen.Binary.StringBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Description_Property,
                 fieldIndex: (int)TES4_FieldIndex.Description,
                 errorMask: errorMask,
                 header: TES4_Registration.SNAM_HEADER,
                 nullable: true);
-            Mutagen.Binary.ListBinaryTranslation<MasterReference, MaskItem<Exception, MasterReference_ErrorMask>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<MasterReference, MaskItem<Exception, MasterReference_ErrorMask>>.Instance.Write(
                 writer: writer,
                 item: item.MasterReferences,
                 fieldIndex: (int)TES4_FieldIndex.MasterReferences,

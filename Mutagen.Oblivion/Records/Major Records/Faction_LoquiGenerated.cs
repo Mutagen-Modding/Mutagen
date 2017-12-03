@@ -18,7 +18,8 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
-using Mutagen.Binary;
+using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda;
 
 namespace Mutagen.Oblivion
 {
@@ -901,7 +902,7 @@ namespace Mutagen.Oblivion
             switch (nextRecordType.Type)
             {
                 case "XNAM":
-                    var RelationstryGet = Mutagen.Binary.ListBinaryTranslation<Relation, MaskItem<Exception, Relation_ErrorMask>>.Instance.ParseRepeatedItem(
+                    var RelationstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<Relation, MaskItem<Exception, Relation_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: Faction_Registration.XNAM_HEADER,
                         fieldIndex: (int)Faction_FieldIndex.Relations,
@@ -919,7 +920,7 @@ namespace Mutagen.Oblivion
                     break;
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var FlagstryGet = Mutagen.Binary.EnumBinaryTranslation<Faction.FactionFlag>.Instance.Parse(
+                    var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Faction.FactionFlag>.Instance.Parse(
                         frame.Spawn(contentLength),
                         fieldIndex: (int)Faction_FieldIndex.Flags,
                         errorMask: errorMask);
@@ -927,13 +928,13 @@ namespace Mutagen.Oblivion
                     break;
                 case "CNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._CrimeGoldMultiplier.SetIfSucceeded(Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
+                    item._CrimeGoldMultiplier.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)Faction_FieldIndex.CrimeGoldMultiplier,
                         errorMask: errorMask));
                     break;
                 case "RNAM":
-                    var RankstryGet = Mutagen.Binary.ListBinaryTranslation<Rank, MaskItem<Exception, Rank_ErrorMask>>.Instance.ParseRepeatedItem(
+                    var RankstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<Rank, MaskItem<Exception, Rank_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: Faction_Registration.RNAM_HEADER,
                         fieldIndex: (int)Faction_FieldIndex.Ranks,
@@ -1994,7 +1995,7 @@ namespace Mutagen.Oblivion.Internals
                 item: item,
                 writer: writer,
                 errorMask: errorMask);
-            Mutagen.Binary.ListBinaryTranslation<Relation, MaskItem<Exception, Relation_ErrorMask>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<Relation, MaskItem<Exception, Relation_ErrorMask>>.Instance.Write(
                 writer: writer,
                 item: item.Relations,
                 fieldIndex: (int)Faction_FieldIndex.Relations,
@@ -2008,7 +2009,7 @@ namespace Mutagen.Oblivion.Internals
                         errorMask: out listSubMask);
                 }
                 );
-            Mutagen.Binary.EnumBinaryTranslation<Faction.FactionFlag>.Instance.Write(
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Faction.FactionFlag>.Instance.Write(
                 writer,
                 item.Flags_Property,
                 length: new ContentLength(1),
@@ -2016,14 +2017,14 @@ namespace Mutagen.Oblivion.Internals
                 errorMask: errorMask,
                 header: Faction_Registration.DATA_HEADER,
                 nullable: false);
-            Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.CrimeGoldMultiplier_Property,
                 fieldIndex: (int)Faction_FieldIndex.CrimeGoldMultiplier,
                 errorMask: errorMask,
                 header: Faction_Registration.CNAM_HEADER,
                 nullable: false);
-            Mutagen.Binary.ListBinaryTranslation<Rank, MaskItem<Exception, Rank_ErrorMask>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<Rank, MaskItem<Exception, Rank_ErrorMask>>.Instance.Write(
                 writer: writer,
                 item: item.Ranks,
                 fieldIndex: (int)Faction_FieldIndex.Ranks,

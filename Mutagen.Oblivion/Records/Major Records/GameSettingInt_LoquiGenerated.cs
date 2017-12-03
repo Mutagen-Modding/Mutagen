@@ -18,7 +18,8 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
-using Mutagen.Binary;
+using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda;
 
 namespace Mutagen.Oblivion
 {
@@ -787,7 +788,7 @@ namespace Mutagen.Oblivion
             {
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Data.SetIfSucceeded(Mutagen.Binary.Int32BinaryTranslation.Instance.Parse(
+                    item._Data.SetIfSucceeded(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)GameSettingInt_FieldIndex.Data,
                         errorMask: errorMask));
@@ -1485,7 +1486,7 @@ namespace Mutagen.Oblivion.Internals
                 item: item,
                 writer: writer,
                 errorMask: errorMask);
-            Mutagen.Binary.Int32BinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Data_Property,
                 fieldIndex: (int)GameSettingInt_FieldIndex.Data,

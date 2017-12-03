@@ -1,4 +1,4 @@
-﻿using Mutagen.Binary;
+﻿using Mutagen.Bethesda.Binary;
 using Mutagen.Oblivion.Internals;
 using Noggog.Notifying;
 using System;
