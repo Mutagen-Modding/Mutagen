@@ -14,14 +14,13 @@ namespace Mutagen.Bethesda.Generation
         static void Main(string[] args)
         {
             LoquiGenerator gen = new LoquiGenerator(
-                new DirectoryInfo("../../../Mutagen.Oblivion"))
+                new DirectoryInfo("../../../Mutagen.Bethesda.Oblivion"))
             {
-                DefaultNamespace = "Mutagen.Oblivion",
+                DefaultNamespace = "Mutagen.Bethesda.Oblivion",
                 RaisePropertyChangedDefault = false,
                 ProtocolDefault = new ProtocolKey("Oblivion"),
                 NotifyingDefault = NotifyingOption.Notifying
             };
-            gen.Namespaces.Add("Mutagen.Bethesda");
             gen.XmlTranslation.ShouldGenerateXSD = false;
             gen.XmlTranslation.AddTypeAssociation<FormIDType>(new PrimitiveXmlTranslationGeneration<FormID>());
             gen.GenerationModules.Add(new MutagenModule());
@@ -34,7 +33,7 @@ namespace Mutagen.Bethesda.Generation
 
             // Add Projects
             gen.AddProjectToModify(
-                new FileInfo(Path.Combine(gen.CommonGenerationFolder.FullName, "Mutagen.Oblivion.csproj")));
+                new FileInfo(Path.Combine(gen.CommonGenerationFolder.FullName, "Mutagen.Bethesda.Oblivion.csproj")));
 
             gen.AddProtocol(
                 new ProtocolGeneration(

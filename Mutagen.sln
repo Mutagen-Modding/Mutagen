@@ -7,8 +7,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencie
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpExt", "..\CSharpExt\CSharpExt\CSharpExt.csproj", "{C56B9607-41CF-4F59-9EEF-F79D57309EDA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Generation", "Mutagen.Bethesda.Generation\Mutagen.Bethesda.Generation.csproj", "{3EBDABC9-FFE9-41DF-91E2-102E57C6F992}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Loqui", "..\Loqui\Loqui\Loqui.csproj", "{91F19C1E-ADF8-4B84-9452-04C2CD8F46D4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Loqui.Generation", "..\Loqui\Loqui.Generation\Loqui.Generation.csproj", "{5ED43AC5-E456-4894-A253-60B3B3D35D87}"
@@ -19,9 +17,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpExt.Tests", "..\CShar
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Tester", "Mutagen.Bethesda.Tester\Mutagen.Bethesda.Tester.csproj", "{7E9B22E1-1C07-4277-93AB-C986E9BAEF66}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Oblivion", "Mutagen.Oblivion\Mutagen.Oblivion.csproj", "{C9FC687D-7DA3-4BFC-B49A-D66C0F1C1774}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Oblivion", "Mutagen.Bethesda.Oblivion\Mutagen.Bethesda.Oblivion.csproj", "{C9FC687D-7DA3-4BFC-B49A-D66C0F1C1774}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda", "Mutagen.Bethesda\Mutagen.Bethesda.csproj", "{FE4B569A-C9E5-4A2B-B990-8C5161235C21}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Generation", "Mutagen.Bethesda.Generation\Mutagen.Bethesda.Generation.csproj", "{3EBDABC9-FFE9-41DF-91E2-102E57C6F992}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,10 +33,6 @@ Global
 		{C56B9607-41CF-4F59-9EEF-F79D57309EDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C56B9607-41CF-4F59-9EEF-F79D57309EDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C56B9607-41CF-4F59-9EEF-F79D57309EDA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3EBDABC9-FFE9-41DF-91E2-102E57C6F992}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3EBDABC9-FFE9-41DF-91E2-102E57C6F992}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3EBDABC9-FFE9-41DF-91E2-102E57C6F992}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3EBDABC9-FFE9-41DF-91E2-102E57C6F992}.Release|Any CPU.Build.0 = Release|Any CPU
 		{91F19C1E-ADF8-4B84-9452-04C2CD8F46D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{91F19C1E-ADF8-4B84-9452-04C2CD8F46D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{91F19C1E-ADF8-4B84-9452-04C2CD8F46D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -65,6 +61,10 @@ Global
 		{FE4B569A-C9E5-4A2B-B990-8C5161235C21}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FE4B569A-C9E5-4A2B-B990-8C5161235C21}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FE4B569A-C9E5-4A2B-B990-8C5161235C21}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3EBDABC9-FFE9-41DF-91E2-102E57C6F992}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3EBDABC9-FFE9-41DF-91E2-102E57C6F992}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3EBDABC9-FFE9-41DF-91E2-102E57C6F992}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3EBDABC9-FFE9-41DF-91E2-102E57C6F992}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

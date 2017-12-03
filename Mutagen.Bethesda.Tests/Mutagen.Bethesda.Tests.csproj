@@ -81,9 +81,9 @@
       <Project>{FE4B569A-C9E5-4A2B-B990-8C5161235C21}</Project>
       <Name>Mutagen.Bethesda</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Mutagen.Oblivion\Mutagen.Oblivion.csproj">
+    <ProjectReference Include="..\Mutagen.Bethesda.Oblivion\Mutagen.Bethesda.Oblivion.csproj">
       <Project>{c9fc687d-7da3-4bfc-b49a-d66c0f1c1774}</Project>
-      <Name>Mutagen.Oblivion</Name>
+      <Name>Mutagen.Bethesda.Oblivion</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
