@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>16bbe34cc726eb6bbf30f0a7de18a7e79b9854e3</Sha>
+         <Sha>eab7e024204c10c6da24d442ef41c76b985ad819</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>12-02-2017 02:07:42</CommitDate>
-         <Description>CommaWrapper and some async whenalls</Description>
+         <CommitDate>12-03-2017 02:57:46</CommitDate>
+         <Description>Generation setup refactoring to allow LoquiGenerator to have less responsibility</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>
