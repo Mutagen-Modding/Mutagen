@@ -18,7 +18,8 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
-using Mutagen.Binary;
+using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda;
 
 namespace Mutagen.Oblivion
 {
@@ -780,17 +781,17 @@ namespace Mutagen.Oblivion
             Func<Header_ErrorMask> errorMask)
         {
             if (frame.Complete) return;
-            item._Version.SetIfSucceeded(Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
+            item._Version.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)Header_FieldIndex.Version,
                 errorMask: errorMask));
             if (frame.Complete) return;
-            item._NumRecords.SetIfSucceeded(Mutagen.Binary.Int32BinaryTranslation.Instance.Parse(
+            item._NumRecords.SetIfSucceeded(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)Header_FieldIndex.NumRecords,
                 errorMask: errorMask));
             if (frame.Complete) return;
-            item._NextObjectID.SetIfSucceeded(Mutagen.Binary.UInt32BinaryTranslation.Instance.Parse(
+            item._NextObjectID.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)Header_FieldIndex.NextObjectID,
                 errorMask: errorMask));
@@ -1620,17 +1621,17 @@ namespace Mutagen.Oblivion.Internals
             MutagenWriter writer,
             Func<Header_ErrorMask> errorMask)
         {
-            Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Version_Property,
                 fieldIndex: (int)Header_FieldIndex.Version,
                 errorMask: errorMask);
-            Mutagen.Binary.Int32BinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.NumRecords_Property,
                 fieldIndex: (int)Header_FieldIndex.NumRecords,
                 errorMask: errorMask);
-            Mutagen.Binary.UInt32BinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.NextObjectID_Property,
                 fieldIndex: (int)Header_FieldIndex.NextObjectID,

@@ -18,7 +18,8 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
-using Mutagen.Binary;
+using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda;
 
 namespace Mutagen.Oblivion
 {
@@ -781,18 +782,18 @@ namespace Mutagen.Oblivion
             Func<HavokData_ErrorMask> errorMask)
         {
             if (frame.Complete) return;
-            var MaterialtryGet = Mutagen.Binary.EnumBinaryTranslation<HavokData.MaterialType>.Instance.Parse(
+            var MaterialtryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<HavokData.MaterialType>.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(1)),
                 fieldIndex: (int)HavokData_FieldIndex.Material,
                 errorMask: errorMask);
             item._Material.SetIfSucceeded(MaterialtryGet);
             if (frame.Complete) return;
-            item._Friction.SetIfSucceeded(Mutagen.Binary.ByteBinaryTranslation.Instance.Parse(
+            item._Friction.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)HavokData_FieldIndex.Friction,
                 errorMask: errorMask));
             if (frame.Complete) return;
-            item._Restitution.SetIfSucceeded(Mutagen.Binary.ByteBinaryTranslation.Instance.Parse(
+            item._Restitution.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)HavokData_FieldIndex.Restitution,
                 errorMask: errorMask));
@@ -1622,18 +1623,18 @@ namespace Mutagen.Oblivion.Internals
             MutagenWriter writer,
             Func<HavokData_ErrorMask> errorMask)
         {
-            Mutagen.Binary.EnumBinaryTranslation<HavokData.MaterialType>.Instance.Write(
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<HavokData.MaterialType>.Instance.Write(
                 writer,
                 item.Material_Property,
                 length: new ContentLength(1),
                 fieldIndex: (int)HavokData_FieldIndex.Material,
                 errorMask: errorMask);
-            Mutagen.Binary.ByteBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Friction_Property,
                 fieldIndex: (int)HavokData_FieldIndex.Friction,
                 errorMask: errorMask);
-            Mutagen.Binary.ByteBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Restitution_Property,
                 fieldIndex: (int)HavokData_FieldIndex.Restitution,

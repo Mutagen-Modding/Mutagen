@@ -19,7 +19,8 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
-using Mutagen.Binary;
+using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda;
 
 namespace Mutagen.Oblivion
 {
@@ -925,7 +926,7 @@ namespace Mutagen.Oblivion
             {
                 case "DESC":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var DescriptiontryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
+                    var DescriptiontryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)MagicEffect_FieldIndex.Description,
                         errorMask: errorMask);
@@ -933,7 +934,7 @@ namespace Mutagen.Oblivion
                     break;
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var tryGet = Mutagen.Binary.FilePathBinaryTranslation.Instance.Parse(
+                    var tryGet = Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)MagicEffect_FieldIndex.Icon,
                         errorMask: errorMask);
@@ -953,14 +954,14 @@ namespace Mutagen.Oblivion
                     break;
                 case "ESCE":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var CounterEffectstryGet = Mutagen.Binary.ListBinaryTranslation<FormID, Exception>.Instance.ParseRepeatedItem(
+                    var CounterEffectstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<FormID, Exception>.Instance.ParseRepeatedItem(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)MagicEffect_FieldIndex.CounterEffects,
                         objType: ObjectType.Subrecord,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
                         {
-                            return Mutagen.Binary.FormIDBinaryTranslation.Instance.Parse(
+                            return Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                                 r,
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask);
@@ -2085,14 +2086,14 @@ namespace Mutagen.Oblivion.Internals
                 item: item,
                 writer: writer,
                 errorMask: errorMask);
-            Mutagen.Binary.StringBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Description_Property,
                 fieldIndex: (int)MagicEffect_FieldIndex.Description,
                 errorMask: errorMask,
                 header: MagicEffect_Registration.DESC_HEADER,
                 nullable: false);
-            Mutagen.Binary.FilePathBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Icon_Property,
                 fieldIndex: (int)MagicEffect_FieldIndex.Icon,
@@ -2109,7 +2110,7 @@ namespace Mutagen.Oblivion.Internals
                 item: item.Data_Property,
                 fieldIndex: (int)MagicEffect_FieldIndex.Data,
                 errorMask: errorMask);
-            Mutagen.Binary.ListBinaryTranslation<FormID, Exception>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormID, Exception>.Instance.Write(
                 writer: writer,
                 item: item.CounterEffects,
                 fieldIndex: (int)MagicEffect_FieldIndex.CounterEffects,
@@ -2117,7 +2118,7 @@ namespace Mutagen.Oblivion.Internals
                 errorMask: errorMask,
                 transl: (FormID subItem, bool listDoMasks, out Exception listSubMask) =>
                 {
-                    Mutagen.Binary.FormIDBinaryTranslation.Instance.Write(
+                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: subItem,
                         doMasks: listDoMasks,

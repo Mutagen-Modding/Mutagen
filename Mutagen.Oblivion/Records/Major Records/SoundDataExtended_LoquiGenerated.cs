@@ -18,7 +18,8 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
-using Mutagen.Binary;
+using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda;
 
 namespace Mutagen.Oblivion
 {
@@ -822,17 +823,17 @@ namespace Mutagen.Oblivion
                 frame: frame,
                 errorMask: errorMask);
             if (frame.Complete) return;
-            item._StaticAttenuation.SetIfSucceeded(Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
+            item._StaticAttenuation.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)SoundDataExtended_FieldIndex.StaticAttenuation,
                 errorMask: errorMask));
             if (frame.Complete) return;
-            item._StopTime.SetIfSucceeded(Mutagen.Binary.ByteBinaryTranslation.Instance.Parse(
+            item._StopTime.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)SoundDataExtended_FieldIndex.StopTime,
                 errorMask: errorMask));
             if (frame.Complete) return;
-            item._StartTime.SetIfSucceeded(Mutagen.Binary.ByteBinaryTranslation.Instance.Parse(
+            item._StartTime.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)SoundDataExtended_FieldIndex.StartTime,
                 errorMask: errorMask));
@@ -1670,17 +1671,17 @@ namespace Mutagen.Oblivion.Internals
                 item: item,
                 writer: writer,
                 errorMask: errorMask);
-            Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.StaticAttenuation_Property,
                 fieldIndex: (int)SoundDataExtended_FieldIndex.StaticAttenuation,
                 errorMask: errorMask);
-            Mutagen.Binary.ByteBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.StopTime_Property,
                 fieldIndex: (int)SoundDataExtended_FieldIndex.StopTime,
                 errorMask: errorMask);
-            Mutagen.Binary.ByteBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.StartTime_Property,
                 fieldIndex: (int)SoundDataExtended_FieldIndex.StartTime,

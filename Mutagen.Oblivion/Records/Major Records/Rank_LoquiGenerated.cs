@@ -18,7 +18,8 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
-using Mutagen.Binary;
+using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda;
 
 namespace Mutagen.Oblivion
 {
@@ -836,14 +837,14 @@ namespace Mutagen.Oblivion
                 case "RNAM":
                     if (!first) return false;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._RankNumber.SetIfSucceeded(Mutagen.Binary.Int32BinaryTranslation.Instance.Parse(
+                    item._RankNumber.SetIfSucceeded(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)Rank_FieldIndex.RankNumber,
                         errorMask: errorMask));
                     break;
                 case "MNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var MaleNametryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
+                    var MaleNametryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)Rank_FieldIndex.MaleName,
                         errorMask: errorMask);
@@ -851,7 +852,7 @@ namespace Mutagen.Oblivion
                     break;
                 case "FNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var FemaleNametryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
+                    var FemaleNametryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)Rank_FieldIndex.FemaleName,
                         errorMask: errorMask);
@@ -859,7 +860,7 @@ namespace Mutagen.Oblivion
                     break;
                 case "INAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var tryGet = Mutagen.Binary.FilePathBinaryTranslation.Instance.Parse(
+                    var tryGet = Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)Rank_FieldIndex.Insignia,
                         errorMask: errorMask);
@@ -1769,28 +1770,28 @@ namespace Mutagen.Oblivion.Internals
             MutagenWriter writer,
             Func<Rank_ErrorMask> errorMask)
         {
-            Mutagen.Binary.Int32BinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.RankNumber_Property,
                 fieldIndex: (int)Rank_FieldIndex.RankNumber,
                 errorMask: errorMask,
                 header: Rank_Registration.RNAM_HEADER,
                 nullable: false);
-            Mutagen.Binary.StringBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.MaleName_Property,
                 fieldIndex: (int)Rank_FieldIndex.MaleName,
                 errorMask: errorMask,
                 header: Rank_Registration.MNAM_HEADER,
                 nullable: false);
-            Mutagen.Binary.StringBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FemaleName_Property,
                 fieldIndex: (int)Rank_FieldIndex.FemaleName,
                 errorMask: errorMask,
                 header: Rank_Registration.FNAM_HEADER,
                 nullable: false);
-            Mutagen.Binary.FilePathBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Insignia_Property,
                 fieldIndex: (int)Rank_FieldIndex.Insignia,

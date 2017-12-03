@@ -18,7 +18,8 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
-using Mutagen.Binary;
+using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda;
 
 namespace Mutagen.Oblivion
 {
@@ -781,18 +782,18 @@ namespace Mutagen.Oblivion
             Func<ClassTraining_ErrorMask> errorMask)
         {
             if (frame.Complete) return;
-            var TrainedSkilltryGet = Mutagen.Binary.EnumBinaryTranslation<Skill>.Instance.Parse(
+            var TrainedSkilltryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(1)),
                 fieldIndex: (int)ClassTraining_FieldIndex.TrainedSkill,
                 errorMask: errorMask);
             item._TrainedSkill.SetIfSucceeded(TrainedSkilltryGet);
             if (frame.Complete) return;
-            item._MaximumTrainingLevel.SetIfSucceeded(Mutagen.Binary.ByteBinaryTranslation.Instance.Parse(
+            item._MaximumTrainingLevel.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)ClassTraining_FieldIndex.MaximumTrainingLevel,
                 errorMask: errorMask));
             if (frame.Complete) return;
-            var FlufftryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+            var FlufftryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(2)),
                 fieldIndex: (int)ClassTraining_FieldIndex.Fluff,
                 errorMask: errorMask);
@@ -1615,18 +1616,18 @@ namespace Mutagen.Oblivion.Internals
             MutagenWriter writer,
             Func<ClassTraining_ErrorMask> errorMask)
         {
-            Mutagen.Binary.EnumBinaryTranslation<Skill>.Instance.Write(
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Write(
                 writer,
                 item.TrainedSkill_Property,
                 length: new ContentLength(1),
                 fieldIndex: (int)ClassTraining_FieldIndex.TrainedSkill,
                 errorMask: errorMask);
-            Mutagen.Binary.ByteBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.MaximumTrainingLevel_Property,
                 fieldIndex: (int)ClassTraining_FieldIndex.MaximumTrainingLevel,
                 errorMask: errorMask);
-            Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Fluff_Property,
                 fieldIndex: (int)ClassTraining_FieldIndex.Fluff,

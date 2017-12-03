@@ -18,7 +18,8 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
-using Mutagen.Binary;
+using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda;
 
 namespace Mutagen.Oblivion
 {
@@ -768,14 +769,14 @@ namespace Mutagen.Oblivion
                 case "SCRV":
                     if (!first) return false;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._VariableIndex.SetIfSucceeded(Mutagen.Binary.Int32BinaryTranslation.Instance.Parse(
+                    item._VariableIndex.SetIfSucceeded(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)ScriptReference_FieldIndex.VariableIndex,
                         errorMask: errorMask));
                     break;
                 case "SCRO":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Reference.SetIfSucceeded(Mutagen.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    item._Reference.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)ScriptReference_FieldIndex.Reference,
                         errorMask: errorMask));
@@ -1528,14 +1529,14 @@ namespace Mutagen.Oblivion.Internals
             MutagenWriter writer,
             Func<ScriptReference_ErrorMask> errorMask)
         {
-            Mutagen.Binary.Int32BinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.VariableIndex_Property,
                 fieldIndex: (int)ScriptReference_FieldIndex.VariableIndex,
                 errorMask: errorMask,
                 header: ScriptReference_Registration.SCRV_HEADER,
                 nullable: false);
-            Mutagen.Binary.FormIDBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Reference_Property,
                 fieldIndex: (int)ScriptReference_FieldIndex.Reference,

@@ -18,7 +18,8 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
-using Mutagen.Binary;
+using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda;
 
 namespace Mutagen.Oblivion
 {
@@ -947,12 +948,12 @@ namespace Mutagen.Oblivion
                 fieldIndex: (int)Group_FieldIndex.ContainedRecordType,
                 errorMask: errorMask);
             if (frame.Complete) return;
-            item._GroupType.SetIfSucceeded(Mutagen.Binary.Int32BinaryTranslation.Instance.Parse(
+            item._GroupType.SetIfSucceeded(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)Group_FieldIndex.GroupType,
                 errorMask: errorMask));
             if (frame.Complete) return;
-            var LastModifiedtryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+            var LastModifiedtryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(4)),
                 fieldIndex: (int)Group_FieldIndex.LastModified,
                 errorMask: errorMask);
@@ -973,7 +974,7 @@ namespace Mutagen.Oblivion
                 default:
                     if (nextRecordType.Equals(T_RecordType))
                     {
-                        var ItemstryGet = Mutagen.Binary.ListBinaryTranslation<T, MaskItem<Exception, T_ErrMask>>.Instance.ParseRepeatedItem(
+                        var ItemstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<T, MaskItem<Exception, T_ErrMask>>.Instance.ParseRepeatedItem(
                             frame: frame,
                             triggeringRecord: T_RecordType,
                             fieldIndex: (int)Group_FieldIndex.Items,
@@ -1950,12 +1951,12 @@ namespace Mutagen.Oblivion.Internals
                 item: item,
                 fieldIndex: (int)Group_FieldIndex.ContainedRecordType,
                 errorMask: errorMask);
-            Mutagen.Binary.Int32BinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.GroupType_Property,
                 fieldIndex: (int)Group_FieldIndex.GroupType,
                 errorMask: errorMask);
-            Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.LastModified_Property,
                 fieldIndex: (int)Group_FieldIndex.LastModified,
@@ -1969,7 +1970,7 @@ namespace Mutagen.Oblivion.Internals
             where T : MajorRecord, ILoquiObjectGetter
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
-            Mutagen.Binary.ListBinaryTranslation<T, MaskItem<Exception, T_ErrMask>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<T, MaskItem<Exception, T_ErrMask>>.Instance.Write(
                 writer: writer,
                 item: item.Items,
                 fieldIndex: (int)Group_FieldIndex.Items,

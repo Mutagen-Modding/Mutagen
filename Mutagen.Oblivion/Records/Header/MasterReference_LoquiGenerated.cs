@@ -18,7 +18,8 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
-using Mutagen.Binary;
+using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda;
 
 namespace Mutagen.Oblivion
 {
@@ -768,7 +769,7 @@ namespace Mutagen.Oblivion
                 case "MAST":
                     if (!first) return false;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var MastertryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
+                    var MastertryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)MasterReference_FieldIndex.Master,
                         errorMask: errorMask);
@@ -776,7 +777,7 @@ namespace Mutagen.Oblivion
                     break;
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._FileSize.SetIfSucceeded(Mutagen.Binary.UInt64BinaryTranslation.Instance.Parse(
+                    item._FileSize.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt64BinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)MasterReference_FieldIndex.FileSize,
                         errorMask: errorMask));
@@ -1529,14 +1530,14 @@ namespace Mutagen.Oblivion.Internals
             MutagenWriter writer,
             Func<MasterReference_ErrorMask> errorMask)
         {
-            Mutagen.Binary.StringBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Master_Property,
                 fieldIndex: (int)MasterReference_FieldIndex.Master,
                 errorMask: errorMask,
                 header: MasterReference_Registration.MAST_HEADER,
                 nullable: false);
-            Mutagen.Binary.UInt64BinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.UInt64BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FileSize_Property,
                 fieldIndex: (int)MasterReference_FieldIndex.FileSize,

@@ -19,7 +19,8 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
-using Mutagen.Binary;
+using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda;
 
 namespace Mutagen.Oblivion
 {
@@ -772,7 +773,7 @@ namespace Mutagen.Oblivion
                     break;
                 case "SCVR":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var NametryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
+                    var NametryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)LocalVariable_FieldIndex.Name,
                         errorMask: errorMask);
@@ -1570,7 +1571,7 @@ namespace Mutagen.Oblivion.Internals
                 item: item.Data_Property,
                 fieldIndex: (int)LocalVariable_FieldIndex.Data,
                 errorMask: errorMask);
-            Mutagen.Binary.StringBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Name_Property,
                 fieldIndex: (int)LocalVariable_FieldIndex.Name,

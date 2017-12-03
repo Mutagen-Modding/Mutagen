@@ -18,7 +18,8 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
-using Mutagen.Binary;
+using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda;
 
 namespace Mutagen.Oblivion
 {
@@ -746,12 +747,12 @@ namespace Mutagen.Oblivion
             Func<RaceVoices_ErrorMask> errorMask)
         {
             if (frame.Complete) return;
-            item._Male.SetIfSucceeded(Mutagen.Binary.FormIDBinaryTranslation.Instance.Parse(
+            item._Male.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)RaceVoices_FieldIndex.Male,
                 errorMask: errorMask));
             if (frame.Complete) return;
-            item._Female.SetIfSucceeded(Mutagen.Binary.FormIDBinaryTranslation.Instance.Parse(
+            item._Female.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)RaceVoices_FieldIndex.Female,
                 errorMask: errorMask));
@@ -1504,12 +1505,12 @@ namespace Mutagen.Oblivion.Internals
             MutagenWriter writer,
             Func<RaceVoices_ErrorMask> errorMask)
         {
-            Mutagen.Binary.FormIDBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Male_Property,
                 fieldIndex: (int)RaceVoices_FieldIndex.Male,
                 errorMask: errorMask);
-            Mutagen.Binary.FormIDBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Female_Property,
                 fieldIndex: (int)RaceVoices_FieldIndex.Female,

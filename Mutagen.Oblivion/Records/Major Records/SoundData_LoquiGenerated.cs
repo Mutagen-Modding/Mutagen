@@ -18,7 +18,8 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
-using Mutagen.Binary;
+using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda;
 
 namespace Mutagen.Oblivion
 {
@@ -877,14 +878,14 @@ namespace Mutagen.Oblivion
                 fieldIndex: (int)SoundData_FieldIndex.MaximumAttenuationDistance,
                 errorMask: errorMask);
             if (frame.Complete) return;
-            item._FrequencyAdjustment.SetIfSucceeded(Mutagen.Binary.Int8BinaryTranslation.Instance.Parse(
+            item._FrequencyAdjustment.SetIfSucceeded(Mutagen.Bethesda.Binary.Int8BinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)SoundData_FieldIndex.FrequencyAdjustment,
                 errorMask: errorMask));
             if (frame.Complete) return;
             frame.Position += 1;
             if (frame.Complete) return;
-            var FlagstryGet = Mutagen.Binary.EnumBinaryTranslation<SoundData.Flag>.Instance.Parse(
+            var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<SoundData.Flag>.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(4)),
                 fieldIndex: (int)SoundData_FieldIndex.Flags,
                 errorMask: errorMask);
@@ -1802,15 +1803,15 @@ namespace Mutagen.Oblivion.Internals
                 item: item,
                 fieldIndex: (int)SoundData_FieldIndex.MaximumAttenuationDistance,
                 errorMask: errorMask);
-            Mutagen.Binary.Int8BinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.Int8BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FrequencyAdjustment_Property,
                 fieldIndex: (int)SoundData_FieldIndex.FrequencyAdjustment,
                 errorMask: errorMask);
-            Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Marker);
-            Mutagen.Binary.EnumBinaryTranslation<SoundData.Flag>.Instance.Write(
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<SoundData.Flag>.Instance.Write(
                 writer,
                 item.Flags_Property,
                 length: new ContentLength(4),

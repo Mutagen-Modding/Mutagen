@@ -18,7 +18,8 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
-using Mutagen.Binary;
+using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda;
 
 namespace Mutagen.Oblivion
 {
@@ -581,18 +582,18 @@ namespace Mutagen.Oblivion
             Func<MajorRecord_ErrorMask> errorMask)
         {
             if (frame.Complete) return;
-            var MajorRecordFlagstryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+            var MajorRecordFlagstryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(4)),
                 fieldIndex: (int)MajorRecord_FieldIndex.MajorRecordFlags,
                 errorMask: errorMask);
             item._MajorRecordFlags.SetIfSucceeded(MajorRecordFlagstryGet);
             if (frame.Complete) return;
-            item._FormID.SetIfSucceeded(Mutagen.Binary.FormIDBinaryTranslation.Instance.Parse(
+            item._FormID.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)MajorRecord_FieldIndex.FormID,
                 errorMask: errorMask));
             if (frame.Complete) return;
-            var VersiontryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+            var VersiontryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(4)),
                 fieldIndex: (int)MajorRecord_FieldIndex.Version,
                 errorMask: errorMask);
@@ -611,7 +612,7 @@ namespace Mutagen.Oblivion
             {
                 case "EDID":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var EditorIDtryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
+                    var EditorIDtryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)MajorRecord_FieldIndex.EditorID,
                         errorMask: errorMask);
@@ -1459,17 +1460,17 @@ namespace Mutagen.Oblivion.Internals
             MutagenWriter writer,
             Func<MajorRecord_ErrorMask> errorMask)
         {
-            Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.MajorRecordFlags_Property,
                 fieldIndex: (int)MajorRecord_FieldIndex.MajorRecordFlags,
                 errorMask: errorMask);
-            Mutagen.Binary.FormIDBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FormID_Property,
                 fieldIndex: (int)MajorRecord_FieldIndex.FormID,
                 errorMask: errorMask);
-            Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Version_Property,
                 fieldIndex: (int)MajorRecord_FieldIndex.Version,
@@ -1481,7 +1482,7 @@ namespace Mutagen.Oblivion.Internals
             MutagenWriter writer,
             Func<MajorRecord_ErrorMask> errorMask)
         {
-            Mutagen.Binary.StringBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.EditorID_Property,
                 fieldIndex: (int)MajorRecord_FieldIndex.EditorID,

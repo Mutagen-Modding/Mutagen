@@ -18,7 +18,8 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
-using Mutagen.Binary;
+using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda;
 
 namespace Mutagen.Oblivion
 {
@@ -530,7 +531,7 @@ namespace Mutagen.Oblivion
                     break;
                 case "FLTV":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._RawFloat.SetIfSucceeded(Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
+                    item._RawFloat.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)Global_FieldIndex.RawFloat,
                         errorMask: errorMask));
@@ -1191,7 +1192,7 @@ namespace Mutagen.Oblivion.Internals
                 item: item,
                 fieldIndex: (int)Global_FieldIndex.TypeChar,
                 errorMask: errorMask);
-            Mutagen.Binary.FloatBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.RawFloat_Property,
                 fieldIndex: (int)Global_FieldIndex.RawFloat,

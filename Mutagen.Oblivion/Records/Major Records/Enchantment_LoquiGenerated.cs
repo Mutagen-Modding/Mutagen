@@ -18,7 +18,8 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
-using Mutagen.Binary;
+using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda;
 
 namespace Mutagen.Oblivion
 {
@@ -931,27 +932,27 @@ namespace Mutagen.Oblivion
             {
                 case "ENIT":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var TypetryGet = Mutagen.Binary.EnumBinaryTranslation<Enchantment.EnchantmentType>.Instance.Parse(
+                    var TypetryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Enchantment.EnchantmentType>.Instance.Parse(
                         frame: frame.Spawn(new ContentLength(4)),
                         fieldIndex: (int)Enchantment_FieldIndex.Type,
                         errorMask: errorMask);
                     item._Type.SetIfSucceeded(TypetryGet);
-                    item._ChargeAmount.SetIfSucceeded(Mutagen.Binary.UInt32BinaryTranslation.Instance.Parse(
+                    item._ChargeAmount.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                         frame: frame,
                         fieldIndex: (int)Enchantment_FieldIndex.ChargeAmount,
                         errorMask: errorMask));
-                    item._EnchantCost.SetIfSucceeded(Mutagen.Binary.UInt32BinaryTranslation.Instance.Parse(
+                    item._EnchantCost.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                         frame: frame,
                         fieldIndex: (int)Enchantment_FieldIndex.EnchantCost,
                         errorMask: errorMask));
-                    var FlagstryGet = Mutagen.Binary.EnumBinaryTranslation<Enchantment.Flag>.Instance.Parse(
+                    var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Enchantment.Flag>.Instance.Parse(
                         frame: frame.Spawn(new ContentLength(4)),
                         fieldIndex: (int)Enchantment_FieldIndex.Flags,
                         errorMask: errorMask);
                     item._Flags.SetIfSucceeded(FlagstryGet);
                     break;
                 case "EFIT":
-                    var EffectstryGet = Mutagen.Binary.ListBinaryTranslation<EnchantmentEffect, MaskItem<Exception, EnchantmentEffect_ErrorMask>>.Instance.ParseRepeatedItem(
+                    var EffectstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<EnchantmentEffect, MaskItem<Exception, EnchantmentEffect_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: Enchantment_Registration.EFIT_HEADER,
                         fieldIndex: (int)Enchantment_FieldIndex.Effects,
@@ -2042,30 +2043,30 @@ namespace Mutagen.Oblivion.Internals
                 errorMask: errorMask);
             using (HeaderExport.ExportSubRecordHeader(writer, Enchantment_Registration.ENIT_HEADER))
             {
-                Mutagen.Binary.EnumBinaryTranslation<Enchantment.EnchantmentType>.Instance.Write(
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Enchantment.EnchantmentType>.Instance.Write(
                     writer,
                     item.Type_Property,
                     length: new ContentLength(4),
                     fieldIndex: (int)Enchantment_FieldIndex.Type,
                     errorMask: errorMask);
-                Mutagen.Binary.UInt32BinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ChargeAmount_Property,
                     fieldIndex: (int)Enchantment_FieldIndex.ChargeAmount,
                     errorMask: errorMask);
-                Mutagen.Binary.UInt32BinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.EnchantCost_Property,
                     fieldIndex: (int)Enchantment_FieldIndex.EnchantCost,
                     errorMask: errorMask);
-                Mutagen.Binary.EnumBinaryTranslation<Enchantment.Flag>.Instance.Write(
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Enchantment.Flag>.Instance.Write(
                     writer,
                     item.Flags_Property,
                     length: new ContentLength(4),
                     fieldIndex: (int)Enchantment_FieldIndex.Flags,
                     errorMask: errorMask);
             }
-            Mutagen.Binary.ListBinaryTranslation<EnchantmentEffect, MaskItem<Exception, EnchantmentEffect_ErrorMask>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<EnchantmentEffect, MaskItem<Exception, EnchantmentEffect_ErrorMask>>.Instance.Write(
                 writer: writer,
                 item: item.Effects,
                 fieldIndex: (int)Enchantment_FieldIndex.Effects,

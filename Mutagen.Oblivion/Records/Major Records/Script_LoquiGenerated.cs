@@ -19,7 +19,8 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
-using Mutagen.Binary;
+using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda;
 
 namespace Mutagen.Oblivion
 {
@@ -940,7 +941,7 @@ namespace Mutagen.Oblivion
                     break;
                 case "SCDA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var CompiledScripttryGet = Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                    var CompiledScripttryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                         frame.Spawn(contentLength),
                         fieldIndex: (int)Script_FieldIndex.CompiledScript,
                         errorMask: errorMask);
@@ -948,14 +949,14 @@ namespace Mutagen.Oblivion
                     break;
                 case "SCTX":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var SourceCodetryGet = Mutagen.Binary.StringBinaryTranslation.Instance.Parse(
+                    var SourceCodetryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)Script_FieldIndex.SourceCode,
                         errorMask: errorMask);
                     item._SourceCode.SetIfSucceeded(SourceCodetryGet);
                     break;
                 case "SLSD":
-                    var LocalVariablestryGet = Mutagen.Binary.ListBinaryTranslation<LocalVariable, MaskItem<Exception, LocalVariable_ErrorMask>>.Instance.ParseRepeatedItem(
+                    var LocalVariablestryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<LocalVariable, MaskItem<Exception, LocalVariable_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: Script_Registration.SLSD_HEADER,
                         fieldIndex: (int)Script_FieldIndex.LocalVariables,
@@ -972,7 +973,7 @@ namespace Mutagen.Oblivion
                     item._LocalVariables.SetIfSucceeded(LocalVariablestryGet);
                     break;
                 case "SCRV":
-                    var ReferencestryGet = Mutagen.Binary.ListBinaryTranslation<ScriptReference, MaskItem<Exception, ScriptReference_ErrorMask>>.Instance.ParseRepeatedItem(
+                    var ReferencestryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<ScriptReference, MaskItem<Exception, ScriptReference_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: Script_Registration.SCRV_HEADER,
                         fieldIndex: (int)Script_FieldIndex.References,
@@ -2123,14 +2124,14 @@ namespace Mutagen.Oblivion.Internals
                 item: item.MetadataSummary_Property,
                 fieldIndex: (int)Script_FieldIndex.MetadataSummary,
                 errorMask: errorMask);
-            Mutagen.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.CompiledScript_Property,
                 fieldIndex: (int)Script_FieldIndex.CompiledScript,
                 errorMask: errorMask,
                 header: Script_Registration.SCDA_HEADER,
                 nullable: false);
-            Mutagen.Binary.StringBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.SourceCode_Property,
                 fieldIndex: (int)Script_FieldIndex.SourceCode,
@@ -2138,7 +2139,7 @@ namespace Mutagen.Oblivion.Internals
                 header: Script_Registration.SCTX_HEADER,
                 nullable: false,
                 nullTerminate: false);
-            Mutagen.Binary.ListBinaryTranslation<LocalVariable, MaskItem<Exception, LocalVariable_ErrorMask>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<LocalVariable, MaskItem<Exception, LocalVariable_ErrorMask>>.Instance.Write(
                 writer: writer,
                 item: item.LocalVariables,
                 fieldIndex: (int)Script_FieldIndex.LocalVariables,
@@ -2152,7 +2153,7 @@ namespace Mutagen.Oblivion.Internals
                         errorMask: out listSubMask);
                 }
                 );
-            Mutagen.Binary.ListBinaryTranslation<ScriptReference, MaskItem<Exception, ScriptReference_ErrorMask>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<ScriptReference, MaskItem<Exception, ScriptReference_ErrorMask>>.Instance.Write(
                 writer: writer,
                 item: item.References,
                 fieldIndex: (int)Script_FieldIndex.References,

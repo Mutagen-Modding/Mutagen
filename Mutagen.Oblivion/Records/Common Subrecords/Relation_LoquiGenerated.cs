@@ -18,7 +18,8 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
-using Mutagen.Binary;
+using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda;
 
 namespace Mutagen.Oblivion
 {
@@ -746,12 +747,12 @@ namespace Mutagen.Oblivion
             Func<Relation_ErrorMask> errorMask)
         {
             if (frame.Complete) return;
-            item._Faction.SetIfSucceeded(Mutagen.Binary.FormIDBinaryTranslation.Instance.Parse(
+            item._Faction.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)Relation_FieldIndex.Faction,
                 errorMask: errorMask));
             if (frame.Complete) return;
-            item._Modifier.SetIfSucceeded(Mutagen.Binary.Int32BinaryTranslation.Instance.Parse(
+            item._Modifier.SetIfSucceeded(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)Relation_FieldIndex.Modifier,
                 errorMask: errorMask));
@@ -1504,12 +1505,12 @@ namespace Mutagen.Oblivion.Internals
             MutagenWriter writer,
             Func<Relation_ErrorMask> errorMask)
         {
-            Mutagen.Binary.FormIDBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Faction_Property,
                 fieldIndex: (int)Relation_FieldIndex.Faction,
                 errorMask: errorMask);
-            Mutagen.Binary.Int32BinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Modifier_Property,
                 fieldIndex: (int)Relation_FieldIndex.Modifier,

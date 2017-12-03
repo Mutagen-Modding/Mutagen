@@ -1,5 +1,6 @@
 ﻿using Loqui;
-using Mutagen.Binary;
+using Mutagen.Bethesda;
+using Mutagen.Bethesda.Binary;
 using Mutagen.Oblivion.Internals;
 using System;
 using System.Collections.Generic;
@@ -79,7 +80,7 @@ namespace Mutagen.Oblivion
 
             // Skip to and read data
             frame.Reader.Position += 13;
-            var floatParse = Mutagen.Binary.FloatBinaryTranslation.Instance.Parse(
+            var floatParse = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame,
                 doMasks,
                 out var floatMask);
@@ -108,7 +109,7 @@ namespace Mutagen.Oblivion
             int fieldIndex,
             Func<Global_ErrorMask> errorMask)
         {
-            Mutagen.Binary.CharBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.CharBinaryTranslation.Instance.Write(
                 writer,
                 item.TypeChar,
                 header: Global_Registration.FNAM_HEADER,

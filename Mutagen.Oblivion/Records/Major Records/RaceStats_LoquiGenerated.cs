@@ -18,7 +18,8 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
-using Mutagen.Binary;
+using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda;
 
 namespace Mutagen.Oblivion
 {
@@ -947,42 +948,42 @@ namespace Mutagen.Oblivion
             Func<RaceStats_ErrorMask> errorMask)
         {
             if (frame.Complete) return;
-            item._Strength.SetIfSucceeded(Mutagen.Binary.ByteBinaryTranslation.Instance.Parse(
+            item._Strength.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)RaceStats_FieldIndex.Strength,
                 errorMask: errorMask));
             if (frame.Complete) return;
-            item._Intelligence.SetIfSucceeded(Mutagen.Binary.ByteBinaryTranslation.Instance.Parse(
+            item._Intelligence.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)RaceStats_FieldIndex.Intelligence,
                 errorMask: errorMask));
             if (frame.Complete) return;
-            item._Willpower.SetIfSucceeded(Mutagen.Binary.ByteBinaryTranslation.Instance.Parse(
+            item._Willpower.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)RaceStats_FieldIndex.Willpower,
                 errorMask: errorMask));
             if (frame.Complete) return;
-            item._Agility.SetIfSucceeded(Mutagen.Binary.ByteBinaryTranslation.Instance.Parse(
+            item._Agility.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)RaceStats_FieldIndex.Agility,
                 errorMask: errorMask));
             if (frame.Complete) return;
-            item._Speed.SetIfSucceeded(Mutagen.Binary.ByteBinaryTranslation.Instance.Parse(
+            item._Speed.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)RaceStats_FieldIndex.Speed,
                 errorMask: errorMask));
             if (frame.Complete) return;
-            item._Endurance.SetIfSucceeded(Mutagen.Binary.ByteBinaryTranslation.Instance.Parse(
+            item._Endurance.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)RaceStats_FieldIndex.Endurance,
                 errorMask: errorMask));
             if (frame.Complete) return;
-            item._Personality.SetIfSucceeded(Mutagen.Binary.ByteBinaryTranslation.Instance.Parse(
+            item._Personality.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)RaceStats_FieldIndex.Personality,
                 errorMask: errorMask));
             if (frame.Complete) return;
-            item._Luck.SetIfSucceeded(Mutagen.Binary.ByteBinaryTranslation.Instance.Parse(
+            item._Luck.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)RaceStats_FieldIndex.Luck,
                 errorMask: errorMask));
@@ -2189,42 +2190,42 @@ namespace Mutagen.Oblivion.Internals
             MutagenWriter writer,
             Func<RaceStats_ErrorMask> errorMask)
         {
-            Mutagen.Binary.ByteBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Strength_Property,
                 fieldIndex: (int)RaceStats_FieldIndex.Strength,
                 errorMask: errorMask);
-            Mutagen.Binary.ByteBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Intelligence_Property,
                 fieldIndex: (int)RaceStats_FieldIndex.Intelligence,
                 errorMask: errorMask);
-            Mutagen.Binary.ByteBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Willpower_Property,
                 fieldIndex: (int)RaceStats_FieldIndex.Willpower,
                 errorMask: errorMask);
-            Mutagen.Binary.ByteBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Agility_Property,
                 fieldIndex: (int)RaceStats_FieldIndex.Agility,
                 errorMask: errorMask);
-            Mutagen.Binary.ByteBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Speed_Property,
                 fieldIndex: (int)RaceStats_FieldIndex.Speed,
                 errorMask: errorMask);
-            Mutagen.Binary.ByteBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Endurance_Property,
                 fieldIndex: (int)RaceStats_FieldIndex.Endurance,
                 errorMask: errorMask);
-            Mutagen.Binary.ByteBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Personality_Property,
                 fieldIndex: (int)RaceStats_FieldIndex.Personality,
                 errorMask: errorMask);
-            Mutagen.Binary.ByteBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Luck_Property,
                 fieldIndex: (int)RaceStats_FieldIndex.Luck,

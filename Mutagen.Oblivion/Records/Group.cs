@@ -1,5 +1,5 @@
 ﻿using Loqui;
-using Mutagen.Binary;
+using Mutagen.Bethesda.Binary;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -30,7 +30,7 @@ namespace Mutagen.Oblivion
             Func<Group_ErrorMask<T_ErrMask>> errorMask)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
-            Mutagen.Binary.StringBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer,
                 T_RecordType.Type,
                 doMasks: errorMask != null,

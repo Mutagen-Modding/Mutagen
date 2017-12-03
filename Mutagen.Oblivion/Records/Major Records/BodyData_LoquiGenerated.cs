@@ -19,7 +19,8 @@ using System.IO;
 using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
-using Mutagen.Binary;
+using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda;
 
 namespace Mutagen.Oblivion
 {
@@ -777,7 +778,7 @@ namespace Mutagen.Oblivion
                         errorMask: errorMask));
                     break;
                 case "INDX":
-                    var BodyPartstryGet = Mutagen.Binary.ListBinaryTranslation<BodyPart, MaskItem<Exception, BodyPart_ErrorMask>>.Instance.ParseRepeatedItem(
+                    var BodyPartstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<BodyPart, MaskItem<Exception, BodyPart_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: BodyData_Registration.INDX_HEADER,
                         fieldIndex: (int)BodyData_FieldIndex.BodyParts,
@@ -1643,7 +1644,7 @@ namespace Mutagen.Oblivion.Internals
                 item: item.Model_Property,
                 fieldIndex: (int)BodyData_FieldIndex.Model,
                 errorMask: errorMask);
-            Mutagen.Binary.ListBinaryTranslation<BodyPart, MaskItem<Exception, BodyPart_ErrorMask>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<BodyPart, MaskItem<Exception, BodyPart_ErrorMask>>.Instance.Write(
                 writer: writer,
                 item: item.BodyParts,
                 fieldIndex: (int)BodyData_FieldIndex.BodyParts,
