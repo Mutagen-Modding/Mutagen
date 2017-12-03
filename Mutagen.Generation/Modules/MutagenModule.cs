@@ -276,6 +276,7 @@ namespace Mutagen.Generation
             await SetObjectTrigger(obj);
             await base.PostLoad(obj);
             Dictionary<string, TypeGeneration> triggerMapping = new Dictionary<string, TypeGeneration>();
+            Dictionary<RecordType, TypeGeneration> triggerRecMapping = new Dictionary<RecordType, TypeGeneration>();
             foreach (var field in obj.IterateFields())
             {
                 if (!field.TryGetFieldData(out var mutaData)) continue;
@@ -287,6 +288,14 @@ namespace Mutagen.Generation
                         throw new ArgumentException($"{obj.Name} cannot have two fields that have the same trigger {trigger}: {existingField.Name} AND {field.Name}");
                     }
                     triggerMapping[trigger] = field;
+                }
+                foreach (var triggerRec in mutaData.TriggeringRecordTypes)
+                {
+                    if (triggerRecMapping.TryGetValue(triggerRec, out var existingField))
+                    {
+                        throw new ArgumentException($"{obj.Name} cannot have two fields that have the same trigger record {triggerRec}: {existingField.Name} AND {field.Name}");
+                    }
+                    triggerRecMapping[triggerRec] = field;
                 }
             }
         }
