@@ -101,17 +101,20 @@ namespace Mutagen.Generation
             {
                 fg.AppendLine($"public static IEnumerable<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;");
                 fg.AppendLine($"private static readonly Lazy<HashSet<RecordType>> _TriggeringRecordTypes = new Lazy<HashSet<RecordType>>(() =>");
-                using (new BraceWrapper(fg))
+                using (new BraceWrapper(fg) { AppendSemicolon = true,  AppendParenthesis = true })
                 {
                     fg.AppendLine($"return new HashSet<RecordType>(");
                     using (new DepthWrapper(fg))
                     {
                         fg.AppendLine($"new RecordType[]");
-                        using (new BraceWrapper(fg))
+                        using (new BraceWrapper(fg) { AppendParenthesis = true, AppendSemicolon = true })
                         {
-                            foreach (var trigger in trigRecType.Value)
+                            using (var comma = new CommaWrapper(fg))
                             {
-                                fg.AppendLine($"{trigger.Type}_HEADER");
+                                foreach (var trigger in trigRecType.Value)
+                                {
+                                    comma.Add($"{trigger.Type}_HEADER");
+                                }
                             }
                         }
                     }
@@ -143,26 +146,12 @@ namespace Mutagen.Generation
             if (record != null && !isGRUP)
             {
                 obj.CustomData[Constants.RECORD_TYPE] = new RecordType(record);
-                obj.CustomData[Constants.TRIGGERING_RECORD_TYPE] = new RecordType[] { new RecordType(record) };
-            }
-            else
-            {
-                var field = obj.Node.Element(XName.Get("Fields", LoquiGenerator.Namespace))?.Elements().FirstOrDefault();
-                if (field != null)
-                {
-                    record = field.GetAttribute("recordType");
-                    if (record != null)
-                    {
-                        obj.CustomData[Constants.TRIGGERING_RECORD_TYPE] = new RecordType[] { new RecordType(record) };
-                    }
-                }
             }
             obj.CustomData[Constants.FAIL_ON_UNKNOWN] = obj.Node.GetAttribute<bool>("failOnUnknownType", defaultVal: false);
 
             if (isGRUP)
             {
                 obj.CustomData[Constants.RECORD_TYPE] = new RecordType("GRUP");
-                obj.CustomData[Constants.TRIGGERING_RECORD_TYPE] = new RecordType[] { new RecordType("GRUP") };
             }
 
             var objType = obj.Node.GetAttribute("objType");
@@ -177,20 +166,6 @@ namespace Mutagen.Generation
                 var markerTypeRec = new RecordType(markerType.Value);
                 obj.CustomData[Constants.MARKER_TYPE] = markerTypeRec;
                 obj.CustomData[Constants.RECORD_TYPE] = markerTypeRec;
-                obj.CustomData[Constants.TRIGGERING_RECORD_TYPE] = new RecordType[] { markerTypeRec };
-            }
-
-            if (obj.CustomData.TryGetValue(Constants.TRIGGERING_RECORD_TYPE, out var trigRecTypeObj))
-            {
-                var trigRecTypes = trigRecTypeObj as IEnumerable<RecordType>;
-                if (trigRecTypes.CountGreaterThan(1))
-                {
-                    throw new NotImplementedException();
-                }
-                else
-                {
-                    obj.CustomData[Constants.TRIGGERING_SOURCE] = obj.RecordTypeHeaderName(trigRecTypes.First());
-                }
             }
         }
 
@@ -237,11 +212,68 @@ namespace Mutagen.Generation
             data.CustomBinary = node.GetAttribute<bool>("customBinary", false);
         }
 
+        private async Task SetObjectTrigger(ObjectGeneration obj)
+        {
+            var isGRUP = obj.Name.Equals("Group");
+            if (obj.TryGetRecordType(out var recType) && !isGRUP)
+            {
+                obj.CustomData[Constants.TRIGGERING_RECORD_TYPE] = new RecordType[] { recType };
+            }
+            else
+            {
+                HashSet<RecordType> recTypes = new HashSet<RecordType>();
+                foreach (var field in obj.IterateFields(
+                    nonIntegrated: false,
+                    expandSets: SetMarkerType.ExpandSets.True))
+                {
+                    if (!field.TryGetFieldData(out var fieldData)) break;
+                    if (!fieldData.HasTrigger) break;
+                    recTypes.Add(fieldData.TriggeringRecordTypes);
+                    if (field.IsEnumerable && !(field is ByteArrayType)) continue;
+                    if (field.Notifying != NotifyingOption.None) break;
+                    if (!field.IsNullable()) break;
+
+                }
+                obj.CustomData[Constants.TRIGGERING_RECORD_TYPE] = recTypes;
+            }
+
+            if (isGRUP)
+            {
+                obj.CustomData[Constants.TRIGGERING_RECORD_TYPE] = new RecordType[] { new RecordType("GRUP") };
+            }
+
+            if (obj.TryGetMarkerType(out var markerType))
+            {
+                obj.CustomData[Constants.TRIGGERING_RECORD_TYPE] = new RecordType[] { markerType };
+            }
+
+            var objTriggers = await obj.TryGetTriggeringRecordTypes();
+            if (objTriggers.Succeeded)
+            {
+                if (objTriggers.Value.CountGreaterThan(1))
+                {
+                    throw new NotImplementedException();
+                }
+                else
+                {
+                    obj.CustomData[Constants.TRIGGERING_SOURCE] = obj.RecordTypeHeaderName(objTriggers.Value.First());
+                }
+            }
+
+
+            if (obj.CustomData.TryGetValue(Constants.TRIGGERING_RECORD_TASK, out var tcsTask))
+            {
+                TaskCompletionSource<bool> tcs = (TaskCompletionSource<bool>)tcsTask;
+                tcs.SetResult(true);
+            }
+        }
+
         public override async Task PostLoad(ObjectGeneration obj)
         {
             await Task.WhenAll(
                 obj.IterateFields(expandSets: SetMarkerType.ExpandSets.TrueAndInclude)
                     .Select((field) => SetRecordTrigger(obj, field, field.GetFieldData())));
+            await SetObjectTrigger(obj);
             await base.PostLoad(obj);
             Dictionary<string, TypeGeneration> triggerMapping = new Dictionary<string, TypeGeneration>();
             foreach (var field in obj.IterateFields())
@@ -284,12 +316,11 @@ namespace Mutagen.Generation
             TypeGeneration field,
             MutagenFieldData data)
         {
-            RecordType recType;
             if (field is LoquiType loqui)
             {
                 IEnumerable<RecordType> trigRecTypes = await TaskExt.AwaitOrDefaultValue(loqui.TargetObjectGeneration?.TryGetTriggeringRecordTypes());
                 if (loqui.TargetObjectGeneration != null
-                    && (loqui.TargetObjectGeneration.TryGetRecordType(out recType)
+                    && (loqui.TargetObjectGeneration.TryGetRecordType(out var recType)
                         || trigRecTypes != null))
                 {
                     if (loqui.TargetObjectGeneration.Name.Equals("Group"))

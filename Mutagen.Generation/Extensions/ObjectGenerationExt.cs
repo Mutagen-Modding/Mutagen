@@ -45,13 +45,29 @@ namespace Mutagen.Generation
             return data.Value;
         }
 
+        public static bool TryGetMarkerType(this ObjectGeneration objGen, out RecordType recType)
+        {
+            if (objGen.CustomData.TryGetValue(Constants.MARKER_TYPE, out var dataObj))
+            {
+                recType = (RecordType)dataObj;
+                return true;
+            }
+            recType = default(RecordType);
+            return false;
+        }
+
         public static async Task<TryGet<IEnumerable<RecordType>>> TryGetTriggeringRecordTypes(this ObjectGeneration objGen)
         {
             if (objGen.CustomData.TryGetValue(Constants.TRIGGERING_RECORD_TYPE, out var dataObj))
             {
-                return TryGet<IEnumerable<RecordType>>.Succeed((IEnumerable<RecordType>)dataObj);
+                var enumer = (IEnumerable<RecordType>)dataObj;
+                return TryGet<IEnumerable<RecordType>>.Create(
+                    successful: enumer.Any(),
+                    val: enumer);
             }
-            return TryGet<IEnumerable<RecordType>>.Fail(EnumerableExt<RecordType>.EMPTY);
+            var taskObj = (TaskCompletionSource<bool>)objGen.CustomData.TryCreateValue(Constants.TRIGGERING_RECORD_TASK, () => new TaskCompletionSource<bool>());
+            await taskObj.Task;
+            return await TryGetTriggeringRecordTypes(objGen);
         }
 
         public static ObjectType GetObjectType(this ObjectGeneration objGen)
