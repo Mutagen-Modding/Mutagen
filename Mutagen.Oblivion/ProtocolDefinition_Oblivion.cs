@@ -56,6 +56,9 @@ namespace Loqui
             LoquiRegistration.Register(Mutagen.Oblivion.Internals.ScriptReference_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Oblivion.Internals.LandTexture_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Oblivion.Internals.HavokData_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Oblivion.Internals.EnchantmentEffect_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Oblivion.Internals.ScriptEffect_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Oblivion.Internals.Enchantment_Registration.Instance);
         }
     }
 }

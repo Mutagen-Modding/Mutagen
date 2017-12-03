@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <!--<Object name="Enchantment" objType="Record" recordType="ENCH" baseClass="NamedMajorRecord" GUID="0da326e3-960f-4c8d-880d-64593d78494b" ID="52">
+  <Object name="Enchantment" objType="Record" recordType="ENCH" baseClass="NamedMajorRecord" GUID="70c1ef12-4d5f-4f6a-8899-5518fcba82ed" ID="55">
     <Fields>
       <Data recordType="ENIT">
         <Fields>
@@ -39,5 +39,5 @@
       </Data>
       <String name="Name" recordType="FULL" />
     </Fields>
-  </Object>-->
+  </Object>
 </Loqui>

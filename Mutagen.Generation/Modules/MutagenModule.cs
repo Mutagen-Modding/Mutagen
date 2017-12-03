@@ -225,11 +225,12 @@ namespace Mutagen.Generation
                 HashSet<RecordType> recTypes = new HashSet<RecordType>();
                 foreach (var field in obj.IterateFields(
                     nonIntegrated: false,
-                    expandSets: SetMarkerType.ExpandSets.True))
+                    expandSets: SetMarkerType.ExpandSets.FalseAndInclude))
                 {
                     if (!field.TryGetFieldData(out var fieldData)) break;
                     if (!fieldData.HasTrigger) break;
                     recTypes.Add(fieldData.TriggeringRecordTypes);
+                    if (field is SetMarkerType) break;
                     if (field.IsEnumerable && !(field is ByteArrayType)) continue;
                     if (field.Notifying != NotifyingOption.None) break;
                     if (!field.IsNullable()) break;
