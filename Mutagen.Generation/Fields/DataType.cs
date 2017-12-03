@@ -15,7 +15,14 @@ namespace Mutagen
         public override async Task Load(XElement node, bool requireName = true)
         {
             var data = this.CustomData.TryCreateValue(Mutagen.Generation.Constants.DATA_KEY, () => new MutagenFieldData(this)) as MutagenFieldData;
-            data.RecordType = new RecordType("DATA");
+            if (node.TryGetAttribute("recordType", out var recType))
+            {
+                data.RecordType = new RecordType(recType.Value);
+            }
+            else
+            {
+                data.RecordType = new RecordType("DATA");
+            }
             await base.Load(node, requireName: false);
         }
     }

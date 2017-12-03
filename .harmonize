@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>99a26e8f5c489de9d59478ec44e55dc9217330e7</Sha>
+         <Sha>524d6b902c41ca83af92cb21ccb36b72fa2d8213</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>12-02-2017 02:07:39</CommitDate>
-         <Description>Enumerable.IterateMarkLast</Description>
+         <CommitDate>12-02-2017 22:06:16</CommitDate>
+         <Description>Merge branch 'master' of https://github.com/Noggog/CSharpExt</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

@@ -185,14 +185,14 @@ namespace Mutagen.Generation
             if (recordAttr != null
                 && markerAttr != null)
             {
-                throw new ArgumentException("Cannot have both record type and marker type defined");
+                throw new ArgumentException($"{obj.Name} {field.Name} cannot have both record type and marker type defined");
             }
             ModifyGRUPRecordTrigger(obj, field, data);
 
             data.Optional = node.GetAttribute<bool>("optional", false);
             if (data.Optional && !data.RecordType.HasValue)
             {
-                throw new ArgumentException("Cannot have an optional field if it is not a record typed field.");
+                throw new ArgumentException($"{obj.Name} {field.Name} cannot have an optional field if it is not a record typed field.");
             }
             data.Length = node.GetAttribute<long?>("length", null);
             if (field is ByteArrayType byteArray
@@ -202,10 +202,11 @@ namespace Mutagen.Generation
             }
             if (!data.Length.HasValue
                 && !data.RecordType.HasValue
+                && !(field is NothingType)
                 && !(field is PrimitiveType)
                 && !(field is ContainerType))
             {
-                throw new ArgumentException("Have to define either length or record type.");
+                throw new ArgumentException($"{obj.Name} {field.Name} have to define either length or record type.");
             }
             data.IncludeInLength = node.GetAttribute<bool>("includeInLength", true);
             data.Vestigial = node.GetAttribute<bool>("vestigial", false);
