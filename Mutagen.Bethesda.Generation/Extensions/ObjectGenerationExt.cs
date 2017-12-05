@@ -70,6 +70,17 @@ namespace Mutagen.Bethesda.Generation
             return await TryGetTriggeringRecordTypes(objGen);
         }
 
+        public static bool TryGetTriggeringTCS(this ObjectGeneration objGen, out TaskCompletionSource<bool> tcs)
+        {
+            if (objGen.CustomData.TryGetValue(Constants.TRIGGERING_RECORD_TASK, out var tcsTask))
+            {
+                tcs = (TaskCompletionSource<bool>)tcsTask;
+                return true;
+            }
+            tcs = default(TaskCompletionSource<bool>);
+            return false;
+        }
+
         public static ObjectType GetObjectType(this ObjectGeneration objGen)
         {
             if (objGen.CustomData.TryGetValue(Constants.OBJECT_TYPE, out var dataObj))

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Loqui;
 using System.Xml.Linq;
+using Noggog;
 
 namespace Mutagen.Bethesda.Generation
 {
@@ -215,59 +216,57 @@ namespace Mutagen.Bethesda.Generation
 
         private async Task SetObjectTrigger(ObjectGeneration obj)
         {
-            var isGRUP = obj.Name.Equals("Group");
-            if (obj.TryGetRecordType(out var recType) && !isGRUP)
-            {
-                obj.CustomData[Constants.TRIGGERING_RECORD_TYPE] = new RecordType[] { recType };
-            }
-            else
-            {
-                HashSet<RecordType> recTypes = new HashSet<RecordType>();
-                foreach (var field in obj.IterateFields(
-                    nonIntegrated: false,
-                    expandSets: SetMarkerType.ExpandSets.FalseAndInclude))
+            obj.TryGetTriggeringTCS(out var tcs);
+            await TaskExt.DoThenComplete(tcs,
+                async () =>
                 {
-                    if (!field.TryGetFieldData(out var fieldData)) break;
-                    if (!fieldData.HasTrigger) break;
-                    recTypes.Add(fieldData.TriggeringRecordTypes);
-                    if (field is SetMarkerType) break;
-                    if (field.IsEnumerable && !(field is ByteArrayType)) continue;
-                    if (field.Notifying != NotifyingOption.None) break;
-                    if (!field.IsNullable()) break;
+                    var isGRUP = obj.Name.Equals("Group");
+                    if (obj.TryGetRecordType(out var recType) && !isGRUP)
+                    {
+                        obj.CustomData[Constants.TRIGGERING_RECORD_TYPE] = new RecordType[] { recType };
+                    }
+                    else
+                    {
+                        HashSet<RecordType> recTypes = new HashSet<RecordType>();
+                        foreach (var field in obj.IterateFields(
+                            nonIntegrated: false,
+                            expandSets: SetMarkerType.ExpandSets.FalseAndInclude))
+                        {
+                            if (!field.TryGetFieldData(out var fieldData)) break;
+                            if (!fieldData.HasTrigger) break;
+                            recTypes.Add(fieldData.TriggeringRecordTypes);
+                            if (field is SetMarkerType) break;
+                            if (field.IsEnumerable && !(field is ByteArrayType)) continue;
+                            if (field.Notifying != NotifyingOption.None) break;
+                            if (!field.IsNullable()) break;
 
-                }
-                obj.CustomData[Constants.TRIGGERING_RECORD_TYPE] = recTypes;
-            }
+                        }
+                        obj.CustomData[Constants.TRIGGERING_RECORD_TYPE] = recTypes;
+                    }
 
-            if (isGRUP)
-            {
-                obj.CustomData[Constants.TRIGGERING_RECORD_TYPE] = new RecordType[] { new RecordType("GRUP") };
-            }
+                    if (isGRUP)
+                    {
+                        obj.CustomData[Constants.TRIGGERING_RECORD_TYPE] = new RecordType[] { new RecordType("GRUP") };
+                    }
 
-            if (obj.TryGetMarkerType(out var markerType))
-            {
-                obj.CustomData[Constants.TRIGGERING_RECORD_TYPE] = new RecordType[] { markerType };
-            }
+                    if (obj.TryGetMarkerType(out var markerType))
+                    {
+                        obj.CustomData[Constants.TRIGGERING_RECORD_TYPE] = new RecordType[] { markerType };
+                    }
 
-            var objTriggers = await obj.TryGetTriggeringRecordTypes();
-            if (objTriggers.Succeeded)
-            {
-                if (objTriggers.Value.CountGreaterThan(1))
-                {
-                    throw new NotImplementedException();
-                }
-                else
-                {
-                    obj.CustomData[Constants.TRIGGERING_SOURCE] = obj.RecordTypeHeaderName(objTriggers.Value.First());
-                }
-            }
-
-
-            if (obj.CustomData.TryGetValue(Constants.TRIGGERING_RECORD_TASK, out var tcsTask))
-            {
-                TaskCompletionSource<bool> tcs = (TaskCompletionSource<bool>)tcsTask;
-                tcs.SetResult(true);
-            }
+                    var objTriggers = await obj.TryGetTriggeringRecordTypes();
+                    if (objTriggers.Succeeded)
+                    {
+                        if (objTriggers.Value.CountGreaterThan(1))
+                        {
+                            obj.CustomData[Constants.TRIGGERING_SOURCE] = $"{obj.RegistrationName}.TriggeringRecordTypes";
+                        }
+                        else
+                        {
+                            obj.CustomData[Constants.TRIGGERING_SOURCE] = obj.RecordTypeHeaderName(objTriggers.Value.First());
+                        }
+                    }
+                });
         }
 
         public override async Task PostLoad(ObjectGeneration obj)
