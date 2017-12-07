@@ -16,7 +16,8 @@ namespace Mutagen.Bethesda.Generation
             LoquiGenerator gen = new LoquiGenerator()
             {
                 RaisePropertyChangedDefault = false,
-                NotifyingDefault = NotifyingOption.Notifying
+                NotifyingDefault = true,
+                HasBeenSetDefault = true
             };
             gen.XmlTranslation.ShouldGenerateXSD = false;
             gen.XmlTranslation.AddTypeAssociation<FormIDType>(new PrimitiveXmlTranslationGeneration<FormID>());

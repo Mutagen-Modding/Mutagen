@@ -237,7 +237,7 @@ namespace Mutagen.Bethesda.Generation
                             recTypes.Add(fieldData.TriggeringRecordTypes);
                             if (field is SetMarkerType) break;
                             if (field.IsEnumerable && !(field is ByteArrayType)) continue;
-                            if (field.Notifying != NotifyingOption.None) break;
+                            if (!field.Bare) break;
                             if (!field.IsNullable()) break;
 
                         }

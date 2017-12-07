@@ -15,7 +15,7 @@
           </List>
           <Enum name="Flags" enumName="ClassFlag" />
           <Enum name="ClassServices" enumName="ClassService" />
-          <RefDirect name="Training" refName="ClassTraining" singleton="None" />
+          <RefDirect name="Training" refName="ClassTraining" nullable="None" />
         </Fields>
       </Data>
     </Fields>

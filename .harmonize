@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>524d6b902c41ca83af92cb21ccb36b72fa2d8213</Sha>
+         <Sha>d70dc393ca6449f19b3f50697840962a1d416032</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>12-02-2017 22:06:16</CommitDate>
-         <Description>Merge branch 'master' of https://github.com/Noggog/CSharpExt</Description>
+         <CommitDate>12-05-2017 20:49:17</CommitDate>
+         <Description>TaskExt.Timeout and DoThenComplete</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>eab7e024204c10c6da24d442ef41c76b985ad819</Sha>
+         <Sha>e9301f40c6e6d00aa803391d835fa063c3ef6ba9</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>12-03-2017 02:57:46</CommitDate>
-         <Description>Generation setup refactoring to allow LoquiGenerator to have less responsibility</Description>
+         <CommitDate>12-06-2017 19:09:54</CommitDate>
+         <Description>Merge branch 'Bugfix' into Dev</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

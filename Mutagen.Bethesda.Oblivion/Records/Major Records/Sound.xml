@@ -8,8 +8,8 @@
   </Object>
   <Object name="SoundData" objType="Subrecord" recordType="SNDD" IGetterExport="false" GUID="4849cf00-7d46-4b82-bec2-e7eb7f54e563" ID="40">
     <Fields>
-      <UInt16 name="MinimumAttenuationDistance" notifying="Notifying" customBinary="true" />
-      <UInt16 name="MaximumAttenuationDistance" notifying="Notifying" customBinary="true" />
+      <UInt16 name="MinimumAttenuationDistance" notifying="True" customBinary="true" />
+      <UInt16 name="MaximumAttenuationDistance" notifying="True" customBinary="true" />
       <Int8 name="FrequencyAdjustment" />
       <Buffer name="Marker" length="1" static="false" />
       <Enum name="Flags" enumName="SoundData.Flag" byteLength="4" />

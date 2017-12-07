@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="OblivionMod" objType="Mod" failOnUnknownType="false" GUID="b6f626df-b164-466b-960a-1639d88f66bc" ID="3">
     <Fields>
-      <Ref name="TES4" singleton="NotNull">
+      <Ref name="TES4" nullable="NotNull">
         <Direct refName="TES4" />
       </Ref>
       <Ref name="GameSettings">

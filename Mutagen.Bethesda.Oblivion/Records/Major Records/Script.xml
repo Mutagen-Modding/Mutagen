@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Script" objType="Record" recordType="SCPT" baseClass="MajorRecord" GUID="4eda2162-86bb-49f3-babd-a9ea5ad8d928" ID="46">
     <Fields>
-      <RefDirect name="MetadataSummary" refName="ScriptMetaSummary" singleton="Singleton" />
+      <RefDirect name="MetadataSummary" refName="ScriptMetaSummary" nullable="Singleton" />
       <ByteArray name="CompiledScript" recordType="SCDA" />
       <String name="SourceCode" recordType="SCTX" nullTerminate="false" />
       <List name="LocalVariables">

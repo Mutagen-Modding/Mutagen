@@ -607,7 +607,7 @@ namespace Mutagen.Bethesda.Generation
                 itemAccessor: new Accessor()
                 {
                     DirectAccess = $"item.{field.ProtectedName}",
-                    PropertyAccess = field.Notifying == NotifyingOption.None ? null : $"item.{field.ProtectedProperty}"
+                    PropertyAccess = field.Bare ? null : $"item.{field.ProtectedProperty}"
                 },
                 doMaskAccessor: "doMasks",
                 maskAccessor: $"errorMask");
