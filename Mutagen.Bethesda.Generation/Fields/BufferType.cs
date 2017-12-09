@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Generation
 
         public override async Task Load(XElement node, bool requireName = true)
         {
-            this.Nullable = false;
+            this.Singleton = SingletonLevel.NotNull;
             await base.Load(node, requireName);
             this.IntegrateField = false;
             this.Static = node.GetAttribute<bool>("static");

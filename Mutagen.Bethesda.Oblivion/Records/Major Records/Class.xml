@@ -24,7 +24,7 @@
     <Fields>
       <Enum name="TrainedSkill" enumName="Skill" byteLength="1" />
       <UInt8 name="MaximumTrainingLevel" max="100" min="0" />
-      <ByteArray name="Fluff" length="2" nullable="false" />
+      <ByteArray name="Fluff" length="2" nullable="NotNull" />
     </Fields>
   </Object>
 </Loqui>

@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>e9301f40c6e6d00aa803391d835fa063c3ef6ba9</Sha>
+         <Sha>f0f214de56c4731b3211affa019ca672e89897ad</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>12-06-2017 19:09:54</CommitDate>
-         <Description>Merge branch 'Bugfix' into Dev</Description>
+         <CommitDate>12-09-2017 18:00:31</CommitDate>
+         <Description>ObjectGeneration now has a LoadingComplete task to watch</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

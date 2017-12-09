@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="TES4" recordType="TES4" objType="Record" GUID="d26d9f2a-53af-4c45-9490-dfdb377b6655" ID="2">
     <Fields>
-      <ByteArray name="Fluff" length="12" nullable="false" />
+      <ByteArray name="Fluff" length="12" nullable="NotNull" />
       <RefDirect name="Header" refName="Header" nullable="NotNull" />
       <ByteArray name="TypeOffsets" recordType="OFST" optional="true" />
       <ByteArray name="Deleted" recordType="DELE" optional="true" />

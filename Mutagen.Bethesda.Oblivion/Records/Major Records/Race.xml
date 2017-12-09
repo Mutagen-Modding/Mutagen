@@ -10,7 +10,7 @@
       <Data>
         <Fields>
           <RefList name="SkillBoosts" maxSize="7" refName="SkillBoost" />
-          <ByteArray name="Fluff" length="4" nullable="false" />
+          <ByteArray name="Fluff" length="4" nullable="NotNull" />
           <Float name="MaleHeight" />
           <Float name="FemaleHeight" />
           <Float name="MaleWeight" />
@@ -33,7 +33,7 @@
         <FormID />
       </List>
       <RefDirect name="FaceGenData" refName="FaceGenData" />
-      <ByteArray name="Unknown" recordType="SNAM" length="2" nullable="false" />
+      <ByteArray name="Unknown" recordType="SNAM" length="2" nullable="NotNull" />
     </Fields>
   </Object>
   <Object name="SkillBoost" objType="Subrecord" GUID="5b28ecc2-3bf5-495e-9f6f-db9ce344e94e" ID="27">

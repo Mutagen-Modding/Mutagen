@@ -218,56 +218,52 @@ namespace Mutagen.Bethesda.Generation
         private async Task SetObjectTrigger(ObjectGeneration obj)
         {
             var data = obj.GetObjectData();
-            await TaskExt.DoThenComplete(data.TCS,
-                async () =>
+            var isGRUP = obj.Name.Equals("Group");
+            if (obj.TryGetRecordType(out var recType) && !isGRUP)
+            {
+                data.TriggeringRecordTypes.Add(recType);
+            }
+            else
+            {
+                HashSet<RecordType> recTypes = new HashSet<RecordType>();
+                foreach (var field in obj.IterateFields(
+                    nonIntegrated: false,
+                    expandSets: SetMarkerType.ExpandSets.FalseAndInclude))
                 {
-                    var isGRUP = obj.Name.Equals("Group");
-                    if (obj.TryGetRecordType(out var recType) && !isGRUP)
-                    {
-                        data.TriggeringRecordTypes.Add(recType);
-                    }
-                    else
-                    {
-                        HashSet<RecordType> recTypes = new HashSet<RecordType>();
-                        foreach (var field in obj.IterateFields(
-                            nonIntegrated: false,
-                            expandSets: SetMarkerType.ExpandSets.FalseAndInclude))
-                        {
-                            if (!field.TryGetFieldData(out var fieldData)) break;
-                            if (!fieldData.HasTrigger) break;
-                            recTypes.Add(fieldData.TriggeringRecordTypes);
-                            if (field is SetMarkerType) break;
-                            if (field.IsEnumerable && !(field is ByteArrayType)) continue;
-                            if (!field.Bare) break;
-                            if (!field.IsNullable()) break;
+                    if (!field.TryGetFieldData(out var fieldData)) break;
+                    if (!fieldData.HasTrigger) break;
+                    recTypes.Add(fieldData.TriggeringRecordTypes);
+                    if (field is SetMarkerType) break;
+                    if (field.IsEnumerable && !(field is ByteArrayType)) continue;
+                    if (!field.Bare) break;
+                    if (!field.IsNullable()) break;
 
-                        }
-                        data.TriggeringRecordTypes.Add(recTypes);
-                    }
+                }
+                data.TriggeringRecordTypes.Add(recTypes);
+            }
 
-                    if (isGRUP)
-                    {
-                        data.TriggeringRecordTypes.Add(new RecordType("GRUP"));
-                    }
+            if (isGRUP)
+            {
+                data.TriggeringRecordTypes.Add(new RecordType("GRUP"));
+            }
 
-                    if (obj.TryGetMarkerType(out var markerType))
-                    {
-                        data.TriggeringRecordTypes.Add(markerType);
-                    }
+            if (obj.TryGetMarkerType(out var markerType))
+            {
+                data.TriggeringRecordTypes.Add(markerType);
+            }
 
-                    
-                    if (data.TriggeringRecordTypes.Count > 0)
-                    {
-                        if (data.TriggeringRecordTypes.CountGreaterThan(1))
-                        {
-                            obj.GetObjectData().TriggeringSource = $"{obj.RegistrationName}.TriggeringRecordTypes";
-                        }
-                        else
-                        {
-                            obj.GetObjectData().TriggeringSource = obj.RecordTypeHeaderName(data.TriggeringRecordTypes.First());
-                        }
-                    }
-                });
+
+            if (data.TriggeringRecordTypes.Count > 0)
+            {
+                if (data.TriggeringRecordTypes.CountGreaterThan(1))
+                {
+                    obj.GetObjectData().TriggeringSource = $"{obj.RegistrationName}.TriggeringRecordTypes";
+                }
+                else
+                {
+                    obj.GetObjectData().TriggeringSource = obj.RecordTypeHeaderName(data.TriggeringRecordTypes.First());
+                }
+            }
         }
 
         public override async Task PostLoad(ObjectGeneration obj)

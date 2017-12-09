@@ -7,7 +7,7 @@
     <Fields>
       <String name="ContainedRecordType" derivative="true" customBinary="true" />
       <Int32 name="GroupType" />
-      <ByteArray name="LastModified" protected="true" length="4" nullable="false" />
+      <ByteArray name="LastModified" protected="true" length="4" nullable="NotNull" />
       <List name="Items">
         <Ref>
           <Generic>T</Generic>

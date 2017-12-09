@@ -14,6 +14,5 @@ namespace Mutagen.Bethesda.Generation
         public RecordType? MarkerType;
         public HashSet<RecordType> TriggeringRecordTypes = new HashSet<RecordType>();
         public string TriggeringSource;
-        public TaskCompletionSource<bool> TCS = new TaskCompletionSource<bool>();
     }
 }

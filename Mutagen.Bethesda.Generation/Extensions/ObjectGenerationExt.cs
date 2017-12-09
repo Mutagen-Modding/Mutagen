@@ -65,8 +65,8 @@ namespace Mutagen.Bethesda.Generation
 
         public static async Task<TryGet<IEnumerable<RecordType>>> TryGetTriggeringRecordTypes(this ObjectGeneration objGen)
         {
+            await objGen.LoadingCompleteTask.Task;
             var data = objGen.GetObjectData();
-            await data.TCS.Task;
             return TryGet<IEnumerable<RecordType>>.Create(
                 successful: data.TriggeringRecordTypes.Any(),
                 val: data.TriggeringRecordTypes);
