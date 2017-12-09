@@ -142,17 +142,18 @@ namespace Mutagen.Bethesda.Generation
 
         public override async Task PreLoad(ObjectGeneration obj)
         {
+            var data = obj.GetObjectData();
             var record = obj.Node.GetAttribute("recordType");
             var isGRUP = obj.Name.Equals("Group");
             if (record != null && !isGRUP)
             {
-                obj.CustomData[Constants.RECORD_TYPE] = new RecordType(record);
+                data.RecordType = new RecordType(record);
             }
-            obj.CustomData[Constants.FAIL_ON_UNKNOWN] = obj.Node.GetAttribute<bool>("failOnUnknownType", defaultVal: false);
+            data.FailOnUnknown = obj.Node.GetAttribute<bool>("failOnUnknownType", defaultVal: false);
 
             if (isGRUP)
             {
-                obj.CustomData[Constants.RECORD_TYPE] = new RecordType("GRUP");
+                data.RecordType = new RecordType("GRUP");
             }
 
             var objType = obj.Node.GetAttribute("objType");
@@ -160,13 +161,13 @@ namespace Mutagen.Bethesda.Generation
             {
                 throw new ArgumentException("Must specify object type.");
             }
-            obj.CustomData[Constants.OBJECT_TYPE] = objTypeEnum;
+            data.ObjectType = objTypeEnum;
 
             if (obj.Node.TryGetAttribute("markerType", out var markerType))
             {
                 var markerTypeRec = new RecordType(markerType.Value);
-                obj.CustomData[Constants.MARKER_TYPE] = markerTypeRec;
-                obj.CustomData[Constants.RECORD_TYPE] = markerTypeRec;
+                data.MarkerType = markerTypeRec;
+                data.RecordType = markerTypeRec;
             }
         }
 
@@ -216,14 +217,14 @@ namespace Mutagen.Bethesda.Generation
 
         private async Task SetObjectTrigger(ObjectGeneration obj)
         {
-            obj.TryGetTriggeringTCS(out var tcs);
-            await TaskExt.DoThenComplete(tcs,
+            var data = obj.GetObjectData();
+            await TaskExt.DoThenComplete(data.TCS,
                 async () =>
                 {
                     var isGRUP = obj.Name.Equals("Group");
                     if (obj.TryGetRecordType(out var recType) && !isGRUP)
                     {
-                        obj.CustomData[Constants.TRIGGERING_RECORD_TYPE] = new RecordType[] { recType };
+                        data.TriggeringRecordTypes.Add(recType);
                     }
                     else
                     {
@@ -241,29 +242,29 @@ namespace Mutagen.Bethesda.Generation
                             if (!field.IsNullable()) break;
 
                         }
-                        obj.CustomData[Constants.TRIGGERING_RECORD_TYPE] = recTypes;
+                        data.TriggeringRecordTypes.Add(recTypes);
                     }
 
                     if (isGRUP)
                     {
-                        obj.CustomData[Constants.TRIGGERING_RECORD_TYPE] = new RecordType[] { new RecordType("GRUP") };
+                        data.TriggeringRecordTypes.Add(new RecordType("GRUP"));
                     }
 
                     if (obj.TryGetMarkerType(out var markerType))
                     {
-                        obj.CustomData[Constants.TRIGGERING_RECORD_TYPE] = new RecordType[] { markerType };
+                        data.TriggeringRecordTypes.Add(markerType);
                     }
 
-                    var objTriggers = await obj.TryGetTriggeringRecordTypes();
-                    if (objTriggers.Succeeded)
+                    
+                    if (data.TriggeringRecordTypes.Count > 0)
                     {
-                        if (objTriggers.Value.CountGreaterThan(1))
+                        if (data.TriggeringRecordTypes.CountGreaterThan(1))
                         {
-                            obj.CustomData[Constants.TRIGGERING_SOURCE] = $"{obj.RegistrationName}.TriggeringRecordTypes";
+                            obj.GetObjectData().TriggeringSource = $"{obj.RegistrationName}.TriggeringRecordTypes";
                         }
                         else
                         {
-                            obj.CustomData[Constants.TRIGGERING_SOURCE] = obj.RecordTypeHeaderName(objTriggers.Value.First());
+                            obj.GetObjectData().TriggeringSource = obj.RecordTypeHeaderName(data.TriggeringRecordTypes.First());
                         }
                     }
                 });

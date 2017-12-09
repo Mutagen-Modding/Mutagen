@@ -10,6 +10,11 @@ namespace Mutagen.Bethesda.Generation
 {
     public static class ObjectGenerationExt
     {
+        public static MutagenObjData GetObjectData(this ObjectGeneration objGen)
+        {
+            return (MutagenObjData)objGen.CustomData.TryCreateValue(Constants.DATA_KEY, () => new MutagenObjData());
+        }
+
         public static RecordType GetRecordType(this ObjectGeneration objGen)
         {
             if (!TryGetRecordType(objGen, out var data))
@@ -21,13 +26,14 @@ namespace Mutagen.Bethesda.Generation
 
         public static bool TryGetRecordType(this ObjectGeneration objGen, out RecordType recType)
         {
-            if (objGen.CustomData.TryGetValue(Constants.RECORD_TYPE, out var dataObj))
+            var data = objGen.GetObjectData();
+            if (data.RecordType == null)
             {
-                recType = (RecordType)dataObj;
-                return true;
+                recType = default;
+                return false;
             }
-            recType = default(RecordType);
-            return false;
+            recType = data.RecordType.Value;
+            return true;
         }
 
         public static bool HasRecordType(this ObjectGeneration objGen)
@@ -47,52 +53,35 @@ namespace Mutagen.Bethesda.Generation
 
         public static bool TryGetMarkerType(this ObjectGeneration objGen, out RecordType recType)
         {
-            if (objGen.CustomData.TryGetValue(Constants.MARKER_TYPE, out var dataObj))
+            var data = objGen.GetObjectData();
+            if (data.MarkerType == null)
             {
-                recType = (RecordType)dataObj;
-                return true;
+                recType = default;
+                return false;
             }
-            recType = default(RecordType);
-            return false;
+            recType = data.MarkerType.Value;
+            return true;
         }
 
         public static async Task<TryGet<IEnumerable<RecordType>>> TryGetTriggeringRecordTypes(this ObjectGeneration objGen)
         {
-            if (objGen.CustomData.TryGetValue(Constants.TRIGGERING_RECORD_TYPE, out var dataObj))
-            {
-                var enumer = (IEnumerable<RecordType>)dataObj;
-                return TryGet<IEnumerable<RecordType>>.Create(
-                    successful: enumer.Any(),
-                    val: enumer);
-            }
-            var taskObj = (TaskCompletionSource<bool>)objGen.CustomData.TryCreateValue(Constants.TRIGGERING_RECORD_TASK, () => new TaskCompletionSource<bool>());
-            await taskObj.Task;
-            return await TryGetTriggeringRecordTypes(objGen);
-        }
-
-        public static bool TryGetTriggeringTCS(this ObjectGeneration objGen, out TaskCompletionSource<bool> tcs)
-        {
-            if (objGen.CustomData.TryGetValue(Constants.TRIGGERING_RECORD_TASK, out var tcsTask))
-            {
-                tcs = (TaskCompletionSource<bool>)tcsTask;
-                return true;
-            }
-            tcs = default(TaskCompletionSource<bool>);
-            return false;
+            var data = objGen.GetObjectData();
+            await data.TCS.Task;
+            return TryGet<IEnumerable<RecordType>>.Create(
+                successful: data.TriggeringRecordTypes.Any(),
+                val: data.TriggeringRecordTypes);
         }
 
         public static ObjectType GetObjectType(this ObjectGeneration objGen)
         {
-            if (objGen.CustomData.TryGetValue(Constants.OBJECT_TYPE, out var dataObj))
-            {
-                return (ObjectType)dataObj;
-            }
+            var objType = objGen.GetObjectData().ObjectType;
+            if (objType.HasValue) return objType.Value;
             throw new ArgumentException($"Object {objGen.Name} did not have object type defined.");
         }
 
         public static string GetTriggeringSource(this ObjectGeneration objGen)
         {
-            return objGen.CustomData[Constants.TRIGGERING_SOURCE] as string;
+            return objGen.GetObjectData().TriggeringSource;
         }
 
         public static string RecordTypeHeaderName(this ObjectGeneration objGen, RecordType recType)

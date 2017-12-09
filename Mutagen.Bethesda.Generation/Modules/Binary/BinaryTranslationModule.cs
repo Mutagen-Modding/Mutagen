@@ -510,7 +510,7 @@ namespace Mutagen.Bethesda.Generation
                             }
                             else
                             {
-                                var failOnUnknown = (bool)obj.CustomData[Constants.FAIL_ON_UNKNOWN];
+                                var failOnUnknown = obj.GetObjectData().FailOnUnknown;
                                 if (mutaObjType == ObjectType.Subrecord)
                                 {
                                     fg.AppendLine("return false;");

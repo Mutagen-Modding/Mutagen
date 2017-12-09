@@ -50,12 +50,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
+    <Compile Include="Custom Data\MutagenObjData.cs" />
     <Compile Include="Extensions\ObjectGenerationExt.cs" />
     <Compile Include="Extensions\TypeGenerationExt.cs" />
     <Compile Include="Fields\DataType.cs" />
     <Compile Include="Fields\EnumType.cs" />
     <Compile Include="Fields\FormIDType.cs" />
-    <Compile Include="Fields\MutagenFieldData.cs" />
+    <Compile Include="Custom Data\MutagenFieldData.cs" />
     <Compile Include="Fields\BufferType.cs" />
     <Compile Include="Fields\StringType.cs" />
     <Compile Include="Modules\Binary\BinaryTranslationModule.cs" />
