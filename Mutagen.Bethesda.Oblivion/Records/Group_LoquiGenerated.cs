@@ -1566,11 +1566,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case Group_FieldIndex.ContainedRecordType:
                     throw new ArgumentException($"Tried to set at a derivative index {index}");
+                case Group_FieldIndex.LastModified:
+                    throw new ArgumentException("Tried to set at a readonly index " + index);
                 case Group_FieldIndex.GroupType:
                     obj.GroupType_Property.HasBeenSet = on;
                     break;
-                case Group_FieldIndex.LastModified:
-                    throw new ArgumentException("Tried to set at a readonly index " + index);
                 case Group_FieldIndex.Items:
                     obj.Items.HasBeenSet = on;
                     break;

@@ -1123,11 +1123,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case MajorRecord_FieldIndex.RecordType:
                     throw new ArgumentException($"Tried to set at a derivative index {index}");
+                case MajorRecord_FieldIndex.FormID:
+                    throw new ArgumentException("Tried to set at a readonly index " + index);
                 case MajorRecord_FieldIndex.MajorRecordFlags:
                     obj.MajorRecordFlags_Property.HasBeenSet = on;
                     break;
-                case MajorRecord_FieldIndex.FormID:
-                    throw new ArgumentException("Tried to set at a readonly index " + index);
                 case MajorRecord_FieldIndex.Version:
                     obj.Version_Property.HasBeenSet = on;
                     break;
