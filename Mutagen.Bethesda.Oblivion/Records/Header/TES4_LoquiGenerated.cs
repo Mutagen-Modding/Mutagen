@@ -38,20 +38,20 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Fluff
-        protected readonly INotifyingItem<Byte[]> _Fluff = NotifyingItem.Factory<Byte[]>(
+        protected readonly INotifyingSetItem<Byte[]> _Fluff = NotifyingSetItem.Factory<Byte[]>(
             markAsSet: false,
             noNullFallback: () => new byte[12]);
-        public INotifyingItem<Byte[]> Fluff_Property => _Fluff;
+        public INotifyingSetItem<Byte[]> Fluff_Property => _Fluff;
         public Byte[] Fluff
         {
             get => this._Fluff.Item;
             set => this._Fluff.Set(value);
         }
-        INotifyingItem<Byte[]> ITES4.Fluff_Property => this.Fluff_Property;
-        INotifyingItemGetter<Byte[]> ITES4Getter.Fluff_Property => this.Fluff_Property;
+        INotifyingSetItem<Byte[]> ITES4.Fluff_Property => this.Fluff_Property;
+        INotifyingSetItemGetter<Byte[]> ITES4Getter.Fluff_Property => this.Fluff_Property;
         #endregion
         #region Header
-        private readonly INotifyingItem<Header> _Header = new NotifyingItemConvertWrapper<Header>(
+        private readonly INotifyingSetItem<Header> _Header = new NotifyingSetItemConvertWrapper<Header>(
             defaultVal: new Header(),
             incomingConverter: (change) =>
             {
@@ -62,55 +62,55 @@ namespace Mutagen.Bethesda.Oblivion
                 return TryGet<Header>.Succeed(change.New);
             }
         );
-        public INotifyingItem<Header> Header_Property => this._Header;
+        public INotifyingSetItem<Header> Header_Property => this._Header;
         Header ITES4Getter.Header => this.Header;
         public Header Header { get => _Header.Item; set => _Header.Item = value; }
-        INotifyingItem<Header> ITES4.Header_Property => this.Header_Property;
-        INotifyingItemGetter<Header> ITES4Getter.Header_Property => this.Header_Property;
+        INotifyingSetItem<Header> ITES4.Header_Property => this.Header_Property;
+        INotifyingSetItemGetter<Header> ITES4Getter.Header_Property => this.Header_Property;
         #endregion
         #region TypeOffsets
-        protected readonly INotifyingItem<Byte[]> _TypeOffsets = NotifyingItem.Factory<Byte[]>(markAsSet: false);
-        public INotifyingItem<Byte[]> TypeOffsets_Property => _TypeOffsets;
+        protected readonly INotifyingSetItem<Byte[]> _TypeOffsets = NotifyingSetItem.Factory<Byte[]>(markAsSet: false);
+        public INotifyingSetItem<Byte[]> TypeOffsets_Property => _TypeOffsets;
         public Byte[] TypeOffsets
         {
             get => this._TypeOffsets.Item;
             set => this._TypeOffsets.Set(value);
         }
-        INotifyingItem<Byte[]> ITES4.TypeOffsets_Property => this.TypeOffsets_Property;
-        INotifyingItemGetter<Byte[]> ITES4Getter.TypeOffsets_Property => this.TypeOffsets_Property;
+        INotifyingSetItem<Byte[]> ITES4.TypeOffsets_Property => this.TypeOffsets_Property;
+        INotifyingSetItemGetter<Byte[]> ITES4Getter.TypeOffsets_Property => this.TypeOffsets_Property;
         #endregion
         #region Deleted
-        protected readonly INotifyingItem<Byte[]> _Deleted = NotifyingItem.Factory<Byte[]>(markAsSet: false);
-        public INotifyingItem<Byte[]> Deleted_Property => _Deleted;
+        protected readonly INotifyingSetItem<Byte[]> _Deleted = NotifyingSetItem.Factory<Byte[]>(markAsSet: false);
+        public INotifyingSetItem<Byte[]> Deleted_Property => _Deleted;
         public Byte[] Deleted
         {
             get => this._Deleted.Item;
             set => this._Deleted.Set(value);
         }
-        INotifyingItem<Byte[]> ITES4.Deleted_Property => this.Deleted_Property;
-        INotifyingItemGetter<Byte[]> ITES4Getter.Deleted_Property => this.Deleted_Property;
+        INotifyingSetItem<Byte[]> ITES4.Deleted_Property => this.Deleted_Property;
+        INotifyingSetItemGetter<Byte[]> ITES4Getter.Deleted_Property => this.Deleted_Property;
         #endregion
         #region Author
-        protected readonly INotifyingItem<String> _Author = NotifyingItem.Factory<String>(markAsSet: false);
-        public INotifyingItem<String> Author_Property => _Author;
+        protected readonly INotifyingSetItem<String> _Author = NotifyingSetItem.Factory<String>(markAsSet: false);
+        public INotifyingSetItem<String> Author_Property => _Author;
         public String Author
         {
             get => this._Author.Item;
             set => this._Author.Set(value);
         }
-        INotifyingItem<String> ITES4.Author_Property => this.Author_Property;
-        INotifyingItemGetter<String> ITES4Getter.Author_Property => this.Author_Property;
+        INotifyingSetItem<String> ITES4.Author_Property => this.Author_Property;
+        INotifyingSetItemGetter<String> ITES4Getter.Author_Property => this.Author_Property;
         #endregion
         #region Description
-        protected readonly INotifyingItem<String> _Description = NotifyingItem.Factory<String>(markAsSet: false);
-        public INotifyingItem<String> Description_Property => _Description;
+        protected readonly INotifyingSetItem<String> _Description = NotifyingSetItem.Factory<String>(markAsSet: false);
+        public INotifyingSetItem<String> Description_Property => _Description;
         public String Description
         {
             get => this._Description.Item;
             set => this._Description.Set(value);
         }
-        INotifyingItem<String> ITES4.Description_Property => this.Description_Property;
-        INotifyingItemGetter<String> ITES4Getter.Description_Property => this.Description_Property;
+        INotifyingSetItem<String> ITES4.Description_Property => this.Description_Property;
+        INotifyingSetItemGetter<String> ITES4Getter.Description_Property => this.Description_Property;
         #endregion
         #region MasterReferences
         private readonly INotifyingList<MasterReference> _MasterReferences = new NotifyingList<MasterReference>();
@@ -1215,22 +1215,22 @@ namespace Mutagen.Bethesda.Oblivion
     public interface ITES4 : ITES4Getter, ILoquiClass<ITES4, ITES4Getter>, ILoquiClass<TES4, ITES4Getter>
     {
         new Byte[] Fluff { get; set; }
-        new INotifyingItem<Byte[]> Fluff_Property { get; }
+        new INotifyingSetItem<Byte[]> Fluff_Property { get; }
 
         new Header Header { get; set; }
-        new INotifyingItem<Header> Header_Property { get; }
+        new INotifyingSetItem<Header> Header_Property { get; }
 
         new Byte[] TypeOffsets { get; set; }
-        new INotifyingItem<Byte[]> TypeOffsets_Property { get; }
+        new INotifyingSetItem<Byte[]> TypeOffsets_Property { get; }
 
         new Byte[] Deleted { get; set; }
-        new INotifyingItem<Byte[]> Deleted_Property { get; }
+        new INotifyingSetItem<Byte[]> Deleted_Property { get; }
 
         new String Author { get; set; }
-        new INotifyingItem<String> Author_Property { get; }
+        new INotifyingSetItem<String> Author_Property { get; }
 
         new String Description { get; set; }
-        new INotifyingItem<String> Description_Property { get; }
+        new INotifyingSetItem<String> Description_Property { get; }
 
         new INotifyingList<MasterReference> MasterReferences { get; }
     }
@@ -1239,32 +1239,32 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Fluff
         Byte[] Fluff { get; }
-        INotifyingItemGetter<Byte[]> Fluff_Property { get; }
+        INotifyingSetItemGetter<Byte[]> Fluff_Property { get; }
 
         #endregion
         #region Header
         Header Header { get; }
-        INotifyingItemGetter<Header> Header_Property { get; }
+        INotifyingSetItemGetter<Header> Header_Property { get; }
 
         #endregion
         #region TypeOffsets
         Byte[] TypeOffsets { get; }
-        INotifyingItemGetter<Byte[]> TypeOffsets_Property { get; }
+        INotifyingSetItemGetter<Byte[]> TypeOffsets_Property { get; }
 
         #endregion
         #region Deleted
         Byte[] Deleted { get; }
-        INotifyingItemGetter<Byte[]> Deleted_Property { get; }
+        INotifyingSetItemGetter<Byte[]> Deleted_Property { get; }
 
         #endregion
         #region Author
         String Author { get; }
-        INotifyingItemGetter<String> Author_Property { get; }
+        INotifyingSetItemGetter<String> Author_Property { get; }
 
         #endregion
         #region Description
         String Description { get; }
-        INotifyingItemGetter<String> Description_Property { get; }
+        INotifyingSetItemGetter<String> Description_Property { get; }
 
         #endregion
         #region MasterReferences
@@ -1614,9 +1614,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Fluff_Property.SetToWithDefault(
-                        rhs.Fluff_Property,
-                        def?.Fluff_Property,
-                        cmds);
+                        rhs: rhs.Fluff_Property,
+                        def: def?.Fluff_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1680,9 +1680,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.TypeOffsets_Property.SetToWithDefault(
-                        rhs.TypeOffsets_Property,
-                        def?.TypeOffsets_Property,
-                        cmds);
+                        rhs: rhs.TypeOffsets_Property,
+                        def: def?.TypeOffsets_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1695,9 +1695,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Deleted_Property.SetToWithDefault(
-                        rhs.Deleted_Property,
-                        def?.Deleted_Property,
-                        cmds);
+                        rhs: rhs.Deleted_Property,
+                        def: def?.Deleted_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1710,9 +1710,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Author_Property.SetToWithDefault(
-                        rhs.Author_Property,
-                        def?.Author_Property,
-                        cmds);
+                        rhs: rhs.Author_Property,
+                        def: def?.Author_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1725,9 +1725,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Description_Property.SetToWithDefault(
-                        rhs.Description_Property,
-                        def?.Description_Property,
-                        cmds);
+                        rhs: rhs.Description_Property,
+                        def: def?.Description_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)

@@ -37,70 +37,70 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region MagicEffect
-        protected readonly INotifyingItem<FormID> _MagicEffect = NotifyingItem.Factory<FormID>(markAsSet: false);
-        public INotifyingItem<FormID> MagicEffect_Property => _MagicEffect;
+        protected readonly INotifyingSetItem<FormID> _MagicEffect = NotifyingSetItem.Factory<FormID>(markAsSet: false);
+        public INotifyingSetItem<FormID> MagicEffect_Property => _MagicEffect;
         public FormID MagicEffect
         {
             get => this._MagicEffect.Item;
             set => this._MagicEffect.Set(value);
         }
-        INotifyingItem<FormID> IEnchantmentEffect.MagicEffect_Property => this.MagicEffect_Property;
-        INotifyingItemGetter<FormID> IEnchantmentEffectGetter.MagicEffect_Property => this.MagicEffect_Property;
+        INotifyingSetItem<FormID> IEnchantmentEffect.MagicEffect_Property => this.MagicEffect_Property;
+        INotifyingSetItemGetter<FormID> IEnchantmentEffectGetter.MagicEffect_Property => this.MagicEffect_Property;
         #endregion
         #region Magnitude
-        protected readonly INotifyingItem<UInt32> _Magnitude = NotifyingItem.Factory<UInt32>(markAsSet: false);
-        public INotifyingItem<UInt32> Magnitude_Property => _Magnitude;
+        protected readonly INotifyingSetItem<UInt32> _Magnitude = NotifyingSetItem.Factory<UInt32>(markAsSet: false);
+        public INotifyingSetItem<UInt32> Magnitude_Property => _Magnitude;
         public UInt32 Magnitude
         {
             get => this._Magnitude.Item;
             set => this._Magnitude.Set(value);
         }
-        INotifyingItem<UInt32> IEnchantmentEffect.Magnitude_Property => this.Magnitude_Property;
-        INotifyingItemGetter<UInt32> IEnchantmentEffectGetter.Magnitude_Property => this.Magnitude_Property;
+        INotifyingSetItem<UInt32> IEnchantmentEffect.Magnitude_Property => this.Magnitude_Property;
+        INotifyingSetItemGetter<UInt32> IEnchantmentEffectGetter.Magnitude_Property => this.Magnitude_Property;
         #endregion
         #region Area
-        protected readonly INotifyingItem<UInt32> _Area = NotifyingItem.Factory<UInt32>(markAsSet: false);
-        public INotifyingItem<UInt32> Area_Property => _Area;
+        protected readonly INotifyingSetItem<UInt32> _Area = NotifyingSetItem.Factory<UInt32>(markAsSet: false);
+        public INotifyingSetItem<UInt32> Area_Property => _Area;
         public UInt32 Area
         {
             get => this._Area.Item;
             set => this._Area.Set(value);
         }
-        INotifyingItem<UInt32> IEnchantmentEffect.Area_Property => this.Area_Property;
-        INotifyingItemGetter<UInt32> IEnchantmentEffectGetter.Area_Property => this.Area_Property;
+        INotifyingSetItem<UInt32> IEnchantmentEffect.Area_Property => this.Area_Property;
+        INotifyingSetItemGetter<UInt32> IEnchantmentEffectGetter.Area_Property => this.Area_Property;
         #endregion
         #region Duration
-        protected readonly INotifyingItem<UInt32> _Duration = NotifyingItem.Factory<UInt32>(markAsSet: false);
-        public INotifyingItem<UInt32> Duration_Property => _Duration;
+        protected readonly INotifyingSetItem<UInt32> _Duration = NotifyingSetItem.Factory<UInt32>(markAsSet: false);
+        public INotifyingSetItem<UInt32> Duration_Property => _Duration;
         public UInt32 Duration
         {
             get => this._Duration.Item;
             set => this._Duration.Set(value);
         }
-        INotifyingItem<UInt32> IEnchantmentEffect.Duration_Property => this.Duration_Property;
-        INotifyingItemGetter<UInt32> IEnchantmentEffectGetter.Duration_Property => this.Duration_Property;
+        INotifyingSetItem<UInt32> IEnchantmentEffect.Duration_Property => this.Duration_Property;
+        INotifyingSetItemGetter<UInt32> IEnchantmentEffectGetter.Duration_Property => this.Duration_Property;
         #endregion
         #region Type
-        protected readonly INotifyingItem<EnchantmentEffect.EffectType> _Type = NotifyingItem.Factory<EnchantmentEffect.EffectType>(markAsSet: false);
-        public INotifyingItem<EnchantmentEffect.EffectType> Type_Property => _Type;
+        protected readonly INotifyingSetItem<EnchantmentEffect.EffectType> _Type = NotifyingSetItem.Factory<EnchantmentEffect.EffectType>(markAsSet: false);
+        public INotifyingSetItem<EnchantmentEffect.EffectType> Type_Property => _Type;
         public EnchantmentEffect.EffectType Type
         {
             get => this._Type.Item;
             set => this._Type.Set(value);
         }
-        INotifyingItem<EnchantmentEffect.EffectType> IEnchantmentEffect.Type_Property => this.Type_Property;
-        INotifyingItemGetter<EnchantmentEffect.EffectType> IEnchantmentEffectGetter.Type_Property => this.Type_Property;
+        INotifyingSetItem<EnchantmentEffect.EffectType> IEnchantmentEffect.Type_Property => this.Type_Property;
+        INotifyingSetItemGetter<EnchantmentEffect.EffectType> IEnchantmentEffectGetter.Type_Property => this.Type_Property;
         #endregion
         #region ActorValue
-        protected readonly INotifyingItem<ActorValue> _ActorValue = NotifyingItem.Factory<ActorValue>(markAsSet: false);
-        public INotifyingItem<ActorValue> ActorValue_Property => _ActorValue;
+        protected readonly INotifyingSetItem<ActorValue> _ActorValue = NotifyingSetItem.Factory<ActorValue>(markAsSet: false);
+        public INotifyingSetItem<ActorValue> ActorValue_Property => _ActorValue;
         public ActorValue ActorValue
         {
             get => this._ActorValue.Item;
             set => this._ActorValue.Set(value);
         }
-        INotifyingItem<ActorValue> IEnchantmentEffect.ActorValue_Property => this.ActorValue_Property;
-        INotifyingItemGetter<ActorValue> IEnchantmentEffectGetter.ActorValue_Property => this.ActorValue_Property;
+        INotifyingSetItem<ActorValue> IEnchantmentEffect.ActorValue_Property => this.ActorValue_Property;
+        INotifyingSetItemGetter<ActorValue> IEnchantmentEffectGetter.ActorValue_Property => this.ActorValue_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -1072,22 +1072,22 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IEnchantmentEffect : IEnchantmentEffectGetter, ILoquiClass<IEnchantmentEffect, IEnchantmentEffectGetter>, ILoquiClass<EnchantmentEffect, IEnchantmentEffectGetter>
     {
         new FormID MagicEffect { get; set; }
-        new INotifyingItem<FormID> MagicEffect_Property { get; }
+        new INotifyingSetItem<FormID> MagicEffect_Property { get; }
 
         new UInt32 Magnitude { get; set; }
-        new INotifyingItem<UInt32> Magnitude_Property { get; }
+        new INotifyingSetItem<UInt32> Magnitude_Property { get; }
 
         new UInt32 Area { get; set; }
-        new INotifyingItem<UInt32> Area_Property { get; }
+        new INotifyingSetItem<UInt32> Area_Property { get; }
 
         new UInt32 Duration { get; set; }
-        new INotifyingItem<UInt32> Duration_Property { get; }
+        new INotifyingSetItem<UInt32> Duration_Property { get; }
 
         new EnchantmentEffect.EffectType Type { get; set; }
-        new INotifyingItem<EnchantmentEffect.EffectType> Type_Property { get; }
+        new INotifyingSetItem<EnchantmentEffect.EffectType> Type_Property { get; }
 
         new ActorValue ActorValue { get; set; }
-        new INotifyingItem<ActorValue> ActorValue_Property { get; }
+        new INotifyingSetItem<ActorValue> ActorValue_Property { get; }
 
     }
 
@@ -1095,32 +1095,32 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region MagicEffect
         FormID MagicEffect { get; }
-        INotifyingItemGetter<FormID> MagicEffect_Property { get; }
+        INotifyingSetItemGetter<FormID> MagicEffect_Property { get; }
 
         #endregion
         #region Magnitude
         UInt32 Magnitude { get; }
-        INotifyingItemGetter<UInt32> Magnitude_Property { get; }
+        INotifyingSetItemGetter<UInt32> Magnitude_Property { get; }
 
         #endregion
         #region Area
         UInt32 Area { get; }
-        INotifyingItemGetter<UInt32> Area_Property { get; }
+        INotifyingSetItemGetter<UInt32> Area_Property { get; }
 
         #endregion
         #region Duration
         UInt32 Duration { get; }
-        INotifyingItemGetter<UInt32> Duration_Property { get; }
+        INotifyingSetItemGetter<UInt32> Duration_Property { get; }
 
         #endregion
         #region Type
         EnchantmentEffect.EffectType Type { get; }
-        INotifyingItemGetter<EnchantmentEffect.EffectType> Type_Property { get; }
+        INotifyingSetItemGetter<EnchantmentEffect.EffectType> Type_Property { get; }
 
         #endregion
         #region ActorValue
         ActorValue ActorValue { get; }
-        INotifyingItemGetter<ActorValue> ActorValue_Property { get; }
+        INotifyingSetItemGetter<ActorValue> ActorValue_Property { get; }
 
         #endregion
 
@@ -1447,9 +1447,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.MagicEffect_Property.SetToWithDefault(
-                        rhs.MagicEffect_Property,
-                        def?.MagicEffect_Property,
-                        cmds);
+                        rhs: rhs.MagicEffect_Property,
+                        def: def?.MagicEffect_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1462,9 +1462,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Magnitude_Property.SetToWithDefault(
-                        rhs.Magnitude_Property,
-                        def?.Magnitude_Property,
-                        cmds);
+                        rhs: rhs.Magnitude_Property,
+                        def: def?.Magnitude_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1477,9 +1477,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Area_Property.SetToWithDefault(
-                        rhs.Area_Property,
-                        def?.Area_Property,
-                        cmds);
+                        rhs: rhs.Area_Property,
+                        def: def?.Area_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1492,9 +1492,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Duration_Property.SetToWithDefault(
-                        rhs.Duration_Property,
-                        def?.Duration_Property,
-                        cmds);
+                        rhs: rhs.Duration_Property,
+                        def: def?.Duration_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1507,9 +1507,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Type_Property.SetToWithDefault(
-                        rhs.Type_Property,
-                        def?.Type_Property,
-                        cmds);
+                        rhs: rhs.Type_Property,
+                        def: def?.Type_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1522,9 +1522,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.ActorValue_Property.SetToWithDefault(
-                        rhs.ActorValue_Property,
-                        def?.ActorValue_Property,
-                        cmds);
+                        rhs: rhs.ActorValue_Property,
+                        def: def?.ActorValue_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)

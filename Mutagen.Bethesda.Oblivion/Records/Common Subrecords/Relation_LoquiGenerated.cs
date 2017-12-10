@@ -37,26 +37,26 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Faction
-        protected readonly INotifyingItem<FormID> _Faction = NotifyingItem.Factory<FormID>(markAsSet: false);
-        public INotifyingItem<FormID> Faction_Property => _Faction;
+        protected readonly INotifyingSetItem<FormID> _Faction = NotifyingSetItem.Factory<FormID>(markAsSet: false);
+        public INotifyingSetItem<FormID> Faction_Property => _Faction;
         public FormID Faction
         {
             get => this._Faction.Item;
             set => this._Faction.Set(value);
         }
-        INotifyingItem<FormID> IRelation.Faction_Property => this.Faction_Property;
-        INotifyingItemGetter<FormID> IRelationGetter.Faction_Property => this.Faction_Property;
+        INotifyingSetItem<FormID> IRelation.Faction_Property => this.Faction_Property;
+        INotifyingSetItemGetter<FormID> IRelationGetter.Faction_Property => this.Faction_Property;
         #endregion
         #region Modifier
-        protected readonly INotifyingItem<Int32> _Modifier = NotifyingItem.Factory<Int32>(markAsSet: false);
-        public INotifyingItem<Int32> Modifier_Property => _Modifier;
+        protected readonly INotifyingSetItem<Int32> _Modifier = NotifyingSetItem.Factory<Int32>(markAsSet: false);
+        public INotifyingSetItem<Int32> Modifier_Property => _Modifier;
         public Int32 Modifier
         {
             get => this._Modifier.Item;
             set => this._Modifier.Set(value);
         }
-        INotifyingItem<Int32> IRelation.Modifier_Property => this.Modifier_Property;
-        INotifyingItemGetter<Int32> IRelationGetter.Modifier_Property => this.Modifier_Property;
+        INotifyingSetItem<Int32> IRelation.Modifier_Property => this.Modifier_Property;
+        INotifyingSetItemGetter<Int32> IRelationGetter.Modifier_Property => this.Modifier_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -907,10 +907,10 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IRelation : IRelationGetter, ILoquiClass<IRelation, IRelationGetter>, ILoquiClass<Relation, IRelationGetter>
     {
         new FormID Faction { get; set; }
-        new INotifyingItem<FormID> Faction_Property { get; }
+        new INotifyingSetItem<FormID> Faction_Property { get; }
 
         new Int32 Modifier { get; set; }
-        new INotifyingItem<Int32> Modifier_Property { get; }
+        new INotifyingSetItem<Int32> Modifier_Property { get; }
 
     }
 
@@ -918,12 +918,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Faction
         FormID Faction { get; }
-        INotifyingItemGetter<FormID> Faction_Property { get; }
+        INotifyingSetItemGetter<FormID> Faction_Property { get; }
 
         #endregion
         #region Modifier
         Int32 Modifier { get; }
-        INotifyingItemGetter<Int32> Modifier_Property { get; }
+        INotifyingSetItemGetter<Int32> Modifier_Property { get; }
 
         #endregion
 
@@ -1202,9 +1202,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Faction_Property.SetToWithDefault(
-                        rhs.Faction_Property,
-                        def?.Faction_Property,
-                        cmds);
+                        rhs: rhs.Faction_Property,
+                        def: def?.Faction_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1217,9 +1217,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Modifier_Property.SetToWithDefault(
-                        rhs.Modifier_Property,
-                        def?.Modifier_Property,
-                        cmds);
+                        rhs: rhs.Modifier_Property,
+                        def: def?.Modifier_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)

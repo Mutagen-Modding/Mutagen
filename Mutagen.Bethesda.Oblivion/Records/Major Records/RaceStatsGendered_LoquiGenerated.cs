@@ -38,20 +38,20 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Male
-        private readonly INotifyingItem<RaceStats> _Male = new NotifyingItem<RaceStats>();
-        public INotifyingItem<RaceStats> Male_Property => this._Male;
+        private readonly INotifyingSetItem<RaceStats> _Male = new NotifyingSetItem<RaceStats>();
+        public INotifyingSetItem<RaceStats> Male_Property => this._Male;
         RaceStats IRaceStatsGenderedGetter.Male => this.Male;
         public RaceStats Male { get => _Male.Item; set => _Male.Item = value; }
-        INotifyingItem<RaceStats> IRaceStatsGendered.Male_Property => this.Male_Property;
-        INotifyingItemGetter<RaceStats> IRaceStatsGenderedGetter.Male_Property => this.Male_Property;
+        INotifyingSetItem<RaceStats> IRaceStatsGendered.Male_Property => this.Male_Property;
+        INotifyingSetItemGetter<RaceStats> IRaceStatsGenderedGetter.Male_Property => this.Male_Property;
         #endregion
         #region Female
-        private readonly INotifyingItem<RaceStats> _Female = new NotifyingItem<RaceStats>();
-        public INotifyingItem<RaceStats> Female_Property => this._Female;
+        private readonly INotifyingSetItem<RaceStats> _Female = new NotifyingSetItem<RaceStats>();
+        public INotifyingSetItem<RaceStats> Female_Property => this._Female;
         RaceStats IRaceStatsGenderedGetter.Female => this.Female;
         public RaceStats Female { get => _Female.Item; set => _Female.Item = value; }
-        INotifyingItem<RaceStats> IRaceStatsGendered.Female_Property => this.Female_Property;
-        INotifyingItemGetter<RaceStats> IRaceStatsGenderedGetter.Female_Property => this.Female_Property;
+        INotifyingSetItem<RaceStats> IRaceStatsGendered.Female_Property => this.Female_Property;
+        INotifyingSetItemGetter<RaceStats> IRaceStatsGenderedGetter.Female_Property => this.Female_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -902,10 +902,10 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IRaceStatsGendered : IRaceStatsGenderedGetter, ILoquiClass<IRaceStatsGendered, IRaceStatsGenderedGetter>, ILoquiClass<RaceStatsGendered, IRaceStatsGenderedGetter>
     {
         new RaceStats Male { get; set; }
-        new INotifyingItem<RaceStats> Male_Property { get; }
+        new INotifyingSetItem<RaceStats> Male_Property { get; }
 
         new RaceStats Female { get; set; }
-        new INotifyingItem<RaceStats> Female_Property { get; }
+        new INotifyingSetItem<RaceStats> Female_Property { get; }
 
     }
 
@@ -913,12 +913,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Male
         RaceStats Male { get; }
-        INotifyingItemGetter<RaceStats> Male_Property { get; }
+        INotifyingSetItemGetter<RaceStats> Male_Property { get; }
 
         #endregion
         #region Female
         RaceStats Female { get; }
-        INotifyingItemGetter<RaceStats> Female_Property { get; }
+        INotifyingSetItemGetter<RaceStats> Female_Property { get; }
 
         #endregion
 

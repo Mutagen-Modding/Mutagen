@@ -38,23 +38,23 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region File
-        protected readonly INotifyingItem<FilePath> _File = NotifyingItem.Factory<FilePath>(markAsSet: false);
-        public INotifyingItem<FilePath> File_Property => _File;
+        protected readonly INotifyingSetItem<FilePath> _File = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
+        public INotifyingSetItem<FilePath> File_Property => _File;
         public FilePath File
         {
             get => this._File.Item;
             set => this._File.Set(value);
         }
-        INotifyingItem<FilePath> ISound.File_Property => this.File_Property;
-        INotifyingItemGetter<FilePath> ISoundGetter.File_Property => this.File_Property;
+        INotifyingSetItem<FilePath> ISound.File_Property => this.File_Property;
+        INotifyingSetItemGetter<FilePath> ISoundGetter.File_Property => this.File_Property;
         #endregion
         #region Data
-        private readonly INotifyingItem<SoundData> _Data = new NotifyingItem<SoundData>();
-        public INotifyingItem<SoundData> Data_Property => this._Data;
+        private readonly INotifyingSetItem<SoundData> _Data = new NotifyingSetItem<SoundData>();
+        public INotifyingSetItem<SoundData> Data_Property => this._Data;
         SoundData ISoundGetter.Data => this.Data;
         public SoundData Data { get => _Data.Item; set => _Data.Item = value; }
-        INotifyingItem<SoundData> ISound.Data_Property => this.Data_Property;
-        INotifyingItemGetter<SoundData> ISoundGetter.Data_Property => this.Data_Property;
+        INotifyingSetItem<SoundData> ISound.Data_Property => this.Data_Property;
+        INotifyingSetItemGetter<SoundData> ISoundGetter.Data_Property => this.Data_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -966,10 +966,10 @@ namespace Mutagen.Bethesda.Oblivion
     public interface ISound : ISoundGetter, IMajorRecord, ILoquiClass<ISound, ISoundGetter>, ILoquiClass<Sound, ISoundGetter>
     {
         new FilePath File { get; set; }
-        new INotifyingItem<FilePath> File_Property { get; }
+        new INotifyingSetItem<FilePath> File_Property { get; }
 
         new SoundData Data { get; set; }
-        new INotifyingItem<SoundData> Data_Property { get; }
+        new INotifyingSetItem<SoundData> Data_Property { get; }
 
     }
 
@@ -977,12 +977,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region File
         FilePath File { get; }
-        INotifyingItemGetter<FilePath> File_Property { get; }
+        INotifyingSetItemGetter<FilePath> File_Property { get; }
 
         #endregion
         #region Data
         SoundData Data { get; }
-        INotifyingItemGetter<SoundData> Data_Property { get; }
+        INotifyingSetItemGetter<SoundData> Data_Property { get; }
 
         #endregion
 
@@ -1273,9 +1273,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.File_Property.SetToWithDefault(
-                        rhs.File_Property,
-                        def?.File_Property,
-                        cmds);
+                        rhs: rhs.File_Property,
+                        def: def?.File_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)

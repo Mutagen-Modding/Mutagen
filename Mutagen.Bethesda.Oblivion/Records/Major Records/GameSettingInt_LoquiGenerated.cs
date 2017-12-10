@@ -37,15 +37,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Data
-        protected readonly INotifyingItem<Int32> _Data = NotifyingItem.Factory<Int32>(markAsSet: false);
-        public INotifyingItem<Int32> Data_Property => _Data;
+        protected readonly INotifyingSetItem<Int32> _Data = NotifyingSetItem.Factory<Int32>(markAsSet: false);
+        public INotifyingSetItem<Int32> Data_Property => _Data;
         public Int32 Data
         {
             get => this._Data.Item;
             set => this._Data.Set(value);
         }
-        INotifyingItem<Int32> IGameSettingInt.Data_Property => this.Data_Property;
-        INotifyingItemGetter<Int32> IGameSettingIntGetter.Data_Property => this.Data_Property;
+        INotifyingSetItem<Int32> IGameSettingInt.Data_Property => this.Data_Property;
+        INotifyingSetItemGetter<Int32> IGameSettingIntGetter.Data_Property => this.Data_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -935,7 +935,7 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IGameSettingInt : IGameSettingIntGetter, IGameSetting, ILoquiClass<IGameSettingInt, IGameSettingIntGetter>, ILoquiClass<GameSettingInt, IGameSettingIntGetter>
     {
         new Int32 Data { get; set; }
-        new INotifyingItem<Int32> Data_Property { get; }
+        new INotifyingSetItem<Int32> Data_Property { get; }
 
     }
 
@@ -943,7 +943,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Data
         Int32 Data { get; }
-        INotifyingItemGetter<Int32> Data_Property { get; }
+        INotifyingSetItemGetter<Int32> Data_Property { get; }
 
         #endregion
 
@@ -1219,9 +1219,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Data_Property.SetToWithDefault(
-                        rhs.Data_Property,
-                        def?.Data_Property,
-                        cmds);
+                        rhs: rhs.Data_Property,
+                        def: def?.Data_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)

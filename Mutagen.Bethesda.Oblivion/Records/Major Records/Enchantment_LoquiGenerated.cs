@@ -37,48 +37,48 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Type
-        protected readonly INotifyingItem<Enchantment.EnchantmentType> _Type = NotifyingItem.Factory<Enchantment.EnchantmentType>(markAsSet: false);
-        public INotifyingItem<Enchantment.EnchantmentType> Type_Property => _Type;
+        protected readonly INotifyingSetItem<Enchantment.EnchantmentType> _Type = NotifyingSetItem.Factory<Enchantment.EnchantmentType>(markAsSet: false);
+        public INotifyingSetItem<Enchantment.EnchantmentType> Type_Property => _Type;
         public Enchantment.EnchantmentType Type
         {
             get => this._Type.Item;
             set => this._Type.Set(value);
         }
-        INotifyingItem<Enchantment.EnchantmentType> IEnchantment.Type_Property => this.Type_Property;
-        INotifyingItemGetter<Enchantment.EnchantmentType> IEnchantmentGetter.Type_Property => this.Type_Property;
+        INotifyingSetItem<Enchantment.EnchantmentType> IEnchantment.Type_Property => this.Type_Property;
+        INotifyingSetItemGetter<Enchantment.EnchantmentType> IEnchantmentGetter.Type_Property => this.Type_Property;
         #endregion
         #region ChargeAmount
-        protected readonly INotifyingItem<UInt32> _ChargeAmount = NotifyingItem.Factory<UInt32>(markAsSet: false);
-        public INotifyingItem<UInt32> ChargeAmount_Property => _ChargeAmount;
+        protected readonly INotifyingSetItem<UInt32> _ChargeAmount = NotifyingSetItem.Factory<UInt32>(markAsSet: false);
+        public INotifyingSetItem<UInt32> ChargeAmount_Property => _ChargeAmount;
         public UInt32 ChargeAmount
         {
             get => this._ChargeAmount.Item;
             set => this._ChargeAmount.Set(value);
         }
-        INotifyingItem<UInt32> IEnchantment.ChargeAmount_Property => this.ChargeAmount_Property;
-        INotifyingItemGetter<UInt32> IEnchantmentGetter.ChargeAmount_Property => this.ChargeAmount_Property;
+        INotifyingSetItem<UInt32> IEnchantment.ChargeAmount_Property => this.ChargeAmount_Property;
+        INotifyingSetItemGetter<UInt32> IEnchantmentGetter.ChargeAmount_Property => this.ChargeAmount_Property;
         #endregion
         #region EnchantCost
-        protected readonly INotifyingItem<UInt32> _EnchantCost = NotifyingItem.Factory<UInt32>(markAsSet: false);
-        public INotifyingItem<UInt32> EnchantCost_Property => _EnchantCost;
+        protected readonly INotifyingSetItem<UInt32> _EnchantCost = NotifyingSetItem.Factory<UInt32>(markAsSet: false);
+        public INotifyingSetItem<UInt32> EnchantCost_Property => _EnchantCost;
         public UInt32 EnchantCost
         {
             get => this._EnchantCost.Item;
             set => this._EnchantCost.Set(value);
         }
-        INotifyingItem<UInt32> IEnchantment.EnchantCost_Property => this.EnchantCost_Property;
-        INotifyingItemGetter<UInt32> IEnchantmentGetter.EnchantCost_Property => this.EnchantCost_Property;
+        INotifyingSetItem<UInt32> IEnchantment.EnchantCost_Property => this.EnchantCost_Property;
+        INotifyingSetItemGetter<UInt32> IEnchantmentGetter.EnchantCost_Property => this.EnchantCost_Property;
         #endregion
         #region Flags
-        protected readonly INotifyingItem<Enchantment.Flag> _Flags = NotifyingItem.Factory<Enchantment.Flag>(markAsSet: false);
-        public INotifyingItem<Enchantment.Flag> Flags_Property => _Flags;
+        protected readonly INotifyingSetItem<Enchantment.Flag> _Flags = NotifyingSetItem.Factory<Enchantment.Flag>(markAsSet: false);
+        public INotifyingSetItem<Enchantment.Flag> Flags_Property => _Flags;
         public Enchantment.Flag Flags
         {
             get => this._Flags.Item;
             set => this._Flags.Set(value);
         }
-        INotifyingItem<Enchantment.Flag> IEnchantment.Flags_Property => this.Flags_Property;
-        INotifyingItemGetter<Enchantment.Flag> IEnchantmentGetter.Flags_Property => this.Flags_Property;
+        INotifyingSetItem<Enchantment.Flag> IEnchantment.Flags_Property => this.Flags_Property;
+        INotifyingSetItemGetter<Enchantment.Flag> IEnchantmentGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region Effects
         private readonly INotifyingList<EnchantmentEffect> _Effects = new NotifyingList<EnchantmentEffect>();
@@ -1146,16 +1146,16 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IEnchantment : IEnchantmentGetter, INamedMajorRecord, ILoquiClass<IEnchantment, IEnchantmentGetter>, ILoquiClass<Enchantment, IEnchantmentGetter>
     {
         new Enchantment.EnchantmentType Type { get; set; }
-        new INotifyingItem<Enchantment.EnchantmentType> Type_Property { get; }
+        new INotifyingSetItem<Enchantment.EnchantmentType> Type_Property { get; }
 
         new UInt32 ChargeAmount { get; set; }
-        new INotifyingItem<UInt32> ChargeAmount_Property { get; }
+        new INotifyingSetItem<UInt32> ChargeAmount_Property { get; }
 
         new UInt32 EnchantCost { get; set; }
-        new INotifyingItem<UInt32> EnchantCost_Property { get; }
+        new INotifyingSetItem<UInt32> EnchantCost_Property { get; }
 
         new Enchantment.Flag Flags { get; set; }
-        new INotifyingItem<Enchantment.Flag> Flags_Property { get; }
+        new INotifyingSetItem<Enchantment.Flag> Flags_Property { get; }
 
         new INotifyingList<EnchantmentEffect> Effects { get; }
     }
@@ -1164,22 +1164,22 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Type
         Enchantment.EnchantmentType Type { get; }
-        INotifyingItemGetter<Enchantment.EnchantmentType> Type_Property { get; }
+        INotifyingSetItemGetter<Enchantment.EnchantmentType> Type_Property { get; }
 
         #endregion
         #region ChargeAmount
         UInt32 ChargeAmount { get; }
-        INotifyingItemGetter<UInt32> ChargeAmount_Property { get; }
+        INotifyingSetItemGetter<UInt32> ChargeAmount_Property { get; }
 
         #endregion
         #region EnchantCost
         UInt32 EnchantCost { get; }
-        INotifyingItemGetter<UInt32> EnchantCost_Property { get; }
+        INotifyingSetItemGetter<UInt32> EnchantCost_Property { get; }
 
         #endregion
         #region Flags
         Enchantment.Flag Flags { get; }
-        INotifyingItemGetter<Enchantment.Flag> Flags_Property { get; }
+        INotifyingSetItemGetter<Enchantment.Flag> Flags_Property { get; }
 
         #endregion
         #region Effects
@@ -1509,9 +1509,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Type_Property.SetToWithDefault(
-                        rhs.Type_Property,
-                        def?.Type_Property,
-                        cmds);
+                        rhs: rhs.Type_Property,
+                        def: def?.Type_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1524,9 +1524,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.ChargeAmount_Property.SetToWithDefault(
-                        rhs.ChargeAmount_Property,
-                        def?.ChargeAmount_Property,
-                        cmds);
+                        rhs: rhs.ChargeAmount_Property,
+                        def: def?.ChargeAmount_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1539,9 +1539,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.EnchantCost_Property.SetToWithDefault(
-                        rhs.EnchantCost_Property,
-                        def?.EnchantCost_Property,
-                        cmds);
+                        rhs: rhs.EnchantCost_Property,
+                        def: def?.EnchantCost_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1554,9 +1554,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Flags_Property.SetToWithDefault(
-                        rhs.Flags_Property,
-                        def?.Flags_Property,
-                        cmds);
+                        rhs: rhs.Flags_Property,
+                        def: def?.Flags_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)

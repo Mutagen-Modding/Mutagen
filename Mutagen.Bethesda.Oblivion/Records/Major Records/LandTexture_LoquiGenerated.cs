@@ -38,34 +38,34 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Icon
-        protected readonly INotifyingItem<FilePath> _Icon = NotifyingItem.Factory<FilePath>(markAsSet: false);
-        public INotifyingItem<FilePath> Icon_Property => _Icon;
+        protected readonly INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
+        public INotifyingSetItem<FilePath> Icon_Property => _Icon;
         public FilePath Icon
         {
             get => this._Icon.Item;
             set => this._Icon.Set(value);
         }
-        INotifyingItem<FilePath> ILandTexture.Icon_Property => this.Icon_Property;
-        INotifyingItemGetter<FilePath> ILandTextureGetter.Icon_Property => this.Icon_Property;
+        INotifyingSetItem<FilePath> ILandTexture.Icon_Property => this.Icon_Property;
+        INotifyingSetItemGetter<FilePath> ILandTextureGetter.Icon_Property => this.Icon_Property;
         #endregion
         #region Havok
-        private readonly INotifyingItem<HavokData> _Havok = new NotifyingItem<HavokData>();
-        public INotifyingItem<HavokData> Havok_Property => this._Havok;
+        private readonly INotifyingSetItem<HavokData> _Havok = new NotifyingSetItem<HavokData>();
+        public INotifyingSetItem<HavokData> Havok_Property => this._Havok;
         HavokData ILandTextureGetter.Havok => this.Havok;
         public HavokData Havok { get => _Havok.Item; set => _Havok.Item = value; }
-        INotifyingItem<HavokData> ILandTexture.Havok_Property => this.Havok_Property;
-        INotifyingItemGetter<HavokData> ILandTextureGetter.Havok_Property => this.Havok_Property;
+        INotifyingSetItem<HavokData> ILandTexture.Havok_Property => this.Havok_Property;
+        INotifyingSetItemGetter<HavokData> ILandTextureGetter.Havok_Property => this.Havok_Property;
         #endregion
         #region TextureSpecularExponent
-        protected readonly INotifyingItem<Byte> _TextureSpecularExponent = NotifyingItem.Factory<Byte>(markAsSet: false);
-        public INotifyingItem<Byte> TextureSpecularExponent_Property => _TextureSpecularExponent;
+        protected readonly INotifyingSetItem<Byte> _TextureSpecularExponent = NotifyingSetItem.Factory<Byte>(markAsSet: false);
+        public INotifyingSetItem<Byte> TextureSpecularExponent_Property => _TextureSpecularExponent;
         public Byte TextureSpecularExponent
         {
             get => this._TextureSpecularExponent.Item;
             set => this._TextureSpecularExponent.Set(value);
         }
-        INotifyingItem<Byte> ILandTexture.TextureSpecularExponent_Property => this.TextureSpecularExponent_Property;
-        INotifyingItemGetter<Byte> ILandTextureGetter.TextureSpecularExponent_Property => this.TextureSpecularExponent_Property;
+        INotifyingSetItem<Byte> ILandTexture.TextureSpecularExponent_Property => this.TextureSpecularExponent_Property;
+        INotifyingSetItemGetter<Byte> ILandTextureGetter.TextureSpecularExponent_Property => this.TextureSpecularExponent_Property;
         #endregion
         #region PotentialGrass
         private readonly INotifyingList<FormID> _PotentialGrass = new NotifyingList<FormID>();
@@ -1076,13 +1076,13 @@ namespace Mutagen.Bethesda.Oblivion
     public interface ILandTexture : ILandTextureGetter, IMajorRecord, ILoquiClass<ILandTexture, ILandTextureGetter>, ILoquiClass<LandTexture, ILandTextureGetter>
     {
         new FilePath Icon { get; set; }
-        new INotifyingItem<FilePath> Icon_Property { get; }
+        new INotifyingSetItem<FilePath> Icon_Property { get; }
 
         new HavokData Havok { get; set; }
-        new INotifyingItem<HavokData> Havok_Property { get; }
+        new INotifyingSetItem<HavokData> Havok_Property { get; }
 
         new Byte TextureSpecularExponent { get; set; }
-        new INotifyingItem<Byte> TextureSpecularExponent_Property { get; }
+        new INotifyingSetItem<Byte> TextureSpecularExponent_Property { get; }
 
         new INotifyingList<FormID> PotentialGrass { get; }
     }
@@ -1091,17 +1091,17 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Icon
         FilePath Icon { get; }
-        INotifyingItemGetter<FilePath> Icon_Property { get; }
+        INotifyingSetItemGetter<FilePath> Icon_Property { get; }
 
         #endregion
         #region Havok
         HavokData Havok { get; }
-        INotifyingItemGetter<HavokData> Havok_Property { get; }
+        INotifyingSetItemGetter<HavokData> Havok_Property { get; }
 
         #endregion
         #region TextureSpecularExponent
         Byte TextureSpecularExponent { get; }
-        INotifyingItemGetter<Byte> TextureSpecularExponent_Property { get; }
+        INotifyingSetItemGetter<Byte> TextureSpecularExponent_Property { get; }
 
         #endregion
         #region PotentialGrass
@@ -1421,9 +1421,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Icon_Property.SetToWithDefault(
-                        rhs.Icon_Property,
-                        def?.Icon_Property,
-                        cmds);
+                        rhs: rhs.Icon_Property,
+                        def: def?.Icon_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1487,9 +1487,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.TextureSpecularExponent_Property.SetToWithDefault(
-                        rhs.TextureSpecularExponent_Property,
-                        def?.TextureSpecularExponent_Property,
-                        cmds);
+                        rhs: rhs.TextureSpecularExponent_Property,
+                        def: def?.TextureSpecularExponent_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)

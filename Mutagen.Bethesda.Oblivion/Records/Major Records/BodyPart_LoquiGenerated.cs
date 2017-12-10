@@ -37,26 +37,26 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Index
-        protected readonly INotifyingItem<Race.BodyIndex> _Index = NotifyingItem.Factory<Race.BodyIndex>(markAsSet: false);
-        public INotifyingItem<Race.BodyIndex> Index_Property => _Index;
+        protected readonly INotifyingSetItem<Race.BodyIndex> _Index = NotifyingSetItem.Factory<Race.BodyIndex>(markAsSet: false);
+        public INotifyingSetItem<Race.BodyIndex> Index_Property => _Index;
         public Race.BodyIndex Index
         {
             get => this._Index.Item;
             set => this._Index.Set(value);
         }
-        INotifyingItem<Race.BodyIndex> IBodyPart.Index_Property => this.Index_Property;
-        INotifyingItemGetter<Race.BodyIndex> IBodyPartGetter.Index_Property => this.Index_Property;
+        INotifyingSetItem<Race.BodyIndex> IBodyPart.Index_Property => this.Index_Property;
+        INotifyingSetItemGetter<Race.BodyIndex> IBodyPartGetter.Index_Property => this.Index_Property;
         #endregion
         #region Icon
-        protected readonly INotifyingItem<FilePath> _Icon = NotifyingItem.Factory<FilePath>(markAsSet: false);
-        public INotifyingItem<FilePath> Icon_Property => _Icon;
+        protected readonly INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
+        public INotifyingSetItem<FilePath> Icon_Property => _Icon;
         public FilePath Icon
         {
             get => this._Icon.Item;
             set => this._Icon.Set(value);
         }
-        INotifyingItem<FilePath> IBodyPart.Icon_Property => this.Icon_Property;
-        INotifyingItemGetter<FilePath> IBodyPartGetter.Icon_Property => this.Icon_Property;
+        INotifyingSetItem<FilePath> IBodyPart.Icon_Property => this.Icon_Property;
+        INotifyingSetItemGetter<FilePath> IBodyPartGetter.Icon_Property => this.Icon_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -939,10 +939,10 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IBodyPart : IBodyPartGetter, ILoquiClass<IBodyPart, IBodyPartGetter>, ILoquiClass<BodyPart, IBodyPartGetter>
     {
         new Race.BodyIndex Index { get; set; }
-        new INotifyingItem<Race.BodyIndex> Index_Property { get; }
+        new INotifyingSetItem<Race.BodyIndex> Index_Property { get; }
 
         new FilePath Icon { get; set; }
-        new INotifyingItem<FilePath> Icon_Property { get; }
+        new INotifyingSetItem<FilePath> Icon_Property { get; }
 
     }
 
@@ -950,12 +950,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Index
         Race.BodyIndex Index { get; }
-        INotifyingItemGetter<Race.BodyIndex> Index_Property { get; }
+        INotifyingSetItemGetter<Race.BodyIndex> Index_Property { get; }
 
         #endregion
         #region Icon
         FilePath Icon { get; }
-        INotifyingItemGetter<FilePath> Icon_Property { get; }
+        INotifyingSetItemGetter<FilePath> Icon_Property { get; }
 
         #endregion
 
@@ -1235,9 +1235,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Index_Property.SetToWithDefault(
-                        rhs.Index_Property,
-                        def?.Index_Property,
-                        cmds);
+                        rhs: rhs.Index_Property,
+                        def: def?.Index_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1250,9 +1250,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Icon_Property.SetToWithDefault(
-                        rhs.Icon_Property,
-                        def?.Icon_Property,
-                        cmds);
+                        rhs: rhs.Icon_Property,
+                        def: def?.Icon_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)

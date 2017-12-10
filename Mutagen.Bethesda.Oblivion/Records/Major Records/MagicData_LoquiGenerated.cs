@@ -37,182 +37,182 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Flags
-        protected readonly INotifyingItem<MagicEffect.MagicFlag> _Flags = NotifyingItem.Factory<MagicEffect.MagicFlag>(markAsSet: false);
-        public INotifyingItem<MagicEffect.MagicFlag> Flags_Property => _Flags;
+        protected readonly INotifyingSetItem<MagicEffect.MagicFlag> _Flags = NotifyingSetItem.Factory<MagicEffect.MagicFlag>(markAsSet: false);
+        public INotifyingSetItem<MagicEffect.MagicFlag> Flags_Property => _Flags;
         public MagicEffect.MagicFlag Flags
         {
             get => this._Flags.Item;
             set => this._Flags.Set(value);
         }
-        INotifyingItem<MagicEffect.MagicFlag> IMagicData.Flags_Property => this.Flags_Property;
-        INotifyingItemGetter<MagicEffect.MagicFlag> IMagicDataGetter.Flags_Property => this.Flags_Property;
+        INotifyingSetItem<MagicEffect.MagicFlag> IMagicData.Flags_Property => this.Flags_Property;
+        INotifyingSetItemGetter<MagicEffect.MagicFlag> IMagicDataGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region BaseCost
-        protected readonly INotifyingItem<Single> _BaseCost = NotifyingItem.Factory<Single>(markAsSet: false);
-        public INotifyingItem<Single> BaseCost_Property => _BaseCost;
+        protected readonly INotifyingSetItem<Single> _BaseCost = NotifyingSetItem.Factory<Single>(markAsSet: false);
+        public INotifyingSetItem<Single> BaseCost_Property => _BaseCost;
         public Single BaseCost
         {
             get => this._BaseCost.Item;
             set => this._BaseCost.Set(value);
         }
-        INotifyingItem<Single> IMagicData.BaseCost_Property => this.BaseCost_Property;
-        INotifyingItemGetter<Single> IMagicDataGetter.BaseCost_Property => this.BaseCost_Property;
+        INotifyingSetItem<Single> IMagicData.BaseCost_Property => this.BaseCost_Property;
+        INotifyingSetItemGetter<Single> IMagicDataGetter.BaseCost_Property => this.BaseCost_Property;
         #endregion
         #region Unused
-        protected readonly INotifyingItem<Byte[]> _Unused = NotifyingItem.Factory<Byte[]>(
+        protected readonly INotifyingSetItem<Byte[]> _Unused = NotifyingSetItem.Factory<Byte[]>(
             markAsSet: false,
             noNullFallback: () => new byte[4]);
-        public INotifyingItem<Byte[]> Unused_Property => _Unused;
+        public INotifyingSetItem<Byte[]> Unused_Property => _Unused;
         public Byte[] Unused
         {
             get => this._Unused.Item;
             set => this._Unused.Set(value);
         }
-        INotifyingItem<Byte[]> IMagicData.Unused_Property => this.Unused_Property;
-        INotifyingItemGetter<Byte[]> IMagicDataGetter.Unused_Property => this.Unused_Property;
+        INotifyingSetItem<Byte[]> IMagicData.Unused_Property => this.Unused_Property;
+        INotifyingSetItemGetter<Byte[]> IMagicDataGetter.Unused_Property => this.Unused_Property;
         #endregion
         #region MagicSchool
-        protected readonly INotifyingItem<MagicSchool> _MagicSchool = NotifyingItem.Factory<MagicSchool>(markAsSet: false);
-        public INotifyingItem<MagicSchool> MagicSchool_Property => _MagicSchool;
+        protected readonly INotifyingSetItem<MagicSchool> _MagicSchool = NotifyingSetItem.Factory<MagicSchool>(markAsSet: false);
+        public INotifyingSetItem<MagicSchool> MagicSchool_Property => _MagicSchool;
         public MagicSchool MagicSchool
         {
             get => this._MagicSchool.Item;
             set => this._MagicSchool.Set(value);
         }
-        INotifyingItem<MagicSchool> IMagicData.MagicSchool_Property => this.MagicSchool_Property;
-        INotifyingItemGetter<MagicSchool> IMagicDataGetter.MagicSchool_Property => this.MagicSchool_Property;
+        INotifyingSetItem<MagicSchool> IMagicData.MagicSchool_Property => this.MagicSchool_Property;
+        INotifyingSetItemGetter<MagicSchool> IMagicDataGetter.MagicSchool_Property => this.MagicSchool_Property;
         #endregion
         #region Resistance
-        protected readonly INotifyingItem<Resistance> _Resistance = NotifyingItem.Factory<Resistance>(markAsSet: false);
-        public INotifyingItem<Resistance> Resistance_Property => _Resistance;
+        protected readonly INotifyingSetItem<Resistance> _Resistance = NotifyingSetItem.Factory<Resistance>(markAsSet: false);
+        public INotifyingSetItem<Resistance> Resistance_Property => _Resistance;
         public Resistance Resistance
         {
             get => this._Resistance.Item;
             set => this._Resistance.Set(value);
         }
-        INotifyingItem<Resistance> IMagicData.Resistance_Property => this.Resistance_Property;
-        INotifyingItemGetter<Resistance> IMagicDataGetter.Resistance_Property => this.Resistance_Property;
+        INotifyingSetItem<Resistance> IMagicData.Resistance_Property => this.Resistance_Property;
+        INotifyingSetItemGetter<Resistance> IMagicDataGetter.Resistance_Property => this.Resistance_Property;
         #endregion
         #region CounterEffectCount
-        protected readonly INotifyingItem<UInt32> _CounterEffectCount = NotifyingItem.Factory<UInt32>(markAsSet: false);
-        public INotifyingItem<UInt32> CounterEffectCount_Property => _CounterEffectCount;
+        protected readonly INotifyingSetItem<UInt32> _CounterEffectCount = NotifyingSetItem.Factory<UInt32>(markAsSet: false);
+        public INotifyingSetItem<UInt32> CounterEffectCount_Property => _CounterEffectCount;
         public UInt32 CounterEffectCount
         {
             get => this._CounterEffectCount.Item;
             set => this._CounterEffectCount.Set(value);
         }
-        INotifyingItem<UInt32> IMagicData.CounterEffectCount_Property => this.CounterEffectCount_Property;
-        INotifyingItemGetter<UInt32> IMagicDataGetter.CounterEffectCount_Property => this.CounterEffectCount_Property;
+        INotifyingSetItem<UInt32> IMagicData.CounterEffectCount_Property => this.CounterEffectCount_Property;
+        INotifyingSetItemGetter<UInt32> IMagicDataGetter.CounterEffectCount_Property => this.CounterEffectCount_Property;
         #endregion
         #region Light
-        protected readonly INotifyingItem<FormID> _Light = NotifyingItem.Factory<FormID>(markAsSet: false);
-        public INotifyingItem<FormID> Light_Property => _Light;
+        protected readonly INotifyingSetItem<FormID> _Light = NotifyingSetItem.Factory<FormID>(markAsSet: false);
+        public INotifyingSetItem<FormID> Light_Property => _Light;
         public FormID Light
         {
             get => this._Light.Item;
             set => this._Light.Set(value);
         }
-        INotifyingItem<FormID> IMagicData.Light_Property => this.Light_Property;
-        INotifyingItemGetter<FormID> IMagicDataGetter.Light_Property => this.Light_Property;
+        INotifyingSetItem<FormID> IMagicData.Light_Property => this.Light_Property;
+        INotifyingSetItemGetter<FormID> IMagicDataGetter.Light_Property => this.Light_Property;
         #endregion
         #region ProjectileSpeed
-        protected readonly INotifyingItem<Single> _ProjectileSpeed = NotifyingItem.Factory<Single>(markAsSet: false);
-        public INotifyingItem<Single> ProjectileSpeed_Property => _ProjectileSpeed;
+        protected readonly INotifyingSetItem<Single> _ProjectileSpeed = NotifyingSetItem.Factory<Single>(markAsSet: false);
+        public INotifyingSetItem<Single> ProjectileSpeed_Property => _ProjectileSpeed;
         public Single ProjectileSpeed
         {
             get => this._ProjectileSpeed.Item;
             set => this._ProjectileSpeed.Set(value);
         }
-        INotifyingItem<Single> IMagicData.ProjectileSpeed_Property => this.ProjectileSpeed_Property;
-        INotifyingItemGetter<Single> IMagicDataGetter.ProjectileSpeed_Property => this.ProjectileSpeed_Property;
+        INotifyingSetItem<Single> IMagicData.ProjectileSpeed_Property => this.ProjectileSpeed_Property;
+        INotifyingSetItemGetter<Single> IMagicDataGetter.ProjectileSpeed_Property => this.ProjectileSpeed_Property;
         #endregion
         #region EffectShader
-        protected readonly INotifyingItem<FormID> _EffectShader = NotifyingItem.Factory<FormID>(markAsSet: false);
-        public INotifyingItem<FormID> EffectShader_Property => _EffectShader;
+        protected readonly INotifyingSetItem<FormID> _EffectShader = NotifyingSetItem.Factory<FormID>(markAsSet: false);
+        public INotifyingSetItem<FormID> EffectShader_Property => _EffectShader;
         public FormID EffectShader
         {
             get => this._EffectShader.Item;
             set => this._EffectShader.Set(value);
         }
-        INotifyingItem<FormID> IMagicData.EffectShader_Property => this.EffectShader_Property;
-        INotifyingItemGetter<FormID> IMagicDataGetter.EffectShader_Property => this.EffectShader_Property;
+        INotifyingSetItem<FormID> IMagicData.EffectShader_Property => this.EffectShader_Property;
+        INotifyingSetItemGetter<FormID> IMagicDataGetter.EffectShader_Property => this.EffectShader_Property;
         #endregion
         #region EnchantEffect
-        protected readonly INotifyingItem<FormID> _EnchantEffect = NotifyingItem.Factory<FormID>(markAsSet: false);
-        public INotifyingItem<FormID> EnchantEffect_Property => _EnchantEffect;
+        protected readonly INotifyingSetItem<FormID> _EnchantEffect = NotifyingSetItem.Factory<FormID>(markAsSet: false);
+        public INotifyingSetItem<FormID> EnchantEffect_Property => _EnchantEffect;
         public FormID EnchantEffect
         {
             get => this._EnchantEffect.Item;
             set => this._EnchantEffect.Set(value);
         }
-        INotifyingItem<FormID> IMagicData.EnchantEffect_Property => this.EnchantEffect_Property;
-        INotifyingItemGetter<FormID> IMagicDataGetter.EnchantEffect_Property => this.EnchantEffect_Property;
+        INotifyingSetItem<FormID> IMagicData.EnchantEffect_Property => this.EnchantEffect_Property;
+        INotifyingSetItemGetter<FormID> IMagicDataGetter.EnchantEffect_Property => this.EnchantEffect_Property;
         #endregion
         #region CastingSound
-        protected readonly INotifyingItem<FormID> _CastingSound = NotifyingItem.Factory<FormID>(markAsSet: false);
-        public INotifyingItem<FormID> CastingSound_Property => _CastingSound;
+        protected readonly INotifyingSetItem<FormID> _CastingSound = NotifyingSetItem.Factory<FormID>(markAsSet: false);
+        public INotifyingSetItem<FormID> CastingSound_Property => _CastingSound;
         public FormID CastingSound
         {
             get => this._CastingSound.Item;
             set => this._CastingSound.Set(value);
         }
-        INotifyingItem<FormID> IMagicData.CastingSound_Property => this.CastingSound_Property;
-        INotifyingItemGetter<FormID> IMagicDataGetter.CastingSound_Property => this.CastingSound_Property;
+        INotifyingSetItem<FormID> IMagicData.CastingSound_Property => this.CastingSound_Property;
+        INotifyingSetItemGetter<FormID> IMagicDataGetter.CastingSound_Property => this.CastingSound_Property;
         #endregion
         #region BoltSound
-        protected readonly INotifyingItem<FormID> _BoltSound = NotifyingItem.Factory<FormID>(markAsSet: false);
-        public INotifyingItem<FormID> BoltSound_Property => _BoltSound;
+        protected readonly INotifyingSetItem<FormID> _BoltSound = NotifyingSetItem.Factory<FormID>(markAsSet: false);
+        public INotifyingSetItem<FormID> BoltSound_Property => _BoltSound;
         public FormID BoltSound
         {
             get => this._BoltSound.Item;
             set => this._BoltSound.Set(value);
         }
-        INotifyingItem<FormID> IMagicData.BoltSound_Property => this.BoltSound_Property;
-        INotifyingItemGetter<FormID> IMagicDataGetter.BoltSound_Property => this.BoltSound_Property;
+        INotifyingSetItem<FormID> IMagicData.BoltSound_Property => this.BoltSound_Property;
+        INotifyingSetItemGetter<FormID> IMagicDataGetter.BoltSound_Property => this.BoltSound_Property;
         #endregion
         #region HitSound
-        protected readonly INotifyingItem<FormID> _HitSound = NotifyingItem.Factory<FormID>(markAsSet: false);
-        public INotifyingItem<FormID> HitSound_Property => _HitSound;
+        protected readonly INotifyingSetItem<FormID> _HitSound = NotifyingSetItem.Factory<FormID>(markAsSet: false);
+        public INotifyingSetItem<FormID> HitSound_Property => _HitSound;
         public FormID HitSound
         {
             get => this._HitSound.Item;
             set => this._HitSound.Set(value);
         }
-        INotifyingItem<FormID> IMagicData.HitSound_Property => this.HitSound_Property;
-        INotifyingItemGetter<FormID> IMagicDataGetter.HitSound_Property => this.HitSound_Property;
+        INotifyingSetItem<FormID> IMagicData.HitSound_Property => this.HitSound_Property;
+        INotifyingSetItemGetter<FormID> IMagicDataGetter.HitSound_Property => this.HitSound_Property;
         #endregion
         #region AreaSound
-        protected readonly INotifyingItem<FormID> _AreaSound = NotifyingItem.Factory<FormID>(markAsSet: false);
-        public INotifyingItem<FormID> AreaSound_Property => _AreaSound;
+        protected readonly INotifyingSetItem<FormID> _AreaSound = NotifyingSetItem.Factory<FormID>(markAsSet: false);
+        public INotifyingSetItem<FormID> AreaSound_Property => _AreaSound;
         public FormID AreaSound
         {
             get => this._AreaSound.Item;
             set => this._AreaSound.Set(value);
         }
-        INotifyingItem<FormID> IMagicData.AreaSound_Property => this.AreaSound_Property;
-        INotifyingItemGetter<FormID> IMagicDataGetter.AreaSound_Property => this.AreaSound_Property;
+        INotifyingSetItem<FormID> IMagicData.AreaSound_Property => this.AreaSound_Property;
+        INotifyingSetItemGetter<FormID> IMagicDataGetter.AreaSound_Property => this.AreaSound_Property;
         #endregion
         #region ConstantEffectEnchantmentFactor
-        protected readonly INotifyingItem<Single> _ConstantEffectEnchantmentFactor = NotifyingItem.Factory<Single>(markAsSet: false);
-        public INotifyingItem<Single> ConstantEffectEnchantmentFactor_Property => _ConstantEffectEnchantmentFactor;
+        protected readonly INotifyingSetItem<Single> _ConstantEffectEnchantmentFactor = NotifyingSetItem.Factory<Single>(markAsSet: false);
+        public INotifyingSetItem<Single> ConstantEffectEnchantmentFactor_Property => _ConstantEffectEnchantmentFactor;
         public Single ConstantEffectEnchantmentFactor
         {
             get => this._ConstantEffectEnchantmentFactor.Item;
             set => this._ConstantEffectEnchantmentFactor.Set(value);
         }
-        INotifyingItem<Single> IMagicData.ConstantEffectEnchantmentFactor_Property => this.ConstantEffectEnchantmentFactor_Property;
-        INotifyingItemGetter<Single> IMagicDataGetter.ConstantEffectEnchantmentFactor_Property => this.ConstantEffectEnchantmentFactor_Property;
+        INotifyingSetItem<Single> IMagicData.ConstantEffectEnchantmentFactor_Property => this.ConstantEffectEnchantmentFactor_Property;
+        INotifyingSetItemGetter<Single> IMagicDataGetter.ConstantEffectEnchantmentFactor_Property => this.ConstantEffectEnchantmentFactor_Property;
         #endregion
         #region ConstantEffectBarterFactor
-        protected readonly INotifyingItem<Single> _ConstantEffectBarterFactor = NotifyingItem.Factory<Single>(markAsSet: false);
-        public INotifyingItem<Single> ConstantEffectBarterFactor_Property => _ConstantEffectBarterFactor;
+        protected readonly INotifyingSetItem<Single> _ConstantEffectBarterFactor = NotifyingSetItem.Factory<Single>(markAsSet: false);
+        public INotifyingSetItem<Single> ConstantEffectBarterFactor_Property => _ConstantEffectBarterFactor;
         public Single ConstantEffectBarterFactor
         {
             get => this._ConstantEffectBarterFactor.Item;
             set => this._ConstantEffectBarterFactor.Set(value);
         }
-        INotifyingItem<Single> IMagicData.ConstantEffectBarterFactor_Property => this.ConstantEffectBarterFactor_Property;
-        INotifyingItemGetter<Single> IMagicDataGetter.ConstantEffectBarterFactor_Property => this.ConstantEffectBarterFactor_Property;
+        INotifyingSetItem<Single> IMagicData.ConstantEffectBarterFactor_Property => this.ConstantEffectBarterFactor_Property;
+        INotifyingSetItemGetter<Single> IMagicDataGetter.ConstantEffectBarterFactor_Property => this.ConstantEffectBarterFactor_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -1602,52 +1602,52 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IMagicData : IMagicDataGetter, ILoquiClass<IMagicData, IMagicDataGetter>, ILoquiClass<MagicData, IMagicDataGetter>
     {
         new MagicEffect.MagicFlag Flags { get; set; }
-        new INotifyingItem<MagicEffect.MagicFlag> Flags_Property { get; }
+        new INotifyingSetItem<MagicEffect.MagicFlag> Flags_Property { get; }
 
         new Single BaseCost { get; set; }
-        new INotifyingItem<Single> BaseCost_Property { get; }
+        new INotifyingSetItem<Single> BaseCost_Property { get; }
 
         new Byte[] Unused { get; set; }
-        new INotifyingItem<Byte[]> Unused_Property { get; }
+        new INotifyingSetItem<Byte[]> Unused_Property { get; }
 
         new MagicSchool MagicSchool { get; set; }
-        new INotifyingItem<MagicSchool> MagicSchool_Property { get; }
+        new INotifyingSetItem<MagicSchool> MagicSchool_Property { get; }
 
         new Resistance Resistance { get; set; }
-        new INotifyingItem<Resistance> Resistance_Property { get; }
+        new INotifyingSetItem<Resistance> Resistance_Property { get; }
 
         new UInt32 CounterEffectCount { get; set; }
-        new INotifyingItem<UInt32> CounterEffectCount_Property { get; }
+        new INotifyingSetItem<UInt32> CounterEffectCount_Property { get; }
 
         new FormID Light { get; set; }
-        new INotifyingItem<FormID> Light_Property { get; }
+        new INotifyingSetItem<FormID> Light_Property { get; }
 
         new Single ProjectileSpeed { get; set; }
-        new INotifyingItem<Single> ProjectileSpeed_Property { get; }
+        new INotifyingSetItem<Single> ProjectileSpeed_Property { get; }
 
         new FormID EffectShader { get; set; }
-        new INotifyingItem<FormID> EffectShader_Property { get; }
+        new INotifyingSetItem<FormID> EffectShader_Property { get; }
 
         new FormID EnchantEffect { get; set; }
-        new INotifyingItem<FormID> EnchantEffect_Property { get; }
+        new INotifyingSetItem<FormID> EnchantEffect_Property { get; }
 
         new FormID CastingSound { get; set; }
-        new INotifyingItem<FormID> CastingSound_Property { get; }
+        new INotifyingSetItem<FormID> CastingSound_Property { get; }
 
         new FormID BoltSound { get; set; }
-        new INotifyingItem<FormID> BoltSound_Property { get; }
+        new INotifyingSetItem<FormID> BoltSound_Property { get; }
 
         new FormID HitSound { get; set; }
-        new INotifyingItem<FormID> HitSound_Property { get; }
+        new INotifyingSetItem<FormID> HitSound_Property { get; }
 
         new FormID AreaSound { get; set; }
-        new INotifyingItem<FormID> AreaSound_Property { get; }
+        new INotifyingSetItem<FormID> AreaSound_Property { get; }
 
         new Single ConstantEffectEnchantmentFactor { get; set; }
-        new INotifyingItem<Single> ConstantEffectEnchantmentFactor_Property { get; }
+        new INotifyingSetItem<Single> ConstantEffectEnchantmentFactor_Property { get; }
 
         new Single ConstantEffectBarterFactor { get; set; }
-        new INotifyingItem<Single> ConstantEffectBarterFactor_Property { get; }
+        new INotifyingSetItem<Single> ConstantEffectBarterFactor_Property { get; }
 
     }
 
@@ -1655,82 +1655,82 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Flags
         MagicEffect.MagicFlag Flags { get; }
-        INotifyingItemGetter<MagicEffect.MagicFlag> Flags_Property { get; }
+        INotifyingSetItemGetter<MagicEffect.MagicFlag> Flags_Property { get; }
 
         #endregion
         #region BaseCost
         Single BaseCost { get; }
-        INotifyingItemGetter<Single> BaseCost_Property { get; }
+        INotifyingSetItemGetter<Single> BaseCost_Property { get; }
 
         #endregion
         #region Unused
         Byte[] Unused { get; }
-        INotifyingItemGetter<Byte[]> Unused_Property { get; }
+        INotifyingSetItemGetter<Byte[]> Unused_Property { get; }
 
         #endregion
         #region MagicSchool
         MagicSchool MagicSchool { get; }
-        INotifyingItemGetter<MagicSchool> MagicSchool_Property { get; }
+        INotifyingSetItemGetter<MagicSchool> MagicSchool_Property { get; }
 
         #endregion
         #region Resistance
         Resistance Resistance { get; }
-        INotifyingItemGetter<Resistance> Resistance_Property { get; }
+        INotifyingSetItemGetter<Resistance> Resistance_Property { get; }
 
         #endregion
         #region CounterEffectCount
         UInt32 CounterEffectCount { get; }
-        INotifyingItemGetter<UInt32> CounterEffectCount_Property { get; }
+        INotifyingSetItemGetter<UInt32> CounterEffectCount_Property { get; }
 
         #endregion
         #region Light
         FormID Light { get; }
-        INotifyingItemGetter<FormID> Light_Property { get; }
+        INotifyingSetItemGetter<FormID> Light_Property { get; }
 
         #endregion
         #region ProjectileSpeed
         Single ProjectileSpeed { get; }
-        INotifyingItemGetter<Single> ProjectileSpeed_Property { get; }
+        INotifyingSetItemGetter<Single> ProjectileSpeed_Property { get; }
 
         #endregion
         #region EffectShader
         FormID EffectShader { get; }
-        INotifyingItemGetter<FormID> EffectShader_Property { get; }
+        INotifyingSetItemGetter<FormID> EffectShader_Property { get; }
 
         #endregion
         #region EnchantEffect
         FormID EnchantEffect { get; }
-        INotifyingItemGetter<FormID> EnchantEffect_Property { get; }
+        INotifyingSetItemGetter<FormID> EnchantEffect_Property { get; }
 
         #endregion
         #region CastingSound
         FormID CastingSound { get; }
-        INotifyingItemGetter<FormID> CastingSound_Property { get; }
+        INotifyingSetItemGetter<FormID> CastingSound_Property { get; }
 
         #endregion
         #region BoltSound
         FormID BoltSound { get; }
-        INotifyingItemGetter<FormID> BoltSound_Property { get; }
+        INotifyingSetItemGetter<FormID> BoltSound_Property { get; }
 
         #endregion
         #region HitSound
         FormID HitSound { get; }
-        INotifyingItemGetter<FormID> HitSound_Property { get; }
+        INotifyingSetItemGetter<FormID> HitSound_Property { get; }
 
         #endregion
         #region AreaSound
         FormID AreaSound { get; }
-        INotifyingItemGetter<FormID> AreaSound_Property { get; }
+        INotifyingSetItemGetter<FormID> AreaSound_Property { get; }
 
         #endregion
         #region ConstantEffectEnchantmentFactor
         Single ConstantEffectEnchantmentFactor { get; }
-        INotifyingItemGetter<Single> ConstantEffectEnchantmentFactor_Property { get; }
+        INotifyingSetItemGetter<Single> ConstantEffectEnchantmentFactor_Property { get; }
 
         #endregion
         #region ConstantEffectBarterFactor
         Single ConstantEffectBarterFactor { get; }
-        INotifyingItemGetter<Single> ConstantEffectBarterFactor_Property { get; }
+        INotifyingSetItemGetter<Single> ConstantEffectBarterFactor_Property { get; }
 
         #endregion
 
@@ -2177,9 +2177,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Flags_Property.SetToWithDefault(
-                        rhs.Flags_Property,
-                        def?.Flags_Property,
-                        cmds);
+                        rhs: rhs.Flags_Property,
+                        def: def?.Flags_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -2192,9 +2192,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.BaseCost_Property.SetToWithDefault(
-                        rhs.BaseCost_Property,
-                        def?.BaseCost_Property,
-                        cmds);
+                        rhs: rhs.BaseCost_Property,
+                        def: def?.BaseCost_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -2207,9 +2207,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Unused_Property.SetToWithDefault(
-                        rhs.Unused_Property,
-                        def?.Unused_Property,
-                        cmds);
+                        rhs: rhs.Unused_Property,
+                        def: def?.Unused_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -2222,9 +2222,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.MagicSchool_Property.SetToWithDefault(
-                        rhs.MagicSchool_Property,
-                        def?.MagicSchool_Property,
-                        cmds);
+                        rhs: rhs.MagicSchool_Property,
+                        def: def?.MagicSchool_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -2237,9 +2237,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Resistance_Property.SetToWithDefault(
-                        rhs.Resistance_Property,
-                        def?.Resistance_Property,
-                        cmds);
+                        rhs: rhs.Resistance_Property,
+                        def: def?.Resistance_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -2252,9 +2252,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.CounterEffectCount_Property.SetToWithDefault(
-                        rhs.CounterEffectCount_Property,
-                        def?.CounterEffectCount_Property,
-                        cmds);
+                        rhs: rhs.CounterEffectCount_Property,
+                        def: def?.CounterEffectCount_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -2267,9 +2267,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Light_Property.SetToWithDefault(
-                        rhs.Light_Property,
-                        def?.Light_Property,
-                        cmds);
+                        rhs: rhs.Light_Property,
+                        def: def?.Light_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -2282,9 +2282,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.ProjectileSpeed_Property.SetToWithDefault(
-                        rhs.ProjectileSpeed_Property,
-                        def?.ProjectileSpeed_Property,
-                        cmds);
+                        rhs: rhs.ProjectileSpeed_Property,
+                        def: def?.ProjectileSpeed_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -2297,9 +2297,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.EffectShader_Property.SetToWithDefault(
-                        rhs.EffectShader_Property,
-                        def?.EffectShader_Property,
-                        cmds);
+                        rhs: rhs.EffectShader_Property,
+                        def: def?.EffectShader_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -2312,9 +2312,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.EnchantEffect_Property.SetToWithDefault(
-                        rhs.EnchantEffect_Property,
-                        def?.EnchantEffect_Property,
-                        cmds);
+                        rhs: rhs.EnchantEffect_Property,
+                        def: def?.EnchantEffect_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -2327,9 +2327,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.CastingSound_Property.SetToWithDefault(
-                        rhs.CastingSound_Property,
-                        def?.CastingSound_Property,
-                        cmds);
+                        rhs: rhs.CastingSound_Property,
+                        def: def?.CastingSound_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -2342,9 +2342,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.BoltSound_Property.SetToWithDefault(
-                        rhs.BoltSound_Property,
-                        def?.BoltSound_Property,
-                        cmds);
+                        rhs: rhs.BoltSound_Property,
+                        def: def?.BoltSound_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -2357,9 +2357,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.HitSound_Property.SetToWithDefault(
-                        rhs.HitSound_Property,
-                        def?.HitSound_Property,
-                        cmds);
+                        rhs: rhs.HitSound_Property,
+                        def: def?.HitSound_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -2372,9 +2372,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.AreaSound_Property.SetToWithDefault(
-                        rhs.AreaSound_Property,
-                        def?.AreaSound_Property,
-                        cmds);
+                        rhs: rhs.AreaSound_Property,
+                        def: def?.AreaSound_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -2387,9 +2387,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.ConstantEffectEnchantmentFactor_Property.SetToWithDefault(
-                        rhs.ConstantEffectEnchantmentFactor_Property,
-                        def?.ConstantEffectEnchantmentFactor_Property,
-                        cmds);
+                        rhs: rhs.ConstantEffectEnchantmentFactor_Property,
+                        def: def?.ConstantEffectEnchantmentFactor_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -2402,9 +2402,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.ConstantEffectBarterFactor_Property.SetToWithDefault(
-                        rhs.ConstantEffectBarterFactor_Property,
-                        def?.ConstantEffectBarterFactor_Property,
-                        cmds);
+                        rhs: rhs.ConstantEffectBarterFactor_Property,
+                        def: def?.ConstantEffectBarterFactor_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)

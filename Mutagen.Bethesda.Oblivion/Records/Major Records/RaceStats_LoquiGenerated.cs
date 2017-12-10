@@ -37,92 +37,92 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Strength
-        protected readonly INotifyingItem<Byte> _Strength = NotifyingItem.Factory<Byte>(markAsSet: false);
-        public INotifyingItem<Byte> Strength_Property => _Strength;
+        protected readonly INotifyingSetItem<Byte> _Strength = NotifyingSetItem.Factory<Byte>(markAsSet: false);
+        public INotifyingSetItem<Byte> Strength_Property => _Strength;
         public Byte Strength
         {
             get => this._Strength.Item;
             set => this._Strength.Set(value);
         }
-        INotifyingItem<Byte> IRaceStats.Strength_Property => this.Strength_Property;
-        INotifyingItemGetter<Byte> IRaceStatsGetter.Strength_Property => this.Strength_Property;
+        INotifyingSetItem<Byte> IRaceStats.Strength_Property => this.Strength_Property;
+        INotifyingSetItemGetter<Byte> IRaceStatsGetter.Strength_Property => this.Strength_Property;
         #endregion
         #region Intelligence
-        protected readonly INotifyingItem<Byte> _Intelligence = NotifyingItem.Factory<Byte>(markAsSet: false);
-        public INotifyingItem<Byte> Intelligence_Property => _Intelligence;
+        protected readonly INotifyingSetItem<Byte> _Intelligence = NotifyingSetItem.Factory<Byte>(markAsSet: false);
+        public INotifyingSetItem<Byte> Intelligence_Property => _Intelligence;
         public Byte Intelligence
         {
             get => this._Intelligence.Item;
             set => this._Intelligence.Set(value);
         }
-        INotifyingItem<Byte> IRaceStats.Intelligence_Property => this.Intelligence_Property;
-        INotifyingItemGetter<Byte> IRaceStatsGetter.Intelligence_Property => this.Intelligence_Property;
+        INotifyingSetItem<Byte> IRaceStats.Intelligence_Property => this.Intelligence_Property;
+        INotifyingSetItemGetter<Byte> IRaceStatsGetter.Intelligence_Property => this.Intelligence_Property;
         #endregion
         #region Willpower
-        protected readonly INotifyingItem<Byte> _Willpower = NotifyingItem.Factory<Byte>(markAsSet: false);
-        public INotifyingItem<Byte> Willpower_Property => _Willpower;
+        protected readonly INotifyingSetItem<Byte> _Willpower = NotifyingSetItem.Factory<Byte>(markAsSet: false);
+        public INotifyingSetItem<Byte> Willpower_Property => _Willpower;
         public Byte Willpower
         {
             get => this._Willpower.Item;
             set => this._Willpower.Set(value);
         }
-        INotifyingItem<Byte> IRaceStats.Willpower_Property => this.Willpower_Property;
-        INotifyingItemGetter<Byte> IRaceStatsGetter.Willpower_Property => this.Willpower_Property;
+        INotifyingSetItem<Byte> IRaceStats.Willpower_Property => this.Willpower_Property;
+        INotifyingSetItemGetter<Byte> IRaceStatsGetter.Willpower_Property => this.Willpower_Property;
         #endregion
         #region Agility
-        protected readonly INotifyingItem<Byte> _Agility = NotifyingItem.Factory<Byte>(markAsSet: false);
-        public INotifyingItem<Byte> Agility_Property => _Agility;
+        protected readonly INotifyingSetItem<Byte> _Agility = NotifyingSetItem.Factory<Byte>(markAsSet: false);
+        public INotifyingSetItem<Byte> Agility_Property => _Agility;
         public Byte Agility
         {
             get => this._Agility.Item;
             set => this._Agility.Set(value);
         }
-        INotifyingItem<Byte> IRaceStats.Agility_Property => this.Agility_Property;
-        INotifyingItemGetter<Byte> IRaceStatsGetter.Agility_Property => this.Agility_Property;
+        INotifyingSetItem<Byte> IRaceStats.Agility_Property => this.Agility_Property;
+        INotifyingSetItemGetter<Byte> IRaceStatsGetter.Agility_Property => this.Agility_Property;
         #endregion
         #region Speed
-        protected readonly INotifyingItem<Byte> _Speed = NotifyingItem.Factory<Byte>(markAsSet: false);
-        public INotifyingItem<Byte> Speed_Property => _Speed;
+        protected readonly INotifyingSetItem<Byte> _Speed = NotifyingSetItem.Factory<Byte>(markAsSet: false);
+        public INotifyingSetItem<Byte> Speed_Property => _Speed;
         public Byte Speed
         {
             get => this._Speed.Item;
             set => this._Speed.Set(value);
         }
-        INotifyingItem<Byte> IRaceStats.Speed_Property => this.Speed_Property;
-        INotifyingItemGetter<Byte> IRaceStatsGetter.Speed_Property => this.Speed_Property;
+        INotifyingSetItem<Byte> IRaceStats.Speed_Property => this.Speed_Property;
+        INotifyingSetItemGetter<Byte> IRaceStatsGetter.Speed_Property => this.Speed_Property;
         #endregion
         #region Endurance
-        protected readonly INotifyingItem<Byte> _Endurance = NotifyingItem.Factory<Byte>(markAsSet: false);
-        public INotifyingItem<Byte> Endurance_Property => _Endurance;
+        protected readonly INotifyingSetItem<Byte> _Endurance = NotifyingSetItem.Factory<Byte>(markAsSet: false);
+        public INotifyingSetItem<Byte> Endurance_Property => _Endurance;
         public Byte Endurance
         {
             get => this._Endurance.Item;
             set => this._Endurance.Set(value);
         }
-        INotifyingItem<Byte> IRaceStats.Endurance_Property => this.Endurance_Property;
-        INotifyingItemGetter<Byte> IRaceStatsGetter.Endurance_Property => this.Endurance_Property;
+        INotifyingSetItem<Byte> IRaceStats.Endurance_Property => this.Endurance_Property;
+        INotifyingSetItemGetter<Byte> IRaceStatsGetter.Endurance_Property => this.Endurance_Property;
         #endregion
         #region Personality
-        protected readonly INotifyingItem<Byte> _Personality = NotifyingItem.Factory<Byte>(markAsSet: false);
-        public INotifyingItem<Byte> Personality_Property => _Personality;
+        protected readonly INotifyingSetItem<Byte> _Personality = NotifyingSetItem.Factory<Byte>(markAsSet: false);
+        public INotifyingSetItem<Byte> Personality_Property => _Personality;
         public Byte Personality
         {
             get => this._Personality.Item;
             set => this._Personality.Set(value);
         }
-        INotifyingItem<Byte> IRaceStats.Personality_Property => this.Personality_Property;
-        INotifyingItemGetter<Byte> IRaceStatsGetter.Personality_Property => this.Personality_Property;
+        INotifyingSetItem<Byte> IRaceStats.Personality_Property => this.Personality_Property;
+        INotifyingSetItemGetter<Byte> IRaceStatsGetter.Personality_Property => this.Personality_Property;
         #endregion
         #region Luck
-        protected readonly INotifyingItem<Byte> _Luck = NotifyingItem.Factory<Byte>(markAsSet: false);
-        public INotifyingItem<Byte> Luck_Property => _Luck;
+        protected readonly INotifyingSetItem<Byte> _Luck = NotifyingSetItem.Factory<Byte>(markAsSet: false);
+        public INotifyingSetItem<Byte> Luck_Property => _Luck;
         public Byte Luck
         {
             get => this._Luck.Item;
             set => this._Luck.Set(value);
         }
-        INotifyingItem<Byte> IRaceStats.Luck_Property => this.Luck_Property;
-        INotifyingItemGetter<Byte> IRaceStatsGetter.Luck_Property => this.Luck_Property;
+        INotifyingSetItem<Byte> IRaceStats.Luck_Property => this.Luck_Property;
+        INotifyingSetItemGetter<Byte> IRaceStatsGetter.Luck_Property => this.Luck_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -1198,28 +1198,28 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IRaceStats : IRaceStatsGetter, ILoquiClass<IRaceStats, IRaceStatsGetter>, ILoquiClass<RaceStats, IRaceStatsGetter>
     {
         new Byte Strength { get; set; }
-        new INotifyingItem<Byte> Strength_Property { get; }
+        new INotifyingSetItem<Byte> Strength_Property { get; }
 
         new Byte Intelligence { get; set; }
-        new INotifyingItem<Byte> Intelligence_Property { get; }
+        new INotifyingSetItem<Byte> Intelligence_Property { get; }
 
         new Byte Willpower { get; set; }
-        new INotifyingItem<Byte> Willpower_Property { get; }
+        new INotifyingSetItem<Byte> Willpower_Property { get; }
 
         new Byte Agility { get; set; }
-        new INotifyingItem<Byte> Agility_Property { get; }
+        new INotifyingSetItem<Byte> Agility_Property { get; }
 
         new Byte Speed { get; set; }
-        new INotifyingItem<Byte> Speed_Property { get; }
+        new INotifyingSetItem<Byte> Speed_Property { get; }
 
         new Byte Endurance { get; set; }
-        new INotifyingItem<Byte> Endurance_Property { get; }
+        new INotifyingSetItem<Byte> Endurance_Property { get; }
 
         new Byte Personality { get; set; }
-        new INotifyingItem<Byte> Personality_Property { get; }
+        new INotifyingSetItem<Byte> Personality_Property { get; }
 
         new Byte Luck { get; set; }
-        new INotifyingItem<Byte> Luck_Property { get; }
+        new INotifyingSetItem<Byte> Luck_Property { get; }
 
     }
 
@@ -1227,42 +1227,42 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Strength
         Byte Strength { get; }
-        INotifyingItemGetter<Byte> Strength_Property { get; }
+        INotifyingSetItemGetter<Byte> Strength_Property { get; }
 
         #endregion
         #region Intelligence
         Byte Intelligence { get; }
-        INotifyingItemGetter<Byte> Intelligence_Property { get; }
+        INotifyingSetItemGetter<Byte> Intelligence_Property { get; }
 
         #endregion
         #region Willpower
         Byte Willpower { get; }
-        INotifyingItemGetter<Byte> Willpower_Property { get; }
+        INotifyingSetItemGetter<Byte> Willpower_Property { get; }
 
         #endregion
         #region Agility
         Byte Agility { get; }
-        INotifyingItemGetter<Byte> Agility_Property { get; }
+        INotifyingSetItemGetter<Byte> Agility_Property { get; }
 
         #endregion
         #region Speed
         Byte Speed { get; }
-        INotifyingItemGetter<Byte> Speed_Property { get; }
+        INotifyingSetItemGetter<Byte> Speed_Property { get; }
 
         #endregion
         #region Endurance
         Byte Endurance { get; }
-        INotifyingItemGetter<Byte> Endurance_Property { get; }
+        INotifyingSetItemGetter<Byte> Endurance_Property { get; }
 
         #endregion
         #region Personality
         Byte Personality { get; }
-        INotifyingItemGetter<Byte> Personality_Property { get; }
+        INotifyingSetItemGetter<Byte> Personality_Property { get; }
 
         #endregion
         #region Luck
         Byte Luck { get; }
-        INotifyingItemGetter<Byte> Luck_Property { get; }
+        INotifyingSetItemGetter<Byte> Luck_Property { get; }
 
         #endregion
 
@@ -1611,9 +1611,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Strength_Property.SetToWithDefault(
-                        rhs.Strength_Property,
-                        def?.Strength_Property,
-                        cmds);
+                        rhs: rhs.Strength_Property,
+                        def: def?.Strength_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1626,9 +1626,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Intelligence_Property.SetToWithDefault(
-                        rhs.Intelligence_Property,
-                        def?.Intelligence_Property,
-                        cmds);
+                        rhs: rhs.Intelligence_Property,
+                        def: def?.Intelligence_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1641,9 +1641,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Willpower_Property.SetToWithDefault(
-                        rhs.Willpower_Property,
-                        def?.Willpower_Property,
-                        cmds);
+                        rhs: rhs.Willpower_Property,
+                        def: def?.Willpower_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1656,9 +1656,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Agility_Property.SetToWithDefault(
-                        rhs.Agility_Property,
-                        def?.Agility_Property,
-                        cmds);
+                        rhs: rhs.Agility_Property,
+                        def: def?.Agility_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1671,9 +1671,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Speed_Property.SetToWithDefault(
-                        rhs.Speed_Property,
-                        def?.Speed_Property,
-                        cmds);
+                        rhs: rhs.Speed_Property,
+                        def: def?.Speed_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1686,9 +1686,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Endurance_Property.SetToWithDefault(
-                        rhs.Endurance_Property,
-                        def?.Endurance_Property,
-                        cmds);
+                        rhs: rhs.Endurance_Property,
+                        def: def?.Endurance_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1701,9 +1701,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Personality_Property.SetToWithDefault(
-                        rhs.Personality_Property,
-                        def?.Personality_Property,
-                        cmds);
+                        rhs: rhs.Personality_Property,
+                        def: def?.Personality_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1716,9 +1716,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Luck_Property.SetToWithDefault(
-                        rhs.Luck_Property,
-                        def?.Luck_Property,
-                        cmds);
+                        rhs: rhs.Luck_Property,
+                        def: def?.Luck_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)

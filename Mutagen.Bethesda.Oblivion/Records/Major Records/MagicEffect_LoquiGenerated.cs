@@ -38,42 +38,42 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Description
-        protected readonly INotifyingItem<String> _Description = NotifyingItem.Factory<String>(markAsSet: false);
-        public INotifyingItem<String> Description_Property => _Description;
+        protected readonly INotifyingSetItem<String> _Description = NotifyingSetItem.Factory<String>(markAsSet: false);
+        public INotifyingSetItem<String> Description_Property => _Description;
         public String Description
         {
             get => this._Description.Item;
             set => this._Description.Set(value);
         }
-        INotifyingItem<String> IMagicEffect.Description_Property => this.Description_Property;
-        INotifyingItemGetter<String> IMagicEffectGetter.Description_Property => this.Description_Property;
+        INotifyingSetItem<String> IMagicEffect.Description_Property => this.Description_Property;
+        INotifyingSetItemGetter<String> IMagicEffectGetter.Description_Property => this.Description_Property;
         #endregion
         #region Icon
-        protected readonly INotifyingItem<FilePath> _Icon = NotifyingItem.Factory<FilePath>(markAsSet: false);
-        public INotifyingItem<FilePath> Icon_Property => _Icon;
+        protected readonly INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
+        public INotifyingSetItem<FilePath> Icon_Property => _Icon;
         public FilePath Icon
         {
             get => this._Icon.Item;
             set => this._Icon.Set(value);
         }
-        INotifyingItem<FilePath> IMagicEffect.Icon_Property => this.Icon_Property;
-        INotifyingItemGetter<FilePath> IMagicEffectGetter.Icon_Property => this.Icon_Property;
+        INotifyingSetItem<FilePath> IMagicEffect.Icon_Property => this.Icon_Property;
+        INotifyingSetItemGetter<FilePath> IMagicEffectGetter.Icon_Property => this.Icon_Property;
         #endregion
         #region Model
-        private readonly INotifyingItem<Model> _Model = new NotifyingItem<Model>();
-        public INotifyingItem<Model> Model_Property => this._Model;
+        private readonly INotifyingSetItem<Model> _Model = new NotifyingSetItem<Model>();
+        public INotifyingSetItem<Model> Model_Property => this._Model;
         Model IMagicEffectGetter.Model => this.Model;
         public Model Model { get => _Model.Item; set => _Model.Item = value; }
-        INotifyingItem<Model> IMagicEffect.Model_Property => this.Model_Property;
-        INotifyingItemGetter<Model> IMagicEffectGetter.Model_Property => this.Model_Property;
+        INotifyingSetItem<Model> IMagicEffect.Model_Property => this.Model_Property;
+        INotifyingSetItemGetter<Model> IMagicEffectGetter.Model_Property => this.Model_Property;
         #endregion
         #region Data
-        private readonly INotifyingItem<MagicData> _Data = new NotifyingItem<MagicData>();
-        public INotifyingItem<MagicData> Data_Property => this._Data;
+        private readonly INotifyingSetItem<MagicData> _Data = new NotifyingSetItem<MagicData>();
+        public INotifyingSetItem<MagicData> Data_Property => this._Data;
         MagicData IMagicEffectGetter.Data => this.Data;
         public MagicData Data { get => _Data.Item; set => _Data.Item = value; }
-        INotifyingItem<MagicData> IMagicEffect.Data_Property => this.Data_Property;
-        INotifyingItemGetter<MagicData> IMagicEffectGetter.Data_Property => this.Data_Property;
+        INotifyingSetItem<MagicData> IMagicEffect.Data_Property => this.Data_Property;
+        INotifyingSetItemGetter<MagicData> IMagicEffectGetter.Data_Property => this.Data_Property;
         #endregion
         #region CounterEffects
         private readonly INotifyingList<FormID> _CounterEffects = new NotifyingList<FormID>();
@@ -1147,16 +1147,16 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IMagicEffect : IMagicEffectGetter, INamedMajorRecord, ILoquiClass<IMagicEffect, IMagicEffectGetter>, ILoquiClass<MagicEffect, IMagicEffectGetter>
     {
         new String Description { get; set; }
-        new INotifyingItem<String> Description_Property { get; }
+        new INotifyingSetItem<String> Description_Property { get; }
 
         new FilePath Icon { get; set; }
-        new INotifyingItem<FilePath> Icon_Property { get; }
+        new INotifyingSetItem<FilePath> Icon_Property { get; }
 
         new Model Model { get; set; }
-        new INotifyingItem<Model> Model_Property { get; }
+        new INotifyingSetItem<Model> Model_Property { get; }
 
         new MagicData Data { get; set; }
-        new INotifyingItem<MagicData> Data_Property { get; }
+        new INotifyingSetItem<MagicData> Data_Property { get; }
 
         new INotifyingList<FormID> CounterEffects { get; }
     }
@@ -1165,22 +1165,22 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Description
         String Description { get; }
-        INotifyingItemGetter<String> Description_Property { get; }
+        INotifyingSetItemGetter<String> Description_Property { get; }
 
         #endregion
         #region Icon
         FilePath Icon { get; }
-        INotifyingItemGetter<FilePath> Icon_Property { get; }
+        INotifyingSetItemGetter<FilePath> Icon_Property { get; }
 
         #endregion
         #region Model
         Model Model { get; }
-        INotifyingItemGetter<Model> Model_Property { get; }
+        INotifyingSetItemGetter<Model> Model_Property { get; }
 
         #endregion
         #region Data
         MagicData Data { get; }
-        INotifyingItemGetter<MagicData> Data_Property { get; }
+        INotifyingSetItemGetter<MagicData> Data_Property { get; }
 
         #endregion
         #region CounterEffects
@@ -1513,9 +1513,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Description_Property.SetToWithDefault(
-                        rhs.Description_Property,
-                        def?.Description_Property,
-                        cmds);
+                        rhs: rhs.Description_Property,
+                        def: def?.Description_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1528,9 +1528,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Icon_Property.SetToWithDefault(
-                        rhs.Icon_Property,
-                        def?.Icon_Property,
-                        cmds);
+                        rhs: rhs.Icon_Property,
+                        def: def?.Icon_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)

@@ -37,37 +37,37 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Material
-        protected readonly INotifyingItem<HavokData.MaterialType> _Material = NotifyingItem.Factory<HavokData.MaterialType>(markAsSet: false);
-        public INotifyingItem<HavokData.MaterialType> Material_Property => _Material;
+        protected readonly INotifyingSetItem<HavokData.MaterialType> _Material = NotifyingSetItem.Factory<HavokData.MaterialType>(markAsSet: false);
+        public INotifyingSetItem<HavokData.MaterialType> Material_Property => _Material;
         public HavokData.MaterialType Material
         {
             get => this._Material.Item;
             set => this._Material.Set(value);
         }
-        INotifyingItem<HavokData.MaterialType> IHavokData.Material_Property => this.Material_Property;
-        INotifyingItemGetter<HavokData.MaterialType> IHavokDataGetter.Material_Property => this.Material_Property;
+        INotifyingSetItem<HavokData.MaterialType> IHavokData.Material_Property => this.Material_Property;
+        INotifyingSetItemGetter<HavokData.MaterialType> IHavokDataGetter.Material_Property => this.Material_Property;
         #endregion
         #region Friction
-        protected readonly INotifyingItem<Byte> _Friction = NotifyingItem.Factory<Byte>(markAsSet: false);
-        public INotifyingItem<Byte> Friction_Property => _Friction;
+        protected readonly INotifyingSetItem<Byte> _Friction = NotifyingSetItem.Factory<Byte>(markAsSet: false);
+        public INotifyingSetItem<Byte> Friction_Property => _Friction;
         public Byte Friction
         {
             get => this._Friction.Item;
             set => this._Friction.Set(value);
         }
-        INotifyingItem<Byte> IHavokData.Friction_Property => this.Friction_Property;
-        INotifyingItemGetter<Byte> IHavokDataGetter.Friction_Property => this.Friction_Property;
+        INotifyingSetItem<Byte> IHavokData.Friction_Property => this.Friction_Property;
+        INotifyingSetItemGetter<Byte> IHavokDataGetter.Friction_Property => this.Friction_Property;
         #endregion
         #region Restitution
-        protected readonly INotifyingItem<Byte> _Restitution = NotifyingItem.Factory<Byte>(markAsSet: false);
-        public INotifyingItem<Byte> Restitution_Property => _Restitution;
+        protected readonly INotifyingSetItem<Byte> _Restitution = NotifyingSetItem.Factory<Byte>(markAsSet: false);
+        public INotifyingSetItem<Byte> Restitution_Property => _Restitution;
         public Byte Restitution
         {
             get => this._Restitution.Item;
             set => this._Restitution.Set(value);
         }
-        INotifyingItem<Byte> IHavokData.Restitution_Property => this.Restitution_Property;
-        INotifyingItemGetter<Byte> IHavokDataGetter.Restitution_Property => this.Restitution_Property;
+        INotifyingSetItem<Byte> IHavokData.Restitution_Property => this.Restitution_Property;
+        INotifyingSetItemGetter<Byte> IHavokDataGetter.Restitution_Property => this.Restitution_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -958,13 +958,13 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IHavokData : IHavokDataGetter, ILoquiClass<IHavokData, IHavokDataGetter>, ILoquiClass<HavokData, IHavokDataGetter>
     {
         new HavokData.MaterialType Material { get; set; }
-        new INotifyingItem<HavokData.MaterialType> Material_Property { get; }
+        new INotifyingSetItem<HavokData.MaterialType> Material_Property { get; }
 
         new Byte Friction { get; set; }
-        new INotifyingItem<Byte> Friction_Property { get; }
+        new INotifyingSetItem<Byte> Friction_Property { get; }
 
         new Byte Restitution { get; set; }
-        new INotifyingItem<Byte> Restitution_Property { get; }
+        new INotifyingSetItem<Byte> Restitution_Property { get; }
 
     }
 
@@ -972,17 +972,17 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Material
         HavokData.MaterialType Material { get; }
-        INotifyingItemGetter<HavokData.MaterialType> Material_Property { get; }
+        INotifyingSetItemGetter<HavokData.MaterialType> Material_Property { get; }
 
         #endregion
         #region Friction
         Byte Friction { get; }
-        INotifyingItemGetter<Byte> Friction_Property { get; }
+        INotifyingSetItemGetter<Byte> Friction_Property { get; }
 
         #endregion
         #region Restitution
         Byte Restitution { get; }
-        INotifyingItemGetter<Byte> Restitution_Property { get; }
+        INotifyingSetItemGetter<Byte> Restitution_Property { get; }
 
         #endregion
 
@@ -1273,9 +1273,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Material_Property.SetToWithDefault(
-                        rhs.Material_Property,
-                        def?.Material_Property,
-                        cmds);
+                        rhs: rhs.Material_Property,
+                        def: def?.Material_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1288,9 +1288,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Friction_Property.SetToWithDefault(
-                        rhs.Friction_Property,
-                        def?.Friction_Property,
-                        cmds);
+                        rhs: rhs.Friction_Property,
+                        def: def?.Friction_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1303,9 +1303,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Restitution_Property.SetToWithDefault(
-                        rhs.Restitution_Property,
-                        def?.Restitution_Property,
-                        cmds);
+                        rhs: rhs.Restitution_Property,
+                        def: def?.Restitution_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)

@@ -37,26 +37,26 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Master
-        protected readonly INotifyingItem<String> _Master = NotifyingItem.Factory<String>(markAsSet: false);
-        public INotifyingItem<String> Master_Property => _Master;
+        protected readonly INotifyingSetItem<String> _Master = NotifyingSetItem.Factory<String>(markAsSet: false);
+        public INotifyingSetItem<String> Master_Property => _Master;
         public String Master
         {
             get => this._Master.Item;
             set => this._Master.Set(value);
         }
-        INotifyingItem<String> IMasterReference.Master_Property => this.Master_Property;
-        INotifyingItemGetter<String> IMasterReferenceGetter.Master_Property => this.Master_Property;
+        INotifyingSetItem<String> IMasterReference.Master_Property => this.Master_Property;
+        INotifyingSetItemGetter<String> IMasterReferenceGetter.Master_Property => this.Master_Property;
         #endregion
         #region FileSize
-        protected readonly INotifyingItem<UInt64> _FileSize = NotifyingItem.Factory<UInt64>(markAsSet: false);
-        public INotifyingItem<UInt64> FileSize_Property => _FileSize;
+        protected readonly INotifyingSetItem<UInt64> _FileSize = NotifyingSetItem.Factory<UInt64>(markAsSet: false);
+        public INotifyingSetItem<UInt64> FileSize_Property => _FileSize;
         public UInt64 FileSize
         {
             get => this._FileSize.Item;
             set => this._FileSize.Set(value);
         }
-        INotifyingItem<UInt64> IMasterReference.FileSize_Property => this.FileSize_Property;
-        INotifyingItemGetter<UInt64> IMasterReferenceGetter.FileSize_Property => this.FileSize_Property;
+        INotifyingSetItem<UInt64> IMasterReference.FileSize_Property => this.FileSize_Property;
+        INotifyingSetItemGetter<UInt64> IMasterReferenceGetter.FileSize_Property => this.FileSize_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -937,10 +937,10 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IMasterReference : IMasterReferenceGetter, ILoquiClass<IMasterReference, IMasterReferenceGetter>, ILoquiClass<MasterReference, IMasterReferenceGetter>
     {
         new String Master { get; set; }
-        new INotifyingItem<String> Master_Property { get; }
+        new INotifyingSetItem<String> Master_Property { get; }
 
         new UInt64 FileSize { get; set; }
-        new INotifyingItem<UInt64> FileSize_Property { get; }
+        new INotifyingSetItem<UInt64> FileSize_Property { get; }
 
     }
 
@@ -948,12 +948,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Master
         String Master { get; }
-        INotifyingItemGetter<String> Master_Property { get; }
+        INotifyingSetItemGetter<String> Master_Property { get; }
 
         #endregion
         #region FileSize
         UInt64 FileSize { get; }
-        INotifyingItemGetter<UInt64> FileSize_Property { get; }
+        INotifyingSetItemGetter<UInt64> FileSize_Property { get; }
 
         #endregion
 
@@ -1233,9 +1233,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Master_Property.SetToWithDefault(
-                        rhs.Master_Property,
-                        def?.Master_Property,
-                        cmds);
+                        rhs: rhs.Master_Property,
+                        def: def?.Master_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1248,9 +1248,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.FileSize_Property.SetToWithDefault(
-                        rhs.FileSize_Property,
-                        def?.FileSize_Property,
-                        cmds);
+                        rhs: rhs.FileSize_Property,
+                        def: def?.FileSize_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)

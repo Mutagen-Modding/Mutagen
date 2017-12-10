@@ -46,26 +46,26 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Flags
-        protected readonly INotifyingItem<Faction.FactionFlag> _Flags = NotifyingItem.Factory<Faction.FactionFlag>(markAsSet: false);
-        public INotifyingItem<Faction.FactionFlag> Flags_Property => _Flags;
+        protected readonly INotifyingSetItem<Faction.FactionFlag> _Flags = NotifyingSetItem.Factory<Faction.FactionFlag>(markAsSet: false);
+        public INotifyingSetItem<Faction.FactionFlag> Flags_Property => _Flags;
         public Faction.FactionFlag Flags
         {
             get => this._Flags.Item;
             set => this._Flags.Set(value);
         }
-        INotifyingItem<Faction.FactionFlag> IFaction.Flags_Property => this.Flags_Property;
-        INotifyingItemGetter<Faction.FactionFlag> IFactionGetter.Flags_Property => this.Flags_Property;
+        INotifyingSetItem<Faction.FactionFlag> IFaction.Flags_Property => this.Flags_Property;
+        INotifyingSetItemGetter<Faction.FactionFlag> IFactionGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region CrimeGoldMultiplier
-        protected readonly INotifyingItem<Single> _CrimeGoldMultiplier = NotifyingItem.Factory<Single>(markAsSet: false);
-        public INotifyingItem<Single> CrimeGoldMultiplier_Property => _CrimeGoldMultiplier;
+        protected readonly INotifyingSetItem<Single> _CrimeGoldMultiplier = NotifyingSetItem.Factory<Single>(markAsSet: false);
+        public INotifyingSetItem<Single> CrimeGoldMultiplier_Property => _CrimeGoldMultiplier;
         public Single CrimeGoldMultiplier
         {
             get => this._CrimeGoldMultiplier.Item;
             set => this._CrimeGoldMultiplier.Set(value);
         }
-        INotifyingItem<Single> IFaction.CrimeGoldMultiplier_Property => this.CrimeGoldMultiplier_Property;
-        INotifyingItemGetter<Single> IFactionGetter.CrimeGoldMultiplier_Property => this.CrimeGoldMultiplier_Property;
+        INotifyingSetItem<Single> IFaction.CrimeGoldMultiplier_Property => this.CrimeGoldMultiplier_Property;
+        INotifyingSetItemGetter<Single> IFactionGetter.CrimeGoldMultiplier_Property => this.CrimeGoldMultiplier_Property;
         #endregion
         #region Ranks
         private readonly INotifyingList<Rank> _Ranks = new NotifyingList<Rank>();
@@ -1115,10 +1115,10 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new INotifyingList<Relation> Relations { get; }
         new Faction.FactionFlag Flags { get; set; }
-        new INotifyingItem<Faction.FactionFlag> Flags_Property { get; }
+        new INotifyingSetItem<Faction.FactionFlag> Flags_Property { get; }
 
         new Single CrimeGoldMultiplier { get; set; }
-        new INotifyingItem<Single> CrimeGoldMultiplier_Property { get; }
+        new INotifyingSetItem<Single> CrimeGoldMultiplier_Property { get; }
 
         new INotifyingList<Rank> Ranks { get; }
     }
@@ -1130,12 +1130,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Flags
         Faction.FactionFlag Flags { get; }
-        INotifyingItemGetter<Faction.FactionFlag> Flags_Property { get; }
+        INotifyingSetItemGetter<Faction.FactionFlag> Flags_Property { get; }
 
         #endregion
         #region CrimeGoldMultiplier
         Single CrimeGoldMultiplier { get; }
-        INotifyingItemGetter<Single> CrimeGoldMultiplier_Property { get; }
+        INotifyingSetItemGetter<Single> CrimeGoldMultiplier_Property { get; }
 
         #endregion
         #region Ranks
@@ -1487,9 +1487,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Flags_Property.SetToWithDefault(
-                        rhs.Flags_Property,
-                        def?.Flags_Property,
-                        cmds);
+                        rhs: rhs.Flags_Property,
+                        def: def?.Flags_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1502,9 +1502,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.CrimeGoldMultiplier_Property.SetToWithDefault(
-                        rhs.CrimeGoldMultiplier_Property,
-                        def?.CrimeGoldMultiplier_Property,
-                        cmds);
+                        rhs: rhs.CrimeGoldMultiplier_Property,
+                        def: def?.CrimeGoldMultiplier_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)

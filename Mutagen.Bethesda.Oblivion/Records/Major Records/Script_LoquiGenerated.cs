@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Ctor
         public Script()
         {
-            _MetadataSummary = NotifyingItem.Factory<ScriptMetaSummary>(
+            _MetadataSummary = NotifyingSetItem.Factory<ScriptMetaSummary>(
                 defaultVal: _MetadataSummary_Object,
                 markAsSet: true);
             CustomCtor();
@@ -42,33 +42,33 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region MetadataSummary
         private ScriptMetaSummary _MetadataSummary_Object = new ScriptMetaSummary();
-        protected readonly INotifyingItem<ScriptMetaSummary> _MetadataSummary;
-        public INotifyingItemGetter<ScriptMetaSummary> MetadataSummary_Property => this._MetadataSummary;
+        protected readonly INotifyingSetItem<ScriptMetaSummary> _MetadataSummary;
+        public INotifyingSetItemGetter<ScriptMetaSummary> MetadataSummary_Property => this._MetadataSummary;
         ScriptMetaSummary IScriptGetter.MetadataSummary => this.MetadataSummary;
         public ScriptMetaSummary MetadataSummary { get => _MetadataSummary.Item; }
-        INotifyingItemGetter<ScriptMetaSummary> IScriptGetter.MetadataSummary_Property => this.MetadataSummary_Property;
+        INotifyingSetItemGetter<ScriptMetaSummary> IScriptGetter.MetadataSummary_Property => this.MetadataSummary_Property;
         #endregion
         #region CompiledScript
-        protected readonly INotifyingItem<Byte[]> _CompiledScript = NotifyingItem.Factory<Byte[]>(markAsSet: false);
-        public INotifyingItem<Byte[]> CompiledScript_Property => _CompiledScript;
+        protected readonly INotifyingSetItem<Byte[]> _CompiledScript = NotifyingSetItem.Factory<Byte[]>(markAsSet: false);
+        public INotifyingSetItem<Byte[]> CompiledScript_Property => _CompiledScript;
         public Byte[] CompiledScript
         {
             get => this._CompiledScript.Item;
             set => this._CompiledScript.Set(value);
         }
-        INotifyingItem<Byte[]> IScript.CompiledScript_Property => this.CompiledScript_Property;
-        INotifyingItemGetter<Byte[]> IScriptGetter.CompiledScript_Property => this.CompiledScript_Property;
+        INotifyingSetItem<Byte[]> IScript.CompiledScript_Property => this.CompiledScript_Property;
+        INotifyingSetItemGetter<Byte[]> IScriptGetter.CompiledScript_Property => this.CompiledScript_Property;
         #endregion
         #region SourceCode
-        protected readonly INotifyingItem<String> _SourceCode = NotifyingItem.Factory<String>(markAsSet: false);
-        public INotifyingItem<String> SourceCode_Property => _SourceCode;
+        protected readonly INotifyingSetItem<String> _SourceCode = NotifyingSetItem.Factory<String>(markAsSet: false);
+        public INotifyingSetItem<String> SourceCode_Property => _SourceCode;
         public String SourceCode
         {
             get => this._SourceCode.Item;
             set => this._SourceCode.Set(value);
         }
-        INotifyingItem<String> IScript.SourceCode_Property => this.SourceCode_Property;
-        INotifyingItemGetter<String> IScriptGetter.SourceCode_Property => this.SourceCode_Property;
+        INotifyingSetItem<String> IScript.SourceCode_Property => this.SourceCode_Property;
+        INotifyingSetItemGetter<String> IScriptGetter.SourceCode_Property => this.SourceCode_Property;
         #endregion
         #region LocalVariables
         private readonly INotifyingList<LocalVariable> _LocalVariables = new NotifyingList<LocalVariable>();
@@ -1159,10 +1159,10 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IScript : IScriptGetter, IMajorRecord, ILoquiClass<IScript, IScriptGetter>, ILoquiClass<Script, IScriptGetter>
     {
         new Byte[] CompiledScript { get; set; }
-        new INotifyingItem<Byte[]> CompiledScript_Property { get; }
+        new INotifyingSetItem<Byte[]> CompiledScript_Property { get; }
 
         new String SourceCode { get; set; }
-        new INotifyingItem<String> SourceCode_Property { get; }
+        new INotifyingSetItem<String> SourceCode_Property { get; }
 
         new INotifyingList<LocalVariable> LocalVariables { get; }
         new INotifyingList<ScriptReference> References { get; }
@@ -1172,17 +1172,17 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region MetadataSummary
         ScriptMetaSummary MetadataSummary { get; }
-        INotifyingItemGetter<ScriptMetaSummary> MetadataSummary_Property { get; }
+        INotifyingSetItemGetter<ScriptMetaSummary> MetadataSummary_Property { get; }
 
         #endregion
         #region CompiledScript
         Byte[] CompiledScript { get; }
-        INotifyingItemGetter<Byte[]> CompiledScript_Property { get; }
+        INotifyingSetItemGetter<Byte[]> CompiledScript_Property { get; }
 
         #endregion
         #region SourceCode
         String SourceCode { get; }
-        INotifyingItemGetter<String> SourceCode_Property { get; }
+        INotifyingSetItemGetter<String> SourceCode_Property { get; }
 
         #endregion
         #region LocalVariables
@@ -1548,9 +1548,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.CompiledScript_Property.SetToWithDefault(
-                        rhs.CompiledScript_Property,
-                        def?.CompiledScript_Property,
-                        cmds);
+                        rhs: rhs.CompiledScript_Property,
+                        def: def?.CompiledScript_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1563,9 +1563,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.SourceCode_Property.SetToWithDefault(
-                        rhs.SourceCode_Property,
-                        def?.SourceCode_Property,
-                        cmds);
+                        rhs: rhs.SourceCode_Property,
+                        def: def?.SourceCode_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)

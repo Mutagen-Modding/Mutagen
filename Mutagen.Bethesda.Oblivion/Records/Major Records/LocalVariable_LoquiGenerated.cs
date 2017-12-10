@@ -38,23 +38,23 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Data
-        private readonly INotifyingItem<LocalVariableData> _Data = new NotifyingItem<LocalVariableData>();
-        public INotifyingItem<LocalVariableData> Data_Property => this._Data;
+        private readonly INotifyingSetItem<LocalVariableData> _Data = new NotifyingSetItem<LocalVariableData>();
+        public INotifyingSetItem<LocalVariableData> Data_Property => this._Data;
         LocalVariableData ILocalVariableGetter.Data => this.Data;
         public LocalVariableData Data { get => _Data.Item; set => _Data.Item = value; }
-        INotifyingItem<LocalVariableData> ILocalVariable.Data_Property => this.Data_Property;
-        INotifyingItemGetter<LocalVariableData> ILocalVariableGetter.Data_Property => this.Data_Property;
+        INotifyingSetItem<LocalVariableData> ILocalVariable.Data_Property => this.Data_Property;
+        INotifyingSetItemGetter<LocalVariableData> ILocalVariableGetter.Data_Property => this.Data_Property;
         #endregion
         #region Name
-        protected readonly INotifyingItem<String> _Name = NotifyingItem.Factory<String>(markAsSet: false);
-        public INotifyingItem<String> Name_Property => _Name;
+        protected readonly INotifyingSetItem<String> _Name = NotifyingSetItem.Factory<String>(markAsSet: false);
+        public INotifyingSetItem<String> Name_Property => _Name;
         public String Name
         {
             get => this._Name.Item;
             set => this._Name.Set(value);
         }
-        INotifyingItem<String> ILocalVariable.Name_Property => this.Name_Property;
-        INotifyingItemGetter<String> ILocalVariableGetter.Name_Property => this.Name_Property;
+        INotifyingSetItem<String> ILocalVariable.Name_Property => this.Name_Property;
+        INotifyingSetItemGetter<String> ILocalVariableGetter.Name_Property => this.Name_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -934,10 +934,10 @@ namespace Mutagen.Bethesda.Oblivion
     public interface ILocalVariable : ILocalVariableGetter, ILoquiClass<ILocalVariable, ILocalVariableGetter>, ILoquiClass<LocalVariable, ILocalVariableGetter>
     {
         new LocalVariableData Data { get; set; }
-        new INotifyingItem<LocalVariableData> Data_Property { get; }
+        new INotifyingSetItem<LocalVariableData> Data_Property { get; }
 
         new String Name { get; set; }
-        new INotifyingItem<String> Name_Property { get; }
+        new INotifyingSetItem<String> Name_Property { get; }
 
     }
 
@@ -945,12 +945,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Data
         LocalVariableData Data { get; }
-        INotifyingItemGetter<LocalVariableData> Data_Property { get; }
+        INotifyingSetItemGetter<LocalVariableData> Data_Property { get; }
 
         #endregion
         #region Name
         String Name { get; }
-        INotifyingItemGetter<String> Name_Property { get; }
+        INotifyingSetItemGetter<String> Name_Property { get; }
 
         #endregion
 
@@ -1282,9 +1282,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Name_Property.SetToWithDefault(
-                        rhs.Name_Property,
-                        def?.Name_Property,
-                        cmds);
+                        rhs: rhs.Name_Property,
+                        def: def?.Name_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)

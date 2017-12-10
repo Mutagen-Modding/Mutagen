@@ -37,14 +37,14 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Data
-        protected readonly INotifyingItem<Int32> _Data = NotifyingItem.Factory<Int32>(markAsSet: false);
-        public INotifyingItemGetter<Int32> Data_Property => _Data;
+        protected readonly INotifyingSetItem<Int32> _Data = NotifyingSetItem.Factory<Int32>(markAsSet: false);
+        public INotifyingSetItemGetter<Int32> Data_Property => _Data;
         public Int32 Data
         {
             get => this._Data.Item;
             protected set => this._Data.Set(value);
         }
-        INotifyingItemGetter<Int32> IGlobalIntGetter.Data_Property => this.Data_Property;
+        INotifyingSetItemGetter<Int32> IGlobalIntGetter.Data_Property => this.Data_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -897,7 +897,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Data
         Int32 Data { get; }
-        INotifyingItemGetter<Int32> Data_Property { get; }
+        INotifyingSetItemGetter<Int32> Data_Property { get; }
 
         #endregion
 

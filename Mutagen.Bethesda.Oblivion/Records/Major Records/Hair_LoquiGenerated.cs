@@ -38,34 +38,34 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Model
-        private readonly INotifyingItem<Model> _Model = new NotifyingItem<Model>();
-        public INotifyingItem<Model> Model_Property => this._Model;
+        private readonly INotifyingSetItem<Model> _Model = new NotifyingSetItem<Model>();
+        public INotifyingSetItem<Model> Model_Property => this._Model;
         Model IHairGetter.Model => this.Model;
         public Model Model { get => _Model.Item; set => _Model.Item = value; }
-        INotifyingItem<Model> IHair.Model_Property => this.Model_Property;
-        INotifyingItemGetter<Model> IHairGetter.Model_Property => this.Model_Property;
+        INotifyingSetItem<Model> IHair.Model_Property => this.Model_Property;
+        INotifyingSetItemGetter<Model> IHairGetter.Model_Property => this.Model_Property;
         #endregion
         #region Icon
-        protected readonly INotifyingItem<FilePath> _Icon = NotifyingItem.Factory<FilePath>(markAsSet: false);
-        public INotifyingItem<FilePath> Icon_Property => _Icon;
+        protected readonly INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
+        public INotifyingSetItem<FilePath> Icon_Property => _Icon;
         public FilePath Icon
         {
             get => this._Icon.Item;
             set => this._Icon.Set(value);
         }
-        INotifyingItem<FilePath> IHair.Icon_Property => this.Icon_Property;
-        INotifyingItemGetter<FilePath> IHairGetter.Icon_Property => this.Icon_Property;
+        INotifyingSetItem<FilePath> IHair.Icon_Property => this.Icon_Property;
+        INotifyingSetItemGetter<FilePath> IHairGetter.Icon_Property => this.Icon_Property;
         #endregion
         #region Flags
-        protected readonly INotifyingItem<Hair.HairFlag> _Flags = NotifyingItem.Factory<Hair.HairFlag>(markAsSet: false);
-        public INotifyingItem<Hair.HairFlag> Flags_Property => _Flags;
+        protected readonly INotifyingSetItem<Hair.HairFlag> _Flags = NotifyingSetItem.Factory<Hair.HairFlag>(markAsSet: false);
+        public INotifyingSetItem<Hair.HairFlag> Flags_Property => _Flags;
         public Hair.HairFlag Flags
         {
             get => this._Flags.Item;
             set => this._Flags.Set(value);
         }
-        INotifyingItem<Hair.HairFlag> IHair.Flags_Property => this.Flags_Property;
-        INotifyingItemGetter<Hair.HairFlag> IHairGetter.Flags_Property => this.Flags_Property;
+        INotifyingSetItem<Hair.HairFlag> IHair.Flags_Property => this.Flags_Property;
+        INotifyingSetItemGetter<Hair.HairFlag> IHairGetter.Flags_Property => this.Flags_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -1037,13 +1037,13 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IHair : IHairGetter, INamedMajorRecord, ILoquiClass<IHair, IHairGetter>, ILoquiClass<Hair, IHairGetter>
     {
         new Model Model { get; set; }
-        new INotifyingItem<Model> Model_Property { get; }
+        new INotifyingSetItem<Model> Model_Property { get; }
 
         new FilePath Icon { get; set; }
-        new INotifyingItem<FilePath> Icon_Property { get; }
+        new INotifyingSetItem<FilePath> Icon_Property { get; }
 
         new Hair.HairFlag Flags { get; set; }
-        new INotifyingItem<Hair.HairFlag> Flags_Property { get; }
+        new INotifyingSetItem<Hair.HairFlag> Flags_Property { get; }
 
     }
 
@@ -1051,17 +1051,17 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Model
         Model Model { get; }
-        INotifyingItemGetter<Model> Model_Property { get; }
+        INotifyingSetItemGetter<Model> Model_Property { get; }
 
         #endregion
         #region Icon
         FilePath Icon { get; }
-        INotifyingItemGetter<FilePath> Icon_Property { get; }
+        INotifyingSetItemGetter<FilePath> Icon_Property { get; }
 
         #endregion
         #region Flags
         Hair.HairFlag Flags { get; }
-        INotifyingItemGetter<Hair.HairFlag> Flags_Property { get; }
+        INotifyingSetItemGetter<Hair.HairFlag> Flags_Property { get; }
 
         #endregion
 
@@ -1415,9 +1415,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Icon_Property.SetToWithDefault(
-                        rhs.Icon_Property,
-                        def?.Icon_Property,
-                        cmds);
+                        rhs: rhs.Icon_Property,
+                        def: def?.Icon_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1430,9 +1430,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Flags_Property.SetToWithDefault(
-                        rhs.Flags_Property,
-                        def?.Flags_Property,
-                        cmds);
+                        rhs: rhs.Flags_Property,
+                        def: def?.Flags_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)

@@ -38,15 +38,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Description
-        protected readonly INotifyingItem<String> _Description = NotifyingItem.Factory<String>(markAsSet: false);
-        public INotifyingItem<String> Description_Property => _Description;
+        protected readonly INotifyingSetItem<String> _Description = NotifyingSetItem.Factory<String>(markAsSet: false);
+        public INotifyingSetItem<String> Description_Property => _Description;
         public String Description
         {
             get => this._Description.Item;
             set => this._Description.Set(value);
         }
-        INotifyingItem<String> IRace.Description_Property => this.Description_Property;
-        INotifyingItemGetter<String> IRaceGetter.Description_Property => this.Description_Property;
+        INotifyingSetItem<String> IRace.Description_Property => this.Description_Property;
+        INotifyingSetItemGetter<String> IRaceGetter.Description_Property => this.Description_Property;
         #endregion
         #region Spells
         private readonly INotifyingList<FormID> _Spells = new NotifyingList<FormID>();
@@ -76,129 +76,129 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Fluff
-        protected readonly INotifyingItem<Byte[]> _Fluff = NotifyingItem.Factory<Byte[]>(
+        protected readonly INotifyingSetItem<Byte[]> _Fluff = NotifyingSetItem.Factory<Byte[]>(
             markAsSet: false,
             noNullFallback: () => new byte[4]);
-        public INotifyingItem<Byte[]> Fluff_Property => _Fluff;
+        public INotifyingSetItem<Byte[]> Fluff_Property => _Fluff;
         public Byte[] Fluff
         {
             get => this._Fluff.Item;
             set => this._Fluff.Set(value);
         }
-        INotifyingItem<Byte[]> IRace.Fluff_Property => this.Fluff_Property;
-        INotifyingItemGetter<Byte[]> IRaceGetter.Fluff_Property => this.Fluff_Property;
+        INotifyingSetItem<Byte[]> IRace.Fluff_Property => this.Fluff_Property;
+        INotifyingSetItemGetter<Byte[]> IRaceGetter.Fluff_Property => this.Fluff_Property;
         #endregion
         #region MaleHeight
-        protected readonly INotifyingItem<Single> _MaleHeight = NotifyingItem.Factory<Single>(markAsSet: false);
-        public INotifyingItem<Single> MaleHeight_Property => _MaleHeight;
+        protected readonly INotifyingSetItem<Single> _MaleHeight = NotifyingSetItem.Factory<Single>(markAsSet: false);
+        public INotifyingSetItem<Single> MaleHeight_Property => _MaleHeight;
         public Single MaleHeight
         {
             get => this._MaleHeight.Item;
             set => this._MaleHeight.Set(value);
         }
-        INotifyingItem<Single> IRace.MaleHeight_Property => this.MaleHeight_Property;
-        INotifyingItemGetter<Single> IRaceGetter.MaleHeight_Property => this.MaleHeight_Property;
+        INotifyingSetItem<Single> IRace.MaleHeight_Property => this.MaleHeight_Property;
+        INotifyingSetItemGetter<Single> IRaceGetter.MaleHeight_Property => this.MaleHeight_Property;
         #endregion
         #region FemaleHeight
-        protected readonly INotifyingItem<Single> _FemaleHeight = NotifyingItem.Factory<Single>(markAsSet: false);
-        public INotifyingItem<Single> FemaleHeight_Property => _FemaleHeight;
+        protected readonly INotifyingSetItem<Single> _FemaleHeight = NotifyingSetItem.Factory<Single>(markAsSet: false);
+        public INotifyingSetItem<Single> FemaleHeight_Property => _FemaleHeight;
         public Single FemaleHeight
         {
             get => this._FemaleHeight.Item;
             set => this._FemaleHeight.Set(value);
         }
-        INotifyingItem<Single> IRace.FemaleHeight_Property => this.FemaleHeight_Property;
-        INotifyingItemGetter<Single> IRaceGetter.FemaleHeight_Property => this.FemaleHeight_Property;
+        INotifyingSetItem<Single> IRace.FemaleHeight_Property => this.FemaleHeight_Property;
+        INotifyingSetItemGetter<Single> IRaceGetter.FemaleHeight_Property => this.FemaleHeight_Property;
         #endregion
         #region MaleWeight
-        protected readonly INotifyingItem<Single> _MaleWeight = NotifyingItem.Factory<Single>(markAsSet: false);
-        public INotifyingItem<Single> MaleWeight_Property => _MaleWeight;
+        protected readonly INotifyingSetItem<Single> _MaleWeight = NotifyingSetItem.Factory<Single>(markAsSet: false);
+        public INotifyingSetItem<Single> MaleWeight_Property => _MaleWeight;
         public Single MaleWeight
         {
             get => this._MaleWeight.Item;
             set => this._MaleWeight.Set(value);
         }
-        INotifyingItem<Single> IRace.MaleWeight_Property => this.MaleWeight_Property;
-        INotifyingItemGetter<Single> IRaceGetter.MaleWeight_Property => this.MaleWeight_Property;
+        INotifyingSetItem<Single> IRace.MaleWeight_Property => this.MaleWeight_Property;
+        INotifyingSetItemGetter<Single> IRaceGetter.MaleWeight_Property => this.MaleWeight_Property;
         #endregion
         #region FemaleWeight
-        protected readonly INotifyingItem<Single> _FemaleWeight = NotifyingItem.Factory<Single>(markAsSet: false);
-        public INotifyingItem<Single> FemaleWeight_Property => _FemaleWeight;
+        protected readonly INotifyingSetItem<Single> _FemaleWeight = NotifyingSetItem.Factory<Single>(markAsSet: false);
+        public INotifyingSetItem<Single> FemaleWeight_Property => _FemaleWeight;
         public Single FemaleWeight
         {
             get => this._FemaleWeight.Item;
             set => this._FemaleWeight.Set(value);
         }
-        INotifyingItem<Single> IRace.FemaleWeight_Property => this.FemaleWeight_Property;
-        INotifyingItemGetter<Single> IRaceGetter.FemaleWeight_Property => this.FemaleWeight_Property;
+        INotifyingSetItem<Single> IRace.FemaleWeight_Property => this.FemaleWeight_Property;
+        INotifyingSetItemGetter<Single> IRaceGetter.FemaleWeight_Property => this.FemaleWeight_Property;
         #endregion
         #region Flags
-        protected readonly INotifyingItem<Race.Flag> _Flags = NotifyingItem.Factory<Race.Flag>(markAsSet: false);
-        public INotifyingItem<Race.Flag> Flags_Property => _Flags;
+        protected readonly INotifyingSetItem<Race.Flag> _Flags = NotifyingSetItem.Factory<Race.Flag>(markAsSet: false);
+        public INotifyingSetItem<Race.Flag> Flags_Property => _Flags;
         public Race.Flag Flags
         {
             get => this._Flags.Item;
             set => this._Flags.Set(value);
         }
-        INotifyingItem<Race.Flag> IRace.Flags_Property => this.Flags_Property;
-        INotifyingItemGetter<Race.Flag> IRaceGetter.Flags_Property => this.Flags_Property;
+        INotifyingSetItem<Race.Flag> IRace.Flags_Property => this.Flags_Property;
+        INotifyingSetItemGetter<Race.Flag> IRaceGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region Voices
-        private readonly INotifyingItem<RaceVoices> _Voices = new NotifyingItem<RaceVoices>();
-        public INotifyingItem<RaceVoices> Voices_Property => this._Voices;
+        private readonly INotifyingSetItem<RaceVoices> _Voices = new NotifyingSetItem<RaceVoices>();
+        public INotifyingSetItem<RaceVoices> Voices_Property => this._Voices;
         RaceVoices IRaceGetter.Voices => this.Voices;
         public RaceVoices Voices { get => _Voices.Item; set => _Voices.Item = value; }
-        INotifyingItem<RaceVoices> IRace.Voices_Property => this.Voices_Property;
-        INotifyingItemGetter<RaceVoices> IRaceGetter.Voices_Property => this.Voices_Property;
+        INotifyingSetItem<RaceVoices> IRace.Voices_Property => this.Voices_Property;
+        INotifyingSetItemGetter<RaceVoices> IRaceGetter.Voices_Property => this.Voices_Property;
         #endregion
         #region DefaultHair
-        private readonly INotifyingItem<RaceHair> _DefaultHair = new NotifyingItem<RaceHair>();
-        public INotifyingItem<RaceHair> DefaultHair_Property => this._DefaultHair;
+        private readonly INotifyingSetItem<RaceHair> _DefaultHair = new NotifyingSetItem<RaceHair>();
+        public INotifyingSetItem<RaceHair> DefaultHair_Property => this._DefaultHair;
         RaceHair IRaceGetter.DefaultHair => this.DefaultHair;
         public RaceHair DefaultHair { get => _DefaultHair.Item; set => _DefaultHair.Item = value; }
-        INotifyingItem<RaceHair> IRace.DefaultHair_Property => this.DefaultHair_Property;
-        INotifyingItemGetter<RaceHair> IRaceGetter.DefaultHair_Property => this.DefaultHair_Property;
+        INotifyingSetItem<RaceHair> IRace.DefaultHair_Property => this.DefaultHair_Property;
+        INotifyingSetItemGetter<RaceHair> IRaceGetter.DefaultHair_Property => this.DefaultHair_Property;
         #endregion
         #region DefaultHairColor
-        protected readonly INotifyingItem<Byte> _DefaultHairColor = NotifyingItem.Factory<Byte>(markAsSet: false);
-        public INotifyingItem<Byte> DefaultHairColor_Property => _DefaultHairColor;
+        protected readonly INotifyingSetItem<Byte> _DefaultHairColor = NotifyingSetItem.Factory<Byte>(markAsSet: false);
+        public INotifyingSetItem<Byte> DefaultHairColor_Property => _DefaultHairColor;
         public Byte DefaultHairColor
         {
             get => this._DefaultHairColor.Item;
             set => this._DefaultHairColor.Set(value);
         }
-        INotifyingItem<Byte> IRace.DefaultHairColor_Property => this.DefaultHairColor_Property;
-        INotifyingItemGetter<Byte> IRaceGetter.DefaultHairColor_Property => this.DefaultHairColor_Property;
+        INotifyingSetItem<Byte> IRace.DefaultHairColor_Property => this.DefaultHairColor_Property;
+        INotifyingSetItemGetter<Byte> IRaceGetter.DefaultHairColor_Property => this.DefaultHairColor_Property;
         #endregion
         #region FaceGenMainClamp
-        protected readonly INotifyingItem<Int32> _FaceGenMainClamp = NotifyingItem.Factory<Int32>(markAsSet: false);
-        public INotifyingItem<Int32> FaceGenMainClamp_Property => _FaceGenMainClamp;
+        protected readonly INotifyingSetItem<Int32> _FaceGenMainClamp = NotifyingSetItem.Factory<Int32>(markAsSet: false);
+        public INotifyingSetItem<Int32> FaceGenMainClamp_Property => _FaceGenMainClamp;
         public Int32 FaceGenMainClamp
         {
             get => this._FaceGenMainClamp.Item;
             set => this._FaceGenMainClamp.Set(value);
         }
-        INotifyingItem<Int32> IRace.FaceGenMainClamp_Property => this.FaceGenMainClamp_Property;
-        INotifyingItemGetter<Int32> IRaceGetter.FaceGenMainClamp_Property => this.FaceGenMainClamp_Property;
+        INotifyingSetItem<Int32> IRace.FaceGenMainClamp_Property => this.FaceGenMainClamp_Property;
+        INotifyingSetItemGetter<Int32> IRaceGetter.FaceGenMainClamp_Property => this.FaceGenMainClamp_Property;
         #endregion
         #region FaceGenFaceClamp
-        protected readonly INotifyingItem<Int32> _FaceGenFaceClamp = NotifyingItem.Factory<Int32>(markAsSet: false);
-        public INotifyingItem<Int32> FaceGenFaceClamp_Property => _FaceGenFaceClamp;
+        protected readonly INotifyingSetItem<Int32> _FaceGenFaceClamp = NotifyingSetItem.Factory<Int32>(markAsSet: false);
+        public INotifyingSetItem<Int32> FaceGenFaceClamp_Property => _FaceGenFaceClamp;
         public Int32 FaceGenFaceClamp
         {
             get => this._FaceGenFaceClamp.Item;
             set => this._FaceGenFaceClamp.Set(value);
         }
-        INotifyingItem<Int32> IRace.FaceGenFaceClamp_Property => this.FaceGenFaceClamp_Property;
-        INotifyingItemGetter<Int32> IRaceGetter.FaceGenFaceClamp_Property => this.FaceGenFaceClamp_Property;
+        INotifyingSetItem<Int32> IRace.FaceGenFaceClamp_Property => this.FaceGenFaceClamp_Property;
+        INotifyingSetItemGetter<Int32> IRaceGetter.FaceGenFaceClamp_Property => this.FaceGenFaceClamp_Property;
         #endregion
         #region RaceStats
-        private readonly INotifyingItem<RaceStatsGendered> _RaceStats = new NotifyingItem<RaceStatsGendered>();
-        public INotifyingItem<RaceStatsGendered> RaceStats_Property => this._RaceStats;
+        private readonly INotifyingSetItem<RaceStatsGendered> _RaceStats = new NotifyingSetItem<RaceStatsGendered>();
+        public INotifyingSetItem<RaceStatsGendered> RaceStats_Property => this._RaceStats;
         RaceStatsGendered IRaceGetter.RaceStats => this.RaceStats;
         public RaceStatsGendered RaceStats { get => _RaceStats.Item; set => _RaceStats.Item = value; }
-        INotifyingItem<RaceStatsGendered> IRace.RaceStats_Property => this.RaceStats_Property;
-        INotifyingItemGetter<RaceStatsGendered> IRaceGetter.RaceStats_Property => this.RaceStats_Property;
+        INotifyingSetItem<RaceStatsGendered> IRace.RaceStats_Property => this.RaceStats_Property;
+        INotifyingSetItemGetter<RaceStatsGendered> IRaceGetter.RaceStats_Property => this.RaceStats_Property;
         #endregion
         #region FaceData
         private readonly INotifyingList<FacePart> _FaceData = new NotifyingList<FacePart>();
@@ -210,12 +210,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region BodyData
-        private readonly INotifyingItem<GenderedBodyData> _BodyData = new NotifyingItem<GenderedBodyData>();
-        public INotifyingItem<GenderedBodyData> BodyData_Property => this._BodyData;
+        private readonly INotifyingSetItem<GenderedBodyData> _BodyData = new NotifyingSetItem<GenderedBodyData>();
+        public INotifyingSetItem<GenderedBodyData> BodyData_Property => this._BodyData;
         GenderedBodyData IRaceGetter.BodyData => this.BodyData;
         public GenderedBodyData BodyData { get => _BodyData.Item; set => _BodyData.Item = value; }
-        INotifyingItem<GenderedBodyData> IRace.BodyData_Property => this.BodyData_Property;
-        INotifyingItemGetter<GenderedBodyData> IRaceGetter.BodyData_Property => this.BodyData_Property;
+        INotifyingSetItem<GenderedBodyData> IRace.BodyData_Property => this.BodyData_Property;
+        INotifyingSetItemGetter<GenderedBodyData> IRaceGetter.BodyData_Property => this.BodyData_Property;
         #endregion
         #region Hairs
         private readonly INotifyingList<FormID> _Hairs = new NotifyingList<FormID>();
@@ -236,25 +236,25 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region FaceGenData
-        private readonly INotifyingItem<FaceGenData> _FaceGenData = new NotifyingItem<FaceGenData>();
-        public INotifyingItem<FaceGenData> FaceGenData_Property => this._FaceGenData;
+        private readonly INotifyingSetItem<FaceGenData> _FaceGenData = new NotifyingSetItem<FaceGenData>();
+        public INotifyingSetItem<FaceGenData> FaceGenData_Property => this._FaceGenData;
         FaceGenData IRaceGetter.FaceGenData => this.FaceGenData;
         public FaceGenData FaceGenData { get => _FaceGenData.Item; set => _FaceGenData.Item = value; }
-        INotifyingItem<FaceGenData> IRace.FaceGenData_Property => this.FaceGenData_Property;
-        INotifyingItemGetter<FaceGenData> IRaceGetter.FaceGenData_Property => this.FaceGenData_Property;
+        INotifyingSetItem<FaceGenData> IRace.FaceGenData_Property => this.FaceGenData_Property;
+        INotifyingSetItemGetter<FaceGenData> IRaceGetter.FaceGenData_Property => this.FaceGenData_Property;
         #endregion
         #region Unknown
-        protected readonly INotifyingItem<Byte[]> _Unknown = NotifyingItem.Factory<Byte[]>(
+        protected readonly INotifyingSetItem<Byte[]> _Unknown = NotifyingSetItem.Factory<Byte[]>(
             markAsSet: false,
             noNullFallback: () => new byte[2]);
-        public INotifyingItem<Byte[]> Unknown_Property => _Unknown;
+        public INotifyingSetItem<Byte[]> Unknown_Property => _Unknown;
         public Byte[] Unknown
         {
             get => this._Unknown.Item;
             set => this._Unknown.Set(value);
         }
-        INotifyingItem<Byte[]> IRace.Unknown_Property => this.Unknown_Property;
-        INotifyingItemGetter<Byte[]> IRaceGetter.Unknown_Property => this.Unknown_Property;
+        INotifyingSetItem<Byte[]> IRace.Unknown_Property => this.Unknown_Property;
+        INotifyingSetItemGetter<Byte[]> IRaceGetter.Unknown_Property => this.Unknown_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -2056,58 +2056,58 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IRace : IRaceGetter, INamedMajorRecord, ILoquiClass<IRace, IRaceGetter>, ILoquiClass<Race, IRaceGetter>
     {
         new String Description { get; set; }
-        new INotifyingItem<String> Description_Property { get; }
+        new INotifyingSetItem<String> Description_Property { get; }
 
         new INotifyingList<FormID> Spells { get; }
         new INotifyingList<Relation> Relations { get; }
         new INotifyingList<SkillBoost> SkillBoosts { get; }
         new Byte[] Fluff { get; set; }
-        new INotifyingItem<Byte[]> Fluff_Property { get; }
+        new INotifyingSetItem<Byte[]> Fluff_Property { get; }
 
         new Single MaleHeight { get; set; }
-        new INotifyingItem<Single> MaleHeight_Property { get; }
+        new INotifyingSetItem<Single> MaleHeight_Property { get; }
 
         new Single FemaleHeight { get; set; }
-        new INotifyingItem<Single> FemaleHeight_Property { get; }
+        new INotifyingSetItem<Single> FemaleHeight_Property { get; }
 
         new Single MaleWeight { get; set; }
-        new INotifyingItem<Single> MaleWeight_Property { get; }
+        new INotifyingSetItem<Single> MaleWeight_Property { get; }
 
         new Single FemaleWeight { get; set; }
-        new INotifyingItem<Single> FemaleWeight_Property { get; }
+        new INotifyingSetItem<Single> FemaleWeight_Property { get; }
 
         new Race.Flag Flags { get; set; }
-        new INotifyingItem<Race.Flag> Flags_Property { get; }
+        new INotifyingSetItem<Race.Flag> Flags_Property { get; }
 
         new RaceVoices Voices { get; set; }
-        new INotifyingItem<RaceVoices> Voices_Property { get; }
+        new INotifyingSetItem<RaceVoices> Voices_Property { get; }
 
         new RaceHair DefaultHair { get; set; }
-        new INotifyingItem<RaceHair> DefaultHair_Property { get; }
+        new INotifyingSetItem<RaceHair> DefaultHair_Property { get; }
 
         new Byte DefaultHairColor { get; set; }
-        new INotifyingItem<Byte> DefaultHairColor_Property { get; }
+        new INotifyingSetItem<Byte> DefaultHairColor_Property { get; }
 
         new Int32 FaceGenMainClamp { get; set; }
-        new INotifyingItem<Int32> FaceGenMainClamp_Property { get; }
+        new INotifyingSetItem<Int32> FaceGenMainClamp_Property { get; }
 
         new Int32 FaceGenFaceClamp { get; set; }
-        new INotifyingItem<Int32> FaceGenFaceClamp_Property { get; }
+        new INotifyingSetItem<Int32> FaceGenFaceClamp_Property { get; }
 
         new RaceStatsGendered RaceStats { get; set; }
-        new INotifyingItem<RaceStatsGendered> RaceStats_Property { get; }
+        new INotifyingSetItem<RaceStatsGendered> RaceStats_Property { get; }
 
         new INotifyingList<FacePart> FaceData { get; }
         new GenderedBodyData BodyData { get; set; }
-        new INotifyingItem<GenderedBodyData> BodyData_Property { get; }
+        new INotifyingSetItem<GenderedBodyData> BodyData_Property { get; }
 
         new INotifyingList<FormID> Hairs { get; }
         new INotifyingList<FormID> Eyes { get; }
         new FaceGenData FaceGenData { get; set; }
-        new INotifyingItem<FaceGenData> FaceGenData_Property { get; }
+        new INotifyingSetItem<FaceGenData> FaceGenData_Property { get; }
 
         new Byte[] Unknown { get; set; }
-        new INotifyingItem<Byte[]> Unknown_Property { get; }
+        new INotifyingSetItem<Byte[]> Unknown_Property { get; }
 
     }
 
@@ -2115,7 +2115,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Description
         String Description { get; }
-        INotifyingItemGetter<String> Description_Property { get; }
+        INotifyingSetItemGetter<String> Description_Property { get; }
 
         #endregion
         #region Spells
@@ -2129,62 +2129,62 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Fluff
         Byte[] Fluff { get; }
-        INotifyingItemGetter<Byte[]> Fluff_Property { get; }
+        INotifyingSetItemGetter<Byte[]> Fluff_Property { get; }
 
         #endregion
         #region MaleHeight
         Single MaleHeight { get; }
-        INotifyingItemGetter<Single> MaleHeight_Property { get; }
+        INotifyingSetItemGetter<Single> MaleHeight_Property { get; }
 
         #endregion
         #region FemaleHeight
         Single FemaleHeight { get; }
-        INotifyingItemGetter<Single> FemaleHeight_Property { get; }
+        INotifyingSetItemGetter<Single> FemaleHeight_Property { get; }
 
         #endregion
         #region MaleWeight
         Single MaleWeight { get; }
-        INotifyingItemGetter<Single> MaleWeight_Property { get; }
+        INotifyingSetItemGetter<Single> MaleWeight_Property { get; }
 
         #endregion
         #region FemaleWeight
         Single FemaleWeight { get; }
-        INotifyingItemGetter<Single> FemaleWeight_Property { get; }
+        INotifyingSetItemGetter<Single> FemaleWeight_Property { get; }
 
         #endregion
         #region Flags
         Race.Flag Flags { get; }
-        INotifyingItemGetter<Race.Flag> Flags_Property { get; }
+        INotifyingSetItemGetter<Race.Flag> Flags_Property { get; }
 
         #endregion
         #region Voices
         RaceVoices Voices { get; }
-        INotifyingItemGetter<RaceVoices> Voices_Property { get; }
+        INotifyingSetItemGetter<RaceVoices> Voices_Property { get; }
 
         #endregion
         #region DefaultHair
         RaceHair DefaultHair { get; }
-        INotifyingItemGetter<RaceHair> DefaultHair_Property { get; }
+        INotifyingSetItemGetter<RaceHair> DefaultHair_Property { get; }
 
         #endregion
         #region DefaultHairColor
         Byte DefaultHairColor { get; }
-        INotifyingItemGetter<Byte> DefaultHairColor_Property { get; }
+        INotifyingSetItemGetter<Byte> DefaultHairColor_Property { get; }
 
         #endregion
         #region FaceGenMainClamp
         Int32 FaceGenMainClamp { get; }
-        INotifyingItemGetter<Int32> FaceGenMainClamp_Property { get; }
+        INotifyingSetItemGetter<Int32> FaceGenMainClamp_Property { get; }
 
         #endregion
         #region FaceGenFaceClamp
         Int32 FaceGenFaceClamp { get; }
-        INotifyingItemGetter<Int32> FaceGenFaceClamp_Property { get; }
+        INotifyingSetItemGetter<Int32> FaceGenFaceClamp_Property { get; }
 
         #endregion
         #region RaceStats
         RaceStatsGendered RaceStats { get; }
-        INotifyingItemGetter<RaceStatsGendered> RaceStats_Property { get; }
+        INotifyingSetItemGetter<RaceStatsGendered> RaceStats_Property { get; }
 
         #endregion
         #region FaceData
@@ -2192,7 +2192,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region BodyData
         GenderedBodyData BodyData { get; }
-        INotifyingItemGetter<GenderedBodyData> BodyData_Property { get; }
+        INotifyingSetItemGetter<GenderedBodyData> BodyData_Property { get; }
 
         #endregion
         #region Hairs
@@ -2203,12 +2203,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region FaceGenData
         FaceGenData FaceGenData { get; }
-        INotifyingItemGetter<FaceGenData> FaceGenData_Property { get; }
+        INotifyingSetItemGetter<FaceGenData> FaceGenData_Property { get; }
 
         #endregion
         #region Unknown
         Byte[] Unknown { get; }
-        INotifyingItemGetter<Byte[]> Unknown_Property { get; }
+        INotifyingSetItemGetter<Byte[]> Unknown_Property { get; }
 
         #endregion
 
@@ -2754,9 +2754,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Description_Property.SetToWithDefault(
-                        rhs.Description_Property,
-                        def?.Description_Property,
-                        cmds);
+                        rhs: rhs.Description_Property,
+                        def: def?.Description_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -2848,9 +2848,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Fluff_Property.SetToWithDefault(
-                        rhs.Fluff_Property,
-                        def?.Fluff_Property,
-                        cmds);
+                        rhs: rhs.Fluff_Property,
+                        def: def?.Fluff_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -2863,9 +2863,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.MaleHeight_Property.SetToWithDefault(
-                        rhs.MaleHeight_Property,
-                        def?.MaleHeight_Property,
-                        cmds);
+                        rhs: rhs.MaleHeight_Property,
+                        def: def?.MaleHeight_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -2878,9 +2878,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.FemaleHeight_Property.SetToWithDefault(
-                        rhs.FemaleHeight_Property,
-                        def?.FemaleHeight_Property,
-                        cmds);
+                        rhs: rhs.FemaleHeight_Property,
+                        def: def?.FemaleHeight_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -2893,9 +2893,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.MaleWeight_Property.SetToWithDefault(
-                        rhs.MaleWeight_Property,
-                        def?.MaleWeight_Property,
-                        cmds);
+                        rhs: rhs.MaleWeight_Property,
+                        def: def?.MaleWeight_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -2908,9 +2908,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.FemaleWeight_Property.SetToWithDefault(
-                        rhs.FemaleWeight_Property,
-                        def?.FemaleWeight_Property,
-                        cmds);
+                        rhs: rhs.FemaleWeight_Property,
+                        def: def?.FemaleWeight_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -2923,9 +2923,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Flags_Property.SetToWithDefault(
-                        rhs.Flags_Property,
-                        def?.Flags_Property,
-                        cmds);
+                        rhs: rhs.Flags_Property,
+                        def: def?.Flags_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -3040,9 +3040,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.DefaultHairColor_Property.SetToWithDefault(
-                        rhs.DefaultHairColor_Property,
-                        def?.DefaultHairColor_Property,
-                        cmds);
+                        rhs: rhs.DefaultHairColor_Property,
+                        def: def?.DefaultHairColor_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -3055,9 +3055,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.FaceGenMainClamp_Property.SetToWithDefault(
-                        rhs.FaceGenMainClamp_Property,
-                        def?.FaceGenMainClamp_Property,
-                        cmds);
+                        rhs: rhs.FaceGenMainClamp_Property,
+                        def: def?.FaceGenMainClamp_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -3070,9 +3070,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.FaceGenFaceClamp_Property.SetToWithDefault(
-                        rhs.FaceGenFaceClamp_Property,
-                        def?.FaceGenFaceClamp_Property,
-                        cmds);
+                        rhs: rhs.FaceGenFaceClamp_Property,
+                        def: def?.FaceGenFaceClamp_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -3300,9 +3300,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Unknown_Property.SetToWithDefault(
-                        rhs.Unknown_Property,
-                        def?.Unknown_Property,
-                        cmds);
+                        rhs: rhs.Unknown_Property,
+                        def: def?.Unknown_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)

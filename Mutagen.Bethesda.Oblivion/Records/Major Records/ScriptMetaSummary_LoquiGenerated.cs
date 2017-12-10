@@ -37,59 +37,59 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Fluff
-        protected readonly INotifyingItem<Byte[]> _Fluff = NotifyingItem.Factory<Byte[]>(
+        protected readonly INotifyingSetItem<Byte[]> _Fluff = NotifyingSetItem.Factory<Byte[]>(
             markAsSet: false,
             noNullFallback: () => new byte[4]);
-        public INotifyingItem<Byte[]> Fluff_Property => _Fluff;
+        public INotifyingSetItem<Byte[]> Fluff_Property => _Fluff;
         public Byte[] Fluff
         {
             get => this._Fluff.Item;
             set => this._Fluff.Set(value);
         }
-        INotifyingItem<Byte[]> IScriptMetaSummary.Fluff_Property => this.Fluff_Property;
-        INotifyingItemGetter<Byte[]> IScriptMetaSummaryGetter.Fluff_Property => this.Fluff_Property;
+        INotifyingSetItem<Byte[]> IScriptMetaSummary.Fluff_Property => this.Fluff_Property;
+        INotifyingSetItemGetter<Byte[]> IScriptMetaSummaryGetter.Fluff_Property => this.Fluff_Property;
         #endregion
         #region RefCount
-        protected readonly INotifyingItem<UInt32> _RefCount = NotifyingItem.Factory<UInt32>(markAsSet: false);
-        public INotifyingItem<UInt32> RefCount_Property => _RefCount;
+        protected readonly INotifyingSetItem<UInt32> _RefCount = NotifyingSetItem.Factory<UInt32>(markAsSet: false);
+        public INotifyingSetItem<UInt32> RefCount_Property => _RefCount;
         public UInt32 RefCount
         {
             get => this._RefCount.Item;
             set => this._RefCount.Set(value);
         }
-        INotifyingItem<UInt32> IScriptMetaSummary.RefCount_Property => this.RefCount_Property;
-        INotifyingItemGetter<UInt32> IScriptMetaSummaryGetter.RefCount_Property => this.RefCount_Property;
+        INotifyingSetItem<UInt32> IScriptMetaSummary.RefCount_Property => this.RefCount_Property;
+        INotifyingSetItemGetter<UInt32> IScriptMetaSummaryGetter.RefCount_Property => this.RefCount_Property;
         #endregion
         #region CompiledSize
-        protected readonly INotifyingItem<Int32> _CompiledSize = NotifyingItem.Factory<Int32>(markAsSet: false);
-        public INotifyingItemGetter<Int32> CompiledSize_Property => _CompiledSize;
+        protected readonly INotifyingSetItem<Int32> _CompiledSize = NotifyingSetItem.Factory<Int32>(markAsSet: false);
+        public INotifyingSetItemGetter<Int32> CompiledSize_Property => _CompiledSize;
         public Int32 CompiledSize
         {
             get => this._CompiledSize.Item;
             protected set => this._CompiledSize.Set(value);
         }
-        INotifyingItemGetter<Int32> IScriptMetaSummaryGetter.CompiledSize_Property => this.CompiledSize_Property;
+        INotifyingSetItemGetter<Int32> IScriptMetaSummaryGetter.CompiledSize_Property => this.CompiledSize_Property;
         #endregion
         #region VariableCount
-        protected readonly INotifyingItem<UInt32> _VariableCount = NotifyingItem.Factory<UInt32>(markAsSet: false);
-        public INotifyingItemGetter<UInt32> VariableCount_Property => _VariableCount;
+        protected readonly INotifyingSetItem<UInt32> _VariableCount = NotifyingSetItem.Factory<UInt32>(markAsSet: false);
+        public INotifyingSetItemGetter<UInt32> VariableCount_Property => _VariableCount;
         public UInt32 VariableCount
         {
             get => this._VariableCount.Item;
             protected set => this._VariableCount.Set(value);
         }
-        INotifyingItemGetter<UInt32> IScriptMetaSummaryGetter.VariableCount_Property => this.VariableCount_Property;
+        INotifyingSetItemGetter<UInt32> IScriptMetaSummaryGetter.VariableCount_Property => this.VariableCount_Property;
         #endregion
         #region Type
-        protected readonly INotifyingItem<Script.ScriptType> _Type = NotifyingItem.Factory<Script.ScriptType>(markAsSet: false);
-        public INotifyingItem<Script.ScriptType> Type_Property => _Type;
+        protected readonly INotifyingSetItem<Script.ScriptType> _Type = NotifyingSetItem.Factory<Script.ScriptType>(markAsSet: false);
+        public INotifyingSetItem<Script.ScriptType> Type_Property => _Type;
         public Script.ScriptType Type
         {
             get => this._Type.Item;
             set => this._Type.Set(value);
         }
-        INotifyingItem<Script.ScriptType> IScriptMetaSummary.Type_Property => this.Type_Property;
-        INotifyingItemGetter<Script.ScriptType> IScriptMetaSummaryGetter.Type_Property => this.Type_Property;
+        INotifyingSetItem<Script.ScriptType> IScriptMetaSummary.Type_Property => this.Type_Property;
+        INotifyingSetItemGetter<Script.ScriptType> IScriptMetaSummaryGetter.Type_Property => this.Type_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -1092,13 +1092,13 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IScriptMetaSummary : IScriptMetaSummaryGetter, ILoquiClass<IScriptMetaSummary, IScriptMetaSummaryGetter>, ILoquiClass<ScriptMetaSummary, IScriptMetaSummaryGetter>
     {
         new Byte[] Fluff { get; set; }
-        new INotifyingItem<Byte[]> Fluff_Property { get; }
+        new INotifyingSetItem<Byte[]> Fluff_Property { get; }
 
         new UInt32 RefCount { get; set; }
-        new INotifyingItem<UInt32> RefCount_Property { get; }
+        new INotifyingSetItem<UInt32> RefCount_Property { get; }
 
         new Script.ScriptType Type { get; set; }
-        new INotifyingItem<Script.ScriptType> Type_Property { get; }
+        new INotifyingSetItem<Script.ScriptType> Type_Property { get; }
 
     }
 
@@ -1106,27 +1106,27 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Fluff
         Byte[] Fluff { get; }
-        INotifyingItemGetter<Byte[]> Fluff_Property { get; }
+        INotifyingSetItemGetter<Byte[]> Fluff_Property { get; }
 
         #endregion
         #region RefCount
         UInt32 RefCount { get; }
-        INotifyingItemGetter<UInt32> RefCount_Property { get; }
+        INotifyingSetItemGetter<UInt32> RefCount_Property { get; }
 
         #endregion
         #region CompiledSize
         Int32 CompiledSize { get; }
-        INotifyingItemGetter<Int32> CompiledSize_Property { get; }
+        INotifyingSetItemGetter<Int32> CompiledSize_Property { get; }
 
         #endregion
         #region VariableCount
         UInt32 VariableCount { get; }
-        INotifyingItemGetter<UInt32> VariableCount_Property { get; }
+        INotifyingSetItemGetter<UInt32> VariableCount_Property { get; }
 
         #endregion
         #region Type
         Script.ScriptType Type { get; }
-        INotifyingItemGetter<Script.ScriptType> Type_Property { get; }
+        INotifyingSetItemGetter<Script.ScriptType> Type_Property { get; }
 
         #endregion
 
@@ -1443,9 +1443,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Fluff_Property.SetToWithDefault(
-                        rhs.Fluff_Property,
-                        def?.Fluff_Property,
-                        cmds);
+                        rhs: rhs.Fluff_Property,
+                        def: def?.Fluff_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1458,9 +1458,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.RefCount_Property.SetToWithDefault(
-                        rhs.RefCount_Property,
-                        def?.RefCount_Property,
-                        cmds);
+                        rhs: rhs.RefCount_Property,
+                        def: def?.RefCount_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1473,9 +1473,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Type_Property.SetToWithDefault(
-                        rhs.Type_Property,
-                        def?.Type_Property,
-                        cmds);
+                        rhs: rhs.Type_Property,
+                        def: def?.Type_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)

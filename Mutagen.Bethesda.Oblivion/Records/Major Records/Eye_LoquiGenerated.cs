@@ -37,26 +37,26 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Icon
-        protected readonly INotifyingItem<FilePath> _Icon = NotifyingItem.Factory<FilePath>(markAsSet: false);
-        public INotifyingItem<FilePath> Icon_Property => _Icon;
+        protected readonly INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
+        public INotifyingSetItem<FilePath> Icon_Property => _Icon;
         public FilePath Icon
         {
             get => this._Icon.Item;
             set => this._Icon.Set(value);
         }
-        INotifyingItem<FilePath> IEye.Icon_Property => this.Icon_Property;
-        INotifyingItemGetter<FilePath> IEyeGetter.Icon_Property => this.Icon_Property;
+        INotifyingSetItem<FilePath> IEye.Icon_Property => this.Icon_Property;
+        INotifyingSetItemGetter<FilePath> IEyeGetter.Icon_Property => this.Icon_Property;
         #endregion
         #region Flags
-        protected readonly INotifyingItem<Eye.Flag> _Flags = NotifyingItem.Factory<Eye.Flag>(markAsSet: false);
-        public INotifyingItem<Eye.Flag> Flags_Property => _Flags;
+        protected readonly INotifyingSetItem<Eye.Flag> _Flags = NotifyingSetItem.Factory<Eye.Flag>(markAsSet: false);
+        public INotifyingSetItem<Eye.Flag> Flags_Property => _Flags;
         public Eye.Flag Flags
         {
             get => this._Flags.Item;
             set => this._Flags.Set(value);
         }
-        INotifyingItem<Eye.Flag> IEye.Flags_Property => this.Flags_Property;
-        INotifyingItemGetter<Eye.Flag> IEyeGetter.Flags_Property => this.Flags_Property;
+        INotifyingSetItem<Eye.Flag> IEye.Flags_Property => this.Flags_Property;
+        INotifyingSetItemGetter<Eye.Flag> IEyeGetter.Flags_Property => this.Flags_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -989,10 +989,10 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IEye : IEyeGetter, INamedMajorRecord, ILoquiClass<IEye, IEyeGetter>, ILoquiClass<Eye, IEyeGetter>
     {
         new FilePath Icon { get; set; }
-        new INotifyingItem<FilePath> Icon_Property { get; }
+        new INotifyingSetItem<FilePath> Icon_Property { get; }
 
         new Eye.Flag Flags { get; set; }
-        new INotifyingItem<Eye.Flag> Flags_Property { get; }
+        new INotifyingSetItem<Eye.Flag> Flags_Property { get; }
 
     }
 
@@ -1000,12 +1000,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Icon
         FilePath Icon { get; }
-        INotifyingItemGetter<FilePath> Icon_Property { get; }
+        INotifyingSetItemGetter<FilePath> Icon_Property { get; }
 
         #endregion
         #region Flags
         Eye.Flag Flags { get; }
-        INotifyingItemGetter<Eye.Flag> Flags_Property { get; }
+        INotifyingSetItemGetter<Eye.Flag> Flags_Property { get; }
 
         #endregion
 
@@ -1294,9 +1294,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Icon_Property.SetToWithDefault(
-                        rhs.Icon_Property,
-                        def?.Icon_Property,
-                        cmds);
+                        rhs: rhs.Icon_Property,
+                        def: def?.Icon_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1309,9 +1309,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Flags_Property.SetToWithDefault(
-                        rhs.Flags_Property,
-                        def?.Flags_Property,
-                        cmds);
+                        rhs: rhs.Flags_Property,
+                        def: def?.Flags_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)

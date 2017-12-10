@@ -37,15 +37,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Data
-        protected readonly INotifyingItem<Single> _Data = NotifyingItem.Factory<Single>(markAsSet: false);
-        public INotifyingItem<Single> Data_Property => _Data;
+        protected readonly INotifyingSetItem<Single> _Data = NotifyingSetItem.Factory<Single>(markAsSet: false);
+        public INotifyingSetItem<Single> Data_Property => _Data;
         public Single Data
         {
             get => this._Data.Item;
             set => this._Data.Set(value);
         }
-        INotifyingItem<Single> IGameSettingFloat.Data_Property => this.Data_Property;
-        INotifyingItemGetter<Single> IGameSettingFloatGetter.Data_Property => this.Data_Property;
+        INotifyingSetItem<Single> IGameSettingFloat.Data_Property => this.Data_Property;
+        INotifyingSetItemGetter<Single> IGameSettingFloatGetter.Data_Property => this.Data_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -935,7 +935,7 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IGameSettingFloat : IGameSettingFloatGetter, IGameSetting, ILoquiClass<IGameSettingFloat, IGameSettingFloatGetter>, ILoquiClass<GameSettingFloat, IGameSettingFloatGetter>
     {
         new Single Data { get; set; }
-        new INotifyingItem<Single> Data_Property { get; }
+        new INotifyingSetItem<Single> Data_Property { get; }
 
     }
 
@@ -943,7 +943,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Data
         Single Data { get; }
-        INotifyingItemGetter<Single> Data_Property { get; }
+        INotifyingSetItemGetter<Single> Data_Property { get; }
 
         #endregion
 
@@ -1219,9 +1219,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Data_Property.SetToWithDefault(
-                        rhs.Data_Property,
-                        def?.Data_Property,
-                        cmds);
+                        rhs: rhs.Data_Property,
+                        def: def?.Data_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)

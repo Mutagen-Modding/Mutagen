@@ -37,25 +37,25 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region TypeChar
-        protected readonly INotifyingItem<Char> _TypeChar = NotifyingItem.Factory<Char>(markAsSet: false);
-        public INotifyingItemGetter<Char> TypeChar_Property => _TypeChar;
+        protected readonly INotifyingSetItem<Char> _TypeChar = NotifyingSetItem.Factory<Char>(markAsSet: false);
+        public INotifyingSetItemGetter<Char> TypeChar_Property => _TypeChar;
         public Char TypeChar
         {
             get => this._TypeChar.Item;
             protected set => this._TypeChar.Set(value);
         }
-        INotifyingItemGetter<Char> IGlobalGetter.TypeChar_Property => this.TypeChar_Property;
+        INotifyingSetItemGetter<Char> IGlobalGetter.TypeChar_Property => this.TypeChar_Property;
         #endregion
         #region RawFloat
-        protected readonly INotifyingItem<Single> _RawFloat = NotifyingItem.Factory<Single>(markAsSet: false);
-        public INotifyingItem<Single> RawFloat_Property => _RawFloat;
+        protected readonly INotifyingSetItem<Single> _RawFloat = NotifyingSetItem.Factory<Single>(markAsSet: false);
+        public INotifyingSetItem<Single> RawFloat_Property => _RawFloat;
         public Single RawFloat
         {
             get => this._RawFloat.Item;
             set => this._RawFloat.Set(value);
         }
-        INotifyingItem<Single> IGlobal.RawFloat_Property => this.RawFloat_Property;
-        INotifyingItemGetter<Single> IGlobalGetter.RawFloat_Property => this.RawFloat_Property;
+        INotifyingSetItem<Single> IGlobal.RawFloat_Property => this.RawFloat_Property;
+        INotifyingSetItemGetter<Single> IGlobalGetter.RawFloat_Property => this.RawFloat_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -601,7 +601,7 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IGlobal : IGlobalGetter, IMajorRecord, ILoquiClass<IGlobal, IGlobalGetter>, ILoquiClass<Global, IGlobalGetter>
     {
         new Single RawFloat { get; set; }
-        new INotifyingItem<Single> RawFloat_Property { get; }
+        new INotifyingSetItem<Single> RawFloat_Property { get; }
 
     }
 
@@ -609,12 +609,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region TypeChar
         Char TypeChar { get; }
-        INotifyingItemGetter<Char> TypeChar_Property { get; }
+        INotifyingSetItemGetter<Char> TypeChar_Property { get; }
 
         #endregion
         #region RawFloat
         Single RawFloat { get; }
-        INotifyingItemGetter<Single> RawFloat_Property { get; }
+        INotifyingSetItemGetter<Single> RawFloat_Property { get; }
 
         #endregion
 
@@ -905,9 +905,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.RawFloat_Property.SetToWithDefault(
-                        rhs.RawFloat_Property,
-                        def?.RawFloat_Property,
-                        cmds);
+                        rhs: rhs.RawFloat_Property,
+                        def: def?.RawFloat_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)

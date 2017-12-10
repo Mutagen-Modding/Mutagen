@@ -37,61 +37,61 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region MajorRecordFlags
-        protected readonly INotifyingItem<Byte[]> _MajorRecordFlags = NotifyingItem.Factory<Byte[]>(
+        protected readonly INotifyingSetItem<Byte[]> _MajorRecordFlags = NotifyingSetItem.Factory<Byte[]>(
             markAsSet: false,
             noNullFallback: () => new byte[4]);
-        public INotifyingItem<Byte[]> MajorRecordFlags_Property => _MajorRecordFlags;
+        public INotifyingSetItem<Byte[]> MajorRecordFlags_Property => _MajorRecordFlags;
         public Byte[] MajorRecordFlags
         {
             get => this._MajorRecordFlags.Item;
             set => this._MajorRecordFlags.Set(value);
         }
-        INotifyingItem<Byte[]> IMajorRecord.MajorRecordFlags_Property => this.MajorRecordFlags_Property;
-        INotifyingItemGetter<Byte[]> IMajorRecordGetter.MajorRecordFlags_Property => this.MajorRecordFlags_Property;
+        INotifyingSetItem<Byte[]> IMajorRecord.MajorRecordFlags_Property => this.MajorRecordFlags_Property;
+        INotifyingSetItemGetter<Byte[]> IMajorRecordGetter.MajorRecordFlags_Property => this.MajorRecordFlags_Property;
         #endregion
         #region FormID
-        protected readonly INotifyingItem<FormID> _FormID = NotifyingItem.Factory<FormID>(markAsSet: false);
-        public INotifyingItemGetter<FormID> FormID_Property => _FormID;
+        protected readonly INotifyingSetItem<FormID> _FormID = NotifyingSetItem.Factory<FormID>(markAsSet: false);
+        public INotifyingSetItemGetter<FormID> FormID_Property => _FormID;
         public FormID FormID
         {
             get => this._FormID.Item;
             protected set => this._FormID.Set(value);
         }
-        INotifyingItemGetter<FormID> IMajorRecordGetter.FormID_Property => this.FormID_Property;
+        INotifyingSetItemGetter<FormID> IMajorRecordGetter.FormID_Property => this.FormID_Property;
         #endregion
         #region Version
-        protected readonly INotifyingItem<Byte[]> _Version = NotifyingItem.Factory<Byte[]>(
+        protected readonly INotifyingSetItem<Byte[]> _Version = NotifyingSetItem.Factory<Byte[]>(
             markAsSet: false,
             noNullFallback: () => new byte[4]);
-        public INotifyingItem<Byte[]> Version_Property => _Version;
+        public INotifyingSetItem<Byte[]> Version_Property => _Version;
         public Byte[] Version
         {
             get => this._Version.Item;
             set => this._Version.Set(value);
         }
-        INotifyingItem<Byte[]> IMajorRecord.Version_Property => this.Version_Property;
-        INotifyingItemGetter<Byte[]> IMajorRecordGetter.Version_Property => this.Version_Property;
+        INotifyingSetItem<Byte[]> IMajorRecord.Version_Property => this.Version_Property;
+        INotifyingSetItemGetter<Byte[]> IMajorRecordGetter.Version_Property => this.Version_Property;
         #endregion
         #region EditorID
-        protected readonly INotifyingItem<String> _EditorID = NotifyingItem.Factory<String>(markAsSet: false);
-        public INotifyingItem<String> EditorID_Property => _EditorID;
+        protected readonly INotifyingSetItem<String> _EditorID = NotifyingSetItem.Factory<String>(markAsSet: false);
+        public INotifyingSetItem<String> EditorID_Property => _EditorID;
         public String EditorID
         {
             get => this._EditorID.Item;
             set => this._EditorID.Set(value);
         }
-        INotifyingItem<String> IMajorRecord.EditorID_Property => this.EditorID_Property;
-        INotifyingItemGetter<String> IMajorRecordGetter.EditorID_Property => this.EditorID_Property;
+        INotifyingSetItem<String> IMajorRecord.EditorID_Property => this.EditorID_Property;
+        INotifyingSetItemGetter<String> IMajorRecordGetter.EditorID_Property => this.EditorID_Property;
         #endregion
         #region RecordType
-        protected readonly INotifyingItem<RecordType> _RecordType = NotifyingItem.Factory<RecordType>(markAsSet: false);
-        public INotifyingItemGetter<RecordType> RecordType_Property => _RecordType;
+        protected readonly INotifyingSetItem<RecordType> _RecordType = NotifyingSetItem.Factory<RecordType>(markAsSet: false);
+        public INotifyingSetItemGetter<RecordType> RecordType_Property => _RecordType;
         public RecordType RecordType
         {
             get => this._RecordType.Item;
             protected set => this._RecordType.Set(value);
         }
-        INotifyingItemGetter<RecordType> IMajorRecordGetter.RecordType_Property => this.RecordType_Property;
+        INotifyingSetItemGetter<RecordType> IMajorRecordGetter.RecordType_Property => this.RecordType_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -718,13 +718,13 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IMajorRecord : IMajorRecordGetter, ILoquiClass<IMajorRecord, IMajorRecordGetter>, ILoquiClass<MajorRecord, IMajorRecordGetter>
     {
         new Byte[] MajorRecordFlags { get; set; }
-        new INotifyingItem<Byte[]> MajorRecordFlags_Property { get; }
+        new INotifyingSetItem<Byte[]> MajorRecordFlags_Property { get; }
 
         new Byte[] Version { get; set; }
-        new INotifyingItem<Byte[]> Version_Property { get; }
+        new INotifyingSetItem<Byte[]> Version_Property { get; }
 
         new String EditorID { get; set; }
-        new INotifyingItem<String> EditorID_Property { get; }
+        new INotifyingSetItem<String> EditorID_Property { get; }
 
     }
 
@@ -732,27 +732,27 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region MajorRecordFlags
         Byte[] MajorRecordFlags { get; }
-        INotifyingItemGetter<Byte[]> MajorRecordFlags_Property { get; }
+        INotifyingSetItemGetter<Byte[]> MajorRecordFlags_Property { get; }
 
         #endregion
         #region FormID
         FormID FormID { get; }
-        INotifyingItemGetter<FormID> FormID_Property { get; }
+        INotifyingSetItemGetter<FormID> FormID_Property { get; }
 
         #endregion
         #region Version
         Byte[] Version { get; }
-        INotifyingItemGetter<Byte[]> Version_Property { get; }
+        INotifyingSetItemGetter<Byte[]> Version_Property { get; }
 
         #endregion
         #region EditorID
         String EditorID { get; }
-        INotifyingItemGetter<String> EditorID_Property { get; }
+        INotifyingSetItemGetter<String> EditorID_Property { get; }
 
         #endregion
         #region RecordType
         RecordType RecordType { get; }
-        INotifyingItemGetter<RecordType> RecordType_Property { get; }
+        INotifyingSetItemGetter<RecordType> RecordType_Property { get; }
 
         #endregion
 
@@ -1068,9 +1068,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.MajorRecordFlags_Property.SetToWithDefault(
-                        rhs.MajorRecordFlags_Property,
-                        def?.MajorRecordFlags_Property,
-                        cmds);
+                        rhs: rhs.MajorRecordFlags_Property,
+                        def: def?.MajorRecordFlags_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1083,9 +1083,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Version_Property.SetToWithDefault(
-                        rhs.Version_Property,
-                        def?.Version_Property,
-                        cmds);
+                        rhs: rhs.Version_Property,
+                        def: def?.Version_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1098,9 +1098,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.EditorID_Property.SetToWithDefault(
-                        rhs.EditorID_Property,
-                        def?.EditorID_Property,
-                        cmds);
+                        rhs: rhs.EditorID_Property,
+                        def: def?.EditorID_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)

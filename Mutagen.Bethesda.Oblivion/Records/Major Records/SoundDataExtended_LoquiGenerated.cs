@@ -37,37 +37,37 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region StaticAttenuation
-        protected readonly INotifyingItem<Single> _StaticAttenuation = NotifyingItem.Factory<Single>(markAsSet: false);
-        public INotifyingItem<Single> StaticAttenuation_Property => _StaticAttenuation;
+        protected readonly INotifyingSetItem<Single> _StaticAttenuation = NotifyingSetItem.Factory<Single>(markAsSet: false);
+        public INotifyingSetItem<Single> StaticAttenuation_Property => _StaticAttenuation;
         public Single StaticAttenuation
         {
             get => this._StaticAttenuation.Item;
             set => this._StaticAttenuation.Set(value);
         }
-        INotifyingItem<Single> ISoundDataExtended.StaticAttenuation_Property => this.StaticAttenuation_Property;
-        INotifyingItemGetter<Single> ISoundDataExtendedGetter.StaticAttenuation_Property => this.StaticAttenuation_Property;
+        INotifyingSetItem<Single> ISoundDataExtended.StaticAttenuation_Property => this.StaticAttenuation_Property;
+        INotifyingSetItemGetter<Single> ISoundDataExtendedGetter.StaticAttenuation_Property => this.StaticAttenuation_Property;
         #endregion
         #region StopTime
-        protected readonly INotifyingItem<Byte> _StopTime = NotifyingItem.Factory<Byte>(markAsSet: false);
-        public INotifyingItem<Byte> StopTime_Property => _StopTime;
+        protected readonly INotifyingSetItem<Byte> _StopTime = NotifyingSetItem.Factory<Byte>(markAsSet: false);
+        public INotifyingSetItem<Byte> StopTime_Property => _StopTime;
         public Byte StopTime
         {
             get => this._StopTime.Item;
             set => this._StopTime.Set(value);
         }
-        INotifyingItem<Byte> ISoundDataExtended.StopTime_Property => this.StopTime_Property;
-        INotifyingItemGetter<Byte> ISoundDataExtendedGetter.StopTime_Property => this.StopTime_Property;
+        INotifyingSetItem<Byte> ISoundDataExtended.StopTime_Property => this.StopTime_Property;
+        INotifyingSetItemGetter<Byte> ISoundDataExtendedGetter.StopTime_Property => this.StopTime_Property;
         #endregion
         #region StartTime
-        protected readonly INotifyingItem<Byte> _StartTime = NotifyingItem.Factory<Byte>(markAsSet: false);
-        public INotifyingItem<Byte> StartTime_Property => _StartTime;
+        protected readonly INotifyingSetItem<Byte> _StartTime = NotifyingSetItem.Factory<Byte>(markAsSet: false);
+        public INotifyingSetItem<Byte> StartTime_Property => _StartTime;
         public Byte StartTime
         {
             get => this._StartTime.Item;
             set => this._StartTime.Set(value);
         }
-        INotifyingItem<Byte> ISoundDataExtended.StartTime_Property => this.StartTime_Property;
-        INotifyingItemGetter<Byte> ISoundDataExtendedGetter.StartTime_Property => this.StartTime_Property;
+        INotifyingSetItem<Byte> ISoundDataExtended.StartTime_Property => this.StartTime_Property;
+        INotifyingSetItemGetter<Byte> ISoundDataExtendedGetter.StartTime_Property => this.StartTime_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -991,13 +991,13 @@ namespace Mutagen.Bethesda.Oblivion
     public interface ISoundDataExtended : ISoundDataExtendedGetter, ISoundData, ILoquiClass<ISoundDataExtended, ISoundDataExtendedGetter>, ILoquiClass<SoundDataExtended, ISoundDataExtendedGetter>
     {
         new Single StaticAttenuation { get; set; }
-        new INotifyingItem<Single> StaticAttenuation_Property { get; }
+        new INotifyingSetItem<Single> StaticAttenuation_Property { get; }
 
         new Byte StopTime { get; set; }
-        new INotifyingItem<Byte> StopTime_Property { get; }
+        new INotifyingSetItem<Byte> StopTime_Property { get; }
 
         new Byte StartTime { get; set; }
-        new INotifyingItem<Byte> StartTime_Property { get; }
+        new INotifyingSetItem<Byte> StartTime_Property { get; }
 
     }
 
@@ -1005,17 +1005,17 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region StaticAttenuation
         Single StaticAttenuation { get; }
-        INotifyingItemGetter<Single> StaticAttenuation_Property { get; }
+        INotifyingSetItemGetter<Single> StaticAttenuation_Property { get; }
 
         #endregion
         #region StopTime
         Byte StopTime { get; }
-        INotifyingItemGetter<Byte> StopTime_Property { get; }
+        INotifyingSetItemGetter<Byte> StopTime_Property { get; }
 
         #endregion
         #region StartTime
         Byte StartTime { get; }
-        INotifyingItemGetter<Byte> StartTime_Property { get; }
+        INotifyingSetItemGetter<Byte> StartTime_Property { get; }
 
         #endregion
 
@@ -1314,9 +1314,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.StaticAttenuation_Property.SetToWithDefault(
-                        rhs.StaticAttenuation_Property,
-                        def?.StaticAttenuation_Property,
-                        cmds);
+                        rhs: rhs.StaticAttenuation_Property,
+                        def: def?.StaticAttenuation_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1329,9 +1329,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.StopTime_Property.SetToWithDefault(
-                        rhs.StopTime_Property,
-                        def?.StopTime_Property,
-                        cmds);
+                        rhs: rhs.StopTime_Property,
+                        def: def?.StopTime_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1344,9 +1344,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.StartTime_Property.SetToWithDefault(
-                        rhs.StartTime_Property,
-                        def?.StartTime_Property,
-                        cmds);
+                        rhs: rhs.StartTime_Property,
+                        def: def?.StartTime_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)

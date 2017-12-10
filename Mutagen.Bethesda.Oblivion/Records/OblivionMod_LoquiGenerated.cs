@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region TES4
-        private readonly INotifyingItem<TES4> _TES4 = new NotifyingItemConvertWrapper<TES4>(
+        private readonly INotifyingSetItem<TES4> _TES4 = new NotifyingSetItemConvertWrapper<TES4>(
             defaultVal: new TES4(),
             incomingConverter: (change) =>
             {
@@ -49,107 +49,107 @@ namespace Mutagen.Bethesda.Oblivion
                 return TryGet<TES4>.Succeed(change.New);
             }
         );
-        public INotifyingItem<TES4> TES4_Property => this._TES4;
+        public INotifyingSetItem<TES4> TES4_Property => this._TES4;
         TES4 IOblivionModGetter.TES4 => this.TES4;
         public TES4 TES4 { get => _TES4.Item; set => _TES4.Item = value; }
-        INotifyingItem<TES4> IOblivionMod.TES4_Property => this.TES4_Property;
-        INotifyingItemGetter<TES4> IOblivionModGetter.TES4_Property => this.TES4_Property;
+        INotifyingSetItem<TES4> IOblivionMod.TES4_Property => this.TES4_Property;
+        INotifyingSetItemGetter<TES4> IOblivionModGetter.TES4_Property => this.TES4_Property;
         #endregion
         #region GameSettings
-        private readonly INotifyingItem<Group<GameSetting>> _GameSettings = new NotifyingItem<Group<GameSetting>>();
-        public INotifyingItem<Group<GameSetting>> GameSettings_Property => this._GameSettings;
+        private readonly INotifyingSetItem<Group<GameSetting>> _GameSettings = new NotifyingSetItem<Group<GameSetting>>();
+        public INotifyingSetItem<Group<GameSetting>> GameSettings_Property => this._GameSettings;
         Group<GameSetting> IOblivionModGetter.GameSettings => this.GameSettings;
         public Group<GameSetting> GameSettings { get => _GameSettings.Item; set => _GameSettings.Item = value; }
-        INotifyingItem<Group<GameSetting>> IOblivionMod.GameSettings_Property => this.GameSettings_Property;
-        INotifyingItemGetter<Group<GameSetting>> IOblivionModGetter.GameSettings_Property => this.GameSettings_Property;
+        INotifyingSetItem<Group<GameSetting>> IOblivionMod.GameSettings_Property => this.GameSettings_Property;
+        INotifyingSetItemGetter<Group<GameSetting>> IOblivionModGetter.GameSettings_Property => this.GameSettings_Property;
         #endregion
         #region Globals
-        private readonly INotifyingItem<Group<Global>> _Globals = new NotifyingItem<Group<Global>>();
-        public INotifyingItem<Group<Global>> Globals_Property => this._Globals;
+        private readonly INotifyingSetItem<Group<Global>> _Globals = new NotifyingSetItem<Group<Global>>();
+        public INotifyingSetItem<Group<Global>> Globals_Property => this._Globals;
         Group<Global> IOblivionModGetter.Globals => this.Globals;
         public Group<Global> Globals { get => _Globals.Item; set => _Globals.Item = value; }
-        INotifyingItem<Group<Global>> IOblivionMod.Globals_Property => this.Globals_Property;
-        INotifyingItemGetter<Group<Global>> IOblivionModGetter.Globals_Property => this.Globals_Property;
+        INotifyingSetItem<Group<Global>> IOblivionMod.Globals_Property => this.Globals_Property;
+        INotifyingSetItemGetter<Group<Global>> IOblivionModGetter.Globals_Property => this.Globals_Property;
         #endregion
         #region Classes
-        private readonly INotifyingItem<Group<Class>> _Classes = new NotifyingItem<Group<Class>>();
-        public INotifyingItem<Group<Class>> Classes_Property => this._Classes;
+        private readonly INotifyingSetItem<Group<Class>> _Classes = new NotifyingSetItem<Group<Class>>();
+        public INotifyingSetItem<Group<Class>> Classes_Property => this._Classes;
         Group<Class> IOblivionModGetter.Classes => this.Classes;
         public Group<Class> Classes { get => _Classes.Item; set => _Classes.Item = value; }
-        INotifyingItem<Group<Class>> IOblivionMod.Classes_Property => this.Classes_Property;
-        INotifyingItemGetter<Group<Class>> IOblivionModGetter.Classes_Property => this.Classes_Property;
+        INotifyingSetItem<Group<Class>> IOblivionMod.Classes_Property => this.Classes_Property;
+        INotifyingSetItemGetter<Group<Class>> IOblivionModGetter.Classes_Property => this.Classes_Property;
         #endregion
         #region Factions
-        private readonly INotifyingItem<Group<Faction>> _Factions = new NotifyingItem<Group<Faction>>();
-        public INotifyingItem<Group<Faction>> Factions_Property => this._Factions;
+        private readonly INotifyingSetItem<Group<Faction>> _Factions = new NotifyingSetItem<Group<Faction>>();
+        public INotifyingSetItem<Group<Faction>> Factions_Property => this._Factions;
         Group<Faction> IOblivionModGetter.Factions => this.Factions;
         public Group<Faction> Factions { get => _Factions.Item; set => _Factions.Item = value; }
-        INotifyingItem<Group<Faction>> IOblivionMod.Factions_Property => this.Factions_Property;
-        INotifyingItemGetter<Group<Faction>> IOblivionModGetter.Factions_Property => this.Factions_Property;
+        INotifyingSetItem<Group<Faction>> IOblivionMod.Factions_Property => this.Factions_Property;
+        INotifyingSetItemGetter<Group<Faction>> IOblivionModGetter.Factions_Property => this.Factions_Property;
         #endregion
         #region Hairs
-        private readonly INotifyingItem<Group<Hair>> _Hairs = new NotifyingItem<Group<Hair>>();
-        public INotifyingItem<Group<Hair>> Hairs_Property => this._Hairs;
+        private readonly INotifyingSetItem<Group<Hair>> _Hairs = new NotifyingSetItem<Group<Hair>>();
+        public INotifyingSetItem<Group<Hair>> Hairs_Property => this._Hairs;
         Group<Hair> IOblivionModGetter.Hairs => this.Hairs;
         public Group<Hair> Hairs { get => _Hairs.Item; set => _Hairs.Item = value; }
-        INotifyingItem<Group<Hair>> IOblivionMod.Hairs_Property => this.Hairs_Property;
-        INotifyingItemGetter<Group<Hair>> IOblivionModGetter.Hairs_Property => this.Hairs_Property;
+        INotifyingSetItem<Group<Hair>> IOblivionMod.Hairs_Property => this.Hairs_Property;
+        INotifyingSetItemGetter<Group<Hair>> IOblivionModGetter.Hairs_Property => this.Hairs_Property;
         #endregion
         #region Eyes
-        private readonly INotifyingItem<Group<Eye>> _Eyes = new NotifyingItem<Group<Eye>>();
-        public INotifyingItem<Group<Eye>> Eyes_Property => this._Eyes;
+        private readonly INotifyingSetItem<Group<Eye>> _Eyes = new NotifyingSetItem<Group<Eye>>();
+        public INotifyingSetItem<Group<Eye>> Eyes_Property => this._Eyes;
         Group<Eye> IOblivionModGetter.Eyes => this.Eyes;
         public Group<Eye> Eyes { get => _Eyes.Item; set => _Eyes.Item = value; }
-        INotifyingItem<Group<Eye>> IOblivionMod.Eyes_Property => this.Eyes_Property;
-        INotifyingItemGetter<Group<Eye>> IOblivionModGetter.Eyes_Property => this.Eyes_Property;
+        INotifyingSetItem<Group<Eye>> IOblivionMod.Eyes_Property => this.Eyes_Property;
+        INotifyingSetItemGetter<Group<Eye>> IOblivionModGetter.Eyes_Property => this.Eyes_Property;
         #endregion
         #region Races
-        private readonly INotifyingItem<Group<Race>> _Races = new NotifyingItem<Group<Race>>();
-        public INotifyingItem<Group<Race>> Races_Property => this._Races;
+        private readonly INotifyingSetItem<Group<Race>> _Races = new NotifyingSetItem<Group<Race>>();
+        public INotifyingSetItem<Group<Race>> Races_Property => this._Races;
         Group<Race> IOblivionModGetter.Races => this.Races;
         public Group<Race> Races { get => _Races.Item; set => _Races.Item = value; }
-        INotifyingItem<Group<Race>> IOblivionMod.Races_Property => this.Races_Property;
-        INotifyingItemGetter<Group<Race>> IOblivionModGetter.Races_Property => this.Races_Property;
+        INotifyingSetItem<Group<Race>> IOblivionMod.Races_Property => this.Races_Property;
+        INotifyingSetItemGetter<Group<Race>> IOblivionModGetter.Races_Property => this.Races_Property;
         #endregion
         #region Sounds
-        private readonly INotifyingItem<Group<Sound>> _Sounds = new NotifyingItem<Group<Sound>>();
-        public INotifyingItem<Group<Sound>> Sounds_Property => this._Sounds;
+        private readonly INotifyingSetItem<Group<Sound>> _Sounds = new NotifyingSetItem<Group<Sound>>();
+        public INotifyingSetItem<Group<Sound>> Sounds_Property => this._Sounds;
         Group<Sound> IOblivionModGetter.Sounds => this.Sounds;
         public Group<Sound> Sounds { get => _Sounds.Item; set => _Sounds.Item = value; }
-        INotifyingItem<Group<Sound>> IOblivionMod.Sounds_Property => this.Sounds_Property;
-        INotifyingItemGetter<Group<Sound>> IOblivionModGetter.Sounds_Property => this.Sounds_Property;
+        INotifyingSetItem<Group<Sound>> IOblivionMod.Sounds_Property => this.Sounds_Property;
+        INotifyingSetItemGetter<Group<Sound>> IOblivionModGetter.Sounds_Property => this.Sounds_Property;
         #endregion
         #region Skills
-        private readonly INotifyingItem<Group<SkillRecord>> _Skills = new NotifyingItem<Group<SkillRecord>>();
-        public INotifyingItem<Group<SkillRecord>> Skills_Property => this._Skills;
+        private readonly INotifyingSetItem<Group<SkillRecord>> _Skills = new NotifyingSetItem<Group<SkillRecord>>();
+        public INotifyingSetItem<Group<SkillRecord>> Skills_Property => this._Skills;
         Group<SkillRecord> IOblivionModGetter.Skills => this.Skills;
         public Group<SkillRecord> Skills { get => _Skills.Item; set => _Skills.Item = value; }
-        INotifyingItem<Group<SkillRecord>> IOblivionMod.Skills_Property => this.Skills_Property;
-        INotifyingItemGetter<Group<SkillRecord>> IOblivionModGetter.Skills_Property => this.Skills_Property;
+        INotifyingSetItem<Group<SkillRecord>> IOblivionMod.Skills_Property => this.Skills_Property;
+        INotifyingSetItemGetter<Group<SkillRecord>> IOblivionModGetter.Skills_Property => this.Skills_Property;
         #endregion
         #region MagicEffects
-        private readonly INotifyingItem<Group<MagicEffect>> _MagicEffects = new NotifyingItem<Group<MagicEffect>>();
-        public INotifyingItem<Group<MagicEffect>> MagicEffects_Property => this._MagicEffects;
+        private readonly INotifyingSetItem<Group<MagicEffect>> _MagicEffects = new NotifyingSetItem<Group<MagicEffect>>();
+        public INotifyingSetItem<Group<MagicEffect>> MagicEffects_Property => this._MagicEffects;
         Group<MagicEffect> IOblivionModGetter.MagicEffects => this.MagicEffects;
         public Group<MagicEffect> MagicEffects { get => _MagicEffects.Item; set => _MagicEffects.Item = value; }
-        INotifyingItem<Group<MagicEffect>> IOblivionMod.MagicEffects_Property => this.MagicEffects_Property;
-        INotifyingItemGetter<Group<MagicEffect>> IOblivionModGetter.MagicEffects_Property => this.MagicEffects_Property;
+        INotifyingSetItem<Group<MagicEffect>> IOblivionMod.MagicEffects_Property => this.MagicEffects_Property;
+        INotifyingSetItemGetter<Group<MagicEffect>> IOblivionModGetter.MagicEffects_Property => this.MagicEffects_Property;
         #endregion
         #region Scripts
-        private readonly INotifyingItem<Group<Script>> _Scripts = new NotifyingItem<Group<Script>>();
-        public INotifyingItem<Group<Script>> Scripts_Property => this._Scripts;
+        private readonly INotifyingSetItem<Group<Script>> _Scripts = new NotifyingSetItem<Group<Script>>();
+        public INotifyingSetItem<Group<Script>> Scripts_Property => this._Scripts;
         Group<Script> IOblivionModGetter.Scripts => this.Scripts;
         public Group<Script> Scripts { get => _Scripts.Item; set => _Scripts.Item = value; }
-        INotifyingItem<Group<Script>> IOblivionMod.Scripts_Property => this.Scripts_Property;
-        INotifyingItemGetter<Group<Script>> IOblivionModGetter.Scripts_Property => this.Scripts_Property;
+        INotifyingSetItem<Group<Script>> IOblivionMod.Scripts_Property => this.Scripts_Property;
+        INotifyingSetItemGetter<Group<Script>> IOblivionModGetter.Scripts_Property => this.Scripts_Property;
         #endregion
         #region LandTextures
-        private readonly INotifyingItem<Group<LandTexture>> _LandTextures = new NotifyingItem<Group<LandTexture>>();
-        public INotifyingItem<Group<LandTexture>> LandTextures_Property => this._LandTextures;
+        private readonly INotifyingSetItem<Group<LandTexture>> _LandTextures = new NotifyingSetItem<Group<LandTexture>>();
+        public INotifyingSetItem<Group<LandTexture>> LandTextures_Property => this._LandTextures;
         Group<LandTexture> IOblivionModGetter.LandTextures => this.LandTextures;
         public Group<LandTexture> LandTextures { get => _LandTextures.Item; set => _LandTextures.Item = value; }
-        INotifyingItem<Group<LandTexture>> IOblivionMod.LandTextures_Property => this.LandTextures_Property;
-        INotifyingItemGetter<Group<LandTexture>> IOblivionModGetter.LandTextures_Property => this.LandTextures_Property;
+        INotifyingSetItem<Group<LandTexture>> IOblivionMod.LandTextures_Property => this.LandTextures_Property;
+        INotifyingSetItemGetter<Group<LandTexture>> IOblivionModGetter.LandTextures_Property => this.LandTextures_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -1453,43 +1453,43 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IOblivionMod : IOblivionModGetter, ILoquiClass<IOblivionMod, IOblivionModGetter>, ILoquiClass<OblivionMod, IOblivionModGetter>
     {
         new TES4 TES4 { get; set; }
-        new INotifyingItem<TES4> TES4_Property { get; }
+        new INotifyingSetItem<TES4> TES4_Property { get; }
 
         new Group<GameSetting> GameSettings { get; set; }
-        new INotifyingItem<Group<GameSetting>> GameSettings_Property { get; }
+        new INotifyingSetItem<Group<GameSetting>> GameSettings_Property { get; }
 
         new Group<Global> Globals { get; set; }
-        new INotifyingItem<Group<Global>> Globals_Property { get; }
+        new INotifyingSetItem<Group<Global>> Globals_Property { get; }
 
         new Group<Class> Classes { get; set; }
-        new INotifyingItem<Group<Class>> Classes_Property { get; }
+        new INotifyingSetItem<Group<Class>> Classes_Property { get; }
 
         new Group<Faction> Factions { get; set; }
-        new INotifyingItem<Group<Faction>> Factions_Property { get; }
+        new INotifyingSetItem<Group<Faction>> Factions_Property { get; }
 
         new Group<Hair> Hairs { get; set; }
-        new INotifyingItem<Group<Hair>> Hairs_Property { get; }
+        new INotifyingSetItem<Group<Hair>> Hairs_Property { get; }
 
         new Group<Eye> Eyes { get; set; }
-        new INotifyingItem<Group<Eye>> Eyes_Property { get; }
+        new INotifyingSetItem<Group<Eye>> Eyes_Property { get; }
 
         new Group<Race> Races { get; set; }
-        new INotifyingItem<Group<Race>> Races_Property { get; }
+        new INotifyingSetItem<Group<Race>> Races_Property { get; }
 
         new Group<Sound> Sounds { get; set; }
-        new INotifyingItem<Group<Sound>> Sounds_Property { get; }
+        new INotifyingSetItem<Group<Sound>> Sounds_Property { get; }
 
         new Group<SkillRecord> Skills { get; set; }
-        new INotifyingItem<Group<SkillRecord>> Skills_Property { get; }
+        new INotifyingSetItem<Group<SkillRecord>> Skills_Property { get; }
 
         new Group<MagicEffect> MagicEffects { get; set; }
-        new INotifyingItem<Group<MagicEffect>> MagicEffects_Property { get; }
+        new INotifyingSetItem<Group<MagicEffect>> MagicEffects_Property { get; }
 
         new Group<Script> Scripts { get; set; }
-        new INotifyingItem<Group<Script>> Scripts_Property { get; }
+        new INotifyingSetItem<Group<Script>> Scripts_Property { get; }
 
         new Group<LandTexture> LandTextures { get; set; }
-        new INotifyingItem<Group<LandTexture>> LandTextures_Property { get; }
+        new INotifyingSetItem<Group<LandTexture>> LandTextures_Property { get; }
 
     }
 
@@ -1497,67 +1497,67 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region TES4
         TES4 TES4 { get; }
-        INotifyingItemGetter<TES4> TES4_Property { get; }
+        INotifyingSetItemGetter<TES4> TES4_Property { get; }
 
         #endregion
         #region GameSettings
         Group<GameSetting> GameSettings { get; }
-        INotifyingItemGetter<Group<GameSetting>> GameSettings_Property { get; }
+        INotifyingSetItemGetter<Group<GameSetting>> GameSettings_Property { get; }
 
         #endregion
         #region Globals
         Group<Global> Globals { get; }
-        INotifyingItemGetter<Group<Global>> Globals_Property { get; }
+        INotifyingSetItemGetter<Group<Global>> Globals_Property { get; }
 
         #endregion
         #region Classes
         Group<Class> Classes { get; }
-        INotifyingItemGetter<Group<Class>> Classes_Property { get; }
+        INotifyingSetItemGetter<Group<Class>> Classes_Property { get; }
 
         #endregion
         #region Factions
         Group<Faction> Factions { get; }
-        INotifyingItemGetter<Group<Faction>> Factions_Property { get; }
+        INotifyingSetItemGetter<Group<Faction>> Factions_Property { get; }
 
         #endregion
         #region Hairs
         Group<Hair> Hairs { get; }
-        INotifyingItemGetter<Group<Hair>> Hairs_Property { get; }
+        INotifyingSetItemGetter<Group<Hair>> Hairs_Property { get; }
 
         #endregion
         #region Eyes
         Group<Eye> Eyes { get; }
-        INotifyingItemGetter<Group<Eye>> Eyes_Property { get; }
+        INotifyingSetItemGetter<Group<Eye>> Eyes_Property { get; }
 
         #endregion
         #region Races
         Group<Race> Races { get; }
-        INotifyingItemGetter<Group<Race>> Races_Property { get; }
+        INotifyingSetItemGetter<Group<Race>> Races_Property { get; }
 
         #endregion
         #region Sounds
         Group<Sound> Sounds { get; }
-        INotifyingItemGetter<Group<Sound>> Sounds_Property { get; }
+        INotifyingSetItemGetter<Group<Sound>> Sounds_Property { get; }
 
         #endregion
         #region Skills
         Group<SkillRecord> Skills { get; }
-        INotifyingItemGetter<Group<SkillRecord>> Skills_Property { get; }
+        INotifyingSetItemGetter<Group<SkillRecord>> Skills_Property { get; }
 
         #endregion
         #region MagicEffects
         Group<MagicEffect> MagicEffects { get; }
-        INotifyingItemGetter<Group<MagicEffect>> MagicEffects_Property { get; }
+        INotifyingSetItemGetter<Group<MagicEffect>> MagicEffects_Property { get; }
 
         #endregion
         #region Scripts
         Group<Script> Scripts { get; }
-        INotifyingItemGetter<Group<Script>> Scripts_Property { get; }
+        INotifyingSetItemGetter<Group<Script>> Scripts_Property { get; }
 
         #endregion
         #region LandTextures
         Group<LandTexture> LandTextures { get; }
-        INotifyingItemGetter<Group<LandTexture>> LandTextures_Property { get; }
+        INotifyingSetItemGetter<Group<LandTexture>> LandTextures_Property { get; }
 
         #endregion
 

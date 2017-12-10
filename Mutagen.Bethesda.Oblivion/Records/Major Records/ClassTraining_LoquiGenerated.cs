@@ -37,40 +37,40 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region TrainedSkill
-        protected readonly INotifyingItem<Skill> _TrainedSkill = NotifyingItem.Factory<Skill>(markAsSet: false);
-        public INotifyingItem<Skill> TrainedSkill_Property => _TrainedSkill;
+        protected readonly INotifyingSetItem<Skill> _TrainedSkill = NotifyingSetItem.Factory<Skill>(markAsSet: false);
+        public INotifyingSetItem<Skill> TrainedSkill_Property => _TrainedSkill;
         public Skill TrainedSkill
         {
             get => this._TrainedSkill.Item;
             set => this._TrainedSkill.Set(value);
         }
-        INotifyingItem<Skill> IClassTraining.TrainedSkill_Property => this.TrainedSkill_Property;
-        INotifyingItemGetter<Skill> IClassTrainingGetter.TrainedSkill_Property => this.TrainedSkill_Property;
+        INotifyingSetItem<Skill> IClassTraining.TrainedSkill_Property => this.TrainedSkill_Property;
+        INotifyingSetItemGetter<Skill> IClassTrainingGetter.TrainedSkill_Property => this.TrainedSkill_Property;
         #endregion
         #region MaximumTrainingLevel
-        protected readonly INotifyingItem<Byte> _MaximumTrainingLevel = NotifyingItem.Factory<Byte>(markAsSet: false);
-        public INotifyingItem<Byte> MaximumTrainingLevel_Property => _MaximumTrainingLevel;
+        protected readonly INotifyingSetItem<Byte> _MaximumTrainingLevel = NotifyingSetItem.Factory<Byte>(markAsSet: false);
+        public INotifyingSetItem<Byte> MaximumTrainingLevel_Property => _MaximumTrainingLevel;
         public Byte MaximumTrainingLevel
         {
             get => this._MaximumTrainingLevel.Item;
             set => this._MaximumTrainingLevel.Set(value.PutInRange(MaximumTrainingLevel_Range.Min, MaximumTrainingLevel_Range.Max));
         }
-        INotifyingItem<Byte> IClassTraining.MaximumTrainingLevel_Property => this.MaximumTrainingLevel_Property;
-        INotifyingItemGetter<Byte> IClassTrainingGetter.MaximumTrainingLevel_Property => this.MaximumTrainingLevel_Property;
+        INotifyingSetItem<Byte> IClassTraining.MaximumTrainingLevel_Property => this.MaximumTrainingLevel_Property;
+        INotifyingSetItemGetter<Byte> IClassTrainingGetter.MaximumTrainingLevel_Property => this.MaximumTrainingLevel_Property;
         public static RangeUInt8 MaximumTrainingLevel_Range = new RangeUInt8(0, 100);
         #endregion
         #region Fluff
-        protected readonly INotifyingItem<Byte[]> _Fluff = NotifyingItem.Factory<Byte[]>(
+        protected readonly INotifyingSetItem<Byte[]> _Fluff = NotifyingSetItem.Factory<Byte[]>(
             markAsSet: false,
             noNullFallback: () => new byte[2]);
-        public INotifyingItem<Byte[]> Fluff_Property => _Fluff;
+        public INotifyingSetItem<Byte[]> Fluff_Property => _Fluff;
         public Byte[] Fluff
         {
             get => this._Fluff.Item;
             set => this._Fluff.Set(value);
         }
-        INotifyingItem<Byte[]> IClassTraining.Fluff_Property => this.Fluff_Property;
-        INotifyingItemGetter<Byte[]> IClassTrainingGetter.Fluff_Property => this.Fluff_Property;
+        INotifyingSetItem<Byte[]> IClassTraining.Fluff_Property => this.Fluff_Property;
+        INotifyingSetItemGetter<Byte[]> IClassTrainingGetter.Fluff_Property => this.Fluff_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -959,13 +959,13 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IClassTraining : IClassTrainingGetter, ILoquiClass<IClassTraining, IClassTrainingGetter>, ILoquiClass<ClassTraining, IClassTrainingGetter>
     {
         new Skill TrainedSkill { get; set; }
-        new INotifyingItem<Skill> TrainedSkill_Property { get; }
+        new INotifyingSetItem<Skill> TrainedSkill_Property { get; }
 
         new Byte MaximumTrainingLevel { get; set; }
-        new INotifyingItem<Byte> MaximumTrainingLevel_Property { get; }
+        new INotifyingSetItem<Byte> MaximumTrainingLevel_Property { get; }
 
         new Byte[] Fluff { get; set; }
-        new INotifyingItem<Byte[]> Fluff_Property { get; }
+        new INotifyingSetItem<Byte[]> Fluff_Property { get; }
 
     }
 
@@ -973,17 +973,17 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region TrainedSkill
         Skill TrainedSkill { get; }
-        INotifyingItemGetter<Skill> TrainedSkill_Property { get; }
+        INotifyingSetItemGetter<Skill> TrainedSkill_Property { get; }
 
         #endregion
         #region MaximumTrainingLevel
         Byte MaximumTrainingLevel { get; }
-        INotifyingItemGetter<Byte> MaximumTrainingLevel_Property { get; }
+        INotifyingSetItemGetter<Byte> MaximumTrainingLevel_Property { get; }
 
         #endregion
         #region Fluff
         Byte[] Fluff { get; }
-        INotifyingItemGetter<Byte[]> Fluff_Property { get; }
+        INotifyingSetItemGetter<Byte[]> Fluff_Property { get; }
 
         #endregion
 
@@ -1272,9 +1272,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.TrainedSkill_Property.SetToWithDefault(
-                        rhs.TrainedSkill_Property,
-                        def?.TrainedSkill_Property,
-                        cmds);
+                        rhs: rhs.TrainedSkill_Property,
+                        def: def?.TrainedSkill_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1287,9 +1287,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.MaximumTrainingLevel_Property.SetToWithDefault(
-                        rhs.MaximumTrainingLevel_Property,
-                        def?.MaximumTrainingLevel_Property,
-                        cmds);
+                        rhs: rhs.MaximumTrainingLevel_Property,
+                        def: def?.MaximumTrainingLevel_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1302,9 +1302,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Fluff_Property.SetToWithDefault(
-                        rhs.Fluff_Property,
-                        def?.Fluff_Property,
-                        cmds);
+                        rhs: rhs.Fluff_Property,
+                        def: def?.Fluff_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)

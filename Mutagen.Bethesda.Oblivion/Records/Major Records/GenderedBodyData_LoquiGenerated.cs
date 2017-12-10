@@ -38,20 +38,20 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Male
-        private readonly INotifyingItem<BodyData> _Male = new NotifyingItem<BodyData>();
-        public INotifyingItem<BodyData> Male_Property => this._Male;
+        private readonly INotifyingSetItem<BodyData> _Male = new NotifyingSetItem<BodyData>();
+        public INotifyingSetItem<BodyData> Male_Property => this._Male;
         BodyData IGenderedBodyDataGetter.Male => this.Male;
         public BodyData Male { get => _Male.Item; set => _Male.Item = value; }
-        INotifyingItem<BodyData> IGenderedBodyData.Male_Property => this.Male_Property;
-        INotifyingItemGetter<BodyData> IGenderedBodyDataGetter.Male_Property => this.Male_Property;
+        INotifyingSetItem<BodyData> IGenderedBodyData.Male_Property => this.Male_Property;
+        INotifyingSetItemGetter<BodyData> IGenderedBodyDataGetter.Male_Property => this.Male_Property;
         #endregion
         #region Female
-        private readonly INotifyingItem<BodyData> _Female = new NotifyingItem<BodyData>();
-        public INotifyingItem<BodyData> Female_Property => this._Female;
+        private readonly INotifyingSetItem<BodyData> _Female = new NotifyingSetItem<BodyData>();
+        public INotifyingSetItem<BodyData> Female_Property => this._Female;
         BodyData IGenderedBodyDataGetter.Female => this.Female;
         public BodyData Female { get => _Female.Item; set => _Female.Item = value; }
-        INotifyingItem<BodyData> IGenderedBodyData.Female_Property => this.Female_Property;
-        INotifyingItemGetter<BodyData> IGenderedBodyDataGetter.Female_Property => this.Female_Property;
+        INotifyingSetItem<BodyData> IGenderedBodyData.Female_Property => this.Female_Property;
+        INotifyingSetItemGetter<BodyData> IGenderedBodyDataGetter.Female_Property => this.Female_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -931,10 +931,10 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IGenderedBodyData : IGenderedBodyDataGetter, ILoquiClass<IGenderedBodyData, IGenderedBodyDataGetter>, ILoquiClass<GenderedBodyData, IGenderedBodyDataGetter>
     {
         new BodyData Male { get; set; }
-        new INotifyingItem<BodyData> Male_Property { get; }
+        new INotifyingSetItem<BodyData> Male_Property { get; }
 
         new BodyData Female { get; set; }
-        new INotifyingItem<BodyData> Female_Property { get; }
+        new INotifyingSetItem<BodyData> Female_Property { get; }
 
     }
 
@@ -942,12 +942,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Male
         BodyData Male { get; }
-        INotifyingItemGetter<BodyData> Male_Property { get; }
+        INotifyingSetItemGetter<BodyData> Male_Property { get; }
 
         #endregion
         #region Female
         BodyData Female { get; }
-        INotifyingItemGetter<BodyData> Female_Property { get; }
+        INotifyingSetItemGetter<BodyData> Female_Property { get; }
 
         #endregion
 

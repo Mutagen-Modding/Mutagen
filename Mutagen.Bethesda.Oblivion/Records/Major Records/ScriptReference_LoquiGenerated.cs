@@ -37,26 +37,26 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region VariableIndex
-        protected readonly INotifyingItem<Int32> _VariableIndex = NotifyingItem.Factory<Int32>(markAsSet: false);
-        public INotifyingItem<Int32> VariableIndex_Property => _VariableIndex;
+        protected readonly INotifyingSetItem<Int32> _VariableIndex = NotifyingSetItem.Factory<Int32>(markAsSet: false);
+        public INotifyingSetItem<Int32> VariableIndex_Property => _VariableIndex;
         public Int32 VariableIndex
         {
             get => this._VariableIndex.Item;
             set => this._VariableIndex.Set(value);
         }
-        INotifyingItem<Int32> IScriptReference.VariableIndex_Property => this.VariableIndex_Property;
-        INotifyingItemGetter<Int32> IScriptReferenceGetter.VariableIndex_Property => this.VariableIndex_Property;
+        INotifyingSetItem<Int32> IScriptReference.VariableIndex_Property => this.VariableIndex_Property;
+        INotifyingSetItemGetter<Int32> IScriptReferenceGetter.VariableIndex_Property => this.VariableIndex_Property;
         #endregion
         #region Reference
-        protected readonly INotifyingItem<FormID> _Reference = NotifyingItem.Factory<FormID>(markAsSet: false);
-        public INotifyingItem<FormID> Reference_Property => _Reference;
+        protected readonly INotifyingSetItem<FormID> _Reference = NotifyingSetItem.Factory<FormID>(markAsSet: false);
+        public INotifyingSetItem<FormID> Reference_Property => _Reference;
         public FormID Reference
         {
             get => this._Reference.Item;
             set => this._Reference.Set(value);
         }
-        INotifyingItem<FormID> IScriptReference.Reference_Property => this.Reference_Property;
-        INotifyingItemGetter<FormID> IScriptReferenceGetter.Reference_Property => this.Reference_Property;
+        INotifyingSetItem<FormID> IScriptReference.Reference_Property => this.Reference_Property;
+        INotifyingSetItemGetter<FormID> IScriptReferenceGetter.Reference_Property => this.Reference_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -936,10 +936,10 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IScriptReference : IScriptReferenceGetter, ILoquiClass<IScriptReference, IScriptReferenceGetter>, ILoquiClass<ScriptReference, IScriptReferenceGetter>
     {
         new Int32 VariableIndex { get; set; }
-        new INotifyingItem<Int32> VariableIndex_Property { get; }
+        new INotifyingSetItem<Int32> VariableIndex_Property { get; }
 
         new FormID Reference { get; set; }
-        new INotifyingItem<FormID> Reference_Property { get; }
+        new INotifyingSetItem<FormID> Reference_Property { get; }
 
     }
 
@@ -947,12 +947,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region VariableIndex
         Int32 VariableIndex { get; }
-        INotifyingItemGetter<Int32> VariableIndex_Property { get; }
+        INotifyingSetItemGetter<Int32> VariableIndex_Property { get; }
 
         #endregion
         #region Reference
         FormID Reference { get; }
-        INotifyingItemGetter<FormID> Reference_Property { get; }
+        INotifyingSetItemGetter<FormID> Reference_Property { get; }
 
         #endregion
 
@@ -1232,9 +1232,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.VariableIndex_Property.SetToWithDefault(
-                        rhs.VariableIndex_Property,
-                        def?.VariableIndex_Property,
-                        cmds);
+                        rhs: rhs.VariableIndex_Property,
+                        def: def?.VariableIndex_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1247,9 +1247,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Reference_Property.SetToWithDefault(
-                        rhs.Reference_Property,
-                        def?.Reference_Property,
-                        cmds);
+                        rhs: rhs.Reference_Property,
+                        def: def?.Reference_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)

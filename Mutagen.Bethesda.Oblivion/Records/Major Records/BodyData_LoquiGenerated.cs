@@ -38,12 +38,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Model
-        private readonly INotifyingItem<Model> _Model = new NotifyingItem<Model>();
-        public INotifyingItem<Model> Model_Property => this._Model;
+        private readonly INotifyingSetItem<Model> _Model = new NotifyingSetItem<Model>();
+        public INotifyingSetItem<Model> Model_Property => this._Model;
         Model IBodyDataGetter.Model => this.Model;
         public Model Model { get => _Model.Item; set => _Model.Item = value; }
-        INotifyingItem<Model> IBodyData.Model_Property => this.Model_Property;
-        INotifyingItemGetter<Model> IBodyDataGetter.Model_Property => this.Model_Property;
+        INotifyingSetItem<Model> IBodyData.Model_Property => this.Model_Property;
+        INotifyingSetItemGetter<Model> IBodyDataGetter.Model_Property => this.Model_Property;
         #endregion
         #region BodyParts
         private readonly INotifyingList<BodyPart> _BodyParts = new NotifyingList<BodyPart>();
@@ -945,7 +945,7 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IBodyData : IBodyDataGetter, ILoquiClass<IBodyData, IBodyDataGetter>, ILoquiClass<BodyData, IBodyDataGetter>
     {
         new Model Model { get; set; }
-        new INotifyingItem<Model> Model_Property { get; }
+        new INotifyingSetItem<Model> Model_Property { get; }
 
         new INotifyingList<BodyPart> BodyParts { get; }
     }
@@ -954,7 +954,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Model
         Model Model { get; }
-        INotifyingItemGetter<Model> Model_Property { get; }
+        INotifyingSetItemGetter<Model> Model_Property { get; }
 
         #endregion
         #region BodyParts

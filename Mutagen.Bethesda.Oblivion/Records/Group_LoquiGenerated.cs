@@ -45,37 +45,37 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region ContainedRecordType
-        protected readonly INotifyingItem<String> _ContainedRecordType = NotifyingItem.Factory<String>(markAsSet: false);
-        public INotifyingItemGetter<String> ContainedRecordType_Property => _ContainedRecordType;
+        protected readonly INotifyingSetItem<String> _ContainedRecordType = NotifyingSetItem.Factory<String>(markAsSet: false);
+        public INotifyingSetItemGetter<String> ContainedRecordType_Property => _ContainedRecordType;
         public String ContainedRecordType
         {
             get => this._ContainedRecordType.Item;
             protected set => this._ContainedRecordType.Set(value);
         }
-        INotifyingItemGetter<String> IGroupGetter<T>.ContainedRecordType_Property => this.ContainedRecordType_Property;
+        INotifyingSetItemGetter<String> IGroupGetter<T>.ContainedRecordType_Property => this.ContainedRecordType_Property;
         #endregion
         #region GroupType
-        protected readonly INotifyingItem<Int32> _GroupType = NotifyingItem.Factory<Int32>(markAsSet: false);
-        public INotifyingItem<Int32> GroupType_Property => _GroupType;
+        protected readonly INotifyingSetItem<Int32> _GroupType = NotifyingSetItem.Factory<Int32>(markAsSet: false);
+        public INotifyingSetItem<Int32> GroupType_Property => _GroupType;
         public Int32 GroupType
         {
             get => this._GroupType.Item;
             set => this._GroupType.Set(value);
         }
-        INotifyingItem<Int32> IGroup<T>.GroupType_Property => this.GroupType_Property;
-        INotifyingItemGetter<Int32> IGroupGetter<T>.GroupType_Property => this.GroupType_Property;
+        INotifyingSetItem<Int32> IGroup<T>.GroupType_Property => this.GroupType_Property;
+        INotifyingSetItemGetter<Int32> IGroupGetter<T>.GroupType_Property => this.GroupType_Property;
         #endregion
         #region LastModified
-        protected readonly INotifyingItem<Byte[]> _LastModified = NotifyingItem.Factory<Byte[]>(
+        protected readonly INotifyingSetItem<Byte[]> _LastModified = NotifyingSetItem.Factory<Byte[]>(
             markAsSet: false,
             noNullFallback: () => new byte[4]);
-        public INotifyingItemGetter<Byte[]> LastModified_Property => _LastModified;
+        public INotifyingSetItemGetter<Byte[]> LastModified_Property => _LastModified;
         public Byte[] LastModified
         {
             get => this._LastModified.Item;
             protected set => this._LastModified.Set(value);
         }
-        INotifyingItemGetter<Byte[]> IGroupGetter<T>.LastModified_Property => this.LastModified_Property;
+        INotifyingSetItemGetter<Byte[]> IGroupGetter<T>.LastModified_Property => this.LastModified_Property;
         #endregion
         #region Items
         private readonly INotifyingList<T> _Items = new NotifyingList<T>();
@@ -1160,7 +1160,7 @@ namespace Mutagen.Bethesda.Oblivion
         where T : MajorRecord, ILoquiObjectGetter
     {
         new Int32 GroupType { get; set; }
-        new INotifyingItem<Int32> GroupType_Property { get; }
+        new INotifyingSetItem<Int32> GroupType_Property { get; }
 
         new INotifyingList<T> Items { get; }
     }
@@ -1170,17 +1170,17 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region ContainedRecordType
         String ContainedRecordType { get; }
-        INotifyingItemGetter<String> ContainedRecordType_Property { get; }
+        INotifyingSetItemGetter<String> ContainedRecordType_Property { get; }
 
         #endregion
         #region GroupType
         Int32 GroupType { get; }
-        INotifyingItemGetter<Int32> GroupType_Property { get; }
+        INotifyingSetItemGetter<Int32> GroupType_Property { get; }
 
         #endregion
         #region LastModified
         Byte[] LastModified { get; }
-        INotifyingItemGetter<Byte[]> LastModified_Property { get; }
+        INotifyingSetItemGetter<Byte[]> LastModified_Property { get; }
 
         #endregion
         #region Items
@@ -1510,9 +1510,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.GroupType_Property.SetToWithDefault(
-                        rhs.GroupType_Property,
-                        def?.GroupType_Property,
-                        cmds);
+                        rhs: rhs.GroupType_Property,
+                        def: def?.GroupType_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)

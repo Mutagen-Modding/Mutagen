@@ -37,26 +37,26 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Skill
-        protected readonly INotifyingItem<ActorValue> _Skill = NotifyingItem.Factory<ActorValue>(markAsSet: false);
-        public INotifyingItem<ActorValue> Skill_Property => _Skill;
+        protected readonly INotifyingSetItem<ActorValue> _Skill = NotifyingSetItem.Factory<ActorValue>(markAsSet: false);
+        public INotifyingSetItem<ActorValue> Skill_Property => _Skill;
         public ActorValue Skill
         {
             get => this._Skill.Item;
             set => this._Skill.Set(value);
         }
-        INotifyingItem<ActorValue> ISkillBoost.Skill_Property => this.Skill_Property;
-        INotifyingItemGetter<ActorValue> ISkillBoostGetter.Skill_Property => this.Skill_Property;
+        INotifyingSetItem<ActorValue> ISkillBoost.Skill_Property => this.Skill_Property;
+        INotifyingSetItemGetter<ActorValue> ISkillBoostGetter.Skill_Property => this.Skill_Property;
         #endregion
         #region Boost
-        protected readonly INotifyingItem<SByte> _Boost = NotifyingItem.Factory<SByte>(markAsSet: false);
-        public INotifyingItem<SByte> Boost_Property => _Boost;
+        protected readonly INotifyingSetItem<SByte> _Boost = NotifyingSetItem.Factory<SByte>(markAsSet: false);
+        public INotifyingSetItem<SByte> Boost_Property => _Boost;
         public SByte Boost
         {
             get => this._Boost.Item;
             set => this._Boost.Set(value);
         }
-        INotifyingItem<SByte> ISkillBoost.Boost_Property => this.Boost_Property;
-        INotifyingItemGetter<SByte> ISkillBoostGetter.Boost_Property => this.Boost_Property;
+        INotifyingSetItem<SByte> ISkillBoost.Boost_Property => this.Boost_Property;
+        INotifyingSetItemGetter<SByte> ISkillBoostGetter.Boost_Property => this.Boost_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -906,10 +906,10 @@ namespace Mutagen.Bethesda.Oblivion
     public interface ISkillBoost : ISkillBoostGetter, ILoquiClass<ISkillBoost, ISkillBoostGetter>, ILoquiClass<SkillBoost, ISkillBoostGetter>
     {
         new ActorValue Skill { get; set; }
-        new INotifyingItem<ActorValue> Skill_Property { get; }
+        new INotifyingSetItem<ActorValue> Skill_Property { get; }
 
         new SByte Boost { get; set; }
-        new INotifyingItem<SByte> Boost_Property { get; }
+        new INotifyingSetItem<SByte> Boost_Property { get; }
 
     }
 
@@ -917,12 +917,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Skill
         ActorValue Skill { get; }
-        INotifyingItemGetter<ActorValue> Skill_Property { get; }
+        INotifyingSetItemGetter<ActorValue> Skill_Property { get; }
 
         #endregion
         #region Boost
         SByte Boost { get; }
-        INotifyingItemGetter<SByte> Boost_Property { get; }
+        INotifyingSetItemGetter<SByte> Boost_Property { get; }
 
         #endregion
 
@@ -1199,9 +1199,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Skill_Property.SetToWithDefault(
-                        rhs.Skill_Property,
-                        def?.Skill_Property,
-                        cmds);
+                        rhs: rhs.Skill_Property,
+                        def: def?.Skill_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1214,9 +1214,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Boost_Property.SetToWithDefault(
-                        rhs.Boost_Property,
-                        def?.Boost_Property,
-                        cmds);
+                        rhs: rhs.Boost_Property,
+                        def: def?.Boost_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)

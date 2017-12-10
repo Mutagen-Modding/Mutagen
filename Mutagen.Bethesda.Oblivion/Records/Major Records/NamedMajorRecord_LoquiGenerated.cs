@@ -37,15 +37,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Name
-        protected readonly INotifyingItem<String> _Name = NotifyingItem.Factory<String>(markAsSet: false);
-        public INotifyingItem<String> Name_Property => _Name;
+        protected readonly INotifyingSetItem<String> _Name = NotifyingSetItem.Factory<String>(markAsSet: false);
+        public INotifyingSetItem<String> Name_Property => _Name;
         public String Name
         {
             get => this._Name.Item;
             set => this._Name.Set(value);
         }
-        INotifyingItem<String> INamedMajorRecord.Name_Property => this.Name_Property;
-        INotifyingItemGetter<String> INamedMajorRecordGetter.Name_Property => this.Name_Property;
+        INotifyingSetItem<String> INamedMajorRecord.Name_Property => this.Name_Property;
+        INotifyingSetItemGetter<String> INamedMajorRecordGetter.Name_Property => this.Name_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -532,7 +532,7 @@ namespace Mutagen.Bethesda.Oblivion
     public interface INamedMajorRecord : INamedMajorRecordGetter, IMajorRecord, ILoquiClass<INamedMajorRecord, INamedMajorRecordGetter>, ILoquiClass<NamedMajorRecord, INamedMajorRecordGetter>
     {
         new String Name { get; set; }
-        new INotifyingItem<String> Name_Property { get; }
+        new INotifyingSetItem<String> Name_Property { get; }
 
     }
 
@@ -540,7 +540,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Name
         String Name { get; }
-        INotifyingItemGetter<String> Name_Property { get; }
+        INotifyingSetItemGetter<String> Name_Property { get; }
 
         #endregion
 
@@ -815,9 +815,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Name_Property.SetToWithDefault(
-                        rhs.Name_Property,
-                        def?.Name_Property,
-                        cmds);
+                        rhs: rhs.Name_Property,
+                        def: def?.Name_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)

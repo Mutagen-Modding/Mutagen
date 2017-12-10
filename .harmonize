@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>d70dc393ca6449f19b3f50697840962a1d416032</Sha>
+         <Sha>a42c9efd1c54d66ea5c93719b4177f38629a5b6e</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>12-05-2017 20:49:17</CommitDate>
-         <Description>TaskExt.Timeout and DoThenComplete</Description>
+         <CommitDate>12-09-2017 19:45:55</CommitDate>
+         <Description>NotifyingSetItem work</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>f0f214de56c4731b3211affa019ca672e89897ad</Sha>
+         <Sha>943d3f86bebfd5b5f6d4dd861270356cd253aa49</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>12-09-2017 18:00:31</CommitDate>
-         <Description>ObjectGeneration now has a LoadingComplete task to watch</Description>
+         <CommitDate>12-09-2017 19:45:58</CommitDate>
+         <Description>NotifyingSetItem usage work</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

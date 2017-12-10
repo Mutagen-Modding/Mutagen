@@ -37,26 +37,26 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region File
-        protected readonly INotifyingItem<FilePath> _File = NotifyingItem.Factory<FilePath>(markAsSet: false);
-        public INotifyingItem<FilePath> File_Property => _File;
+        protected readonly INotifyingSetItem<FilePath> _File = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
+        public INotifyingSetItem<FilePath> File_Property => _File;
         public FilePath File
         {
             get => this._File.Item;
             set => this._File.Set(value);
         }
-        INotifyingItem<FilePath> IModel.File_Property => this.File_Property;
-        INotifyingItemGetter<FilePath> IModelGetter.File_Property => this.File_Property;
+        INotifyingSetItem<FilePath> IModel.File_Property => this.File_Property;
+        INotifyingSetItemGetter<FilePath> IModelGetter.File_Property => this.File_Property;
         #endregion
         #region BoundRadius
-        protected readonly INotifyingItem<Single> _BoundRadius = NotifyingItem.Factory<Single>(markAsSet: false);
-        public INotifyingItem<Single> BoundRadius_Property => _BoundRadius;
+        protected readonly INotifyingSetItem<Single> _BoundRadius = NotifyingSetItem.Factory<Single>(markAsSet: false);
+        public INotifyingSetItem<Single> BoundRadius_Property => _BoundRadius;
         public Single BoundRadius
         {
             get => this._BoundRadius.Item;
             set => this._BoundRadius.Set(value);
         }
-        INotifyingItem<Single> IModel.BoundRadius_Property => this.BoundRadius_Property;
-        INotifyingItemGetter<Single> IModelGetter.BoundRadius_Property => this.BoundRadius_Property;
+        INotifyingSetItem<Single> IModel.BoundRadius_Property => this.BoundRadius_Property;
+        INotifyingSetItemGetter<Single> IModelGetter.BoundRadius_Property => this.BoundRadius_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -937,10 +937,10 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IModel : IModelGetter, ILoquiClass<IModel, IModelGetter>, ILoquiClass<Model, IModelGetter>
     {
         new FilePath File { get; set; }
-        new INotifyingItem<FilePath> File_Property { get; }
+        new INotifyingSetItem<FilePath> File_Property { get; }
 
         new Single BoundRadius { get; set; }
-        new INotifyingItem<Single> BoundRadius_Property { get; }
+        new INotifyingSetItem<Single> BoundRadius_Property { get; }
 
     }
 
@@ -948,12 +948,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region File
         FilePath File { get; }
-        INotifyingItemGetter<FilePath> File_Property { get; }
+        INotifyingSetItemGetter<FilePath> File_Property { get; }
 
         #endregion
         #region BoundRadius
         Single BoundRadius { get; }
-        INotifyingItemGetter<Single> BoundRadius_Property { get; }
+        INotifyingSetItemGetter<Single> BoundRadius_Property { get; }
 
         #endregion
 
@@ -1233,9 +1233,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.File_Property.SetToWithDefault(
-                        rhs.File_Property,
-                        def?.File_Property,
-                        cmds);
+                        rhs: rhs.File_Property,
+                        def: def?.File_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1248,9 +1248,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.BoundRadius_Property.SetToWithDefault(
-                        rhs.BoundRadius_Property,
-                        def?.BoundRadius_Property,
-                        cmds);
+                        rhs: rhs.BoundRadius_Property,
+                        def: def?.BoundRadius_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)

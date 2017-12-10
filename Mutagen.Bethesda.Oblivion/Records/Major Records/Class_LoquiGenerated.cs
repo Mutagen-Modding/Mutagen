@@ -38,26 +38,26 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Description
-        protected readonly INotifyingItem<String> _Description = NotifyingItem.Factory<String>(markAsSet: false);
-        public INotifyingItem<String> Description_Property => _Description;
+        protected readonly INotifyingSetItem<String> _Description = NotifyingSetItem.Factory<String>(markAsSet: false);
+        public INotifyingSetItem<String> Description_Property => _Description;
         public String Description
         {
             get => this._Description.Item;
             set => this._Description.Set(value);
         }
-        INotifyingItem<String> IClass.Description_Property => this.Description_Property;
-        INotifyingItemGetter<String> IClassGetter.Description_Property => this.Description_Property;
+        INotifyingSetItem<String> IClass.Description_Property => this.Description_Property;
+        INotifyingSetItemGetter<String> IClassGetter.Description_Property => this.Description_Property;
         #endregion
         #region Icon
-        protected readonly INotifyingItem<FilePath> _Icon = NotifyingItem.Factory<FilePath>(markAsSet: false);
-        public INotifyingItem<FilePath> Icon_Property => _Icon;
+        protected readonly INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
+        public INotifyingSetItem<FilePath> Icon_Property => _Icon;
         public FilePath Icon
         {
             get => this._Icon.Item;
             set => this._Icon.Set(value);
         }
-        INotifyingItem<FilePath> IClass.Icon_Property => this.Icon_Property;
-        INotifyingItemGetter<FilePath> IClassGetter.Icon_Property => this.Icon_Property;
+        INotifyingSetItem<FilePath> IClass.Icon_Property => this.Icon_Property;
+        INotifyingSetItemGetter<FilePath> IClassGetter.Icon_Property => this.Icon_Property;
         #endregion
         #region PrimaryAttributes
         private readonly INotifyingList<ActorValue> _PrimaryAttributes = new NotifyingListBounded<ActorValue>(max: 2);
@@ -69,15 +69,15 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Specialization
-        protected readonly INotifyingItem<Class.SpecializationFlag> _Specialization = NotifyingItem.Factory<Class.SpecializationFlag>(markAsSet: false);
-        public INotifyingItem<Class.SpecializationFlag> Specialization_Property => _Specialization;
+        protected readonly INotifyingSetItem<Class.SpecializationFlag> _Specialization = NotifyingSetItem.Factory<Class.SpecializationFlag>(markAsSet: false);
+        public INotifyingSetItem<Class.SpecializationFlag> Specialization_Property => _Specialization;
         public Class.SpecializationFlag Specialization
         {
             get => this._Specialization.Item;
             set => this._Specialization.Set(value);
         }
-        INotifyingItem<Class.SpecializationFlag> IClass.Specialization_Property => this.Specialization_Property;
-        INotifyingItemGetter<Class.SpecializationFlag> IClassGetter.Specialization_Property => this.Specialization_Property;
+        INotifyingSetItem<Class.SpecializationFlag> IClass.Specialization_Property => this.Specialization_Property;
+        INotifyingSetItemGetter<Class.SpecializationFlag> IClassGetter.Specialization_Property => this.Specialization_Property;
         #endregion
         #region SecondaryAttributes
         private readonly INotifyingList<ActorValue> _SecondaryAttributes = new NotifyingListBounded<ActorValue>(max: 7);
@@ -89,34 +89,34 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Flags
-        protected readonly INotifyingItem<ClassFlag> _Flags = NotifyingItem.Factory<ClassFlag>(markAsSet: false);
-        public INotifyingItem<ClassFlag> Flags_Property => _Flags;
+        protected readonly INotifyingSetItem<ClassFlag> _Flags = NotifyingSetItem.Factory<ClassFlag>(markAsSet: false);
+        public INotifyingSetItem<ClassFlag> Flags_Property => _Flags;
         public ClassFlag Flags
         {
             get => this._Flags.Item;
             set => this._Flags.Set(value);
         }
-        INotifyingItem<ClassFlag> IClass.Flags_Property => this.Flags_Property;
-        INotifyingItemGetter<ClassFlag> IClassGetter.Flags_Property => this.Flags_Property;
+        INotifyingSetItem<ClassFlag> IClass.Flags_Property => this.Flags_Property;
+        INotifyingSetItemGetter<ClassFlag> IClassGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region ClassServices
-        protected readonly INotifyingItem<ClassService> _ClassServices = NotifyingItem.Factory<ClassService>(markAsSet: false);
-        public INotifyingItem<ClassService> ClassServices_Property => _ClassServices;
+        protected readonly INotifyingSetItem<ClassService> _ClassServices = NotifyingSetItem.Factory<ClassService>(markAsSet: false);
+        public INotifyingSetItem<ClassService> ClassServices_Property => _ClassServices;
         public ClassService ClassServices
         {
             get => this._ClassServices.Item;
             set => this._ClassServices.Set(value);
         }
-        INotifyingItem<ClassService> IClass.ClassServices_Property => this.ClassServices_Property;
-        INotifyingItemGetter<ClassService> IClassGetter.ClassServices_Property => this.ClassServices_Property;
+        INotifyingSetItem<ClassService> IClass.ClassServices_Property => this.ClassServices_Property;
+        INotifyingSetItemGetter<ClassService> IClassGetter.ClassServices_Property => this.ClassServices_Property;
         #endregion
         #region Training
-        private readonly INotifyingItem<ClassTraining> _Training = new NotifyingItem<ClassTraining>();
-        public INotifyingItem<ClassTraining> Training_Property => this._Training;
+        private readonly INotifyingSetItem<ClassTraining> _Training = new NotifyingSetItem<ClassTraining>();
+        public INotifyingSetItem<ClassTraining> Training_Property => this._Training;
         ClassTraining IClassGetter.Training => this.Training;
         public ClassTraining Training { get => _Training.Item; set => _Training.Item = value; }
-        INotifyingItem<ClassTraining> IClass.Training_Property => this.Training_Property;
-        INotifyingItemGetter<ClassTraining> IClassGetter.Training_Property => this.Training_Property;
+        INotifyingSetItem<ClassTraining> IClass.Training_Property => this.Training_Property;
+        INotifyingSetItemGetter<ClassTraining> IClassGetter.Training_Property => this.Training_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -1307,24 +1307,24 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IClass : IClassGetter, INamedMajorRecord, ILoquiClass<IClass, IClassGetter>, ILoquiClass<Class, IClassGetter>
     {
         new String Description { get; set; }
-        new INotifyingItem<String> Description_Property { get; }
+        new INotifyingSetItem<String> Description_Property { get; }
 
         new FilePath Icon { get; set; }
-        new INotifyingItem<FilePath> Icon_Property { get; }
+        new INotifyingSetItem<FilePath> Icon_Property { get; }
 
         new INotifyingList<ActorValue> PrimaryAttributes { get; }
         new Class.SpecializationFlag Specialization { get; set; }
-        new INotifyingItem<Class.SpecializationFlag> Specialization_Property { get; }
+        new INotifyingSetItem<Class.SpecializationFlag> Specialization_Property { get; }
 
         new INotifyingList<ActorValue> SecondaryAttributes { get; }
         new ClassFlag Flags { get; set; }
-        new INotifyingItem<ClassFlag> Flags_Property { get; }
+        new INotifyingSetItem<ClassFlag> Flags_Property { get; }
 
         new ClassService ClassServices { get; set; }
-        new INotifyingItem<ClassService> ClassServices_Property { get; }
+        new INotifyingSetItem<ClassService> ClassServices_Property { get; }
 
         new ClassTraining Training { get; set; }
-        new INotifyingItem<ClassTraining> Training_Property { get; }
+        new INotifyingSetItem<ClassTraining> Training_Property { get; }
 
     }
 
@@ -1332,12 +1332,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Description
         String Description { get; }
-        INotifyingItemGetter<String> Description_Property { get; }
+        INotifyingSetItemGetter<String> Description_Property { get; }
 
         #endregion
         #region Icon
         FilePath Icon { get; }
-        INotifyingItemGetter<FilePath> Icon_Property { get; }
+        INotifyingSetItemGetter<FilePath> Icon_Property { get; }
 
         #endregion
         #region PrimaryAttributes
@@ -1345,7 +1345,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Specialization
         Class.SpecializationFlag Specialization { get; }
-        INotifyingItemGetter<Class.SpecializationFlag> Specialization_Property { get; }
+        INotifyingSetItemGetter<Class.SpecializationFlag> Specialization_Property { get; }
 
         #endregion
         #region SecondaryAttributes
@@ -1353,17 +1353,17 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Flags
         ClassFlag Flags { get; }
-        INotifyingItemGetter<ClassFlag> Flags_Property { get; }
+        INotifyingSetItemGetter<ClassFlag> Flags_Property { get; }
 
         #endregion
         #region ClassServices
         ClassService ClassServices { get; }
-        INotifyingItemGetter<ClassService> ClassServices_Property { get; }
+        INotifyingSetItemGetter<ClassService> ClassServices_Property { get; }
 
         #endregion
         #region Training
         ClassTraining Training { get; }
-        INotifyingItemGetter<ClassTraining> Training_Property { get; }
+        INotifyingSetItemGetter<ClassTraining> Training_Property { get; }
 
         #endregion
 
@@ -1727,9 +1727,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Description_Property.SetToWithDefault(
-                        rhs.Description_Property,
-                        def?.Description_Property,
-                        cmds);
+                        rhs: rhs.Description_Property,
+                        def: def?.Description_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1742,9 +1742,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Icon_Property.SetToWithDefault(
-                        rhs.Icon_Property,
-                        def?.Icon_Property,
-                        cmds);
+                        rhs: rhs.Icon_Property,
+                        def: def?.Icon_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1772,9 +1772,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Specialization_Property.SetToWithDefault(
-                        rhs.Specialization_Property,
-                        def?.Specialization_Property,
-                        cmds);
+                        rhs: rhs.Specialization_Property,
+                        def: def?.Specialization_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1802,9 +1802,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Flags_Property.SetToWithDefault(
-                        rhs.Flags_Property,
-                        def?.Flags_Property,
-                        cmds);
+                        rhs: rhs.Flags_Property,
+                        def: def?.Flags_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1817,9 +1817,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.ClassServices_Property.SetToWithDefault(
-                        rhs.ClassServices_Property,
-                        def?.ClassServices_Property,
-                        cmds);
+                        rhs: rhs.ClassServices_Property,
+                        def: def?.ClassServices_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)

@@ -37,26 +37,26 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Male
-        protected readonly INotifyingItem<FormID> _Male = NotifyingItem.Factory<FormID>(markAsSet: false);
-        public INotifyingItem<FormID> Male_Property => _Male;
+        protected readonly INotifyingSetItem<FormID> _Male = NotifyingSetItem.Factory<FormID>(markAsSet: false);
+        public INotifyingSetItem<FormID> Male_Property => _Male;
         public FormID Male
         {
             get => this._Male.Item;
             set => this._Male.Set(value);
         }
-        INotifyingItem<FormID> IRaceVoices.Male_Property => this.Male_Property;
-        INotifyingItemGetter<FormID> IRaceVoicesGetter.Male_Property => this.Male_Property;
+        INotifyingSetItem<FormID> IRaceVoices.Male_Property => this.Male_Property;
+        INotifyingSetItemGetter<FormID> IRaceVoicesGetter.Male_Property => this.Male_Property;
         #endregion
         #region Female
-        protected readonly INotifyingItem<FormID> _Female = NotifyingItem.Factory<FormID>(markAsSet: false);
-        public INotifyingItem<FormID> Female_Property => _Female;
+        protected readonly INotifyingSetItem<FormID> _Female = NotifyingSetItem.Factory<FormID>(markAsSet: false);
+        public INotifyingSetItem<FormID> Female_Property => _Female;
         public FormID Female
         {
             get => this._Female.Item;
             set => this._Female.Set(value);
         }
-        INotifyingItem<FormID> IRaceVoices.Female_Property => this.Female_Property;
-        INotifyingItemGetter<FormID> IRaceVoicesGetter.Female_Property => this.Female_Property;
+        INotifyingSetItem<FormID> IRaceVoices.Female_Property => this.Female_Property;
+        INotifyingSetItemGetter<FormID> IRaceVoicesGetter.Female_Property => this.Female_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -907,10 +907,10 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IRaceVoices : IRaceVoicesGetter, ILoquiClass<IRaceVoices, IRaceVoicesGetter>, ILoquiClass<RaceVoices, IRaceVoicesGetter>
     {
         new FormID Male { get; set; }
-        new INotifyingItem<FormID> Male_Property { get; }
+        new INotifyingSetItem<FormID> Male_Property { get; }
 
         new FormID Female { get; set; }
-        new INotifyingItem<FormID> Female_Property { get; }
+        new INotifyingSetItem<FormID> Female_Property { get; }
 
     }
 
@@ -918,12 +918,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Male
         FormID Male { get; }
-        INotifyingItemGetter<FormID> Male_Property { get; }
+        INotifyingSetItemGetter<FormID> Male_Property { get; }
 
         #endregion
         #region Female
         FormID Female { get; }
-        INotifyingItemGetter<FormID> Female_Property { get; }
+        INotifyingSetItemGetter<FormID> Female_Property { get; }
 
         #endregion
 
@@ -1202,9 +1202,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Male_Property.SetToWithDefault(
-                        rhs.Male_Property,
-                        def?.Male_Property,
-                        cmds);
+                        rhs: rhs.Male_Property,
+                        def: def?.Male_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1217,9 +1217,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Female_Property.SetToWithDefault(
-                        rhs.Female_Property,
-                        def?.Female_Property,
-                        cmds);
+                        rhs: rhs.Female_Property,
+                        def: def?.Female_Property,
+                        cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
