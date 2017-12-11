@@ -2535,171 +2535,111 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.Skill_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         EnumXmlTranslation<ActorValue>.Instance.Write(
-                            writer,
-                            nameof(item.Skill),
-                            item.Skill,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)SkillRecord_FieldIndex.Skill,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Skill),
+                            item: item.Skill_Property,
+                            fieldIndex: (int)SkillRecord_FieldIndex.Skill,
+                            errorMask: errorMask);
                     }
                     if (item.Description_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         StringXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.Description),
-                            item.Description,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)SkillRecord_FieldIndex.Description,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Description),
+                            item: item.Description_Property,
+                            fieldIndex: (int)SkillRecord_FieldIndex.Description,
+                            errorMask: errorMask);
                     }
                     if (item.Icon_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         FilePathXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.Icon),
-                            item.Icon,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)SkillRecord_FieldIndex.Icon,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Icon),
+                            item: item.Icon_Property,
+                            fieldIndex: (int)SkillRecord_FieldIndex.Icon,
+                            errorMask: errorMask);
                     }
                     if (item.Action_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         EnumXmlTranslation<ActorValue>.Instance.Write(
-                            writer,
-                            nameof(item.Action),
-                            item.Action,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)SkillRecord_FieldIndex.Action,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Action),
+                            item: item.Action_Property,
+                            fieldIndex: (int)SkillRecord_FieldIndex.Action,
+                            errorMask: errorMask);
                     }
                     if (item.Attribute_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         EnumXmlTranslation<ActorValue>.Instance.Write(
-                            writer,
-                            nameof(item.Attribute),
-                            item.Attribute,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)SkillRecord_FieldIndex.Attribute,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Attribute),
+                            item: item.Attribute_Property,
+                            fieldIndex: (int)SkillRecord_FieldIndex.Attribute,
+                            errorMask: errorMask);
                     }
                     if (item.Specialization_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         EnumXmlTranslation<Specialization>.Instance.Write(
-                            writer,
-                            nameof(item.Specialization),
-                            item.Specialization,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)SkillRecord_FieldIndex.Specialization,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Specialization),
+                            item: item.Specialization_Property,
+                            fieldIndex: (int)SkillRecord_FieldIndex.Specialization,
+                            errorMask: errorMask);
                     }
                     if (item.UseValueFirst_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         FloatXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.UseValueFirst),
-                            item.UseValueFirst,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)SkillRecord_FieldIndex.UseValueFirst,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.UseValueFirst),
+                            item: item.UseValueFirst_Property,
+                            fieldIndex: (int)SkillRecord_FieldIndex.UseValueFirst,
+                            errorMask: errorMask);
                     }
                     if (item.UseValueSecond_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         FloatXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.UseValueSecond),
-                            item.UseValueSecond,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)SkillRecord_FieldIndex.UseValueSecond,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.UseValueSecond),
+                            item: item.UseValueSecond_Property,
+                            fieldIndex: (int)SkillRecord_FieldIndex.UseValueSecond,
+                            errorMask: errorMask);
                     }
                     if (item.ApprenticeText_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         StringXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.ApprenticeText),
-                            item.ApprenticeText,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)SkillRecord_FieldIndex.ApprenticeText,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.ApprenticeText),
+                            item: item.ApprenticeText_Property,
+                            fieldIndex: (int)SkillRecord_FieldIndex.ApprenticeText,
+                            errorMask: errorMask);
                     }
                     if (item.JourneymanText_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         StringXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.JourneymanText),
-                            item.JourneymanText,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)SkillRecord_FieldIndex.JourneymanText,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.JourneymanText),
+                            item: item.JourneymanText_Property,
+                            fieldIndex: (int)SkillRecord_FieldIndex.JourneymanText,
+                            errorMask: errorMask);
                     }
                     if (item.ExpertText_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         StringXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.ExpertText),
-                            item.ExpertText,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)SkillRecord_FieldIndex.ExpertText,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.ExpertText),
+                            item: item.ExpertText_Property,
+                            fieldIndex: (int)SkillRecord_FieldIndex.ExpertText,
+                            errorMask: errorMask);
                     }
                     if (item.MasterText_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         StringXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.MasterText),
-                            item.MasterText,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)SkillRecord_FieldIndex.MasterText,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.MasterText),
+                            item: item.MasterText_Property,
+                            fieldIndex: (int)SkillRecord_FieldIndex.MasterText,
+                            errorMask: errorMask);
                     }
                 }
             }

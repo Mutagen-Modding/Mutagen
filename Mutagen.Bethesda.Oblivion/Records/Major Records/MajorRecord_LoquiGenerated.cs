@@ -1348,59 +1348,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.MajorRecordFlags_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         ByteArrayXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.MajorRecordFlags),
-                            item.MajorRecordFlags,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MajorRecord_FieldIndex.MajorRecordFlags,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.MajorRecordFlags),
+                            item: item.MajorRecordFlags_Property,
+                            fieldIndex: (int)MajorRecord_FieldIndex.MajorRecordFlags,
+                            errorMask: errorMask);
                     }
                     if (item.FormID_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         FormIDXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.FormID),
-                            item.FormID,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MajorRecord_FieldIndex.FormID,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.FormID),
+                            item: item.FormID_Property,
+                            fieldIndex: (int)MajorRecord_FieldIndex.FormID,
+                            errorMask: errorMask);
                     }
                     if (item.Version_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         ByteArrayXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.Version),
-                            item.Version,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MajorRecord_FieldIndex.Version,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Version),
+                            item: item.Version_Property,
+                            fieldIndex: (int)MajorRecord_FieldIndex.Version,
+                            errorMask: errorMask);
                     }
                     if (item.EditorID_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         StringXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.EditorID),
-                            item.EditorID,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MajorRecord_FieldIndex.EditorID,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.EditorID),
+                            item: item.EditorID_Property,
+                            fieldIndex: (int)MajorRecord_FieldIndex.EditorID,
+                            errorMask: errorMask);
                     }
                 }
             }

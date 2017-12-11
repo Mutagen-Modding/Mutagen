@@ -2856,227 +2856,147 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.Flags_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         EnumXmlTranslation<MagicEffect.MagicFlag>.Instance.Write(
-                            writer,
-                            nameof(item.Flags),
-                            item.Flags,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicData_FieldIndex.Flags,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Flags),
+                            item: item.Flags_Property,
+                            fieldIndex: (int)MagicData_FieldIndex.Flags,
+                            errorMask: errorMask);
                     }
                     if (item.BaseCost_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         FloatXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.BaseCost),
-                            item.BaseCost,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicData_FieldIndex.BaseCost,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.BaseCost),
+                            item: item.BaseCost_Property,
+                            fieldIndex: (int)MagicData_FieldIndex.BaseCost,
+                            errorMask: errorMask);
                     }
                     if (item.Unused_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         ByteArrayXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.Unused),
-                            item.Unused,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicData_FieldIndex.Unused,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Unused),
+                            item: item.Unused_Property,
+                            fieldIndex: (int)MagicData_FieldIndex.Unused,
+                            errorMask: errorMask);
                     }
                     if (item.MagicSchool_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         EnumXmlTranslation<MagicSchool>.Instance.Write(
-                            writer,
-                            nameof(item.MagicSchool),
-                            item.MagicSchool,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicData_FieldIndex.MagicSchool,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.MagicSchool),
+                            item: item.MagicSchool_Property,
+                            fieldIndex: (int)MagicData_FieldIndex.MagicSchool,
+                            errorMask: errorMask);
                     }
                     if (item.Resistance_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         EnumXmlTranslation<Resistance>.Instance.Write(
-                            writer,
-                            nameof(item.Resistance),
-                            item.Resistance,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicData_FieldIndex.Resistance,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Resistance),
+                            item: item.Resistance_Property,
+                            fieldIndex: (int)MagicData_FieldIndex.Resistance,
+                            errorMask: errorMask);
                     }
                     if (item.CounterEffectCount_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         UInt32XmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.CounterEffectCount),
-                            item.CounterEffectCount,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicData_FieldIndex.CounterEffectCount,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.CounterEffectCount),
+                            item: item.CounterEffectCount_Property,
+                            fieldIndex: (int)MagicData_FieldIndex.CounterEffectCount,
+                            errorMask: errorMask);
                     }
                     if (item.Light_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         FormIDXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.Light),
-                            item.Light,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicData_FieldIndex.Light,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Light),
+                            item: item.Light_Property,
+                            fieldIndex: (int)MagicData_FieldIndex.Light,
+                            errorMask: errorMask);
                     }
                     if (item.ProjectileSpeed_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         FloatXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.ProjectileSpeed),
-                            item.ProjectileSpeed,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicData_FieldIndex.ProjectileSpeed,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.ProjectileSpeed),
+                            item: item.ProjectileSpeed_Property,
+                            fieldIndex: (int)MagicData_FieldIndex.ProjectileSpeed,
+                            errorMask: errorMask);
                     }
                     if (item.EffectShader_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         FormIDXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.EffectShader),
-                            item.EffectShader,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicData_FieldIndex.EffectShader,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.EffectShader),
+                            item: item.EffectShader_Property,
+                            fieldIndex: (int)MagicData_FieldIndex.EffectShader,
+                            errorMask: errorMask);
                     }
                     if (item.EnchantEffect_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         FormIDXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.EnchantEffect),
-                            item.EnchantEffect,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicData_FieldIndex.EnchantEffect,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.EnchantEffect),
+                            item: item.EnchantEffect_Property,
+                            fieldIndex: (int)MagicData_FieldIndex.EnchantEffect,
+                            errorMask: errorMask);
                     }
                     if (item.CastingSound_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         FormIDXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.CastingSound),
-                            item.CastingSound,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicData_FieldIndex.CastingSound,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.CastingSound),
+                            item: item.CastingSound_Property,
+                            fieldIndex: (int)MagicData_FieldIndex.CastingSound,
+                            errorMask: errorMask);
                     }
                     if (item.BoltSound_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         FormIDXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.BoltSound),
-                            item.BoltSound,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicData_FieldIndex.BoltSound,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.BoltSound),
+                            item: item.BoltSound_Property,
+                            fieldIndex: (int)MagicData_FieldIndex.BoltSound,
+                            errorMask: errorMask);
                     }
                     if (item.HitSound_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         FormIDXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.HitSound),
-                            item.HitSound,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicData_FieldIndex.HitSound,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.HitSound),
+                            item: item.HitSound_Property,
+                            fieldIndex: (int)MagicData_FieldIndex.HitSound,
+                            errorMask: errorMask);
                     }
                     if (item.AreaSound_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         FormIDXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.AreaSound),
-                            item.AreaSound,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicData_FieldIndex.AreaSound,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.AreaSound),
+                            item: item.AreaSound_Property,
+                            fieldIndex: (int)MagicData_FieldIndex.AreaSound,
+                            errorMask: errorMask);
                     }
                     if (item.ConstantEffectEnchantmentFactor_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         FloatXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.ConstantEffectEnchantmentFactor),
-                            item.ConstantEffectEnchantmentFactor,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicData_FieldIndex.ConstantEffectEnchantmentFactor,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.ConstantEffectEnchantmentFactor),
+                            item: item.ConstantEffectEnchantmentFactor_Property,
+                            fieldIndex: (int)MagicData_FieldIndex.ConstantEffectEnchantmentFactor,
+                            errorMask: errorMask);
                     }
                     if (item.ConstantEffectBarterFactor_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         FloatXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.ConstantEffectBarterFactor),
-                            item.ConstantEffectBarterFactor,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicData_FieldIndex.ConstantEffectBarterFactor,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.ConstantEffectBarterFactor),
+                            item: item.ConstantEffectBarterFactor_Property,
+                            fieldIndex: (int)MagicData_FieldIndex.ConstantEffectBarterFactor,
+                            errorMask: errorMask);
                     }
                 }
             }

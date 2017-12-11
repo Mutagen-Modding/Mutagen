@@ -1557,45 +1557,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.SymmetricGeometry_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         ByteArrayXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.SymmetricGeometry),
-                            item.SymmetricGeometry,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)FaceGenData_FieldIndex.SymmetricGeometry,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.SymmetricGeometry),
+                            item: item.SymmetricGeometry_Property,
+                            fieldIndex: (int)FaceGenData_FieldIndex.SymmetricGeometry,
+                            errorMask: errorMask);
                     }
                     if (item.AsymmetricGeometry_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         ByteArrayXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.AsymmetricGeometry),
-                            item.AsymmetricGeometry,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)FaceGenData_FieldIndex.AsymmetricGeometry,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.AsymmetricGeometry),
+                            item: item.AsymmetricGeometry_Property,
+                            fieldIndex: (int)FaceGenData_FieldIndex.AsymmetricGeometry,
+                            errorMask: errorMask);
                     }
                     if (item.SymmetricTexture_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         ByteArrayXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.SymmetricTexture),
-                            item.SymmetricTexture,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)FaceGenData_FieldIndex.SymmetricTexture,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.SymmetricTexture),
+                            item: item.SymmetricTexture_Property,
+                            fieldIndex: (int)FaceGenData_FieldIndex.SymmetricTexture,
+                            errorMask: errorMask);
                     }
                 }
             }

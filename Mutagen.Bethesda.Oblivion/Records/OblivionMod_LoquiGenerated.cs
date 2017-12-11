@@ -628,7 +628,7 @@ namespace Mutagen.Bethesda.Oblivion
                         var tryGet = LoquiXmlTranslation<TES4, TES4_ErrorMask>.Instance.Parse(
                             root: root,
                             doMasks: errorMask != null,
-                            mask: out subMask);
+                            errorMask: out subMask);
                         item._TES4.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
@@ -642,7 +642,7 @@ namespace Mutagen.Bethesda.Oblivion
                         var tryGet = LoquiXmlTranslation<Group<GameSetting>, Group_ErrorMask<GameSetting_ErrorMask>>.Instance.Parse(
                             root: root,
                             doMasks: errorMask != null,
-                            mask: out subMask);
+                            errorMask: out subMask);
                         item._GameSettings.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
@@ -656,7 +656,7 @@ namespace Mutagen.Bethesda.Oblivion
                         var tryGet = LoquiXmlTranslation<Group<Global>, Group_ErrorMask<Global_ErrorMask>>.Instance.Parse(
                             root: root,
                             doMasks: errorMask != null,
-                            mask: out subMask);
+                            errorMask: out subMask);
                         item._Globals.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
@@ -670,7 +670,7 @@ namespace Mutagen.Bethesda.Oblivion
                         var tryGet = LoquiXmlTranslation<Group<Class>, Group_ErrorMask<Class_ErrorMask>>.Instance.Parse(
                             root: root,
                             doMasks: errorMask != null,
-                            mask: out subMask);
+                            errorMask: out subMask);
                         item._Classes.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
@@ -684,7 +684,7 @@ namespace Mutagen.Bethesda.Oblivion
                         var tryGet = LoquiXmlTranslation<Group<Faction>, Group_ErrorMask<Faction_ErrorMask>>.Instance.Parse(
                             root: root,
                             doMasks: errorMask != null,
-                            mask: out subMask);
+                            errorMask: out subMask);
                         item._Factions.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
@@ -698,7 +698,7 @@ namespace Mutagen.Bethesda.Oblivion
                         var tryGet = LoquiXmlTranslation<Group<Hair>, Group_ErrorMask<Hair_ErrorMask>>.Instance.Parse(
                             root: root,
                             doMasks: errorMask != null,
-                            mask: out subMask);
+                            errorMask: out subMask);
                         item._Hairs.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
@@ -712,7 +712,7 @@ namespace Mutagen.Bethesda.Oblivion
                         var tryGet = LoquiXmlTranslation<Group<Eye>, Group_ErrorMask<Eye_ErrorMask>>.Instance.Parse(
                             root: root,
                             doMasks: errorMask != null,
-                            mask: out subMask);
+                            errorMask: out subMask);
                         item._Eyes.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
@@ -726,7 +726,7 @@ namespace Mutagen.Bethesda.Oblivion
                         var tryGet = LoquiXmlTranslation<Group<Race>, Group_ErrorMask<Race_ErrorMask>>.Instance.Parse(
                             root: root,
                             doMasks: errorMask != null,
-                            mask: out subMask);
+                            errorMask: out subMask);
                         item._Races.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
@@ -740,7 +740,7 @@ namespace Mutagen.Bethesda.Oblivion
                         var tryGet = LoquiXmlTranslation<Group<Sound>, Group_ErrorMask<Sound_ErrorMask>>.Instance.Parse(
                             root: root,
                             doMasks: errorMask != null,
-                            mask: out subMask);
+                            errorMask: out subMask);
                         item._Sounds.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
@@ -754,7 +754,7 @@ namespace Mutagen.Bethesda.Oblivion
                         var tryGet = LoquiXmlTranslation<Group<SkillRecord>, Group_ErrorMask<SkillRecord_ErrorMask>>.Instance.Parse(
                             root: root,
                             doMasks: errorMask != null,
-                            mask: out subMask);
+                            errorMask: out subMask);
                         item._Skills.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
@@ -768,7 +768,7 @@ namespace Mutagen.Bethesda.Oblivion
                         var tryGet = LoquiXmlTranslation<Group<MagicEffect>, Group_ErrorMask<MagicEffect_ErrorMask>>.Instance.Parse(
                             root: root,
                             doMasks: errorMask != null,
-                            mask: out subMask);
+                            errorMask: out subMask);
                         item._MagicEffects.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
@@ -782,7 +782,7 @@ namespace Mutagen.Bethesda.Oblivion
                         var tryGet = LoquiXmlTranslation<Group<Script>, Group_ErrorMask<Script_ErrorMask>>.Instance.Parse(
                             root: root,
                             doMasks: errorMask != null,
-                            mask: out subMask);
+                            errorMask: out subMask);
                         item._Scripts.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
@@ -796,7 +796,7 @@ namespace Mutagen.Bethesda.Oblivion
                         var tryGet = LoquiXmlTranslation<Group<LandTexture>, Group_ErrorMask<LandTexture_ErrorMask>>.Instance.Parse(
                             root: root,
                             doMasks: errorMask != null,
-                            mask: out subMask);
+                            errorMask: out subMask);
                         item._LandTextures.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
@@ -3041,198 +3041,120 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.TES4_Property.HasBeenSet)
                     {
-                        MaskItem<Exception, TES4_ErrorMask> subMask;
-                        LoquiXmlTranslation<ITES4Getter, TES4_ErrorMask>.Instance.Write(
+                        LoquiXmlTranslation<TES4, TES4_ErrorMask>.Instance.Write(
                             writer: writer,
-                            item: item.TES4,
+                            item: item.TES4_Property,
                             name: nameof(item.TES4),
-                            doMasks: errorMask != null,
-                            mask: out TES4_ErrorMask loquiMask);
-                        subMask = loquiMask == null ? null : new MaskItem<Exception, TES4_ErrorMask>(null, loquiMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)OblivionMod_FieldIndex.TES4,
-                            subMask);
+                            fieldIndex: (int)OblivionMod_FieldIndex.TES4,
+                            errorMask: errorMask);
                     }
                     if (item.GameSettings_Property.HasBeenSet)
                     {
-                        MaskItem<Exception, Group_ErrorMask<GameSetting_ErrorMask>> subMask;
-                        LoquiXmlTranslation<IGroupGetter<GameSetting>, Group_ErrorMask<GameSetting_ErrorMask>>.Instance.Write(
+                        LoquiXmlTranslation<Group<GameSetting>, Group_ErrorMask<GameSetting_ErrorMask>>.Instance.Write(
                             writer: writer,
-                            item: item.GameSettings,
+                            item: item.GameSettings_Property,
                             name: nameof(item.GameSettings),
-                            doMasks: errorMask != null,
-                            mask: out Group_ErrorMask<GameSetting_ErrorMask> loquiMask);
-                        subMask = loquiMask == null ? null : new MaskItem<Exception, Group_ErrorMask<GameSetting_ErrorMask>>(null, loquiMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)OblivionMod_FieldIndex.GameSettings,
-                            subMask);
+                            fieldIndex: (int)OblivionMod_FieldIndex.GameSettings,
+                            errorMask: errorMask);
                     }
                     if (item.Globals_Property.HasBeenSet)
                     {
-                        MaskItem<Exception, Group_ErrorMask<Global_ErrorMask>> subMask;
-                        LoquiXmlTranslation<IGroupGetter<Global>, Group_ErrorMask<Global_ErrorMask>>.Instance.Write(
+                        LoquiXmlTranslation<Group<Global>, Group_ErrorMask<Global_ErrorMask>>.Instance.Write(
                             writer: writer,
-                            item: item.Globals,
+                            item: item.Globals_Property,
                             name: nameof(item.Globals),
-                            doMasks: errorMask != null,
-                            mask: out Group_ErrorMask<Global_ErrorMask> loquiMask);
-                        subMask = loquiMask == null ? null : new MaskItem<Exception, Group_ErrorMask<Global_ErrorMask>>(null, loquiMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)OblivionMod_FieldIndex.Globals,
-                            subMask);
+                            fieldIndex: (int)OblivionMod_FieldIndex.Globals,
+                            errorMask: errorMask);
                     }
                     if (item.Classes_Property.HasBeenSet)
                     {
-                        MaskItem<Exception, Group_ErrorMask<Class_ErrorMask>> subMask;
-                        LoquiXmlTranslation<IGroupGetter<Class>, Group_ErrorMask<Class_ErrorMask>>.Instance.Write(
+                        LoquiXmlTranslation<Group<Class>, Group_ErrorMask<Class_ErrorMask>>.Instance.Write(
                             writer: writer,
-                            item: item.Classes,
+                            item: item.Classes_Property,
                             name: nameof(item.Classes),
-                            doMasks: errorMask != null,
-                            mask: out Group_ErrorMask<Class_ErrorMask> loquiMask);
-                        subMask = loquiMask == null ? null : new MaskItem<Exception, Group_ErrorMask<Class_ErrorMask>>(null, loquiMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)OblivionMod_FieldIndex.Classes,
-                            subMask);
+                            fieldIndex: (int)OblivionMod_FieldIndex.Classes,
+                            errorMask: errorMask);
                     }
                     if (item.Factions_Property.HasBeenSet)
                     {
-                        MaskItem<Exception, Group_ErrorMask<Faction_ErrorMask>> subMask;
-                        LoquiXmlTranslation<IGroupGetter<Faction>, Group_ErrorMask<Faction_ErrorMask>>.Instance.Write(
+                        LoquiXmlTranslation<Group<Faction>, Group_ErrorMask<Faction_ErrorMask>>.Instance.Write(
                             writer: writer,
-                            item: item.Factions,
+                            item: item.Factions_Property,
                             name: nameof(item.Factions),
-                            doMasks: errorMask != null,
-                            mask: out Group_ErrorMask<Faction_ErrorMask> loquiMask);
-                        subMask = loquiMask == null ? null : new MaskItem<Exception, Group_ErrorMask<Faction_ErrorMask>>(null, loquiMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)OblivionMod_FieldIndex.Factions,
-                            subMask);
+                            fieldIndex: (int)OblivionMod_FieldIndex.Factions,
+                            errorMask: errorMask);
                     }
                     if (item.Hairs_Property.HasBeenSet)
                     {
-                        MaskItem<Exception, Group_ErrorMask<Hair_ErrorMask>> subMask;
-                        LoquiXmlTranslation<IGroupGetter<Hair>, Group_ErrorMask<Hair_ErrorMask>>.Instance.Write(
+                        LoquiXmlTranslation<Group<Hair>, Group_ErrorMask<Hair_ErrorMask>>.Instance.Write(
                             writer: writer,
-                            item: item.Hairs,
+                            item: item.Hairs_Property,
                             name: nameof(item.Hairs),
-                            doMasks: errorMask != null,
-                            mask: out Group_ErrorMask<Hair_ErrorMask> loquiMask);
-                        subMask = loquiMask == null ? null : new MaskItem<Exception, Group_ErrorMask<Hair_ErrorMask>>(null, loquiMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)OblivionMod_FieldIndex.Hairs,
-                            subMask);
+                            fieldIndex: (int)OblivionMod_FieldIndex.Hairs,
+                            errorMask: errorMask);
                     }
                     if (item.Eyes_Property.HasBeenSet)
                     {
-                        MaskItem<Exception, Group_ErrorMask<Eye_ErrorMask>> subMask;
-                        LoquiXmlTranslation<IGroupGetter<Eye>, Group_ErrorMask<Eye_ErrorMask>>.Instance.Write(
+                        LoquiXmlTranslation<Group<Eye>, Group_ErrorMask<Eye_ErrorMask>>.Instance.Write(
                             writer: writer,
-                            item: item.Eyes,
+                            item: item.Eyes_Property,
                             name: nameof(item.Eyes),
-                            doMasks: errorMask != null,
-                            mask: out Group_ErrorMask<Eye_ErrorMask> loquiMask);
-                        subMask = loquiMask == null ? null : new MaskItem<Exception, Group_ErrorMask<Eye_ErrorMask>>(null, loquiMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)OblivionMod_FieldIndex.Eyes,
-                            subMask);
+                            fieldIndex: (int)OblivionMod_FieldIndex.Eyes,
+                            errorMask: errorMask);
                     }
                     if (item.Races_Property.HasBeenSet)
                     {
-                        MaskItem<Exception, Group_ErrorMask<Race_ErrorMask>> subMask;
-                        LoquiXmlTranslation<IGroupGetter<Race>, Group_ErrorMask<Race_ErrorMask>>.Instance.Write(
+                        LoquiXmlTranslation<Group<Race>, Group_ErrorMask<Race_ErrorMask>>.Instance.Write(
                             writer: writer,
-                            item: item.Races,
+                            item: item.Races_Property,
                             name: nameof(item.Races),
-                            doMasks: errorMask != null,
-                            mask: out Group_ErrorMask<Race_ErrorMask> loquiMask);
-                        subMask = loquiMask == null ? null : new MaskItem<Exception, Group_ErrorMask<Race_ErrorMask>>(null, loquiMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)OblivionMod_FieldIndex.Races,
-                            subMask);
+                            fieldIndex: (int)OblivionMod_FieldIndex.Races,
+                            errorMask: errorMask);
                     }
                     if (item.Sounds_Property.HasBeenSet)
                     {
-                        MaskItem<Exception, Group_ErrorMask<Sound_ErrorMask>> subMask;
-                        LoquiXmlTranslation<IGroupGetter<Sound>, Group_ErrorMask<Sound_ErrorMask>>.Instance.Write(
+                        LoquiXmlTranslation<Group<Sound>, Group_ErrorMask<Sound_ErrorMask>>.Instance.Write(
                             writer: writer,
-                            item: item.Sounds,
+                            item: item.Sounds_Property,
                             name: nameof(item.Sounds),
-                            doMasks: errorMask != null,
-                            mask: out Group_ErrorMask<Sound_ErrorMask> loquiMask);
-                        subMask = loquiMask == null ? null : new MaskItem<Exception, Group_ErrorMask<Sound_ErrorMask>>(null, loquiMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)OblivionMod_FieldIndex.Sounds,
-                            subMask);
+                            fieldIndex: (int)OblivionMod_FieldIndex.Sounds,
+                            errorMask: errorMask);
                     }
                     if (item.Skills_Property.HasBeenSet)
                     {
-                        MaskItem<Exception, Group_ErrorMask<SkillRecord_ErrorMask>> subMask;
-                        LoquiXmlTranslation<IGroupGetter<SkillRecord>, Group_ErrorMask<SkillRecord_ErrorMask>>.Instance.Write(
+                        LoquiXmlTranslation<Group<SkillRecord>, Group_ErrorMask<SkillRecord_ErrorMask>>.Instance.Write(
                             writer: writer,
-                            item: item.Skills,
+                            item: item.Skills_Property,
                             name: nameof(item.Skills),
-                            doMasks: errorMask != null,
-                            mask: out Group_ErrorMask<SkillRecord_ErrorMask> loquiMask);
-                        subMask = loquiMask == null ? null : new MaskItem<Exception, Group_ErrorMask<SkillRecord_ErrorMask>>(null, loquiMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)OblivionMod_FieldIndex.Skills,
-                            subMask);
+                            fieldIndex: (int)OblivionMod_FieldIndex.Skills,
+                            errorMask: errorMask);
                     }
                     if (item.MagicEffects_Property.HasBeenSet)
                     {
-                        MaskItem<Exception, Group_ErrorMask<MagicEffect_ErrorMask>> subMask;
-                        LoquiXmlTranslation<IGroupGetter<MagicEffect>, Group_ErrorMask<MagicEffect_ErrorMask>>.Instance.Write(
+                        LoquiXmlTranslation<Group<MagicEffect>, Group_ErrorMask<MagicEffect_ErrorMask>>.Instance.Write(
                             writer: writer,
-                            item: item.MagicEffects,
+                            item: item.MagicEffects_Property,
                             name: nameof(item.MagicEffects),
-                            doMasks: errorMask != null,
-                            mask: out Group_ErrorMask<MagicEffect_ErrorMask> loquiMask);
-                        subMask = loquiMask == null ? null : new MaskItem<Exception, Group_ErrorMask<MagicEffect_ErrorMask>>(null, loquiMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)OblivionMod_FieldIndex.MagicEffects,
-                            subMask);
+                            fieldIndex: (int)OblivionMod_FieldIndex.MagicEffects,
+                            errorMask: errorMask);
                     }
                     if (item.Scripts_Property.HasBeenSet)
                     {
-                        MaskItem<Exception, Group_ErrorMask<Script_ErrorMask>> subMask;
-                        LoquiXmlTranslation<IGroupGetter<Script>, Group_ErrorMask<Script_ErrorMask>>.Instance.Write(
+                        LoquiXmlTranslation<Group<Script>, Group_ErrorMask<Script_ErrorMask>>.Instance.Write(
                             writer: writer,
-                            item: item.Scripts,
+                            item: item.Scripts_Property,
                             name: nameof(item.Scripts),
-                            doMasks: errorMask != null,
-                            mask: out Group_ErrorMask<Script_ErrorMask> loquiMask);
-                        subMask = loquiMask == null ? null : new MaskItem<Exception, Group_ErrorMask<Script_ErrorMask>>(null, loquiMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)OblivionMod_FieldIndex.Scripts,
-                            subMask);
+                            fieldIndex: (int)OblivionMod_FieldIndex.Scripts,
+                            errorMask: errorMask);
                     }
                     if (item.LandTextures_Property.HasBeenSet)
                     {
-                        MaskItem<Exception, Group_ErrorMask<LandTexture_ErrorMask>> subMask;
-                        LoquiXmlTranslation<IGroupGetter<LandTexture>, Group_ErrorMask<LandTexture_ErrorMask>>.Instance.Write(
+                        LoquiXmlTranslation<Group<LandTexture>, Group_ErrorMask<LandTexture_ErrorMask>>.Instance.Write(
                             writer: writer,
-                            item: item.LandTextures,
+                            item: item.LandTextures_Property,
                             name: nameof(item.LandTextures),
-                            doMasks: errorMask != null,
-                            mask: out Group_ErrorMask<LandTexture_ErrorMask> loquiMask);
-                        subMask = loquiMask == null ? null : new MaskItem<Exception, Group_ErrorMask<LandTexture_ErrorMask>>(null, loquiMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)OblivionMod_FieldIndex.LandTextures,
-                            subMask);
+                            fieldIndex: (int)OblivionMod_FieldIndex.LandTextures,
+                            errorMask: errorMask);
                     }
                 }
             }

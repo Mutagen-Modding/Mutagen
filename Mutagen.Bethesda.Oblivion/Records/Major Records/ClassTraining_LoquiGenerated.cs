@@ -1522,45 +1522,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.TrainedSkill_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         EnumXmlTranslation<Skill>.Instance.Write(
-                            writer,
-                            nameof(item.TrainedSkill),
-                            item.TrainedSkill,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)ClassTraining_FieldIndex.TrainedSkill,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.TrainedSkill),
+                            item: item.TrainedSkill_Property,
+                            fieldIndex: (int)ClassTraining_FieldIndex.TrainedSkill,
+                            errorMask: errorMask);
                     }
                     if (item.MaximumTrainingLevel_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         ByteXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.MaximumTrainingLevel),
-                            item.MaximumTrainingLevel,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)ClassTraining_FieldIndex.MaximumTrainingLevel,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.MaximumTrainingLevel),
+                            item: item.MaximumTrainingLevel_Property,
+                            fieldIndex: (int)ClassTraining_FieldIndex.MaximumTrainingLevel,
+                            errorMask: errorMask);
                     }
                     if (item.Fluff_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         ByteArrayXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.Fluff),
-                            item.Fluff,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)ClassTraining_FieldIndex.Fluff,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Fluff),
+                            item: item.Fluff_Property,
+                            fieldIndex: (int)ClassTraining_FieldIndex.Fluff,
+                            errorMask: errorMask);
                     }
                 }
             }

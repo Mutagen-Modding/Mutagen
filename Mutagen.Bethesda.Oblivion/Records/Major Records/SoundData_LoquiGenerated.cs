@@ -1679,59 +1679,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.MinimumAttenuationDistance_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         UInt16XmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.MinimumAttenuationDistance),
-                            item.MinimumAttenuationDistance,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)SoundData_FieldIndex.MinimumAttenuationDistance,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.MinimumAttenuationDistance),
+                            item: item.MinimumAttenuationDistance_Property,
+                            fieldIndex: (int)SoundData_FieldIndex.MinimumAttenuationDistance,
+                            errorMask: errorMask);
                     }
                     if (item.MaximumAttenuationDistance_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         UInt16XmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.MaximumAttenuationDistance),
-                            item.MaximumAttenuationDistance,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)SoundData_FieldIndex.MaximumAttenuationDistance,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.MaximumAttenuationDistance),
+                            item: item.MaximumAttenuationDistance_Property,
+                            fieldIndex: (int)SoundData_FieldIndex.MaximumAttenuationDistance,
+                            errorMask: errorMask);
                     }
                     if (item.FrequencyAdjustment_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         Int8XmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.FrequencyAdjustment),
-                            item.FrequencyAdjustment,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)SoundData_FieldIndex.FrequencyAdjustment,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.FrequencyAdjustment),
+                            item: item.FrequencyAdjustment_Property,
+                            fieldIndex: (int)SoundData_FieldIndex.FrequencyAdjustment,
+                            errorMask: errorMask);
                     }
                     if (item.Flags_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         EnumXmlTranslation<SoundData.Flag>.Instance.Write(
-                            writer,
-                            nameof(item.Flags),
-                            item.Flags,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)SoundData_FieldIndex.Flags,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Flags),
+                            item: item.Flags_Property,
+                            fieldIndex: (int)SoundData_FieldIndex.Flags,
+                            errorMask: errorMask);
                     }
                 }
             }

@@ -1796,87 +1796,57 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.MagicEffect_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         FormIDXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.MagicEffect),
-                            item.MagicEffect,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)EnchantmentEffect_FieldIndex.MagicEffect,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.MagicEffect),
+                            item: item.MagicEffect_Property,
+                            fieldIndex: (int)EnchantmentEffect_FieldIndex.MagicEffect,
+                            errorMask: errorMask);
                     }
                     if (item.Magnitude_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         UInt32XmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.Magnitude),
-                            item.Magnitude,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)EnchantmentEffect_FieldIndex.Magnitude,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Magnitude),
+                            item: item.Magnitude_Property,
+                            fieldIndex: (int)EnchantmentEffect_FieldIndex.Magnitude,
+                            errorMask: errorMask);
                     }
                     if (item.Area_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         UInt32XmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.Area),
-                            item.Area,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)EnchantmentEffect_FieldIndex.Area,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Area),
+                            item: item.Area_Property,
+                            fieldIndex: (int)EnchantmentEffect_FieldIndex.Area,
+                            errorMask: errorMask);
                     }
                     if (item.Duration_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         UInt32XmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.Duration),
-                            item.Duration,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)EnchantmentEffect_FieldIndex.Duration,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Duration),
+                            item: item.Duration_Property,
+                            fieldIndex: (int)EnchantmentEffect_FieldIndex.Duration,
+                            errorMask: errorMask);
                     }
                     if (item.Type_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         EnumXmlTranslation<EnchantmentEffect.EffectType>.Instance.Write(
-                            writer,
-                            nameof(item.Type),
-                            item.Type,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)EnchantmentEffect_FieldIndex.Type,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Type),
+                            item: item.Type_Property,
+                            fieldIndex: (int)EnchantmentEffect_FieldIndex.Type,
+                            errorMask: errorMask);
                     }
                     if (item.ActorValue_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         EnumXmlTranslation<ActorValue>.Instance.Write(
-                            writer,
-                            nameof(item.ActorValue),
-                            item.ActorValue,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)EnchantmentEffect_FieldIndex.ActorValue,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.ActorValue),
+                            item: item.ActorValue_Property,
+                            fieldIndex: (int)EnchantmentEffect_FieldIndex.ActorValue,
+                            errorMask: errorMask);
                     }
                 }
             }

@@ -560,7 +560,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 return LoquiXmlTranslation<LocalVariable, LocalVariable_ErrorMask>.Instance.Parse(
                                     root: r,
                                     doMasks: listDoMasks,
-                                    mask: out listSubMask);
+                                    errorMask: out listSubMask);
                             }
                             );
                         item._LocalVariables.SetIfSucceeded(listTryGet);
@@ -582,7 +582,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 return LoquiXmlTranslation<ScriptReference, ScriptReference_ErrorMask>.Instance.Parse(
                                     root: r,
                                     doMasks: listDoMasks,
-                                    mask: out listSubMask);
+                                    errorMask: out listSubMask);
                             }
                             );
                         item._References.SetIfSucceeded(listTryGet);
@@ -1960,96 +1960,68 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.MetadataSummary_Property.HasBeenSet)
                     {
-                        MaskItem<Exception, ScriptMetaSummary_ErrorMask> subMask;
-                        LoquiXmlTranslation<IScriptMetaSummaryGetter, ScriptMetaSummary_ErrorMask>.Instance.Write(
+                        LoquiXmlTranslation<ScriptMetaSummary, ScriptMetaSummary_ErrorMask>.Instance.Write(
                             writer: writer,
-                            item: item.MetadataSummary,
+                            item: item.MetadataSummary_Property,
                             name: nameof(item.MetadataSummary),
-                            doMasks: errorMask != null,
-                            mask: out ScriptMetaSummary_ErrorMask loquiMask);
-                        subMask = loquiMask == null ? null : new MaskItem<Exception, ScriptMetaSummary_ErrorMask>(null, loquiMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Script_FieldIndex.MetadataSummary,
-                            subMask);
+                            fieldIndex: (int)Script_FieldIndex.MetadataSummary,
+                            errorMask: errorMask);
                     }
                     if (item.CompiledScript_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         ByteArrayXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.CompiledScript),
-                            item.CompiledScript,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Script_FieldIndex.CompiledScript,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.CompiledScript),
+                            item: item.CompiledScript_Property,
+                            fieldIndex: (int)Script_FieldIndex.CompiledScript,
+                            errorMask: errorMask);
                     }
                     if (item.SourceCode_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         StringXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.SourceCode),
-                            item.SourceCode,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Script_FieldIndex.SourceCode,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.SourceCode),
+                            item: item.SourceCode_Property,
+                            fieldIndex: (int)Script_FieldIndex.SourceCode,
+                            errorMask: errorMask);
                     }
                     if (item.LocalVariables.HasBeenSet)
                     {
-                        MaskItem<Exception, IEnumerable<MaskItem<Exception, LocalVariable_ErrorMask>>> subMask;
                         ListXmlTranslation<LocalVariable, MaskItem<Exception, LocalVariable_ErrorMask>>.Instance.Write(
                             writer: writer,
                             name: nameof(item.LocalVariables),
                             item: item.LocalVariables,
-                            doMasks: errorMask != null,
-                            maskObj: out subMask,
+                            fieldIndex: (int)Script_FieldIndex.LocalVariables,
+                            errorMask: errorMask,
                             transl: (LocalVariable subItem, bool listDoMasks, out MaskItem<Exception, LocalVariable_ErrorMask> listSubMask) =>
                             {
-                                LoquiXmlTranslation<ILocalVariableGetter, LocalVariable_ErrorMask>.Instance.Write(
+                                LoquiXmlTranslation<LocalVariable, LocalVariable_ErrorMask>.Instance.Write(
                                     writer: writer,
                                     item: subItem,
                                     name: "Item",
                                     doMasks: errorMask != null,
-                                    mask: out LocalVariable_ErrorMask loquiMask);
-                                listSubMask = loquiMask == null ? null : new MaskItem<Exception, LocalVariable_ErrorMask>(null, loquiMask);
+                                    errorMask: out listSubMask);
                             }
                             );
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Script_FieldIndex.LocalVariables,
-                            subMask);
                     }
                     if (item.References.HasBeenSet)
                     {
-                        MaskItem<Exception, IEnumerable<MaskItem<Exception, ScriptReference_ErrorMask>>> subMask;
                         ListXmlTranslation<ScriptReference, MaskItem<Exception, ScriptReference_ErrorMask>>.Instance.Write(
                             writer: writer,
                             name: nameof(item.References),
                             item: item.References,
-                            doMasks: errorMask != null,
-                            maskObj: out subMask,
+                            fieldIndex: (int)Script_FieldIndex.References,
+                            errorMask: errorMask,
                             transl: (ScriptReference subItem, bool listDoMasks, out MaskItem<Exception, ScriptReference_ErrorMask> listSubMask) =>
                             {
-                                LoquiXmlTranslation<IScriptReferenceGetter, ScriptReference_ErrorMask>.Instance.Write(
+                                LoquiXmlTranslation<ScriptReference, ScriptReference_ErrorMask>.Instance.Write(
                                     writer: writer,
                                     item: subItem,
                                     name: "Item",
                                     doMasks: errorMask != null,
-                                    mask: out ScriptReference_ErrorMask loquiMask);
-                                listSubMask = loquiMask == null ? null : new MaskItem<Exception, ScriptReference_ErrorMask>(null, loquiMask);
+                                    errorMask: out listSubMask);
                             }
                             );
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Script_FieldIndex.References,
-                            subMask);
                     }
                 }
             }

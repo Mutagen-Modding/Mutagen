@@ -1521,45 +1521,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.Version_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         FloatXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.Version),
-                            item.Version,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Header_FieldIndex.Version,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Version),
+                            item: item.Version_Property,
+                            fieldIndex: (int)Header_FieldIndex.Version,
+                            errorMask: errorMask);
                     }
                     if (item.NumRecords_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         Int32XmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.NumRecords),
-                            item.NumRecords,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Header_FieldIndex.NumRecords,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.NumRecords),
+                            item: item.NumRecords_Property,
+                            fieldIndex: (int)Header_FieldIndex.NumRecords,
+                            errorMask: errorMask);
                     }
                     if (item.NextObjectID_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         UInt32XmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.NextObjectID),
-                            item.NextObjectID,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Header_FieldIndex.NextObjectID,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.NextObjectID),
+                            item: item.NextObjectID_Property,
+                            fieldIndex: (int)Header_FieldIndex.NextObjectID,
+                            errorMask: errorMask);
                     }
                 }
             }

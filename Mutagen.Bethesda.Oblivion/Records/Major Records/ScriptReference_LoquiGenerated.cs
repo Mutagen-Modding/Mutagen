@@ -1449,31 +1449,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.VariableIndex_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         Int32XmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.VariableIndex),
-                            item.VariableIndex,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)ScriptReference_FieldIndex.VariableIndex,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.VariableIndex),
+                            item: item.VariableIndex_Property,
+                            fieldIndex: (int)ScriptReference_FieldIndex.VariableIndex,
+                            errorMask: errorMask);
                     }
                     if (item.Reference_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         FormIDXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.Reference),
-                            item.Reference,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)ScriptReference_FieldIndex.Reference,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Reference),
+                            item: item.Reference_Property,
+                            fieldIndex: (int)ScriptReference_FieldIndex.Reference,
+                            errorMask: errorMask);
                     }
                 }
             }

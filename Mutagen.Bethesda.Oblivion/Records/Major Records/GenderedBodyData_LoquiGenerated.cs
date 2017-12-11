@@ -431,7 +431,7 @@ namespace Mutagen.Bethesda.Oblivion
                         var tryGet = LoquiXmlTranslation<BodyData, BodyData_ErrorMask>.Instance.Parse(
                             root: root,
                             doMasks: errorMask != null,
-                            mask: out subMask);
+                            errorMask: out subMask);
                         item._Male.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
@@ -445,7 +445,7 @@ namespace Mutagen.Bethesda.Oblivion
                         var tryGet = LoquiXmlTranslation<BodyData, BodyData_ErrorMask>.Instance.Parse(
                             root: root,
                             doMasks: errorMask != null,
-                            mask: out subMask);
+                            errorMask: out subMask);
                         item._Female.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
@@ -1518,33 +1518,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.Male_Property.HasBeenSet)
                     {
-                        MaskItem<Exception, BodyData_ErrorMask> subMask;
-                        LoquiXmlTranslation<IBodyDataGetter, BodyData_ErrorMask>.Instance.Write(
+                        LoquiXmlTranslation<BodyData, BodyData_ErrorMask>.Instance.Write(
                             writer: writer,
-                            item: item.Male,
+                            item: item.Male_Property,
                             name: nameof(item.Male),
-                            doMasks: errorMask != null,
-                            mask: out BodyData_ErrorMask loquiMask);
-                        subMask = loquiMask == null ? null : new MaskItem<Exception, BodyData_ErrorMask>(null, loquiMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)GenderedBodyData_FieldIndex.Male,
-                            subMask);
+                            fieldIndex: (int)GenderedBodyData_FieldIndex.Male,
+                            errorMask: errorMask);
                     }
                     if (item.Female_Property.HasBeenSet)
                     {
-                        MaskItem<Exception, BodyData_ErrorMask> subMask;
-                        LoquiXmlTranslation<IBodyDataGetter, BodyData_ErrorMask>.Instance.Write(
+                        LoquiXmlTranslation<BodyData, BodyData_ErrorMask>.Instance.Write(
                             writer: writer,
-                            item: item.Female,
+                            item: item.Female_Property,
                             name: nameof(item.Female),
-                            doMasks: errorMask != null,
-                            mask: out BodyData_ErrorMask loquiMask);
-                        subMask = loquiMask == null ? null : new MaskItem<Exception, BodyData_ErrorMask>(null, loquiMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)GenderedBodyData_FieldIndex.Female,
-                            subMask);
+                            fieldIndex: (int)GenderedBodyData_FieldIndex.Female,
+                            errorMask: errorMask);
                     }
                 }
             }

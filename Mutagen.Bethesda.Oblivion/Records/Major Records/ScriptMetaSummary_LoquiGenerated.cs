@@ -1721,45 +1721,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.Fluff_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         ByteArrayXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.Fluff),
-                            item.Fluff,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)ScriptMetaSummary_FieldIndex.Fluff,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Fluff),
+                            item: item.Fluff_Property,
+                            fieldIndex: (int)ScriptMetaSummary_FieldIndex.Fluff,
+                            errorMask: errorMask);
                     }
                     if (item.RefCount_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         UInt32XmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.RefCount),
-                            item.RefCount,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)ScriptMetaSummary_FieldIndex.RefCount,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.RefCount),
+                            item: item.RefCount_Property,
+                            fieldIndex: (int)ScriptMetaSummary_FieldIndex.RefCount,
+                            errorMask: errorMask);
                     }
                     if (item.Type_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         EnumXmlTranslation<Script.ScriptType>.Instance.Write(
-                            writer,
-                            nameof(item.Type),
-                            item.Type,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)ScriptMetaSummary_FieldIndex.Type,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Type),
+                            item: item.Type_Property,
+                            fieldIndex: (int)ScriptMetaSummary_FieldIndex.Type,
+                            errorMask: errorMask);
                     }
                 }
             }

@@ -574,7 +574,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 return LoquiXmlTranslation<T, T_ErrMask>.Instance.Parse(
                                     root: r,
                                     doMasks: listDoMasks,
-                                    mask: out listSubMask);
+                                    errorMask: out listSubMask);
                             }
                             );
                         item._Items.SetIfSucceeded(listTryGet);
@@ -1825,41 +1825,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.GroupType_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         Int32XmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.GroupType),
-                            item.GroupType,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Group_FieldIndex.GroupType,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.GroupType),
+                            item: item.GroupType_Property,
+                            fieldIndex: (int)Group_FieldIndex.GroupType,
+                            errorMask: errorMask);
                     }
                     if (item.LastModified_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         ByteArrayXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.LastModified),
-                            item.LastModified,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Group_FieldIndex.LastModified,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.LastModified),
+                            item: item.LastModified_Property,
+                            fieldIndex: (int)Group_FieldIndex.LastModified,
+                            errorMask: errorMask);
                     }
                     if (item.Items.HasBeenSet)
                     {
-                        MaskItem<Exception, IEnumerable<MaskItem<Exception, T_ErrMask>>> subMask;
                         ListXmlTranslation<T, MaskItem<Exception, T_ErrMask>>.Instance.Write(
                             writer: writer,
                             name: nameof(item.Items),
                             item: item.Items,
-                            doMasks: errorMask != null,
-                            maskObj: out subMask,
+                            fieldIndex: (int)Group_FieldIndex.Items,
+                            errorMask: errorMask,
                             transl: (T subItem, bool listDoMasks, out MaskItem<Exception, T_ErrMask> listSubMask) =>
                             {
                                 LoquiXmlTranslation<T, T_ErrMask>.Instance.Write(
@@ -1867,14 +1856,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     item: subItem,
                                     name: "Item",
                                     doMasks: errorMask != null,
-                                    mask: out T_ErrMask loquiMask);
-                                listSubMask = loquiMask == null ? null : new MaskItem<Exception, T_ErrMask>(null, loquiMask);
+                                    errorMask: out listSubMask);
                             }
                             );
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Group_FieldIndex.Items,
-                            subMask);
                     }
                 }
             }

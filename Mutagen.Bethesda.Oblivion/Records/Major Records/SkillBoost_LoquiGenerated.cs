@@ -1416,31 +1416,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.Skill_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         EnumXmlTranslation<ActorValue>.Instance.Write(
-                            writer,
-                            nameof(item.Skill),
-                            item.Skill,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)SkillBoost_FieldIndex.Skill,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Skill),
+                            item: item.Skill_Property,
+                            fieldIndex: (int)SkillBoost_FieldIndex.Skill,
+                            errorMask: errorMask);
                     }
                     if (item.Boost_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         Int8XmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.Boost),
-                            item.Boost,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)SkillBoost_FieldIndex.Boost,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Boost),
+                            item: item.Boost_Property,
+                            fieldIndex: (int)SkillBoost_FieldIndex.Boost,
+                            errorMask: errorMask);
                     }
                 }
             }

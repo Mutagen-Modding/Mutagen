@@ -1567,45 +1567,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.StaticAttenuation_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         FloatXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.StaticAttenuation),
-                            item.StaticAttenuation,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)SoundDataExtended_FieldIndex.StaticAttenuation,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.StaticAttenuation),
+                            item: item.StaticAttenuation_Property,
+                            fieldIndex: (int)SoundDataExtended_FieldIndex.StaticAttenuation,
+                            errorMask: errorMask);
                     }
                     if (item.StopTime_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         ByteXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.StopTime),
-                            item.StopTime,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)SoundDataExtended_FieldIndex.StopTime,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.StopTime),
+                            item: item.StopTime_Property,
+                            fieldIndex: (int)SoundDataExtended_FieldIndex.StopTime,
+                            errorMask: errorMask);
                     }
                     if (item.StartTime_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         ByteXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.StartTime),
-                            item.StartTime,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)SoundDataExtended_FieldIndex.StartTime,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.StartTime),
+                            item: item.StartTime_Property,
+                            fieldIndex: (int)SoundDataExtended_FieldIndex.StartTime,
+                            errorMask: errorMask);
                     }
                 }
             }

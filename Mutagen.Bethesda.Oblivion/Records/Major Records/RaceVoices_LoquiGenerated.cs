@@ -1419,31 +1419,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.Male_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         FormIDXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.Male),
-                            item.Male,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)RaceVoices_FieldIndex.Male,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Male),
+                            item: item.Male_Property,
+                            fieldIndex: (int)RaceVoices_FieldIndex.Male,
+                            errorMask: errorMask);
                     }
                     if (item.Female_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         FormIDXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.Female),
-                            item.Female,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)RaceVoices_FieldIndex.Female,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Female),
+                            item: item.Female_Property,
+                            fieldIndex: (int)RaceVoices_FieldIndex.Female,
+                            errorMask: errorMask);
                     }
                 }
             }

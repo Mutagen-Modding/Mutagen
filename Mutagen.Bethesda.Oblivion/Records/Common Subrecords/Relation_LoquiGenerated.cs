@@ -1419,31 +1419,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.Faction_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         FormIDXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.Faction),
-                            item.Faction,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Relation_FieldIndex.Faction,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Faction),
+                            item: item.Faction_Property,
+                            fieldIndex: (int)Relation_FieldIndex.Faction,
+                            errorMask: errorMask);
                     }
                     if (item.Modifier_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         Int32XmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.Modifier),
-                            item.Modifier,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Relation_FieldIndex.Modifier,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Modifier),
+                            item: item.Modifier_Property,
+                            fieldIndex: (int)Relation_FieldIndex.Modifier,
+                            errorMask: errorMask);
                     }
                 }
             }

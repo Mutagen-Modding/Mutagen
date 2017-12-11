@@ -458,7 +458,7 @@ namespace Mutagen.Bethesda.Oblivion
                         var tryGet = LoquiXmlTranslation<SoundData, SoundData_ErrorMask>.Instance.Parse(
                             root: root,
                             doMasks: errorMask != null,
-                            mask: out subMask);
+                            errorMask: out subMask);
                         item._Data.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
@@ -1530,32 +1530,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.File_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         FilePathXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.File),
-                            item.File,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Sound_FieldIndex.File,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.File),
+                            item: item.File_Property,
+                            fieldIndex: (int)Sound_FieldIndex.File,
+                            errorMask: errorMask);
                     }
                     if (item.Data_Property.HasBeenSet)
                     {
-                        MaskItem<Exception, SoundData_ErrorMask> subMask;
-                        LoquiXmlTranslation<ISoundDataGetter, SoundData_ErrorMask>.Instance.Write(
+                        LoquiXmlTranslation<SoundData, SoundData_ErrorMask>.Instance.Write(
                             writer: writer,
-                            item: item.Data,
+                            item: item.Data_Property,
                             name: nameof(item.Data),
-                            doMasks: errorMask != null,
-                            mask: out SoundData_ErrorMask loquiMask);
-                        subMask = loquiMask == null ? null : new MaskItem<Exception, SoundData_ErrorMask>(null, loquiMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Sound_FieldIndex.Data,
-                            subMask);
+                            fieldIndex: (int)Sound_FieldIndex.Data,
+                            errorMask: errorMask);
                     }
                 }
             }

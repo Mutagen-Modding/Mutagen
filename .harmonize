@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>2492d7c7ad650f23b020ff879b09960710ce87ce</Sha>
+         <Sha>53cfd49f53be93707f6a2a1259543f6f77900808</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>12-09-2017 20:33:08</CommitDate>
-         <Description>Readded markAsSet optional parameter to NotifyingSetItemConvertWrapper ctor</Description>
+         <CommitDate>12-10-2017 23:35:43</CommitDate>
+         <Description>IHasItemGetter</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>af4dd093ec5cdc6db159e195af80cc85bbbb592a</Sha>
+         <Sha>4f7f7f086215cce5208f40dc501d2e72d0d7825c</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>12-09-2017 20:33:12</CommitDate>
-         <Description>More notifying set item work, and SetNthObjectHasBeenSet refactoring to group common results together</Description>
+         <CommitDate>12-10-2017 23:49:24</CommitDate>
+         <Description>Compilation work and xml translator cleanup</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

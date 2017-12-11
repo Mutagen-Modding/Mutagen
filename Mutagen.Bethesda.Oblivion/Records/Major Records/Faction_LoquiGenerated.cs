@@ -500,7 +500,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 return LoquiXmlTranslation<Relation, Relation_ErrorMask>.Instance.Parse(
                                     root: r,
                                     doMasks: listDoMasks,
-                                    mask: out listSubMask);
+                                    errorMask: out listSubMask);
                             }
                             );
                         item._Relations.SetIfSucceeded(listTryGet);
@@ -551,7 +551,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 return LoquiXmlTranslation<Rank, Rank_ErrorMask>.Instance.Parse(
                                     root: r,
                                     doMasks: listDoMasks,
-                                    mask: out listSubMask);
+                                    errorMask: out listSubMask);
                             }
                             );
                         item._Ranks.SetIfSucceeded(listTryGet);
@@ -1851,81 +1851,59 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.Relations.HasBeenSet)
                     {
-                        MaskItem<Exception, IEnumerable<MaskItem<Exception, Relation_ErrorMask>>> subMask;
                         ListXmlTranslation<Relation, MaskItem<Exception, Relation_ErrorMask>>.Instance.Write(
                             writer: writer,
                             name: nameof(item.Relations),
                             item: item.Relations,
-                            doMasks: errorMask != null,
-                            maskObj: out subMask,
+                            fieldIndex: (int)Faction_FieldIndex.Relations,
+                            errorMask: errorMask,
                             transl: (Relation subItem, bool listDoMasks, out MaskItem<Exception, Relation_ErrorMask> listSubMask) =>
                             {
-                                LoquiXmlTranslation<IRelationGetter, Relation_ErrorMask>.Instance.Write(
+                                LoquiXmlTranslation<Relation, Relation_ErrorMask>.Instance.Write(
                                     writer: writer,
                                     item: subItem,
                                     name: "Item",
                                     doMasks: errorMask != null,
-                                    mask: out Relation_ErrorMask loquiMask);
-                                listSubMask = loquiMask == null ? null : new MaskItem<Exception, Relation_ErrorMask>(null, loquiMask);
+                                    errorMask: out listSubMask);
                             }
                             );
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Faction_FieldIndex.Relations,
-                            subMask);
                     }
                     if (item.Flags_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         EnumXmlTranslation<Faction.FactionFlag>.Instance.Write(
-                            writer,
-                            nameof(item.Flags),
-                            item.Flags,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Faction_FieldIndex.Flags,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Flags),
+                            item: item.Flags_Property,
+                            fieldIndex: (int)Faction_FieldIndex.Flags,
+                            errorMask: errorMask);
                     }
                     if (item.CrimeGoldMultiplier_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         FloatXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.CrimeGoldMultiplier),
-                            item.CrimeGoldMultiplier,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Faction_FieldIndex.CrimeGoldMultiplier,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.CrimeGoldMultiplier),
+                            item: item.CrimeGoldMultiplier_Property,
+                            fieldIndex: (int)Faction_FieldIndex.CrimeGoldMultiplier,
+                            errorMask: errorMask);
                     }
                     if (item.Ranks.HasBeenSet)
                     {
-                        MaskItem<Exception, IEnumerable<MaskItem<Exception, Rank_ErrorMask>>> subMask;
                         ListXmlTranslation<Rank, MaskItem<Exception, Rank_ErrorMask>>.Instance.Write(
                             writer: writer,
                             name: nameof(item.Ranks),
                             item: item.Ranks,
-                            doMasks: errorMask != null,
-                            maskObj: out subMask,
+                            fieldIndex: (int)Faction_FieldIndex.Ranks,
+                            errorMask: errorMask,
                             transl: (Rank subItem, bool listDoMasks, out MaskItem<Exception, Rank_ErrorMask> listSubMask) =>
                             {
-                                LoquiXmlTranslation<IRankGetter, Rank_ErrorMask>.Instance.Write(
+                                LoquiXmlTranslation<Rank, Rank_ErrorMask>.Instance.Write(
                                     writer: writer,
                                     item: subItem,
                                     name: "Item",
                                     doMasks: errorMask != null,
-                                    mask: out Rank_ErrorMask loquiMask);
-                                listSubMask = loquiMask == null ? null : new MaskItem<Exception, Rank_ErrorMask>(null, loquiMask);
+                                    errorMask: out listSubMask);
                             }
                             );
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Faction_FieldIndex.Ranks,
-                            subMask);
                     }
                 }
             }

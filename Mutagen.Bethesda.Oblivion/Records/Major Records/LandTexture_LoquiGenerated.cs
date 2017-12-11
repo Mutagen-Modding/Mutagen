@@ -496,7 +496,7 @@ namespace Mutagen.Bethesda.Oblivion
                         var tryGet = LoquiXmlTranslation<HavokData, HavokData_ErrorMask>.Instance.Parse(
                             root: root,
                             doMasks: errorMask != null,
-                            mask: out subMask);
+                            errorMask: out subMask);
                         item._Havok.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
@@ -1776,70 +1776,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.Icon_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         FilePathXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.Icon),
-                            item.Icon,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)LandTexture_FieldIndex.Icon,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Icon),
+                            item: item.Icon_Property,
+                            fieldIndex: (int)LandTexture_FieldIndex.Icon,
+                            errorMask: errorMask);
                     }
                     if (item.Havok_Property.HasBeenSet)
                     {
-                        MaskItem<Exception, HavokData_ErrorMask> subMask;
-                        LoquiXmlTranslation<IHavokDataGetter, HavokData_ErrorMask>.Instance.Write(
+                        LoquiXmlTranslation<HavokData, HavokData_ErrorMask>.Instance.Write(
                             writer: writer,
-                            item: item.Havok,
+                            item: item.Havok_Property,
                             name: nameof(item.Havok),
-                            doMasks: errorMask != null,
-                            mask: out HavokData_ErrorMask loquiMask);
-                        subMask = loquiMask == null ? null : new MaskItem<Exception, HavokData_ErrorMask>(null, loquiMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)LandTexture_FieldIndex.Havok,
-                            subMask);
+                            fieldIndex: (int)LandTexture_FieldIndex.Havok,
+                            errorMask: errorMask);
                     }
                     if (item.TextureSpecularExponent_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         ByteXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.TextureSpecularExponent),
-                            item.TextureSpecularExponent,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)LandTexture_FieldIndex.TextureSpecularExponent,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.TextureSpecularExponent),
+                            item: item.TextureSpecularExponent_Property,
+                            fieldIndex: (int)LandTexture_FieldIndex.TextureSpecularExponent,
+                            errorMask: errorMask);
                     }
                     if (item.PotentialGrass.HasBeenSet)
                     {
-                        MaskItem<Exception, IEnumerable<Exception>> subMask;
                         ListXmlTranslation<FormID, Exception>.Instance.Write(
                             writer: writer,
                             name: nameof(item.PotentialGrass),
                             item: item.PotentialGrass,
-                            doMasks: errorMask != null,
-                            maskObj: out subMask,
+                            fieldIndex: (int)LandTexture_FieldIndex.PotentialGrass,
+                            errorMask: errorMask,
                             transl: (FormID subItem, bool listDoMasks, out Exception listSubMask) =>
                             {
                                 FormIDXmlTranslation.Instance.Write(
-                                    writer,
-                                    "Item",
-                                    subItem,
+                                    writer: writer,
+                                    name: "Item",
+                                    item: subItem,
                                     doMasks: errorMask != null,
                                     errorMask: out listSubMask);
                             }
                             );
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)LandTexture_FieldIndex.PotentialGrass,
-                            subMask);
                     }
                 }
             }

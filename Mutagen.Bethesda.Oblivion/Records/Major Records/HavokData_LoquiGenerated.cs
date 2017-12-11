@@ -1523,45 +1523,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.Material_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         EnumXmlTranslation<HavokData.MaterialType>.Instance.Write(
-                            writer,
-                            nameof(item.Material),
-                            item.Material,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)HavokData_FieldIndex.Material,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Material),
+                            item: item.Material_Property,
+                            fieldIndex: (int)HavokData_FieldIndex.Material,
+                            errorMask: errorMask);
                     }
                     if (item.Friction_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         ByteXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.Friction),
-                            item.Friction,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)HavokData_FieldIndex.Friction,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Friction),
+                            item: item.Friction_Property,
+                            fieldIndex: (int)HavokData_FieldIndex.Friction,
+                            errorMask: errorMask);
                     }
                     if (item.Restitution_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         ByteXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.Restitution),
-                            item.Restitution,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)HavokData_FieldIndex.Restitution,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Restitution),
+                            item: item.Restitution_Property,
+                            fieldIndex: (int)HavokData_FieldIndex.Restitution,
+                            errorMask: errorMask);
                     }
                 }
             }

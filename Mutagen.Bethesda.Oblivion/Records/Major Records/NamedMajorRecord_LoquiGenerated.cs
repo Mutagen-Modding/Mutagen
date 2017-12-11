@@ -1002,17 +1002,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.Name_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         StringXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.Name),
-                            item.Name,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)NamedMajorRecord_FieldIndex.Name,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Name),
+                            item: item.Name_Property,
+                            fieldIndex: (int)NamedMajorRecord_FieldIndex.Name,
+                            errorMask: errorMask);
                     }
                 }
             }

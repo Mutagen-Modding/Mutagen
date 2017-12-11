@@ -689,7 +689,7 @@ namespace Mutagen.Bethesda.Oblivion
                         var tryGet = LoquiXmlTranslation<ClassTraining, ClassTraining_ErrorMask>.Instance.Parse(
                             root: root,
                             doMasks: errorMask != null,
-                            mask: out subMask);
+                            errorMask: out subMask);
                         item._Training.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
@@ -2246,136 +2246,95 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.Description_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         StringXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.Description),
-                            item.Description,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Class_FieldIndex.Description,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Description),
+                            item: item.Description_Property,
+                            fieldIndex: (int)Class_FieldIndex.Description,
+                            errorMask: errorMask);
                     }
                     if (item.Icon_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         FilePathXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.Icon),
-                            item.Icon,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Class_FieldIndex.Icon,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Icon),
+                            item: item.Icon_Property,
+                            fieldIndex: (int)Class_FieldIndex.Icon,
+                            errorMask: errorMask);
                     }
                     if (item.PrimaryAttributes.HasBeenSet)
                     {
-                        MaskItem<Exception, IEnumerable<Exception>> subMask;
                         ListXmlTranslation<ActorValue, Exception>.Instance.Write(
                             writer: writer,
                             name: nameof(item.PrimaryAttributes),
                             item: item.PrimaryAttributes,
-                            doMasks: errorMask != null,
-                            maskObj: out subMask,
+                            fieldIndex: (int)Class_FieldIndex.PrimaryAttributes,
+                            errorMask: errorMask,
                             transl: (ActorValue subItem, bool listDoMasks, out Exception listSubMask) =>
                             {
                                 EnumXmlTranslation<ActorValue>.Instance.Write(
-                                    writer,
-                                    "Item",
-                                    subItem,
+                                    writer: writer,
+                                    name: "Item",
+                                    item: subItem,
                                     doMasks: errorMask != null,
                                     errorMask: out listSubMask);
                             }
                             );
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Class_FieldIndex.PrimaryAttributes,
-                            subMask);
                     }
                     if (item.Specialization_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         EnumXmlTranslation<Class.SpecializationFlag>.Instance.Write(
-                            writer,
-                            nameof(item.Specialization),
-                            item.Specialization,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Class_FieldIndex.Specialization,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Specialization),
+                            item: item.Specialization_Property,
+                            fieldIndex: (int)Class_FieldIndex.Specialization,
+                            errorMask: errorMask);
                     }
                     if (item.SecondaryAttributes.HasBeenSet)
                     {
-                        MaskItem<Exception, IEnumerable<Exception>> subMask;
                         ListXmlTranslation<ActorValue, Exception>.Instance.Write(
                             writer: writer,
                             name: nameof(item.SecondaryAttributes),
                             item: item.SecondaryAttributes,
-                            doMasks: errorMask != null,
-                            maskObj: out subMask,
+                            fieldIndex: (int)Class_FieldIndex.SecondaryAttributes,
+                            errorMask: errorMask,
                             transl: (ActorValue subItem, bool listDoMasks, out Exception listSubMask) =>
                             {
                                 EnumXmlTranslation<ActorValue>.Instance.Write(
-                                    writer,
-                                    "Item",
-                                    subItem,
+                                    writer: writer,
+                                    name: "Item",
+                                    item: subItem,
                                     doMasks: errorMask != null,
                                     errorMask: out listSubMask);
                             }
                             );
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Class_FieldIndex.SecondaryAttributes,
-                            subMask);
                     }
                     if (item.Flags_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         EnumXmlTranslation<ClassFlag>.Instance.Write(
-                            writer,
-                            nameof(item.Flags),
-                            item.Flags,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Class_FieldIndex.Flags,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Flags),
+                            item: item.Flags_Property,
+                            fieldIndex: (int)Class_FieldIndex.Flags,
+                            errorMask: errorMask);
                     }
                     if (item.ClassServices_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         EnumXmlTranslation<ClassService>.Instance.Write(
-                            writer,
-                            nameof(item.ClassServices),
-                            item.ClassServices,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Class_FieldIndex.ClassServices,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.ClassServices),
+                            item: item.ClassServices_Property,
+                            fieldIndex: (int)Class_FieldIndex.ClassServices,
+                            errorMask: errorMask);
                     }
                     if (item.Training_Property.HasBeenSet)
                     {
-                        MaskItem<Exception, ClassTraining_ErrorMask> subMask;
-                        LoquiXmlTranslation<IClassTrainingGetter, ClassTraining_ErrorMask>.Instance.Write(
+                        LoquiXmlTranslation<ClassTraining, ClassTraining_ErrorMask>.Instance.Write(
                             writer: writer,
-                            item: item.Training,
+                            item: item.Training_Property,
                             name: nameof(item.Training),
-                            doMasks: errorMask != null,
-                            mask: out ClassTraining_ErrorMask loquiMask);
-                        subMask = loquiMask == null ? null : new MaskItem<Exception, ClassTraining_ErrorMask>(null, loquiMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Class_FieldIndex.Training,
-                            subMask);
+                            fieldIndex: (int)Class_FieldIndex.Training,
+                            errorMask: errorMask);
                     }
                 }
             }

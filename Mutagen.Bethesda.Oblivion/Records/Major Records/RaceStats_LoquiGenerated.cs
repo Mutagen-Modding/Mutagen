@@ -2026,115 +2026,75 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.Strength_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         ByteXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.Strength),
-                            item.Strength,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)RaceStats_FieldIndex.Strength,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Strength),
+                            item: item.Strength_Property,
+                            fieldIndex: (int)RaceStats_FieldIndex.Strength,
+                            errorMask: errorMask);
                     }
                     if (item.Intelligence_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         ByteXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.Intelligence),
-                            item.Intelligence,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)RaceStats_FieldIndex.Intelligence,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Intelligence),
+                            item: item.Intelligence_Property,
+                            fieldIndex: (int)RaceStats_FieldIndex.Intelligence,
+                            errorMask: errorMask);
                     }
                     if (item.Willpower_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         ByteXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.Willpower),
-                            item.Willpower,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)RaceStats_FieldIndex.Willpower,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Willpower),
+                            item: item.Willpower_Property,
+                            fieldIndex: (int)RaceStats_FieldIndex.Willpower,
+                            errorMask: errorMask);
                     }
                     if (item.Agility_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         ByteXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.Agility),
-                            item.Agility,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)RaceStats_FieldIndex.Agility,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Agility),
+                            item: item.Agility_Property,
+                            fieldIndex: (int)RaceStats_FieldIndex.Agility,
+                            errorMask: errorMask);
                     }
                     if (item.Speed_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         ByteXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.Speed),
-                            item.Speed,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)RaceStats_FieldIndex.Speed,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Speed),
+                            item: item.Speed_Property,
+                            fieldIndex: (int)RaceStats_FieldIndex.Speed,
+                            errorMask: errorMask);
                     }
                     if (item.Endurance_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         ByteXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.Endurance),
-                            item.Endurance,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)RaceStats_FieldIndex.Endurance,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Endurance),
+                            item: item.Endurance_Property,
+                            fieldIndex: (int)RaceStats_FieldIndex.Endurance,
+                            errorMask: errorMask);
                     }
                     if (item.Personality_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         ByteXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.Personality),
-                            item.Personality,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)RaceStats_FieldIndex.Personality,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Personality),
+                            item: item.Personality_Property,
+                            fieldIndex: (int)RaceStats_FieldIndex.Personality,
+                            errorMask: errorMask);
                     }
                     if (item.Luck_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         ByteXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.Luck),
-                            item.Luck,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)RaceStats_FieldIndex.Luck,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Luck),
+                            item: item.Luck_Property,
+                            fieldIndex: (int)RaceStats_FieldIndex.Luck,
+                            errorMask: errorMask);
                     }
                 }
             }

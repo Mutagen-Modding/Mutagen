@@ -432,7 +432,7 @@ namespace Mutagen.Bethesda.Oblivion
                         var tryGet = LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
                             root: root,
                             doMasks: errorMask != null,
-                            mask: out subMask);
+                            errorMask: out subMask);
                         item._Model.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
@@ -452,7 +452,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 return LoquiXmlTranslation<BodyPart, BodyPart_ErrorMask>.Instance.Parse(
                                     root: r,
                                     doMasks: listDoMasks,
-                                    mask: out listSubMask);
+                                    errorMask: out listSubMask);
                             }
                             );
                         item._BodyParts.SetIfSucceeded(listTryGet);
@@ -1547,43 +1547,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.Model_Property.HasBeenSet)
                     {
-                        MaskItem<Exception, Model_ErrorMask> subMask;
-                        LoquiXmlTranslation<IModelGetter, Model_ErrorMask>.Instance.Write(
+                        LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Write(
                             writer: writer,
-                            item: item.Model,
+                            item: item.Model_Property,
                             name: nameof(item.Model),
-                            doMasks: errorMask != null,
-                            mask: out Model_ErrorMask loquiMask);
-                        subMask = loquiMask == null ? null : new MaskItem<Exception, Model_ErrorMask>(null, loquiMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)BodyData_FieldIndex.Model,
-                            subMask);
+                            fieldIndex: (int)BodyData_FieldIndex.Model,
+                            errorMask: errorMask);
                     }
                     if (item.BodyParts.HasBeenSet)
                     {
-                        MaskItem<Exception, IEnumerable<MaskItem<Exception, BodyPart_ErrorMask>>> subMask;
                         ListXmlTranslation<BodyPart, MaskItem<Exception, BodyPart_ErrorMask>>.Instance.Write(
                             writer: writer,
                             name: nameof(item.BodyParts),
                             item: item.BodyParts,
-                            doMasks: errorMask != null,
-                            maskObj: out subMask,
+                            fieldIndex: (int)BodyData_FieldIndex.BodyParts,
+                            errorMask: errorMask,
                             transl: (BodyPart subItem, bool listDoMasks, out MaskItem<Exception, BodyPart_ErrorMask> listSubMask) =>
                             {
-                                LoquiXmlTranslation<IBodyPartGetter, BodyPart_ErrorMask>.Instance.Write(
+                                LoquiXmlTranslation<BodyPart, BodyPart_ErrorMask>.Instance.Write(
                                     writer: writer,
                                     item: subItem,
                                     name: "Item",
                                     doMasks: errorMask != null,
-                                    mask: out BodyPart_ErrorMask loquiMask);
-                                listSubMask = loquiMask == null ? null : new MaskItem<Exception, BodyPart_ErrorMask>(null, loquiMask);
+                                    errorMask: out listSubMask);
                             }
                             );
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)BodyData_FieldIndex.BodyParts,
-                            subMask);
                     }
                 }
             }

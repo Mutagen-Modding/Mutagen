@@ -434,7 +434,7 @@ namespace Mutagen.Bethesda.Oblivion
                         var tryGet = LoquiXmlTranslation<LocalVariableData, LocalVariableData_ErrorMask>.Instance.Parse(
                             root: root,
                             doMasks: errorMask != null,
-                            mask: out subMask);
+                            errorMask: out subMask);
                         item._Data.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
@@ -1485,32 +1485,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.Data_Property.HasBeenSet)
                     {
-                        MaskItem<Exception, LocalVariableData_ErrorMask> subMask;
-                        LoquiXmlTranslation<ILocalVariableDataGetter, LocalVariableData_ErrorMask>.Instance.Write(
+                        LoquiXmlTranslation<LocalVariableData, LocalVariableData_ErrorMask>.Instance.Write(
                             writer: writer,
-                            item: item.Data,
+                            item: item.Data_Property,
                             name: nameof(item.Data),
-                            doMasks: errorMask != null,
-                            mask: out LocalVariableData_ErrorMask loquiMask);
-                        subMask = loquiMask == null ? null : new MaskItem<Exception, LocalVariableData_ErrorMask>(null, loquiMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)LocalVariable_FieldIndex.Data,
-                            subMask);
+                            fieldIndex: (int)LocalVariable_FieldIndex.Data,
+                            errorMask: errorMask);
                     }
                     if (item.Name_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         StringXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.Name),
-                            item.Name,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)LocalVariable_FieldIndex.Name,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Name),
+                            item: item.Name_Property,
+                            fieldIndex: (int)LocalVariable_FieldIndex.Name,
+                            errorMask: errorMask);
                     }
                 }
             }

@@ -1107,17 +1107,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.RawFloat_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         FloatXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.RawFloat),
-                            item.RawFloat,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Global_FieldIndex.RawFloat,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.RawFloat),
+                            item: item.RawFloat_Property,
+                            fieldIndex: (int)Global_FieldIndex.RawFloat,
+                            errorMask: errorMask);
                     }
                 }
             }

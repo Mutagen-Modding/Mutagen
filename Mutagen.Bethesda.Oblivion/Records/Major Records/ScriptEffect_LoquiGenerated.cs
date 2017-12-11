@@ -1757,73 +1757,48 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.Script_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         FormIDXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.Script),
-                            item.Script,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)ScriptEffect_FieldIndex.Script,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Script),
+                            item: item.Script_Property,
+                            fieldIndex: (int)ScriptEffect_FieldIndex.Script,
+                            errorMask: errorMask);
                     }
                     if (item.MagicSchool_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         EnumXmlTranslation<MagicSchool>.Instance.Write(
-                            writer,
-                            nameof(item.MagicSchool),
-                            item.MagicSchool,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)ScriptEffect_FieldIndex.MagicSchool,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.MagicSchool),
+                            item: item.MagicSchool_Property,
+                            fieldIndex: (int)ScriptEffect_FieldIndex.MagicSchool,
+                            errorMask: errorMask);
                     }
                     if (item.VisualEffect_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         FormIDXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.VisualEffect),
-                            item.VisualEffect,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)ScriptEffect_FieldIndex.VisualEffect,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.VisualEffect),
+                            item: item.VisualEffect_Property,
+                            fieldIndex: (int)ScriptEffect_FieldIndex.VisualEffect,
+                            errorMask: errorMask);
                     }
                     if (item.Flags_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         EnumXmlTranslation<ScriptEffect.Flag>.Instance.Write(
-                            writer,
-                            nameof(item.Flags),
-                            item.Flags,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)ScriptEffect_FieldIndex.Flags,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Flags),
+                            item: item.Flags_Property,
+                            fieldIndex: (int)ScriptEffect_FieldIndex.Flags,
+                            errorMask: errorMask);
                     }
                     if (item.Name_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         StringXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.Name),
-                            item.Name,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)ScriptEffect_FieldIndex.Name,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Name),
+                            item: item.Name_Property,
+                            fieldIndex: (int)ScriptEffect_FieldIndex.Name,
+                            errorMask: errorMask);
                     }
                 }
             }

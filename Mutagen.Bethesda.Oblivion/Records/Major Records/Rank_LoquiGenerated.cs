@@ -1662,59 +1662,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.RankNumber_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         Int32XmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.RankNumber),
-                            item.RankNumber,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Rank_FieldIndex.RankNumber,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.RankNumber),
+                            item: item.RankNumber_Property,
+                            fieldIndex: (int)Rank_FieldIndex.RankNumber,
+                            errorMask: errorMask);
                     }
                     if (item.MaleName_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         StringXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.MaleName),
-                            item.MaleName,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Rank_FieldIndex.MaleName,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.MaleName),
+                            item: item.MaleName_Property,
+                            fieldIndex: (int)Rank_FieldIndex.MaleName,
+                            errorMask: errorMask);
                     }
                     if (item.FemaleName_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         StringXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.FemaleName),
-                            item.FemaleName,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Rank_FieldIndex.FemaleName,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.FemaleName),
+                            item: item.FemaleName_Property,
+                            fieldIndex: (int)Rank_FieldIndex.FemaleName,
+                            errorMask: errorMask);
                     }
                     if (item.Insignia_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         FilePathXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.Insignia),
-                            item.Insignia,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Rank_FieldIndex.Insignia,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Insignia),
+                            item: item.Insignia_Property,
+                            fieldIndex: (int)Rank_FieldIndex.Insignia,
+                            errorMask: errorMask);
                     }
                 }
             }

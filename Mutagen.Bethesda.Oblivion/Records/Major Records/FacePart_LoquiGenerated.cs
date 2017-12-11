@@ -469,7 +469,7 @@ namespace Mutagen.Bethesda.Oblivion
                         var tryGet = LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
                             root: root,
                             doMasks: errorMask != null,
-                            mask: out subMask);
+                            errorMask: out subMask);
                         item._Model.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
@@ -1592,46 +1592,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.Index_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         EnumXmlTranslation<Race.FaceIndex>.Instance.Write(
-                            writer,
-                            nameof(item.Index),
-                            item.Index,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)FacePart_FieldIndex.Index,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Index),
+                            item: item.Index_Property,
+                            fieldIndex: (int)FacePart_FieldIndex.Index,
+                            errorMask: errorMask);
                     }
                     if (item.Model_Property.HasBeenSet)
                     {
-                        MaskItem<Exception, Model_ErrorMask> subMask;
-                        LoquiXmlTranslation<IModelGetter, Model_ErrorMask>.Instance.Write(
+                        LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Write(
                             writer: writer,
-                            item: item.Model,
+                            item: item.Model_Property,
                             name: nameof(item.Model),
-                            doMasks: errorMask != null,
-                            mask: out Model_ErrorMask loquiMask);
-                        subMask = loquiMask == null ? null : new MaskItem<Exception, Model_ErrorMask>(null, loquiMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)FacePart_FieldIndex.Model,
-                            subMask);
+                            fieldIndex: (int)FacePart_FieldIndex.Model,
+                            errorMask: errorMask);
                     }
                     if (item.Icon_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         FilePathXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.Icon),
-                            item.Icon,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)FacePart_FieldIndex.Icon,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Icon),
+                            item: item.Icon_Property,
+                            fieldIndex: (int)FacePart_FieldIndex.Icon,
+                            errorMask: errorMask);
                     }
                 }
             }

@@ -1452,31 +1452,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.Index_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         EnumXmlTranslation<Race.BodyIndex>.Instance.Write(
-                            writer,
-                            nameof(item.Index),
-                            item.Index,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)BodyPart_FieldIndex.Index,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Index),
+                            item: item.Index_Property,
+                            fieldIndex: (int)BodyPart_FieldIndex.Index,
+                            errorMask: errorMask);
                     }
                     if (item.Icon_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         FilePathXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.Icon),
-                            item.Icon,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)BodyPart_FieldIndex.Icon,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Icon),
+                            item: item.Icon_Property,
+                            fieldIndex: (int)BodyPart_FieldIndex.Icon,
+                            errorMask: errorMask);
                     }
                 }
             }

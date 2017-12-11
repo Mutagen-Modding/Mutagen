@@ -580,7 +580,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 return LoquiXmlTranslation<EnchantmentEffect, EnchantmentEffect_ErrorMask>.Instance.Parse(
                                     root: r,
                                     doMasks: listDoMasks,
-                                    mask: out listSubMask);
+                                    errorMask: out listSubMask);
                             }
                             );
                         item._Effects.SetIfSucceeded(listTryGet);
@@ -1883,84 +1883,58 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.Type_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         EnumXmlTranslation<Enchantment.EnchantmentType>.Instance.Write(
-                            writer,
-                            nameof(item.Type),
-                            item.Type,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Enchantment_FieldIndex.Type,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Type),
+                            item: item.Type_Property,
+                            fieldIndex: (int)Enchantment_FieldIndex.Type,
+                            errorMask: errorMask);
                     }
                     if (item.ChargeAmount_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         UInt32XmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.ChargeAmount),
-                            item.ChargeAmount,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Enchantment_FieldIndex.ChargeAmount,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.ChargeAmount),
+                            item: item.ChargeAmount_Property,
+                            fieldIndex: (int)Enchantment_FieldIndex.ChargeAmount,
+                            errorMask: errorMask);
                     }
                     if (item.EnchantCost_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         UInt32XmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.EnchantCost),
-                            item.EnchantCost,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Enchantment_FieldIndex.EnchantCost,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.EnchantCost),
+                            item: item.EnchantCost_Property,
+                            fieldIndex: (int)Enchantment_FieldIndex.EnchantCost,
+                            errorMask: errorMask);
                     }
                     if (item.Flags_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         EnumXmlTranslation<Enchantment.Flag>.Instance.Write(
-                            writer,
-                            nameof(item.Flags),
-                            item.Flags,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Enchantment_FieldIndex.Flags,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Flags),
+                            item: item.Flags_Property,
+                            fieldIndex: (int)Enchantment_FieldIndex.Flags,
+                            errorMask: errorMask);
                     }
                     if (item.Effects.HasBeenSet)
                     {
-                        MaskItem<Exception, IEnumerable<MaskItem<Exception, EnchantmentEffect_ErrorMask>>> subMask;
                         ListXmlTranslation<EnchantmentEffect, MaskItem<Exception, EnchantmentEffect_ErrorMask>>.Instance.Write(
                             writer: writer,
                             name: nameof(item.Effects),
                             item: item.Effects,
-                            doMasks: errorMask != null,
-                            maskObj: out subMask,
+                            fieldIndex: (int)Enchantment_FieldIndex.Effects,
+                            errorMask: errorMask,
                             transl: (EnchantmentEffect subItem, bool listDoMasks, out MaskItem<Exception, EnchantmentEffect_ErrorMask> listSubMask) =>
                             {
-                                LoquiXmlTranslation<IEnchantmentEffectGetter, EnchantmentEffect_ErrorMask>.Instance.Write(
+                                LoquiXmlTranslation<EnchantmentEffect, EnchantmentEffect_ErrorMask>.Instance.Write(
                                     writer: writer,
                                     item: subItem,
                                     name: "Item",
                                     doMasks: errorMask != null,
-                                    mask: out EnchantmentEffect_ErrorMask loquiMask);
-                                listSubMask = loquiMask == null ? null : new MaskItem<Exception, EnchantmentEffect_ErrorMask>(null, loquiMask);
+                                    errorMask: out listSubMask);
                             }
                             );
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Enchantment_FieldIndex.Effects,
-                            subMask);
                     }
                 }
             }

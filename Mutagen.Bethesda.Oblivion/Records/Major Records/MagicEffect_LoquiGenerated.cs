@@ -539,7 +539,7 @@ namespace Mutagen.Bethesda.Oblivion
                         var tryGet = LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
                             root: root,
                             doMasks: errorMask != null,
-                            mask: out subMask);
+                            errorMask: out subMask);
                         item._Model.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
@@ -553,7 +553,7 @@ namespace Mutagen.Bethesda.Oblivion
                         var tryGet = LoquiXmlTranslation<MagicData, MagicData_ErrorMask>.Instance.Parse(
                             root: root,
                             doMasks: errorMask != null,
-                            mask: out subMask);
+                            errorMask: out subMask);
                         item._Data.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
@@ -1938,85 +1938,58 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.Description_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         StringXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.Description),
-                            item.Description,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicEffect_FieldIndex.Description,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Description),
+                            item: item.Description_Property,
+                            fieldIndex: (int)MagicEffect_FieldIndex.Description,
+                            errorMask: errorMask);
                     }
                     if (item.Icon_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         FilePathXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.Icon),
-                            item.Icon,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicEffect_FieldIndex.Icon,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Icon),
+                            item: item.Icon_Property,
+                            fieldIndex: (int)MagicEffect_FieldIndex.Icon,
+                            errorMask: errorMask);
                     }
                     if (item.Model_Property.HasBeenSet)
                     {
-                        MaskItem<Exception, Model_ErrorMask> subMask;
-                        LoquiXmlTranslation<IModelGetter, Model_ErrorMask>.Instance.Write(
+                        LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Write(
                             writer: writer,
-                            item: item.Model,
+                            item: item.Model_Property,
                             name: nameof(item.Model),
-                            doMasks: errorMask != null,
-                            mask: out Model_ErrorMask loquiMask);
-                        subMask = loquiMask == null ? null : new MaskItem<Exception, Model_ErrorMask>(null, loquiMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicEffect_FieldIndex.Model,
-                            subMask);
+                            fieldIndex: (int)MagicEffect_FieldIndex.Model,
+                            errorMask: errorMask);
                     }
                     if (item.Data_Property.HasBeenSet)
                     {
-                        MaskItem<Exception, MagicData_ErrorMask> subMask;
-                        LoquiXmlTranslation<IMagicDataGetter, MagicData_ErrorMask>.Instance.Write(
+                        LoquiXmlTranslation<MagicData, MagicData_ErrorMask>.Instance.Write(
                             writer: writer,
-                            item: item.Data,
+                            item: item.Data_Property,
                             name: nameof(item.Data),
-                            doMasks: errorMask != null,
-                            mask: out MagicData_ErrorMask loquiMask);
-                        subMask = loquiMask == null ? null : new MaskItem<Exception, MagicData_ErrorMask>(null, loquiMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicEffect_FieldIndex.Data,
-                            subMask);
+                            fieldIndex: (int)MagicEffect_FieldIndex.Data,
+                            errorMask: errorMask);
                     }
                     if (item.CounterEffects.HasBeenSet)
                     {
-                        MaskItem<Exception, IEnumerable<Exception>> subMask;
                         ListXmlTranslation<FormID, Exception>.Instance.Write(
                             writer: writer,
                             name: nameof(item.CounterEffects),
                             item: item.CounterEffects,
-                            doMasks: errorMask != null,
-                            maskObj: out subMask,
+                            fieldIndex: (int)MagicEffect_FieldIndex.CounterEffects,
+                            errorMask: errorMask,
                             transl: (FormID subItem, bool listDoMasks, out Exception listSubMask) =>
                             {
                                 FormIDXmlTranslation.Instance.Write(
-                                    writer,
-                                    "Item",
-                                    subItem,
+                                    writer: writer,
+                                    name: "Item",
+                                    item: subItem,
                                     doMasks: errorMask != null,
                                     errorMask: out listSubMask);
                             }
                             );
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicEffect_FieldIndex.CounterEffects,
-                            subMask);
                     }
                 }
             }

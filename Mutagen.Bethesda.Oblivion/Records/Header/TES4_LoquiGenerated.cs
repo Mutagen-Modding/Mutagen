@@ -558,7 +558,7 @@ namespace Mutagen.Bethesda.Oblivion
                         var tryGet = LoquiXmlTranslation<Header, Header_ErrorMask>.Instance.Parse(
                             root: root,
                             doMasks: errorMask != null,
-                            mask: out subMask);
+                            errorMask: out subMask);
                         item._Header.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
@@ -634,7 +634,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 return LoquiXmlTranslation<MasterReference, MasterReference_ErrorMask>.Instance.Parse(
                                     root: r,
                                     doMasks: listDoMasks,
-                                    mask: out listSubMask);
+                                    errorMask: out listSubMask);
                             }
                             );
                         item._MasterReferences.SetIfSucceeded(listTryGet);
@@ -2088,113 +2088,76 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.Fluff_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         ByteArrayXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.Fluff),
-                            item.Fluff,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)TES4_FieldIndex.Fluff,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Fluff),
+                            item: item.Fluff_Property,
+                            fieldIndex: (int)TES4_FieldIndex.Fluff,
+                            errorMask: errorMask);
                     }
                     if (item.Header_Property.HasBeenSet)
                     {
-                        MaskItem<Exception, Header_ErrorMask> subMask;
-                        LoquiXmlTranslation<IHeaderGetter, Header_ErrorMask>.Instance.Write(
+                        LoquiXmlTranslation<Header, Header_ErrorMask>.Instance.Write(
                             writer: writer,
-                            item: item.Header,
+                            item: item.Header_Property,
                             name: nameof(item.Header),
-                            doMasks: errorMask != null,
-                            mask: out Header_ErrorMask loquiMask);
-                        subMask = loquiMask == null ? null : new MaskItem<Exception, Header_ErrorMask>(null, loquiMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)TES4_FieldIndex.Header,
-                            subMask);
+                            fieldIndex: (int)TES4_FieldIndex.Header,
+                            errorMask: errorMask);
                     }
                     if (item.TypeOffsets_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         ByteArrayXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.TypeOffsets),
-                            item.TypeOffsets,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)TES4_FieldIndex.TypeOffsets,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.TypeOffsets),
+                            item: item.TypeOffsets_Property,
+                            fieldIndex: (int)TES4_FieldIndex.TypeOffsets,
+                            errorMask: errorMask);
                     }
                     if (item.Deleted_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         ByteArrayXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.Deleted),
-                            item.Deleted,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)TES4_FieldIndex.Deleted,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Deleted),
+                            item: item.Deleted_Property,
+                            fieldIndex: (int)TES4_FieldIndex.Deleted,
+                            errorMask: errorMask);
                     }
                     if (item.Author_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         StringXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.Author),
-                            item.Author,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)TES4_FieldIndex.Author,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Author),
+                            item: item.Author_Property,
+                            fieldIndex: (int)TES4_FieldIndex.Author,
+                            errorMask: errorMask);
                     }
                     if (item.Description_Property.HasBeenSet)
                     {
-                        Exception subMask;
                         StringXmlTranslation.Instance.Write(
-                            writer,
-                            nameof(item.Description),
-                            item.Description,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)TES4_FieldIndex.Description,
-                            subMask);
+                            writer: writer,
+                            name: nameof(item.Description),
+                            item: item.Description_Property,
+                            fieldIndex: (int)TES4_FieldIndex.Description,
+                            errorMask: errorMask);
                     }
                     if (item.MasterReferences.HasBeenSet)
                     {
-                        MaskItem<Exception, IEnumerable<MaskItem<Exception, MasterReference_ErrorMask>>> subMask;
                         ListXmlTranslation<MasterReference, MaskItem<Exception, MasterReference_ErrorMask>>.Instance.Write(
                             writer: writer,
                             name: nameof(item.MasterReferences),
                             item: item.MasterReferences,
-                            doMasks: errorMask != null,
-                            maskObj: out subMask,
+                            fieldIndex: (int)TES4_FieldIndex.MasterReferences,
+                            errorMask: errorMask,
                             transl: (MasterReference subItem, bool listDoMasks, out MaskItem<Exception, MasterReference_ErrorMask> listSubMask) =>
                             {
-                                LoquiXmlTranslation<IMasterReferenceGetter, MasterReference_ErrorMask>.Instance.Write(
+                                LoquiXmlTranslation<MasterReference, MasterReference_ErrorMask>.Instance.Write(
                                     writer: writer,
                                     item: subItem,
                                     name: "Item",
                                     doMasks: errorMask != null,
-                                    mask: out MasterReference_ErrorMask loquiMask);
-                                listSubMask = loquiMask == null ? null : new MaskItem<Exception, MasterReference_ErrorMask>(null, loquiMask);
+                                    errorMask: out listSubMask);
                             }
                             );
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)TES4_FieldIndex.MasterReferences,
-                            subMask);
                     }
                 }
             }
