@@ -4,7 +4,7 @@
     <Fields>
       <RefList name="Relations" refName="Relation" />
       <Enum name="Flags" recordType="DATA" enumName="Faction.FactionFlag" byteLength="1" />
-      <Float name="CrimeGoldMultiplier" recordType="CNAM" />
+      <Float name="CrimeGoldMultiplier" recordType="CNAM" hasBeenSet="True" />
       <RefList name="Ranks" refName="Rank" />
     </Fields>
   </Object>

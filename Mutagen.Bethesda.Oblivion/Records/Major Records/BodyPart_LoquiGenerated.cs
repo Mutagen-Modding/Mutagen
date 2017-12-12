@@ -37,26 +37,26 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Index
-        protected readonly INotifyingSetItem<Race.BodyIndex> _Index = NotifyingSetItem.Factory<Race.BodyIndex>(markAsSet: false);
-        public INotifyingSetItem<Race.BodyIndex> Index_Property => _Index;
+        protected readonly INotifyingItem<Race.BodyIndex> _Index = NotifyingItem.Factory<Race.BodyIndex>();
+        public INotifyingItem<Race.BodyIndex> Index_Property => _Index;
         public Race.BodyIndex Index
         {
             get => this._Index.Item;
             set => this._Index.Set(value);
         }
-        INotifyingSetItem<Race.BodyIndex> IBodyPart.Index_Property => this.Index_Property;
-        INotifyingSetItemGetter<Race.BodyIndex> IBodyPartGetter.Index_Property => this.Index_Property;
+        INotifyingItem<Race.BodyIndex> IBodyPart.Index_Property => this.Index_Property;
+        INotifyingItemGetter<Race.BodyIndex> IBodyPartGetter.Index_Property => this.Index_Property;
         #endregion
         #region Icon
-        protected readonly INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
-        public INotifyingSetItem<FilePath> Icon_Property => _Icon;
+        protected readonly INotifyingItem<FilePath> _Icon = NotifyingItem.Factory<FilePath>();
+        public INotifyingItem<FilePath> Icon_Property => _Icon;
         public FilePath Icon
         {
             get => this._Icon.Item;
             set => this._Icon.Set(value);
         }
-        INotifyingSetItem<FilePath> IBodyPart.Icon_Property => this.Icon_Property;
-        INotifyingSetItemGetter<FilePath> IBodyPartGetter.Icon_Property => this.Icon_Property;
+        INotifyingItem<FilePath> IBodyPart.Icon_Property => this.Icon_Property;
+        INotifyingItemGetter<FilePath> IBodyPartGetter.Icon_Property => this.Icon_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -117,30 +117,16 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(BodyPart rhs)
         {
             if (rhs == null) return false;
-            if (Index_Property.HasBeenSet != rhs.Index_Property.HasBeenSet) return false;
-            if (Index_Property.HasBeenSet)
-            {
-                if (Index != rhs.Index) return false;
-            }
-            if (Icon_Property.HasBeenSet != rhs.Icon_Property.HasBeenSet) return false;
-            if (Icon_Property.HasBeenSet)
-            {
-                if (!object.Equals(Icon, rhs.Icon)) return false;
-            }
+            if (Index != rhs.Index) return false;
+            if (!object.Equals(Icon, rhs.Icon)) return false;
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            if (Index_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Index).CombineHashCode(ret);
-            }
-            if (Icon_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Icon).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(Index).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Icon).CombineHashCode(ret);
             return ret;
         }
 
@@ -939,10 +925,10 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IBodyPart : IBodyPartGetter, ILoquiClass<IBodyPart, IBodyPartGetter>, ILoquiClass<BodyPart, IBodyPartGetter>
     {
         new Race.BodyIndex Index { get; set; }
-        new INotifyingSetItem<Race.BodyIndex> Index_Property { get; }
+        new INotifyingItem<Race.BodyIndex> Index_Property { get; }
 
         new FilePath Icon { get; set; }
-        new INotifyingSetItem<FilePath> Icon_Property { get; }
+        new INotifyingItem<FilePath> Icon_Property { get; }
 
     }
 
@@ -950,12 +936,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Index
         Race.BodyIndex Index { get; }
-        INotifyingSetItemGetter<Race.BodyIndex> Index_Property { get; }
+        INotifyingItemGetter<Race.BodyIndex> Index_Property { get; }
 
         #endregion
         #region Icon
         FilePath Icon { get; }
-        INotifyingSetItemGetter<FilePath> Icon_Property { get; }
+        INotifyingItemGetter<FilePath> Icon_Property { get; }
 
         #endregion
 
@@ -1234,9 +1220,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Index_Property.SetToWithDefault(
-                        rhs: rhs.Index_Property,
-                        def: def?.Index_Property,
+                    item.Index_Property.Set(
+                        value: rhs.Index,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1249,9 +1234,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Icon_Property.SetToWithDefault(
-                        rhs: rhs.Icon_Property,
-                        def: def?.Icon_Property,
+                    item.Icon_Property.Set(
+                        value: rhs.Icon,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1274,11 +1258,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case BodyPart_FieldIndex.Index:
-                    obj.Index_Property.HasBeenSet = on;
-                    break;
                 case BodyPart_FieldIndex.Icon:
-                    obj.Icon_Property.HasBeenSet = on;
-                    break;
+                    if (on) break;
+                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1293,10 +1275,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case BodyPart_FieldIndex.Index:
-                    obj.Index_Property.Unset(cmds);
+                    obj.Index = default(Race.BodyIndex);
                     break;
                 case BodyPart_FieldIndex.Icon:
-                    obj.Icon_Property.Unset(cmds);
+                    obj.Icon = default(FilePath);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1311,9 +1293,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case BodyPart_FieldIndex.Index:
-                    return obj.Index_Property.HasBeenSet;
                 case BodyPart_FieldIndex.Icon:
-                    return obj.Icon_Property.HasBeenSet;
+                    return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1339,8 +1320,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IBodyPart item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.Index_Property.Unset(cmds.ToUnsetParams());
-            item.Icon_Property.Unset(cmds.ToUnsetParams());
+            item.Index = default(Race.BodyIndex);
+            item.Icon = default(FilePath);
         }
 
         public static BodyPart_Mask<bool> GetEqualsMask(
@@ -1358,8 +1339,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             BodyPart_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Index = item.Index_Property.Equals(rhs.Index_Property, (l, r) => l == r);
-            ret.Icon = item.Icon_Property.Equals(rhs.Icon_Property, (l, r) => object.Equals(l, r));
+            ret.Index = item.Index == rhs.Index;
+            ret.Icon = object.Equals(item.Icon, rhs.Icon);
         }
 
         public static string ToString(
@@ -1405,16 +1386,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IBodyPartGetter item,
             BodyPart_Mask<bool?> checkMask)
         {
-            if (checkMask.Index.HasValue && checkMask.Index.Value != item.Index_Property.HasBeenSet) return false;
-            if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_Property.HasBeenSet) return false;
             return true;
         }
 
         public static BodyPart_Mask<bool> GetHasBeenSetMask(IBodyPartGetter item)
         {
             var ret = new BodyPart_Mask<bool>();
-            ret.Index = item.Index_Property.HasBeenSet;
-            ret.Icon = item.Icon_Property.HasBeenSet;
+            ret.Index = true;
+            ret.Icon = true;
             return ret;
         }
 
@@ -1450,24 +1429,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.BodyPart");
                     }
-                    if (item.Index_Property.HasBeenSet)
-                    {
-                        EnumXmlTranslation<Race.BodyIndex>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Index),
-                            item: item.Index_Property,
-                            fieldIndex: (int)BodyPart_FieldIndex.Index,
-                            errorMask: errorMask);
-                    }
-                    if (item.Icon_Property.HasBeenSet)
-                    {
-                        FilePathXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Icon),
-                            item: item.Icon_Property,
-                            fieldIndex: (int)BodyPart_FieldIndex.Icon,
-                            errorMask: errorMask);
-                    }
+                    EnumXmlTranslation<Race.BodyIndex>.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Index),
+                        item: item.Index_Property,
+                        fieldIndex: (int)BodyPart_FieldIndex.Index,
+                        errorMask: errorMask);
+                    FilePathXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Icon),
+                        item: item.Icon_Property,
+                        fieldIndex: (int)BodyPart_FieldIndex.Icon,
+                        errorMask: errorMask);
                 }
             }
             catch (Exception ex)

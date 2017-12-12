@@ -37,26 +37,26 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Skill
-        protected readonly INotifyingSetItem<ActorValue> _Skill = NotifyingSetItem.Factory<ActorValue>(markAsSet: false);
-        public INotifyingSetItem<ActorValue> Skill_Property => _Skill;
+        protected readonly INotifyingItem<ActorValue> _Skill = NotifyingItem.Factory<ActorValue>();
+        public INotifyingItem<ActorValue> Skill_Property => _Skill;
         public ActorValue Skill
         {
             get => this._Skill.Item;
             set => this._Skill.Set(value);
         }
-        INotifyingSetItem<ActorValue> ISkillBoost.Skill_Property => this.Skill_Property;
-        INotifyingSetItemGetter<ActorValue> ISkillBoostGetter.Skill_Property => this.Skill_Property;
+        INotifyingItem<ActorValue> ISkillBoost.Skill_Property => this.Skill_Property;
+        INotifyingItemGetter<ActorValue> ISkillBoostGetter.Skill_Property => this.Skill_Property;
         #endregion
         #region Boost
-        protected readonly INotifyingSetItem<SByte> _Boost = NotifyingSetItem.Factory<SByte>(markAsSet: false);
-        public INotifyingSetItem<SByte> Boost_Property => _Boost;
+        protected readonly INotifyingItem<SByte> _Boost = NotifyingItem.Factory<SByte>();
+        public INotifyingItem<SByte> Boost_Property => _Boost;
         public SByte Boost
         {
             get => this._Boost.Item;
             set => this._Boost.Set(value);
         }
-        INotifyingSetItem<SByte> ISkillBoost.Boost_Property => this.Boost_Property;
-        INotifyingSetItemGetter<SByte> ISkillBoostGetter.Boost_Property => this.Boost_Property;
+        INotifyingItem<SByte> ISkillBoost.Boost_Property => this.Boost_Property;
+        INotifyingItemGetter<SByte> ISkillBoostGetter.Boost_Property => this.Boost_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -117,30 +117,16 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(SkillBoost rhs)
         {
             if (rhs == null) return false;
-            if (Skill_Property.HasBeenSet != rhs.Skill_Property.HasBeenSet) return false;
-            if (Skill_Property.HasBeenSet)
-            {
-                if (Skill != rhs.Skill) return false;
-            }
-            if (Boost_Property.HasBeenSet != rhs.Boost_Property.HasBeenSet) return false;
-            if (Boost_Property.HasBeenSet)
-            {
-                if (Boost != rhs.Boost) return false;
-            }
+            if (Skill != rhs.Skill) return false;
+            if (Boost != rhs.Boost) return false;
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            if (Skill_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Skill).CombineHashCode(ret);
-            }
-            if (Boost_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Boost).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(Skill).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Boost).CombineHashCode(ret);
             return ret;
         }
 
@@ -906,10 +892,10 @@ namespace Mutagen.Bethesda.Oblivion
     public interface ISkillBoost : ISkillBoostGetter, ILoquiClass<ISkillBoost, ISkillBoostGetter>, ILoquiClass<SkillBoost, ISkillBoostGetter>
     {
         new ActorValue Skill { get; set; }
-        new INotifyingSetItem<ActorValue> Skill_Property { get; }
+        new INotifyingItem<ActorValue> Skill_Property { get; }
 
         new SByte Boost { get; set; }
-        new INotifyingSetItem<SByte> Boost_Property { get; }
+        new INotifyingItem<SByte> Boost_Property { get; }
 
     }
 
@@ -917,12 +903,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Skill
         ActorValue Skill { get; }
-        INotifyingSetItemGetter<ActorValue> Skill_Property { get; }
+        INotifyingItemGetter<ActorValue> Skill_Property { get; }
 
         #endregion
         #region Boost
         SByte Boost { get; }
-        INotifyingSetItemGetter<SByte> Boost_Property { get; }
+        INotifyingItemGetter<SByte> Boost_Property { get; }
 
         #endregion
 
@@ -1198,9 +1184,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Skill_Property.SetToWithDefault(
-                        rhs: rhs.Skill_Property,
-                        def: def?.Skill_Property,
+                    item.Skill_Property.Set(
+                        value: rhs.Skill,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1213,9 +1198,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Boost_Property.SetToWithDefault(
-                        rhs: rhs.Boost_Property,
-                        def: def?.Boost_Property,
+                    item.Boost_Property.Set(
+                        value: rhs.Boost,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1238,11 +1222,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case SkillBoost_FieldIndex.Skill:
-                    obj.Skill_Property.HasBeenSet = on;
-                    break;
                 case SkillBoost_FieldIndex.Boost:
-                    obj.Boost_Property.HasBeenSet = on;
-                    break;
+                    if (on) break;
+                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1257,10 +1239,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case SkillBoost_FieldIndex.Skill:
-                    obj.Skill_Property.Unset(cmds);
+                    obj.Skill = default(ActorValue);
                     break;
                 case SkillBoost_FieldIndex.Boost:
-                    obj.Boost_Property.Unset(cmds);
+                    obj.Boost = default(SByte);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1275,9 +1257,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case SkillBoost_FieldIndex.Skill:
-                    return obj.Skill_Property.HasBeenSet;
                 case SkillBoost_FieldIndex.Boost:
-                    return obj.Boost_Property.HasBeenSet;
+                    return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1303,8 +1284,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISkillBoost item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.Skill_Property.Unset(cmds.ToUnsetParams());
-            item.Boost_Property.Unset(cmds.ToUnsetParams());
+            item.Skill = default(ActorValue);
+            item.Boost = default(SByte);
         }
 
         public static SkillBoost_Mask<bool> GetEqualsMask(
@@ -1322,8 +1303,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             SkillBoost_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Skill = item.Skill_Property.Equals(rhs.Skill_Property, (l, r) => l == r);
-            ret.Boost = item.Boost_Property.Equals(rhs.Boost_Property, (l, r) => l == r);
+            ret.Skill = item.Skill == rhs.Skill;
+            ret.Boost = item.Boost == rhs.Boost;
         }
 
         public static string ToString(
@@ -1369,16 +1350,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this ISkillBoostGetter item,
             SkillBoost_Mask<bool?> checkMask)
         {
-            if (checkMask.Skill.HasValue && checkMask.Skill.Value != item.Skill_Property.HasBeenSet) return false;
-            if (checkMask.Boost.HasValue && checkMask.Boost.Value != item.Boost_Property.HasBeenSet) return false;
             return true;
         }
 
         public static SkillBoost_Mask<bool> GetHasBeenSetMask(ISkillBoostGetter item)
         {
             var ret = new SkillBoost_Mask<bool>();
-            ret.Skill = item.Skill_Property.HasBeenSet;
-            ret.Boost = item.Boost_Property.HasBeenSet;
+            ret.Skill = true;
+            ret.Boost = true;
             return ret;
         }
 
@@ -1414,24 +1393,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.SkillBoost");
                     }
-                    if (item.Skill_Property.HasBeenSet)
-                    {
-                        EnumXmlTranslation<ActorValue>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Skill),
-                            item: item.Skill_Property,
-                            fieldIndex: (int)SkillBoost_FieldIndex.Skill,
-                            errorMask: errorMask);
-                    }
-                    if (item.Boost_Property.HasBeenSet)
-                    {
-                        Int8XmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Boost),
-                            item: item.Boost_Property,
-                            fieldIndex: (int)SkillBoost_FieldIndex.Boost,
-                            errorMask: errorMask);
-                    }
+                    EnumXmlTranslation<ActorValue>.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Skill),
+                        item: item.Skill_Property,
+                        fieldIndex: (int)SkillBoost_FieldIndex.Skill,
+                        errorMask: errorMask);
+                    Int8XmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Boost),
+                        item: item.Boost_Property,
+                        fieldIndex: (int)SkillBoost_FieldIndex.Boost,
+                        errorMask: errorMask);
                 }
             }
             catch (Exception ex)

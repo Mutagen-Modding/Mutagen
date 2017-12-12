@@ -178,9 +178,6 @@
     <Compile Include="Records\Major Records\LocalVariable_LoquiGenerated.cs">
       <DependentUpon>Script.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\MagicData_LoquiGenerated.cs">
-      <DependentUpon>MagicEffect.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\MagicEffect.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>

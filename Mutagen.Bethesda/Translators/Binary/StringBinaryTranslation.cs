@@ -153,6 +153,26 @@ namespace Mutagen.Bethesda.Binary
                 nullTerminate: nullTerminate);
         }
 
+        public void Write<M>(
+            MutagenWriter writer,
+            IHasItemGetter<string> item,
+            RecordType header,
+            int fieldIndex,
+            bool nullable,
+            Func<M> errorMask,
+            bool nullTerminate = true)
+            where M : IErrorMask
+        {
+            this.Write(
+                writer,
+                item.Item,
+                header,
+                fieldIndex,
+                nullable,
+                errorMask,
+                nullTerminate: nullTerminate);
+        }
+
         void IBinaryTranslation<string, Exception>.Write(MutagenWriter writer, string item, ContentLength length, bool doMasks, out Exception maskObj)
         {
             if (length != item.Length)

@@ -37,15 +37,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Data
-        protected readonly INotifyingSetItem<Int32> _Data = NotifyingSetItem.Factory<Int32>(markAsSet: false);
-        public INotifyingSetItem<Int32> Data_Property => _Data;
+        protected readonly INotifyingItem<Int32> _Data = NotifyingItem.Factory<Int32>();
+        public INotifyingItem<Int32> Data_Property => _Data;
         public Int32 Data
         {
             get => this._Data.Item;
             set => this._Data.Set(value);
         }
-        INotifyingSetItem<Int32> IGameSettingInt.Data_Property => this.Data_Property;
-        INotifyingSetItemGetter<Int32> IGameSettingIntGetter.Data_Property => this.Data_Property;
+        INotifyingItem<Int32> IGameSettingInt.Data_Property => this.Data_Property;
+        INotifyingItemGetter<Int32> IGameSettingIntGetter.Data_Property => this.Data_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -103,21 +103,14 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (Data_Property.HasBeenSet != rhs.Data_Property.HasBeenSet) return false;
-            if (Data_Property.HasBeenSet)
-            {
-                if (Data != rhs.Data) return false;
-            }
+            if (Data != rhs.Data) return false;
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            if (Data_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Data).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(Data).CombineHashCode(ret);
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -935,7 +928,7 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IGameSettingInt : IGameSettingIntGetter, IGameSetting, ILoquiClass<IGameSettingInt, IGameSettingIntGetter>, ILoquiClass<GameSettingInt, IGameSettingIntGetter>
     {
         new Int32 Data { get; set; }
-        new INotifyingSetItem<Int32> Data_Property { get; }
+        new INotifyingItem<Int32> Data_Property { get; }
 
     }
 
@@ -943,7 +936,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Data
         Int32 Data { get; }
-        INotifyingSetItemGetter<Int32> Data_Property { get; }
+        INotifyingItemGetter<Int32> Data_Property { get; }
 
         #endregion
 
@@ -1218,9 +1211,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Data_Property.SetToWithDefault(
-                        rhs: rhs.Data_Property,
-                        def: def?.Data_Property,
+                    item.Data_Property.Set(
+                        value: rhs.Data,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1243,8 +1235,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case GameSettingInt_FieldIndex.Data:
-                    obj.Data_Property.HasBeenSet = on;
-                    break;
+                    if (on) break;
+                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 default:
                     GameSettingCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
@@ -1260,7 +1252,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case GameSettingInt_FieldIndex.Data:
-                    obj.Data_Property.Unset(cmds);
+                    obj.Data = default(Int32);
                     break;
                 default:
                     GameSettingCommon.UnsetNthObject(index, obj);
@@ -1276,7 +1268,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case GameSettingInt_FieldIndex.Data:
-                    return obj.Data_Property.HasBeenSet;
+                    return true;
                 default:
                     return GameSettingCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -1300,7 +1292,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IGameSettingInt item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.Data_Property.Unset(cmds.ToUnsetParams());
+            item.Data = default(Int32);
         }
 
         public static GameSettingInt_Mask<bool> GetEqualsMask(
@@ -1318,7 +1310,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             GameSettingInt_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Data = item.Data_Property.Equals(rhs.Data_Property, (l, r) => l == r);
+            ret.Data = item.Data == rhs.Data;
             GameSettingCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -1361,14 +1353,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IGameSettingIntGetter item,
             GameSettingInt_Mask<bool?> checkMask)
         {
-            if (checkMask.Data.HasValue && checkMask.Data.Value != item.Data_Property.HasBeenSet) return false;
             return true;
         }
 
         public static GameSettingInt_Mask<bool> GetHasBeenSetMask(IGameSettingIntGetter item)
         {
             var ret = new GameSettingInt_Mask<bool>();
-            ret.Data = item.Data_Property.HasBeenSet;
+            ret.Data = true;
             return ret;
         }
 
@@ -1404,15 +1395,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.GameSettingInt");
                     }
-                    if (item.Data_Property.HasBeenSet)
-                    {
-                        Int32XmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Data),
-                            item: item.Data_Property,
-                            fieldIndex: (int)GameSettingInt_FieldIndex.Data,
-                            errorMask: errorMask);
-                    }
+                    Int32XmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Data),
+                        item: item.Data_Property,
+                        fieldIndex: (int)GameSettingInt_FieldIndex.Data,
+                        errorMask: errorMask);
                 }
             }
             catch (Exception ex)

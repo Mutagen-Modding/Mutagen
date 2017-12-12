@@ -126,6 +126,24 @@ namespace Mutagen.Bethesda.Binary
 
         public void Write<M>(
             MutagenWriter writer,
+            IHasItemGetter<T> item,
+            RecordType header,
+            int fieldIndex,
+            bool nullable,
+            Func<M> errorMask)
+            where M : IErrorMask
+        {
+            this.Write(
+                writer,
+                item.Item,
+                header,
+                fieldIndex,
+                nullable,
+                errorMask);
+        }
+
+        public void Write<M>(
+            MutagenWriter writer,
             T item,
             int fieldIndex,
             Func<M> errorMask)
@@ -150,6 +168,20 @@ namespace Mutagen.Bethesda.Binary
             where M : IErrorMask
         {
             if (!item.HasBeenSet) return;
+            this.Write(
+                writer,
+                item.Item,
+                fieldIndex,
+                errorMask);
+        }
+
+        public void Write<M>(
+            MutagenWriter writer,
+            IHasItemGetter<T> item,
+            int fieldIndex,
+            Func<M> errorMask)
+            where M : IErrorMask
+        {
             this.Write(
                 writer,
                 item.Item,

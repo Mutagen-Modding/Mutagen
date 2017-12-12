@@ -21,8 +21,8 @@
       <RefDirect name="Voices" refName="RaceVoices" />
       <RefDirect name="DefaultHair" refName="RaceHair" />
       <UInt8 name="DefaultHairColor" recordType="CNAM" />
-      <Int32 name="FaceGenMainClamp" recordType="PNAM" />
-      <Int32 name="FaceGenFaceClamp" recordType="UNAM" />
+      <Int32 name="FaceGenMainClamp" recordType="PNAM" hasBeenSet="True" />
+      <Int32 name="FaceGenFaceClamp" recordType="UNAM" hasBeenSet="True" />
       <RefDirect name="RaceStats" refName="RaceStatsGendered" />
       <RefList name="FaceData" refName="FacePart" markerType="NAM0" />
       <RefDirect name="BodyData" refName="GenderedBodyData" markerType="NAM1" />

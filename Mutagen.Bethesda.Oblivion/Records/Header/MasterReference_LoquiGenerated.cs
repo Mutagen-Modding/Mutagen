@@ -37,26 +37,26 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Master
-        protected readonly INotifyingSetItem<String> _Master = NotifyingSetItem.Factory<String>(markAsSet: false);
-        public INotifyingSetItem<String> Master_Property => _Master;
+        protected readonly INotifyingItem<String> _Master = NotifyingItem.Factory<String>();
+        public INotifyingItem<String> Master_Property => _Master;
         public String Master
         {
             get => this._Master.Item;
             set => this._Master.Set(value);
         }
-        INotifyingSetItem<String> IMasterReference.Master_Property => this.Master_Property;
-        INotifyingSetItemGetter<String> IMasterReferenceGetter.Master_Property => this.Master_Property;
+        INotifyingItem<String> IMasterReference.Master_Property => this.Master_Property;
+        INotifyingItemGetter<String> IMasterReferenceGetter.Master_Property => this.Master_Property;
         #endregion
         #region FileSize
-        protected readonly INotifyingSetItem<UInt64> _FileSize = NotifyingSetItem.Factory<UInt64>(markAsSet: false);
-        public INotifyingSetItem<UInt64> FileSize_Property => _FileSize;
+        protected readonly INotifyingItem<UInt64> _FileSize = NotifyingItem.Factory<UInt64>();
+        public INotifyingItem<UInt64> FileSize_Property => _FileSize;
         public UInt64 FileSize
         {
             get => this._FileSize.Item;
             set => this._FileSize.Set(value);
         }
-        INotifyingSetItem<UInt64> IMasterReference.FileSize_Property => this.FileSize_Property;
-        INotifyingSetItemGetter<UInt64> IMasterReferenceGetter.FileSize_Property => this.FileSize_Property;
+        INotifyingItem<UInt64> IMasterReference.FileSize_Property => this.FileSize_Property;
+        INotifyingItemGetter<UInt64> IMasterReferenceGetter.FileSize_Property => this.FileSize_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -117,30 +117,16 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(MasterReference rhs)
         {
             if (rhs == null) return false;
-            if (Master_Property.HasBeenSet != rhs.Master_Property.HasBeenSet) return false;
-            if (Master_Property.HasBeenSet)
-            {
-                if (!object.Equals(Master, rhs.Master)) return false;
-            }
-            if (FileSize_Property.HasBeenSet != rhs.FileSize_Property.HasBeenSet) return false;
-            if (FileSize_Property.HasBeenSet)
-            {
-                if (FileSize != rhs.FileSize) return false;
-            }
+            if (!object.Equals(Master, rhs.Master)) return false;
+            if (FileSize != rhs.FileSize) return false;
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            if (Master_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Master).CombineHashCode(ret);
-            }
-            if (FileSize_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(FileSize).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(Master).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(FileSize).CombineHashCode(ret);
             return ret;
         }
 
@@ -937,10 +923,10 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IMasterReference : IMasterReferenceGetter, ILoquiClass<IMasterReference, IMasterReferenceGetter>, ILoquiClass<MasterReference, IMasterReferenceGetter>
     {
         new String Master { get; set; }
-        new INotifyingSetItem<String> Master_Property { get; }
+        new INotifyingItem<String> Master_Property { get; }
 
         new UInt64 FileSize { get; set; }
-        new INotifyingSetItem<UInt64> FileSize_Property { get; }
+        new INotifyingItem<UInt64> FileSize_Property { get; }
 
     }
 
@@ -948,12 +934,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Master
         String Master { get; }
-        INotifyingSetItemGetter<String> Master_Property { get; }
+        INotifyingItemGetter<String> Master_Property { get; }
 
         #endregion
         #region FileSize
         UInt64 FileSize { get; }
-        INotifyingSetItemGetter<UInt64> FileSize_Property { get; }
+        INotifyingItemGetter<UInt64> FileSize_Property { get; }
 
         #endregion
 
@@ -1232,9 +1218,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Master_Property.SetToWithDefault(
-                        rhs: rhs.Master_Property,
-                        def: def?.Master_Property,
+                    item.Master_Property.Set(
+                        value: rhs.Master,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1247,9 +1232,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.FileSize_Property.SetToWithDefault(
-                        rhs: rhs.FileSize_Property,
-                        def: def?.FileSize_Property,
+                    item.FileSize_Property.Set(
+                        value: rhs.FileSize,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1272,11 +1256,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case MasterReference_FieldIndex.Master:
-                    obj.Master_Property.HasBeenSet = on;
-                    break;
                 case MasterReference_FieldIndex.FileSize:
-                    obj.FileSize_Property.HasBeenSet = on;
-                    break;
+                    if (on) break;
+                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1291,10 +1273,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case MasterReference_FieldIndex.Master:
-                    obj.Master_Property.Unset(cmds);
+                    obj.Master = default(String);
                     break;
                 case MasterReference_FieldIndex.FileSize:
-                    obj.FileSize_Property.Unset(cmds);
+                    obj.FileSize = default(UInt64);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1309,9 +1291,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case MasterReference_FieldIndex.Master:
-                    return obj.Master_Property.HasBeenSet;
                 case MasterReference_FieldIndex.FileSize:
-                    return obj.FileSize_Property.HasBeenSet;
+                    return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1337,8 +1318,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IMasterReference item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.Master_Property.Unset(cmds.ToUnsetParams());
-            item.FileSize_Property.Unset(cmds.ToUnsetParams());
+            item.Master = default(String);
+            item.FileSize = default(UInt64);
         }
 
         public static MasterReference_Mask<bool> GetEqualsMask(
@@ -1356,8 +1337,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MasterReference_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Master = item.Master_Property.Equals(rhs.Master_Property, (l, r) => object.Equals(l, r));
-            ret.FileSize = item.FileSize_Property.Equals(rhs.FileSize_Property, (l, r) => l == r);
+            ret.Master = object.Equals(item.Master, rhs.Master);
+            ret.FileSize = item.FileSize == rhs.FileSize;
         }
 
         public static string ToString(
@@ -1403,16 +1384,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IMasterReferenceGetter item,
             MasterReference_Mask<bool?> checkMask)
         {
-            if (checkMask.Master.HasValue && checkMask.Master.Value != item.Master_Property.HasBeenSet) return false;
-            if (checkMask.FileSize.HasValue && checkMask.FileSize.Value != item.FileSize_Property.HasBeenSet) return false;
             return true;
         }
 
         public static MasterReference_Mask<bool> GetHasBeenSetMask(IMasterReferenceGetter item)
         {
             var ret = new MasterReference_Mask<bool>();
-            ret.Master = item.Master_Property.HasBeenSet;
-            ret.FileSize = item.FileSize_Property.HasBeenSet;
+            ret.Master = true;
+            ret.FileSize = true;
             return ret;
         }
 
@@ -1448,24 +1427,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.MasterReference");
                     }
-                    if (item.Master_Property.HasBeenSet)
-                    {
-                        StringXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Master),
-                            item: item.Master_Property,
-                            fieldIndex: (int)MasterReference_FieldIndex.Master,
-                            errorMask: errorMask);
-                    }
-                    if (item.FileSize_Property.HasBeenSet)
-                    {
-                        UInt64XmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.FileSize),
-                            item: item.FileSize_Property,
-                            fieldIndex: (int)MasterReference_FieldIndex.FileSize,
-                            errorMask: errorMask);
-                    }
+                    StringXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Master),
+                        item: item.Master_Property,
+                        fieldIndex: (int)MasterReference_FieldIndex.Master,
+                        errorMask: errorMask);
+                    UInt64XmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.FileSize),
+                        item: item.FileSize_Property,
+                        fieldIndex: (int)MasterReference_FieldIndex.FileSize,
+                        errorMask: errorMask);
                 }
             }
             catch (Exception ex)

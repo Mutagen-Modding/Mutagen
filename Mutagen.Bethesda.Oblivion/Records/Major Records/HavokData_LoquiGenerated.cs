@@ -37,37 +37,37 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Material
-        protected readonly INotifyingSetItem<HavokData.MaterialType> _Material = NotifyingSetItem.Factory<HavokData.MaterialType>(markAsSet: false);
-        public INotifyingSetItem<HavokData.MaterialType> Material_Property => _Material;
+        protected readonly INotifyingItem<HavokData.MaterialType> _Material = NotifyingItem.Factory<HavokData.MaterialType>();
+        public INotifyingItem<HavokData.MaterialType> Material_Property => _Material;
         public HavokData.MaterialType Material
         {
             get => this._Material.Item;
             set => this._Material.Set(value);
         }
-        INotifyingSetItem<HavokData.MaterialType> IHavokData.Material_Property => this.Material_Property;
-        INotifyingSetItemGetter<HavokData.MaterialType> IHavokDataGetter.Material_Property => this.Material_Property;
+        INotifyingItem<HavokData.MaterialType> IHavokData.Material_Property => this.Material_Property;
+        INotifyingItemGetter<HavokData.MaterialType> IHavokDataGetter.Material_Property => this.Material_Property;
         #endregion
         #region Friction
-        protected readonly INotifyingSetItem<Byte> _Friction = NotifyingSetItem.Factory<Byte>(markAsSet: false);
-        public INotifyingSetItem<Byte> Friction_Property => _Friction;
+        protected readonly INotifyingItem<Byte> _Friction = NotifyingItem.Factory<Byte>();
+        public INotifyingItem<Byte> Friction_Property => _Friction;
         public Byte Friction
         {
             get => this._Friction.Item;
             set => this._Friction.Set(value);
         }
-        INotifyingSetItem<Byte> IHavokData.Friction_Property => this.Friction_Property;
-        INotifyingSetItemGetter<Byte> IHavokDataGetter.Friction_Property => this.Friction_Property;
+        INotifyingItem<Byte> IHavokData.Friction_Property => this.Friction_Property;
+        INotifyingItemGetter<Byte> IHavokDataGetter.Friction_Property => this.Friction_Property;
         #endregion
         #region Restitution
-        protected readonly INotifyingSetItem<Byte> _Restitution = NotifyingSetItem.Factory<Byte>(markAsSet: false);
-        public INotifyingSetItem<Byte> Restitution_Property => _Restitution;
+        protected readonly INotifyingItem<Byte> _Restitution = NotifyingItem.Factory<Byte>();
+        public INotifyingItem<Byte> Restitution_Property => _Restitution;
         public Byte Restitution
         {
             get => this._Restitution.Item;
             set => this._Restitution.Set(value);
         }
-        INotifyingSetItem<Byte> IHavokData.Restitution_Property => this.Restitution_Property;
-        INotifyingSetItemGetter<Byte> IHavokDataGetter.Restitution_Property => this.Restitution_Property;
+        INotifyingItem<Byte> IHavokData.Restitution_Property => this.Restitution_Property;
+        INotifyingItemGetter<Byte> IHavokDataGetter.Restitution_Property => this.Restitution_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -128,39 +128,18 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(HavokData rhs)
         {
             if (rhs == null) return false;
-            if (Material_Property.HasBeenSet != rhs.Material_Property.HasBeenSet) return false;
-            if (Material_Property.HasBeenSet)
-            {
-                if (Material != rhs.Material) return false;
-            }
-            if (Friction_Property.HasBeenSet != rhs.Friction_Property.HasBeenSet) return false;
-            if (Friction_Property.HasBeenSet)
-            {
-                if (Friction != rhs.Friction) return false;
-            }
-            if (Restitution_Property.HasBeenSet != rhs.Restitution_Property.HasBeenSet) return false;
-            if (Restitution_Property.HasBeenSet)
-            {
-                if (Restitution != rhs.Restitution) return false;
-            }
+            if (Material != rhs.Material) return false;
+            if (Friction != rhs.Friction) return false;
+            if (Restitution != rhs.Restitution) return false;
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            if (Material_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Material).CombineHashCode(ret);
-            }
-            if (Friction_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Friction).CombineHashCode(ret);
-            }
-            if (Restitution_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Restitution).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(Material).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Friction).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Restitution).CombineHashCode(ret);
             return ret;
         }
 
@@ -958,13 +937,13 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IHavokData : IHavokDataGetter, ILoquiClass<IHavokData, IHavokDataGetter>, ILoquiClass<HavokData, IHavokDataGetter>
     {
         new HavokData.MaterialType Material { get; set; }
-        new INotifyingSetItem<HavokData.MaterialType> Material_Property { get; }
+        new INotifyingItem<HavokData.MaterialType> Material_Property { get; }
 
         new Byte Friction { get; set; }
-        new INotifyingSetItem<Byte> Friction_Property { get; }
+        new INotifyingItem<Byte> Friction_Property { get; }
 
         new Byte Restitution { get; set; }
-        new INotifyingSetItem<Byte> Restitution_Property { get; }
+        new INotifyingItem<Byte> Restitution_Property { get; }
 
     }
 
@@ -972,17 +951,17 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Material
         HavokData.MaterialType Material { get; }
-        INotifyingSetItemGetter<HavokData.MaterialType> Material_Property { get; }
+        INotifyingItemGetter<HavokData.MaterialType> Material_Property { get; }
 
         #endregion
         #region Friction
         Byte Friction { get; }
-        INotifyingSetItemGetter<Byte> Friction_Property { get; }
+        INotifyingItemGetter<Byte> Friction_Property { get; }
 
         #endregion
         #region Restitution
         Byte Restitution { get; }
-        INotifyingSetItemGetter<Byte> Restitution_Property { get; }
+        INotifyingItemGetter<Byte> Restitution_Property { get; }
 
         #endregion
 
@@ -1272,9 +1251,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Material_Property.SetToWithDefault(
-                        rhs: rhs.Material_Property,
-                        def: def?.Material_Property,
+                    item.Material_Property.Set(
+                        value: rhs.Material,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1287,9 +1265,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Friction_Property.SetToWithDefault(
-                        rhs: rhs.Friction_Property,
-                        def: def?.Friction_Property,
+                    item.Friction_Property.Set(
+                        value: rhs.Friction,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1302,9 +1279,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Restitution_Property.SetToWithDefault(
-                        rhs: rhs.Restitution_Property,
-                        def: def?.Restitution_Property,
+                    item.Restitution_Property.Set(
+                        value: rhs.Restitution,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1327,14 +1303,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case HavokData_FieldIndex.Material:
-                    obj.Material_Property.HasBeenSet = on;
-                    break;
                 case HavokData_FieldIndex.Friction:
-                    obj.Friction_Property.HasBeenSet = on;
-                    break;
                 case HavokData_FieldIndex.Restitution:
-                    obj.Restitution_Property.HasBeenSet = on;
-                    break;
+                    if (on) break;
+                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1349,13 +1321,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case HavokData_FieldIndex.Material:
-                    obj.Material_Property.Unset(cmds);
+                    obj.Material = default(HavokData.MaterialType);
                     break;
                 case HavokData_FieldIndex.Friction:
-                    obj.Friction_Property.Unset(cmds);
+                    obj.Friction = default(Byte);
                     break;
                 case HavokData_FieldIndex.Restitution:
-                    obj.Restitution_Property.Unset(cmds);
+                    obj.Restitution = default(Byte);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1370,11 +1342,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case HavokData_FieldIndex.Material:
-                    return obj.Material_Property.HasBeenSet;
                 case HavokData_FieldIndex.Friction:
-                    return obj.Friction_Property.HasBeenSet;
                 case HavokData_FieldIndex.Restitution:
-                    return obj.Restitution_Property.HasBeenSet;
+                    return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1402,9 +1372,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IHavokData item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.Material_Property.Unset(cmds.ToUnsetParams());
-            item.Friction_Property.Unset(cmds.ToUnsetParams());
-            item.Restitution_Property.Unset(cmds.ToUnsetParams());
+            item.Material = default(HavokData.MaterialType);
+            item.Friction = default(Byte);
+            item.Restitution = default(Byte);
         }
 
         public static HavokData_Mask<bool> GetEqualsMask(
@@ -1422,9 +1392,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             HavokData_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Material = item.Material_Property.Equals(rhs.Material_Property, (l, r) => l == r);
-            ret.Friction = item.Friction_Property.Equals(rhs.Friction_Property, (l, r) => l == r);
-            ret.Restitution = item.Restitution_Property.Equals(rhs.Restitution_Property, (l, r) => l == r);
+            ret.Material = item.Material == rhs.Material;
+            ret.Friction = item.Friction == rhs.Friction;
+            ret.Restitution = item.Restitution == rhs.Restitution;
         }
 
         public static string ToString(
@@ -1474,18 +1444,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IHavokDataGetter item,
             HavokData_Mask<bool?> checkMask)
         {
-            if (checkMask.Material.HasValue && checkMask.Material.Value != item.Material_Property.HasBeenSet) return false;
-            if (checkMask.Friction.HasValue && checkMask.Friction.Value != item.Friction_Property.HasBeenSet) return false;
-            if (checkMask.Restitution.HasValue && checkMask.Restitution.Value != item.Restitution_Property.HasBeenSet) return false;
             return true;
         }
 
         public static HavokData_Mask<bool> GetHasBeenSetMask(IHavokDataGetter item)
         {
             var ret = new HavokData_Mask<bool>();
-            ret.Material = item.Material_Property.HasBeenSet;
-            ret.Friction = item.Friction_Property.HasBeenSet;
-            ret.Restitution = item.Restitution_Property.HasBeenSet;
+            ret.Material = true;
+            ret.Friction = true;
+            ret.Restitution = true;
             return ret;
         }
 
@@ -1521,33 +1488,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.HavokData");
                     }
-                    if (item.Material_Property.HasBeenSet)
-                    {
-                        EnumXmlTranslation<HavokData.MaterialType>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Material),
-                            item: item.Material_Property,
-                            fieldIndex: (int)HavokData_FieldIndex.Material,
-                            errorMask: errorMask);
-                    }
-                    if (item.Friction_Property.HasBeenSet)
-                    {
-                        ByteXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Friction),
-                            item: item.Friction_Property,
-                            fieldIndex: (int)HavokData_FieldIndex.Friction,
-                            errorMask: errorMask);
-                    }
-                    if (item.Restitution_Property.HasBeenSet)
-                    {
-                        ByteXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Restitution),
-                            item: item.Restitution_Property,
-                            fieldIndex: (int)HavokData_FieldIndex.Restitution,
-                            errorMask: errorMask);
-                    }
+                    EnumXmlTranslation<HavokData.MaterialType>.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Material),
+                        item: item.Material_Property,
+                        fieldIndex: (int)HavokData_FieldIndex.Material,
+                        errorMask: errorMask);
+                    ByteXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Friction),
+                        item: item.Friction_Property,
+                        fieldIndex: (int)HavokData_FieldIndex.Friction,
+                        errorMask: errorMask);
+                    ByteXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Restitution),
+                        item: item.Restitution_Property,
+                        fieldIndex: (int)HavokData_FieldIndex.Restitution,
+                        errorMask: errorMask);
                 }
             }
             catch (Exception ex)

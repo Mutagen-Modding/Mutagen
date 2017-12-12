@@ -121,5 +121,23 @@ namespace Mutagen.Bethesda.Binary
                 nullable,
                 errorMask);
         }
+
+        public void Write<M>(
+            MutagenWriter writer,
+            IHasItemGetter<FilePath> item,
+            RecordType header,
+            int fieldIndex,
+            bool nullable,
+            Func<M> errorMask)
+            where M : IErrorMask
+        {
+            this.Write(
+                writer,
+                item.Item,
+                header,
+                fieldIndex,
+                nullable,
+                errorMask);
+        }
     }
 }

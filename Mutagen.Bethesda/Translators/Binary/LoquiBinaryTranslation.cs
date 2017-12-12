@@ -299,6 +299,20 @@ namespace Mutagen.Bethesda.Binary
                 fieldIndex,
                 errorMask);
         }
+
+        public void Write<Mask>(
+            MutagenWriter writer,
+            IHasItemGetter<T> item,
+            int fieldIndex,
+            Func<Mask> errorMask)
+            where Mask : IErrorMask
+        {
+            this.Write(
+                writer,
+                item.Item,
+                fieldIndex,
+                errorMask);
+        }
         #endregion
     }
 }

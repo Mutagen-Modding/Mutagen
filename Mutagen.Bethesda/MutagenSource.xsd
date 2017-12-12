@@ -183,12 +183,17 @@
     </xs:complexContent>
   </xs:complexType>
 
+  <xs:complexType name="DataTypeFields" >
+    <xs:choice minOccurs="0" maxOccurs="unbounded" >
+      <xs:group ref="NamedFieldOptions" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="Break" />
+    </xs:choice>
+  </xs:complexType>
+  
   <xs:complexType name="DataType" >
-    <xs:complexContent>
-      <xs:extension base="MarkerSet">
-        <xs:attribute name="recordType" type="xs:string" />
-      </xs:extension>
-    </xs:complexContent>
+    <xs:choice minOccurs="0" maxOccurs="unbounded" >
+      <xs:element name="Fields" type="DataTypeFields" minOccurs="0" maxOccurs="1" />
+    </xs:choice>
   </xs:complexType>
   
 </xs:schema>

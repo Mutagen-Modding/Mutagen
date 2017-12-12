@@ -45,37 +45,35 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region ContainedRecordType
-        protected readonly INotifyingSetItem<String> _ContainedRecordType = NotifyingSetItem.Factory<String>(markAsSet: false);
-        public INotifyingSetItemGetter<String> ContainedRecordType_Property => _ContainedRecordType;
+        protected readonly INotifyingItem<String> _ContainedRecordType = NotifyingItem.Factory<String>();
+        public INotifyingItemGetter<String> ContainedRecordType_Property => _ContainedRecordType;
         public String ContainedRecordType
         {
             get => this._ContainedRecordType.Item;
             protected set => this._ContainedRecordType.Set(value);
         }
-        INotifyingSetItemGetter<String> IGroupGetter<T>.ContainedRecordType_Property => this.ContainedRecordType_Property;
+        INotifyingItemGetter<String> IGroupGetter<T>.ContainedRecordType_Property => this.ContainedRecordType_Property;
         #endregion
         #region GroupType
-        protected readonly INotifyingSetItem<Int32> _GroupType = NotifyingSetItem.Factory<Int32>(markAsSet: false);
-        public INotifyingSetItem<Int32> GroupType_Property => _GroupType;
+        protected readonly INotifyingItem<Int32> _GroupType = NotifyingItem.Factory<Int32>();
+        public INotifyingItem<Int32> GroupType_Property => _GroupType;
         public Int32 GroupType
         {
             get => this._GroupType.Item;
             set => this._GroupType.Set(value);
         }
-        INotifyingSetItem<Int32> IGroup<T>.GroupType_Property => this.GroupType_Property;
-        INotifyingSetItemGetter<Int32> IGroupGetter<T>.GroupType_Property => this.GroupType_Property;
+        INotifyingItem<Int32> IGroup<T>.GroupType_Property => this.GroupType_Property;
+        INotifyingItemGetter<Int32> IGroupGetter<T>.GroupType_Property => this.GroupType_Property;
         #endregion
         #region LastModified
-        protected readonly INotifyingSetItem<Byte[]> _LastModified = NotifyingSetItem.Factory<Byte[]>(
-            markAsSet: false,
-            noNullFallback: () => new byte[4]);
-        public INotifyingSetItemGetter<Byte[]> LastModified_Property => _LastModified;
+        protected readonly INotifyingItem<Byte[]> _LastModified = NotifyingItem.Factory<Byte[]>(noNullFallback: () => new byte[4]);
+        public INotifyingItemGetter<Byte[]> LastModified_Property => _LastModified;
         public Byte[] LastModified
         {
             get => this._LastModified.Item;
             protected set => this._LastModified.Set(value);
         }
-        INotifyingSetItemGetter<Byte[]> IGroupGetter<T>.LastModified_Property => this.LastModified_Property;
+        INotifyingItemGetter<Byte[]> IGroupGetter<T>.LastModified_Property => this.LastModified_Property;
         #endregion
         #region Items
         private readonly INotifyingList<T> _Items = new NotifyingList<T>();
@@ -145,48 +143,20 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(Group<T> rhs)
         {
             if (rhs == null) return false;
-            if (ContainedRecordType_Property.HasBeenSet != rhs.ContainedRecordType_Property.HasBeenSet) return false;
-            if (ContainedRecordType_Property.HasBeenSet)
-            {
-                if (!object.Equals(ContainedRecordType, rhs.ContainedRecordType)) return false;
-            }
-            if (GroupType_Property.HasBeenSet != rhs.GroupType_Property.HasBeenSet) return false;
-            if (GroupType_Property.HasBeenSet)
-            {
-                if (GroupType != rhs.GroupType) return false;
-            }
-            if (LastModified_Property.HasBeenSet != rhs.LastModified_Property.HasBeenSet) return false;
-            if (LastModified_Property.HasBeenSet)
-            {
-                if (!LastModified.EqualsFast(rhs.LastModified)) return false;
-            }
-            if (Items.HasBeenSet != rhs.Items.HasBeenSet) return false;
-            if (Items.HasBeenSet)
-            {
-                if (!Items.SequenceEqual(rhs.Items)) return false;
-            }
+            if (!object.Equals(ContainedRecordType, rhs.ContainedRecordType)) return false;
+            if (GroupType != rhs.GroupType) return false;
+            if (!LastModified.EqualsFast(rhs.LastModified)) return false;
+            if (!Items.SequenceEqual(rhs.Items)) return false;
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            if (ContainedRecordType_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(ContainedRecordType).CombineHashCode(ret);
-            }
-            if (GroupType_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(GroupType).CombineHashCode(ret);
-            }
-            if (LastModified_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(LastModified).CombineHashCode(ret);
-            }
-            if (Items.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Items).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(ContainedRecordType).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(GroupType).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(LastModified).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Items).CombineHashCode(ret);
             return ret;
         }
 
@@ -1160,7 +1130,7 @@ namespace Mutagen.Bethesda.Oblivion
         where T : MajorRecord, ILoquiObjectGetter
     {
         new Int32 GroupType { get; set; }
-        new INotifyingSetItem<Int32> GroupType_Property { get; }
+        new INotifyingItem<Int32> GroupType_Property { get; }
 
         new INotifyingList<T> Items { get; }
     }
@@ -1170,17 +1140,17 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region ContainedRecordType
         String ContainedRecordType { get; }
-        INotifyingSetItemGetter<String> ContainedRecordType_Property { get; }
+        INotifyingItemGetter<String> ContainedRecordType_Property { get; }
 
         #endregion
         #region GroupType
         Int32 GroupType { get; }
-        INotifyingSetItemGetter<Int32> GroupType_Property { get; }
+        INotifyingItemGetter<Int32> GroupType_Property { get; }
 
         #endregion
         #region LastModified
         Byte[] LastModified { get; }
-        INotifyingSetItemGetter<Byte[]> LastModified_Property { get; }
+        INotifyingItemGetter<Byte[]> LastModified_Property { get; }
 
         #endregion
         #region Items
@@ -1509,9 +1479,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.GroupType_Property.SetToWithDefault(
-                        rhs: rhs.GroupType_Property,
-                        def: def?.GroupType_Property,
+                    item.GroupType_Property.Set(
+                        value: rhs.GroupType,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1566,14 +1535,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case Group_FieldIndex.ContainedRecordType:
                     throw new ArgumentException($"Tried to set at a derivative index {index}");
-                case Group_FieldIndex.LastModified:
-                    throw new ArgumentException("Tried to set at a readonly index " + index);
                 case Group_FieldIndex.GroupType:
-                    obj.GroupType_Property.HasBeenSet = on;
-                    break;
+                case Group_FieldIndex.LastModified:
                 case Group_FieldIndex.Items:
-                    obj.Items.HasBeenSet = on;
-                    break;
+                    if (on) break;
+                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1591,7 +1557,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Group_FieldIndex.ContainedRecordType:
                     throw new ArgumentException($"Tried to unset at a derivative index {index}");
                 case Group_FieldIndex.GroupType:
-                    obj.GroupType_Property.Unset(cmds);
+                    obj.GroupType = default(Int32);
                     break;
                 case Group_FieldIndex.LastModified:
                     throw new ArgumentException("Tried to set at a readonly index " + index);
@@ -1612,13 +1578,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Group_FieldIndex.ContainedRecordType:
-                    return obj.ContainedRecordType_Property.HasBeenSet;
                 case Group_FieldIndex.GroupType:
-                    return obj.GroupType_Property.HasBeenSet;
                 case Group_FieldIndex.LastModified:
-                    return obj.LastModified_Property.HasBeenSet;
                 case Group_FieldIndex.Items:
-                    return obj.Items.HasBeenSet;
+                    return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1650,7 +1613,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NotifyingUnsetParameters? cmds = null)
             where T : MajorRecord, ILoquiObjectGetter
         {
-            item.GroupType_Property.Unset(cmds.ToUnsetParams());
+            item.GroupType = default(Int32);
             item.Items.Unset(cmds.ToUnsetParams());
         }
 
@@ -1671,9 +1634,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             where T : MajorRecord, ILoquiObjectGetter
         {
             if (rhs == null) return;
-            ret.ContainedRecordType = item.ContainedRecordType_Property.Equals(rhs.ContainedRecordType_Property, (l, r) => object.Equals(l, r));
-            ret.GroupType = item.GroupType_Property.Equals(rhs.GroupType_Property, (l, r) => l == r);
-            ret.LastModified = item.LastModified_Property.Equals(rhs.LastModified_Property, (l, r) => l.EqualsFast(r));
+            ret.ContainedRecordType = object.Equals(item.ContainedRecordType, rhs.ContainedRecordType);
+            ret.GroupType = item.GroupType == rhs.GroupType;
+            ret.LastModified = item.LastModified.EqualsFast(rhs.LastModified);
             if (item.Items.HasBeenSet == rhs.Items.HasBeenSet)
             {
                 if (item.Items.HasBeenSet)
@@ -1682,7 +1645,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ret.Items.Specific = item.Items.SelectAgainst<T, MaskItem<bool, MajorRecord_Mask<bool>>>(rhs.Items, ((l, r) =>
                     {
                         MaskItem<bool, MajorRecord_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => MajorRecordCommon.GetEqualsMask(loqLhs, loqRhs));
+                        itemRet = new MaskItem<bool, MajorRecord_Mask<bool>>();
+                        itemRet.Specific = MajorRecordCommon.GetEqualsMask(l, r);
+                        itemRet.Overall = itemRet.Specific.AllEqual((b) => b);
                         return itemRet;
                     }
                     ), out ret.Items.Overall);
@@ -1769,9 +1734,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Group_Mask<bool?> checkMask)
             where T : MajorRecord, ILoquiObjectGetter
         {
-            if (checkMask.ContainedRecordType.HasValue && checkMask.ContainedRecordType.Value != item.ContainedRecordType_Property.HasBeenSet) return false;
-            if (checkMask.GroupType.HasValue && checkMask.GroupType.Value != item.GroupType_Property.HasBeenSet) return false;
-            if (checkMask.LastModified.HasValue && checkMask.LastModified.Value != item.LastModified_Property.HasBeenSet) return false;
             if (checkMask.Items.Overall.HasValue && checkMask.Items.Overall.Value != item.Items.HasBeenSet) return false;
             return true;
         }
@@ -1780,9 +1742,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             where T : MajorRecord, ILoquiObjectGetter
         {
             var ret = new Group_Mask<bool>();
-            ret.ContainedRecordType = item.ContainedRecordType_Property.HasBeenSet;
-            ret.GroupType = item.GroupType_Property.HasBeenSet;
-            ret.LastModified = item.LastModified_Property.HasBeenSet;
+            ret.ContainedRecordType = true;
+            ret.GroupType = true;
+            ret.LastModified = true;
             ret.Items = new MaskItem<bool, IEnumerable<MaskItem<bool, MajorRecord_Mask<bool>>>>(item.Items.HasBeenSet, item.Items.Select((i) => new MaskItem<bool, MajorRecord_Mask<bool>>(true, i.GetHasBeenSetMask())));
             return ret;
         }
@@ -1823,43 +1785,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.Group");
                     }
-                    if (item.GroupType_Property.HasBeenSet)
-                    {
-                        Int32XmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.GroupType),
-                            item: item.GroupType_Property,
-                            fieldIndex: (int)Group_FieldIndex.GroupType,
-                            errorMask: errorMask);
-                    }
-                    if (item.LastModified_Property.HasBeenSet)
-                    {
-                        ByteArrayXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.LastModified),
-                            item: item.LastModified_Property,
-                            fieldIndex: (int)Group_FieldIndex.LastModified,
-                            errorMask: errorMask);
-                    }
-                    if (item.Items.HasBeenSet)
-                    {
-                        ListXmlTranslation<T, MaskItem<Exception, T_ErrMask>>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Items),
-                            item: item.Items,
-                            fieldIndex: (int)Group_FieldIndex.Items,
-                            errorMask: errorMask,
-                            transl: (T subItem, bool listDoMasks, out MaskItem<Exception, T_ErrMask> listSubMask) =>
-                            {
-                                LoquiXmlTranslation<T, T_ErrMask>.Instance.Write(
-                                    writer: writer,
-                                    item: subItem,
-                                    name: "Item",
-                                    doMasks: errorMask != null,
-                                    errorMask: out listSubMask);
-                            }
-                            );
-                    }
+                    Int32XmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.GroupType),
+                        item: item.GroupType_Property,
+                        fieldIndex: (int)Group_FieldIndex.GroupType,
+                        errorMask: errorMask);
+                    ByteArrayXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.LastModified),
+                        item: item.LastModified_Property,
+                        fieldIndex: (int)Group_FieldIndex.LastModified,
+                        errorMask: errorMask);
+                    ListXmlTranslation<T, MaskItem<Exception, T_ErrMask>>.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Items),
+                        item: item.Items,
+                        fieldIndex: (int)Group_FieldIndex.Items,
+                        errorMask: errorMask,
+                        transl: (T subItem, bool listDoMasks, out MaskItem<Exception, T_ErrMask> listSubMask) =>
+                        {
+                            LoquiXmlTranslation<T, T_ErrMask>.Instance.Write(
+                                writer: writer,
+                                item: subItem,
+                                name: "Item",
+                                doMasks: errorMask != null,
+                                errorMask: out listSubMask);
+                        }
+                        );
                 }
             }
             catch (Exception ex)

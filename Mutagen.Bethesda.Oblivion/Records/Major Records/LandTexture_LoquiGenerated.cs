@@ -38,34 +38,34 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Icon
-        protected readonly INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
-        public INotifyingSetItem<FilePath> Icon_Property => _Icon;
+        protected readonly INotifyingItem<FilePath> _Icon = NotifyingItem.Factory<FilePath>();
+        public INotifyingItem<FilePath> Icon_Property => _Icon;
         public FilePath Icon
         {
             get => this._Icon.Item;
             set => this._Icon.Set(value);
         }
-        INotifyingSetItem<FilePath> ILandTexture.Icon_Property => this.Icon_Property;
-        INotifyingSetItemGetter<FilePath> ILandTextureGetter.Icon_Property => this.Icon_Property;
+        INotifyingItem<FilePath> ILandTexture.Icon_Property => this.Icon_Property;
+        INotifyingItemGetter<FilePath> ILandTextureGetter.Icon_Property => this.Icon_Property;
         #endregion
         #region Havok
-        private readonly INotifyingSetItem<HavokData> _Havok = new NotifyingSetItem<HavokData>();
-        public INotifyingSetItem<HavokData> Havok_Property => this._Havok;
+        private readonly INotifyingItem<HavokData> _Havok = new NotifyingItem<HavokData>();
+        public INotifyingItem<HavokData> Havok_Property => this._Havok;
         HavokData ILandTextureGetter.Havok => this.Havok;
         public HavokData Havok { get => _Havok.Item; set => _Havok.Item = value; }
-        INotifyingSetItem<HavokData> ILandTexture.Havok_Property => this.Havok_Property;
-        INotifyingSetItemGetter<HavokData> ILandTextureGetter.Havok_Property => this.Havok_Property;
+        INotifyingItem<HavokData> ILandTexture.Havok_Property => this.Havok_Property;
+        INotifyingItemGetter<HavokData> ILandTextureGetter.Havok_Property => this.Havok_Property;
         #endregion
         #region TextureSpecularExponent
-        protected readonly INotifyingSetItem<Byte> _TextureSpecularExponent = NotifyingSetItem.Factory<Byte>(markAsSet: false);
-        public INotifyingSetItem<Byte> TextureSpecularExponent_Property => _TextureSpecularExponent;
+        protected readonly INotifyingItem<Byte> _TextureSpecularExponent = NotifyingItem.Factory<Byte>();
+        public INotifyingItem<Byte> TextureSpecularExponent_Property => _TextureSpecularExponent;
         public Byte TextureSpecularExponent
         {
             get => this._TextureSpecularExponent.Item;
             set => this._TextureSpecularExponent.Set(value);
         }
-        INotifyingSetItem<Byte> ILandTexture.TextureSpecularExponent_Property => this.TextureSpecularExponent_Property;
-        INotifyingSetItemGetter<Byte> ILandTextureGetter.TextureSpecularExponent_Property => this.TextureSpecularExponent_Property;
+        INotifyingItem<Byte> ILandTexture.TextureSpecularExponent_Property => this.TextureSpecularExponent_Property;
+        INotifyingItemGetter<Byte> ILandTextureGetter.TextureSpecularExponent_Property => this.TextureSpecularExponent_Property;
         #endregion
         #region PotentialGrass
         private readonly INotifyingList<FormID> _PotentialGrass = new NotifyingList<FormID>();
@@ -132,48 +132,20 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (Icon_Property.HasBeenSet != rhs.Icon_Property.HasBeenSet) return false;
-            if (Icon_Property.HasBeenSet)
-            {
-                if (!object.Equals(Icon, rhs.Icon)) return false;
-            }
-            if (Havok_Property.HasBeenSet != rhs.Havok_Property.HasBeenSet) return false;
-            if (Havok_Property.HasBeenSet)
-            {
-                if (!object.Equals(Havok, rhs.Havok)) return false;
-            }
-            if (TextureSpecularExponent_Property.HasBeenSet != rhs.TextureSpecularExponent_Property.HasBeenSet) return false;
-            if (TextureSpecularExponent_Property.HasBeenSet)
-            {
-                if (TextureSpecularExponent != rhs.TextureSpecularExponent) return false;
-            }
-            if (PotentialGrass.HasBeenSet != rhs.PotentialGrass.HasBeenSet) return false;
-            if (PotentialGrass.HasBeenSet)
-            {
-                if (!PotentialGrass.SequenceEqual(rhs.PotentialGrass)) return false;
-            }
+            if (!object.Equals(Icon, rhs.Icon)) return false;
+            if (!object.Equals(Havok, rhs.Havok)) return false;
+            if (TextureSpecularExponent != rhs.TextureSpecularExponent) return false;
+            if (!PotentialGrass.SequenceEqual(rhs.PotentialGrass)) return false;
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            if (Icon_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Icon).CombineHashCode(ret);
-            }
-            if (Havok_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Havok).CombineHashCode(ret);
-            }
-            if (TextureSpecularExponent_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(TextureSpecularExponent).CombineHashCode(ret);
-            }
-            if (PotentialGrass.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(PotentialGrass).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(Icon).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Havok).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(TextureSpecularExponent).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(PotentialGrass).CombineHashCode(ret);
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -1076,13 +1048,13 @@ namespace Mutagen.Bethesda.Oblivion
     public interface ILandTexture : ILandTextureGetter, IMajorRecord, ILoquiClass<ILandTexture, ILandTextureGetter>, ILoquiClass<LandTexture, ILandTextureGetter>
     {
         new FilePath Icon { get; set; }
-        new INotifyingSetItem<FilePath> Icon_Property { get; }
+        new INotifyingItem<FilePath> Icon_Property { get; }
 
         new HavokData Havok { get; set; }
-        new INotifyingSetItem<HavokData> Havok_Property { get; }
+        new INotifyingItem<HavokData> Havok_Property { get; }
 
         new Byte TextureSpecularExponent { get; set; }
-        new INotifyingSetItem<Byte> TextureSpecularExponent_Property { get; }
+        new INotifyingItem<Byte> TextureSpecularExponent_Property { get; }
 
         new INotifyingList<FormID> PotentialGrass { get; }
     }
@@ -1091,17 +1063,17 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Icon
         FilePath Icon { get; }
-        INotifyingSetItemGetter<FilePath> Icon_Property { get; }
+        INotifyingItemGetter<FilePath> Icon_Property { get; }
 
         #endregion
         #region Havok
         HavokData Havok { get; }
-        INotifyingSetItemGetter<HavokData> Havok_Property { get; }
+        INotifyingItemGetter<HavokData> Havok_Property { get; }
 
         #endregion
         #region TextureSpecularExponent
         Byte TextureSpecularExponent { get; }
-        INotifyingSetItemGetter<Byte> TextureSpecularExponent_Property { get; }
+        INotifyingItemGetter<Byte> TextureSpecularExponent_Property { get; }
 
         #endregion
         #region PotentialGrass
@@ -1420,9 +1392,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Icon_Property.SetToWithDefault(
-                        rhs: rhs.Icon_Property,
-                        def: def?.Icon_Property,
+                    item.Icon_Property.Set(
+                        value: rhs.Icon,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1435,46 +1406,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Havok_Property.SetToWithDefault(
-                        rhs.Havok_Property,
-                        def?.Havok_Property,
-                        cmds,
-                        (r, d) =>
-                        {
-                            switch (copyMask?.Havok.Overall ?? CopyOption.Reference)
+                    switch (copyMask?.Havok?.Overall ?? CopyOption.Reference)
+                    {
+                        case CopyOption.Reference:
+                            item.Havok = rhs.Havok;
+                            break;
+                        case CopyOption.CopyIn:
+                            HavokDataCommon.CopyFieldsFrom(
+                                item: item.Havok,
+                                rhs: rhs.Havok,
+                                def: def?.Havok,
+                                doMasks: doMasks,
+                                errorMask: (doMasks ? new Func<HavokData_ErrorMask>(() =>
+                                {
+                                    var baseMask = errorMask();
+                                    if (baseMask.Havok.Specific == null)
+                                    {
+                                        baseMask.Havok = new MaskItem<Exception, HavokData_ErrorMask>(null, new HavokData_ErrorMask());
+                                    }
+                                    return baseMask.Havok.Specific;
+                                }
+                                ) : null),
+                                copyMask: copyMask?.Havok.Specific,
+                                cmds: cmds);
+                            break;
+                        case CopyOption.MakeCopy:
+                            if (rhs.Havok == null)
                             {
-                                case CopyOption.Reference:
-                                    return r;
-                                case CopyOption.CopyIn:
-                                    HavokDataCommon.CopyFieldsFrom(
-                                        item: item.Havok,
-                                        rhs: rhs.Havok,
-                                        def: def?.Havok,
-                                        doMasks: doMasks,
-                                        errorMask: (doMasks ? new Func<HavokData_ErrorMask>(() =>
-                                        {
-                                            var baseMask = errorMask();
-                                            if (baseMask.Havok.Specific == null)
-                                            {
-                                                baseMask.Havok = new MaskItem<Exception, HavokData_ErrorMask>(null, new HavokData_ErrorMask());
-                                            }
-                                            return baseMask.Havok.Specific;
-                                        }
-                                        ) : null),
-                                        copyMask: copyMask?.Havok.Specific,
-                                        cmds: cmds);
-                                    return r;
-                                case CopyOption.MakeCopy:
-                                    if (r == null) return default(HavokData);
-                                    return HavokData.Copy(
-                                        r,
-                                        copyMask?.Havok?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Havok?.Overall}. Cannot execute copy.");
+                                item.Havok = null;
                             }
-                        }
-                        );
+                            else
+                            {
+                                item.Havok = HavokData.Copy(
+                                    rhs.Havok,
+                                    copyMask?.Havok?.Specific,
+                                    def?.Havok);
+                            }
+                            break;
+                        default:
+                            throw new NotImplementedException($"Unknown CopyOption {copyMask?.Havok?.Overall}. Cannot execute copy.");
+                    }
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1486,9 +1457,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.TextureSpecularExponent_Property.SetToWithDefault(
-                        rhs: rhs.TextureSpecularExponent_Property,
-                        def: def?.TextureSpecularExponent_Property,
+                    item.TextureSpecularExponent_Property.Set(
+                        value: rhs.TextureSpecularExponent,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1526,17 +1496,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case LandTexture_FieldIndex.Icon:
-                    obj.Icon_Property.HasBeenSet = on;
-                    break;
                 case LandTexture_FieldIndex.Havok:
-                    obj.Havok_Property.HasBeenSet = on;
-                    break;
                 case LandTexture_FieldIndex.TextureSpecularExponent:
-                    obj.TextureSpecularExponent_Property.HasBeenSet = on;
-                    break;
                 case LandTexture_FieldIndex.PotentialGrass:
-                    obj.PotentialGrass.HasBeenSet = on;
-                    break;
+                    if (on) break;
+                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 default:
                     MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
@@ -1552,13 +1516,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case LandTexture_FieldIndex.Icon:
-                    obj.Icon_Property.Unset(cmds);
+                    obj.Icon = default(FilePath);
                     break;
                 case LandTexture_FieldIndex.Havok:
-                    obj.Havok_Property.Unset(cmds);
+                    obj.Havok = default(HavokData);
                     break;
                 case LandTexture_FieldIndex.TextureSpecularExponent:
-                    obj.TextureSpecularExponent_Property.Unset(cmds);
+                    obj.TextureSpecularExponent = default(Byte);
                     break;
                 case LandTexture_FieldIndex.PotentialGrass:
                     obj.PotentialGrass.Unset(cmds);
@@ -1577,13 +1541,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case LandTexture_FieldIndex.Icon:
-                    return obj.Icon_Property.HasBeenSet;
                 case LandTexture_FieldIndex.Havok:
-                    return obj.Havok_Property.HasBeenSet;
                 case LandTexture_FieldIndex.TextureSpecularExponent:
-                    return obj.TextureSpecularExponent_Property.HasBeenSet;
                 case LandTexture_FieldIndex.PotentialGrass:
-                    return obj.PotentialGrass.HasBeenSet;
+                    return true;
                 default:
                     return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -1613,9 +1574,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILandTexture item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.Icon_Property.Unset(cmds.ToUnsetParams());
-            item.Havok_Property.Unset(cmds.ToUnsetParams());
-            item.TextureSpecularExponent_Property.Unset(cmds.ToUnsetParams());
+            item.Icon = default(FilePath);
+            item.Havok = default(HavokData);
+            item.TextureSpecularExponent = default(Byte);
             item.PotentialGrass.Unset(cmds.ToUnsetParams());
         }
 
@@ -1634,9 +1595,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             LandTexture_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Icon = item.Icon_Property.Equals(rhs.Icon_Property, (l, r) => object.Equals(l, r));
-            ret.Havok = item.Havok_Property.LoquiEqualsHelper(rhs.Havok_Property, (loqLhs, loqRhs) => HavokDataCommon.GetEqualsMask(loqLhs, loqRhs));
-            ret.TextureSpecularExponent = item.TextureSpecularExponent_Property.Equals(rhs.TextureSpecularExponent_Property, (l, r) => l == r);
+            ret.Icon = object.Equals(item.Icon, rhs.Icon);
+            ret.Havok = new MaskItem<bool, HavokData_Mask<bool>>();
+            ret.Havok.Specific = HavokDataCommon.GetEqualsMask(item.Havok, rhs.Havok);
+            ret.Havok.Overall = ret.Havok.Specific.AllEqual((b) => b);
+            ret.TextureSpecularExponent = item.TextureSpecularExponent == rhs.TextureSpecularExponent;
             if (item.PotentialGrass.HasBeenSet == rhs.PotentialGrass.HasBeenSet)
             {
                 if (item.PotentialGrass.HasBeenSet)
@@ -1724,10 +1687,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this ILandTextureGetter item,
             LandTexture_Mask<bool?> checkMask)
         {
-            if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_Property.HasBeenSet) return false;
-            if (checkMask.Havok.Overall.HasValue && checkMask.Havok.Overall.Value != item.Havok_Property.HasBeenSet) return false;
-            if (checkMask.Havok.Specific != null && (item.Havok_Property.Item == null || !item.Havok_Property.Item.HasBeenSet(checkMask.Havok.Specific))) return false;
-            if (checkMask.TextureSpecularExponent.HasValue && checkMask.TextureSpecularExponent.Value != item.TextureSpecularExponent_Property.HasBeenSet) return false;
             if (checkMask.PotentialGrass.Overall.HasValue && checkMask.PotentialGrass.Overall.Value != item.PotentialGrass.HasBeenSet) return false;
             return true;
         }
@@ -1735,9 +1694,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static LandTexture_Mask<bool> GetHasBeenSetMask(ILandTextureGetter item)
         {
             var ret = new LandTexture_Mask<bool>();
-            ret.Icon = item.Icon_Property.HasBeenSet;
-            ret.Havok = new MaskItem<bool, HavokData_Mask<bool>>(item.Havok_Property.HasBeenSet, HavokDataCommon.GetHasBeenSetMask(item.Havok_Property.Item));
-            ret.TextureSpecularExponent = item.TextureSpecularExponent_Property.HasBeenSet;
+            ret.Icon = true;
+            ret.Havok = new MaskItem<bool, HavokData_Mask<bool>>(true, HavokDataCommon.GetHasBeenSetMask(item.Havok_Property.Item));
+            ret.TextureSpecularExponent = true;
             ret.PotentialGrass = new MaskItem<bool, IEnumerable<bool>>(item.PotentialGrass.HasBeenSet, null);
             return ret;
         }
@@ -1774,52 +1733,40 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.LandTexture");
                     }
-                    if (item.Icon_Property.HasBeenSet)
-                    {
-                        FilePathXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Icon),
-                            item: item.Icon_Property,
-                            fieldIndex: (int)LandTexture_FieldIndex.Icon,
-                            errorMask: errorMask);
-                    }
-                    if (item.Havok_Property.HasBeenSet)
-                    {
-                        LoquiXmlTranslation<HavokData, HavokData_ErrorMask>.Instance.Write(
-                            writer: writer,
-                            item: item.Havok_Property,
-                            name: nameof(item.Havok),
-                            fieldIndex: (int)LandTexture_FieldIndex.Havok,
-                            errorMask: errorMask);
-                    }
-                    if (item.TextureSpecularExponent_Property.HasBeenSet)
-                    {
-                        ByteXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.TextureSpecularExponent),
-                            item: item.TextureSpecularExponent_Property,
-                            fieldIndex: (int)LandTexture_FieldIndex.TextureSpecularExponent,
-                            errorMask: errorMask);
-                    }
-                    if (item.PotentialGrass.HasBeenSet)
-                    {
-                        ListXmlTranslation<FormID, Exception>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.PotentialGrass),
-                            item: item.PotentialGrass,
-                            fieldIndex: (int)LandTexture_FieldIndex.PotentialGrass,
-                            errorMask: errorMask,
-                            transl: (FormID subItem, bool listDoMasks, out Exception listSubMask) =>
-                            {
-                                FormIDXmlTranslation.Instance.Write(
-                                    writer: writer,
-                                    name: "Item",
-                                    item: subItem,
-                                    doMasks: errorMask != null,
-                                    errorMask: out listSubMask);
-                            }
-                            );
-                    }
+                    FilePathXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Icon),
+                        item: item.Icon_Property,
+                        fieldIndex: (int)LandTexture_FieldIndex.Icon,
+                        errorMask: errorMask);
+                    LoquiXmlTranslation<HavokData, HavokData_ErrorMask>.Instance.Write(
+                        writer: writer,
+                        item: item.Havok_Property,
+                        name: nameof(item.Havok),
+                        fieldIndex: (int)LandTexture_FieldIndex.Havok,
+                        errorMask: errorMask);
+                    ByteXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.TextureSpecularExponent),
+                        item: item.TextureSpecularExponent_Property,
+                        fieldIndex: (int)LandTexture_FieldIndex.TextureSpecularExponent,
+                        errorMask: errorMask);
+                    ListXmlTranslation<FormID, Exception>.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.PotentialGrass),
+                        item: item.PotentialGrass,
+                        fieldIndex: (int)LandTexture_FieldIndex.PotentialGrass,
+                        errorMask: errorMask,
+                        transl: (FormID subItem, bool listDoMasks, out Exception listSubMask) =>
+                        {
+                            FormIDXmlTranslation.Instance.Write(
+                                writer: writer,
+                                name: "Item",
+                                item: subItem,
+                                doMasks: errorMask != null,
+                                errorMask: out listSubMask);
+                        }
+                        );
                 }
             }
             catch (Exception ex)

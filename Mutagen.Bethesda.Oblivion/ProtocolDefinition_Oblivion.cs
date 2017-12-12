@@ -48,7 +48,6 @@ namespace Loqui
             LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.SoundDataExtended_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.SkillRecord_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.MagicEffect_Registration.Instance);
-            LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.MagicData_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.Script_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.ScriptMetaSummary_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.LocalVariable_Registration.Instance);

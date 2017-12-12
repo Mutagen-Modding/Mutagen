@@ -552,17 +552,22 @@ namespace Mutagen.Bethesda.Generation
 
         private void GenerateFillSnippet(ObjectGeneration obj, FileGeneration fg, TypeGeneration field, BinaryTranslationGeneration generator)
         {
-            if (field is SetMarkerType set)
+            if (field is DataType set)
             {
                 fg.AppendLine("frame.Position += Constants.SUBRECORD_LENGTH;");
-                foreach (var subfield in set.SubFields)
+                for (int i = 0; i < set.SubFields.Count; i++)
                 {
+                    var subfield = set.SubFields[i];
                     if (!this.TryGetTypeGeneration(subfield.GetType(), out var subGenerator))
                     {
                         throw new ArgumentException("Unsupported type generator: " + subfield);
                     }
 
                     if (!subGenerator.ShouldGenerateCopyIn(subfield)) continue;
+                    if (set.BreakIndices.Contains(i))
+                    {
+                        fg.AppendLine("if (frame.Complete) return true;");
+                    }
                     GenerateFillSnippet(obj, fg, subfield, subGenerator);
                 }
                 return;

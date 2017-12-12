@@ -127,6 +127,38 @@ namespace Mutagen.Bethesda.Binary
                 errorMask);
         }
 
+        public void Write<M>(
+            MutagenWriter writer,
+            IHasItemGetter<E?> item,
+            ContentLength length,
+            int fieldIndex,
+            Func<M> errorMask)
+            where M : IErrorMask
+        {
+            this.Write(
+                writer,
+                item.Item,
+                length,
+                fieldIndex,
+                errorMask);
+        }
+
+        public void Write<M>(
+            MutagenWriter writer,
+            IHasItemGetter<E> item,
+            ContentLength length,
+            int fieldIndex,
+            Func<M> errorMask)
+            where M : IErrorMask
+        {
+            this.Write(
+                writer,
+                item.Item,
+                length,
+                fieldIndex,
+                errorMask);
+        }
+
         public void Write(
             MutagenWriter writer,
             E? item,
@@ -218,6 +250,48 @@ namespace Mutagen.Bethesda.Binary
             where M : IErrorMask
         {
             if (!item.HasBeenSet) return;
+            this.Write(
+                writer,
+                item.Item,
+                header,
+                length,
+                fieldIndex,
+                nullable,
+                errorMask != null,
+                errorMask);
+        }
+
+        public void Write<M>(
+            MutagenWriter writer,
+            IHasItemGetter<E?> item,
+            RecordType header,
+            ContentLength length,
+            int fieldIndex,
+            bool nullable,
+            Func<M> errorMask)
+            where M : IErrorMask
+        {
+            this.Write(
+                writer,
+                item.Item,
+                header,
+                length,
+                fieldIndex,
+                nullable,
+                errorMask != null,
+                errorMask);
+        }
+
+        public void Write<M>(
+            MutagenWriter writer,
+            IHasItemGetter<E> item,
+            RecordType header,
+            ContentLength length,
+            int fieldIndex,
+            bool nullable,
+            Func<M> errorMask)
+            where M : IErrorMask
+        {
             this.Write(
                 writer,
                 item.Item,

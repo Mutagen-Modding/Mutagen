@@ -46,15 +46,15 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Flags
-        protected readonly INotifyingSetItem<Faction.FactionFlag> _Flags = NotifyingSetItem.Factory<Faction.FactionFlag>(markAsSet: false);
-        public INotifyingSetItem<Faction.FactionFlag> Flags_Property => _Flags;
+        protected readonly INotifyingItem<Faction.FactionFlag> _Flags = NotifyingItem.Factory<Faction.FactionFlag>();
+        public INotifyingItem<Faction.FactionFlag> Flags_Property => _Flags;
         public Faction.FactionFlag Flags
         {
             get => this._Flags.Item;
             set => this._Flags.Set(value);
         }
-        INotifyingSetItem<Faction.FactionFlag> IFaction.Flags_Property => this.Flags_Property;
-        INotifyingSetItemGetter<Faction.FactionFlag> IFactionGetter.Flags_Property => this.Flags_Property;
+        INotifyingItem<Faction.FactionFlag> IFaction.Flags_Property => this.Flags_Property;
+        INotifyingItemGetter<Faction.FactionFlag> IFactionGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region CrimeGoldMultiplier
         protected readonly INotifyingSetItem<Single> _CrimeGoldMultiplier = NotifyingSetItem.Factory<Single>(markAsSet: false);
@@ -132,48 +132,27 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (Relations.HasBeenSet != rhs.Relations.HasBeenSet) return false;
-            if (Relations.HasBeenSet)
-            {
-                if (!Relations.SequenceEqual(rhs.Relations)) return false;
-            }
-            if (Flags_Property.HasBeenSet != rhs.Flags_Property.HasBeenSet) return false;
-            if (Flags_Property.HasBeenSet)
-            {
-                if (Flags != rhs.Flags) return false;
-            }
+            if (!Relations.SequenceEqual(rhs.Relations)) return false;
+            if (Flags != rhs.Flags) return false;
             if (CrimeGoldMultiplier_Property.HasBeenSet != rhs.CrimeGoldMultiplier_Property.HasBeenSet) return false;
             if (CrimeGoldMultiplier_Property.HasBeenSet)
             {
                 if (CrimeGoldMultiplier != rhs.CrimeGoldMultiplier) return false;
             }
-            if (Ranks.HasBeenSet != rhs.Ranks.HasBeenSet) return false;
-            if (Ranks.HasBeenSet)
-            {
-                if (!Ranks.SequenceEqual(rhs.Ranks)) return false;
-            }
+            if (!Ranks.SequenceEqual(rhs.Ranks)) return false;
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            if (Relations.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Relations).CombineHashCode(ret);
-            }
-            if (Flags_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(Relations).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
             if (CrimeGoldMultiplier_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(CrimeGoldMultiplier).CombineHashCode(ret);
             }
-            if (Ranks.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Ranks).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(Ranks).CombineHashCode(ret);
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -1115,7 +1094,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new INotifyingList<Relation> Relations { get; }
         new Faction.FactionFlag Flags { get; set; }
-        new INotifyingSetItem<Faction.FactionFlag> Flags_Property { get; }
+        new INotifyingItem<Faction.FactionFlag> Flags_Property { get; }
 
         new Single CrimeGoldMultiplier { get; set; }
         new INotifyingSetItem<Single> CrimeGoldMultiplier_Property { get; }
@@ -1130,7 +1109,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Flags
         Faction.FactionFlag Flags { get; }
-        INotifyingSetItemGetter<Faction.FactionFlag> Flags_Property { get; }
+        INotifyingItemGetter<Faction.FactionFlag> Flags_Property { get; }
 
         #endregion
         #region CrimeGoldMultiplier
@@ -1486,9 +1465,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Flags_Property.SetToWithDefault(
-                        rhs: rhs.Flags_Property,
-                        def: def?.Flags_Property,
+                    item.Flags_Property.Set(
+                        value: rhs.Flags,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1558,16 +1536,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Faction_FieldIndex.Relations:
-                    obj.Relations.HasBeenSet = on;
-                    break;
                 case Faction_FieldIndex.Flags:
-                    obj.Flags_Property.HasBeenSet = on;
-                    break;
+                case Faction_FieldIndex.Ranks:
+                    if (on) break;
+                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 case Faction_FieldIndex.CrimeGoldMultiplier:
                     obj.CrimeGoldMultiplier_Property.HasBeenSet = on;
-                    break;
-                case Faction_FieldIndex.Ranks:
-                    obj.Ranks.HasBeenSet = on;
                     break;
                 default:
                     NamedMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
@@ -1587,7 +1561,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Relations.Unset(cmds);
                     break;
                 case Faction_FieldIndex.Flags:
-                    obj.Flags_Property.Unset(cmds);
+                    obj.Flags = default(Faction.FactionFlag);
                     break;
                 case Faction_FieldIndex.CrimeGoldMultiplier:
                     obj.CrimeGoldMultiplier_Property.Unset(cmds);
@@ -1609,13 +1583,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Faction_FieldIndex.Relations:
-                    return obj.Relations.HasBeenSet;
                 case Faction_FieldIndex.Flags:
-                    return obj.Flags_Property.HasBeenSet;
+                case Faction_FieldIndex.Ranks:
+                    return true;
                 case Faction_FieldIndex.CrimeGoldMultiplier:
                     return obj.CrimeGoldMultiplier_Property.HasBeenSet;
-                case Faction_FieldIndex.Ranks:
-                    return obj.Ranks.HasBeenSet;
                 default:
                     return NamedMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -1646,7 +1618,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NotifyingUnsetParameters? cmds = null)
         {
             item.Relations.Unset(cmds.ToUnsetParams());
-            item.Flags_Property.Unset(cmds.ToUnsetParams());
+            item.Flags = default(Faction.FactionFlag);
             item.CrimeGoldMultiplier_Property.Unset(cmds.ToUnsetParams());
             item.Ranks.Unset(cmds.ToUnsetParams());
         }
@@ -1674,7 +1646,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ret.Relations.Specific = item.Relations.SelectAgainst<Relation, MaskItem<bool, Relation_Mask<bool>>>(rhs.Relations, ((l, r) =>
                     {
                         MaskItem<bool, Relation_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => RelationCommon.GetEqualsMask(loqLhs, loqRhs));
+                        itemRet = new MaskItem<bool, Relation_Mask<bool>>();
+                        itemRet.Specific = RelationCommon.GetEqualsMask(l, r);
+                        itemRet.Overall = itemRet.Specific.AllEqual((b) => b);
                         return itemRet;
                     }
                     ), out ret.Relations.Overall);
@@ -1691,7 +1665,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ret.Relations = new MaskItem<bool, IEnumerable<MaskItem<bool, Relation_Mask<bool>>>>();
                 ret.Relations.Overall = false;
             }
-            ret.Flags = item.Flags_Property.Equals(rhs.Flags_Property, (l, r) => l == r);
+            ret.Flags = item.Flags == rhs.Flags;
             ret.CrimeGoldMultiplier = item.CrimeGoldMultiplier_Property.Equals(rhs.CrimeGoldMultiplier_Property, (l, r) => l == r);
             if (item.Ranks.HasBeenSet == rhs.Ranks.HasBeenSet)
             {
@@ -1701,7 +1675,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ret.Ranks.Specific = item.Ranks.SelectAgainst<Rank, MaskItem<bool, Rank_Mask<bool>>>(rhs.Ranks, ((l, r) =>
                     {
                         MaskItem<bool, Rank_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => RankCommon.GetEqualsMask(loqLhs, loqRhs));
+                        itemRet = new MaskItem<bool, Rank_Mask<bool>>();
+                        itemRet.Specific = RankCommon.GetEqualsMask(l, r);
+                        itemRet.Overall = itemRet.Specific.AllEqual((b) => b);
                         return itemRet;
                     }
                     ), out ret.Ranks.Overall);
@@ -1801,7 +1777,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Faction_Mask<bool?> checkMask)
         {
             if (checkMask.Relations.Overall.HasValue && checkMask.Relations.Overall.Value != item.Relations.HasBeenSet) return false;
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_Property.HasBeenSet) return false;
             if (checkMask.CrimeGoldMultiplier.HasValue && checkMask.CrimeGoldMultiplier.Value != item.CrimeGoldMultiplier_Property.HasBeenSet) return false;
             if (checkMask.Ranks.Overall.HasValue && checkMask.Ranks.Overall.Value != item.Ranks.HasBeenSet) return false;
             return true;
@@ -1811,7 +1786,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var ret = new Faction_Mask<bool>();
             ret.Relations = new MaskItem<bool, IEnumerable<MaskItem<bool, Relation_Mask<bool>>>>(item.Relations.HasBeenSet, item.Relations.Select((i) => new MaskItem<bool, Relation_Mask<bool>>(true, i.GetHasBeenSetMask())));
-            ret.Flags = item.Flags_Property.HasBeenSet;
+            ret.Flags = true;
             ret.CrimeGoldMultiplier = item.CrimeGoldMultiplier_Property.HasBeenSet;
             ret.Ranks = new MaskItem<bool, IEnumerable<MaskItem<bool, Rank_Mask<bool>>>>(item.Ranks.HasBeenSet, item.Ranks.Select((i) => new MaskItem<bool, Rank_Mask<bool>>(true, i.GetHasBeenSetMask())));
             return ret;
@@ -1849,34 +1824,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.Faction");
                     }
-                    if (item.Relations.HasBeenSet)
-                    {
-                        ListXmlTranslation<Relation, MaskItem<Exception, Relation_ErrorMask>>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Relations),
-                            item: item.Relations,
-                            fieldIndex: (int)Faction_FieldIndex.Relations,
-                            errorMask: errorMask,
-                            transl: (Relation subItem, bool listDoMasks, out MaskItem<Exception, Relation_ErrorMask> listSubMask) =>
-                            {
-                                LoquiXmlTranslation<Relation, Relation_ErrorMask>.Instance.Write(
-                                    writer: writer,
-                                    item: subItem,
-                                    name: "Item",
-                                    doMasks: errorMask != null,
-                                    errorMask: out listSubMask);
-                            }
-                            );
-                    }
-                    if (item.Flags_Property.HasBeenSet)
-                    {
-                        EnumXmlTranslation<Faction.FactionFlag>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Flags),
-                            item: item.Flags_Property,
-                            fieldIndex: (int)Faction_FieldIndex.Flags,
-                            errorMask: errorMask);
-                    }
+                    ListXmlTranslation<Relation, MaskItem<Exception, Relation_ErrorMask>>.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Relations),
+                        item: item.Relations,
+                        fieldIndex: (int)Faction_FieldIndex.Relations,
+                        errorMask: errorMask,
+                        transl: (Relation subItem, bool listDoMasks, out MaskItem<Exception, Relation_ErrorMask> listSubMask) =>
+                        {
+                            LoquiXmlTranslation<Relation, Relation_ErrorMask>.Instance.Write(
+                                writer: writer,
+                                item: subItem,
+                                name: "Item",
+                                doMasks: errorMask != null,
+                                errorMask: out listSubMask);
+                        }
+                        );
+                    EnumXmlTranslation<Faction.FactionFlag>.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Flags),
+                        item: item.Flags_Property,
+                        fieldIndex: (int)Faction_FieldIndex.Flags,
+                        errorMask: errorMask);
                     if (item.CrimeGoldMultiplier_Property.HasBeenSet)
                     {
                         FloatXmlTranslation.Instance.Write(
@@ -1886,25 +1855,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             fieldIndex: (int)Faction_FieldIndex.CrimeGoldMultiplier,
                             errorMask: errorMask);
                     }
-                    if (item.Ranks.HasBeenSet)
-                    {
-                        ListXmlTranslation<Rank, MaskItem<Exception, Rank_ErrorMask>>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Ranks),
-                            item: item.Ranks,
-                            fieldIndex: (int)Faction_FieldIndex.Ranks,
-                            errorMask: errorMask,
-                            transl: (Rank subItem, bool listDoMasks, out MaskItem<Exception, Rank_ErrorMask> listSubMask) =>
-                            {
-                                LoquiXmlTranslation<Rank, Rank_ErrorMask>.Instance.Write(
-                                    writer: writer,
-                                    item: subItem,
-                                    name: "Item",
-                                    doMasks: errorMask != null,
-                                    errorMask: out listSubMask);
-                            }
-                            );
-                    }
+                    ListXmlTranslation<Rank, MaskItem<Exception, Rank_ErrorMask>>.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Ranks),
+                        item: item.Ranks,
+                        fieldIndex: (int)Faction_FieldIndex.Ranks,
+                        errorMask: errorMask,
+                        transl: (Rank subItem, bool listDoMasks, out MaskItem<Exception, Rank_ErrorMask> listSubMask) =>
+                        {
+                            LoquiXmlTranslation<Rank, Rank_ErrorMask>.Instance.Write(
+                                writer: writer,
+                                item: subItem,
+                                name: "Item",
+                                doMasks: errorMask != null,
+                                errorMask: out listSubMask);
+                        }
+                        );
                 }
             }
             catch (Exception ex)

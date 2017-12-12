@@ -38,23 +38,23 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Data
-        private readonly INotifyingSetItem<LocalVariableData> _Data = new NotifyingSetItem<LocalVariableData>();
-        public INotifyingSetItem<LocalVariableData> Data_Property => this._Data;
+        private readonly INotifyingItem<LocalVariableData> _Data = new NotifyingItem<LocalVariableData>();
+        public INotifyingItem<LocalVariableData> Data_Property => this._Data;
         LocalVariableData ILocalVariableGetter.Data => this.Data;
         public LocalVariableData Data { get => _Data.Item; set => _Data.Item = value; }
-        INotifyingSetItem<LocalVariableData> ILocalVariable.Data_Property => this.Data_Property;
-        INotifyingSetItemGetter<LocalVariableData> ILocalVariableGetter.Data_Property => this.Data_Property;
+        INotifyingItem<LocalVariableData> ILocalVariable.Data_Property => this.Data_Property;
+        INotifyingItemGetter<LocalVariableData> ILocalVariableGetter.Data_Property => this.Data_Property;
         #endregion
         #region Name
-        protected readonly INotifyingSetItem<String> _Name = NotifyingSetItem.Factory<String>(markAsSet: false);
-        public INotifyingSetItem<String> Name_Property => _Name;
+        protected readonly INotifyingItem<String> _Name = NotifyingItem.Factory<String>();
+        public INotifyingItem<String> Name_Property => _Name;
         public String Name
         {
             get => this._Name.Item;
             set => this._Name.Set(value);
         }
-        INotifyingSetItem<String> ILocalVariable.Name_Property => this.Name_Property;
-        INotifyingSetItemGetter<String> ILocalVariableGetter.Name_Property => this.Name_Property;
+        INotifyingItem<String> ILocalVariable.Name_Property => this.Name_Property;
+        INotifyingItemGetter<String> ILocalVariableGetter.Name_Property => this.Name_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -115,30 +115,16 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(LocalVariable rhs)
         {
             if (rhs == null) return false;
-            if (Data_Property.HasBeenSet != rhs.Data_Property.HasBeenSet) return false;
-            if (Data_Property.HasBeenSet)
-            {
-                if (!object.Equals(Data, rhs.Data)) return false;
-            }
-            if (Name_Property.HasBeenSet != rhs.Name_Property.HasBeenSet) return false;
-            if (Name_Property.HasBeenSet)
-            {
-                if (!object.Equals(Name, rhs.Name)) return false;
-            }
+            if (!object.Equals(Data, rhs.Data)) return false;
+            if (!object.Equals(Name, rhs.Name)) return false;
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            if (Data_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Data).CombineHashCode(ret);
-            }
-            if (Name_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(Data).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
             return ret;
         }
 
@@ -934,10 +920,10 @@ namespace Mutagen.Bethesda.Oblivion
     public interface ILocalVariable : ILocalVariableGetter, ILoquiClass<ILocalVariable, ILocalVariableGetter>, ILoquiClass<LocalVariable, ILocalVariableGetter>
     {
         new LocalVariableData Data { get; set; }
-        new INotifyingSetItem<LocalVariableData> Data_Property { get; }
+        new INotifyingItem<LocalVariableData> Data_Property { get; }
 
         new String Name { get; set; }
-        new INotifyingSetItem<String> Name_Property { get; }
+        new INotifyingItem<String> Name_Property { get; }
 
     }
 
@@ -945,12 +931,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Data
         LocalVariableData Data { get; }
-        INotifyingSetItemGetter<LocalVariableData> Data_Property { get; }
+        INotifyingItemGetter<LocalVariableData> Data_Property { get; }
 
         #endregion
         #region Name
         String Name { get; }
-        INotifyingSetItemGetter<String> Name_Property { get; }
+        INotifyingItemGetter<String> Name_Property { get; }
 
         #endregion
 
@@ -1230,46 +1216,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Data_Property.SetToWithDefault(
-                        rhs.Data_Property,
-                        def?.Data_Property,
-                        cmds,
-                        (r, d) =>
-                        {
-                            switch (copyMask?.Data.Overall ?? CopyOption.Reference)
+                    switch (copyMask?.Data?.Overall ?? CopyOption.Reference)
+                    {
+                        case CopyOption.Reference:
+                            item.Data = rhs.Data;
+                            break;
+                        case CopyOption.CopyIn:
+                            LocalVariableDataCommon.CopyFieldsFrom(
+                                item: item.Data,
+                                rhs: rhs.Data,
+                                def: def?.Data,
+                                doMasks: doMasks,
+                                errorMask: (doMasks ? new Func<LocalVariableData_ErrorMask>(() =>
+                                {
+                                    var baseMask = errorMask();
+                                    if (baseMask.Data.Specific == null)
+                                    {
+                                        baseMask.Data = new MaskItem<Exception, LocalVariableData_ErrorMask>(null, new LocalVariableData_ErrorMask());
+                                    }
+                                    return baseMask.Data.Specific;
+                                }
+                                ) : null),
+                                copyMask: copyMask?.Data.Specific,
+                                cmds: cmds);
+                            break;
+                        case CopyOption.MakeCopy:
+                            if (rhs.Data == null)
                             {
-                                case CopyOption.Reference:
-                                    return r;
-                                case CopyOption.CopyIn:
-                                    LocalVariableDataCommon.CopyFieldsFrom(
-                                        item: item.Data,
-                                        rhs: rhs.Data,
-                                        def: def?.Data,
-                                        doMasks: doMasks,
-                                        errorMask: (doMasks ? new Func<LocalVariableData_ErrorMask>(() =>
-                                        {
-                                            var baseMask = errorMask();
-                                            if (baseMask.Data.Specific == null)
-                                            {
-                                                baseMask.Data = new MaskItem<Exception, LocalVariableData_ErrorMask>(null, new LocalVariableData_ErrorMask());
-                                            }
-                                            return baseMask.Data.Specific;
-                                        }
-                                        ) : null),
-                                        copyMask: copyMask?.Data.Specific,
-                                        cmds: cmds);
-                                    return r;
-                                case CopyOption.MakeCopy:
-                                    if (r == null) return default(LocalVariableData);
-                                    return LocalVariableData.Copy(
-                                        r,
-                                        copyMask?.Data?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Data?.Overall}. Cannot execute copy.");
+                                item.Data = null;
                             }
-                        }
-                        );
+                            else
+                            {
+                                item.Data = LocalVariableData.Copy(
+                                    rhs.Data,
+                                    copyMask?.Data?.Specific,
+                                    def?.Data);
+                            }
+                            break;
+                        default:
+                            throw new NotImplementedException($"Unknown CopyOption {copyMask?.Data?.Overall}. Cannot execute copy.");
+                    }
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1281,9 +1267,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Name_Property.SetToWithDefault(
-                        rhs: rhs.Name_Property,
-                        def: def?.Name_Property,
+                    item.Name_Property.Set(
+                        value: rhs.Name,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1306,11 +1291,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case LocalVariable_FieldIndex.Data:
-                    obj.Data_Property.HasBeenSet = on;
-                    break;
                 case LocalVariable_FieldIndex.Name:
-                    obj.Name_Property.HasBeenSet = on;
-                    break;
+                    if (on) break;
+                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1325,10 +1308,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case LocalVariable_FieldIndex.Data:
-                    obj.Data_Property.Unset(cmds);
+                    obj.Data = default(LocalVariableData);
                     break;
                 case LocalVariable_FieldIndex.Name:
-                    obj.Name_Property.Unset(cmds);
+                    obj.Name = default(String);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1343,9 +1326,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case LocalVariable_FieldIndex.Data:
-                    return obj.Data_Property.HasBeenSet;
                 case LocalVariable_FieldIndex.Name:
-                    return obj.Name_Property.HasBeenSet;
+                    return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1371,8 +1353,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILocalVariable item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.Data_Property.Unset(cmds.ToUnsetParams());
-            item.Name_Property.Unset(cmds.ToUnsetParams());
+            item.Data = default(LocalVariableData);
+            item.Name = default(String);
         }
 
         public static LocalVariable_Mask<bool> GetEqualsMask(
@@ -1390,8 +1372,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             LocalVariable_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Data = item.Data_Property.LoquiEqualsHelper(rhs.Data_Property, (loqLhs, loqRhs) => LocalVariableDataCommon.GetEqualsMask(loqLhs, loqRhs));
-            ret.Name = item.Name_Property.Equals(rhs.Name_Property, (l, r) => object.Equals(l, r));
+            ret.Data = new MaskItem<bool, LocalVariableData_Mask<bool>>();
+            ret.Data.Specific = LocalVariableDataCommon.GetEqualsMask(item.Data, rhs.Data);
+            ret.Data.Overall = ret.Data.Specific.AllEqual((b) => b);
+            ret.Name = object.Equals(item.Name, rhs.Name);
         }
 
         public static string ToString(
@@ -1437,17 +1421,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this ILocalVariableGetter item,
             LocalVariable_Mask<bool?> checkMask)
         {
-            if (checkMask.Data.Overall.HasValue && checkMask.Data.Overall.Value != item.Data_Property.HasBeenSet) return false;
-            if (checkMask.Data.Specific != null && (item.Data_Property.Item == null || !item.Data_Property.Item.HasBeenSet(checkMask.Data.Specific))) return false;
-            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_Property.HasBeenSet) return false;
             return true;
         }
 
         public static LocalVariable_Mask<bool> GetHasBeenSetMask(ILocalVariableGetter item)
         {
             var ret = new LocalVariable_Mask<bool>();
-            ret.Data = new MaskItem<bool, LocalVariableData_Mask<bool>>(item.Data_Property.HasBeenSet, LocalVariableDataCommon.GetHasBeenSetMask(item.Data_Property.Item));
-            ret.Name = item.Name_Property.HasBeenSet;
+            ret.Data = new MaskItem<bool, LocalVariableData_Mask<bool>>(true, LocalVariableDataCommon.GetHasBeenSetMask(item.Data_Property.Item));
+            ret.Name = true;
             return ret;
         }
 
@@ -1483,24 +1464,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.LocalVariable");
                     }
-                    if (item.Data_Property.HasBeenSet)
-                    {
-                        LoquiXmlTranslation<LocalVariableData, LocalVariableData_ErrorMask>.Instance.Write(
-                            writer: writer,
-                            item: item.Data_Property,
-                            name: nameof(item.Data),
-                            fieldIndex: (int)LocalVariable_FieldIndex.Data,
-                            errorMask: errorMask);
-                    }
-                    if (item.Name_Property.HasBeenSet)
-                    {
-                        StringXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Name),
-                            item: item.Name_Property,
-                            fieldIndex: (int)LocalVariable_FieldIndex.Name,
-                            errorMask: errorMask);
-                    }
+                    LoquiXmlTranslation<LocalVariableData, LocalVariableData_ErrorMask>.Instance.Write(
+                        writer: writer,
+                        item: item.Data_Property,
+                        name: nameof(item.Data),
+                        fieldIndex: (int)LocalVariable_FieldIndex.Data,
+                        errorMask: errorMask);
+                    StringXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Name),
+                        item: item.Name_Property,
+                        fieldIndex: (int)LocalVariable_FieldIndex.Name,
+                        errorMask: errorMask);
                 }
             }
             catch (Exception ex)

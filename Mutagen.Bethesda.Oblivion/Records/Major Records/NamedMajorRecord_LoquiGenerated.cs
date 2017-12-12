@@ -37,15 +37,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Name
-        protected readonly INotifyingSetItem<String> _Name = NotifyingSetItem.Factory<String>(markAsSet: false);
-        public INotifyingSetItem<String> Name_Property => _Name;
+        protected readonly INotifyingItem<String> _Name = NotifyingItem.Factory<String>();
+        public INotifyingItem<String> Name_Property => _Name;
         public String Name
         {
             get => this._Name.Item;
             set => this._Name.Set(value);
         }
-        INotifyingSetItem<String> INamedMajorRecord.Name_Property => this.Name_Property;
-        INotifyingSetItemGetter<String> INamedMajorRecordGetter.Name_Property => this.Name_Property;
+        INotifyingItem<String> INamedMajorRecord.Name_Property => this.Name_Property;
+        INotifyingItemGetter<String> INamedMajorRecordGetter.Name_Property => this.Name_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -103,21 +103,14 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (Name_Property.HasBeenSet != rhs.Name_Property.HasBeenSet) return false;
-            if (Name_Property.HasBeenSet)
-            {
-                if (!object.Equals(Name, rhs.Name)) return false;
-            }
+            if (!object.Equals(Name, rhs.Name)) return false;
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            if (Name_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -532,7 +525,7 @@ namespace Mutagen.Bethesda.Oblivion
     public interface INamedMajorRecord : INamedMajorRecordGetter, IMajorRecord, ILoquiClass<INamedMajorRecord, INamedMajorRecordGetter>, ILoquiClass<NamedMajorRecord, INamedMajorRecordGetter>
     {
         new String Name { get; set; }
-        new INotifyingSetItem<String> Name_Property { get; }
+        new INotifyingItem<String> Name_Property { get; }
 
     }
 
@@ -540,7 +533,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Name
         String Name { get; }
-        INotifyingSetItemGetter<String> Name_Property { get; }
+        INotifyingItemGetter<String> Name_Property { get; }
 
         #endregion
 
@@ -814,9 +807,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Name_Property.SetToWithDefault(
-                        rhs: rhs.Name_Property,
-                        def: def?.Name_Property,
+                    item.Name_Property.Set(
+                        value: rhs.Name,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -839,8 +831,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case NamedMajorRecord_FieldIndex.Name:
-                    obj.Name_Property.HasBeenSet = on;
-                    break;
+                    if (on) break;
+                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 default:
                     MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
@@ -856,7 +848,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case NamedMajorRecord_FieldIndex.Name:
-                    obj.Name_Property.Unset(cmds);
+                    obj.Name = default(String);
                     break;
                 default:
                     MajorRecordCommon.UnsetNthObject(index, obj);
@@ -872,7 +864,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case NamedMajorRecord_FieldIndex.Name:
-                    return obj.Name_Property.HasBeenSet;
+                    return true;
                 default:
                     return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -896,7 +888,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             INamedMajorRecord item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.Name_Property.Unset(cmds.ToUnsetParams());
+            item.Name = default(String);
         }
 
         public static NamedMajorRecord_Mask<bool> GetEqualsMask(
@@ -914,7 +906,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NamedMajorRecord_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Name = item.Name_Property.Equals(rhs.Name_Property, (l, r) => object.Equals(l, r));
+            ret.Name = object.Equals(item.Name, rhs.Name);
             MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -957,14 +949,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this INamedMajorRecordGetter item,
             NamedMajorRecord_Mask<bool?> checkMask)
         {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_Property.HasBeenSet) return false;
             return true;
         }
 
         public static NamedMajorRecord_Mask<bool> GetHasBeenSetMask(INamedMajorRecordGetter item)
         {
             var ret = new NamedMajorRecord_Mask<bool>();
-            ret.Name = item.Name_Property.HasBeenSet;
+            ret.Name = true;
             return ret;
         }
 
@@ -1000,15 +991,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.NamedMajorRecord");
                     }
-                    if (item.Name_Property.HasBeenSet)
-                    {
-                        StringXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Name),
-                            item: item.Name_Property,
-                            fieldIndex: (int)NamedMajorRecord_FieldIndex.Name,
-                            errorMask: errorMask);
-                    }
+                    StringXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Name),
+                        item: item.Name_Property,
+                        fieldIndex: (int)NamedMajorRecord_FieldIndex.Name,
+                        errorMask: errorMask);
                 }
             }
             catch (Exception ex)
