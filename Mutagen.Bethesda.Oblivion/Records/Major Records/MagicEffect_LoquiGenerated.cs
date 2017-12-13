@@ -166,82 +166,13 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItem<FormID> IMagicEffect.EffectShader_Property => this.EffectShader_Property;
         INotifyingItemGetter<FormID> IMagicEffectGetter.EffectShader_Property => this.EffectShader_Property;
         #endregion
-        #region EnchantEffect
-        protected readonly INotifyingItem<FormID> _EnchantEffect = NotifyingItem.Factory<FormID>();
-        public INotifyingItem<FormID> EnchantEffect_Property => _EnchantEffect;
-        public FormID EnchantEffect
-        {
-            get => this._EnchantEffect.Item;
-            set => this._EnchantEffect.Set(value);
-        }
-        INotifyingItem<FormID> IMagicEffect.EnchantEffect_Property => this.EnchantEffect_Property;
-        INotifyingItemGetter<FormID> IMagicEffectGetter.EnchantEffect_Property => this.EnchantEffect_Property;
-        #endregion
-        #region CastingSound
-        protected readonly INotifyingItem<FormID> _CastingSound = NotifyingItem.Factory<FormID>();
-        public INotifyingItem<FormID> CastingSound_Property => _CastingSound;
-        public FormID CastingSound
-        {
-            get => this._CastingSound.Item;
-            set => this._CastingSound.Set(value);
-        }
-        INotifyingItem<FormID> IMagicEffect.CastingSound_Property => this.CastingSound_Property;
-        INotifyingItemGetter<FormID> IMagicEffectGetter.CastingSound_Property => this.CastingSound_Property;
-        #endregion
-        #region BoltSound
-        protected readonly INotifyingItem<FormID> _BoltSound = NotifyingItem.Factory<FormID>();
-        public INotifyingItem<FormID> BoltSound_Property => _BoltSound;
-        public FormID BoltSound
-        {
-            get => this._BoltSound.Item;
-            set => this._BoltSound.Set(value);
-        }
-        INotifyingItem<FormID> IMagicEffect.BoltSound_Property => this.BoltSound_Property;
-        INotifyingItemGetter<FormID> IMagicEffectGetter.BoltSound_Property => this.BoltSound_Property;
-        #endregion
-        #region HitSound
-        protected readonly INotifyingItem<FormID> _HitSound = NotifyingItem.Factory<FormID>();
-        public INotifyingItem<FormID> HitSound_Property => _HitSound;
-        public FormID HitSound
-        {
-            get => this._HitSound.Item;
-            set => this._HitSound.Set(value);
-        }
-        INotifyingItem<FormID> IMagicEffect.HitSound_Property => this.HitSound_Property;
-        INotifyingItemGetter<FormID> IMagicEffectGetter.HitSound_Property => this.HitSound_Property;
-        #endregion
-        #region AreaSound
-        protected readonly INotifyingItem<FormID> _AreaSound = NotifyingItem.Factory<FormID>();
-        public INotifyingItem<FormID> AreaSound_Property => _AreaSound;
-        public FormID AreaSound
-        {
-            get => this._AreaSound.Item;
-            set => this._AreaSound.Set(value);
-        }
-        INotifyingItem<FormID> IMagicEffect.AreaSound_Property => this.AreaSound_Property;
-        INotifyingItemGetter<FormID> IMagicEffectGetter.AreaSound_Property => this.AreaSound_Property;
-        #endregion
-        #region ConstantEffectEnchantmentFactor
-        protected readonly INotifyingItem<Single> _ConstantEffectEnchantmentFactor = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> ConstantEffectEnchantmentFactor_Property => _ConstantEffectEnchantmentFactor;
-        public Single ConstantEffectEnchantmentFactor
-        {
-            get => this._ConstantEffectEnchantmentFactor.Item;
-            set => this._ConstantEffectEnchantmentFactor.Set(value);
-        }
-        INotifyingItem<Single> IMagicEffect.ConstantEffectEnchantmentFactor_Property => this.ConstantEffectEnchantmentFactor_Property;
-        INotifyingItemGetter<Single> IMagicEffectGetter.ConstantEffectEnchantmentFactor_Property => this.ConstantEffectEnchantmentFactor_Property;
-        #endregion
-        #region ConstantEffectBarterFactor
-        protected readonly INotifyingItem<Single> _ConstantEffectBarterFactor = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> ConstantEffectBarterFactor_Property => _ConstantEffectBarterFactor;
-        public Single ConstantEffectBarterFactor
-        {
-            get => this._ConstantEffectBarterFactor.Item;
-            set => this._ConstantEffectBarterFactor.Set(value);
-        }
-        INotifyingItem<Single> IMagicEffect.ConstantEffectBarterFactor_Property => this.ConstantEffectBarterFactor_Property;
-        INotifyingItemGetter<Single> IMagicEffectGetter.ConstantEffectBarterFactor_Property => this.ConstantEffectBarterFactor_Property;
+        #region SubData
+        private readonly INotifyingSetItem<MagicEffectSubData> _SubData = new NotifyingSetItem<MagicEffectSubData>();
+        public INotifyingSetItem<MagicEffectSubData> SubData_Property => this._SubData;
+        MagicEffectSubData IMagicEffectGetter.SubData => this.SubData;
+        public MagicEffectSubData SubData { get => _SubData.Item; set => _SubData.Item = value; }
+        INotifyingSetItem<MagicEffectSubData> IMagicEffect.SubData_Property => this.SubData_Property;
+        INotifyingSetItemGetter<MagicEffectSubData> IMagicEffectGetter.SubData_Property => this.SubData_Property;
         #endregion
         #region CounterEffects
         private readonly INotifyingList<FormID> _CounterEffects = new NotifyingList<FormID>();
@@ -320,13 +251,11 @@ namespace Mutagen.Bethesda.Oblivion
             if (Light != rhs.Light) return false;
             if (ProjectileSpeed != rhs.ProjectileSpeed) return false;
             if (EffectShader != rhs.EffectShader) return false;
-            if (EnchantEffect != rhs.EnchantEffect) return false;
-            if (CastingSound != rhs.CastingSound) return false;
-            if (BoltSound != rhs.BoltSound) return false;
-            if (HitSound != rhs.HitSound) return false;
-            if (AreaSound != rhs.AreaSound) return false;
-            if (ConstantEffectEnchantmentFactor != rhs.ConstantEffectEnchantmentFactor) return false;
-            if (ConstantEffectBarterFactor != rhs.ConstantEffectBarterFactor) return false;
+            if (SubData_Property.HasBeenSet != rhs.SubData_Property.HasBeenSet) return false;
+            if (SubData_Property.HasBeenSet)
+            {
+                if (!object.Equals(SubData, rhs.SubData)) return false;
+            }
             if (!CounterEffects.SequenceEqual(rhs.CounterEffects)) return false;
             return true;
         }
@@ -346,13 +275,10 @@ namespace Mutagen.Bethesda.Oblivion
             ret = HashHelper.GetHashCode(Light).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(ProjectileSpeed).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(EffectShader).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(EnchantEffect).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(CastingSound).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(BoltSound).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(HitSound).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(AreaSound).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(ConstantEffectEnchantmentFactor).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(ConstantEffectBarterFactor).CombineHashCode(ret);
+            if (SubData_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(SubData).CombineHashCode(ret);
+            }
             ret = HashHelper.GetHashCode(CounterEffects).CombineHashCode(ret);
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
@@ -839,101 +765,17 @@ namespace Mutagen.Bethesda.Oblivion
                             subMask);
                     }
                     break;
-                case "EnchantEffect":
+                case "SubData":
                     {
-                        Exception subMask;
-                        var tryGet = FormIDXmlTranslation.Instance.ParseNonNull(
-                            root,
+                        MaskItem<Exception, MagicEffectSubData_ErrorMask> subMask;
+                        var tryGet = LoquiXmlTranslation<MagicEffectSubData, MagicEffectSubData_ErrorMask>.Instance.Parse(
+                            root: root,
                             doMasks: errorMask != null,
                             errorMask: out subMask);
-                        item._EnchantEffect.SetIfSucceeded(tryGet);
+                        item._SubData.SetIfSucceeded(tryGet);
                         ErrorMask.HandleErrorMask(
                             errorMask,
-                            (int)MagicEffect_FieldIndex.EnchantEffect,
-                            subMask);
-                    }
-                    break;
-                case "CastingSound":
-                    {
-                        Exception subMask;
-                        var tryGet = FormIDXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._CastingSound.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicEffect_FieldIndex.CastingSound,
-                            subMask);
-                    }
-                    break;
-                case "BoltSound":
-                    {
-                        Exception subMask;
-                        var tryGet = FormIDXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._BoltSound.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicEffect_FieldIndex.BoltSound,
-                            subMask);
-                    }
-                    break;
-                case "HitSound":
-                    {
-                        Exception subMask;
-                        var tryGet = FormIDXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._HitSound.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicEffect_FieldIndex.HitSound,
-                            subMask);
-                    }
-                    break;
-                case "AreaSound":
-                    {
-                        Exception subMask;
-                        var tryGet = FormIDXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._AreaSound.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicEffect_FieldIndex.AreaSound,
-                            subMask);
-                    }
-                    break;
-                case "ConstantEffectEnchantmentFactor":
-                    {
-                        Exception subMask;
-                        var tryGet = FloatXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._ConstantEffectEnchantmentFactor.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicEffect_FieldIndex.ConstantEffectEnchantmentFactor,
-                            subMask);
-                    }
-                    break;
-                case "ConstantEffectBarterFactor":
-                    {
-                        Exception subMask;
-                        var tryGet = FloatXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._ConstantEffectBarterFactor.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicEffect_FieldIndex.ConstantEffectBarterFactor,
+                            (int)MagicEffect_FieldIndex.SubData,
                             subMask);
                     }
                     break;
@@ -1363,33 +1205,10 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         fieldIndex: (int)MagicEffect_FieldIndex.EffectShader,
                         errorMask: errorMask));
-                    item._EnchantEffect.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame,
-                        fieldIndex: (int)MagicEffect_FieldIndex.EnchantEffect,
-                        errorMask: errorMask));
-                    item._CastingSound.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame,
-                        fieldIndex: (int)MagicEffect_FieldIndex.CastingSound,
-                        errorMask: errorMask));
-                    item._BoltSound.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame,
-                        fieldIndex: (int)MagicEffect_FieldIndex.BoltSound,
-                        errorMask: errorMask));
-                    item._HitSound.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame,
-                        fieldIndex: (int)MagicEffect_FieldIndex.HitSound,
-                        errorMask: errorMask));
-                    item._AreaSound.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
-                        frame: frame,
-                        fieldIndex: (int)MagicEffect_FieldIndex.AreaSound,
-                        errorMask: errorMask));
-                    item._ConstantEffectEnchantmentFactor.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: frame,
-                        fieldIndex: (int)MagicEffect_FieldIndex.ConstantEffectEnchantmentFactor,
-                        errorMask: errorMask));
-                    item._ConstantEffectBarterFactor.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: frame,
-                        fieldIndex: (int)MagicEffect_FieldIndex.ConstantEffectBarterFactor,
+                    if (frame.Complete) return true;
+                    item._SubData.SetIfSucceeded(LoquiBinaryTranslation<MagicEffectSubData, MagicEffectSubData_ErrorMask>.Instance.Parse(
+                        frame: frame.Spawn(snapToFinalPosition: false),
+                        fieldIndex: (int)MagicEffect_FieldIndex.SubData,
                         errorMask: errorMask));
                     break;
                 case "ESCE":
@@ -1555,39 +1374,9 @@ namespace Mutagen.Bethesda.Oblivion
                         (FormID)obj,
                         cmds);
                     break;
-                case MagicEffect_FieldIndex.EnchantEffect:
-                    this._EnchantEffect.Set(
-                        (FormID)obj,
-                        cmds);
-                    break;
-                case MagicEffect_FieldIndex.CastingSound:
-                    this._CastingSound.Set(
-                        (FormID)obj,
-                        cmds);
-                    break;
-                case MagicEffect_FieldIndex.BoltSound:
-                    this._BoltSound.Set(
-                        (FormID)obj,
-                        cmds);
-                    break;
-                case MagicEffect_FieldIndex.HitSound:
-                    this._HitSound.Set(
-                        (FormID)obj,
-                        cmds);
-                    break;
-                case MagicEffect_FieldIndex.AreaSound:
-                    this._AreaSound.Set(
-                        (FormID)obj,
-                        cmds);
-                    break;
-                case MagicEffect_FieldIndex.ConstantEffectEnchantmentFactor:
-                    this._ConstantEffectEnchantmentFactor.Set(
-                        (Single)obj,
-                        cmds);
-                    break;
-                case MagicEffect_FieldIndex.ConstantEffectBarterFactor:
-                    this._ConstantEffectBarterFactor.Set(
-                        (Single)obj,
+                case MagicEffect_FieldIndex.SubData:
+                    this._SubData.Set(
+                        (MagicEffectSubData)obj,
                         cmds);
                     break;
                 case MagicEffect_FieldIndex.CounterEffects:
@@ -1684,39 +1473,9 @@ namespace Mutagen.Bethesda.Oblivion
                         (FormID)pair.Value,
                         null);
                     break;
-                case MagicEffect_FieldIndex.EnchantEffect:
-                    obj._EnchantEffect.Set(
-                        (FormID)pair.Value,
-                        null);
-                    break;
-                case MagicEffect_FieldIndex.CastingSound:
-                    obj._CastingSound.Set(
-                        (FormID)pair.Value,
-                        null);
-                    break;
-                case MagicEffect_FieldIndex.BoltSound:
-                    obj._BoltSound.Set(
-                        (FormID)pair.Value,
-                        null);
-                    break;
-                case MagicEffect_FieldIndex.HitSound:
-                    obj._HitSound.Set(
-                        (FormID)pair.Value,
-                        null);
-                    break;
-                case MagicEffect_FieldIndex.AreaSound:
-                    obj._AreaSound.Set(
-                        (FormID)pair.Value,
-                        null);
-                    break;
-                case MagicEffect_FieldIndex.ConstantEffectEnchantmentFactor:
-                    obj._ConstantEffectEnchantmentFactor.Set(
-                        (Single)pair.Value,
-                        null);
-                    break;
-                case MagicEffect_FieldIndex.ConstantEffectBarterFactor:
-                    obj._ConstantEffectBarterFactor.Set(
-                        (Single)pair.Value,
+                case MagicEffect_FieldIndex.SubData:
+                    obj._SubData.Set(
+                        (MagicEffectSubData)pair.Value,
                         null);
                     break;
                 case MagicEffect_FieldIndex.CounterEffects:
@@ -1773,26 +1532,8 @@ namespace Mutagen.Bethesda.Oblivion
         new FormID EffectShader { get; set; }
         new INotifyingItem<FormID> EffectShader_Property { get; }
 
-        new FormID EnchantEffect { get; set; }
-        new INotifyingItem<FormID> EnchantEffect_Property { get; }
-
-        new FormID CastingSound { get; set; }
-        new INotifyingItem<FormID> CastingSound_Property { get; }
-
-        new FormID BoltSound { get; set; }
-        new INotifyingItem<FormID> BoltSound_Property { get; }
-
-        new FormID HitSound { get; set; }
-        new INotifyingItem<FormID> HitSound_Property { get; }
-
-        new FormID AreaSound { get; set; }
-        new INotifyingItem<FormID> AreaSound_Property { get; }
-
-        new Single ConstantEffectEnchantmentFactor { get; set; }
-        new INotifyingItem<Single> ConstantEffectEnchantmentFactor_Property { get; }
-
-        new Single ConstantEffectBarterFactor { get; set; }
-        new INotifyingItem<Single> ConstantEffectBarterFactor_Property { get; }
+        new MagicEffectSubData SubData { get; set; }
+        new INotifyingSetItem<MagicEffectSubData> SubData_Property { get; }
 
         new INotifyingList<FormID> CounterEffects { get; }
     }
@@ -1859,39 +1600,9 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<FormID> EffectShader_Property { get; }
 
         #endregion
-        #region EnchantEffect
-        FormID EnchantEffect { get; }
-        INotifyingItemGetter<FormID> EnchantEffect_Property { get; }
-
-        #endregion
-        #region CastingSound
-        FormID CastingSound { get; }
-        INotifyingItemGetter<FormID> CastingSound_Property { get; }
-
-        #endregion
-        #region BoltSound
-        FormID BoltSound { get; }
-        INotifyingItemGetter<FormID> BoltSound_Property { get; }
-
-        #endregion
-        #region HitSound
-        FormID HitSound { get; }
-        INotifyingItemGetter<FormID> HitSound_Property { get; }
-
-        #endregion
-        #region AreaSound
-        FormID AreaSound { get; }
-        INotifyingItemGetter<FormID> AreaSound_Property { get; }
-
-        #endregion
-        #region ConstantEffectEnchantmentFactor
-        Single ConstantEffectEnchantmentFactor { get; }
-        INotifyingItemGetter<Single> ConstantEffectEnchantmentFactor_Property { get; }
-
-        #endregion
-        #region ConstantEffectBarterFactor
-        Single ConstantEffectBarterFactor { get; }
-        INotifyingItemGetter<Single> ConstantEffectBarterFactor_Property { get; }
+        #region SubData
+        MagicEffectSubData SubData { get; }
+        INotifyingSetItemGetter<MagicEffectSubData> SubData_Property { get; }
 
         #endregion
         #region CounterEffects
@@ -1921,14 +1632,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Light = 15,
         ProjectileSpeed = 16,
         EffectShader = 17,
-        EnchantEffect = 18,
-        CastingSound = 19,
-        BoltSound = 20,
-        HitSound = 21,
-        AreaSound = 22,
-        ConstantEffectEnchantmentFactor = 23,
-        ConstantEffectBarterFactor = 24,
-        CounterEffects = 25,
+        SubData = 18,
+        CounterEffects = 19,
     }
     #endregion
 
@@ -1946,7 +1651,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "57a9087c-140b-4152-8b1e-0508d36a2df4";
 
-        public const ushort FieldCount = 20;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(MagicEffect_Mask<>);
 
@@ -1998,20 +1703,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)MagicEffect_FieldIndex.ProjectileSpeed;
                 case "EFFECTSHADER":
                     return (ushort)MagicEffect_FieldIndex.EffectShader;
-                case "ENCHANTEFFECT":
-                    return (ushort)MagicEffect_FieldIndex.EnchantEffect;
-                case "CASTINGSOUND":
-                    return (ushort)MagicEffect_FieldIndex.CastingSound;
-                case "BOLTSOUND":
-                    return (ushort)MagicEffect_FieldIndex.BoltSound;
-                case "HITSOUND":
-                    return (ushort)MagicEffect_FieldIndex.HitSound;
-                case "AREASOUND":
-                    return (ushort)MagicEffect_FieldIndex.AreaSound;
-                case "CONSTANTEFFECTENCHANTMENTFACTOR":
-                    return (ushort)MagicEffect_FieldIndex.ConstantEffectEnchantmentFactor;
-                case "CONSTANTEFFECTBARTERFACTOR":
-                    return (ushort)MagicEffect_FieldIndex.ConstantEffectBarterFactor;
+                case "SUBDATA":
+                    return (ushort)MagicEffect_FieldIndex.SubData;
                 case "COUNTEREFFECTS":
                     return (ushort)MagicEffect_FieldIndex.CounterEffects;
                 default:
@@ -2038,13 +1731,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MagicEffect_FieldIndex.Light:
                 case MagicEffect_FieldIndex.ProjectileSpeed:
                 case MagicEffect_FieldIndex.EffectShader:
-                case MagicEffect_FieldIndex.EnchantEffect:
-                case MagicEffect_FieldIndex.CastingSound:
-                case MagicEffect_FieldIndex.BoltSound:
-                case MagicEffect_FieldIndex.HitSound:
-                case MagicEffect_FieldIndex.AreaSound:
-                case MagicEffect_FieldIndex.ConstantEffectEnchantmentFactor:
-                case MagicEffect_FieldIndex.ConstantEffectBarterFactor:
+                case MagicEffect_FieldIndex.SubData:
                     return false;
                 default:
                     return NamedMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -2057,6 +1744,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case MagicEffect_FieldIndex.Model:
+                case MagicEffect_FieldIndex.SubData:
                     return true;
                 case MagicEffect_FieldIndex.Description:
                 case MagicEffect_FieldIndex.Icon:
@@ -2069,13 +1757,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MagicEffect_FieldIndex.Light:
                 case MagicEffect_FieldIndex.ProjectileSpeed:
                 case MagicEffect_FieldIndex.EffectShader:
-                case MagicEffect_FieldIndex.EnchantEffect:
-                case MagicEffect_FieldIndex.CastingSound:
-                case MagicEffect_FieldIndex.BoltSound:
-                case MagicEffect_FieldIndex.HitSound:
-                case MagicEffect_FieldIndex.AreaSound:
-                case MagicEffect_FieldIndex.ConstantEffectEnchantmentFactor:
-                case MagicEffect_FieldIndex.ConstantEffectBarterFactor:
                 case MagicEffect_FieldIndex.CounterEffects:
                     return false;
                 default:
@@ -2100,13 +1781,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MagicEffect_FieldIndex.Light:
                 case MagicEffect_FieldIndex.ProjectileSpeed:
                 case MagicEffect_FieldIndex.EffectShader:
-                case MagicEffect_FieldIndex.EnchantEffect:
-                case MagicEffect_FieldIndex.CastingSound:
-                case MagicEffect_FieldIndex.BoltSound:
-                case MagicEffect_FieldIndex.HitSound:
-                case MagicEffect_FieldIndex.AreaSound:
-                case MagicEffect_FieldIndex.ConstantEffectEnchantmentFactor:
-                case MagicEffect_FieldIndex.ConstantEffectBarterFactor:
+                case MagicEffect_FieldIndex.SubData:
                 case MagicEffect_FieldIndex.CounterEffects:
                     return false;
                 default:
@@ -2143,20 +1818,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "ProjectileSpeed";
                 case MagicEffect_FieldIndex.EffectShader:
                     return "EffectShader";
-                case MagicEffect_FieldIndex.EnchantEffect:
-                    return "EnchantEffect";
-                case MagicEffect_FieldIndex.CastingSound:
-                    return "CastingSound";
-                case MagicEffect_FieldIndex.BoltSound:
-                    return "BoltSound";
-                case MagicEffect_FieldIndex.HitSound:
-                    return "HitSound";
-                case MagicEffect_FieldIndex.AreaSound:
-                    return "AreaSound";
-                case MagicEffect_FieldIndex.ConstantEffectEnchantmentFactor:
-                    return "ConstantEffectEnchantmentFactor";
-                case MagicEffect_FieldIndex.ConstantEffectBarterFactor:
-                    return "ConstantEffectBarterFactor";
+                case MagicEffect_FieldIndex.SubData:
+                    return "SubData";
                 case MagicEffect_FieldIndex.CounterEffects:
                     return "CounterEffects";
                 default:
@@ -2181,13 +1844,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MagicEffect_FieldIndex.Light:
                 case MagicEffect_FieldIndex.ProjectileSpeed:
                 case MagicEffect_FieldIndex.EffectShader:
-                case MagicEffect_FieldIndex.EnchantEffect:
-                case MagicEffect_FieldIndex.CastingSound:
-                case MagicEffect_FieldIndex.BoltSound:
-                case MagicEffect_FieldIndex.HitSound:
-                case MagicEffect_FieldIndex.AreaSound:
-                case MagicEffect_FieldIndex.ConstantEffectEnchantmentFactor:
-                case MagicEffect_FieldIndex.ConstantEffectBarterFactor:
+                case MagicEffect_FieldIndex.SubData:
                 case MagicEffect_FieldIndex.CounterEffects:
                     return false;
                 default:
@@ -2212,13 +1869,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MagicEffect_FieldIndex.Light:
                 case MagicEffect_FieldIndex.ProjectileSpeed:
                 case MagicEffect_FieldIndex.EffectShader:
-                case MagicEffect_FieldIndex.EnchantEffect:
-                case MagicEffect_FieldIndex.CastingSound:
-                case MagicEffect_FieldIndex.BoltSound:
-                case MagicEffect_FieldIndex.HitSound:
-                case MagicEffect_FieldIndex.AreaSound:
-                case MagicEffect_FieldIndex.ConstantEffectEnchantmentFactor:
-                case MagicEffect_FieldIndex.ConstantEffectBarterFactor:
+                case MagicEffect_FieldIndex.SubData:
                 case MagicEffect_FieldIndex.CounterEffects:
                     return false;
                 default:
@@ -2255,20 +1906,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(Single);
                 case MagicEffect_FieldIndex.EffectShader:
                     return typeof(FormID);
-                case MagicEffect_FieldIndex.EnchantEffect:
-                    return typeof(FormID);
-                case MagicEffect_FieldIndex.CastingSound:
-                    return typeof(FormID);
-                case MagicEffect_FieldIndex.BoltSound:
-                    return typeof(FormID);
-                case MagicEffect_FieldIndex.HitSound:
-                    return typeof(FormID);
-                case MagicEffect_FieldIndex.AreaSound:
-                    return typeof(FormID);
-                case MagicEffect_FieldIndex.ConstantEffectEnchantmentFactor:
-                    return typeof(Single);
-                case MagicEffect_FieldIndex.ConstantEffectBarterFactor:
-                    return typeof(Single);
+                case MagicEffect_FieldIndex.SubData:
+                    return typeof(MagicEffectSubData);
                 case MagicEffect_FieldIndex.CounterEffects:
                     return typeof(NotifyingList<FormID>);
                 default:
@@ -2604,102 +2243,55 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask().SetNthException((int)MagicEffect_FieldIndex.EffectShader, ex);
                 }
             }
-            if (copyMask?.EnchantEffect ?? true)
+            if (copyMask?.SubData.Overall != CopyOption.Skip)
             {
                 try
                 {
-                    item.EnchantEffect_Property.Set(
-                        value: rhs.EnchantEffect,
-                        cmds: cmds);
+                    item.SubData_Property.SetToWithDefault(
+                        rhs.SubData_Property,
+                        def?.SubData_Property,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.SubData.Overall ?? CopyOption.Reference)
+                            {
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    MagicEffectSubDataCommon.CopyFieldsFrom(
+                                        item: item.SubData,
+                                        rhs: rhs.SubData,
+                                        def: def?.SubData,
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<MagicEffectSubData_ErrorMask>(() =>
+                                        {
+                                            var baseMask = errorMask();
+                                            if (baseMask.SubData.Specific == null)
+                                            {
+                                                baseMask.SubData = new MaskItem<Exception, MagicEffectSubData_ErrorMask>(null, new MagicEffectSubData_ErrorMask());
+                                            }
+                                            return baseMask.SubData.Specific;
+                                        }
+                                        ) : null),
+                                        copyMask: copyMask?.SubData.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(MagicEffectSubData);
+                                    return MagicEffectSubData.Copy(
+                                        r,
+                                        copyMask?.SubData?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.SubData?.Overall}. Cannot execute copy.");
+                            }
+                        }
+                        );
                 }
                 catch (Exception ex)
                 when (doMasks)
                 {
-                    errorMask().SetNthException((int)MagicEffect_FieldIndex.EnchantEffect, ex);
-                }
-            }
-            if (copyMask?.CastingSound ?? true)
-            {
-                try
-                {
-                    item.CastingSound_Property.Set(
-                        value: rhs.CastingSound,
-                        cmds: cmds);
-                }
-                catch (Exception ex)
-                when (doMasks)
-                {
-                    errorMask().SetNthException((int)MagicEffect_FieldIndex.CastingSound, ex);
-                }
-            }
-            if (copyMask?.BoltSound ?? true)
-            {
-                try
-                {
-                    item.BoltSound_Property.Set(
-                        value: rhs.BoltSound,
-                        cmds: cmds);
-                }
-                catch (Exception ex)
-                when (doMasks)
-                {
-                    errorMask().SetNthException((int)MagicEffect_FieldIndex.BoltSound, ex);
-                }
-            }
-            if (copyMask?.HitSound ?? true)
-            {
-                try
-                {
-                    item.HitSound_Property.Set(
-                        value: rhs.HitSound,
-                        cmds: cmds);
-                }
-                catch (Exception ex)
-                when (doMasks)
-                {
-                    errorMask().SetNthException((int)MagicEffect_FieldIndex.HitSound, ex);
-                }
-            }
-            if (copyMask?.AreaSound ?? true)
-            {
-                try
-                {
-                    item.AreaSound_Property.Set(
-                        value: rhs.AreaSound,
-                        cmds: cmds);
-                }
-                catch (Exception ex)
-                when (doMasks)
-                {
-                    errorMask().SetNthException((int)MagicEffect_FieldIndex.AreaSound, ex);
-                }
-            }
-            if (copyMask?.ConstantEffectEnchantmentFactor ?? true)
-            {
-                try
-                {
-                    item.ConstantEffectEnchantmentFactor_Property.Set(
-                        value: rhs.ConstantEffectEnchantmentFactor,
-                        cmds: cmds);
-                }
-                catch (Exception ex)
-                when (doMasks)
-                {
-                    errorMask().SetNthException((int)MagicEffect_FieldIndex.ConstantEffectEnchantmentFactor, ex);
-                }
-            }
-            if (copyMask?.ConstantEffectBarterFactor ?? true)
-            {
-                try
-                {
-                    item.ConstantEffectBarterFactor_Property.Set(
-                        value: rhs.ConstantEffectBarterFactor,
-                        cmds: cmds);
-                }
-                catch (Exception ex)
-                when (doMasks)
-                {
-                    errorMask().SetNthException((int)MagicEffect_FieldIndex.ConstantEffectBarterFactor, ex);
+                    errorMask().SetNthException((int)MagicEffect_FieldIndex.SubData, ex);
                 }
             }
             if (copyMask?.CounterEffects != CopyOption.Skip)
@@ -2742,16 +2334,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MagicEffect_FieldIndex.Light:
                 case MagicEffect_FieldIndex.ProjectileSpeed:
                 case MagicEffect_FieldIndex.EffectShader:
-                case MagicEffect_FieldIndex.EnchantEffect:
-                case MagicEffect_FieldIndex.CastingSound:
-                case MagicEffect_FieldIndex.BoltSound:
-                case MagicEffect_FieldIndex.HitSound:
-                case MagicEffect_FieldIndex.AreaSound:
-                case MagicEffect_FieldIndex.ConstantEffectEnchantmentFactor:
-                case MagicEffect_FieldIndex.ConstantEffectBarterFactor:
                 case MagicEffect_FieldIndex.CounterEffects:
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
+                case MagicEffect_FieldIndex.SubData:
+                    obj.SubData_Property.HasBeenSet = on;
+                    break;
                 default:
                     NamedMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
@@ -2802,26 +2390,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MagicEffect_FieldIndex.EffectShader:
                     obj.EffectShader = default(FormID);
                     break;
-                case MagicEffect_FieldIndex.EnchantEffect:
-                    obj.EnchantEffect = default(FormID);
-                    break;
-                case MagicEffect_FieldIndex.CastingSound:
-                    obj.CastingSound = default(FormID);
-                    break;
-                case MagicEffect_FieldIndex.BoltSound:
-                    obj.BoltSound = default(FormID);
-                    break;
-                case MagicEffect_FieldIndex.HitSound:
-                    obj.HitSound = default(FormID);
-                    break;
-                case MagicEffect_FieldIndex.AreaSound:
-                    obj.AreaSound = default(FormID);
-                    break;
-                case MagicEffect_FieldIndex.ConstantEffectEnchantmentFactor:
-                    obj.ConstantEffectEnchantmentFactor = default(Single);
-                    break;
-                case MagicEffect_FieldIndex.ConstantEffectBarterFactor:
-                    obj.ConstantEffectBarterFactor = default(Single);
+                case MagicEffect_FieldIndex.SubData:
+                    obj.SubData_Property.Unset(cmds);
                     break;
                 case MagicEffect_FieldIndex.CounterEffects:
                     obj.CounterEffects.Unset(cmds);
@@ -2851,15 +2421,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MagicEffect_FieldIndex.Light:
                 case MagicEffect_FieldIndex.ProjectileSpeed:
                 case MagicEffect_FieldIndex.EffectShader:
-                case MagicEffect_FieldIndex.EnchantEffect:
-                case MagicEffect_FieldIndex.CastingSound:
-                case MagicEffect_FieldIndex.BoltSound:
-                case MagicEffect_FieldIndex.HitSound:
-                case MagicEffect_FieldIndex.AreaSound:
-                case MagicEffect_FieldIndex.ConstantEffectEnchantmentFactor:
-                case MagicEffect_FieldIndex.ConstantEffectBarterFactor:
                 case MagicEffect_FieldIndex.CounterEffects:
                     return true;
+                case MagicEffect_FieldIndex.SubData:
+                    return obj.SubData_Property.HasBeenSet;
                 default:
                     return NamedMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -2896,20 +2461,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.ProjectileSpeed;
                 case MagicEffect_FieldIndex.EffectShader:
                     return obj.EffectShader;
-                case MagicEffect_FieldIndex.EnchantEffect:
-                    return obj.EnchantEffect;
-                case MagicEffect_FieldIndex.CastingSound:
-                    return obj.CastingSound;
-                case MagicEffect_FieldIndex.BoltSound:
-                    return obj.BoltSound;
-                case MagicEffect_FieldIndex.HitSound:
-                    return obj.HitSound;
-                case MagicEffect_FieldIndex.AreaSound:
-                    return obj.AreaSound;
-                case MagicEffect_FieldIndex.ConstantEffectEnchantmentFactor:
-                    return obj.ConstantEffectEnchantmentFactor;
-                case MagicEffect_FieldIndex.ConstantEffectBarterFactor:
-                    return obj.ConstantEffectBarterFactor;
+                case MagicEffect_FieldIndex.SubData:
+                    return obj.SubData;
                 case MagicEffect_FieldIndex.CounterEffects:
                     return obj.CounterEffects;
                 default:
@@ -2933,13 +2486,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Light = default(FormID);
             item.ProjectileSpeed = default(Single);
             item.EffectShader = default(FormID);
-            item.EnchantEffect = default(FormID);
-            item.CastingSound = default(FormID);
-            item.BoltSound = default(FormID);
-            item.HitSound = default(FormID);
-            item.AreaSound = default(FormID);
-            item.ConstantEffectEnchantmentFactor = default(Single);
-            item.ConstantEffectBarterFactor = default(Single);
+            item.SubData_Property.Unset(cmds.ToUnsetParams());
             item.CounterEffects.Unset(cmds.ToUnsetParams());
         }
 
@@ -2972,13 +2519,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Light = item.Light == rhs.Light;
             ret.ProjectileSpeed = item.ProjectileSpeed == rhs.ProjectileSpeed;
             ret.EffectShader = item.EffectShader == rhs.EffectShader;
-            ret.EnchantEffect = item.EnchantEffect == rhs.EnchantEffect;
-            ret.CastingSound = item.CastingSound == rhs.CastingSound;
-            ret.BoltSound = item.BoltSound == rhs.BoltSound;
-            ret.HitSound = item.HitSound == rhs.HitSound;
-            ret.AreaSound = item.AreaSound == rhs.AreaSound;
-            ret.ConstantEffectEnchantmentFactor = item.ConstantEffectEnchantmentFactor == rhs.ConstantEffectEnchantmentFactor;
-            ret.ConstantEffectBarterFactor = item.ConstantEffectBarterFactor == rhs.ConstantEffectBarterFactor;
+            ret.SubData = item.SubData_Property.LoquiEqualsHelper(rhs.SubData_Property, (loqLhs, loqRhs) => MagicEffectSubDataCommon.GetEqualsMask(loqLhs, loqRhs));
             if (item.CounterEffects.HasBeenSet == rhs.CounterEffects.HasBeenSet)
             {
                 if (item.CounterEffects.HasBeenSet)
@@ -3076,33 +2617,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"EffectShader => {item.EffectShader}");
                 }
-                if (printMask?.EnchantEffect ?? true)
+                if (printMask?.SubData?.Overall ?? true)
                 {
-                    fg.AppendLine($"EnchantEffect => {item.EnchantEffect}");
-                }
-                if (printMask?.CastingSound ?? true)
-                {
-                    fg.AppendLine($"CastingSound => {item.CastingSound}");
-                }
-                if (printMask?.BoltSound ?? true)
-                {
-                    fg.AppendLine($"BoltSound => {item.BoltSound}");
-                }
-                if (printMask?.HitSound ?? true)
-                {
-                    fg.AppendLine($"HitSound => {item.HitSound}");
-                }
-                if (printMask?.AreaSound ?? true)
-                {
-                    fg.AppendLine($"AreaSound => {item.AreaSound}");
-                }
-                if (printMask?.ConstantEffectEnchantmentFactor ?? true)
-                {
-                    fg.AppendLine($"ConstantEffectEnchantmentFactor => {item.ConstantEffectEnchantmentFactor}");
-                }
-                if (printMask?.ConstantEffectBarterFactor ?? true)
-                {
-                    fg.AppendLine($"ConstantEffectBarterFactor => {item.ConstantEffectBarterFactor}");
+                    item.SubData?.ToString(fg, "SubData");
                 }
                 if (printMask?.CounterEffects?.Overall ?? true)
                 {
@@ -3130,6 +2647,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IMagicEffectGetter item,
             MagicEffect_Mask<bool?> checkMask)
         {
+            if (checkMask.SubData.Overall.HasValue && checkMask.SubData.Overall.Value != item.SubData_Property.HasBeenSet) return false;
+            if (checkMask.SubData.Specific != null && (item.SubData_Property.Item == null || !item.SubData_Property.Item.HasBeenSet(checkMask.SubData.Specific))) return false;
             if (checkMask.CounterEffects.Overall.HasValue && checkMask.CounterEffects.Overall.Value != item.CounterEffects.HasBeenSet) return false;
             return true;
         }
@@ -3149,13 +2668,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Light = true;
             ret.ProjectileSpeed = true;
             ret.EffectShader = true;
-            ret.EnchantEffect = true;
-            ret.CastingSound = true;
-            ret.BoltSound = true;
-            ret.HitSound = true;
-            ret.AreaSound = true;
-            ret.ConstantEffectEnchantmentFactor = true;
-            ret.ConstantEffectBarterFactor = true;
+            ret.SubData = new MaskItem<bool, MagicEffectSubData_Mask<bool>>(item.SubData_Property.HasBeenSet, MagicEffectSubDataCommon.GetHasBeenSetMask(item.SubData_Property.Item));
             ret.CounterEffects = new MaskItem<bool, IEnumerable<bool>>(item.CounterEffects.HasBeenSet, null);
             return ret;
         }
@@ -3264,48 +2777,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item: item.EffectShader_Property,
                         fieldIndex: (int)MagicEffect_FieldIndex.EffectShader,
                         errorMask: errorMask);
-                    FormIDXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.EnchantEffect),
-                        item: item.EnchantEffect_Property,
-                        fieldIndex: (int)MagicEffect_FieldIndex.EnchantEffect,
-                        errorMask: errorMask);
-                    FormIDXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.CastingSound),
-                        item: item.CastingSound_Property,
-                        fieldIndex: (int)MagicEffect_FieldIndex.CastingSound,
-                        errorMask: errorMask);
-                    FormIDXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.BoltSound),
-                        item: item.BoltSound_Property,
-                        fieldIndex: (int)MagicEffect_FieldIndex.BoltSound,
-                        errorMask: errorMask);
-                    FormIDXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.HitSound),
-                        item: item.HitSound_Property,
-                        fieldIndex: (int)MagicEffect_FieldIndex.HitSound,
-                        errorMask: errorMask);
-                    FormIDXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.AreaSound),
-                        item: item.AreaSound_Property,
-                        fieldIndex: (int)MagicEffect_FieldIndex.AreaSound,
-                        errorMask: errorMask);
-                    FloatXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.ConstantEffectEnchantmentFactor),
-                        item: item.ConstantEffectEnchantmentFactor_Property,
-                        fieldIndex: (int)MagicEffect_FieldIndex.ConstantEffectEnchantmentFactor,
-                        errorMask: errorMask);
-                    FloatXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.ConstantEffectBarterFactor),
-                        item: item.ConstantEffectBarterFactor_Property,
-                        fieldIndex: (int)MagicEffect_FieldIndex.ConstantEffectBarterFactor,
-                        errorMask: errorMask);
+                    if (item.SubData_Property.HasBeenSet)
+                    {
+                        LoquiXmlTranslation<MagicEffectSubData, MagicEffectSubData_ErrorMask>.Instance.Write(
+                            writer: writer,
+                            item: item.SubData_Property,
+                            name: nameof(item.SubData),
+                            fieldIndex: (int)MagicEffect_FieldIndex.SubData,
+                            errorMask: errorMask);
+                    }
                     ListXmlTranslation<FormID, Exception>.Instance.Write(
                         writer: writer,
                         name: nameof(item.CounterEffects),
@@ -3469,40 +2949,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.EffectShader_Property,
                     fieldIndex: (int)MagicEffect_FieldIndex.EffectShader,
                     errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                LoquiBinaryTranslation<MagicEffectSubData, MagicEffectSubData_ErrorMask>.Instance.Write(
                     writer: writer,
-                    item: item.EnchantEffect_Property,
-                    fieldIndex: (int)MagicEffect_FieldIndex.EnchantEffect,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.CastingSound_Property,
-                    fieldIndex: (int)MagicEffect_FieldIndex.CastingSound,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.BoltSound_Property,
-                    fieldIndex: (int)MagicEffect_FieldIndex.BoltSound,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.HitSound_Property,
-                    fieldIndex: (int)MagicEffect_FieldIndex.HitSound,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.AreaSound_Property,
-                    fieldIndex: (int)MagicEffect_FieldIndex.AreaSound,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.ConstantEffectEnchantmentFactor_Property,
-                    fieldIndex: (int)MagicEffect_FieldIndex.ConstantEffectEnchantmentFactor,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.ConstantEffectBarterFactor_Property,
-                    fieldIndex: (int)MagicEffect_FieldIndex.ConstantEffectBarterFactor,
+                    item: item.SubData_Property,
+                    fieldIndex: (int)MagicEffect_FieldIndex.SubData,
                     errorMask: errorMask);
             }
             Mutagen.Bethesda.Binary.ListBinaryTranslation<FormID, Exception>.Instance.Write(
@@ -3551,13 +3001,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Light = initialValue;
             this.ProjectileSpeed = initialValue;
             this.EffectShader = initialValue;
-            this.EnchantEffect = initialValue;
-            this.CastingSound = initialValue;
-            this.BoltSound = initialValue;
-            this.HitSound = initialValue;
-            this.AreaSound = initialValue;
-            this.ConstantEffectEnchantmentFactor = initialValue;
-            this.ConstantEffectBarterFactor = initialValue;
+            this.SubData = new MaskItem<T, MagicEffectSubData_Mask<T>>(initialValue, new MagicEffectSubData_Mask<T>(initialValue));
             this.CounterEffects = new MaskItem<T, IEnumerable<T>>(initialValue, null);
         }
         #endregion
@@ -3575,13 +3019,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public T Light;
         public T ProjectileSpeed;
         public T EffectShader;
-        public T EnchantEffect;
-        public T CastingSound;
-        public T BoltSound;
-        public T HitSound;
-        public T AreaSound;
-        public T ConstantEffectEnchantmentFactor;
-        public T ConstantEffectBarterFactor;
+        public MaskItem<T, MagicEffectSubData_Mask<T>> SubData { get; set; }
         public MaskItem<T, IEnumerable<T>> CounterEffects;
         #endregion
 
@@ -3608,13 +3046,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.Light, rhs.Light)) return false;
             if (!object.Equals(this.ProjectileSpeed, rhs.ProjectileSpeed)) return false;
             if (!object.Equals(this.EffectShader, rhs.EffectShader)) return false;
-            if (!object.Equals(this.EnchantEffect, rhs.EnchantEffect)) return false;
-            if (!object.Equals(this.CastingSound, rhs.CastingSound)) return false;
-            if (!object.Equals(this.BoltSound, rhs.BoltSound)) return false;
-            if (!object.Equals(this.HitSound, rhs.HitSound)) return false;
-            if (!object.Equals(this.AreaSound, rhs.AreaSound)) return false;
-            if (!object.Equals(this.ConstantEffectEnchantmentFactor, rhs.ConstantEffectEnchantmentFactor)) return false;
-            if (!object.Equals(this.ConstantEffectBarterFactor, rhs.ConstantEffectBarterFactor)) return false;
+            if (!object.Equals(this.SubData, rhs.SubData)) return false;
             if (!object.Equals(this.CounterEffects, rhs.CounterEffects)) return false;
             return true;
         }
@@ -3633,13 +3065,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.Light?.GetHashCode());
             ret = ret.CombineHashCode(this.ProjectileSpeed?.GetHashCode());
             ret = ret.CombineHashCode(this.EffectShader?.GetHashCode());
-            ret = ret.CombineHashCode(this.EnchantEffect?.GetHashCode());
-            ret = ret.CombineHashCode(this.CastingSound?.GetHashCode());
-            ret = ret.CombineHashCode(this.BoltSound?.GetHashCode());
-            ret = ret.CombineHashCode(this.HitSound?.GetHashCode());
-            ret = ret.CombineHashCode(this.AreaSound?.GetHashCode());
-            ret = ret.CombineHashCode(this.ConstantEffectEnchantmentFactor?.GetHashCode());
-            ret = ret.CombineHashCode(this.ConstantEffectBarterFactor?.GetHashCode());
+            ret = ret.CombineHashCode(this.SubData?.GetHashCode());
             ret = ret.CombineHashCode(this.CounterEffects?.GetHashCode());
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
@@ -3667,13 +3093,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!eval(this.Light)) return false;
             if (!eval(this.ProjectileSpeed)) return false;
             if (!eval(this.EffectShader)) return false;
-            if (!eval(this.EnchantEffect)) return false;
-            if (!eval(this.CastingSound)) return false;
-            if (!eval(this.BoltSound)) return false;
-            if (!eval(this.HitSound)) return false;
-            if (!eval(this.AreaSound)) return false;
-            if (!eval(this.ConstantEffectEnchantmentFactor)) return false;
-            if (!eval(this.ConstantEffectBarterFactor)) return false;
+            if (SubData != null)
+            {
+                if (!eval(this.SubData.Overall)) return false;
+                if (SubData.Specific != null && !SubData.Specific.AllEqual(eval)) return false;
+            }
             if (CounterEffects != null)
             {
                 if (!eval(this.CounterEffects.Overall)) return false;
@@ -3720,13 +3144,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Light = eval(this.Light);
             obj.ProjectileSpeed = eval(this.ProjectileSpeed);
             obj.EffectShader = eval(this.EffectShader);
-            obj.EnchantEffect = eval(this.EnchantEffect);
-            obj.CastingSound = eval(this.CastingSound);
-            obj.BoltSound = eval(this.BoltSound);
-            obj.HitSound = eval(this.HitSound);
-            obj.AreaSound = eval(this.AreaSound);
-            obj.ConstantEffectEnchantmentFactor = eval(this.ConstantEffectEnchantmentFactor);
-            obj.ConstantEffectBarterFactor = eval(this.ConstantEffectBarterFactor);
+            if (this.SubData != null)
+            {
+                obj.SubData = new MaskItem<R, MagicEffectSubData_Mask<R>>();
+                obj.SubData.Overall = eval(this.SubData.Overall);
+                if (this.SubData.Specific != null)
+                {
+                    obj.SubData.Specific = this.SubData.Specific.Translate(eval);
+                }
+            }
             if (CounterEffects != null)
             {
                 obj.CounterEffects = new MaskItem<R, IEnumerable<R>>();
@@ -3821,33 +3247,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"EffectShader => {EffectShader}");
                 }
-                if (printMask?.EnchantEffect ?? true)
+                if (printMask?.SubData?.Overall ?? true)
                 {
-                    fg.AppendLine($"EnchantEffect => {EnchantEffect}");
-                }
-                if (printMask?.CastingSound ?? true)
-                {
-                    fg.AppendLine($"CastingSound => {CastingSound}");
-                }
-                if (printMask?.BoltSound ?? true)
-                {
-                    fg.AppendLine($"BoltSound => {BoltSound}");
-                }
-                if (printMask?.HitSound ?? true)
-                {
-                    fg.AppendLine($"HitSound => {HitSound}");
-                }
-                if (printMask?.AreaSound ?? true)
-                {
-                    fg.AppendLine($"AreaSound => {AreaSound}");
-                }
-                if (printMask?.ConstantEffectEnchantmentFactor ?? true)
-                {
-                    fg.AppendLine($"ConstantEffectEnchantmentFactor => {ConstantEffectEnchantmentFactor}");
-                }
-                if (printMask?.ConstantEffectBarterFactor ?? true)
-                {
-                    fg.AppendLine($"ConstantEffectBarterFactor => {ConstantEffectBarterFactor}");
+                    SubData?.ToString(fg);
                 }
                 if (printMask?.CounterEffects?.Overall ?? true)
                 {
@@ -3896,13 +3298,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Exception Light;
         public Exception ProjectileSpeed;
         public Exception EffectShader;
-        public Exception EnchantEffect;
-        public Exception CastingSound;
-        public Exception BoltSound;
-        public Exception HitSound;
-        public Exception AreaSound;
-        public Exception ConstantEffectEnchantmentFactor;
-        public Exception ConstantEffectBarterFactor;
+        public MaskItem<Exception, MagicEffectSubData_ErrorMask> SubData;
         public MaskItem<Exception, IEnumerable<Exception>> CounterEffects;
         #endregion
 
@@ -3948,26 +3344,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MagicEffect_FieldIndex.EffectShader:
                     this.EffectShader = ex;
                     break;
-                case MagicEffect_FieldIndex.EnchantEffect:
-                    this.EnchantEffect = ex;
-                    break;
-                case MagicEffect_FieldIndex.CastingSound:
-                    this.CastingSound = ex;
-                    break;
-                case MagicEffect_FieldIndex.BoltSound:
-                    this.BoltSound = ex;
-                    break;
-                case MagicEffect_FieldIndex.HitSound:
-                    this.HitSound = ex;
-                    break;
-                case MagicEffect_FieldIndex.AreaSound:
-                    this.AreaSound = ex;
-                    break;
-                case MagicEffect_FieldIndex.ConstantEffectEnchantmentFactor:
-                    this.ConstantEffectEnchantmentFactor = ex;
-                    break;
-                case MagicEffect_FieldIndex.ConstantEffectBarterFactor:
-                    this.ConstantEffectBarterFactor = ex;
+                case MagicEffect_FieldIndex.SubData:
+                    this.SubData = new MaskItem<Exception, MagicEffectSubData_ErrorMask>(ex, null);
                     break;
                 case MagicEffect_FieldIndex.CounterEffects:
                     this.CounterEffects = new MaskItem<Exception, IEnumerable<Exception>>(ex, null);
@@ -4019,26 +3397,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MagicEffect_FieldIndex.EffectShader:
                     this.EffectShader = (Exception)obj;
                     break;
-                case MagicEffect_FieldIndex.EnchantEffect:
-                    this.EnchantEffect = (Exception)obj;
-                    break;
-                case MagicEffect_FieldIndex.CastingSound:
-                    this.CastingSound = (Exception)obj;
-                    break;
-                case MagicEffect_FieldIndex.BoltSound:
-                    this.BoltSound = (Exception)obj;
-                    break;
-                case MagicEffect_FieldIndex.HitSound:
-                    this.HitSound = (Exception)obj;
-                    break;
-                case MagicEffect_FieldIndex.AreaSound:
-                    this.AreaSound = (Exception)obj;
-                    break;
-                case MagicEffect_FieldIndex.ConstantEffectEnchantmentFactor:
-                    this.ConstantEffectEnchantmentFactor = (Exception)obj;
-                    break;
-                case MagicEffect_FieldIndex.ConstantEffectBarterFactor:
-                    this.ConstantEffectBarterFactor = (Exception)obj;
+                case MagicEffect_FieldIndex.SubData:
+                    this.SubData = (MaskItem<Exception, MagicEffectSubData_ErrorMask>)obj;
                     break;
                 case MagicEffect_FieldIndex.CounterEffects:
                     this.CounterEffects = (MaskItem<Exception, IEnumerable<Exception>>)obj;
@@ -4093,13 +3453,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine($"Light => {Light}");
             fg.AppendLine($"ProjectileSpeed => {ProjectileSpeed}");
             fg.AppendLine($"EffectShader => {EffectShader}");
-            fg.AppendLine($"EnchantEffect => {EnchantEffect}");
-            fg.AppendLine($"CastingSound => {CastingSound}");
-            fg.AppendLine($"BoltSound => {BoltSound}");
-            fg.AppendLine($"HitSound => {HitSound}");
-            fg.AppendLine($"AreaSound => {AreaSound}");
-            fg.AppendLine($"ConstantEffectEnchantmentFactor => {ConstantEffectEnchantmentFactor}");
-            fg.AppendLine($"ConstantEffectBarterFactor => {ConstantEffectBarterFactor}");
+            SubData?.ToString(fg);
             fg.AppendLine("CounterEffects =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -4141,13 +3495,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Light = this.Light.Combine(rhs.Light);
             ret.ProjectileSpeed = this.ProjectileSpeed.Combine(rhs.ProjectileSpeed);
             ret.EffectShader = this.EffectShader.Combine(rhs.EffectShader);
-            ret.EnchantEffect = this.EnchantEffect.Combine(rhs.EnchantEffect);
-            ret.CastingSound = this.CastingSound.Combine(rhs.CastingSound);
-            ret.BoltSound = this.BoltSound.Combine(rhs.BoltSound);
-            ret.HitSound = this.HitSound.Combine(rhs.HitSound);
-            ret.AreaSound = this.AreaSound.Combine(rhs.AreaSound);
-            ret.ConstantEffectEnchantmentFactor = this.ConstantEffectEnchantmentFactor.Combine(rhs.ConstantEffectEnchantmentFactor);
-            ret.ConstantEffectBarterFactor = this.ConstantEffectBarterFactor.Combine(rhs.ConstantEffectBarterFactor);
+            ret.SubData = new MaskItem<Exception, MagicEffectSubData_ErrorMask>(this.SubData.Overall.Combine(rhs.SubData.Overall), ((IErrorMask<MagicEffectSubData_ErrorMask>)this.SubData.Specific).Combine(rhs.SubData.Specific));
             ret.CounterEffects = new MaskItem<Exception, IEnumerable<Exception>>(this.CounterEffects.Overall.Combine(rhs.CounterEffects.Overall), new List<Exception>(this.CounterEffects.Specific.And(rhs.CounterEffects.Specific)));
             return ret;
         }
@@ -4174,13 +3522,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Light;
         public bool ProjectileSpeed;
         public bool EffectShader;
-        public bool EnchantEffect;
-        public bool CastingSound;
-        public bool BoltSound;
-        public bool HitSound;
-        public bool AreaSound;
-        public bool ConstantEffectEnchantmentFactor;
-        public bool ConstantEffectBarterFactor;
+        public MaskItem<CopyOption, MagicEffectSubData_CopyMask> SubData;
         public CopyOption CounterEffects;
         #endregion
 
