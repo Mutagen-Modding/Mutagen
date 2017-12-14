@@ -64,6 +64,7 @@ namespace Mutagen.Bethesda.Binary
                 var ret = new List<T>();
                 while (true)
                 {
+                    var startingPos = frame.Position;
                     var get = transl(safeFrame, doMasks, out var subMaskObj);
                     if (get.Succeeded)
                     {
@@ -82,6 +83,7 @@ namespace Mutagen.Bethesda.Binary
                         maskList.Add(subMaskObj);
                     }
 
+                    if (frame.Position == startingPos) throw new ArgumentException($"Parsed item on the list consumed no data: {get.Value}");
                     if (!HeaderTranslation.TryGetRecordType(safeFrame, objType, triggeringRecord)) break;
                 }
                 errorMask = maskList == null ? null : new MaskItem<Exception, IEnumerable<M>>(null, maskList);
