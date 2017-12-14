@@ -194,6 +194,7 @@
     <xs:choice minOccurs="0" maxOccurs="unbounded" >
       <xs:element name="Fields" type="DataTypeFields" minOccurs="0" maxOccurs="1" />
     </xs:choice>
+    <xs:attribute name="recordType" />
   </xs:complexType>
   
 </xs:schema>
