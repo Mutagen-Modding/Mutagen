@@ -935,9 +935,10 @@ namespace Mutagen.Bethesda.Oblivion
                     item._LocalVariables.SetIfSucceeded(LocalVariablestryGet);
                     break;
                 case "SCRV":
+                case "SCRO":
                     var ReferencestryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<ScriptReference, MaskItem<Exception, ScriptReference_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
-                        triggeringRecord: Script_Registration.SCRV_HEADER,
+                        triggeringRecord: ScriptReference_Registration.TriggeringRecordTypes,
                         fieldIndex: (int)Script_FieldIndex.References,
                         objType: ObjectType.Subrecord,
                         errorMask: errorMask,
@@ -1361,6 +1362,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType SCTX_HEADER = new RecordType("SCTX");
         public static readonly RecordType SLSD_HEADER = new RecordType("SLSD");
         public static readonly RecordType SCRV_HEADER = new RecordType("SCRV");
+        public static readonly RecordType SCRO_HEADER = new RecordType("SCRO");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = SCPT_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 5;

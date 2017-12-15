@@ -37,26 +37,26 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region VariableIndex
-        protected readonly INotifyingItem<Int32> _VariableIndex = NotifyingItem.Factory<Int32>();
-        public INotifyingItem<Int32> VariableIndex_Property => _VariableIndex;
+        protected readonly INotifyingSetItem<Int32> _VariableIndex = NotifyingSetItem.Factory<Int32>(markAsSet: false);
+        public INotifyingSetItem<Int32> VariableIndex_Property => _VariableIndex;
         public Int32 VariableIndex
         {
             get => this._VariableIndex.Item;
             set => this._VariableIndex.Set(value);
         }
-        INotifyingItem<Int32> IScriptReference.VariableIndex_Property => this.VariableIndex_Property;
-        INotifyingItemGetter<Int32> IScriptReferenceGetter.VariableIndex_Property => this.VariableIndex_Property;
+        INotifyingSetItem<Int32> IScriptReference.VariableIndex_Property => this.VariableIndex_Property;
+        INotifyingSetItemGetter<Int32> IScriptReferenceGetter.VariableIndex_Property => this.VariableIndex_Property;
         #endregion
         #region Reference
-        protected readonly INotifyingItem<FormID> _Reference = NotifyingItem.Factory<FormID>();
-        public INotifyingItem<FormID> Reference_Property => _Reference;
+        protected readonly INotifyingSetItem<FormID> _Reference = NotifyingSetItem.Factory<FormID>(markAsSet: false);
+        public INotifyingSetItem<FormID> Reference_Property => _Reference;
         public FormID Reference
         {
             get => this._Reference.Item;
             set => this._Reference.Set(value);
         }
-        INotifyingItem<FormID> IScriptReference.Reference_Property => this.Reference_Property;
-        INotifyingItemGetter<FormID> IScriptReferenceGetter.Reference_Property => this.Reference_Property;
+        INotifyingSetItem<FormID> IScriptReference.Reference_Property => this.Reference_Property;
+        INotifyingSetItemGetter<FormID> IScriptReferenceGetter.Reference_Property => this.Reference_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -117,16 +117,30 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(ScriptReference rhs)
         {
             if (rhs == null) return false;
-            if (VariableIndex != rhs.VariableIndex) return false;
-            if (Reference != rhs.Reference) return false;
+            if (VariableIndex_Property.HasBeenSet != rhs.VariableIndex_Property.HasBeenSet) return false;
+            if (VariableIndex_Property.HasBeenSet)
+            {
+                if (VariableIndex != rhs.VariableIndex) return false;
+            }
+            if (Reference_Property.HasBeenSet != rhs.Reference_Property.HasBeenSet) return false;
+            if (Reference_Property.HasBeenSet)
+            {
+                if (Reference != rhs.Reference) return false;
+            }
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = HashHelper.GetHashCode(VariableIndex).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Reference).CombineHashCode(ret);
+            if (VariableIndex_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(VariableIndex).CombineHashCode(ret);
+            }
+            if (Reference_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Reference).CombineHashCode(ret);
+            }
             return ret;
         }
 
@@ -760,6 +774,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 case "SCRO":
+                    if (!first) return false;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._Reference.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
@@ -922,10 +937,10 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IScriptReference : IScriptReferenceGetter, ILoquiClass<IScriptReference, IScriptReferenceGetter>, ILoquiClass<ScriptReference, IScriptReferenceGetter>
     {
         new Int32 VariableIndex { get; set; }
-        new INotifyingItem<Int32> VariableIndex_Property { get; }
+        new INotifyingSetItem<Int32> VariableIndex_Property { get; }
 
         new FormID Reference { get; set; }
-        new INotifyingItem<FormID> Reference_Property { get; }
+        new INotifyingSetItem<FormID> Reference_Property { get; }
 
     }
 
@@ -933,12 +948,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region VariableIndex
         Int32 VariableIndex { get; }
-        INotifyingItemGetter<Int32> VariableIndex_Property { get; }
+        INotifyingSetItemGetter<Int32> VariableIndex_Property { get; }
 
         #endregion
         #region Reference
         FormID Reference { get; }
-        INotifyingItemGetter<FormID> Reference_Property { get; }
+        INotifyingSetItemGetter<FormID> Reference_Property { get; }
 
         #endregion
 
@@ -1104,7 +1119,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly RecordType SCRV_HEADER = new RecordType("SCRV");
         public static readonly RecordType SCRO_HEADER = new RecordType("SCRO");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = SCRV_HEADER;
+        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
+        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        {
+            return new CollectionGetterWrapper<RecordType>(
+                new HashSet<RecordType>(
+                    new RecordType[]
+                    {
+                        SCRV_HEADER,
+                        SCRO_HEADER
+                    })
+            );
+        });
         public const int NumStructFields = 0;
         public const int NumTypedFields = 2;
         #region Interface
@@ -1217,8 +1243,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.VariableIndex_Property.Set(
-                        value: rhs.VariableIndex,
+                    item.VariableIndex_Property.SetToWithDefault(
+                        rhs: rhs.VariableIndex_Property,
+                        def: def?.VariableIndex_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1231,8 +1258,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Reference_Property.Set(
-                        value: rhs.Reference,
+                    item.Reference_Property.SetToWithDefault(
+                        rhs: rhs.Reference_Property,
+                        def: def?.Reference_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1255,9 +1283,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case ScriptReference_FieldIndex.VariableIndex:
+                    obj.VariableIndex_Property.HasBeenSet = on;
+                    break;
                 case ScriptReference_FieldIndex.Reference:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
+                    obj.Reference_Property.HasBeenSet = on;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1272,10 +1302,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case ScriptReference_FieldIndex.VariableIndex:
-                    obj.VariableIndex = default(Int32);
+                    obj.VariableIndex_Property.Unset(cmds);
                     break;
                 case ScriptReference_FieldIndex.Reference:
-                    obj.Reference = default(FormID);
+                    obj.Reference_Property.Unset(cmds);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1290,8 +1320,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case ScriptReference_FieldIndex.VariableIndex:
+                    return obj.VariableIndex_Property.HasBeenSet;
                 case ScriptReference_FieldIndex.Reference:
-                    return true;
+                    return obj.Reference_Property.HasBeenSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1317,8 +1348,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptReference item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.VariableIndex = default(Int32);
-            item.Reference = default(FormID);
+            item.VariableIndex_Property.Unset(cmds.ToUnsetParams());
+            item.Reference_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static ScriptReference_Mask<bool> GetEqualsMask(
@@ -1336,8 +1367,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptReference_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.VariableIndex = item.VariableIndex == rhs.VariableIndex;
-            ret.Reference = item.Reference == rhs.Reference;
+            ret.VariableIndex = item.VariableIndex_Property.Equals(rhs.VariableIndex_Property, (l, r) => l == r);
+            ret.Reference = item.Reference_Property.Equals(rhs.Reference_Property, (l, r) => l == r);
         }
 
         public static string ToString(
@@ -1383,14 +1414,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IScriptReferenceGetter item,
             ScriptReference_Mask<bool?> checkMask)
         {
+            if (checkMask.VariableIndex.HasValue && checkMask.VariableIndex.Value != item.VariableIndex_Property.HasBeenSet) return false;
+            if (checkMask.Reference.HasValue && checkMask.Reference.Value != item.Reference_Property.HasBeenSet) return false;
             return true;
         }
 
         public static ScriptReference_Mask<bool> GetHasBeenSetMask(IScriptReferenceGetter item)
         {
             var ret = new ScriptReference_Mask<bool>();
-            ret.VariableIndex = true;
-            ret.Reference = true;
+            ret.VariableIndex = item.VariableIndex_Property.HasBeenSet;
+            ret.Reference = item.Reference_Property.HasBeenSet;
             return ret;
         }
 
@@ -1426,18 +1459,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.ScriptReference");
                     }
-                    Int32XmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.VariableIndex),
-                        item: item.VariableIndex_Property,
-                        fieldIndex: (int)ScriptReference_FieldIndex.VariableIndex,
-                        errorMask: errorMask);
-                    FormIDXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Reference),
-                        item: item.Reference_Property,
-                        fieldIndex: (int)ScriptReference_FieldIndex.Reference,
-                        errorMask: errorMask);
+                    if (item.VariableIndex_Property.HasBeenSet)
+                    {
+                        Int32XmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.VariableIndex),
+                            item: item.VariableIndex_Property,
+                            fieldIndex: (int)ScriptReference_FieldIndex.VariableIndex,
+                            errorMask: errorMask);
+                    }
+                    if (item.Reference_Property.HasBeenSet)
+                    {
+                        FormIDXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Reference),
+                            item: item.Reference_Property,
+                            fieldIndex: (int)ScriptReference_FieldIndex.Reference,
+                            errorMask: errorMask);
+                    }
                 }
             }
             catch (Exception ex)

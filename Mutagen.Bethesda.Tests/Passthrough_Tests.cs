@@ -49,9 +49,7 @@ namespace Mutagen.Bethesda.Tests
                 substitutions.Add(23192, 0);
                 substitutions.Add(24134, 0);
                 RangeCollection sourceSkip = new RangeCollection();
-                sourceSkip.Add(new RangeInt64(0x4F60D, 0x3B810A));
                 RangeCollection targetSkip = new RangeCollection();
-                targetSkip.Add(new RangeInt64(0x4F60D, 0x3B4816));
                 AssertFilesEqual(
                     Properties.Settings.Default.OblivionESM, 
                     outputPath, 

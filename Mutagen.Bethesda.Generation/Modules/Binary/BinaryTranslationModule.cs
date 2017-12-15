@@ -452,7 +452,7 @@ namespace Mutagen.Bethesda.Generation
                                 }
                                 using (new DepthWrapper(fg))
                                 {
-                                    if (typelessStruct && field.Index == 0)
+                                    if (typelessStruct && data.IsTriggerForObject)
                                     {
                                         fg.AppendLine($"if (!first) return false;");
                                     }

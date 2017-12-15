@@ -835,6 +835,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "SCIT":
+                    if (!first) return false;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._Script.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame,
@@ -856,7 +857,6 @@ namespace Mutagen.Bethesda.Oblivion
                     item._Flags.SetIfSucceeded(FlagstryGet);
                     break;
                 case "FULL":
-                    if (!first) return false;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var NametryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),

@@ -100,25 +100,30 @@ namespace Mutagen.Bethesda.Generation
             }
             else if (count > 1)
             {
-                fg.AppendLine($"public static IEnumerable<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;");
-                fg.AppendLine($"private static readonly Lazy<HashSet<RecordType>> _TriggeringRecordTypes = new Lazy<HashSet<RecordType>>(() =>");
+                fg.AppendLine($"public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;");
+                fg.AppendLine($"private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>");
                 using (new BraceWrapper(fg) { AppendSemicolon = true,  AppendParenthesis = true })
                 {
-                    fg.AppendLine($"return new HashSet<RecordType>(");
+                    fg.AppendLine($"return new CollectionGetterWrapper<RecordType>(");
                     using (new DepthWrapper(fg))
                     {
-                        fg.AppendLine($"new RecordType[]");
-                        using (new BraceWrapper(fg) { AppendParenthesis = true, AppendSemicolon = true })
+                        fg.AppendLine("new HashSet<RecordType>(");
+                        using (new DepthWrapper(fg))
                         {
-                            using (var comma = new CommaWrapper(fg))
+                            fg.AppendLine($"new RecordType[]");
+                            using (new BraceWrapper(fg) { AppendParenthesis = true })
                             {
-                                foreach (var trigger in trigRecType.Value)
+                                using (var comma = new CommaWrapper(fg))
                                 {
-                                    comma.Add($"{trigger.Type}_HEADER");
+                                    foreach (var trigger in trigRecType.Value)
+                                    {
+                                        comma.Add($"{trigger.Type}_HEADER");
+                                    }
                                 }
                             }
                         }
                     }
+                    fg.AppendLine(");");
                 }
             }
         }
@@ -233,10 +238,10 @@ namespace Mutagen.Bethesda.Generation
                     if (!field.TryGetFieldData(out var fieldData)) break;
                     if (!fieldData.HasTrigger) break;
                     recTypes.Add(fieldData.TriggeringRecordTypes);
+                    fieldData.IsTriggerForObject = true;
                     if (field is SetMarkerType) break;
                     if (field.IsEnumerable && !(field is ByteArrayType)) continue;
-                    if (!field.Bare) break;
-                    if (!field.IsNullable()) break;
+                    if (!field.HasBeenSet) break;
 
                 }
                 data.TriggeringRecordTypes.Add(recTypes);

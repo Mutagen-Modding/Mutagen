@@ -33,8 +33,8 @@
   </Object>
   <Object name="ScriptReference" objType="Subrecord" GUID="5eb6ddcc-5ba8-4da7-87f5-99b6038a61c7" ID="50">
     <Fields>
-      <Int32 name="VariableIndex" recordType="SCRV" />
-      <FormID name="Reference" recordType="SCRO" />
+      <Int32 name="VariableIndex" recordType="SCRV" hasBeenSet="True" />
+      <FormID name="Reference" recordType="SCRO" hasBeenSet="True" />
     </Fields>
   </Object>
 </Loqui>

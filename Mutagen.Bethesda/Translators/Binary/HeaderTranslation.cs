@@ -206,9 +206,9 @@ namespace Mutagen.Bethesda.Binary
         public static RecordType GetNextRecordType(
             MutagenFrame frame)
         {
-            var ret = ReadNextRecordType(frame);
+            var header = Encoding.ASCII.GetString(frame.Reader.ReadBytes(Constants.HEADER_LENGTH));
             frame.Position -= Constants.HEADER_LENGTH;
-            return ret;
+            return new RecordType(header, validate: false);
         }
 
         public static RecordType GetNextRecordType(

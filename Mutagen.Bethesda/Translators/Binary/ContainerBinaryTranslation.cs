@@ -62,8 +62,9 @@ namespace Mutagen.Bethesda.Binary
             {
                 List<M> maskList = null;
                 var ret = new List<T>();
-                while (true)
+                while (!frame.Complete)
                 {
+                    if (!HeaderTranslation.TryGetRecordType(safeFrame, objType, triggeringRecord)) break;
                     var startingPos = frame.Position;
                     var get = transl(safeFrame, doMasks, out var subMaskObj);
                     if (get.Succeeded)
@@ -84,7 +85,55 @@ namespace Mutagen.Bethesda.Binary
                     }
 
                     if (frame.Position == startingPos) throw new ArgumentException($"Parsed item on the list consumed no data: {get.Value}");
-                    if (!HeaderTranslation.TryGetRecordType(safeFrame, objType, triggeringRecord)) break;
+                }
+                errorMask = maskList == null ? null : new MaskItem<Exception, IEnumerable<M>>(null, maskList);
+                return TryGet<IEnumerable<T>>.Succeed(ret);
+            }
+            catch (Exception ex)
+            when (doMasks)
+            {
+                errorMask = new MaskItem<Exception, IEnumerable<M>>(ex, null);
+                return TryGet<IEnumerable<T>>.Failure;
+            }
+        }
+
+        public TryGet<IEnumerable<T>> ParseRepeatedItem(
+            MutagenFrame frame,
+            bool doMasks,
+            ICollectionGetter<RecordType> triggeringRecord,
+            ObjectType objType,
+            out MaskItem<Exception, IEnumerable<M>> errorMask,
+            BinarySubParseDelegate<T, M> transl)
+        {
+            var safeFrame = frame.Spawn(snapToFinalPosition: false);
+            try
+            {
+                List<M> maskList = null;
+                var ret = new List<T>();
+                while (!frame.Complete)
+                {
+                    var nextRecord = HeaderTranslation.GetNextRecordType(frame);
+                    if (!triggeringRecord.Contains(nextRecord)) break;
+                    var startingPos = frame.Position;
+                    var get = transl(safeFrame, doMasks, out var subMaskObj);
+                    if (get.Succeeded)
+                    {
+                        ret.Add(get.Value);
+                    }
+                    if (subMaskObj != null)
+                    {
+                        if (!doMasks)
+                        { // This shouldn't actually throw, as subparse is expected to throw if doMasks is off
+                            throw new ArgumentException("Error parsing list.  Could not parse subitem.");
+                        }
+                        if (maskList == null)
+                        {
+                            maskList = new List<M>();
+                        }
+                        maskList.Add(subMaskObj);
+                    }
+
+                    if (frame.Position == startingPos) throw new ArgumentException($"Parsed item on the list consumed no data: {get.Value}");
                 }
                 errorMask = maskList == null ? null : new MaskItem<Exception, IEnumerable<M>>(null, maskList);
                 return TryGet<IEnumerable<T>>.Succeed(ret);
@@ -146,6 +195,29 @@ namespace Mutagen.Bethesda.Binary
             MutagenFrame frame,
             int fieldIndex,
             RecordType triggeringRecord,
+            ObjectType objType,
+            Func<Mask> errorMask,
+            BinarySubParseDelegate<T, M> transl)
+            where Mask : IErrorMask
+        {
+            var ret = this.ParseRepeatedItem(
+                frame: frame,
+                triggeringRecord: triggeringRecord,
+                doMasks: errorMask != null,
+                objType: objType,
+                errorMask: out var err,
+                transl: transl);
+            ErrorMask.HandleErrorMask(
+                errorMask,
+                fieldIndex,
+                err);
+            return ret;
+        }
+
+        public TryGet<IEnumerable<T>> ParseRepeatedItem<Mask>(
+            MutagenFrame frame,
+            int fieldIndex,
+            ICollectionGetter<RecordType> triggeringRecord,
             ObjectType objType,
             Func<Mask> errorMask,
             BinarySubParseDelegate<T, M> transl)
