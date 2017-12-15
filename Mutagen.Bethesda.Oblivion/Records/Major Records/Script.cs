@@ -23,12 +23,6 @@ namespace Mutagen.Bethesda.Oblivion
                     this.MetadataSummary.CompiledSizeInternal = change.New.Length;
                 },
                 fireInitial: false);
-            this.LocalVariables.Subscribe(
-                (change) =>
-                {
-                    this.MetadataSummary.VariableCountInternal = (uint)this.LocalVariables.Count;
-                },
-                fireInitial: false);
         }
     }
 }

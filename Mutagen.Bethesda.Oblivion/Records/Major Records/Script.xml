@@ -16,7 +16,7 @@
       <ByteArray name="Fluff" length="4" nullable="NotNull" />
       <UInt32 name="RefCount" />
       <Int32 name="CompiledSize" derivative="true" customBinary="true" />
-      <UInt32 name="VariableCount" derivative="true" customBinary="true" />
+      <UInt32 name="VariableCount" />
       <Enum name="Type" enumName="Script.ScriptType" byteLength="4" />
     </Fields>
   </Object>

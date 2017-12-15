@@ -70,12 +70,13 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region VariableCount
         protected readonly INotifyingItem<UInt32> _VariableCount = NotifyingItem.Factory<UInt32>();
-        public INotifyingItemGetter<UInt32> VariableCount_Property => _VariableCount;
+        public INotifyingItem<UInt32> VariableCount_Property => _VariableCount;
         public UInt32 VariableCount
         {
             get => this._VariableCount.Item;
-            protected set => this._VariableCount.Set(value);
+            set => this._VariableCount.Set(value);
         }
+        INotifyingItem<UInt32> IScriptMetaSummary.VariableCount_Property => this.VariableCount_Property;
         INotifyingItemGetter<UInt32> IScriptMetaSummaryGetter.VariableCount_Property => this.VariableCount_Property;
         #endregion
         #region Type
@@ -805,31 +806,6 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        static partial void FillBinary_VariableCount_Custom(
-            MutagenFrame frame,
-            IScriptMetaSummary item,
-            int fieldIndex,
-            Func<ScriptMetaSummary_ErrorMask> errorMask);
-
-        static partial void WriteBinary_VariableCount_Custom(
-            MutagenWriter writer,
-            IScriptMetaSummaryGetter item,
-            int fieldIndex,
-            Func<ScriptMetaSummary_ErrorMask> errorMask);
-
-        public static void WriteBinary_VariableCount(
-            MutagenWriter writer,
-            IScriptMetaSummaryGetter item,
-            int fieldIndex,
-            Func<ScriptMetaSummary_ErrorMask> errorMask)
-        {
-            WriteBinary_VariableCount_Custom(
-                writer: writer,
-                item: item,
-                fieldIndex: fieldIndex,
-                errorMask: errorMask);
-        }
-
         private static ScriptMetaSummary Create_Binary_Internal(
             MutagenFrame frame,
             Func<ScriptMetaSummary_ErrorMask> errorMask)
@@ -879,11 +855,10 @@ namespace Mutagen.Bethesda.Oblivion
                 fieldIndex: (int)ScriptMetaSummary_FieldIndex.CompiledSize,
                 errorMask: errorMask);
             if (frame.Complete) return;
-            FillBinary_VariableCount_Custom(
+            item._VariableCount.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                 frame: frame,
-                item: item,
                 fieldIndex: (int)ScriptMetaSummary_FieldIndex.VariableCount,
-                errorMask: errorMask);
+                errorMask: errorMask));
             if (frame.Complete) return;
             var TypetryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Script.ScriptType>.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(4)),
@@ -970,7 +945,6 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case ScriptMetaSummary_FieldIndex.CompiledSize:
-                case ScriptMetaSummary_FieldIndex.VariableCount:
                     throw new ArgumentException($"Tried to set at a derivative index {index}");
                 case ScriptMetaSummary_FieldIndex.Fluff:
                     this._Fluff.Set(
@@ -979,6 +953,11 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case ScriptMetaSummary_FieldIndex.RefCount:
                     this._RefCount.Set(
+                        (UInt32)obj,
+                        cmds);
+                    break;
+                case ScriptMetaSummary_FieldIndex.VariableCount:
+                    this._VariableCount.Set(
                         (UInt32)obj,
                         cmds);
                     break;
@@ -1034,6 +1013,11 @@ namespace Mutagen.Bethesda.Oblivion
                         (UInt32)pair.Value,
                         null);
                     break;
+                case ScriptMetaSummary_FieldIndex.VariableCount:
+                    obj._VariableCount.Set(
+                        (UInt32)pair.Value,
+                        null);
+                    break;
                 case ScriptMetaSummary_FieldIndex.Type:
                     obj._Type.Set(
                         (Script.ScriptType)pair.Value,
@@ -1059,6 +1043,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         new UInt32 RefCount { get; set; }
         new INotifyingItem<UInt32> RefCount_Property { get; }
+
+        new UInt32 VariableCount { get; set; }
+        new INotifyingItem<UInt32> VariableCount_Property { get; }
 
         new Script.ScriptType Type { get; set; }
         new INotifyingItem<Script.ScriptType> Type_Property { get; }
@@ -1243,10 +1230,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case ScriptMetaSummary_FieldIndex.CompiledSize:
-                case ScriptMetaSummary_FieldIndex.VariableCount:
                     return true;
                 case ScriptMetaSummary_FieldIndex.Fluff:
                 case ScriptMetaSummary_FieldIndex.RefCount:
+                case ScriptMetaSummary_FieldIndex.VariableCount:
                 case ScriptMetaSummary_FieldIndex.Type:
                     return false;
                 default:
@@ -1260,10 +1247,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case ScriptMetaSummary_FieldIndex.CompiledSize:
-                case ScriptMetaSummary_FieldIndex.VariableCount:
                     return true;
                 case ScriptMetaSummary_FieldIndex.Fluff:
                 case ScriptMetaSummary_FieldIndex.RefCount:
+                case ScriptMetaSummary_FieldIndex.VariableCount:
                 case ScriptMetaSummary_FieldIndex.Type:
                     return false;
                 default:
@@ -1429,6 +1416,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask().SetNthException((int)ScriptMetaSummary_FieldIndex.RefCount, ex);
                 }
             }
+            if (copyMask?.VariableCount ?? true)
+            {
+                try
+                {
+                    item.VariableCount_Property.Set(
+                        value: rhs.VariableCount,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)ScriptMetaSummary_FieldIndex.VariableCount, ex);
+                }
+            }
             if (copyMask?.Type ?? true)
             {
                 try
@@ -1457,10 +1458,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case ScriptMetaSummary_FieldIndex.CompiledSize:
-                case ScriptMetaSummary_FieldIndex.VariableCount:
                     throw new ArgumentException($"Tried to set at a derivative index {index}");
                 case ScriptMetaSummary_FieldIndex.Fluff:
                 case ScriptMetaSummary_FieldIndex.RefCount:
+                case ScriptMetaSummary_FieldIndex.VariableCount:
                 case ScriptMetaSummary_FieldIndex.Type:
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
@@ -1478,13 +1479,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case ScriptMetaSummary_FieldIndex.CompiledSize:
-                case ScriptMetaSummary_FieldIndex.VariableCount:
                     throw new ArgumentException($"Tried to unset at a derivative index {index}");
                 case ScriptMetaSummary_FieldIndex.Fluff:
                     obj.Fluff = default(Byte[]);
                     break;
                 case ScriptMetaSummary_FieldIndex.RefCount:
                     obj.RefCount = default(UInt32);
+                    break;
+                case ScriptMetaSummary_FieldIndex.VariableCount:
+                    obj.VariableCount = default(UInt32);
                     break;
                 case ScriptMetaSummary_FieldIndex.Type:
                     obj.Type = default(Script.ScriptType);
@@ -1540,6 +1543,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.Fluff = default(Byte[]);
             item.RefCount = default(UInt32);
+            item.VariableCount = default(UInt32);
             item.Type = default(Script.ScriptType);
         }
 
@@ -1678,6 +1682,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item: item.RefCount_Property,
                         fieldIndex: (int)ScriptMetaSummary_FieldIndex.RefCount,
                         errorMask: errorMask);
+                    UInt32XmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.VariableCount),
+                        item: item.VariableCount_Property,
+                        fieldIndex: (int)ScriptMetaSummary_FieldIndex.VariableCount,
+                        errorMask: errorMask);
                     EnumXmlTranslation<Script.ScriptType>.Instance.Write(
                         writer: writer,
                         name: nameof(item.Type),
@@ -1758,9 +1768,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 fieldIndex: (int)ScriptMetaSummary_FieldIndex.CompiledSize,
                 errorMask: errorMask);
-            ScriptMetaSummary.WriteBinary_VariableCount(
+            Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item,
+                item: item.VariableCount_Property,
                 fieldIndex: (int)ScriptMetaSummary_FieldIndex.VariableCount,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<Script.ScriptType>.Instance.Write(

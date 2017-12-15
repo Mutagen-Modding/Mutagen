@@ -15,11 +15,6 @@ namespace Mutagen.Bethesda.Oblivion
             set => this.CompiledSize = value;
         }
 
-        internal uint VariableCountInternal
-        {
-            set => this.VariableCount = value;
-        }
-
         static partial void FillBinary_CompiledSize_Custom(MutagenFrame frame, IScriptMetaSummary item, int fieldIndex, Func<ScriptMetaSummary_ErrorMask> errorMask)
         {
             frame.Position += 4;
@@ -30,20 +25,6 @@ namespace Mutagen.Bethesda.Oblivion
             Int32BinaryTranslation.Instance.Write(
                 writer,
                 item.CompiledSize,
-                fieldIndex,
-                errorMask);
-        }
-
-        static partial void FillBinary_VariableCount_Custom(MutagenFrame frame, IScriptMetaSummary item, int fieldIndex, Func<ScriptMetaSummary_ErrorMask> errorMask)
-        {
-            frame.Position += 4;
-        }
-
-        static partial void WriteBinary_VariableCount_Custom(MutagenWriter writer, IScriptMetaSummaryGetter item, int fieldIndex, Func<ScriptMetaSummary_ErrorMask> errorMask)
-        {
-            UInt32BinaryTranslation.Instance.Write(
-                writer,
-                item.VariableCount,
                 fieldIndex,
                 errorMask);
         }
