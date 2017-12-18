@@ -84,7 +84,11 @@ namespace Mutagen.Bethesda.Binary
                         maskList.Add(subMaskObj);
                     }
 
-                    if (frame.Position == startingPos) throw new ArgumentException($"Parsed item on the list consumed no data: {get.Value}");
+                    if (frame.Position == startingPos)
+                    {
+                        frame.Position += Constants.SUBRECORD_LENGTH;
+                        throw new ArgumentException($"Parsed item on the list consumed no data: {get.Value}");
+                    }
                 }
                 errorMask = maskList == null ? null : new MaskItem<Exception, IEnumerable<M>>(null, maskList);
                 return TryGet<IEnumerable<T>>.Succeed(ret);
