@@ -59,6 +59,7 @@
     <Compile Include="Fields\FormIDType.cs" />
     <Compile Include="Custom Data\MutagenFieldData.cs" />
     <Compile Include="Fields\BufferType.cs" />
+    <Compile Include="Fields\SpecialParseType.cs" />
     <Compile Include="Fields\StringType.cs" />
     <Compile Include="Modules\Binary\BinaryTranslationModule.cs" />
     <Compile Include="Modules\Binary\ByteArrayTranslationGeneration.cs" />
@@ -70,6 +71,7 @@
     <Compile Include="Modules\Binary\BufferBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\PrimitiveBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\BinaryTranslationGeneration.cs" />
+    <Compile Include="Modules\Binary\SpecialParseTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\StringBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\MutagenModule.cs" />
     <Compile Include="Modules\XML\FormIDXmlTranslationGeneration.cs" />

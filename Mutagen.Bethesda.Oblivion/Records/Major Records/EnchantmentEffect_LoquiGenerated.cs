@@ -603,6 +603,27 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #region Mutagen
+        static partial void SpecialParse_MagicEffectInitial(
+            EnchantmentEffect item,
+            MutagenFrame frame,
+            Func<EnchantmentEffect_ErrorMask> errorMask);
+        static partial void SpecialWrite_MagicEffectInitial(
+            IEnchantmentEffectGetter item,
+            MutagenWriter writer,
+            Func<EnchantmentEffect_ErrorMask> errorMask);
+        internal static void SpecialWrite_MagicEffectInitial_Internal(
+            IEnchantmentEffectGetter item,
+            MutagenWriter writer,
+            Func<EnchantmentEffect_ErrorMask> errorMask)
+        {
+            SpecialWrite_MagicEffectInitial(
+                item: item,
+                writer: writer,
+                errorMask: errorMask);
+        }
+        #endregion
+
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
@@ -904,6 +925,12 @@ namespace Mutagen.Bethesda.Oblivion
                 contentLength: out var contentLength);
             switch (nextRecordType.Type)
             {
+                case "EFID":
+                    SpecialParse_MagicEffectInitial(
+                        item: item,
+                        frame: frame,
+                        errorMask: errorMask);
+                    break;
                 case "EFIT":
                     if (lastParsed.HasValue && lastParsed.Value >= EnchantmentEffect_FieldIndex.ActorValue) return TryGet<EnchantmentEffect_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
@@ -1390,6 +1417,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly RecordType EFIT_HEADER = new RecordType("EFIT");
+        public static readonly RecordType EFID_HEADER = new RecordType("EFID");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = EFIT_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 0;
@@ -1958,6 +1986,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             Func<EnchantmentEffect_ErrorMask> errorMask)
         {
+            EnchantmentEffect.SpecialWrite_MagicEffectInitial_Internal(
+                item: item,
+                writer: writer,
+                errorMask: errorMask);
             using (HeaderExport.ExportSubRecordHeader(writer, EnchantmentEffect_Registration.EFIT_HEADER))
             {
                 Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(

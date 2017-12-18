@@ -8,7 +8,7 @@ using Loqui;
 using System.Xml.Linq;
 using Mutagen.Bethesda.Generation;
 
-namespace Mutagen.Bethesda
+namespace Mutagen.Bethesda.Generation
 {
     public class DataType : SetMarkerType
     {

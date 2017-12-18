@@ -129,6 +129,7 @@
         <xs:element name="FormID" type="NFormID"/>
         <xs:element name="Buffer" type="NBuffer"/>
         <xs:element name="Data" type="DataType" />
+        <xs:element name="SpecialParse" type="NSpecialParse"/>
       </xs:choice>
     </xs:group>
 
@@ -137,6 +138,7 @@
         <xs:group ref="FieldOptions"/>
         <xs:element name="FormID" type="FormID"/>
         <xs:element name="Buffer" type="Buffer"/>
+        <xs:element name="SpecialParse" type="SpecialParse"/>
       </xs:choice>
     </xs:group>
   </xs:redefine>
@@ -162,6 +164,18 @@
   <xs:complexType name="NBuffer" >
     <xs:complexContent>
       <xs:extension base="Buffer">
+        <xs:attribute name="name" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="SpecialParse" >
+    <xs:attribute name="recordType" type="xs:string" use="required" />
+  </xs:complexType>
+
+  <xs:complexType name="NSpecialParse" >
+    <xs:complexContent>
+      <xs:extension base="SpecialParse">
         <xs:attribute name="name" type="xs:string" use="required" />
       </xs:extension>
     </xs:complexContent>
