@@ -2,6 +2,7 @@
 using Mutagen.Bethesda.Oblivion.Internals;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Oblivion
 {
+    [DebuggerDisplay("{GetType().Name} {this.EditorID?.ToString()} {this.FormID.ToString()}")]
     public partial class MajorRecord
     {
         internal static void Fill_Binary(
