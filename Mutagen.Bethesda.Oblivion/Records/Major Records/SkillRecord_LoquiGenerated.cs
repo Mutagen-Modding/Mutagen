@@ -2504,7 +2504,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     record: SkillRecord_Registration.SKIL_HEADER,
                     type: ObjectType.Record))
                 {
-                    Write_Binary_Embedded(
+                    MajorRecordCommon.Write_Binary_Embedded(
                         item: item,
                         writer: writer,
                         errorMask: errorMask);
@@ -2521,17 +2521,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         #endregion
-
-        public static void Write_Binary_Embedded(
-            ISkillRecordGetter item,
-            MutagenWriter writer,
-            Func<SkillRecord_ErrorMask> errorMask)
-        {
-            MajorRecordCommon.Write_Binary_Embedded(
-                item: item,
-                writer: writer,
-                errorMask: errorMask);
-        }
 
         public static void Write_Binary_RecordTypes(
             ISkillRecordGetter item,

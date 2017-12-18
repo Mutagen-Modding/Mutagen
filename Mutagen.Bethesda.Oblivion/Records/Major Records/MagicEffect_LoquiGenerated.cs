@@ -2842,7 +2842,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     record: MagicEffect_Registration.MGEF_HEADER,
                     type: ObjectType.Record))
                 {
-                    Write_Binary_Embedded(
+                    MajorRecordCommon.Write_Binary_Embedded(
                         item: item,
                         writer: writer,
                         errorMask: errorMask);
@@ -2859,17 +2859,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         #endregion
-
-        public static void Write_Binary_Embedded(
-            IMagicEffectGetter item,
-            MutagenWriter writer,
-            Func<MagicEffect_ErrorMask> errorMask)
-        {
-            MajorRecordCommon.Write_Binary_Embedded(
-                item: item,
-                writer: writer,
-                errorMask: errorMask);
-        }
 
         public static void Write_Binary_RecordTypes(
             IMagicEffectGetter item,

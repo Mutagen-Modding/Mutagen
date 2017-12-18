@@ -2279,7 +2279,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     record: Class_Registration.CLAS_HEADER,
                     type: ObjectType.Record))
                 {
-                    Write_Binary_Embedded(
+                    MajorRecordCommon.Write_Binary_Embedded(
                         item: item,
                         writer: writer,
                         errorMask: errorMask);
@@ -2296,17 +2296,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         #endregion
-
-        public static void Write_Binary_Embedded(
-            IClassGetter item,
-            MutagenWriter writer,
-            Func<Class_ErrorMask> errorMask)
-        {
-            MajorRecordCommon.Write_Binary_Embedded(
-                item: item,
-                writer: writer,
-                errorMask: errorMask);
-        }
 
         public static void Write_Binary_RecordTypes(
             IClassGetter item,
