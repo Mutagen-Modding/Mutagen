@@ -217,7 +217,7 @@ namespace Mutagen.Bethesda.Generation
 
         private bool HasRecordTypeFields(ObjectGeneration obj)
         {
-            foreach (var field in obj.IterateFields())
+            foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.FalseAndInclude))
             {
                 if (field.TryGetFieldData(out var data)
                     && data.HasTrigger) return true;
@@ -227,7 +227,7 @@ namespace Mutagen.Bethesda.Generation
 
         private bool HasEmbeddedFields(ObjectGeneration obj)
         {
-            foreach (var field in obj.IterateFields())
+            foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.FalseAndInclude))
             {
                 if (field is SetMarkerType) continue;
                 if (!field.TryGetFieldData(out var data)

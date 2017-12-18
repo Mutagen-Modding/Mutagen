@@ -1908,7 +1908,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     record: Enchantment_Registration.ENCH_HEADER,
                     type: ObjectType.Record))
                 {
-                    Write_Binary_Embedded(
+                    MajorRecordCommon.Write_Binary_Embedded(
                         item: item,
                         writer: writer,
                         errorMask: errorMask);
@@ -1925,17 +1925,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         #endregion
-
-        public static void Write_Binary_Embedded(
-            IEnchantmentGetter item,
-            MutagenWriter writer,
-            Func<Enchantment_ErrorMask> errorMask)
-        {
-            MajorRecordCommon.Write_Binary_Embedded(
-                item: item,
-                writer: writer,
-                errorMask: errorMask);
-        }
 
         public static void Write_Binary_RecordTypes(
             IEnchantmentGetter item,
