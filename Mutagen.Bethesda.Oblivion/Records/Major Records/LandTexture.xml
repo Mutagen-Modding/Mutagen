@@ -4,7 +4,7 @@
     <Fields>
       <FilePath name="Icon" recordType="ICON" />
       <RefDirect name="Havok" refName="HavokData" />
-      <UInt8 name="TextureSpecularExponent" recordType="SNAM" />
+      <UInt8 name="TextureSpecularExponent" recordType="SNAM" hasBeenSet="True" />
       <List name="PotentialGrass">
         <FormID recordType="GNAM" />
       </List>
