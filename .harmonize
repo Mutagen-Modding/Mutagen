@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>33adc063dc20048f22d130af6da96ec15959a025</Sha>
+         <Sha>c0c451c25193b8dc676b8d81ae8887146d6f027d</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>12-14-2017 21:25:33</CommitDate>
-         <Description>ICollectionGetter</Description>
+         <CommitDate>12-17-2017 15:23:30</CommitDate>
+         <Description>DirectoryPath/FilePath API extended</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

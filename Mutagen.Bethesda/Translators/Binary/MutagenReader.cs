@@ -46,6 +46,17 @@ namespace Mutagen.Bethesda.Binary
             return this.reader.ReadBytes(count);
         }
 
+        public string ReadString(int count)
+        {
+            var bytes = this.reader.ReadBytes(count);
+            char[] chars = new char[bytes.Length];
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                chars[i] = (char)bytes[i];
+            }
+            return new string(chars);
+        }
+
         public byte ReadByte()
         {
             return this.reader.ReadByte();

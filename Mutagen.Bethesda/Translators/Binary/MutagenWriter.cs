@@ -108,6 +108,27 @@ namespace Mutagen.Bethesda.Binary
             this.writer.Write(c);
         }
 
+        #region Char Constants
+        const char RightQuote = (char)0x92;
+        #endregion
+
+        public void Write(string str)
+        {
+            byte[] bytes = str.ToBytes();
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                switch (str[i])
+                {
+                    case RightQuote:
+                        bytes[i] = 0x92;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            this.writer.Write(bytes);
+        }
+
         public void Dispose()
         {
             this.writer.Dispose();

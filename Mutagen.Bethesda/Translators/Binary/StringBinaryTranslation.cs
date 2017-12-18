@@ -3,6 +3,7 @@ using Noggog;
 using Noggog.Notifying;
 using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace Mutagen.Bethesda.Binary
@@ -16,8 +17,8 @@ namespace Mutagen.Bethesda.Binary
             try
             {
                 errorMask = null;
-                var str = Encoding.ASCII.GetString(frame.Reader.ReadBytes(frame.Length));
-                str= str.TrimEnd('\0');
+                var str = frame.Reader.ReadString(frame.Length);
+                str = str.TrimEnd('\0');
                 return TryGet<string>.Succeed(str);
             }
             catch (Exception ex)
@@ -51,13 +52,13 @@ namespace Mutagen.Bethesda.Binary
         public void Write(
             MutagenWriter writer,
             string item,
-            bool doMasks, 
+            bool doMasks,
             out Exception errorMask,
             bool nullTerminate = true)
         {
             try
             {
-                writer.Write(item.ToCharArray());
+                writer.Write(item);
                 if (nullTerminate)
                 {
                     writer.Write((byte)0);
@@ -72,8 +73,8 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public void Write(
-            MutagenWriter writer, 
-            string item, 
+            MutagenWriter writer,
+            string item,
             RecordType header,
             bool nullable,
             bool doMasks,
@@ -94,9 +95,9 @@ namespace Mutagen.Bethesda.Binary
                 using (HeaderExport.ExportHeader(writer, header, ObjectType.Subrecord))
                 {
                     this.Write(
-                        writer, 
-                        item, 
-                        doMasks, 
+                        writer,
+                        item,
+                        doMasks,
                         out errorMask,
                         nullTerminate: nullTerminate);
                 }
