@@ -37,81 +37,81 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region EnchantEffect
-        protected readonly INotifyingItem<FormID> _EnchantEffect = NotifyingItem.Factory<FormID>();
-        public INotifyingItem<FormID> EnchantEffect_Property => _EnchantEffect;
+        protected readonly INotifyingSetItem<FormID> _EnchantEffect = NotifyingSetItem.Factory<FormID>(markAsSet: false);
+        public INotifyingSetItem<FormID> EnchantEffect_Property => _EnchantEffect;
         public FormID EnchantEffect
         {
             get => this._EnchantEffect.Item;
             set => this._EnchantEffect.Set(value);
         }
-        INotifyingItem<FormID> IMagicEffectSubData.EnchantEffect_Property => this.EnchantEffect_Property;
-        INotifyingItemGetter<FormID> IMagicEffectSubDataGetter.EnchantEffect_Property => this.EnchantEffect_Property;
+        INotifyingSetItem<FormID> IMagicEffectSubData.EnchantEffect_Property => this.EnchantEffect_Property;
+        INotifyingSetItemGetter<FormID> IMagicEffectSubDataGetter.EnchantEffect_Property => this.EnchantEffect_Property;
         #endregion
         #region CastingSound
-        protected readonly INotifyingItem<FormID> _CastingSound = NotifyingItem.Factory<FormID>();
-        public INotifyingItem<FormID> CastingSound_Property => _CastingSound;
+        protected readonly INotifyingSetItem<FormID> _CastingSound = NotifyingSetItem.Factory<FormID>(markAsSet: false);
+        public INotifyingSetItem<FormID> CastingSound_Property => _CastingSound;
         public FormID CastingSound
         {
             get => this._CastingSound.Item;
             set => this._CastingSound.Set(value);
         }
-        INotifyingItem<FormID> IMagicEffectSubData.CastingSound_Property => this.CastingSound_Property;
-        INotifyingItemGetter<FormID> IMagicEffectSubDataGetter.CastingSound_Property => this.CastingSound_Property;
+        INotifyingSetItem<FormID> IMagicEffectSubData.CastingSound_Property => this.CastingSound_Property;
+        INotifyingSetItemGetter<FormID> IMagicEffectSubDataGetter.CastingSound_Property => this.CastingSound_Property;
         #endregion
         #region BoltSound
-        protected readonly INotifyingItem<FormID> _BoltSound = NotifyingItem.Factory<FormID>();
-        public INotifyingItem<FormID> BoltSound_Property => _BoltSound;
+        protected readonly INotifyingSetItem<FormID> _BoltSound = NotifyingSetItem.Factory<FormID>(markAsSet: false);
+        public INotifyingSetItem<FormID> BoltSound_Property => _BoltSound;
         public FormID BoltSound
         {
             get => this._BoltSound.Item;
             set => this._BoltSound.Set(value);
         }
-        INotifyingItem<FormID> IMagicEffectSubData.BoltSound_Property => this.BoltSound_Property;
-        INotifyingItemGetter<FormID> IMagicEffectSubDataGetter.BoltSound_Property => this.BoltSound_Property;
+        INotifyingSetItem<FormID> IMagicEffectSubData.BoltSound_Property => this.BoltSound_Property;
+        INotifyingSetItemGetter<FormID> IMagicEffectSubDataGetter.BoltSound_Property => this.BoltSound_Property;
         #endregion
         #region HitSound
-        protected readonly INotifyingItem<FormID> _HitSound = NotifyingItem.Factory<FormID>();
-        public INotifyingItem<FormID> HitSound_Property => _HitSound;
+        protected readonly INotifyingSetItem<FormID> _HitSound = NotifyingSetItem.Factory<FormID>(markAsSet: false);
+        public INotifyingSetItem<FormID> HitSound_Property => _HitSound;
         public FormID HitSound
         {
             get => this._HitSound.Item;
             set => this._HitSound.Set(value);
         }
-        INotifyingItem<FormID> IMagicEffectSubData.HitSound_Property => this.HitSound_Property;
-        INotifyingItemGetter<FormID> IMagicEffectSubDataGetter.HitSound_Property => this.HitSound_Property;
+        INotifyingSetItem<FormID> IMagicEffectSubData.HitSound_Property => this.HitSound_Property;
+        INotifyingSetItemGetter<FormID> IMagicEffectSubDataGetter.HitSound_Property => this.HitSound_Property;
         #endregion
         #region AreaSound
-        protected readonly INotifyingItem<FormID> _AreaSound = NotifyingItem.Factory<FormID>();
-        public INotifyingItem<FormID> AreaSound_Property => _AreaSound;
+        protected readonly INotifyingSetItem<FormID> _AreaSound = NotifyingSetItem.Factory<FormID>(markAsSet: false);
+        public INotifyingSetItem<FormID> AreaSound_Property => _AreaSound;
         public FormID AreaSound
         {
             get => this._AreaSound.Item;
             set => this._AreaSound.Set(value);
         }
-        INotifyingItem<FormID> IMagicEffectSubData.AreaSound_Property => this.AreaSound_Property;
-        INotifyingItemGetter<FormID> IMagicEffectSubDataGetter.AreaSound_Property => this.AreaSound_Property;
+        INotifyingSetItem<FormID> IMagicEffectSubData.AreaSound_Property => this.AreaSound_Property;
+        INotifyingSetItemGetter<FormID> IMagicEffectSubDataGetter.AreaSound_Property => this.AreaSound_Property;
         #endregion
         #region ConstantEffectEnchantmentFactor
-        protected readonly INotifyingItem<Single> _ConstantEffectEnchantmentFactor = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> ConstantEffectEnchantmentFactor_Property => _ConstantEffectEnchantmentFactor;
+        protected readonly INotifyingSetItem<Single> _ConstantEffectEnchantmentFactor = NotifyingSetItem.Factory<Single>(markAsSet: false);
+        public INotifyingSetItem<Single> ConstantEffectEnchantmentFactor_Property => _ConstantEffectEnchantmentFactor;
         public Single ConstantEffectEnchantmentFactor
         {
             get => this._ConstantEffectEnchantmentFactor.Item;
             set => this._ConstantEffectEnchantmentFactor.Set(value);
         }
-        INotifyingItem<Single> IMagicEffectSubData.ConstantEffectEnchantmentFactor_Property => this.ConstantEffectEnchantmentFactor_Property;
-        INotifyingItemGetter<Single> IMagicEffectSubDataGetter.ConstantEffectEnchantmentFactor_Property => this.ConstantEffectEnchantmentFactor_Property;
+        INotifyingSetItem<Single> IMagicEffectSubData.ConstantEffectEnchantmentFactor_Property => this.ConstantEffectEnchantmentFactor_Property;
+        INotifyingSetItemGetter<Single> IMagicEffectSubDataGetter.ConstantEffectEnchantmentFactor_Property => this.ConstantEffectEnchantmentFactor_Property;
         #endregion
         #region ConstantEffectBarterFactor
-        protected readonly INotifyingItem<Single> _ConstantEffectBarterFactor = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> ConstantEffectBarterFactor_Property => _ConstantEffectBarterFactor;
+        protected readonly INotifyingSetItem<Single> _ConstantEffectBarterFactor = NotifyingSetItem.Factory<Single>(markAsSet: false);
+        public INotifyingSetItem<Single> ConstantEffectBarterFactor_Property => _ConstantEffectBarterFactor;
         public Single ConstantEffectBarterFactor
         {
             get => this._ConstantEffectBarterFactor.Item;
             set => this._ConstantEffectBarterFactor.Set(value);
         }
-        INotifyingItem<Single> IMagicEffectSubData.ConstantEffectBarterFactor_Property => this.ConstantEffectBarterFactor_Property;
-        INotifyingItemGetter<Single> IMagicEffectSubDataGetter.ConstantEffectBarterFactor_Property => this.ConstantEffectBarterFactor_Property;
+        INotifyingSetItem<Single> IMagicEffectSubData.ConstantEffectBarterFactor_Property => this.ConstantEffectBarterFactor_Property;
+        INotifyingSetItemGetter<Single> IMagicEffectSubDataGetter.ConstantEffectBarterFactor_Property => this.ConstantEffectBarterFactor_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -172,26 +172,75 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(MagicEffectSubData rhs)
         {
             if (rhs == null) return false;
-            if (EnchantEffect != rhs.EnchantEffect) return false;
-            if (CastingSound != rhs.CastingSound) return false;
-            if (BoltSound != rhs.BoltSound) return false;
-            if (HitSound != rhs.HitSound) return false;
-            if (AreaSound != rhs.AreaSound) return false;
-            if (ConstantEffectEnchantmentFactor != rhs.ConstantEffectEnchantmentFactor) return false;
-            if (ConstantEffectBarterFactor != rhs.ConstantEffectBarterFactor) return false;
+            if (EnchantEffect_Property.HasBeenSet != rhs.EnchantEffect_Property.HasBeenSet) return false;
+            if (EnchantEffect_Property.HasBeenSet)
+            {
+                if (EnchantEffect != rhs.EnchantEffect) return false;
+            }
+            if (CastingSound_Property.HasBeenSet != rhs.CastingSound_Property.HasBeenSet) return false;
+            if (CastingSound_Property.HasBeenSet)
+            {
+                if (CastingSound != rhs.CastingSound) return false;
+            }
+            if (BoltSound_Property.HasBeenSet != rhs.BoltSound_Property.HasBeenSet) return false;
+            if (BoltSound_Property.HasBeenSet)
+            {
+                if (BoltSound != rhs.BoltSound) return false;
+            }
+            if (HitSound_Property.HasBeenSet != rhs.HitSound_Property.HasBeenSet) return false;
+            if (HitSound_Property.HasBeenSet)
+            {
+                if (HitSound != rhs.HitSound) return false;
+            }
+            if (AreaSound_Property.HasBeenSet != rhs.AreaSound_Property.HasBeenSet) return false;
+            if (AreaSound_Property.HasBeenSet)
+            {
+                if (AreaSound != rhs.AreaSound) return false;
+            }
+            if (ConstantEffectEnchantmentFactor_Property.HasBeenSet != rhs.ConstantEffectEnchantmentFactor_Property.HasBeenSet) return false;
+            if (ConstantEffectEnchantmentFactor_Property.HasBeenSet)
+            {
+                if (ConstantEffectEnchantmentFactor != rhs.ConstantEffectEnchantmentFactor) return false;
+            }
+            if (ConstantEffectBarterFactor_Property.HasBeenSet != rhs.ConstantEffectBarterFactor_Property.HasBeenSet) return false;
+            if (ConstantEffectBarterFactor_Property.HasBeenSet)
+            {
+                if (ConstantEffectBarterFactor != rhs.ConstantEffectBarterFactor) return false;
+            }
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = HashHelper.GetHashCode(EnchantEffect).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(CastingSound).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(BoltSound).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(HitSound).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(AreaSound).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(ConstantEffectEnchantmentFactor).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(ConstantEffectBarterFactor).CombineHashCode(ret);
+            if (EnchantEffect_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(EnchantEffect).CombineHashCode(ret);
+            }
+            if (CastingSound_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(CastingSound).CombineHashCode(ret);
+            }
+            if (BoltSound_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(BoltSound).CombineHashCode(ret);
+            }
+            if (HitSound_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(HitSound).CombineHashCode(ret);
+            }
+            if (AreaSound_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(AreaSound).CombineHashCode(ret);
+            }
+            if (ConstantEffectEnchantmentFactor_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(ConstantEffectEnchantmentFactor).CombineHashCode(ret);
+            }
+            if (ConstantEffectBarterFactor_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(ConstantEffectBarterFactor).CombineHashCode(ret);
+            }
             return ret;
         }
 
@@ -1100,25 +1149,25 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IMagicEffectSubData : IMagicEffectSubDataGetter, ILoquiClass<IMagicEffectSubData, IMagicEffectSubDataGetter>, ILoquiClass<MagicEffectSubData, IMagicEffectSubDataGetter>
     {
         new FormID EnchantEffect { get; set; }
-        new INotifyingItem<FormID> EnchantEffect_Property { get; }
+        new INotifyingSetItem<FormID> EnchantEffect_Property { get; }
 
         new FormID CastingSound { get; set; }
-        new INotifyingItem<FormID> CastingSound_Property { get; }
+        new INotifyingSetItem<FormID> CastingSound_Property { get; }
 
         new FormID BoltSound { get; set; }
-        new INotifyingItem<FormID> BoltSound_Property { get; }
+        new INotifyingSetItem<FormID> BoltSound_Property { get; }
 
         new FormID HitSound { get; set; }
-        new INotifyingItem<FormID> HitSound_Property { get; }
+        new INotifyingSetItem<FormID> HitSound_Property { get; }
 
         new FormID AreaSound { get; set; }
-        new INotifyingItem<FormID> AreaSound_Property { get; }
+        new INotifyingSetItem<FormID> AreaSound_Property { get; }
 
         new Single ConstantEffectEnchantmentFactor { get; set; }
-        new INotifyingItem<Single> ConstantEffectEnchantmentFactor_Property { get; }
+        new INotifyingSetItem<Single> ConstantEffectEnchantmentFactor_Property { get; }
 
         new Single ConstantEffectBarterFactor { get; set; }
-        new INotifyingItem<Single> ConstantEffectBarterFactor_Property { get; }
+        new INotifyingSetItem<Single> ConstantEffectBarterFactor_Property { get; }
 
     }
 
@@ -1126,37 +1175,37 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region EnchantEffect
         FormID EnchantEffect { get; }
-        INotifyingItemGetter<FormID> EnchantEffect_Property { get; }
+        INotifyingSetItemGetter<FormID> EnchantEffect_Property { get; }
 
         #endregion
         #region CastingSound
         FormID CastingSound { get; }
-        INotifyingItemGetter<FormID> CastingSound_Property { get; }
+        INotifyingSetItemGetter<FormID> CastingSound_Property { get; }
 
         #endregion
         #region BoltSound
         FormID BoltSound { get; }
-        INotifyingItemGetter<FormID> BoltSound_Property { get; }
+        INotifyingSetItemGetter<FormID> BoltSound_Property { get; }
 
         #endregion
         #region HitSound
         FormID HitSound { get; }
-        INotifyingItemGetter<FormID> HitSound_Property { get; }
+        INotifyingSetItemGetter<FormID> HitSound_Property { get; }
 
         #endregion
         #region AreaSound
         FormID AreaSound { get; }
-        INotifyingItemGetter<FormID> AreaSound_Property { get; }
+        INotifyingSetItemGetter<FormID> AreaSound_Property { get; }
 
         #endregion
         #region ConstantEffectEnchantmentFactor
         Single ConstantEffectEnchantmentFactor { get; }
-        INotifyingItemGetter<Single> ConstantEffectEnchantmentFactor_Property { get; }
+        INotifyingSetItemGetter<Single> ConstantEffectEnchantmentFactor_Property { get; }
 
         #endregion
         #region ConstantEffectBarterFactor
         Single ConstantEffectBarterFactor { get; }
-        INotifyingItemGetter<Single> ConstantEffectBarterFactor_Property { get; }
+        INotifyingSetItemGetter<Single> ConstantEffectBarterFactor_Property { get; }
 
         #endregion
 
@@ -1492,8 +1541,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.EnchantEffect_Property.Set(
-                        value: rhs.EnchantEffect,
+                    item.EnchantEffect_Property.SetToWithDefault(
+                        rhs: rhs.EnchantEffect_Property,
+                        def: def?.EnchantEffect_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1506,8 +1556,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.CastingSound_Property.Set(
-                        value: rhs.CastingSound,
+                    item.CastingSound_Property.SetToWithDefault(
+                        rhs: rhs.CastingSound_Property,
+                        def: def?.CastingSound_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1520,8 +1571,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.BoltSound_Property.Set(
-                        value: rhs.BoltSound,
+                    item.BoltSound_Property.SetToWithDefault(
+                        rhs: rhs.BoltSound_Property,
+                        def: def?.BoltSound_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1534,8 +1586,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.HitSound_Property.Set(
-                        value: rhs.HitSound,
+                    item.HitSound_Property.SetToWithDefault(
+                        rhs: rhs.HitSound_Property,
+                        def: def?.HitSound_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1548,8 +1601,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.AreaSound_Property.Set(
-                        value: rhs.AreaSound,
+                    item.AreaSound_Property.SetToWithDefault(
+                        rhs: rhs.AreaSound_Property,
+                        def: def?.AreaSound_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1562,8 +1616,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.ConstantEffectEnchantmentFactor_Property.Set(
-                        value: rhs.ConstantEffectEnchantmentFactor,
+                    item.ConstantEffectEnchantmentFactor_Property.SetToWithDefault(
+                        rhs: rhs.ConstantEffectEnchantmentFactor_Property,
+                        def: def?.ConstantEffectEnchantmentFactor_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1576,8 +1631,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.ConstantEffectBarterFactor_Property.Set(
-                        value: rhs.ConstantEffectBarterFactor,
+                    item.ConstantEffectBarterFactor_Property.SetToWithDefault(
+                        rhs: rhs.ConstantEffectBarterFactor_Property,
+                        def: def?.ConstantEffectBarterFactor_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1600,14 +1656,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case MagicEffectSubData_FieldIndex.EnchantEffect:
+                    obj.EnchantEffect_Property.HasBeenSet = on;
+                    break;
                 case MagicEffectSubData_FieldIndex.CastingSound:
+                    obj.CastingSound_Property.HasBeenSet = on;
+                    break;
                 case MagicEffectSubData_FieldIndex.BoltSound:
+                    obj.BoltSound_Property.HasBeenSet = on;
+                    break;
                 case MagicEffectSubData_FieldIndex.HitSound:
+                    obj.HitSound_Property.HasBeenSet = on;
+                    break;
                 case MagicEffectSubData_FieldIndex.AreaSound:
+                    obj.AreaSound_Property.HasBeenSet = on;
+                    break;
                 case MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor:
+                    obj.ConstantEffectEnchantmentFactor_Property.HasBeenSet = on;
+                    break;
                 case MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
+                    obj.ConstantEffectBarterFactor_Property.HasBeenSet = on;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1622,25 +1690,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case MagicEffectSubData_FieldIndex.EnchantEffect:
-                    obj.EnchantEffect = default(FormID);
+                    obj.EnchantEffect_Property.Unset(cmds);
                     break;
                 case MagicEffectSubData_FieldIndex.CastingSound:
-                    obj.CastingSound = default(FormID);
+                    obj.CastingSound_Property.Unset(cmds);
                     break;
                 case MagicEffectSubData_FieldIndex.BoltSound:
-                    obj.BoltSound = default(FormID);
+                    obj.BoltSound_Property.Unset(cmds);
                     break;
                 case MagicEffectSubData_FieldIndex.HitSound:
-                    obj.HitSound = default(FormID);
+                    obj.HitSound_Property.Unset(cmds);
                     break;
                 case MagicEffectSubData_FieldIndex.AreaSound:
-                    obj.AreaSound = default(FormID);
+                    obj.AreaSound_Property.Unset(cmds);
                     break;
                 case MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor:
-                    obj.ConstantEffectEnchantmentFactor = default(Single);
+                    obj.ConstantEffectEnchantmentFactor_Property.Unset(cmds);
                     break;
                 case MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor:
-                    obj.ConstantEffectBarterFactor = default(Single);
+                    obj.ConstantEffectBarterFactor_Property.Unset(cmds);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1655,13 +1723,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case MagicEffectSubData_FieldIndex.EnchantEffect:
+                    return obj.EnchantEffect_Property.HasBeenSet;
                 case MagicEffectSubData_FieldIndex.CastingSound:
+                    return obj.CastingSound_Property.HasBeenSet;
                 case MagicEffectSubData_FieldIndex.BoltSound:
+                    return obj.BoltSound_Property.HasBeenSet;
                 case MagicEffectSubData_FieldIndex.HitSound:
+                    return obj.HitSound_Property.HasBeenSet;
                 case MagicEffectSubData_FieldIndex.AreaSound:
+                    return obj.AreaSound_Property.HasBeenSet;
                 case MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor:
+                    return obj.ConstantEffectEnchantmentFactor_Property.HasBeenSet;
                 case MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor:
-                    return true;
+                    return obj.ConstantEffectBarterFactor_Property.HasBeenSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1697,13 +1771,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IMagicEffectSubData item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.EnchantEffect = default(FormID);
-            item.CastingSound = default(FormID);
-            item.BoltSound = default(FormID);
-            item.HitSound = default(FormID);
-            item.AreaSound = default(FormID);
-            item.ConstantEffectEnchantmentFactor = default(Single);
-            item.ConstantEffectBarterFactor = default(Single);
+            item.EnchantEffect_Property.Unset(cmds.ToUnsetParams());
+            item.CastingSound_Property.Unset(cmds.ToUnsetParams());
+            item.BoltSound_Property.Unset(cmds.ToUnsetParams());
+            item.HitSound_Property.Unset(cmds.ToUnsetParams());
+            item.AreaSound_Property.Unset(cmds.ToUnsetParams());
+            item.ConstantEffectEnchantmentFactor_Property.Unset(cmds.ToUnsetParams());
+            item.ConstantEffectBarterFactor_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static MagicEffectSubData_Mask<bool> GetEqualsMask(
@@ -1721,13 +1795,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MagicEffectSubData_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.EnchantEffect = item.EnchantEffect == rhs.EnchantEffect;
-            ret.CastingSound = item.CastingSound == rhs.CastingSound;
-            ret.BoltSound = item.BoltSound == rhs.BoltSound;
-            ret.HitSound = item.HitSound == rhs.HitSound;
-            ret.AreaSound = item.AreaSound == rhs.AreaSound;
-            ret.ConstantEffectEnchantmentFactor = item.ConstantEffectEnchantmentFactor == rhs.ConstantEffectEnchantmentFactor;
-            ret.ConstantEffectBarterFactor = item.ConstantEffectBarterFactor == rhs.ConstantEffectBarterFactor;
+            ret.EnchantEffect = item.EnchantEffect_Property.Equals(rhs.EnchantEffect_Property, (l, r) => l == r);
+            ret.CastingSound = item.CastingSound_Property.Equals(rhs.CastingSound_Property, (l, r) => l == r);
+            ret.BoltSound = item.BoltSound_Property.Equals(rhs.BoltSound_Property, (l, r) => l == r);
+            ret.HitSound = item.HitSound_Property.Equals(rhs.HitSound_Property, (l, r) => l == r);
+            ret.AreaSound = item.AreaSound_Property.Equals(rhs.AreaSound_Property, (l, r) => l == r);
+            ret.ConstantEffectEnchantmentFactor = item.ConstantEffectEnchantmentFactor_Property.Equals(rhs.ConstantEffectEnchantmentFactor_Property, (l, r) => l == r);
+            ret.ConstantEffectBarterFactor = item.ConstantEffectBarterFactor_Property.Equals(rhs.ConstantEffectBarterFactor_Property, (l, r) => l == r);
         }
 
         public static string ToString(
@@ -1793,19 +1867,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IMagicEffectSubDataGetter item,
             MagicEffectSubData_Mask<bool?> checkMask)
         {
+            if (checkMask.EnchantEffect.HasValue && checkMask.EnchantEffect.Value != item.EnchantEffect_Property.HasBeenSet) return false;
+            if (checkMask.CastingSound.HasValue && checkMask.CastingSound.Value != item.CastingSound_Property.HasBeenSet) return false;
+            if (checkMask.BoltSound.HasValue && checkMask.BoltSound.Value != item.BoltSound_Property.HasBeenSet) return false;
+            if (checkMask.HitSound.HasValue && checkMask.HitSound.Value != item.HitSound_Property.HasBeenSet) return false;
+            if (checkMask.AreaSound.HasValue && checkMask.AreaSound.Value != item.AreaSound_Property.HasBeenSet) return false;
+            if (checkMask.ConstantEffectEnchantmentFactor.HasValue && checkMask.ConstantEffectEnchantmentFactor.Value != item.ConstantEffectEnchantmentFactor_Property.HasBeenSet) return false;
+            if (checkMask.ConstantEffectBarterFactor.HasValue && checkMask.ConstantEffectBarterFactor.Value != item.ConstantEffectBarterFactor_Property.HasBeenSet) return false;
             return true;
         }
 
         public static MagicEffectSubData_Mask<bool> GetHasBeenSetMask(IMagicEffectSubDataGetter item)
         {
             var ret = new MagicEffectSubData_Mask<bool>();
-            ret.EnchantEffect = true;
-            ret.CastingSound = true;
-            ret.BoltSound = true;
-            ret.HitSound = true;
-            ret.AreaSound = true;
-            ret.ConstantEffectEnchantmentFactor = true;
-            ret.ConstantEffectBarterFactor = true;
+            ret.EnchantEffect = item.EnchantEffect_Property.HasBeenSet;
+            ret.CastingSound = item.CastingSound_Property.HasBeenSet;
+            ret.BoltSound = item.BoltSound_Property.HasBeenSet;
+            ret.HitSound = item.HitSound_Property.HasBeenSet;
+            ret.AreaSound = item.AreaSound_Property.HasBeenSet;
+            ret.ConstantEffectEnchantmentFactor = item.ConstantEffectEnchantmentFactor_Property.HasBeenSet;
+            ret.ConstantEffectBarterFactor = item.ConstantEffectBarterFactor_Property.HasBeenSet;
             return ret;
         }
 
@@ -1841,48 +1922,69 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.MagicEffectSubData");
                     }
-                    FormIDXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.EnchantEffect),
-                        item: item.EnchantEffect_Property,
-                        fieldIndex: (int)MagicEffectSubData_FieldIndex.EnchantEffect,
-                        errorMask: errorMask);
-                    FormIDXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.CastingSound),
-                        item: item.CastingSound_Property,
-                        fieldIndex: (int)MagicEffectSubData_FieldIndex.CastingSound,
-                        errorMask: errorMask);
-                    FormIDXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.BoltSound),
-                        item: item.BoltSound_Property,
-                        fieldIndex: (int)MagicEffectSubData_FieldIndex.BoltSound,
-                        errorMask: errorMask);
-                    FormIDXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.HitSound),
-                        item: item.HitSound_Property,
-                        fieldIndex: (int)MagicEffectSubData_FieldIndex.HitSound,
-                        errorMask: errorMask);
-                    FormIDXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.AreaSound),
-                        item: item.AreaSound_Property,
-                        fieldIndex: (int)MagicEffectSubData_FieldIndex.AreaSound,
-                        errorMask: errorMask);
-                    FloatXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.ConstantEffectEnchantmentFactor),
-                        item: item.ConstantEffectEnchantmentFactor_Property,
-                        fieldIndex: (int)MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor,
-                        errorMask: errorMask);
-                    FloatXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.ConstantEffectBarterFactor),
-                        item: item.ConstantEffectBarterFactor_Property,
-                        fieldIndex: (int)MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor,
-                        errorMask: errorMask);
+                    if (item.EnchantEffect_Property.HasBeenSet)
+                    {
+                        FormIDXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.EnchantEffect),
+                            item: item.EnchantEffect_Property,
+                            fieldIndex: (int)MagicEffectSubData_FieldIndex.EnchantEffect,
+                            errorMask: errorMask);
+                    }
+                    if (item.CastingSound_Property.HasBeenSet)
+                    {
+                        FormIDXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.CastingSound),
+                            item: item.CastingSound_Property,
+                            fieldIndex: (int)MagicEffectSubData_FieldIndex.CastingSound,
+                            errorMask: errorMask);
+                    }
+                    if (item.BoltSound_Property.HasBeenSet)
+                    {
+                        FormIDXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.BoltSound),
+                            item: item.BoltSound_Property,
+                            fieldIndex: (int)MagicEffectSubData_FieldIndex.BoltSound,
+                            errorMask: errorMask);
+                    }
+                    if (item.HitSound_Property.HasBeenSet)
+                    {
+                        FormIDXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.HitSound),
+                            item: item.HitSound_Property,
+                            fieldIndex: (int)MagicEffectSubData_FieldIndex.HitSound,
+                            errorMask: errorMask);
+                    }
+                    if (item.AreaSound_Property.HasBeenSet)
+                    {
+                        FormIDXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.AreaSound),
+                            item: item.AreaSound_Property,
+                            fieldIndex: (int)MagicEffectSubData_FieldIndex.AreaSound,
+                            errorMask: errorMask);
+                    }
+                    if (item.ConstantEffectEnchantmentFactor_Property.HasBeenSet)
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.ConstantEffectEnchantmentFactor),
+                            item: item.ConstantEffectEnchantmentFactor_Property,
+                            fieldIndex: (int)MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor,
+                            errorMask: errorMask);
+                    }
+                    if (item.ConstantEffectBarterFactor_Property.HasBeenSet)
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.ConstantEffectBarterFactor),
+                            item: item.ConstantEffectBarterFactor_Property,
+                            fieldIndex: (int)MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor,
+                            errorMask: errorMask);
+                    }
                 }
             }
             catch (Exception ex)

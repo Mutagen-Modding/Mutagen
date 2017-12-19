@@ -37,58 +37,60 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Fluff
-        protected readonly INotifyingItem<Byte[]> _Fluff = NotifyingItem.Factory<Byte[]>(noNullFallback: () => new byte[4]);
-        public INotifyingItem<Byte[]> Fluff_Property => _Fluff;
+        protected readonly INotifyingSetItem<Byte[]> _Fluff = NotifyingSetItem.Factory<Byte[]>(
+            markAsSet: false,
+            noNullFallback: () => new byte[4]);
+        public INotifyingSetItem<Byte[]> Fluff_Property => _Fluff;
         public Byte[] Fluff
         {
             get => this._Fluff.Item;
             set => this._Fluff.Set(value);
         }
-        INotifyingItem<Byte[]> IScriptMetaSummary.Fluff_Property => this.Fluff_Property;
-        INotifyingItemGetter<Byte[]> IScriptMetaSummaryGetter.Fluff_Property => this.Fluff_Property;
+        INotifyingSetItem<Byte[]> IScriptMetaSummary.Fluff_Property => this.Fluff_Property;
+        INotifyingSetItemGetter<Byte[]> IScriptMetaSummaryGetter.Fluff_Property => this.Fluff_Property;
         #endregion
         #region RefCount
-        protected readonly INotifyingItem<UInt32> _RefCount = NotifyingItem.Factory<UInt32>();
-        public INotifyingItem<UInt32> RefCount_Property => _RefCount;
+        protected readonly INotifyingSetItem<UInt32> _RefCount = NotifyingSetItem.Factory<UInt32>(markAsSet: false);
+        public INotifyingSetItem<UInt32> RefCount_Property => _RefCount;
         public UInt32 RefCount
         {
             get => this._RefCount.Item;
             set => this._RefCount.Set(value);
         }
-        INotifyingItem<UInt32> IScriptMetaSummary.RefCount_Property => this.RefCount_Property;
-        INotifyingItemGetter<UInt32> IScriptMetaSummaryGetter.RefCount_Property => this.RefCount_Property;
+        INotifyingSetItem<UInt32> IScriptMetaSummary.RefCount_Property => this.RefCount_Property;
+        INotifyingSetItemGetter<UInt32> IScriptMetaSummaryGetter.RefCount_Property => this.RefCount_Property;
         #endregion
         #region CompiledSize
-        protected readonly INotifyingItem<Int32> _CompiledSize = NotifyingItem.Factory<Int32>();
-        public INotifyingItemGetter<Int32> CompiledSize_Property => _CompiledSize;
+        protected readonly INotifyingSetItem<Int32> _CompiledSize = NotifyingSetItem.Factory<Int32>(markAsSet: false);
+        public INotifyingSetItemGetter<Int32> CompiledSize_Property => _CompiledSize;
         public Int32 CompiledSize
         {
             get => this._CompiledSize.Item;
             protected set => this._CompiledSize.Set(value);
         }
-        INotifyingItemGetter<Int32> IScriptMetaSummaryGetter.CompiledSize_Property => this.CompiledSize_Property;
+        INotifyingSetItemGetter<Int32> IScriptMetaSummaryGetter.CompiledSize_Property => this.CompiledSize_Property;
         #endregion
         #region VariableCount
-        protected readonly INotifyingItem<UInt32> _VariableCount = NotifyingItem.Factory<UInt32>();
-        public INotifyingItem<UInt32> VariableCount_Property => _VariableCount;
+        protected readonly INotifyingSetItem<UInt32> _VariableCount = NotifyingSetItem.Factory<UInt32>(markAsSet: false);
+        public INotifyingSetItem<UInt32> VariableCount_Property => _VariableCount;
         public UInt32 VariableCount
         {
             get => this._VariableCount.Item;
             set => this._VariableCount.Set(value);
         }
-        INotifyingItem<UInt32> IScriptMetaSummary.VariableCount_Property => this.VariableCount_Property;
-        INotifyingItemGetter<UInt32> IScriptMetaSummaryGetter.VariableCount_Property => this.VariableCount_Property;
+        INotifyingSetItem<UInt32> IScriptMetaSummary.VariableCount_Property => this.VariableCount_Property;
+        INotifyingSetItemGetter<UInt32> IScriptMetaSummaryGetter.VariableCount_Property => this.VariableCount_Property;
         #endregion
         #region Type
-        protected readonly INotifyingItem<Script.ScriptType> _Type = NotifyingItem.Factory<Script.ScriptType>();
-        public INotifyingItem<Script.ScriptType> Type_Property => _Type;
+        protected readonly INotifyingSetItem<Script.ScriptType> _Type = NotifyingSetItem.Factory<Script.ScriptType>(markAsSet: false);
+        public INotifyingSetItem<Script.ScriptType> Type_Property => _Type;
         public Script.ScriptType Type
         {
             get => this._Type.Item;
             set => this._Type.Set(value);
         }
-        INotifyingItem<Script.ScriptType> IScriptMetaSummary.Type_Property => this.Type_Property;
-        INotifyingItemGetter<Script.ScriptType> IScriptMetaSummaryGetter.Type_Property => this.Type_Property;
+        INotifyingSetItem<Script.ScriptType> IScriptMetaSummary.Type_Property => this.Type_Property;
+        INotifyingSetItemGetter<Script.ScriptType> IScriptMetaSummaryGetter.Type_Property => this.Type_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -149,22 +151,57 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(ScriptMetaSummary rhs)
         {
             if (rhs == null) return false;
-            if (!Fluff.EqualsFast(rhs.Fluff)) return false;
-            if (RefCount != rhs.RefCount) return false;
-            if (CompiledSize != rhs.CompiledSize) return false;
-            if (VariableCount != rhs.VariableCount) return false;
-            if (Type != rhs.Type) return false;
+            if (Fluff_Property.HasBeenSet != rhs.Fluff_Property.HasBeenSet) return false;
+            if (Fluff_Property.HasBeenSet)
+            {
+                if (!Fluff.EqualsFast(rhs.Fluff)) return false;
+            }
+            if (RefCount_Property.HasBeenSet != rhs.RefCount_Property.HasBeenSet) return false;
+            if (RefCount_Property.HasBeenSet)
+            {
+                if (RefCount != rhs.RefCount) return false;
+            }
+            if (CompiledSize_Property.HasBeenSet != rhs.CompiledSize_Property.HasBeenSet) return false;
+            if (CompiledSize_Property.HasBeenSet)
+            {
+                if (CompiledSize != rhs.CompiledSize) return false;
+            }
+            if (VariableCount_Property.HasBeenSet != rhs.VariableCount_Property.HasBeenSet) return false;
+            if (VariableCount_Property.HasBeenSet)
+            {
+                if (VariableCount != rhs.VariableCount) return false;
+            }
+            if (Type_Property.HasBeenSet != rhs.Type_Property.HasBeenSet) return false;
+            if (Type_Property.HasBeenSet)
+            {
+                if (Type != rhs.Type) return false;
+            }
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = HashHelper.GetHashCode(Fluff).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(RefCount).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(CompiledSize).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(VariableCount).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Type).CombineHashCode(ret);
+            if (Fluff_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Fluff).CombineHashCode(ret);
+            }
+            if (RefCount_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(RefCount).CombineHashCode(ret);
+            }
+            if (CompiledSize_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(CompiledSize).CombineHashCode(ret);
+            }
+            if (VariableCount_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(VariableCount).CombineHashCode(ret);
+            }
+            if (Type_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Type).CombineHashCode(ret);
+            }
             return ret;
         }
 
@@ -1039,16 +1076,16 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IScriptMetaSummary : IScriptMetaSummaryGetter, ILoquiClass<IScriptMetaSummary, IScriptMetaSummaryGetter>, ILoquiClass<ScriptMetaSummary, IScriptMetaSummaryGetter>
     {
         new Byte[] Fluff { get; set; }
-        new INotifyingItem<Byte[]> Fluff_Property { get; }
+        new INotifyingSetItem<Byte[]> Fluff_Property { get; }
 
         new UInt32 RefCount { get; set; }
-        new INotifyingItem<UInt32> RefCount_Property { get; }
+        new INotifyingSetItem<UInt32> RefCount_Property { get; }
 
         new UInt32 VariableCount { get; set; }
-        new INotifyingItem<UInt32> VariableCount_Property { get; }
+        new INotifyingSetItem<UInt32> VariableCount_Property { get; }
 
         new Script.ScriptType Type { get; set; }
-        new INotifyingItem<Script.ScriptType> Type_Property { get; }
+        new INotifyingSetItem<Script.ScriptType> Type_Property { get; }
 
     }
 
@@ -1056,27 +1093,27 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Fluff
         Byte[] Fluff { get; }
-        INotifyingItemGetter<Byte[]> Fluff_Property { get; }
+        INotifyingSetItemGetter<Byte[]> Fluff_Property { get; }
 
         #endregion
         #region RefCount
         UInt32 RefCount { get; }
-        INotifyingItemGetter<UInt32> RefCount_Property { get; }
+        INotifyingSetItemGetter<UInt32> RefCount_Property { get; }
 
         #endregion
         #region CompiledSize
         Int32 CompiledSize { get; }
-        INotifyingItemGetter<Int32> CompiledSize_Property { get; }
+        INotifyingSetItemGetter<Int32> CompiledSize_Property { get; }
 
         #endregion
         #region VariableCount
         UInt32 VariableCount { get; }
-        INotifyingItemGetter<UInt32> VariableCount_Property { get; }
+        INotifyingSetItemGetter<UInt32> VariableCount_Property { get; }
 
         #endregion
         #region Type
         Script.ScriptType Type { get; }
-        INotifyingItemGetter<Script.ScriptType> Type_Property { get; }
+        INotifyingSetItemGetter<Script.ScriptType> Type_Property { get; }
 
         #endregion
 
@@ -1392,8 +1429,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Fluff_Property.Set(
-                        value: rhs.Fluff,
+                    item.Fluff_Property.SetToWithDefault(
+                        rhs: rhs.Fluff_Property,
+                        def: def?.Fluff_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1406,8 +1444,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.RefCount_Property.Set(
-                        value: rhs.RefCount,
+                    item.RefCount_Property.SetToWithDefault(
+                        rhs: rhs.RefCount_Property,
+                        def: def?.RefCount_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1420,8 +1459,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.VariableCount_Property.Set(
-                        value: rhs.VariableCount,
+                    item.VariableCount_Property.SetToWithDefault(
+                        rhs: rhs.VariableCount_Property,
+                        def: def?.VariableCount_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1434,8 +1474,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Type_Property.Set(
-                        value: rhs.Type,
+                    item.Type_Property.SetToWithDefault(
+                        rhs: rhs.Type_Property,
+                        def: def?.Type_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1460,11 +1501,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ScriptMetaSummary_FieldIndex.CompiledSize:
                     throw new ArgumentException($"Tried to set at a derivative index {index}");
                 case ScriptMetaSummary_FieldIndex.Fluff:
+                    obj.Fluff_Property.HasBeenSet = on;
+                    break;
                 case ScriptMetaSummary_FieldIndex.RefCount:
+                    obj.RefCount_Property.HasBeenSet = on;
+                    break;
                 case ScriptMetaSummary_FieldIndex.VariableCount:
+                    obj.VariableCount_Property.HasBeenSet = on;
+                    break;
                 case ScriptMetaSummary_FieldIndex.Type:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
+                    obj.Type_Property.HasBeenSet = on;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1481,16 +1528,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ScriptMetaSummary_FieldIndex.CompiledSize:
                     throw new ArgumentException($"Tried to unset at a derivative index {index}");
                 case ScriptMetaSummary_FieldIndex.Fluff:
-                    obj.Fluff = default(Byte[]);
+                    obj.Fluff_Property.Unset(cmds);
                     break;
                 case ScriptMetaSummary_FieldIndex.RefCount:
-                    obj.RefCount = default(UInt32);
+                    obj.RefCount_Property.Unset(cmds);
                     break;
                 case ScriptMetaSummary_FieldIndex.VariableCount:
-                    obj.VariableCount = default(UInt32);
+                    obj.VariableCount_Property.Unset(cmds);
                     break;
                 case ScriptMetaSummary_FieldIndex.Type:
-                    obj.Type = default(Script.ScriptType);
+                    obj.Type_Property.Unset(cmds);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1505,11 +1552,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case ScriptMetaSummary_FieldIndex.Fluff:
+                    return obj.Fluff_Property.HasBeenSet;
                 case ScriptMetaSummary_FieldIndex.RefCount:
+                    return obj.RefCount_Property.HasBeenSet;
                 case ScriptMetaSummary_FieldIndex.CompiledSize:
+                    return obj.CompiledSize_Property.HasBeenSet;
                 case ScriptMetaSummary_FieldIndex.VariableCount:
+                    return obj.VariableCount_Property.HasBeenSet;
                 case ScriptMetaSummary_FieldIndex.Type:
-                    return true;
+                    return obj.Type_Property.HasBeenSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1541,10 +1592,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptMetaSummary item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.Fluff = default(Byte[]);
-            item.RefCount = default(UInt32);
-            item.VariableCount = default(UInt32);
-            item.Type = default(Script.ScriptType);
+            item.Fluff_Property.Unset(cmds.ToUnsetParams());
+            item.RefCount_Property.Unset(cmds.ToUnsetParams());
+            item.VariableCount_Property.Unset(cmds.ToUnsetParams());
+            item.Type_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static ScriptMetaSummary_Mask<bool> GetEqualsMask(
@@ -1562,11 +1613,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptMetaSummary_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Fluff = item.Fluff.EqualsFast(rhs.Fluff);
-            ret.RefCount = item.RefCount == rhs.RefCount;
-            ret.CompiledSize = item.CompiledSize == rhs.CompiledSize;
-            ret.VariableCount = item.VariableCount == rhs.VariableCount;
-            ret.Type = item.Type == rhs.Type;
+            ret.Fluff = item.Fluff_Property.Equals(rhs.Fluff_Property, (l, r) => l.EqualsFast(r));
+            ret.RefCount = item.RefCount_Property.Equals(rhs.RefCount_Property, (l, r) => l == r);
+            ret.CompiledSize = item.CompiledSize_Property.Equals(rhs.CompiledSize_Property, (l, r) => l == r);
+            ret.VariableCount = item.VariableCount_Property.Equals(rhs.VariableCount_Property, (l, r) => l == r);
+            ret.Type = item.Type_Property.Equals(rhs.Type_Property, (l, r) => l == r);
         }
 
         public static string ToString(
@@ -1624,17 +1675,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IScriptMetaSummaryGetter item,
             ScriptMetaSummary_Mask<bool?> checkMask)
         {
+            if (checkMask.Fluff.HasValue && checkMask.Fluff.Value != item.Fluff_Property.HasBeenSet) return false;
+            if (checkMask.RefCount.HasValue && checkMask.RefCount.Value != item.RefCount_Property.HasBeenSet) return false;
+            if (checkMask.CompiledSize.HasValue && checkMask.CompiledSize.Value != item.CompiledSize_Property.HasBeenSet) return false;
+            if (checkMask.VariableCount.HasValue && checkMask.VariableCount.Value != item.VariableCount_Property.HasBeenSet) return false;
+            if (checkMask.Type.HasValue && checkMask.Type.Value != item.Type_Property.HasBeenSet) return false;
             return true;
         }
 
         public static ScriptMetaSummary_Mask<bool> GetHasBeenSetMask(IScriptMetaSummaryGetter item)
         {
             var ret = new ScriptMetaSummary_Mask<bool>();
-            ret.Fluff = true;
-            ret.RefCount = true;
-            ret.CompiledSize = true;
-            ret.VariableCount = true;
-            ret.Type = true;
+            ret.Fluff = item.Fluff_Property.HasBeenSet;
+            ret.RefCount = item.RefCount_Property.HasBeenSet;
+            ret.CompiledSize = item.CompiledSize_Property.HasBeenSet;
+            ret.VariableCount = item.VariableCount_Property.HasBeenSet;
+            ret.Type = item.Type_Property.HasBeenSet;
             return ret;
         }
 
@@ -1670,30 +1726,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.ScriptMetaSummary");
                     }
-                    ByteArrayXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Fluff),
-                        item: item.Fluff_Property,
-                        fieldIndex: (int)ScriptMetaSummary_FieldIndex.Fluff,
-                        errorMask: errorMask);
-                    UInt32XmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.RefCount),
-                        item: item.RefCount_Property,
-                        fieldIndex: (int)ScriptMetaSummary_FieldIndex.RefCount,
-                        errorMask: errorMask);
-                    UInt32XmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.VariableCount),
-                        item: item.VariableCount_Property,
-                        fieldIndex: (int)ScriptMetaSummary_FieldIndex.VariableCount,
-                        errorMask: errorMask);
-                    EnumXmlTranslation<Script.ScriptType>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Type),
-                        item: item.Type_Property,
-                        fieldIndex: (int)ScriptMetaSummary_FieldIndex.Type,
-                        errorMask: errorMask);
+                    if (item.Fluff_Property.HasBeenSet)
+                    {
+                        ByteArrayXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Fluff),
+                            item: item.Fluff_Property,
+                            fieldIndex: (int)ScriptMetaSummary_FieldIndex.Fluff,
+                            errorMask: errorMask);
+                    }
+                    if (item.RefCount_Property.HasBeenSet)
+                    {
+                        UInt32XmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.RefCount),
+                            item: item.RefCount_Property,
+                            fieldIndex: (int)ScriptMetaSummary_FieldIndex.RefCount,
+                            errorMask: errorMask);
+                    }
+                    if (item.VariableCount_Property.HasBeenSet)
+                    {
+                        UInt32XmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.VariableCount),
+                            item: item.VariableCount_Property,
+                            fieldIndex: (int)ScriptMetaSummary_FieldIndex.VariableCount,
+                            errorMask: errorMask);
+                    }
+                    if (item.Type_Property.HasBeenSet)
+                    {
+                        EnumXmlTranslation<Script.ScriptType>.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Type),
+                            item: item.Type_Property,
+                            fieldIndex: (int)ScriptMetaSummary_FieldIndex.Type,
+                            errorMask: errorMask);
+                    }
                 }
             }
             catch (Exception ex)

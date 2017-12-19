@@ -38,34 +38,34 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Model
-        private readonly INotifyingItem<Model> _Model = new NotifyingItem<Model>();
-        public INotifyingItem<Model> Model_Property => this._Model;
+        private readonly INotifyingSetItem<Model> _Model = new NotifyingSetItem<Model>();
+        public INotifyingSetItem<Model> Model_Property => this._Model;
         Model IHairGetter.Model => this.Model;
         public Model Model { get => _Model.Item; set => _Model.Item = value; }
-        INotifyingItem<Model> IHair.Model_Property => this.Model_Property;
-        INotifyingItemGetter<Model> IHairGetter.Model_Property => this.Model_Property;
+        INotifyingSetItem<Model> IHair.Model_Property => this.Model_Property;
+        INotifyingSetItemGetter<Model> IHairGetter.Model_Property => this.Model_Property;
         #endregion
         #region Icon
-        protected readonly INotifyingItem<FilePath> _Icon = NotifyingItem.Factory<FilePath>();
-        public INotifyingItem<FilePath> Icon_Property => _Icon;
+        protected readonly INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
+        public INotifyingSetItem<FilePath> Icon_Property => _Icon;
         public FilePath Icon
         {
             get => this._Icon.Item;
             set => this._Icon.Set(value);
         }
-        INotifyingItem<FilePath> IHair.Icon_Property => this.Icon_Property;
-        INotifyingItemGetter<FilePath> IHairGetter.Icon_Property => this.Icon_Property;
+        INotifyingSetItem<FilePath> IHair.Icon_Property => this.Icon_Property;
+        INotifyingSetItemGetter<FilePath> IHairGetter.Icon_Property => this.Icon_Property;
         #endregion
         #region Flags
-        protected readonly INotifyingItem<Hair.HairFlag> _Flags = NotifyingItem.Factory<Hair.HairFlag>();
-        public INotifyingItem<Hair.HairFlag> Flags_Property => _Flags;
+        protected readonly INotifyingSetItem<Hair.HairFlag> _Flags = NotifyingSetItem.Factory<Hair.HairFlag>(markAsSet: false);
+        public INotifyingSetItem<Hair.HairFlag> Flags_Property => _Flags;
         public Hair.HairFlag Flags
         {
             get => this._Flags.Item;
             set => this._Flags.Set(value);
         }
-        INotifyingItem<Hair.HairFlag> IHair.Flags_Property => this.Flags_Property;
-        INotifyingItemGetter<Hair.HairFlag> IHairGetter.Flags_Property => this.Flags_Property;
+        INotifyingSetItem<Hair.HairFlag> IHair.Flags_Property => this.Flags_Property;
+        INotifyingSetItemGetter<Hair.HairFlag> IHairGetter.Flags_Property => this.Flags_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -123,18 +123,39 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (!object.Equals(Model, rhs.Model)) return false;
-            if (!object.Equals(Icon, rhs.Icon)) return false;
-            if (Flags != rhs.Flags) return false;
+            if (Model_Property.HasBeenSet != rhs.Model_Property.HasBeenSet) return false;
+            if (Model_Property.HasBeenSet)
+            {
+                if (!object.Equals(Model, rhs.Model)) return false;
+            }
+            if (Icon_Property.HasBeenSet != rhs.Icon_Property.HasBeenSet) return false;
+            if (Icon_Property.HasBeenSet)
+            {
+                if (!object.Equals(Icon, rhs.Icon)) return false;
+            }
+            if (Flags_Property.HasBeenSet != rhs.Flags_Property.HasBeenSet) return false;
+            if (Flags_Property.HasBeenSet)
+            {
+                if (Flags != rhs.Flags) return false;
+            }
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = HashHelper.GetHashCode(Model).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Icon).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
+            if (Model_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Model).CombineHashCode(ret);
+            }
+            if (Icon_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Icon).CombineHashCode(ret);
+            }
+            if (Flags_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
+            }
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -832,6 +853,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "MODL":
+                case "MODB":
                     item._Model.SetIfSucceeded(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)Hair_FieldIndex.Model,
@@ -1016,13 +1038,13 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IHair : IHairGetter, INamedMajorRecord, ILoquiClass<IHair, IHairGetter>, ILoquiClass<Hair, IHairGetter>
     {
         new Model Model { get; set; }
-        new INotifyingItem<Model> Model_Property { get; }
+        new INotifyingSetItem<Model> Model_Property { get; }
 
         new FilePath Icon { get; set; }
-        new INotifyingItem<FilePath> Icon_Property { get; }
+        new INotifyingSetItem<FilePath> Icon_Property { get; }
 
         new Hair.HairFlag Flags { get; set; }
-        new INotifyingItem<Hair.HairFlag> Flags_Property { get; }
+        new INotifyingSetItem<Hair.HairFlag> Flags_Property { get; }
 
     }
 
@@ -1030,17 +1052,17 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Model
         Model Model { get; }
-        INotifyingItemGetter<Model> Model_Property { get; }
+        INotifyingSetItemGetter<Model> Model_Property { get; }
 
         #endregion
         #region Icon
         FilePath Icon { get; }
-        INotifyingItemGetter<FilePath> Icon_Property { get; }
+        INotifyingSetItemGetter<FilePath> Icon_Property { get; }
 
         #endregion
         #region Flags
         Hair.HairFlag Flags { get; }
-        INotifyingItemGetter<Hair.HairFlag> Flags_Property { get; }
+        INotifyingSetItemGetter<Hair.HairFlag> Flags_Property { get; }
 
         #endregion
 
@@ -1219,6 +1241,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly RecordType HAIR_HEADER = new RecordType("HAIR");
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
+        public static readonly RecordType MODB_HEADER = new RecordType("MODB");
         public static readonly RecordType ICON_HEADER = new RecordType("ICON");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = HAIR_HEADER;
@@ -1342,46 +1365,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    switch (copyMask?.Model?.Overall ?? CopyOption.Reference)
-                    {
-                        case CopyOption.Reference:
-                            item.Model = rhs.Model;
-                            break;
-                        case CopyOption.CopyIn:
-                            ModelCommon.CopyFieldsFrom(
-                                item: item.Model,
-                                rhs: rhs.Model,
-                                def: def?.Model,
-                                doMasks: doMasks,
-                                errorMask: (doMasks ? new Func<Model_ErrorMask>(() =>
-                                {
-                                    var baseMask = errorMask();
-                                    if (baseMask.Model.Specific == null)
-                                    {
-                                        baseMask.Model = new MaskItem<Exception, Model_ErrorMask>(null, new Model_ErrorMask());
-                                    }
-                                    return baseMask.Model.Specific;
-                                }
-                                ) : null),
-                                copyMask: copyMask?.Model.Specific,
-                                cmds: cmds);
-                            break;
-                        case CopyOption.MakeCopy:
-                            if (rhs.Model == null)
+                    item.Model_Property.SetToWithDefault(
+                        rhs.Model_Property,
+                        def?.Model_Property,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.Model.Overall ?? CopyOption.Reference)
                             {
-                                item.Model = null;
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    ModelCommon.CopyFieldsFrom(
+                                        item: item.Model,
+                                        rhs: rhs.Model,
+                                        def: def?.Model,
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<Model_ErrorMask>(() =>
+                                        {
+                                            var baseMask = errorMask();
+                                            if (baseMask.Model.Specific == null)
+                                            {
+                                                baseMask.Model = new MaskItem<Exception, Model_ErrorMask>(null, new Model_ErrorMask());
+                                            }
+                                            return baseMask.Model.Specific;
+                                        }
+                                        ) : null),
+                                        copyMask: copyMask?.Model.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(Model);
+                                    return Model.Copy(
+                                        r,
+                                        copyMask?.Model?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Model?.Overall}. Cannot execute copy.");
                             }
-                            else
-                            {
-                                item.Model = Model.Copy(
-                                    rhs.Model,
-                                    copyMask?.Model?.Specific,
-                                    def?.Model);
-                            }
-                            break;
-                        default:
-                            throw new NotImplementedException($"Unknown CopyOption {copyMask?.Model?.Overall}. Cannot execute copy.");
-                    }
+                        }
+                        );
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1393,8 +1416,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Icon_Property.Set(
-                        value: rhs.Icon,
+                    item.Icon_Property.SetToWithDefault(
+                        rhs: rhs.Icon_Property,
+                        def: def?.Icon_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1407,8 +1431,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Flags_Property.Set(
-                        value: rhs.Flags,
+                    item.Flags_Property.SetToWithDefault(
+                        rhs: rhs.Flags_Property,
+                        def: def?.Flags_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1431,10 +1456,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Hair_FieldIndex.Model:
+                    obj.Model_Property.HasBeenSet = on;
+                    break;
                 case Hair_FieldIndex.Icon:
+                    obj.Icon_Property.HasBeenSet = on;
+                    break;
                 case Hair_FieldIndex.Flags:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
+                    obj.Flags_Property.HasBeenSet = on;
+                    break;
                 default:
                     NamedMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
@@ -1450,13 +1479,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Hair_FieldIndex.Model:
-                    obj.Model = default(Model);
+                    obj.Model_Property.Unset(cmds);
                     break;
                 case Hair_FieldIndex.Icon:
-                    obj.Icon = default(FilePath);
+                    obj.Icon_Property.Unset(cmds);
                     break;
                 case Hair_FieldIndex.Flags:
-                    obj.Flags = default(Hair.HairFlag);
+                    obj.Flags_Property.Unset(cmds);
                     break;
                 default:
                     NamedMajorRecordCommon.UnsetNthObject(index, obj);
@@ -1472,9 +1501,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Hair_FieldIndex.Model:
+                    return obj.Model_Property.HasBeenSet;
                 case Hair_FieldIndex.Icon:
+                    return obj.Icon_Property.HasBeenSet;
                 case Hair_FieldIndex.Flags:
-                    return true;
+                    return obj.Flags_Property.HasBeenSet;
                 default:
                     return NamedMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -1502,9 +1533,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IHair item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.Model = default(Model);
-            item.Icon = default(FilePath);
-            item.Flags = default(Hair.HairFlag);
+            item.Model_Property.Unset(cmds.ToUnsetParams());
+            item.Icon_Property.Unset(cmds.ToUnsetParams());
+            item.Flags_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static Hair_Mask<bool> GetEqualsMask(
@@ -1522,11 +1553,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Hair_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Model = new MaskItem<bool, Model_Mask<bool>>();
-            ret.Model.Specific = ModelCommon.GetEqualsMask(item.Model, rhs.Model);
-            ret.Model.Overall = ret.Model.Specific.AllEqual((b) => b);
-            ret.Icon = object.Equals(item.Icon, rhs.Icon);
-            ret.Flags = item.Flags == rhs.Flags;
+            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Icon = item.Icon_Property.Equals(rhs.Icon_Property, (l, r) => object.Equals(l, r));
+            ret.Flags = item.Flags_Property.Equals(rhs.Flags_Property, (l, r) => l == r);
             NamedMajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -1577,15 +1606,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IHairGetter item,
             Hair_Mask<bool?> checkMask)
         {
+            if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_Property.HasBeenSet) return false;
+            if (checkMask.Model.Specific != null && (item.Model_Property.Item == null || !item.Model_Property.Item.HasBeenSet(checkMask.Model.Specific))) return false;
+            if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_Property.HasBeenSet) return false;
+            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_Property.HasBeenSet) return false;
             return true;
         }
 
         public static Hair_Mask<bool> GetHasBeenSetMask(IHairGetter item)
         {
             var ret = new Hair_Mask<bool>();
-            ret.Model = new MaskItem<bool, Model_Mask<bool>>(true, ModelCommon.GetHasBeenSetMask(item.Model_Property.Item));
-            ret.Icon = true;
-            ret.Flags = true;
+            ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_Property.HasBeenSet, ModelCommon.GetHasBeenSetMask(item.Model_Property.Item));
+            ret.Icon = item.Icon_Property.HasBeenSet;
+            ret.Flags = item.Flags_Property.HasBeenSet;
             return ret;
         }
 
@@ -1621,24 +1654,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.Hair");
                     }
-                    LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Write(
-                        writer: writer,
-                        item: item.Model_Property,
-                        name: nameof(item.Model),
-                        fieldIndex: (int)Hair_FieldIndex.Model,
-                        errorMask: errorMask);
-                    FilePathXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Icon),
-                        item: item.Icon_Property,
-                        fieldIndex: (int)Hair_FieldIndex.Icon,
-                        errorMask: errorMask);
-                    EnumXmlTranslation<Hair.HairFlag>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Flags),
-                        item: item.Flags_Property,
-                        fieldIndex: (int)Hair_FieldIndex.Flags,
-                        errorMask: errorMask);
+                    if (item.Model_Property.HasBeenSet)
+                    {
+                        LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Write(
+                            writer: writer,
+                            item: item.Model_Property,
+                            name: nameof(item.Model),
+                            fieldIndex: (int)Hair_FieldIndex.Model,
+                            errorMask: errorMask);
+                    }
+                    if (item.Icon_Property.HasBeenSet)
+                    {
+                        FilePathXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Icon),
+                            item: item.Icon_Property,
+                            fieldIndex: (int)Hair_FieldIndex.Icon,
+                            errorMask: errorMask);
+                    }
+                    if (item.Flags_Property.HasBeenSet)
+                    {
+                        EnumXmlTranslation<Hair.HairFlag>.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Flags),
+                            item: item.Flags_Property,
+                            fieldIndex: (int)Hair_FieldIndex.Flags,
+                            errorMask: errorMask);
+                    }
                 }
             }
             catch (Exception ex)

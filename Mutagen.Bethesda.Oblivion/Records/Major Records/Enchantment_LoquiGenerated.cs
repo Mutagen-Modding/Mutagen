@@ -37,48 +37,48 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Type
-        protected readonly INotifyingItem<Enchantment.EnchantmentType> _Type = NotifyingItem.Factory<Enchantment.EnchantmentType>();
-        public INotifyingItem<Enchantment.EnchantmentType> Type_Property => _Type;
+        protected readonly INotifyingSetItem<Enchantment.EnchantmentType> _Type = NotifyingSetItem.Factory<Enchantment.EnchantmentType>(markAsSet: false);
+        public INotifyingSetItem<Enchantment.EnchantmentType> Type_Property => _Type;
         public Enchantment.EnchantmentType Type
         {
             get => this._Type.Item;
             set => this._Type.Set(value);
         }
-        INotifyingItem<Enchantment.EnchantmentType> IEnchantment.Type_Property => this.Type_Property;
-        INotifyingItemGetter<Enchantment.EnchantmentType> IEnchantmentGetter.Type_Property => this.Type_Property;
+        INotifyingSetItem<Enchantment.EnchantmentType> IEnchantment.Type_Property => this.Type_Property;
+        INotifyingSetItemGetter<Enchantment.EnchantmentType> IEnchantmentGetter.Type_Property => this.Type_Property;
         #endregion
         #region ChargeAmount
-        protected readonly INotifyingItem<UInt32> _ChargeAmount = NotifyingItem.Factory<UInt32>();
-        public INotifyingItem<UInt32> ChargeAmount_Property => _ChargeAmount;
+        protected readonly INotifyingSetItem<UInt32> _ChargeAmount = NotifyingSetItem.Factory<UInt32>(markAsSet: false);
+        public INotifyingSetItem<UInt32> ChargeAmount_Property => _ChargeAmount;
         public UInt32 ChargeAmount
         {
             get => this._ChargeAmount.Item;
             set => this._ChargeAmount.Set(value);
         }
-        INotifyingItem<UInt32> IEnchantment.ChargeAmount_Property => this.ChargeAmount_Property;
-        INotifyingItemGetter<UInt32> IEnchantmentGetter.ChargeAmount_Property => this.ChargeAmount_Property;
+        INotifyingSetItem<UInt32> IEnchantment.ChargeAmount_Property => this.ChargeAmount_Property;
+        INotifyingSetItemGetter<UInt32> IEnchantmentGetter.ChargeAmount_Property => this.ChargeAmount_Property;
         #endregion
         #region EnchantCost
-        protected readonly INotifyingItem<UInt32> _EnchantCost = NotifyingItem.Factory<UInt32>();
-        public INotifyingItem<UInt32> EnchantCost_Property => _EnchantCost;
+        protected readonly INotifyingSetItem<UInt32> _EnchantCost = NotifyingSetItem.Factory<UInt32>(markAsSet: false);
+        public INotifyingSetItem<UInt32> EnchantCost_Property => _EnchantCost;
         public UInt32 EnchantCost
         {
             get => this._EnchantCost.Item;
             set => this._EnchantCost.Set(value);
         }
-        INotifyingItem<UInt32> IEnchantment.EnchantCost_Property => this.EnchantCost_Property;
-        INotifyingItemGetter<UInt32> IEnchantmentGetter.EnchantCost_Property => this.EnchantCost_Property;
+        INotifyingSetItem<UInt32> IEnchantment.EnchantCost_Property => this.EnchantCost_Property;
+        INotifyingSetItemGetter<UInt32> IEnchantmentGetter.EnchantCost_Property => this.EnchantCost_Property;
         #endregion
         #region Flags
-        protected readonly INotifyingItem<Enchantment.Flag> _Flags = NotifyingItem.Factory<Enchantment.Flag>();
-        public INotifyingItem<Enchantment.Flag> Flags_Property => _Flags;
+        protected readonly INotifyingSetItem<Enchantment.Flag> _Flags = NotifyingSetItem.Factory<Enchantment.Flag>(markAsSet: false);
+        public INotifyingSetItem<Enchantment.Flag> Flags_Property => _Flags;
         public Enchantment.Flag Flags
         {
             get => this._Flags.Item;
             set => this._Flags.Set(value);
         }
-        INotifyingItem<Enchantment.Flag> IEnchantment.Flags_Property => this.Flags_Property;
-        INotifyingItemGetter<Enchantment.Flag> IEnchantmentGetter.Flags_Property => this.Flags_Property;
+        INotifyingSetItem<Enchantment.Flag> IEnchantment.Flags_Property => this.Flags_Property;
+        INotifyingSetItemGetter<Enchantment.Flag> IEnchantmentGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region Effects
         private readonly INotifyingList<EnchantmentEffect> _Effects = new NotifyingList<EnchantmentEffect>();
@@ -145,22 +145,57 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (Type != rhs.Type) return false;
-            if (ChargeAmount != rhs.ChargeAmount) return false;
-            if (EnchantCost != rhs.EnchantCost) return false;
-            if (Flags != rhs.Flags) return false;
-            if (!Effects.SequenceEqual(rhs.Effects)) return false;
+            if (Type_Property.HasBeenSet != rhs.Type_Property.HasBeenSet) return false;
+            if (Type_Property.HasBeenSet)
+            {
+                if (Type != rhs.Type) return false;
+            }
+            if (ChargeAmount_Property.HasBeenSet != rhs.ChargeAmount_Property.HasBeenSet) return false;
+            if (ChargeAmount_Property.HasBeenSet)
+            {
+                if (ChargeAmount != rhs.ChargeAmount) return false;
+            }
+            if (EnchantCost_Property.HasBeenSet != rhs.EnchantCost_Property.HasBeenSet) return false;
+            if (EnchantCost_Property.HasBeenSet)
+            {
+                if (EnchantCost != rhs.EnchantCost) return false;
+            }
+            if (Flags_Property.HasBeenSet != rhs.Flags_Property.HasBeenSet) return false;
+            if (Flags_Property.HasBeenSet)
+            {
+                if (Flags != rhs.Flags) return false;
+            }
+            if (Effects.HasBeenSet != rhs.Effects.HasBeenSet) return false;
+            if (Effects.HasBeenSet)
+            {
+                if (!Effects.SequenceEqual(rhs.Effects)) return false;
+            }
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = HashHelper.GetHashCode(Type).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(ChargeAmount).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(EnchantCost).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Effects).CombineHashCode(ret);
+            if (Type_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Type).CombineHashCode(ret);
+            }
+            if (ChargeAmount_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(ChargeAmount).CombineHashCode(ret);
+            }
+            if (EnchantCost_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(EnchantCost).CombineHashCode(ret);
+            }
+            if (Flags_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
+            }
+            if (Effects.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Effects).CombineHashCode(ret);
+            }
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -1111,16 +1146,16 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IEnchantment : IEnchantmentGetter, INamedMajorRecord, ILoquiClass<IEnchantment, IEnchantmentGetter>, ILoquiClass<Enchantment, IEnchantmentGetter>
     {
         new Enchantment.EnchantmentType Type { get; set; }
-        new INotifyingItem<Enchantment.EnchantmentType> Type_Property { get; }
+        new INotifyingSetItem<Enchantment.EnchantmentType> Type_Property { get; }
 
         new UInt32 ChargeAmount { get; set; }
-        new INotifyingItem<UInt32> ChargeAmount_Property { get; }
+        new INotifyingSetItem<UInt32> ChargeAmount_Property { get; }
 
         new UInt32 EnchantCost { get; set; }
-        new INotifyingItem<UInt32> EnchantCost_Property { get; }
+        new INotifyingSetItem<UInt32> EnchantCost_Property { get; }
 
         new Enchantment.Flag Flags { get; set; }
-        new INotifyingItem<Enchantment.Flag> Flags_Property { get; }
+        new INotifyingSetItem<Enchantment.Flag> Flags_Property { get; }
 
         new INotifyingList<EnchantmentEffect> Effects { get; }
     }
@@ -1129,22 +1164,22 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Type
         Enchantment.EnchantmentType Type { get; }
-        INotifyingItemGetter<Enchantment.EnchantmentType> Type_Property { get; }
+        INotifyingSetItemGetter<Enchantment.EnchantmentType> Type_Property { get; }
 
         #endregion
         #region ChargeAmount
         UInt32 ChargeAmount { get; }
-        INotifyingItemGetter<UInt32> ChargeAmount_Property { get; }
+        INotifyingSetItemGetter<UInt32> ChargeAmount_Property { get; }
 
         #endregion
         #region EnchantCost
         UInt32 EnchantCost { get; }
-        INotifyingItemGetter<UInt32> EnchantCost_Property { get; }
+        INotifyingSetItemGetter<UInt32> EnchantCost_Property { get; }
 
         #endregion
         #region Flags
         Enchantment.Flag Flags { get; }
-        INotifyingItemGetter<Enchantment.Flag> Flags_Property { get; }
+        INotifyingSetItemGetter<Enchantment.Flag> Flags_Property { get; }
 
         #endregion
         #region Effects
@@ -1473,8 +1508,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Type_Property.Set(
-                        value: rhs.Type,
+                    item.Type_Property.SetToWithDefault(
+                        rhs: rhs.Type_Property,
+                        def: def?.Type_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1487,8 +1523,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.ChargeAmount_Property.Set(
-                        value: rhs.ChargeAmount,
+                    item.ChargeAmount_Property.SetToWithDefault(
+                        rhs: rhs.ChargeAmount_Property,
+                        def: def?.ChargeAmount_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1501,8 +1538,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.EnchantCost_Property.Set(
-                        value: rhs.EnchantCost,
+                    item.EnchantCost_Property.SetToWithDefault(
+                        rhs: rhs.EnchantCost_Property,
+                        def: def?.EnchantCost_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1515,8 +1553,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Flags_Property.Set(
-                        value: rhs.Flags,
+                    item.Flags_Property.SetToWithDefault(
+                        rhs: rhs.Flags_Property,
+                        def: def?.Flags_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1571,12 +1610,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Enchantment_FieldIndex.Type:
+                    obj.Type_Property.HasBeenSet = on;
+                    break;
                 case Enchantment_FieldIndex.ChargeAmount:
+                    obj.ChargeAmount_Property.HasBeenSet = on;
+                    break;
                 case Enchantment_FieldIndex.EnchantCost:
+                    obj.EnchantCost_Property.HasBeenSet = on;
+                    break;
                 case Enchantment_FieldIndex.Flags:
+                    obj.Flags_Property.HasBeenSet = on;
+                    break;
                 case Enchantment_FieldIndex.Effects:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
+                    obj.Effects.HasBeenSet = on;
+                    break;
                 default:
                     NamedMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
@@ -1592,16 +1639,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Enchantment_FieldIndex.Type:
-                    obj.Type = default(Enchantment.EnchantmentType);
+                    obj.Type_Property.Unset(cmds);
                     break;
                 case Enchantment_FieldIndex.ChargeAmount:
-                    obj.ChargeAmount = default(UInt32);
+                    obj.ChargeAmount_Property.Unset(cmds);
                     break;
                 case Enchantment_FieldIndex.EnchantCost:
-                    obj.EnchantCost = default(UInt32);
+                    obj.EnchantCost_Property.Unset(cmds);
                     break;
                 case Enchantment_FieldIndex.Flags:
-                    obj.Flags = default(Enchantment.Flag);
+                    obj.Flags_Property.Unset(cmds);
                     break;
                 case Enchantment_FieldIndex.Effects:
                     obj.Effects.Unset(cmds);
@@ -1620,11 +1667,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Enchantment_FieldIndex.Type:
+                    return obj.Type_Property.HasBeenSet;
                 case Enchantment_FieldIndex.ChargeAmount:
+                    return obj.ChargeAmount_Property.HasBeenSet;
                 case Enchantment_FieldIndex.EnchantCost:
+                    return obj.EnchantCost_Property.HasBeenSet;
                 case Enchantment_FieldIndex.Flags:
+                    return obj.Flags_Property.HasBeenSet;
                 case Enchantment_FieldIndex.Effects:
-                    return true;
+                    return obj.Effects.HasBeenSet;
                 default:
                     return NamedMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -1656,10 +1707,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEnchantment item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.Type = default(Enchantment.EnchantmentType);
-            item.ChargeAmount = default(UInt32);
-            item.EnchantCost = default(UInt32);
-            item.Flags = default(Enchantment.Flag);
+            item.Type_Property.Unset(cmds.ToUnsetParams());
+            item.ChargeAmount_Property.Unset(cmds.ToUnsetParams());
+            item.EnchantCost_Property.Unset(cmds.ToUnsetParams());
+            item.Flags_Property.Unset(cmds.ToUnsetParams());
             item.Effects.Unset(cmds.ToUnsetParams());
         }
 
@@ -1678,10 +1729,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Enchantment_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Type = item.Type == rhs.Type;
-            ret.ChargeAmount = item.ChargeAmount == rhs.ChargeAmount;
-            ret.EnchantCost = item.EnchantCost == rhs.EnchantCost;
-            ret.Flags = item.Flags == rhs.Flags;
+            ret.Type = item.Type_Property.Equals(rhs.Type_Property, (l, r) => l == r);
+            ret.ChargeAmount = item.ChargeAmount_Property.Equals(rhs.ChargeAmount_Property, (l, r) => l == r);
+            ret.EnchantCost = item.EnchantCost_Property.Equals(rhs.EnchantCost_Property, (l, r) => l == r);
+            ret.Flags = item.Flags_Property.Equals(rhs.Flags_Property, (l, r) => l == r);
             if (item.Effects.HasBeenSet == rhs.Effects.HasBeenSet)
             {
                 if (item.Effects.HasBeenSet)
@@ -1690,9 +1741,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ret.Effects.Specific = item.Effects.SelectAgainst<EnchantmentEffect, MaskItem<bool, EnchantmentEffect_Mask<bool>>>(rhs.Effects, ((l, r) =>
                     {
                         MaskItem<bool, EnchantmentEffect_Mask<bool>> itemRet;
-                        itemRet = new MaskItem<bool, EnchantmentEffect_Mask<bool>>();
-                        itemRet.Specific = EnchantmentEffectCommon.GetEqualsMask(l, r);
-                        itemRet.Overall = itemRet.Specific.AllEqual((b) => b);
+                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => EnchantmentEffectCommon.GetEqualsMask(loqLhs, loqRhs));
                         return itemRet;
                     }
                     ), out ret.Effects.Overall);
@@ -1781,6 +1830,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IEnchantmentGetter item,
             Enchantment_Mask<bool?> checkMask)
         {
+            if (checkMask.Type.HasValue && checkMask.Type.Value != item.Type_Property.HasBeenSet) return false;
+            if (checkMask.ChargeAmount.HasValue && checkMask.ChargeAmount.Value != item.ChargeAmount_Property.HasBeenSet) return false;
+            if (checkMask.EnchantCost.HasValue && checkMask.EnchantCost.Value != item.EnchantCost_Property.HasBeenSet) return false;
+            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_Property.HasBeenSet) return false;
             if (checkMask.Effects.Overall.HasValue && checkMask.Effects.Overall.Value != item.Effects.HasBeenSet) return false;
             return true;
         }
@@ -1788,10 +1841,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Enchantment_Mask<bool> GetHasBeenSetMask(IEnchantmentGetter item)
         {
             var ret = new Enchantment_Mask<bool>();
-            ret.Type = true;
-            ret.ChargeAmount = true;
-            ret.EnchantCost = true;
-            ret.Flags = true;
+            ret.Type = item.Type_Property.HasBeenSet;
+            ret.ChargeAmount = item.ChargeAmount_Property.HasBeenSet;
+            ret.EnchantCost = item.EnchantCost_Property.HasBeenSet;
+            ret.Flags = item.Flags_Property.HasBeenSet;
             ret.Effects = new MaskItem<bool, IEnumerable<MaskItem<bool, EnchantmentEffect_Mask<bool>>>>(item.Effects.HasBeenSet, item.Effects.Select((i) => new MaskItem<bool, EnchantmentEffect_Mask<bool>>(true, i.GetHasBeenSetMask())));
             return ret;
         }
@@ -1828,46 +1881,61 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.Enchantment");
                     }
-                    EnumXmlTranslation<Enchantment.EnchantmentType>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Type),
-                        item: item.Type_Property,
-                        fieldIndex: (int)Enchantment_FieldIndex.Type,
-                        errorMask: errorMask);
-                    UInt32XmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.ChargeAmount),
-                        item: item.ChargeAmount_Property,
-                        fieldIndex: (int)Enchantment_FieldIndex.ChargeAmount,
-                        errorMask: errorMask);
-                    UInt32XmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.EnchantCost),
-                        item: item.EnchantCost_Property,
-                        fieldIndex: (int)Enchantment_FieldIndex.EnchantCost,
-                        errorMask: errorMask);
-                    EnumXmlTranslation<Enchantment.Flag>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Flags),
-                        item: item.Flags_Property,
-                        fieldIndex: (int)Enchantment_FieldIndex.Flags,
-                        errorMask: errorMask);
-                    ListXmlTranslation<EnchantmentEffect, MaskItem<Exception, EnchantmentEffect_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Effects),
-                        item: item.Effects,
-                        fieldIndex: (int)Enchantment_FieldIndex.Effects,
-                        errorMask: errorMask,
-                        transl: (EnchantmentEffect subItem, bool listDoMasks, out MaskItem<Exception, EnchantmentEffect_ErrorMask> listSubMask) =>
-                        {
-                            LoquiXmlTranslation<EnchantmentEffect, EnchantmentEffect_ErrorMask>.Instance.Write(
-                                writer: writer,
-                                item: subItem,
-                                name: "Item",
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
-                        }
-                        );
+                    if (item.Type_Property.HasBeenSet)
+                    {
+                        EnumXmlTranslation<Enchantment.EnchantmentType>.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Type),
+                            item: item.Type_Property,
+                            fieldIndex: (int)Enchantment_FieldIndex.Type,
+                            errorMask: errorMask);
+                    }
+                    if (item.ChargeAmount_Property.HasBeenSet)
+                    {
+                        UInt32XmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.ChargeAmount),
+                            item: item.ChargeAmount_Property,
+                            fieldIndex: (int)Enchantment_FieldIndex.ChargeAmount,
+                            errorMask: errorMask);
+                    }
+                    if (item.EnchantCost_Property.HasBeenSet)
+                    {
+                        UInt32XmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.EnchantCost),
+                            item: item.EnchantCost_Property,
+                            fieldIndex: (int)Enchantment_FieldIndex.EnchantCost,
+                            errorMask: errorMask);
+                    }
+                    if (item.Flags_Property.HasBeenSet)
+                    {
+                        EnumXmlTranslation<Enchantment.Flag>.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Flags),
+                            item: item.Flags_Property,
+                            fieldIndex: (int)Enchantment_FieldIndex.Flags,
+                            errorMask: errorMask);
+                    }
+                    if (item.Effects.HasBeenSet)
+                    {
+                        ListXmlTranslation<EnchantmentEffect, MaskItem<Exception, EnchantmentEffect_ErrorMask>>.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Effects),
+                            item: item.Effects,
+                            fieldIndex: (int)Enchantment_FieldIndex.Effects,
+                            errorMask: errorMask,
+                            transl: (EnchantmentEffect subItem, bool listDoMasks, out MaskItem<Exception, EnchantmentEffect_ErrorMask> listSubMask) =>
+                            {
+                                LoquiXmlTranslation<EnchantmentEffect, EnchantmentEffect_ErrorMask>.Instance.Write(
+                                    writer: writer,
+                                    item: subItem,
+                                    name: "Item",
+                                    doMasks: errorMask != null,
+                                    errorMask: out listSubMask);
+                            }
+                            );
+                    }
                 }
             }
             catch (Exception ex)

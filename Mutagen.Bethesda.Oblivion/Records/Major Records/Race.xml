@@ -2,7 +2,7 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Race" objType="Record" recordType="RACE" baseClass="NamedMajorRecord" GUID="265136e6-60a6-4ade-a7c4-b31197fb95e5" ID="25">
     <Fields>
-      <String name="Description" recordType="DESC" />
+      <String name="Description" recordType="DESC" hasBeenSet="True" />
       <List name="Spells">
         <FormID recordType="SPLO" />
       </List>

@@ -38,23 +38,23 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region File
-        protected readonly INotifyingItem<FilePath> _File = NotifyingItem.Factory<FilePath>();
-        public INotifyingItem<FilePath> File_Property => _File;
+        protected readonly INotifyingSetItem<FilePath> _File = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
+        public INotifyingSetItem<FilePath> File_Property => _File;
         public FilePath File
         {
             get => this._File.Item;
             set => this._File.Set(value);
         }
-        INotifyingItem<FilePath> ISound.File_Property => this.File_Property;
-        INotifyingItemGetter<FilePath> ISoundGetter.File_Property => this.File_Property;
+        INotifyingSetItem<FilePath> ISound.File_Property => this.File_Property;
+        INotifyingSetItemGetter<FilePath> ISoundGetter.File_Property => this.File_Property;
         #endregion
         #region Data
-        private readonly INotifyingItem<SoundData> _Data = new NotifyingItem<SoundData>();
-        public INotifyingItem<SoundData> Data_Property => this._Data;
+        private readonly INotifyingSetItem<SoundData> _Data = new NotifyingSetItem<SoundData>();
+        public INotifyingSetItem<SoundData> Data_Property => this._Data;
         SoundData ISoundGetter.Data => this.Data;
         public SoundData Data { get => _Data.Item; set => _Data.Item = value; }
-        INotifyingItem<SoundData> ISound.Data_Property => this.Data_Property;
-        INotifyingItemGetter<SoundData> ISoundGetter.Data_Property => this.Data_Property;
+        INotifyingSetItem<SoundData> ISound.Data_Property => this.Data_Property;
+        INotifyingSetItemGetter<SoundData> ISoundGetter.Data_Property => this.Data_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -112,16 +112,30 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (!object.Equals(File, rhs.File)) return false;
-            if (!object.Equals(Data, rhs.Data)) return false;
+            if (File_Property.HasBeenSet != rhs.File_Property.HasBeenSet) return false;
+            if (File_Property.HasBeenSet)
+            {
+                if (!object.Equals(File, rhs.File)) return false;
+            }
+            if (Data_Property.HasBeenSet != rhs.Data_Property.HasBeenSet) return false;
+            if (Data_Property.HasBeenSet)
+            {
+                if (!object.Equals(Data, rhs.Data)) return false;
+            }
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = HashHelper.GetHashCode(File).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Data).CombineHashCode(ret);
+            if (File_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(File).CombineHashCode(ret);
+            }
+            if (Data_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Data).CombineHashCode(ret);
+            }
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -952,10 +966,10 @@ namespace Mutagen.Bethesda.Oblivion
     public interface ISound : ISoundGetter, IMajorRecord, ILoquiClass<ISound, ISoundGetter>, ILoquiClass<Sound, ISoundGetter>
     {
         new FilePath File { get; set; }
-        new INotifyingItem<FilePath> File_Property { get; }
+        new INotifyingSetItem<FilePath> File_Property { get; }
 
         new SoundData Data { get; set; }
-        new INotifyingItem<SoundData> Data_Property { get; }
+        new INotifyingSetItem<SoundData> Data_Property { get; }
 
     }
 
@@ -963,12 +977,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region File
         FilePath File { get; }
-        INotifyingItemGetter<FilePath> File_Property { get; }
+        INotifyingSetItemGetter<FilePath> File_Property { get; }
 
         #endregion
         #region Data
         SoundData Data { get; }
-        INotifyingItemGetter<SoundData> Data_Property { get; }
+        INotifyingSetItemGetter<SoundData> Data_Property { get; }
 
         #endregion
 
@@ -1258,8 +1272,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.File_Property.Set(
-                        value: rhs.File,
+                    item.File_Property.SetToWithDefault(
+                        rhs: rhs.File_Property,
+                        def: def?.File_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1272,46 +1287,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    switch (copyMask?.Data?.Overall ?? CopyOption.Reference)
-                    {
-                        case CopyOption.Reference:
-                            item.Data = rhs.Data;
-                            break;
-                        case CopyOption.CopyIn:
-                            SoundDataCommon.CopyFieldsFrom(
-                                item: item.Data,
-                                rhs: rhs.Data,
-                                def: def?.Data,
-                                doMasks: doMasks,
-                                errorMask: (doMasks ? new Func<SoundData_ErrorMask>(() =>
-                                {
-                                    var baseMask = errorMask();
-                                    if (baseMask.Data.Specific == null)
-                                    {
-                                        baseMask.Data = new MaskItem<Exception, SoundData_ErrorMask>(null, new SoundData_ErrorMask());
-                                    }
-                                    return baseMask.Data.Specific;
-                                }
-                                ) : null),
-                                copyMask: copyMask?.Data.Specific,
-                                cmds: cmds);
-                            break;
-                        case CopyOption.MakeCopy:
-                            if (rhs.Data == null)
+                    item.Data_Property.SetToWithDefault(
+                        rhs.Data_Property,
+                        def?.Data_Property,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.Data.Overall ?? CopyOption.Reference)
                             {
-                                item.Data = null;
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    SoundDataCommon.CopyFieldsFrom(
+                                        item: item.Data,
+                                        rhs: rhs.Data,
+                                        def: def?.Data,
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<SoundData_ErrorMask>(() =>
+                                        {
+                                            var baseMask = errorMask();
+                                            if (baseMask.Data.Specific == null)
+                                            {
+                                                baseMask.Data = new MaskItem<Exception, SoundData_ErrorMask>(null, new SoundData_ErrorMask());
+                                            }
+                                            return baseMask.Data.Specific;
+                                        }
+                                        ) : null),
+                                        copyMask: copyMask?.Data.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(SoundData);
+                                    return SoundData.Copy(
+                                        r,
+                                        copyMask?.Data?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Data?.Overall}. Cannot execute copy.");
                             }
-                            else
-                            {
-                                item.Data = SoundData.Copy(
-                                    rhs.Data,
-                                    copyMask?.Data?.Specific,
-                                    def?.Data);
-                            }
-                            break;
-                        default:
-                            throw new NotImplementedException($"Unknown CopyOption {copyMask?.Data?.Overall}. Cannot execute copy.");
-                    }
+                        }
+                        );
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1333,9 +1348,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Sound_FieldIndex.File:
+                    obj.File_Property.HasBeenSet = on;
+                    break;
                 case Sound_FieldIndex.Data:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
+                    obj.Data_Property.HasBeenSet = on;
+                    break;
                 default:
                     MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
@@ -1351,10 +1368,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Sound_FieldIndex.File:
-                    obj.File = default(FilePath);
+                    obj.File_Property.Unset(cmds);
                     break;
                 case Sound_FieldIndex.Data:
-                    obj.Data = default(SoundData);
+                    obj.Data_Property.Unset(cmds);
                     break;
                 default:
                     MajorRecordCommon.UnsetNthObject(index, obj);
@@ -1370,8 +1387,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Sound_FieldIndex.File:
+                    return obj.File_Property.HasBeenSet;
                 case Sound_FieldIndex.Data:
-                    return true;
+                    return obj.Data_Property.HasBeenSet;
                 default:
                     return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -1397,8 +1415,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISound item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.File = default(FilePath);
-            item.Data = default(SoundData);
+            item.File_Property.Unset(cmds.ToUnsetParams());
+            item.Data_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static Sound_Mask<bool> GetEqualsMask(
@@ -1416,10 +1434,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Sound_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.File = object.Equals(item.File, rhs.File);
-            ret.Data = new MaskItem<bool, SoundData_Mask<bool>>();
-            ret.Data.Specific = SoundDataCommon.GetEqualsMask(item.Data, rhs.Data);
-            ret.Data.Overall = ret.Data.Specific.AllEqual((b) => b);
+            ret.File = item.File_Property.Equals(rhs.File_Property, (l, r) => object.Equals(l, r));
+            ret.Data = item.Data_Property.LoquiEqualsHelper(rhs.Data_Property, (loqLhs, loqRhs) => SoundDataCommon.GetEqualsMask(loqLhs, loqRhs));
             MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -1466,14 +1482,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this ISoundGetter item,
             Sound_Mask<bool?> checkMask)
         {
+            if (checkMask.File.HasValue && checkMask.File.Value != item.File_Property.HasBeenSet) return false;
+            if (checkMask.Data.Overall.HasValue && checkMask.Data.Overall.Value != item.Data_Property.HasBeenSet) return false;
+            if (checkMask.Data.Specific != null && (item.Data_Property.Item == null || !item.Data_Property.Item.HasBeenSet(checkMask.Data.Specific))) return false;
             return true;
         }
 
         public static Sound_Mask<bool> GetHasBeenSetMask(ISoundGetter item)
         {
             var ret = new Sound_Mask<bool>();
-            ret.File = true;
-            ret.Data = new MaskItem<bool, SoundData_Mask<bool>>(true, SoundDataCommon.GetHasBeenSetMask(item.Data_Property.Item));
+            ret.File = item.File_Property.HasBeenSet;
+            ret.Data = new MaskItem<bool, SoundData_Mask<bool>>(item.Data_Property.HasBeenSet, SoundDataCommon.GetHasBeenSetMask(item.Data_Property.Item));
             return ret;
         }
 
@@ -1509,18 +1528,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.Sound");
                     }
-                    FilePathXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.File),
-                        item: item.File_Property,
-                        fieldIndex: (int)Sound_FieldIndex.File,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<SoundData, SoundData_ErrorMask>.Instance.Write(
-                        writer: writer,
-                        item: item.Data_Property,
-                        name: nameof(item.Data),
-                        fieldIndex: (int)Sound_FieldIndex.Data,
-                        errorMask: errorMask);
+                    if (item.File_Property.HasBeenSet)
+                    {
+                        FilePathXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.File),
+                            item: item.File_Property,
+                            fieldIndex: (int)Sound_FieldIndex.File,
+                            errorMask: errorMask);
+                    }
+                    if (item.Data_Property.HasBeenSet)
+                    {
+                        LoquiXmlTranslation<SoundData, SoundData_ErrorMask>.Instance.Write(
+                            writer: writer,
+                            item: item.Data_Property,
+                            name: nameof(item.Data),
+                            fieldIndex: (int)Sound_FieldIndex.Data,
+                            errorMask: errorMask);
+                    }
                 }
             }
             catch (Exception ex)

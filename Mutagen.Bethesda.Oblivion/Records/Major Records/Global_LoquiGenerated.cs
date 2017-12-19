@@ -37,25 +37,25 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region TypeChar
-        protected readonly INotifyingItem<Char> _TypeChar = NotifyingItem.Factory<Char>();
-        public INotifyingItemGetter<Char> TypeChar_Property => _TypeChar;
+        protected readonly INotifyingSetItem<Char> _TypeChar = NotifyingSetItem.Factory<Char>(markAsSet: false);
+        public INotifyingSetItemGetter<Char> TypeChar_Property => _TypeChar;
         public Char TypeChar
         {
             get => this._TypeChar.Item;
             protected set => this._TypeChar.Set(value);
         }
-        INotifyingItemGetter<Char> IGlobalGetter.TypeChar_Property => this.TypeChar_Property;
+        INotifyingSetItemGetter<Char> IGlobalGetter.TypeChar_Property => this.TypeChar_Property;
         #endregion
         #region RawFloat
-        protected readonly INotifyingItem<Single> _RawFloat = NotifyingItem.Factory<Single>();
-        public INotifyingItem<Single> RawFloat_Property => _RawFloat;
+        protected readonly INotifyingSetItem<Single> _RawFloat = NotifyingSetItem.Factory<Single>(markAsSet: false);
+        public INotifyingSetItem<Single> RawFloat_Property => _RawFloat;
         public Single RawFloat
         {
             get => this._RawFloat.Item;
             set => this._RawFloat.Set(value);
         }
-        INotifyingItem<Single> IGlobal.RawFloat_Property => this.RawFloat_Property;
-        INotifyingItemGetter<Single> IGlobalGetter.RawFloat_Property => this.RawFloat_Property;
+        INotifyingSetItem<Single> IGlobal.RawFloat_Property => this.RawFloat_Property;
+        INotifyingSetItemGetter<Single> IGlobalGetter.RawFloat_Property => this.RawFloat_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -113,16 +113,30 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (TypeChar != rhs.TypeChar) return false;
-            if (RawFloat != rhs.RawFloat) return false;
+            if (TypeChar_Property.HasBeenSet != rhs.TypeChar_Property.HasBeenSet) return false;
+            if (TypeChar_Property.HasBeenSet)
+            {
+                if (TypeChar != rhs.TypeChar) return false;
+            }
+            if (RawFloat_Property.HasBeenSet != rhs.RawFloat_Property.HasBeenSet) return false;
+            if (RawFloat_Property.HasBeenSet)
+            {
+                if (RawFloat != rhs.RawFloat) return false;
+            }
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = HashHelper.GetHashCode(TypeChar).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(RawFloat).CombineHashCode(ret);
+            if (TypeChar_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(TypeChar).CombineHashCode(ret);
+            }
+            if (RawFloat_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(RawFloat).CombineHashCode(ret);
+            }
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -587,7 +601,7 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IGlobal : IGlobalGetter, IMajorRecord, ILoquiClass<IGlobal, IGlobalGetter>, ILoquiClass<Global, IGlobalGetter>
     {
         new Single RawFloat { get; set; }
-        new INotifyingItem<Single> RawFloat_Property { get; }
+        new INotifyingSetItem<Single> RawFloat_Property { get; }
 
     }
 
@@ -595,12 +609,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region TypeChar
         Char TypeChar { get; }
-        INotifyingItemGetter<Char> TypeChar_Property { get; }
+        INotifyingSetItemGetter<Char> TypeChar_Property { get; }
 
         #endregion
         #region RawFloat
         Single RawFloat { get; }
-        INotifyingItemGetter<Single> RawFloat_Property { get; }
+        INotifyingSetItemGetter<Single> RawFloat_Property { get; }
 
         #endregion
 
@@ -890,8 +904,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.RawFloat_Property.Set(
-                        value: rhs.RawFloat,
+                    item.RawFloat_Property.SetToWithDefault(
+                        rhs: rhs.RawFloat_Property,
+                        def: def?.RawFloat_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -916,8 +931,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Global_FieldIndex.TypeChar:
                     throw new ArgumentException($"Tried to set at a derivative index {index}");
                 case Global_FieldIndex.RawFloat:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
+                    obj.RawFloat_Property.HasBeenSet = on;
+                    break;
                 default:
                     MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
@@ -935,7 +950,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Global_FieldIndex.TypeChar:
                     throw new ArgumentException($"Tried to unset at a derivative index {index}");
                 case Global_FieldIndex.RawFloat:
-                    obj.RawFloat = default(Single);
+                    obj.RawFloat_Property.Unset(cmds);
                     break;
                 default:
                     MajorRecordCommon.UnsetNthObject(index, obj);
@@ -951,8 +966,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Global_FieldIndex.TypeChar:
+                    return obj.TypeChar_Property.HasBeenSet;
                 case Global_FieldIndex.RawFloat:
-                    return true;
+                    return obj.RawFloat_Property.HasBeenSet;
                 default:
                     return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -978,7 +994,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IGlobal item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.RawFloat = default(Single);
+            item.RawFloat_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static Global_Mask<bool> GetEqualsMask(
@@ -996,8 +1012,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Global_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.TypeChar = item.TypeChar == rhs.TypeChar;
-            ret.RawFloat = item.RawFloat == rhs.RawFloat;
+            ret.TypeChar = item.TypeChar_Property.Equals(rhs.TypeChar_Property, (l, r) => l == r);
+            ret.RawFloat = item.RawFloat_Property.Equals(rhs.RawFloat_Property, (l, r) => l == r);
             MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -1044,14 +1060,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IGlobalGetter item,
             Global_Mask<bool?> checkMask)
         {
+            if (checkMask.TypeChar.HasValue && checkMask.TypeChar.Value != item.TypeChar_Property.HasBeenSet) return false;
+            if (checkMask.RawFloat.HasValue && checkMask.RawFloat.Value != item.RawFloat_Property.HasBeenSet) return false;
             return true;
         }
 
         public static Global_Mask<bool> GetHasBeenSetMask(IGlobalGetter item)
         {
             var ret = new Global_Mask<bool>();
-            ret.TypeChar = true;
-            ret.RawFloat = true;
+            ret.TypeChar = item.TypeChar_Property.HasBeenSet;
+            ret.RawFloat = item.RawFloat_Property.HasBeenSet;
             return ret;
         }
 
@@ -1087,12 +1105,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.Global");
                     }
-                    FloatXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.RawFloat),
-                        item: item.RawFloat_Property,
-                        fieldIndex: (int)Global_FieldIndex.RawFloat,
-                        errorMask: errorMask);
+                    if (item.RawFloat_Property.HasBeenSet)
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.RawFloat),
+                            item: item.RawFloat_Property,
+                            fieldIndex: (int)Global_FieldIndex.RawFloat,
+                            errorMask: errorMask);
+                    }
                 }
             }
             catch (Exception ex)

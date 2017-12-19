@@ -37,26 +37,26 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Faction
-        protected readonly INotifyingItem<FormID> _Faction = NotifyingItem.Factory<FormID>();
-        public INotifyingItem<FormID> Faction_Property => _Faction;
+        protected readonly INotifyingSetItem<FormID> _Faction = NotifyingSetItem.Factory<FormID>(markAsSet: false);
+        public INotifyingSetItem<FormID> Faction_Property => _Faction;
         public FormID Faction
         {
             get => this._Faction.Item;
             set => this._Faction.Set(value);
         }
-        INotifyingItem<FormID> IRelation.Faction_Property => this.Faction_Property;
-        INotifyingItemGetter<FormID> IRelationGetter.Faction_Property => this.Faction_Property;
+        INotifyingSetItem<FormID> IRelation.Faction_Property => this.Faction_Property;
+        INotifyingSetItemGetter<FormID> IRelationGetter.Faction_Property => this.Faction_Property;
         #endregion
         #region Modifier
-        protected readonly INotifyingItem<Int32> _Modifier = NotifyingItem.Factory<Int32>();
-        public INotifyingItem<Int32> Modifier_Property => _Modifier;
+        protected readonly INotifyingSetItem<Int32> _Modifier = NotifyingSetItem.Factory<Int32>(markAsSet: false);
+        public INotifyingSetItem<Int32> Modifier_Property => _Modifier;
         public Int32 Modifier
         {
             get => this._Modifier.Item;
             set => this._Modifier.Set(value);
         }
-        INotifyingItem<Int32> IRelation.Modifier_Property => this.Modifier_Property;
-        INotifyingItemGetter<Int32> IRelationGetter.Modifier_Property => this.Modifier_Property;
+        INotifyingSetItem<Int32> IRelation.Modifier_Property => this.Modifier_Property;
+        INotifyingSetItemGetter<Int32> IRelationGetter.Modifier_Property => this.Modifier_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -117,16 +117,30 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(Relation rhs)
         {
             if (rhs == null) return false;
-            if (Faction != rhs.Faction) return false;
-            if (Modifier != rhs.Modifier) return false;
+            if (Faction_Property.HasBeenSet != rhs.Faction_Property.HasBeenSet) return false;
+            if (Faction_Property.HasBeenSet)
+            {
+                if (Faction != rhs.Faction) return false;
+            }
+            if (Modifier_Property.HasBeenSet != rhs.Modifier_Property.HasBeenSet) return false;
+            if (Modifier_Property.HasBeenSet)
+            {
+                if (Modifier != rhs.Modifier) return false;
+            }
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = HashHelper.GetHashCode(Faction).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Modifier).CombineHashCode(ret);
+            if (Faction_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Faction).CombineHashCode(ret);
+            }
+            if (Modifier_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Modifier).CombineHashCode(ret);
+            }
             return ret;
         }
 
@@ -893,10 +907,10 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IRelation : IRelationGetter, ILoquiClass<IRelation, IRelationGetter>, ILoquiClass<Relation, IRelationGetter>
     {
         new FormID Faction { get; set; }
-        new INotifyingItem<FormID> Faction_Property { get; }
+        new INotifyingSetItem<FormID> Faction_Property { get; }
 
         new Int32 Modifier { get; set; }
-        new INotifyingItem<Int32> Modifier_Property { get; }
+        new INotifyingSetItem<Int32> Modifier_Property { get; }
 
     }
 
@@ -904,12 +918,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Faction
         FormID Faction { get; }
-        INotifyingItemGetter<FormID> Faction_Property { get; }
+        INotifyingSetItemGetter<FormID> Faction_Property { get; }
 
         #endregion
         #region Modifier
         Int32 Modifier { get; }
-        INotifyingItemGetter<Int32> Modifier_Property { get; }
+        INotifyingSetItemGetter<Int32> Modifier_Property { get; }
 
         #endregion
 
@@ -1187,8 +1201,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Faction_Property.Set(
-                        value: rhs.Faction,
+                    item.Faction_Property.SetToWithDefault(
+                        rhs: rhs.Faction_Property,
+                        def: def?.Faction_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1201,8 +1216,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Modifier_Property.Set(
-                        value: rhs.Modifier,
+                    item.Modifier_Property.SetToWithDefault(
+                        rhs: rhs.Modifier_Property,
+                        def: def?.Modifier_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1225,9 +1241,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Relation_FieldIndex.Faction:
+                    obj.Faction_Property.HasBeenSet = on;
+                    break;
                 case Relation_FieldIndex.Modifier:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
+                    obj.Modifier_Property.HasBeenSet = on;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1242,10 +1260,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Relation_FieldIndex.Faction:
-                    obj.Faction = default(FormID);
+                    obj.Faction_Property.Unset(cmds);
                     break;
                 case Relation_FieldIndex.Modifier:
-                    obj.Modifier = default(Int32);
+                    obj.Modifier_Property.Unset(cmds);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1260,8 +1278,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Relation_FieldIndex.Faction:
+                    return obj.Faction_Property.HasBeenSet;
                 case Relation_FieldIndex.Modifier:
-                    return true;
+                    return obj.Modifier_Property.HasBeenSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1287,8 +1306,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRelation item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.Faction = default(FormID);
-            item.Modifier = default(Int32);
+            item.Faction_Property.Unset(cmds.ToUnsetParams());
+            item.Modifier_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static Relation_Mask<bool> GetEqualsMask(
@@ -1306,8 +1325,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Relation_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Faction = item.Faction == rhs.Faction;
-            ret.Modifier = item.Modifier == rhs.Modifier;
+            ret.Faction = item.Faction_Property.Equals(rhs.Faction_Property, (l, r) => l == r);
+            ret.Modifier = item.Modifier_Property.Equals(rhs.Modifier_Property, (l, r) => l == r);
         }
 
         public static string ToString(
@@ -1353,14 +1372,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IRelationGetter item,
             Relation_Mask<bool?> checkMask)
         {
+            if (checkMask.Faction.HasValue && checkMask.Faction.Value != item.Faction_Property.HasBeenSet) return false;
+            if (checkMask.Modifier.HasValue && checkMask.Modifier.Value != item.Modifier_Property.HasBeenSet) return false;
             return true;
         }
 
         public static Relation_Mask<bool> GetHasBeenSetMask(IRelationGetter item)
         {
             var ret = new Relation_Mask<bool>();
-            ret.Faction = true;
-            ret.Modifier = true;
+            ret.Faction = item.Faction_Property.HasBeenSet;
+            ret.Modifier = item.Modifier_Property.HasBeenSet;
             return ret;
         }
 
@@ -1396,18 +1417,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.Relation");
                     }
-                    FormIDXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Faction),
-                        item: item.Faction_Property,
-                        fieldIndex: (int)Relation_FieldIndex.Faction,
-                        errorMask: errorMask);
-                    Int32XmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Modifier),
-                        item: item.Modifier_Property,
-                        fieldIndex: (int)Relation_FieldIndex.Modifier,
-                        errorMask: errorMask);
+                    if (item.Faction_Property.HasBeenSet)
+                    {
+                        FormIDXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Faction),
+                            item: item.Faction_Property,
+                            fieldIndex: (int)Relation_FieldIndex.Faction,
+                            errorMask: errorMask);
+                    }
+                    if (item.Modifier_Property.HasBeenSet)
+                    {
+                        Int32XmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Modifier),
+                            item: item.Modifier_Property,
+                            fieldIndex: (int)Relation_FieldIndex.Modifier,
+                            errorMask: errorMask);
+                    }
                 }
             }
             catch (Exception ex)

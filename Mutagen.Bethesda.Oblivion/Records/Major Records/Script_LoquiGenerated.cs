@@ -32,7 +32,9 @@ namespace Mutagen.Bethesda.Oblivion
         #region Ctor
         public Script()
         {
-            _MetadataSummary = NotifyingItem.Factory<ScriptMetaSummary>(defaultVal: _MetadataSummary_Object);
+            _MetadataSummary = NotifyingSetItem.Factory<ScriptMetaSummary>(
+                defaultVal: _MetadataSummary_Object,
+                markAsSet: true);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -40,33 +42,33 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region MetadataSummary
         private ScriptMetaSummary _MetadataSummary_Object = new ScriptMetaSummary();
-        protected readonly INotifyingItem<ScriptMetaSummary> _MetadataSummary;
-        public INotifyingItemGetter<ScriptMetaSummary> MetadataSummary_Property => this._MetadataSummary;
+        protected readonly INotifyingSetItem<ScriptMetaSummary> _MetadataSummary;
+        public INotifyingSetItemGetter<ScriptMetaSummary> MetadataSummary_Property => this._MetadataSummary;
         ScriptMetaSummary IScriptGetter.MetadataSummary => this.MetadataSummary;
         public ScriptMetaSummary MetadataSummary { get => _MetadataSummary.Item; }
-        INotifyingItemGetter<ScriptMetaSummary> IScriptGetter.MetadataSummary_Property => this.MetadataSummary_Property;
+        INotifyingSetItemGetter<ScriptMetaSummary> IScriptGetter.MetadataSummary_Property => this.MetadataSummary_Property;
         #endregion
         #region CompiledScript
-        protected readonly INotifyingItem<Byte[]> _CompiledScript = NotifyingItem.Factory<Byte[]>();
-        public INotifyingItem<Byte[]> CompiledScript_Property => _CompiledScript;
+        protected readonly INotifyingSetItem<Byte[]> _CompiledScript = NotifyingSetItem.Factory<Byte[]>(markAsSet: false);
+        public INotifyingSetItem<Byte[]> CompiledScript_Property => _CompiledScript;
         public Byte[] CompiledScript
         {
             get => this._CompiledScript.Item;
             set => this._CompiledScript.Set(value);
         }
-        INotifyingItem<Byte[]> IScript.CompiledScript_Property => this.CompiledScript_Property;
-        INotifyingItemGetter<Byte[]> IScriptGetter.CompiledScript_Property => this.CompiledScript_Property;
+        INotifyingSetItem<Byte[]> IScript.CompiledScript_Property => this.CompiledScript_Property;
+        INotifyingSetItemGetter<Byte[]> IScriptGetter.CompiledScript_Property => this.CompiledScript_Property;
         #endregion
         #region SourceCode
-        protected readonly INotifyingItem<String> _SourceCode = NotifyingItem.Factory<String>();
-        public INotifyingItem<String> SourceCode_Property => _SourceCode;
+        protected readonly INotifyingSetItem<String> _SourceCode = NotifyingSetItem.Factory<String>(markAsSet: false);
+        public INotifyingSetItem<String> SourceCode_Property => _SourceCode;
         public String SourceCode
         {
             get => this._SourceCode.Item;
             set => this._SourceCode.Set(value);
         }
-        INotifyingItem<String> IScript.SourceCode_Property => this.SourceCode_Property;
-        INotifyingItemGetter<String> IScriptGetter.SourceCode_Property => this.SourceCode_Property;
+        INotifyingSetItem<String> IScript.SourceCode_Property => this.SourceCode_Property;
+        INotifyingSetItemGetter<String> IScriptGetter.SourceCode_Property => this.SourceCode_Property;
         #endregion
         #region LocalVariables
         private readonly INotifyingList<LocalVariable> _LocalVariables = new NotifyingList<LocalVariable>();
@@ -142,22 +144,57 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (!object.Equals(MetadataSummary, rhs.MetadataSummary)) return false;
-            if (!CompiledScript.EqualsFast(rhs.CompiledScript)) return false;
-            if (!object.Equals(SourceCode, rhs.SourceCode)) return false;
-            if (!LocalVariables.SequenceEqual(rhs.LocalVariables)) return false;
-            if (!References.SequenceEqual(rhs.References)) return false;
+            if (MetadataSummary_Property.HasBeenSet != rhs.MetadataSummary_Property.HasBeenSet) return false;
+            if (MetadataSummary_Property.HasBeenSet)
+            {
+                if (!object.Equals(MetadataSummary, rhs.MetadataSummary)) return false;
+            }
+            if (CompiledScript_Property.HasBeenSet != rhs.CompiledScript_Property.HasBeenSet) return false;
+            if (CompiledScript_Property.HasBeenSet)
+            {
+                if (!CompiledScript.EqualsFast(rhs.CompiledScript)) return false;
+            }
+            if (SourceCode_Property.HasBeenSet != rhs.SourceCode_Property.HasBeenSet) return false;
+            if (SourceCode_Property.HasBeenSet)
+            {
+                if (!object.Equals(SourceCode, rhs.SourceCode)) return false;
+            }
+            if (LocalVariables.HasBeenSet != rhs.LocalVariables.HasBeenSet) return false;
+            if (LocalVariables.HasBeenSet)
+            {
+                if (!LocalVariables.SequenceEqual(rhs.LocalVariables)) return false;
+            }
+            if (References.HasBeenSet != rhs.References.HasBeenSet) return false;
+            if (References.HasBeenSet)
+            {
+                if (!References.SequenceEqual(rhs.References)) return false;
+            }
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = HashHelper.GetHashCode(MetadataSummary).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(CompiledScript).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(SourceCode).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(LocalVariables).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(References).CombineHashCode(ret);
+            if (MetadataSummary_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(MetadataSummary).CombineHashCode(ret);
+            }
+            if (CompiledScript_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(CompiledScript).CombineHashCode(ret);
+            }
+            if (SourceCode_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(SourceCode).CombineHashCode(ret);
+            }
+            if (LocalVariables.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(LocalVariables).CombineHashCode(ret);
+            }
+            if (References.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(References).CombineHashCode(ret);
+            }
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -918,9 +955,10 @@ namespace Mutagen.Bethesda.Oblivion
                     item._SourceCode.SetIfSucceeded(SourceCodetryGet);
                     break;
                 case "SLSD":
+                case "SCVR":
                     var LocalVariablestryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<LocalVariable, MaskItem<Exception, LocalVariable_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
-                        triggeringRecord: Script_Registration.SLSD_HEADER,
+                        triggeringRecord: LocalVariable_Registration.TriggeringRecordTypes,
                         fieldIndex: (int)Script_FieldIndex.LocalVariables,
                         objType: ObjectType.Subrecord,
                         errorMask: errorMask,
@@ -1123,10 +1161,10 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IScript : IScriptGetter, IMajorRecord, ILoquiClass<IScript, IScriptGetter>, ILoquiClass<Script, IScriptGetter>
     {
         new Byte[] CompiledScript { get; set; }
-        new INotifyingItem<Byte[]> CompiledScript_Property { get; }
+        new INotifyingSetItem<Byte[]> CompiledScript_Property { get; }
 
         new String SourceCode { get; set; }
-        new INotifyingItem<String> SourceCode_Property { get; }
+        new INotifyingSetItem<String> SourceCode_Property { get; }
 
         new INotifyingList<LocalVariable> LocalVariables { get; }
         new INotifyingList<ScriptReference> References { get; }
@@ -1136,17 +1174,17 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region MetadataSummary
         ScriptMetaSummary MetadataSummary { get; }
-        INotifyingItemGetter<ScriptMetaSummary> MetadataSummary_Property { get; }
+        INotifyingSetItemGetter<ScriptMetaSummary> MetadataSummary_Property { get; }
 
         #endregion
         #region CompiledScript
         Byte[] CompiledScript { get; }
-        INotifyingItemGetter<Byte[]> CompiledScript_Property { get; }
+        INotifyingSetItemGetter<Byte[]> CompiledScript_Property { get; }
 
         #endregion
         #region SourceCode
         String SourceCode { get; }
-        INotifyingItemGetter<String> SourceCode_Property { get; }
+        INotifyingSetItemGetter<String> SourceCode_Property { get; }
 
         #endregion
         #region LocalVariables
@@ -1361,6 +1399,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType SCDA_HEADER = new RecordType("SCDA");
         public static readonly RecordType SCTX_HEADER = new RecordType("SCTX");
         public static readonly RecordType SLSD_HEADER = new RecordType("SLSD");
+        public static readonly RecordType SCVR_HEADER = new RecordType("SCVR");
         public static readonly RecordType SCRV_HEADER = new RecordType("SCRV");
         public static readonly RecordType SCRO_HEADER = new RecordType("SCRO");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = SCPT_HEADER;
@@ -1512,8 +1551,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.CompiledScript_Property.Set(
-                        value: rhs.CompiledScript,
+                    item.CompiledScript_Property.SetToWithDefault(
+                        rhs: rhs.CompiledScript_Property,
+                        def: def?.CompiledScript_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1526,8 +1566,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.SourceCode_Property.Set(
-                        value: rhs.SourceCode,
+                    item.SourceCode_Property.SetToWithDefault(
+                        rhs: rhs.SourceCode_Property,
+                        def: def?.SourceCode_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1614,12 +1655,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Script_FieldIndex.MetadataSummary:
+                    throw new ArgumentException("Tried to set at a readonly index " + index);
                 case Script_FieldIndex.CompiledScript:
+                    obj.CompiledScript_Property.HasBeenSet = on;
+                    break;
                 case Script_FieldIndex.SourceCode:
+                    obj.SourceCode_Property.HasBeenSet = on;
+                    break;
                 case Script_FieldIndex.LocalVariables:
+                    obj.LocalVariables.HasBeenSet = on;
+                    break;
                 case Script_FieldIndex.References:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
+                    obj.References.HasBeenSet = on;
+                    break;
                 default:
                     MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
@@ -1637,10 +1685,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Script_FieldIndex.MetadataSummary:
                     throw new ArgumentException("Tried to set at a readonly index " + index);
                 case Script_FieldIndex.CompiledScript:
-                    obj.CompiledScript = default(Byte[]);
+                    obj.CompiledScript_Property.Unset(cmds);
                     break;
                 case Script_FieldIndex.SourceCode:
-                    obj.SourceCode = default(String);
+                    obj.SourceCode_Property.Unset(cmds);
                     break;
                 case Script_FieldIndex.LocalVariables:
                     obj.LocalVariables.Unset(cmds);
@@ -1662,11 +1710,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Script_FieldIndex.MetadataSummary:
+                    return obj.MetadataSummary_Property.HasBeenSet;
                 case Script_FieldIndex.CompiledScript:
+                    return obj.CompiledScript_Property.HasBeenSet;
                 case Script_FieldIndex.SourceCode:
+                    return obj.SourceCode_Property.HasBeenSet;
                 case Script_FieldIndex.LocalVariables:
+                    return obj.LocalVariables.HasBeenSet;
                 case Script_FieldIndex.References:
-                    return true;
+                    return obj.References.HasBeenSet;
                 default:
                     return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -1698,8 +1750,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScript item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.CompiledScript = default(Byte[]);
-            item.SourceCode = default(String);
+            item.CompiledScript_Property.Unset(cmds.ToUnsetParams());
+            item.SourceCode_Property.Unset(cmds.ToUnsetParams());
             item.LocalVariables.Unset(cmds.ToUnsetParams());
             item.References.Unset(cmds.ToUnsetParams());
         }
@@ -1719,11 +1771,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Script_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.MetadataSummary = new MaskItem<bool, ScriptMetaSummary_Mask<bool>>();
-            ret.MetadataSummary.Specific = ScriptMetaSummaryCommon.GetEqualsMask(item.MetadataSummary, rhs.MetadataSummary);
-            ret.MetadataSummary.Overall = ret.MetadataSummary.Specific.AllEqual((b) => b);
-            ret.CompiledScript = item.CompiledScript.EqualsFast(rhs.CompiledScript);
-            ret.SourceCode = object.Equals(item.SourceCode, rhs.SourceCode);
+            ret.MetadataSummary = item.MetadataSummary_Property.LoquiEqualsHelper(rhs.MetadataSummary_Property, (loqLhs, loqRhs) => ScriptMetaSummaryCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.CompiledScript = item.CompiledScript_Property.Equals(rhs.CompiledScript_Property, (l, r) => l.EqualsFast(r));
+            ret.SourceCode = item.SourceCode_Property.Equals(rhs.SourceCode_Property, (l, r) => object.Equals(l, r));
             if (item.LocalVariables.HasBeenSet == rhs.LocalVariables.HasBeenSet)
             {
                 if (item.LocalVariables.HasBeenSet)
@@ -1732,9 +1782,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ret.LocalVariables.Specific = item.LocalVariables.SelectAgainst<LocalVariable, MaskItem<bool, LocalVariable_Mask<bool>>>(rhs.LocalVariables, ((l, r) =>
                     {
                         MaskItem<bool, LocalVariable_Mask<bool>> itemRet;
-                        itemRet = new MaskItem<bool, LocalVariable_Mask<bool>>();
-                        itemRet.Specific = LocalVariableCommon.GetEqualsMask(l, r);
-                        itemRet.Overall = itemRet.Specific.AllEqual((b) => b);
+                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => LocalVariableCommon.GetEqualsMask(loqLhs, loqRhs));
                         return itemRet;
                     }
                     ), out ret.LocalVariables.Overall);
@@ -1759,9 +1807,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ret.References.Specific = item.References.SelectAgainst<ScriptReference, MaskItem<bool, ScriptReference_Mask<bool>>>(rhs.References, ((l, r) =>
                     {
                         MaskItem<bool, ScriptReference_Mask<bool>> itemRet;
-                        itemRet = new MaskItem<bool, ScriptReference_Mask<bool>>();
-                        itemRet.Specific = ScriptReferenceCommon.GetEqualsMask(l, r);
-                        itemRet.Overall = itemRet.Specific.AllEqual((b) => b);
+                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => ScriptReferenceCommon.GetEqualsMask(loqLhs, loqRhs));
                         return itemRet;
                     }
                     ), out ret.References.Overall);
@@ -1864,6 +1910,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IScriptGetter item,
             Script_Mask<bool?> checkMask)
         {
+            if (checkMask.MetadataSummary.Overall.HasValue && checkMask.MetadataSummary.Overall.Value != item.MetadataSummary_Property.HasBeenSet) return false;
+            if (checkMask.MetadataSummary.Specific != null && (item.MetadataSummary_Property.Item == null || !item.MetadataSummary_Property.Item.HasBeenSet(checkMask.MetadataSummary.Specific))) return false;
+            if (checkMask.CompiledScript.HasValue && checkMask.CompiledScript.Value != item.CompiledScript_Property.HasBeenSet) return false;
+            if (checkMask.SourceCode.HasValue && checkMask.SourceCode.Value != item.SourceCode_Property.HasBeenSet) return false;
             if (checkMask.LocalVariables.Overall.HasValue && checkMask.LocalVariables.Overall.Value != item.LocalVariables.HasBeenSet) return false;
             if (checkMask.References.Overall.HasValue && checkMask.References.Overall.Value != item.References.HasBeenSet) return false;
             return true;
@@ -1872,9 +1922,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Script_Mask<bool> GetHasBeenSetMask(IScriptGetter item)
         {
             var ret = new Script_Mask<bool>();
-            ret.MetadataSummary = new MaskItem<bool, ScriptMetaSummary_Mask<bool>>(true, ScriptMetaSummaryCommon.GetHasBeenSetMask(item.MetadataSummary_Property.Item));
-            ret.CompiledScript = true;
-            ret.SourceCode = true;
+            ret.MetadataSummary = new MaskItem<bool, ScriptMetaSummary_Mask<bool>>(item.MetadataSummary_Property.HasBeenSet, ScriptMetaSummaryCommon.GetHasBeenSetMask(item.MetadataSummary_Property.Item));
+            ret.CompiledScript = item.CompiledScript_Property.HasBeenSet;
+            ret.SourceCode = item.SourceCode_Property.HasBeenSet;
             ret.LocalVariables = new MaskItem<bool, IEnumerable<MaskItem<bool, LocalVariable_Mask<bool>>>>(item.LocalVariables.HasBeenSet, item.LocalVariables.Select((i) => new MaskItem<bool, LocalVariable_Mask<bool>>(true, i.GetHasBeenSetMask())));
             ret.References = new MaskItem<bool, IEnumerable<MaskItem<bool, ScriptReference_Mask<bool>>>>(item.References.HasBeenSet, item.References.Select((i) => new MaskItem<bool, ScriptReference_Mask<bool>>(true, i.GetHasBeenSetMask())));
             return ret;
@@ -1912,56 +1962,71 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.Script");
                     }
-                    LoquiXmlTranslation<ScriptMetaSummary, ScriptMetaSummary_ErrorMask>.Instance.Write(
-                        writer: writer,
-                        item: item.MetadataSummary_Property,
-                        name: nameof(item.MetadataSummary),
-                        fieldIndex: (int)Script_FieldIndex.MetadataSummary,
-                        errorMask: errorMask);
-                    ByteArrayXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.CompiledScript),
-                        item: item.CompiledScript_Property,
-                        fieldIndex: (int)Script_FieldIndex.CompiledScript,
-                        errorMask: errorMask);
-                    StringXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.SourceCode),
-                        item: item.SourceCode_Property,
-                        fieldIndex: (int)Script_FieldIndex.SourceCode,
-                        errorMask: errorMask);
-                    ListXmlTranslation<LocalVariable, MaskItem<Exception, LocalVariable_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.LocalVariables),
-                        item: item.LocalVariables,
-                        fieldIndex: (int)Script_FieldIndex.LocalVariables,
-                        errorMask: errorMask,
-                        transl: (LocalVariable subItem, bool listDoMasks, out MaskItem<Exception, LocalVariable_ErrorMask> listSubMask) =>
-                        {
-                            LoquiXmlTranslation<LocalVariable, LocalVariable_ErrorMask>.Instance.Write(
-                                writer: writer,
-                                item: subItem,
-                                name: "Item",
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                    ListXmlTranslation<ScriptReference, MaskItem<Exception, ScriptReference_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.References),
-                        item: item.References,
-                        fieldIndex: (int)Script_FieldIndex.References,
-                        errorMask: errorMask,
-                        transl: (ScriptReference subItem, bool listDoMasks, out MaskItem<Exception, ScriptReference_ErrorMask> listSubMask) =>
-                        {
-                            LoquiXmlTranslation<ScriptReference, ScriptReference_ErrorMask>.Instance.Write(
-                                writer: writer,
-                                item: subItem,
-                                name: "Item",
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
-                        }
-                        );
+                    if (item.MetadataSummary_Property.HasBeenSet)
+                    {
+                        LoquiXmlTranslation<ScriptMetaSummary, ScriptMetaSummary_ErrorMask>.Instance.Write(
+                            writer: writer,
+                            item: item.MetadataSummary_Property,
+                            name: nameof(item.MetadataSummary),
+                            fieldIndex: (int)Script_FieldIndex.MetadataSummary,
+                            errorMask: errorMask);
+                    }
+                    if (item.CompiledScript_Property.HasBeenSet)
+                    {
+                        ByteArrayXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.CompiledScript),
+                            item: item.CompiledScript_Property,
+                            fieldIndex: (int)Script_FieldIndex.CompiledScript,
+                            errorMask: errorMask);
+                    }
+                    if (item.SourceCode_Property.HasBeenSet)
+                    {
+                        StringXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.SourceCode),
+                            item: item.SourceCode_Property,
+                            fieldIndex: (int)Script_FieldIndex.SourceCode,
+                            errorMask: errorMask);
+                    }
+                    if (item.LocalVariables.HasBeenSet)
+                    {
+                        ListXmlTranslation<LocalVariable, MaskItem<Exception, LocalVariable_ErrorMask>>.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.LocalVariables),
+                            item: item.LocalVariables,
+                            fieldIndex: (int)Script_FieldIndex.LocalVariables,
+                            errorMask: errorMask,
+                            transl: (LocalVariable subItem, bool listDoMasks, out MaskItem<Exception, LocalVariable_ErrorMask> listSubMask) =>
+                            {
+                                LoquiXmlTranslation<LocalVariable, LocalVariable_ErrorMask>.Instance.Write(
+                                    writer: writer,
+                                    item: subItem,
+                                    name: "Item",
+                                    doMasks: errorMask != null,
+                                    errorMask: out listSubMask);
+                            }
+                            );
+                    }
+                    if (item.References.HasBeenSet)
+                    {
+                        ListXmlTranslation<ScriptReference, MaskItem<Exception, ScriptReference_ErrorMask>>.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.References),
+                            item: item.References,
+                            fieldIndex: (int)Script_FieldIndex.References,
+                            errorMask: errorMask,
+                            transl: (ScriptReference subItem, bool listDoMasks, out MaskItem<Exception, ScriptReference_ErrorMask> listSubMask) =>
+                            {
+                                LoquiXmlTranslation<ScriptReference, ScriptReference_ErrorMask>.Instance.Write(
+                                    writer: writer,
+                                    item: subItem,
+                                    name: "Item",
+                                    doMasks: errorMask != null,
+                                    errorMask: out listSubMask);
+                            }
+                            );
+                    }
                 }
             }
             catch (Exception ex)

@@ -37,15 +37,17 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Data
-        protected readonly INotifyingItem<Byte[]> _Data = NotifyingItem.Factory<Byte[]>(noNullFallback: () => new byte[24]);
-        public INotifyingItem<Byte[]> Data_Property => _Data;
+        protected readonly INotifyingSetItem<Byte[]> _Data = NotifyingSetItem.Factory<Byte[]>(
+            markAsSet: false,
+            noNullFallback: () => new byte[24]);
+        public INotifyingSetItem<Byte[]> Data_Property => _Data;
         public Byte[] Data
         {
             get => this._Data.Item;
             set => this._Data.Set(value);
         }
-        INotifyingItem<Byte[]> ILocalVariableData.Data_Property => this.Data_Property;
-        INotifyingItemGetter<Byte[]> ILocalVariableDataGetter.Data_Property => this.Data_Property;
+        INotifyingSetItem<Byte[]> ILocalVariableData.Data_Property => this.Data_Property;
+        INotifyingSetItemGetter<Byte[]> ILocalVariableDataGetter.Data_Property => this.Data_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -106,14 +108,21 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(LocalVariableData rhs)
         {
             if (rhs == null) return false;
-            if (!Data.EqualsFast(rhs.Data)) return false;
+            if (Data_Property.HasBeenSet != rhs.Data_Property.HasBeenSet) return false;
+            if (Data_Property.HasBeenSet)
+            {
+                if (!Data.EqualsFast(rhs.Data)) return false;
+            }
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = HashHelper.GetHashCode(Data).CombineHashCode(ret);
+            if (Data_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Data).CombineHashCode(ret);
+            }
             return ret;
         }
 
@@ -852,7 +861,7 @@ namespace Mutagen.Bethesda.Oblivion
     public interface ILocalVariableData : ILocalVariableDataGetter, ILoquiClass<ILocalVariableData, ILocalVariableDataGetter>, ILoquiClass<LocalVariableData, ILocalVariableDataGetter>
     {
         new Byte[] Data { get; set; }
-        new INotifyingItem<Byte[]> Data_Property { get; }
+        new INotifyingSetItem<Byte[]> Data_Property { get; }
 
     }
 
@@ -860,7 +869,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Data
         Byte[] Data { get; }
-        INotifyingItemGetter<Byte[]> Data_Property { get; }
+        INotifyingSetItemGetter<Byte[]> Data_Property { get; }
 
         #endregion
 
@@ -1126,8 +1135,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Data_Property.Set(
-                        value: rhs.Data,
+                    item.Data_Property.SetToWithDefault(
+                        rhs: rhs.Data_Property,
+                        def: def?.Data_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1150,8 +1160,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case LocalVariableData_FieldIndex.Data:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
+                    obj.Data_Property.HasBeenSet = on;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1166,7 +1176,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case LocalVariableData_FieldIndex.Data:
-                    obj.Data = default(Byte[]);
+                    obj.Data_Property.Unset(cmds);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1181,7 +1191,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case LocalVariableData_FieldIndex.Data:
-                    return true;
+                    return obj.Data_Property.HasBeenSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1205,7 +1215,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILocalVariableData item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.Data = default(Byte[]);
+            item.Data_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static LocalVariableData_Mask<bool> GetEqualsMask(
@@ -1223,7 +1233,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             LocalVariableData_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Data = item.Data.EqualsFast(rhs.Data);
+            ret.Data = item.Data_Property.Equals(rhs.Data_Property, (l, r) => l.EqualsFast(r));
         }
 
         public static string ToString(
@@ -1265,13 +1275,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this ILocalVariableDataGetter item,
             LocalVariableData_Mask<bool?> checkMask)
         {
+            if (checkMask.Data.HasValue && checkMask.Data.Value != item.Data_Property.HasBeenSet) return false;
             return true;
         }
 
         public static LocalVariableData_Mask<bool> GetHasBeenSetMask(ILocalVariableDataGetter item)
         {
             var ret = new LocalVariableData_Mask<bool>();
-            ret.Data = true;
+            ret.Data = item.Data_Property.HasBeenSet;
             return ret;
         }
 
@@ -1307,12 +1318,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.LocalVariableData");
                     }
-                    ByteArrayXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Data),
-                        item: item.Data_Property,
-                        fieldIndex: (int)LocalVariableData_FieldIndex.Data,
-                        errorMask: errorMask);
+                    if (item.Data_Property.HasBeenSet)
+                    {
+                        ByteArrayXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Data),
+                            item: item.Data_Property,
+                            fieldIndex: (int)LocalVariableData_FieldIndex.Data,
+                            errorMask: errorMask);
+                    }
                 }
             }
             catch (Exception ex)

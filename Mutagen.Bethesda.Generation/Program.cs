@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 RaisePropertyChangedDefault = false,
                 NotifyingDefault = true,
-                HasBeenSetDefault = false
+                HasBeenSetDefault = true
             };
             gen.XmlTranslation.ShouldGenerateXSD = false;
             gen.XmlTranslation.AddTypeAssociation<FormIDType>(new PrimitiveXmlTranslationGeneration<FormID>());

@@ -37,48 +37,48 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region RankNumber
-        protected readonly INotifyingItem<Int32> _RankNumber = NotifyingItem.Factory<Int32>();
-        public INotifyingItem<Int32> RankNumber_Property => _RankNumber;
+        protected readonly INotifyingSetItem<Int32> _RankNumber = NotifyingSetItem.Factory<Int32>(markAsSet: false);
+        public INotifyingSetItem<Int32> RankNumber_Property => _RankNumber;
         public Int32 RankNumber
         {
             get => this._RankNumber.Item;
             set => this._RankNumber.Set(value);
         }
-        INotifyingItem<Int32> IRank.RankNumber_Property => this.RankNumber_Property;
-        INotifyingItemGetter<Int32> IRankGetter.RankNumber_Property => this.RankNumber_Property;
+        INotifyingSetItem<Int32> IRank.RankNumber_Property => this.RankNumber_Property;
+        INotifyingSetItemGetter<Int32> IRankGetter.RankNumber_Property => this.RankNumber_Property;
         #endregion
         #region MaleName
-        protected readonly INotifyingItem<String> _MaleName = NotifyingItem.Factory<String>();
-        public INotifyingItem<String> MaleName_Property => _MaleName;
+        protected readonly INotifyingSetItem<String> _MaleName = NotifyingSetItem.Factory<String>(markAsSet: false);
+        public INotifyingSetItem<String> MaleName_Property => _MaleName;
         public String MaleName
         {
             get => this._MaleName.Item;
             set => this._MaleName.Set(value);
         }
-        INotifyingItem<String> IRank.MaleName_Property => this.MaleName_Property;
-        INotifyingItemGetter<String> IRankGetter.MaleName_Property => this.MaleName_Property;
+        INotifyingSetItem<String> IRank.MaleName_Property => this.MaleName_Property;
+        INotifyingSetItemGetter<String> IRankGetter.MaleName_Property => this.MaleName_Property;
         #endregion
         #region FemaleName
-        protected readonly INotifyingItem<String> _FemaleName = NotifyingItem.Factory<String>();
-        public INotifyingItem<String> FemaleName_Property => _FemaleName;
+        protected readonly INotifyingSetItem<String> _FemaleName = NotifyingSetItem.Factory<String>(markAsSet: false);
+        public INotifyingSetItem<String> FemaleName_Property => _FemaleName;
         public String FemaleName
         {
             get => this._FemaleName.Item;
             set => this._FemaleName.Set(value);
         }
-        INotifyingItem<String> IRank.FemaleName_Property => this.FemaleName_Property;
-        INotifyingItemGetter<String> IRankGetter.FemaleName_Property => this.FemaleName_Property;
+        INotifyingSetItem<String> IRank.FemaleName_Property => this.FemaleName_Property;
+        INotifyingSetItemGetter<String> IRankGetter.FemaleName_Property => this.FemaleName_Property;
         #endregion
         #region Insignia
-        protected readonly INotifyingItem<FilePath> _Insignia = NotifyingItem.Factory<FilePath>();
-        public INotifyingItem<FilePath> Insignia_Property => _Insignia;
+        protected readonly INotifyingSetItem<FilePath> _Insignia = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
+        public INotifyingSetItem<FilePath> Insignia_Property => _Insignia;
         public FilePath Insignia
         {
             get => this._Insignia.Item;
             set => this._Insignia.Set(value);
         }
-        INotifyingItem<FilePath> IRank.Insignia_Property => this.Insignia_Property;
-        INotifyingItemGetter<FilePath> IRankGetter.Insignia_Property => this.Insignia_Property;
+        INotifyingSetItem<FilePath> IRank.Insignia_Property => this.Insignia_Property;
+        INotifyingSetItemGetter<FilePath> IRankGetter.Insignia_Property => this.Insignia_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -139,20 +139,48 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(Rank rhs)
         {
             if (rhs == null) return false;
-            if (RankNumber != rhs.RankNumber) return false;
-            if (!object.Equals(MaleName, rhs.MaleName)) return false;
-            if (!object.Equals(FemaleName, rhs.FemaleName)) return false;
-            if (!object.Equals(Insignia, rhs.Insignia)) return false;
+            if (RankNumber_Property.HasBeenSet != rhs.RankNumber_Property.HasBeenSet) return false;
+            if (RankNumber_Property.HasBeenSet)
+            {
+                if (RankNumber != rhs.RankNumber) return false;
+            }
+            if (MaleName_Property.HasBeenSet != rhs.MaleName_Property.HasBeenSet) return false;
+            if (MaleName_Property.HasBeenSet)
+            {
+                if (!object.Equals(MaleName, rhs.MaleName)) return false;
+            }
+            if (FemaleName_Property.HasBeenSet != rhs.FemaleName_Property.HasBeenSet) return false;
+            if (FemaleName_Property.HasBeenSet)
+            {
+                if (!object.Equals(FemaleName, rhs.FemaleName)) return false;
+            }
+            if (Insignia_Property.HasBeenSet != rhs.Insignia_Property.HasBeenSet) return false;
+            if (Insignia_Property.HasBeenSet)
+            {
+                if (!object.Equals(Insignia, rhs.Insignia)) return false;
+            }
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = HashHelper.GetHashCode(RankNumber).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(MaleName).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(FemaleName).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Insignia).CombineHashCode(ret);
+            if (RankNumber_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(RankNumber).CombineHashCode(ret);
+            }
+            if (MaleName_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(MaleName).CombineHashCode(ret);
+            }
+            if (FemaleName_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(FemaleName).CombineHashCode(ret);
+            }
+            if (Insignia_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Insignia).CombineHashCode(ret);
+            }
             return ret;
         }
 
@@ -814,6 +842,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 case "MNAM":
+                    if (!first) return false;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var MaleNametryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
@@ -822,6 +851,7 @@ namespace Mutagen.Bethesda.Oblivion
                     item._MaleName.SetIfSucceeded(MaleNametryGet);
                     break;
                 case "FNAM":
+                    if (!first) return false;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var FemaleNametryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
@@ -830,6 +860,7 @@ namespace Mutagen.Bethesda.Oblivion
                     item._FemaleName.SetIfSucceeded(FemaleNametryGet);
                     break;
                 case "INAM":
+                    if (!first) return false;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var tryGet = Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
@@ -1013,16 +1044,16 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IRank : IRankGetter, ILoquiClass<IRank, IRankGetter>, ILoquiClass<Rank, IRankGetter>
     {
         new Int32 RankNumber { get; set; }
-        new INotifyingItem<Int32> RankNumber_Property { get; }
+        new INotifyingSetItem<Int32> RankNumber_Property { get; }
 
         new String MaleName { get; set; }
-        new INotifyingItem<String> MaleName_Property { get; }
+        new INotifyingSetItem<String> MaleName_Property { get; }
 
         new String FemaleName { get; set; }
-        new INotifyingItem<String> FemaleName_Property { get; }
+        new INotifyingSetItem<String> FemaleName_Property { get; }
 
         new FilePath Insignia { get; set; }
-        new INotifyingItem<FilePath> Insignia_Property { get; }
+        new INotifyingSetItem<FilePath> Insignia_Property { get; }
 
     }
 
@@ -1030,22 +1061,22 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region RankNumber
         Int32 RankNumber { get; }
-        INotifyingItemGetter<Int32> RankNumber_Property { get; }
+        INotifyingSetItemGetter<Int32> RankNumber_Property { get; }
 
         #endregion
         #region MaleName
         String MaleName { get; }
-        INotifyingItemGetter<String> MaleName_Property { get; }
+        INotifyingSetItemGetter<String> MaleName_Property { get; }
 
         #endregion
         #region FemaleName
         String FemaleName { get; }
-        INotifyingItemGetter<String> FemaleName_Property { get; }
+        INotifyingSetItemGetter<String> FemaleName_Property { get; }
 
         #endregion
         #region Insignia
         FilePath Insignia { get; }
-        INotifyingItemGetter<FilePath> Insignia_Property { get; }
+        INotifyingSetItemGetter<FilePath> Insignia_Property { get; }
 
         #endregion
 
@@ -1237,7 +1268,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType MNAM_HEADER = new RecordType("MNAM");
         public static readonly RecordType FNAM_HEADER = new RecordType("FNAM");
         public static readonly RecordType INAM_HEADER = new RecordType("INAM");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = RNAM_HEADER;
+        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
+        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        {
+            return new CollectionGetterWrapper<RecordType>(
+                new HashSet<RecordType>(
+                    new RecordType[]
+                    {
+                        RNAM_HEADER,
+                        MNAM_HEADER,
+                        FNAM_HEADER,
+                        INAM_HEADER
+                    })
+            );
+        });
         public const int NumStructFields = 0;
         public const int NumTypedFields = 4;
         #region Interface
@@ -1350,8 +1394,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.RankNumber_Property.Set(
-                        value: rhs.RankNumber,
+                    item.RankNumber_Property.SetToWithDefault(
+                        rhs: rhs.RankNumber_Property,
+                        def: def?.RankNumber_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1364,8 +1409,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.MaleName_Property.Set(
-                        value: rhs.MaleName,
+                    item.MaleName_Property.SetToWithDefault(
+                        rhs: rhs.MaleName_Property,
+                        def: def?.MaleName_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1378,8 +1424,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.FemaleName_Property.Set(
-                        value: rhs.FemaleName,
+                    item.FemaleName_Property.SetToWithDefault(
+                        rhs: rhs.FemaleName_Property,
+                        def: def?.FemaleName_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1392,8 +1439,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Insignia_Property.Set(
-                        value: rhs.Insignia,
+                    item.Insignia_Property.SetToWithDefault(
+                        rhs: rhs.Insignia_Property,
+                        def: def?.Insignia_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1416,11 +1464,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Rank_FieldIndex.RankNumber:
+                    obj.RankNumber_Property.HasBeenSet = on;
+                    break;
                 case Rank_FieldIndex.MaleName:
+                    obj.MaleName_Property.HasBeenSet = on;
+                    break;
                 case Rank_FieldIndex.FemaleName:
+                    obj.FemaleName_Property.HasBeenSet = on;
+                    break;
                 case Rank_FieldIndex.Insignia:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
+                    obj.Insignia_Property.HasBeenSet = on;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1435,16 +1489,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Rank_FieldIndex.RankNumber:
-                    obj.RankNumber = default(Int32);
+                    obj.RankNumber_Property.Unset(cmds);
                     break;
                 case Rank_FieldIndex.MaleName:
-                    obj.MaleName = default(String);
+                    obj.MaleName_Property.Unset(cmds);
                     break;
                 case Rank_FieldIndex.FemaleName:
-                    obj.FemaleName = default(String);
+                    obj.FemaleName_Property.Unset(cmds);
                     break;
                 case Rank_FieldIndex.Insignia:
-                    obj.Insignia = default(FilePath);
+                    obj.Insignia_Property.Unset(cmds);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1459,10 +1513,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Rank_FieldIndex.RankNumber:
+                    return obj.RankNumber_Property.HasBeenSet;
                 case Rank_FieldIndex.MaleName:
+                    return obj.MaleName_Property.HasBeenSet;
                 case Rank_FieldIndex.FemaleName:
+                    return obj.FemaleName_Property.HasBeenSet;
                 case Rank_FieldIndex.Insignia:
-                    return true;
+                    return obj.Insignia_Property.HasBeenSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1492,10 +1549,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRank item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.RankNumber = default(Int32);
-            item.MaleName = default(String);
-            item.FemaleName = default(String);
-            item.Insignia = default(FilePath);
+            item.RankNumber_Property.Unset(cmds.ToUnsetParams());
+            item.MaleName_Property.Unset(cmds.ToUnsetParams());
+            item.FemaleName_Property.Unset(cmds.ToUnsetParams());
+            item.Insignia_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static Rank_Mask<bool> GetEqualsMask(
@@ -1513,10 +1570,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Rank_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.RankNumber = item.RankNumber == rhs.RankNumber;
-            ret.MaleName = object.Equals(item.MaleName, rhs.MaleName);
-            ret.FemaleName = object.Equals(item.FemaleName, rhs.FemaleName);
-            ret.Insignia = object.Equals(item.Insignia, rhs.Insignia);
+            ret.RankNumber = item.RankNumber_Property.Equals(rhs.RankNumber_Property, (l, r) => l == r);
+            ret.MaleName = item.MaleName_Property.Equals(rhs.MaleName_Property, (l, r) => object.Equals(l, r));
+            ret.FemaleName = item.FemaleName_Property.Equals(rhs.FemaleName_Property, (l, r) => object.Equals(l, r));
+            ret.Insignia = item.Insignia_Property.Equals(rhs.Insignia_Property, (l, r) => object.Equals(l, r));
         }
 
         public static string ToString(
@@ -1570,16 +1627,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IRankGetter item,
             Rank_Mask<bool?> checkMask)
         {
+            if (checkMask.RankNumber.HasValue && checkMask.RankNumber.Value != item.RankNumber_Property.HasBeenSet) return false;
+            if (checkMask.MaleName.HasValue && checkMask.MaleName.Value != item.MaleName_Property.HasBeenSet) return false;
+            if (checkMask.FemaleName.HasValue && checkMask.FemaleName.Value != item.FemaleName_Property.HasBeenSet) return false;
+            if (checkMask.Insignia.HasValue && checkMask.Insignia.Value != item.Insignia_Property.HasBeenSet) return false;
             return true;
         }
 
         public static Rank_Mask<bool> GetHasBeenSetMask(IRankGetter item)
         {
             var ret = new Rank_Mask<bool>();
-            ret.RankNumber = true;
-            ret.MaleName = true;
-            ret.FemaleName = true;
-            ret.Insignia = true;
+            ret.RankNumber = item.RankNumber_Property.HasBeenSet;
+            ret.MaleName = item.MaleName_Property.HasBeenSet;
+            ret.FemaleName = item.FemaleName_Property.HasBeenSet;
+            ret.Insignia = item.Insignia_Property.HasBeenSet;
             return ret;
         }
 
@@ -1615,30 +1676,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.Rank");
                     }
-                    Int32XmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.RankNumber),
-                        item: item.RankNumber_Property,
-                        fieldIndex: (int)Rank_FieldIndex.RankNumber,
-                        errorMask: errorMask);
-                    StringXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.MaleName),
-                        item: item.MaleName_Property,
-                        fieldIndex: (int)Rank_FieldIndex.MaleName,
-                        errorMask: errorMask);
-                    StringXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.FemaleName),
-                        item: item.FemaleName_Property,
-                        fieldIndex: (int)Rank_FieldIndex.FemaleName,
-                        errorMask: errorMask);
-                    FilePathXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Insignia),
-                        item: item.Insignia_Property,
-                        fieldIndex: (int)Rank_FieldIndex.Insignia,
-                        errorMask: errorMask);
+                    if (item.RankNumber_Property.HasBeenSet)
+                    {
+                        Int32XmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.RankNumber),
+                            item: item.RankNumber_Property,
+                            fieldIndex: (int)Rank_FieldIndex.RankNumber,
+                            errorMask: errorMask);
+                    }
+                    if (item.MaleName_Property.HasBeenSet)
+                    {
+                        StringXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.MaleName),
+                            item: item.MaleName_Property,
+                            fieldIndex: (int)Rank_FieldIndex.MaleName,
+                            errorMask: errorMask);
+                    }
+                    if (item.FemaleName_Property.HasBeenSet)
+                    {
+                        StringXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.FemaleName),
+                            item: item.FemaleName_Property,
+                            fieldIndex: (int)Rank_FieldIndex.FemaleName,
+                            errorMask: errorMask);
+                    }
+                    if (item.Insignia_Property.HasBeenSet)
+                    {
+                        FilePathXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Insignia),
+                            item: item.Insignia_Property,
+                            fieldIndex: (int)Rank_FieldIndex.Insignia,
+                            errorMask: errorMask);
+                    }
                 }
             }
             catch (Exception ex)

@@ -38,20 +38,20 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Male
-        private readonly INotifyingItem<RaceStats> _Male = new NotifyingItem<RaceStats>();
-        public INotifyingItem<RaceStats> Male_Property => this._Male;
+        private readonly INotifyingSetItem<RaceStats> _Male = new NotifyingSetItem<RaceStats>();
+        public INotifyingSetItem<RaceStats> Male_Property => this._Male;
         RaceStats IRaceStatsGenderedGetter.Male => this.Male;
         public RaceStats Male { get => _Male.Item; set => _Male.Item = value; }
-        INotifyingItem<RaceStats> IRaceStatsGendered.Male_Property => this.Male_Property;
-        INotifyingItemGetter<RaceStats> IRaceStatsGenderedGetter.Male_Property => this.Male_Property;
+        INotifyingSetItem<RaceStats> IRaceStatsGendered.Male_Property => this.Male_Property;
+        INotifyingSetItemGetter<RaceStats> IRaceStatsGenderedGetter.Male_Property => this.Male_Property;
         #endregion
         #region Female
-        private readonly INotifyingItem<RaceStats> _Female = new NotifyingItem<RaceStats>();
-        public INotifyingItem<RaceStats> Female_Property => this._Female;
+        private readonly INotifyingSetItem<RaceStats> _Female = new NotifyingSetItem<RaceStats>();
+        public INotifyingSetItem<RaceStats> Female_Property => this._Female;
         RaceStats IRaceStatsGenderedGetter.Female => this.Female;
         public RaceStats Female { get => _Female.Item; set => _Female.Item = value; }
-        INotifyingItem<RaceStats> IRaceStatsGendered.Female_Property => this.Female_Property;
-        INotifyingItemGetter<RaceStats> IRaceStatsGenderedGetter.Female_Property => this.Female_Property;
+        INotifyingSetItem<RaceStats> IRaceStatsGendered.Female_Property => this.Female_Property;
+        INotifyingSetItemGetter<RaceStats> IRaceStatsGenderedGetter.Female_Property => this.Female_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -112,16 +112,30 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(RaceStatsGendered rhs)
         {
             if (rhs == null) return false;
-            if (!object.Equals(Male, rhs.Male)) return false;
-            if (!object.Equals(Female, rhs.Female)) return false;
+            if (Male_Property.HasBeenSet != rhs.Male_Property.HasBeenSet) return false;
+            if (Male_Property.HasBeenSet)
+            {
+                if (!object.Equals(Male, rhs.Male)) return false;
+            }
+            if (Female_Property.HasBeenSet != rhs.Female_Property.HasBeenSet) return false;
+            if (Female_Property.HasBeenSet)
+            {
+                if (!object.Equals(Female, rhs.Female)) return false;
+            }
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = HashHelper.GetHashCode(Male).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Female).CombineHashCode(ret);
+            if (Male_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Male).CombineHashCode(ret);
+            }
+            if (Female_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Female).CombineHashCode(ret);
+            }
             return ret;
         }
 
@@ -888,10 +902,10 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IRaceStatsGendered : IRaceStatsGenderedGetter, ILoquiClass<IRaceStatsGendered, IRaceStatsGenderedGetter>, ILoquiClass<RaceStatsGendered, IRaceStatsGenderedGetter>
     {
         new RaceStats Male { get; set; }
-        new INotifyingItem<RaceStats> Male_Property { get; }
+        new INotifyingSetItem<RaceStats> Male_Property { get; }
 
         new RaceStats Female { get; set; }
-        new INotifyingItem<RaceStats> Female_Property { get; }
+        new INotifyingSetItem<RaceStats> Female_Property { get; }
 
     }
 
@@ -899,12 +913,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Male
         RaceStats Male { get; }
-        INotifyingItemGetter<RaceStats> Male_Property { get; }
+        INotifyingSetItemGetter<RaceStats> Male_Property { get; }
 
         #endregion
         #region Female
         RaceStats Female { get; }
-        INotifyingItemGetter<RaceStats> Female_Property { get; }
+        INotifyingSetItemGetter<RaceStats> Female_Property { get; }
 
         #endregion
 
@@ -1182,46 +1196,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    switch (copyMask?.Male?.Overall ?? CopyOption.Reference)
-                    {
-                        case CopyOption.Reference:
-                            item.Male = rhs.Male;
-                            break;
-                        case CopyOption.CopyIn:
-                            RaceStatsCommon.CopyFieldsFrom(
-                                item: item.Male,
-                                rhs: rhs.Male,
-                                def: def?.Male,
-                                doMasks: doMasks,
-                                errorMask: (doMasks ? new Func<RaceStats_ErrorMask>(() =>
-                                {
-                                    var baseMask = errorMask();
-                                    if (baseMask.Male.Specific == null)
-                                    {
-                                        baseMask.Male = new MaskItem<Exception, RaceStats_ErrorMask>(null, new RaceStats_ErrorMask());
-                                    }
-                                    return baseMask.Male.Specific;
-                                }
-                                ) : null),
-                                copyMask: copyMask?.Male.Specific,
-                                cmds: cmds);
-                            break;
-                        case CopyOption.MakeCopy:
-                            if (rhs.Male == null)
+                    item.Male_Property.SetToWithDefault(
+                        rhs.Male_Property,
+                        def?.Male_Property,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.Male.Overall ?? CopyOption.Reference)
                             {
-                                item.Male = null;
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    RaceStatsCommon.CopyFieldsFrom(
+                                        item: item.Male,
+                                        rhs: rhs.Male,
+                                        def: def?.Male,
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<RaceStats_ErrorMask>(() =>
+                                        {
+                                            var baseMask = errorMask();
+                                            if (baseMask.Male.Specific == null)
+                                            {
+                                                baseMask.Male = new MaskItem<Exception, RaceStats_ErrorMask>(null, new RaceStats_ErrorMask());
+                                            }
+                                            return baseMask.Male.Specific;
+                                        }
+                                        ) : null),
+                                        copyMask: copyMask?.Male.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(RaceStats);
+                                    return RaceStats.Copy(
+                                        r,
+                                        copyMask?.Male?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Male?.Overall}. Cannot execute copy.");
                             }
-                            else
-                            {
-                                item.Male = RaceStats.Copy(
-                                    rhs.Male,
-                                    copyMask?.Male?.Specific,
-                                    def?.Male);
-                            }
-                            break;
-                        default:
-                            throw new NotImplementedException($"Unknown CopyOption {copyMask?.Male?.Overall}. Cannot execute copy.");
-                    }
+                        }
+                        );
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1233,46 +1247,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    switch (copyMask?.Female?.Overall ?? CopyOption.Reference)
-                    {
-                        case CopyOption.Reference:
-                            item.Female = rhs.Female;
-                            break;
-                        case CopyOption.CopyIn:
-                            RaceStatsCommon.CopyFieldsFrom(
-                                item: item.Female,
-                                rhs: rhs.Female,
-                                def: def?.Female,
-                                doMasks: doMasks,
-                                errorMask: (doMasks ? new Func<RaceStats_ErrorMask>(() =>
-                                {
-                                    var baseMask = errorMask();
-                                    if (baseMask.Female.Specific == null)
-                                    {
-                                        baseMask.Female = new MaskItem<Exception, RaceStats_ErrorMask>(null, new RaceStats_ErrorMask());
-                                    }
-                                    return baseMask.Female.Specific;
-                                }
-                                ) : null),
-                                copyMask: copyMask?.Female.Specific,
-                                cmds: cmds);
-                            break;
-                        case CopyOption.MakeCopy:
-                            if (rhs.Female == null)
+                    item.Female_Property.SetToWithDefault(
+                        rhs.Female_Property,
+                        def?.Female_Property,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.Female.Overall ?? CopyOption.Reference)
                             {
-                                item.Female = null;
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    RaceStatsCommon.CopyFieldsFrom(
+                                        item: item.Female,
+                                        rhs: rhs.Female,
+                                        def: def?.Female,
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<RaceStats_ErrorMask>(() =>
+                                        {
+                                            var baseMask = errorMask();
+                                            if (baseMask.Female.Specific == null)
+                                            {
+                                                baseMask.Female = new MaskItem<Exception, RaceStats_ErrorMask>(null, new RaceStats_ErrorMask());
+                                            }
+                                            return baseMask.Female.Specific;
+                                        }
+                                        ) : null),
+                                        copyMask: copyMask?.Female.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(RaceStats);
+                                    return RaceStats.Copy(
+                                        r,
+                                        copyMask?.Female?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Female?.Overall}. Cannot execute copy.");
                             }
-                            else
-                            {
-                                item.Female = RaceStats.Copy(
-                                    rhs.Female,
-                                    copyMask?.Female?.Specific,
-                                    def?.Female);
-                            }
-                            break;
-                        default:
-                            throw new NotImplementedException($"Unknown CopyOption {copyMask?.Female?.Overall}. Cannot execute copy.");
-                    }
+                        }
+                        );
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1294,9 +1308,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RaceStatsGendered_FieldIndex.Male:
+                    obj.Male_Property.HasBeenSet = on;
+                    break;
                 case RaceStatsGendered_FieldIndex.Female:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
+                    obj.Female_Property.HasBeenSet = on;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1311,10 +1327,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RaceStatsGendered_FieldIndex.Male:
-                    obj.Male = default(RaceStats);
+                    obj.Male_Property.Unset(cmds);
                     break;
                 case RaceStatsGendered_FieldIndex.Female:
-                    obj.Female = default(RaceStats);
+                    obj.Female_Property.Unset(cmds);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1329,8 +1345,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RaceStatsGendered_FieldIndex.Male:
+                    return obj.Male_Property.HasBeenSet;
                 case RaceStatsGendered_FieldIndex.Female:
-                    return true;
+                    return obj.Female_Property.HasBeenSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1356,8 +1373,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRaceStatsGendered item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.Male = default(RaceStats);
-            item.Female = default(RaceStats);
+            item.Male_Property.Unset(cmds.ToUnsetParams());
+            item.Female_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static RaceStatsGendered_Mask<bool> GetEqualsMask(
@@ -1375,12 +1392,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RaceStatsGendered_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Male = new MaskItem<bool, RaceStats_Mask<bool>>();
-            ret.Male.Specific = RaceStatsCommon.GetEqualsMask(item.Male, rhs.Male);
-            ret.Male.Overall = ret.Male.Specific.AllEqual((b) => b);
-            ret.Female = new MaskItem<bool, RaceStats_Mask<bool>>();
-            ret.Female.Specific = RaceStatsCommon.GetEqualsMask(item.Female, rhs.Female);
-            ret.Female.Overall = ret.Female.Specific.AllEqual((b) => b);
+            ret.Male = item.Male_Property.LoquiEqualsHelper(rhs.Male_Property, (loqLhs, loqRhs) => RaceStatsCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Female = item.Female_Property.LoquiEqualsHelper(rhs.Female_Property, (loqLhs, loqRhs) => RaceStatsCommon.GetEqualsMask(loqLhs, loqRhs));
         }
 
         public static string ToString(
@@ -1426,14 +1439,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IRaceStatsGenderedGetter item,
             RaceStatsGendered_Mask<bool?> checkMask)
         {
+            if (checkMask.Male.Overall.HasValue && checkMask.Male.Overall.Value != item.Male_Property.HasBeenSet) return false;
+            if (checkMask.Male.Specific != null && (item.Male_Property.Item == null || !item.Male_Property.Item.HasBeenSet(checkMask.Male.Specific))) return false;
+            if (checkMask.Female.Overall.HasValue && checkMask.Female.Overall.Value != item.Female_Property.HasBeenSet) return false;
+            if (checkMask.Female.Specific != null && (item.Female_Property.Item == null || !item.Female_Property.Item.HasBeenSet(checkMask.Female.Specific))) return false;
             return true;
         }
 
         public static RaceStatsGendered_Mask<bool> GetHasBeenSetMask(IRaceStatsGenderedGetter item)
         {
             var ret = new RaceStatsGendered_Mask<bool>();
-            ret.Male = new MaskItem<bool, RaceStats_Mask<bool>>(true, RaceStatsCommon.GetHasBeenSetMask(item.Male_Property.Item));
-            ret.Female = new MaskItem<bool, RaceStats_Mask<bool>>(true, RaceStatsCommon.GetHasBeenSetMask(item.Female_Property.Item));
+            ret.Male = new MaskItem<bool, RaceStats_Mask<bool>>(item.Male_Property.HasBeenSet, RaceStatsCommon.GetHasBeenSetMask(item.Male_Property.Item));
+            ret.Female = new MaskItem<bool, RaceStats_Mask<bool>>(item.Female_Property.HasBeenSet, RaceStatsCommon.GetHasBeenSetMask(item.Female_Property.Item));
             return ret;
         }
 
@@ -1469,18 +1486,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.RaceStatsGendered");
                     }
-                    LoquiXmlTranslation<RaceStats, RaceStats_ErrorMask>.Instance.Write(
-                        writer: writer,
-                        item: item.Male_Property,
-                        name: nameof(item.Male),
-                        fieldIndex: (int)RaceStatsGendered_FieldIndex.Male,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<RaceStats, RaceStats_ErrorMask>.Instance.Write(
-                        writer: writer,
-                        item: item.Female_Property,
-                        name: nameof(item.Female),
-                        fieldIndex: (int)RaceStatsGendered_FieldIndex.Female,
-                        errorMask: errorMask);
+                    if (item.Male_Property.HasBeenSet)
+                    {
+                        LoquiXmlTranslation<RaceStats, RaceStats_ErrorMask>.Instance.Write(
+                            writer: writer,
+                            item: item.Male_Property,
+                            name: nameof(item.Male),
+                            fieldIndex: (int)RaceStatsGendered_FieldIndex.Male,
+                            errorMask: errorMask);
+                    }
+                    if (item.Female_Property.HasBeenSet)
+                    {
+                        LoquiXmlTranslation<RaceStats, RaceStats_ErrorMask>.Instance.Write(
+                            writer: writer,
+                            item: item.Female_Property,
+                            name: nameof(item.Female),
+                            fieldIndex: (int)RaceStatsGendered_FieldIndex.Female,
+                            errorMask: errorMask);
+                    }
                 }
             }
             catch (Exception ex)

@@ -2,8 +2,8 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="MagicEffect" objType="Record" baseClass="NamedMajorRecord" recordType="MGEF" GUID="57a9087c-140b-4152-8b1e-0508d36a2df4" ID="44">
     <Fields>
-      <String name="Description" recordType="DESC" />
-      <FilePath name="Icon" recordType="ICON" />
+      <String name="Description" recordType="DESC" hasBeenSet="True" />
+      <FilePath name="Icon" recordType="ICON" hasBeenSet="True" />
       <RefDirect name="Model" refName="Model" />
       <Data>
         <Fields>
