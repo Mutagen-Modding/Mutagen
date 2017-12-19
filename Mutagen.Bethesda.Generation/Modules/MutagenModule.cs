@@ -182,6 +182,7 @@ namespace Mutagen.Bethesda.Generation
             var recordAttr = node.GetAttribute("recordType");
             if (recordAttr != null)
             {
+                field.HasBeenSetProperty.SetIfNotSet(true);
                 data.RecordType = new RecordType(recordAttr);
             }
             var markerAttr = node.GetAttribute("markerType");

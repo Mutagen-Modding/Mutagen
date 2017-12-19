@@ -37,37 +37,37 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Skill
-        protected readonly INotifyingItem<ActorValue> _Skill = NotifyingItem.Factory<ActorValue>();
-        public INotifyingItem<ActorValue> Skill_Property => _Skill;
+        protected readonly INotifyingSetItem<ActorValue> _Skill = NotifyingSetItem.Factory<ActorValue>(markAsSet: false);
+        public INotifyingSetItem<ActorValue> Skill_Property => _Skill;
         public ActorValue Skill
         {
             get => this._Skill.Item;
             set => this._Skill.Set(value);
         }
-        INotifyingItem<ActorValue> ISkillRecord.Skill_Property => this.Skill_Property;
-        INotifyingItemGetter<ActorValue> ISkillRecordGetter.Skill_Property => this.Skill_Property;
+        INotifyingSetItem<ActorValue> ISkillRecord.Skill_Property => this.Skill_Property;
+        INotifyingSetItemGetter<ActorValue> ISkillRecordGetter.Skill_Property => this.Skill_Property;
         #endregion
         #region Description
-        protected readonly INotifyingItem<String> _Description = NotifyingItem.Factory<String>();
-        public INotifyingItem<String> Description_Property => _Description;
+        protected readonly INotifyingSetItem<String> _Description = NotifyingSetItem.Factory<String>(markAsSet: false);
+        public INotifyingSetItem<String> Description_Property => _Description;
         public String Description
         {
             get => this._Description.Item;
             set => this._Description.Set(value);
         }
-        INotifyingItem<String> ISkillRecord.Description_Property => this.Description_Property;
-        INotifyingItemGetter<String> ISkillRecordGetter.Description_Property => this.Description_Property;
+        INotifyingSetItem<String> ISkillRecord.Description_Property => this.Description_Property;
+        INotifyingSetItemGetter<String> ISkillRecordGetter.Description_Property => this.Description_Property;
         #endregion
         #region Icon
-        protected readonly INotifyingItem<FilePath> _Icon = NotifyingItem.Factory<FilePath>();
-        public INotifyingItem<FilePath> Icon_Property => _Icon;
+        protected readonly INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
+        public INotifyingSetItem<FilePath> Icon_Property => _Icon;
         public FilePath Icon
         {
             get => this._Icon.Item;
             set => this._Icon.Set(value);
         }
-        INotifyingItem<FilePath> ISkillRecord.Icon_Property => this.Icon_Property;
-        INotifyingItemGetter<FilePath> ISkillRecordGetter.Icon_Property => this.Icon_Property;
+        INotifyingSetItem<FilePath> ISkillRecord.Icon_Property => this.Icon_Property;
+        INotifyingSetItemGetter<FilePath> ISkillRecordGetter.Icon_Property => this.Icon_Property;
         #endregion
         #region Action
         protected readonly INotifyingItem<ActorValue> _Action = NotifyingItem.Factory<ActorValue>();
@@ -125,48 +125,48 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> ISkillRecordGetter.UseValueSecond_Property => this.UseValueSecond_Property;
         #endregion
         #region ApprenticeText
-        protected readonly INotifyingItem<String> _ApprenticeText = NotifyingItem.Factory<String>();
-        public INotifyingItem<String> ApprenticeText_Property => _ApprenticeText;
+        protected readonly INotifyingSetItem<String> _ApprenticeText = NotifyingSetItem.Factory<String>(markAsSet: false);
+        public INotifyingSetItem<String> ApprenticeText_Property => _ApprenticeText;
         public String ApprenticeText
         {
             get => this._ApprenticeText.Item;
             set => this._ApprenticeText.Set(value);
         }
-        INotifyingItem<String> ISkillRecord.ApprenticeText_Property => this.ApprenticeText_Property;
-        INotifyingItemGetter<String> ISkillRecordGetter.ApprenticeText_Property => this.ApprenticeText_Property;
+        INotifyingSetItem<String> ISkillRecord.ApprenticeText_Property => this.ApprenticeText_Property;
+        INotifyingSetItemGetter<String> ISkillRecordGetter.ApprenticeText_Property => this.ApprenticeText_Property;
         #endregion
         #region JourneymanText
-        protected readonly INotifyingItem<String> _JourneymanText = NotifyingItem.Factory<String>();
-        public INotifyingItem<String> JourneymanText_Property => _JourneymanText;
+        protected readonly INotifyingSetItem<String> _JourneymanText = NotifyingSetItem.Factory<String>(markAsSet: false);
+        public INotifyingSetItem<String> JourneymanText_Property => _JourneymanText;
         public String JourneymanText
         {
             get => this._JourneymanText.Item;
             set => this._JourneymanText.Set(value);
         }
-        INotifyingItem<String> ISkillRecord.JourneymanText_Property => this.JourneymanText_Property;
-        INotifyingItemGetter<String> ISkillRecordGetter.JourneymanText_Property => this.JourneymanText_Property;
+        INotifyingSetItem<String> ISkillRecord.JourneymanText_Property => this.JourneymanText_Property;
+        INotifyingSetItemGetter<String> ISkillRecordGetter.JourneymanText_Property => this.JourneymanText_Property;
         #endregion
         #region ExpertText
-        protected readonly INotifyingItem<String> _ExpertText = NotifyingItem.Factory<String>();
-        public INotifyingItem<String> ExpertText_Property => _ExpertText;
+        protected readonly INotifyingSetItem<String> _ExpertText = NotifyingSetItem.Factory<String>(markAsSet: false);
+        public INotifyingSetItem<String> ExpertText_Property => _ExpertText;
         public String ExpertText
         {
             get => this._ExpertText.Item;
             set => this._ExpertText.Set(value);
         }
-        INotifyingItem<String> ISkillRecord.ExpertText_Property => this.ExpertText_Property;
-        INotifyingItemGetter<String> ISkillRecordGetter.ExpertText_Property => this.ExpertText_Property;
+        INotifyingSetItem<String> ISkillRecord.ExpertText_Property => this.ExpertText_Property;
+        INotifyingSetItemGetter<String> ISkillRecordGetter.ExpertText_Property => this.ExpertText_Property;
         #endregion
         #region MasterText
-        protected readonly INotifyingItem<String> _MasterText = NotifyingItem.Factory<String>();
-        public INotifyingItem<String> MasterText_Property => _MasterText;
+        protected readonly INotifyingSetItem<String> _MasterText = NotifyingSetItem.Factory<String>(markAsSet: false);
+        public INotifyingSetItem<String> MasterText_Property => _MasterText;
         public String MasterText
         {
             get => this._MasterText.Item;
             set => this._MasterText.Set(value);
         }
-        INotifyingItem<String> ISkillRecord.MasterText_Property => this.MasterText_Property;
-        INotifyingItemGetter<String> ISkillRecordGetter.MasterText_Property => this.MasterText_Property;
+        INotifyingSetItem<String> ISkillRecord.MasterText_Property => this.MasterText_Property;
+        INotifyingSetItemGetter<String> ISkillRecordGetter.MasterText_Property => this.MasterText_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -224,36 +224,85 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (Skill != rhs.Skill) return false;
-            if (!object.Equals(Description, rhs.Description)) return false;
-            if (!object.Equals(Icon, rhs.Icon)) return false;
+            if (Skill_Property.HasBeenSet != rhs.Skill_Property.HasBeenSet) return false;
+            if (Skill_Property.HasBeenSet)
+            {
+                if (Skill != rhs.Skill) return false;
+            }
+            if (Description_Property.HasBeenSet != rhs.Description_Property.HasBeenSet) return false;
+            if (Description_Property.HasBeenSet)
+            {
+                if (!object.Equals(Description, rhs.Description)) return false;
+            }
+            if (Icon_Property.HasBeenSet != rhs.Icon_Property.HasBeenSet) return false;
+            if (Icon_Property.HasBeenSet)
+            {
+                if (!object.Equals(Icon, rhs.Icon)) return false;
+            }
             if (Action != rhs.Action) return false;
             if (Attribute != rhs.Attribute) return false;
             if (Specialization != rhs.Specialization) return false;
             if (UseValueFirst != rhs.UseValueFirst) return false;
             if (UseValueSecond != rhs.UseValueSecond) return false;
-            if (!object.Equals(ApprenticeText, rhs.ApprenticeText)) return false;
-            if (!object.Equals(JourneymanText, rhs.JourneymanText)) return false;
-            if (!object.Equals(ExpertText, rhs.ExpertText)) return false;
-            if (!object.Equals(MasterText, rhs.MasterText)) return false;
+            if (ApprenticeText_Property.HasBeenSet != rhs.ApprenticeText_Property.HasBeenSet) return false;
+            if (ApprenticeText_Property.HasBeenSet)
+            {
+                if (!object.Equals(ApprenticeText, rhs.ApprenticeText)) return false;
+            }
+            if (JourneymanText_Property.HasBeenSet != rhs.JourneymanText_Property.HasBeenSet) return false;
+            if (JourneymanText_Property.HasBeenSet)
+            {
+                if (!object.Equals(JourneymanText, rhs.JourneymanText)) return false;
+            }
+            if (ExpertText_Property.HasBeenSet != rhs.ExpertText_Property.HasBeenSet) return false;
+            if (ExpertText_Property.HasBeenSet)
+            {
+                if (!object.Equals(ExpertText, rhs.ExpertText)) return false;
+            }
+            if (MasterText_Property.HasBeenSet != rhs.MasterText_Property.HasBeenSet) return false;
+            if (MasterText_Property.HasBeenSet)
+            {
+                if (!object.Equals(MasterText, rhs.MasterText)) return false;
+            }
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = HashHelper.GetHashCode(Skill).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Description).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Icon).CombineHashCode(ret);
+            if (Skill_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Skill).CombineHashCode(ret);
+            }
+            if (Description_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Description).CombineHashCode(ret);
+            }
+            if (Icon_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Icon).CombineHashCode(ret);
+            }
             ret = HashHelper.GetHashCode(Action).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Attribute).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Specialization).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(UseValueFirst).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(UseValueSecond).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(ApprenticeText).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(JourneymanText).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(ExpertText).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(MasterText).CombineHashCode(ret);
+            if (ApprenticeText_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(ApprenticeText).CombineHashCode(ret);
+            }
+            if (JourneymanText_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(JourneymanText).CombineHashCode(ret);
+            }
+            if (ExpertText_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(ExpertText).CombineHashCode(ret);
+            }
+            if (MasterText_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(MasterText).CombineHashCode(ret);
+            }
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -1390,13 +1439,13 @@ namespace Mutagen.Bethesda.Oblivion
     public interface ISkillRecord : ISkillRecordGetter, IMajorRecord, ILoquiClass<ISkillRecord, ISkillRecordGetter>, ILoquiClass<SkillRecord, ISkillRecordGetter>
     {
         new ActorValue Skill { get; set; }
-        new INotifyingItem<ActorValue> Skill_Property { get; }
+        new INotifyingSetItem<ActorValue> Skill_Property { get; }
 
         new String Description { get; set; }
-        new INotifyingItem<String> Description_Property { get; }
+        new INotifyingSetItem<String> Description_Property { get; }
 
         new FilePath Icon { get; set; }
-        new INotifyingItem<FilePath> Icon_Property { get; }
+        new INotifyingSetItem<FilePath> Icon_Property { get; }
 
         new ActorValue Action { get; set; }
         new INotifyingItem<ActorValue> Action_Property { get; }
@@ -1414,16 +1463,16 @@ namespace Mutagen.Bethesda.Oblivion
         new INotifyingItem<Single> UseValueSecond_Property { get; }
 
         new String ApprenticeText { get; set; }
-        new INotifyingItem<String> ApprenticeText_Property { get; }
+        new INotifyingSetItem<String> ApprenticeText_Property { get; }
 
         new String JourneymanText { get; set; }
-        new INotifyingItem<String> JourneymanText_Property { get; }
+        new INotifyingSetItem<String> JourneymanText_Property { get; }
 
         new String ExpertText { get; set; }
-        new INotifyingItem<String> ExpertText_Property { get; }
+        new INotifyingSetItem<String> ExpertText_Property { get; }
 
         new String MasterText { get; set; }
-        new INotifyingItem<String> MasterText_Property { get; }
+        new INotifyingSetItem<String> MasterText_Property { get; }
 
     }
 
@@ -1431,17 +1480,17 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Skill
         ActorValue Skill { get; }
-        INotifyingItemGetter<ActorValue> Skill_Property { get; }
+        INotifyingSetItemGetter<ActorValue> Skill_Property { get; }
 
         #endregion
         #region Description
         String Description { get; }
-        INotifyingItemGetter<String> Description_Property { get; }
+        INotifyingSetItemGetter<String> Description_Property { get; }
 
         #endregion
         #region Icon
         FilePath Icon { get; }
-        INotifyingItemGetter<FilePath> Icon_Property { get; }
+        INotifyingSetItemGetter<FilePath> Icon_Property { get; }
 
         #endregion
         #region Action
@@ -1471,22 +1520,22 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region ApprenticeText
         String ApprenticeText { get; }
-        INotifyingItemGetter<String> ApprenticeText_Property { get; }
+        INotifyingSetItemGetter<String> ApprenticeText_Property { get; }
 
         #endregion
         #region JourneymanText
         String JourneymanText { get; }
-        INotifyingItemGetter<String> JourneymanText_Property { get; }
+        INotifyingSetItemGetter<String> JourneymanText_Property { get; }
 
         #endregion
         #region ExpertText
         String ExpertText { get; }
-        INotifyingItemGetter<String> ExpertText_Property { get; }
+        INotifyingSetItemGetter<String> ExpertText_Property { get; }
 
         #endregion
         #region MasterText
         String MasterText { get; }
-        INotifyingItemGetter<String> MasterText_Property { get; }
+        INotifyingSetItemGetter<String> MasterText_Property { get; }
 
         #endregion
 
@@ -1900,8 +1949,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Skill_Property.Set(
-                        value: rhs.Skill,
+                    item.Skill_Property.SetToWithDefault(
+                        rhs: rhs.Skill_Property,
+                        def: def?.Skill_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1914,8 +1964,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Description_Property.Set(
-                        value: rhs.Description,
+                    item.Description_Property.SetToWithDefault(
+                        rhs: rhs.Description_Property,
+                        def: def?.Description_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1928,8 +1979,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Icon_Property.Set(
-                        value: rhs.Icon,
+                    item.Icon_Property.SetToWithDefault(
+                        rhs: rhs.Icon_Property,
+                        def: def?.Icon_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -2012,8 +2064,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.ApprenticeText_Property.Set(
-                        value: rhs.ApprenticeText,
+                    item.ApprenticeText_Property.SetToWithDefault(
+                        rhs: rhs.ApprenticeText_Property,
+                        def: def?.ApprenticeText_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -2026,8 +2079,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.JourneymanText_Property.Set(
-                        value: rhs.JourneymanText,
+                    item.JourneymanText_Property.SetToWithDefault(
+                        rhs: rhs.JourneymanText_Property,
+                        def: def?.JourneymanText_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -2040,8 +2094,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.ExpertText_Property.Set(
-                        value: rhs.ExpertText,
+                    item.ExpertText_Property.SetToWithDefault(
+                        rhs: rhs.ExpertText_Property,
+                        def: def?.ExpertText_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -2054,8 +2109,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.MasterText_Property.Set(
-                        value: rhs.MasterText,
+                    item.MasterText_Property.SetToWithDefault(
+                        rhs: rhs.MasterText_Property,
+                        def: def?.MasterText_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -2077,20 +2133,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             SkillRecord_FieldIndex enu = (SkillRecord_FieldIndex)index;
             switch (enu)
             {
-                case SkillRecord_FieldIndex.Skill:
-                case SkillRecord_FieldIndex.Description:
-                case SkillRecord_FieldIndex.Icon:
                 case SkillRecord_FieldIndex.Action:
                 case SkillRecord_FieldIndex.Attribute:
                 case SkillRecord_FieldIndex.Specialization:
                 case SkillRecord_FieldIndex.UseValueFirst:
                 case SkillRecord_FieldIndex.UseValueSecond:
-                case SkillRecord_FieldIndex.ApprenticeText:
-                case SkillRecord_FieldIndex.JourneymanText:
-                case SkillRecord_FieldIndex.ExpertText:
-                case SkillRecord_FieldIndex.MasterText:
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
+                case SkillRecord_FieldIndex.Skill:
+                    obj.Skill_Property.HasBeenSet = on;
+                    break;
+                case SkillRecord_FieldIndex.Description:
+                    obj.Description_Property.HasBeenSet = on;
+                    break;
+                case SkillRecord_FieldIndex.Icon:
+                    obj.Icon_Property.HasBeenSet = on;
+                    break;
+                case SkillRecord_FieldIndex.ApprenticeText:
+                    obj.ApprenticeText_Property.HasBeenSet = on;
+                    break;
+                case SkillRecord_FieldIndex.JourneymanText:
+                    obj.JourneymanText_Property.HasBeenSet = on;
+                    break;
+                case SkillRecord_FieldIndex.ExpertText:
+                    obj.ExpertText_Property.HasBeenSet = on;
+                    break;
+                case SkillRecord_FieldIndex.MasterText:
+                    obj.MasterText_Property.HasBeenSet = on;
+                    break;
                 default:
                     MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
@@ -2106,13 +2176,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case SkillRecord_FieldIndex.Skill:
-                    obj.Skill = default(ActorValue);
+                    obj.Skill_Property.Unset(cmds);
                     break;
                 case SkillRecord_FieldIndex.Description:
-                    obj.Description = default(String);
+                    obj.Description_Property.Unset(cmds);
                     break;
                 case SkillRecord_FieldIndex.Icon:
-                    obj.Icon = default(FilePath);
+                    obj.Icon_Property.Unset(cmds);
                     break;
                 case SkillRecord_FieldIndex.Action:
                     obj.Action = default(ActorValue);
@@ -2130,16 +2200,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.UseValueSecond = default(Single);
                     break;
                 case SkillRecord_FieldIndex.ApprenticeText:
-                    obj.ApprenticeText = default(String);
+                    obj.ApprenticeText_Property.Unset(cmds);
                     break;
                 case SkillRecord_FieldIndex.JourneymanText:
-                    obj.JourneymanText = default(String);
+                    obj.JourneymanText_Property.Unset(cmds);
                     break;
                 case SkillRecord_FieldIndex.ExpertText:
-                    obj.ExpertText = default(String);
+                    obj.ExpertText_Property.Unset(cmds);
                     break;
                 case SkillRecord_FieldIndex.MasterText:
-                    obj.MasterText = default(String);
+                    obj.MasterText_Property.Unset(cmds);
                     break;
                 default:
                     MajorRecordCommon.UnsetNthObject(index, obj);
@@ -2154,19 +2224,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             SkillRecord_FieldIndex enu = (SkillRecord_FieldIndex)index;
             switch (enu)
             {
-                case SkillRecord_FieldIndex.Skill:
-                case SkillRecord_FieldIndex.Description:
-                case SkillRecord_FieldIndex.Icon:
                 case SkillRecord_FieldIndex.Action:
                 case SkillRecord_FieldIndex.Attribute:
                 case SkillRecord_FieldIndex.Specialization:
                 case SkillRecord_FieldIndex.UseValueFirst:
                 case SkillRecord_FieldIndex.UseValueSecond:
-                case SkillRecord_FieldIndex.ApprenticeText:
-                case SkillRecord_FieldIndex.JourneymanText:
-                case SkillRecord_FieldIndex.ExpertText:
-                case SkillRecord_FieldIndex.MasterText:
                     return true;
+                case SkillRecord_FieldIndex.Skill:
+                    return obj.Skill_Property.HasBeenSet;
+                case SkillRecord_FieldIndex.Description:
+                    return obj.Description_Property.HasBeenSet;
+                case SkillRecord_FieldIndex.Icon:
+                    return obj.Icon_Property.HasBeenSet;
+                case SkillRecord_FieldIndex.ApprenticeText:
+                    return obj.ApprenticeText_Property.HasBeenSet;
+                case SkillRecord_FieldIndex.JourneymanText:
+                    return obj.JourneymanText_Property.HasBeenSet;
+                case SkillRecord_FieldIndex.ExpertText:
+                    return obj.ExpertText_Property.HasBeenSet;
+                case SkillRecord_FieldIndex.MasterText:
+                    return obj.MasterText_Property.HasBeenSet;
                 default:
                     return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -2212,18 +2289,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISkillRecord item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.Skill = default(ActorValue);
-            item.Description = default(String);
-            item.Icon = default(FilePath);
+            item.Skill_Property.Unset(cmds.ToUnsetParams());
+            item.Description_Property.Unset(cmds.ToUnsetParams());
+            item.Icon_Property.Unset(cmds.ToUnsetParams());
             item.Action = default(ActorValue);
             item.Attribute = default(ActorValue);
             item.Specialization = default(Specialization);
             item.UseValueFirst = default(Single);
             item.UseValueSecond = default(Single);
-            item.ApprenticeText = default(String);
-            item.JourneymanText = default(String);
-            item.ExpertText = default(String);
-            item.MasterText = default(String);
+            item.ApprenticeText_Property.Unset(cmds.ToUnsetParams());
+            item.JourneymanText_Property.Unset(cmds.ToUnsetParams());
+            item.ExpertText_Property.Unset(cmds.ToUnsetParams());
+            item.MasterText_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static SkillRecord_Mask<bool> GetEqualsMask(
@@ -2241,18 +2318,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             SkillRecord_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Skill = item.Skill == rhs.Skill;
-            ret.Description = object.Equals(item.Description, rhs.Description);
-            ret.Icon = object.Equals(item.Icon, rhs.Icon);
+            ret.Skill = item.Skill_Property.Equals(rhs.Skill_Property, (l, r) => l == r);
+            ret.Description = item.Description_Property.Equals(rhs.Description_Property, (l, r) => object.Equals(l, r));
+            ret.Icon = item.Icon_Property.Equals(rhs.Icon_Property, (l, r) => object.Equals(l, r));
             ret.Action = item.Action == rhs.Action;
             ret.Attribute = item.Attribute == rhs.Attribute;
             ret.Specialization = item.Specialization == rhs.Specialization;
             ret.UseValueFirst = item.UseValueFirst == rhs.UseValueFirst;
             ret.UseValueSecond = item.UseValueSecond == rhs.UseValueSecond;
-            ret.ApprenticeText = object.Equals(item.ApprenticeText, rhs.ApprenticeText);
-            ret.JourneymanText = object.Equals(item.JourneymanText, rhs.JourneymanText);
-            ret.ExpertText = object.Equals(item.ExpertText, rhs.ExpertText);
-            ret.MasterText = object.Equals(item.MasterText, rhs.MasterText);
+            ret.ApprenticeText = item.ApprenticeText_Property.Equals(rhs.ApprenticeText_Property, (l, r) => object.Equals(l, r));
+            ret.JourneymanText = item.JourneymanText_Property.Equals(rhs.JourneymanText_Property, (l, r) => object.Equals(l, r));
+            ret.ExpertText = item.ExpertText_Property.Equals(rhs.ExpertText_Property, (l, r) => object.Equals(l, r));
+            ret.MasterText = item.MasterText_Property.Equals(rhs.MasterText_Property, (l, r) => object.Equals(l, r));
             MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -2339,24 +2416,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this ISkillRecordGetter item,
             SkillRecord_Mask<bool?> checkMask)
         {
+            if (checkMask.Skill.HasValue && checkMask.Skill.Value != item.Skill_Property.HasBeenSet) return false;
+            if (checkMask.Description.HasValue && checkMask.Description.Value != item.Description_Property.HasBeenSet) return false;
+            if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_Property.HasBeenSet) return false;
+            if (checkMask.ApprenticeText.HasValue && checkMask.ApprenticeText.Value != item.ApprenticeText_Property.HasBeenSet) return false;
+            if (checkMask.JourneymanText.HasValue && checkMask.JourneymanText.Value != item.JourneymanText_Property.HasBeenSet) return false;
+            if (checkMask.ExpertText.HasValue && checkMask.ExpertText.Value != item.ExpertText_Property.HasBeenSet) return false;
+            if (checkMask.MasterText.HasValue && checkMask.MasterText.Value != item.MasterText_Property.HasBeenSet) return false;
             return true;
         }
 
         public static SkillRecord_Mask<bool> GetHasBeenSetMask(ISkillRecordGetter item)
         {
             var ret = new SkillRecord_Mask<bool>();
-            ret.Skill = true;
-            ret.Description = true;
-            ret.Icon = true;
+            ret.Skill = item.Skill_Property.HasBeenSet;
+            ret.Description = item.Description_Property.HasBeenSet;
+            ret.Icon = item.Icon_Property.HasBeenSet;
             ret.Action = true;
             ret.Attribute = true;
             ret.Specialization = true;
             ret.UseValueFirst = true;
             ret.UseValueSecond = true;
-            ret.ApprenticeText = true;
-            ret.JourneymanText = true;
-            ret.ExpertText = true;
-            ret.MasterText = true;
+            ret.ApprenticeText = item.ApprenticeText_Property.HasBeenSet;
+            ret.JourneymanText = item.JourneymanText_Property.HasBeenSet;
+            ret.ExpertText = item.ExpertText_Property.HasBeenSet;
+            ret.MasterText = item.MasterText_Property.HasBeenSet;
             return ret;
         }
 
@@ -2392,24 +2476,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.SkillRecord");
                     }
-                    EnumXmlTranslation<ActorValue>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Skill),
-                        item: item.Skill_Property,
-                        fieldIndex: (int)SkillRecord_FieldIndex.Skill,
-                        errorMask: errorMask);
-                    StringXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Description),
-                        item: item.Description_Property,
-                        fieldIndex: (int)SkillRecord_FieldIndex.Description,
-                        errorMask: errorMask);
-                    FilePathXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Icon),
-                        item: item.Icon_Property,
-                        fieldIndex: (int)SkillRecord_FieldIndex.Icon,
-                        errorMask: errorMask);
+                    if (item.Skill_Property.HasBeenSet)
+                    {
+                        EnumXmlTranslation<ActorValue>.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Skill),
+                            item: item.Skill_Property,
+                            fieldIndex: (int)SkillRecord_FieldIndex.Skill,
+                            errorMask: errorMask);
+                    }
+                    if (item.Description_Property.HasBeenSet)
+                    {
+                        StringXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Description),
+                            item: item.Description_Property,
+                            fieldIndex: (int)SkillRecord_FieldIndex.Description,
+                            errorMask: errorMask);
+                    }
+                    if (item.Icon_Property.HasBeenSet)
+                    {
+                        FilePathXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Icon),
+                            item: item.Icon_Property,
+                            fieldIndex: (int)SkillRecord_FieldIndex.Icon,
+                            errorMask: errorMask);
+                    }
                     EnumXmlTranslation<ActorValue>.Instance.Write(
                         writer: writer,
                         name: nameof(item.Action),
@@ -2440,30 +2533,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item: item.UseValueSecond_Property,
                         fieldIndex: (int)SkillRecord_FieldIndex.UseValueSecond,
                         errorMask: errorMask);
-                    StringXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.ApprenticeText),
-                        item: item.ApprenticeText_Property,
-                        fieldIndex: (int)SkillRecord_FieldIndex.ApprenticeText,
-                        errorMask: errorMask);
-                    StringXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.JourneymanText),
-                        item: item.JourneymanText_Property,
-                        fieldIndex: (int)SkillRecord_FieldIndex.JourneymanText,
-                        errorMask: errorMask);
-                    StringXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.ExpertText),
-                        item: item.ExpertText_Property,
-                        fieldIndex: (int)SkillRecord_FieldIndex.ExpertText,
-                        errorMask: errorMask);
-                    StringXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.MasterText),
-                        item: item.MasterText_Property,
-                        fieldIndex: (int)SkillRecord_FieldIndex.MasterText,
-                        errorMask: errorMask);
+                    if (item.ApprenticeText_Property.HasBeenSet)
+                    {
+                        StringXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.ApprenticeText),
+                            item: item.ApprenticeText_Property,
+                            fieldIndex: (int)SkillRecord_FieldIndex.ApprenticeText,
+                            errorMask: errorMask);
+                    }
+                    if (item.JourneymanText_Property.HasBeenSet)
+                    {
+                        StringXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.JourneymanText),
+                            item: item.JourneymanText_Property,
+                            fieldIndex: (int)SkillRecord_FieldIndex.JourneymanText,
+                            errorMask: errorMask);
+                    }
+                    if (item.ExpertText_Property.HasBeenSet)
+                    {
+                        StringXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.ExpertText),
+                            item: item.ExpertText_Property,
+                            fieldIndex: (int)SkillRecord_FieldIndex.ExpertText,
+                            errorMask: errorMask);
+                    }
+                    if (item.MasterText_Property.HasBeenSet)
+                    {
+                        StringXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.MasterText),
+                            item: item.MasterText_Property,
+                            fieldIndex: (int)SkillRecord_FieldIndex.MasterText,
+                            errorMask: errorMask);
+                    }
                 }
             }
             catch (Exception ex)

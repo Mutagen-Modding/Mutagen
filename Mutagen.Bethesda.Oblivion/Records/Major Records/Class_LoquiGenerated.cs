@@ -38,26 +38,26 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Description
-        protected readonly INotifyingItem<String> _Description = NotifyingItem.Factory<String>();
-        public INotifyingItem<String> Description_Property => _Description;
+        protected readonly INotifyingSetItem<String> _Description = NotifyingSetItem.Factory<String>(markAsSet: false);
+        public INotifyingSetItem<String> Description_Property => _Description;
         public String Description
         {
             get => this._Description.Item;
             set => this._Description.Set(value);
         }
-        INotifyingItem<String> IClass.Description_Property => this.Description_Property;
-        INotifyingItemGetter<String> IClassGetter.Description_Property => this.Description_Property;
+        INotifyingSetItem<String> IClass.Description_Property => this.Description_Property;
+        INotifyingSetItemGetter<String> IClassGetter.Description_Property => this.Description_Property;
         #endregion
         #region Icon
-        protected readonly INotifyingItem<FilePath> _Icon = NotifyingItem.Factory<FilePath>();
-        public INotifyingItem<FilePath> Icon_Property => _Icon;
+        protected readonly INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
+        public INotifyingSetItem<FilePath> Icon_Property => _Icon;
         public FilePath Icon
         {
             get => this._Icon.Item;
             set => this._Icon.Set(value);
         }
-        INotifyingItem<FilePath> IClass.Icon_Property => this.Icon_Property;
-        INotifyingItemGetter<FilePath> IClassGetter.Icon_Property => this.Icon_Property;
+        INotifyingSetItem<FilePath> IClass.Icon_Property => this.Icon_Property;
+        INotifyingSetItemGetter<FilePath> IClassGetter.Icon_Property => this.Icon_Property;
         #endregion
         #region PrimaryAttributes
         private readonly INotifyingList<ActorValue> _PrimaryAttributes = new NotifyingListBounded<ActorValue>(max: 2);
@@ -174,8 +174,16 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (!object.Equals(Description, rhs.Description)) return false;
-            if (!object.Equals(Icon, rhs.Icon)) return false;
+            if (Description_Property.HasBeenSet != rhs.Description_Property.HasBeenSet) return false;
+            if (Description_Property.HasBeenSet)
+            {
+                if (!object.Equals(Description, rhs.Description)) return false;
+            }
+            if (Icon_Property.HasBeenSet != rhs.Icon_Property.HasBeenSet) return false;
+            if (Icon_Property.HasBeenSet)
+            {
+                if (!object.Equals(Icon, rhs.Icon)) return false;
+            }
             if (!PrimaryAttributes.SequenceEqual(rhs.PrimaryAttributes)) return false;
             if (Specialization != rhs.Specialization) return false;
             if (!SecondaryAttributes.SequenceEqual(rhs.SecondaryAttributes)) return false;
@@ -192,8 +200,14 @@ namespace Mutagen.Bethesda.Oblivion
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = HashHelper.GetHashCode(Description).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Icon).CombineHashCode(ret);
+            if (Description_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Description).CombineHashCode(ret);
+            }
+            if (Icon_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Icon).CombineHashCode(ret);
+            }
             ret = HashHelper.GetHashCode(PrimaryAttributes).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Specialization).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(SecondaryAttributes).CombineHashCode(ret);
@@ -1259,10 +1273,10 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IClass : IClassGetter, INamedMajorRecord, ILoquiClass<IClass, IClassGetter>, ILoquiClass<Class, IClassGetter>
     {
         new String Description { get; set; }
-        new INotifyingItem<String> Description_Property { get; }
+        new INotifyingSetItem<String> Description_Property { get; }
 
         new FilePath Icon { get; set; }
-        new INotifyingItem<FilePath> Icon_Property { get; }
+        new INotifyingSetItem<FilePath> Icon_Property { get; }
 
         new INotifyingList<ActorValue> PrimaryAttributes { get; }
         new Class.SpecializationFlag Specialization { get; set; }
@@ -1284,12 +1298,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Description
         String Description { get; }
-        INotifyingItemGetter<String> Description_Property { get; }
+        INotifyingSetItemGetter<String> Description_Property { get; }
 
         #endregion
         #region Icon
         FilePath Icon { get; }
-        INotifyingItemGetter<FilePath> Icon_Property { get; }
+        INotifyingSetItemGetter<FilePath> Icon_Property { get; }
 
         #endregion
         #region PrimaryAttributes
@@ -1678,8 +1692,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Description_Property.Set(
-                        value: rhs.Description,
+                    item.Description_Property.SetToWithDefault(
+                        rhs: rhs.Description_Property,
+                        def: def?.Description_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1692,8 +1707,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Icon_Property.Set(
-                        value: rhs.Icon,
+                    item.Icon_Property.SetToWithDefault(
+                        rhs: rhs.Icon_Property,
+                        def: def?.Icon_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1838,8 +1854,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Class_FieldIndex enu = (Class_FieldIndex)index;
             switch (enu)
             {
-                case Class_FieldIndex.Description:
-                case Class_FieldIndex.Icon:
                 case Class_FieldIndex.PrimaryAttributes:
                 case Class_FieldIndex.Specialization:
                 case Class_FieldIndex.SecondaryAttributes:
@@ -1847,6 +1861,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Class_FieldIndex.ClassServices:
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
+                case Class_FieldIndex.Description:
+                    obj.Description_Property.HasBeenSet = on;
+                    break;
+                case Class_FieldIndex.Icon:
+                    obj.Icon_Property.HasBeenSet = on;
+                    break;
                 case Class_FieldIndex.Training:
                     obj.Training_Property.HasBeenSet = on;
                     break;
@@ -1865,10 +1885,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Class_FieldIndex.Description:
-                    obj.Description = default(String);
+                    obj.Description_Property.Unset(cmds);
                     break;
                 case Class_FieldIndex.Icon:
-                    obj.Icon = default(FilePath);
+                    obj.Icon_Property.Unset(cmds);
                     break;
                 case Class_FieldIndex.PrimaryAttributes:
                     obj.PrimaryAttributes.Unset(cmds);
@@ -1901,14 +1921,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Class_FieldIndex enu = (Class_FieldIndex)index;
             switch (enu)
             {
-                case Class_FieldIndex.Description:
-                case Class_FieldIndex.Icon:
                 case Class_FieldIndex.PrimaryAttributes:
                 case Class_FieldIndex.Specialization:
                 case Class_FieldIndex.SecondaryAttributes:
                 case Class_FieldIndex.Flags:
                 case Class_FieldIndex.ClassServices:
                     return true;
+                case Class_FieldIndex.Description:
+                    return obj.Description_Property.HasBeenSet;
+                case Class_FieldIndex.Icon:
+                    return obj.Icon_Property.HasBeenSet;
                 case Class_FieldIndex.Training:
                     return obj.Training_Property.HasBeenSet;
                 default:
@@ -1948,8 +1970,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IClass item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.Description = default(String);
-            item.Icon = default(FilePath);
+            item.Description_Property.Unset(cmds.ToUnsetParams());
+            item.Icon_Property.Unset(cmds.ToUnsetParams());
             item.PrimaryAttributes.Unset(cmds.ToUnsetParams());
             item.Specialization = default(Class.SpecializationFlag);
             item.SecondaryAttributes.Unset(cmds.ToUnsetParams());
@@ -1973,8 +1995,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Class_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Description = object.Equals(item.Description, rhs.Description);
-            ret.Icon = object.Equals(item.Icon, rhs.Icon);
+            ret.Description = item.Description_Property.Equals(rhs.Description_Property, (l, r) => object.Equals(l, r));
+            ret.Icon = item.Icon_Property.Equals(rhs.Icon_Property, (l, r) => object.Equals(l, r));
             if (item.PrimaryAttributes.HasBeenSet == rhs.PrimaryAttributes.HasBeenSet)
             {
                 if (item.PrimaryAttributes.HasBeenSet)
@@ -2115,6 +2137,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IClassGetter item,
             Class_Mask<bool?> checkMask)
         {
+            if (checkMask.Description.HasValue && checkMask.Description.Value != item.Description_Property.HasBeenSet) return false;
+            if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_Property.HasBeenSet) return false;
             if (checkMask.PrimaryAttributes.Overall.HasValue && checkMask.PrimaryAttributes.Overall.Value != item.PrimaryAttributes.HasBeenSet) return false;
             if (checkMask.SecondaryAttributes.Overall.HasValue && checkMask.SecondaryAttributes.Overall.Value != item.SecondaryAttributes.HasBeenSet) return false;
             if (checkMask.Training.Overall.HasValue && checkMask.Training.Overall.Value != item.Training_Property.HasBeenSet) return false;
@@ -2125,8 +2149,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Class_Mask<bool> GetHasBeenSetMask(IClassGetter item)
         {
             var ret = new Class_Mask<bool>();
-            ret.Description = true;
-            ret.Icon = true;
+            ret.Description = item.Description_Property.HasBeenSet;
+            ret.Icon = item.Icon_Property.HasBeenSet;
             ret.PrimaryAttributes = new MaskItem<bool, IEnumerable<bool>>(item.PrimaryAttributes.HasBeenSet, null);
             ret.Specialization = true;
             ret.SecondaryAttributes = new MaskItem<bool, IEnumerable<bool>>(item.SecondaryAttributes.HasBeenSet, null);
@@ -2168,18 +2192,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.Class");
                     }
-                    StringXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Description),
-                        item: item.Description_Property,
-                        fieldIndex: (int)Class_FieldIndex.Description,
-                        errorMask: errorMask);
-                    FilePathXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Icon),
-                        item: item.Icon_Property,
-                        fieldIndex: (int)Class_FieldIndex.Icon,
-                        errorMask: errorMask);
+                    if (item.Description_Property.HasBeenSet)
+                    {
+                        StringXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Description),
+                            item: item.Description_Property,
+                            fieldIndex: (int)Class_FieldIndex.Description,
+                            errorMask: errorMask);
+                    }
+                    if (item.Icon_Property.HasBeenSet)
+                    {
+                        FilePathXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Icon),
+                            item: item.Icon_Property,
+                            fieldIndex: (int)Class_FieldIndex.Icon,
+                            errorMask: errorMask);
+                    }
                     ListXmlTranslation<ActorValue, Exception>.Instance.Write(
                         writer: writer,
                         name: nameof(item.PrimaryAttributes),

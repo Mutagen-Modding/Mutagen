@@ -38,26 +38,26 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Description
-        protected readonly INotifyingItem<String> _Description = NotifyingItem.Factory<String>();
-        public INotifyingItem<String> Description_Property => _Description;
+        protected readonly INotifyingSetItem<String> _Description = NotifyingSetItem.Factory<String>(markAsSet: false);
+        public INotifyingSetItem<String> Description_Property => _Description;
         public String Description
         {
             get => this._Description.Item;
             set => this._Description.Set(value);
         }
-        INotifyingItem<String> IMagicEffect.Description_Property => this.Description_Property;
-        INotifyingItemGetter<String> IMagicEffectGetter.Description_Property => this.Description_Property;
+        INotifyingSetItem<String> IMagicEffect.Description_Property => this.Description_Property;
+        INotifyingSetItemGetter<String> IMagicEffectGetter.Description_Property => this.Description_Property;
         #endregion
         #region Icon
-        protected readonly INotifyingItem<FilePath> _Icon = NotifyingItem.Factory<FilePath>();
-        public INotifyingItem<FilePath> Icon_Property => _Icon;
+        protected readonly INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
+        public INotifyingSetItem<FilePath> Icon_Property => _Icon;
         public FilePath Icon
         {
             get => this._Icon.Item;
             set => this._Icon.Set(value);
         }
-        INotifyingItem<FilePath> IMagicEffect.Icon_Property => this.Icon_Property;
-        INotifyingItemGetter<FilePath> IMagicEffectGetter.Icon_Property => this.Icon_Property;
+        INotifyingSetItem<FilePath> IMagicEffect.Icon_Property => this.Icon_Property;
+        INotifyingSetItemGetter<FilePath> IMagicEffectGetter.Icon_Property => this.Icon_Property;
         #endregion
         #region Model
         private readonly INotifyingItem<Model> _Model = new NotifyingItem<Model>();
@@ -239,8 +239,16 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (!object.Equals(Description, rhs.Description)) return false;
-            if (!object.Equals(Icon, rhs.Icon)) return false;
+            if (Description_Property.HasBeenSet != rhs.Description_Property.HasBeenSet) return false;
+            if (Description_Property.HasBeenSet)
+            {
+                if (!object.Equals(Description, rhs.Description)) return false;
+            }
+            if (Icon_Property.HasBeenSet != rhs.Icon_Property.HasBeenSet) return false;
+            if (Icon_Property.HasBeenSet)
+            {
+                if (!object.Equals(Icon, rhs.Icon)) return false;
+            }
             if (!object.Equals(Model, rhs.Model)) return false;
             if (Flags != rhs.Flags) return false;
             if (BaseCost != rhs.BaseCost) return false;
@@ -256,15 +264,25 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!object.Equals(SubData, rhs.SubData)) return false;
             }
-            if (!CounterEffects.SequenceEqual(rhs.CounterEffects)) return false;
+            if (CounterEffects.HasBeenSet != rhs.CounterEffects.HasBeenSet) return false;
+            if (CounterEffects.HasBeenSet)
+            {
+                if (!CounterEffects.SequenceEqual(rhs.CounterEffects)) return false;
+            }
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = HashHelper.GetHashCode(Description).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Icon).CombineHashCode(ret);
+            if (Description_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Description).CombineHashCode(ret);
+            }
+            if (Icon_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Icon).CombineHashCode(ret);
+            }
             ret = HashHelper.GetHashCode(Model).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(BaseCost).CombineHashCode(ret);
@@ -279,7 +297,10 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(SubData).CombineHashCode(ret);
             }
-            ret = HashHelper.GetHashCode(CounterEffects).CombineHashCode(ret);
+            if (CounterEffects.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(CounterEffects).CombineHashCode(ret);
+            }
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -1158,6 +1179,7 @@ namespace Mutagen.Bethesda.Oblivion
                     item._Icon.SetIfSucceeded(tryGet);
                     break;
                 case "MODL":
+                case "MODB":
                     item._Model.SetIfSucceeded(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)MagicEffect_FieldIndex.Model,
@@ -1497,10 +1519,10 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IMagicEffect : IMagicEffectGetter, INamedMajorRecord, ILoquiClass<IMagicEffect, IMagicEffectGetter>, ILoquiClass<MagicEffect, IMagicEffectGetter>
     {
         new String Description { get; set; }
-        new INotifyingItem<String> Description_Property { get; }
+        new INotifyingSetItem<String> Description_Property { get; }
 
         new FilePath Icon { get; set; }
-        new INotifyingItem<FilePath> Icon_Property { get; }
+        new INotifyingSetItem<FilePath> Icon_Property { get; }
 
         new Model Model { get; set; }
         new INotifyingItem<Model> Model_Property { get; }
@@ -1542,12 +1564,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Description
         String Description { get; }
-        INotifyingItemGetter<String> Description_Property { get; }
+        INotifyingSetItemGetter<String> Description_Property { get; }
 
         #endregion
         #region Icon
         FilePath Icon { get; }
-        INotifyingItemGetter<FilePath> Icon_Property { get; }
+        INotifyingSetItemGetter<FilePath> Icon_Property { get; }
 
         #endregion
         #region Model
@@ -1919,6 +1941,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType DESC_HEADER = new RecordType("DESC");
         public static readonly RecordType ICON_HEADER = new RecordType("ICON");
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
+        public static readonly RecordType MODB_HEADER = new RecordType("MODB");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType ESCE_HEADER = new RecordType("ESCE");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = MGEF_HEADER;
@@ -2042,8 +2065,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Description_Property.Set(
-                        value: rhs.Description,
+                    item.Description_Property.SetToWithDefault(
+                        rhs: rhs.Description_Property,
+                        def: def?.Description_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -2056,8 +2080,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Icon_Property.Set(
-                        value: rhs.Icon,
+                    item.Icon_Property.SetToWithDefault(
+                        rhs: rhs.Icon_Property,
+                        def: def?.Icon_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -2322,8 +2347,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MagicEffect_FieldIndex enu = (MagicEffect_FieldIndex)index;
             switch (enu)
             {
-                case MagicEffect_FieldIndex.Description:
-                case MagicEffect_FieldIndex.Icon:
                 case MagicEffect_FieldIndex.Model:
                 case MagicEffect_FieldIndex.Flags:
                 case MagicEffect_FieldIndex.BaseCost:
@@ -2334,11 +2357,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MagicEffect_FieldIndex.Light:
                 case MagicEffect_FieldIndex.ProjectileSpeed:
                 case MagicEffect_FieldIndex.EffectShader:
-                case MagicEffect_FieldIndex.CounterEffects:
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
+                case MagicEffect_FieldIndex.Description:
+                    obj.Description_Property.HasBeenSet = on;
+                    break;
+                case MagicEffect_FieldIndex.Icon:
+                    obj.Icon_Property.HasBeenSet = on;
+                    break;
                 case MagicEffect_FieldIndex.SubData:
                     obj.SubData_Property.HasBeenSet = on;
+                    break;
+                case MagicEffect_FieldIndex.CounterEffects:
+                    obj.CounterEffects.HasBeenSet = on;
                     break;
                 default:
                     NamedMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
@@ -2355,10 +2386,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case MagicEffect_FieldIndex.Description:
-                    obj.Description = default(String);
+                    obj.Description_Property.Unset(cmds);
                     break;
                 case MagicEffect_FieldIndex.Icon:
-                    obj.Icon = default(FilePath);
+                    obj.Icon_Property.Unset(cmds);
                     break;
                 case MagicEffect_FieldIndex.Model:
                     obj.Model = default(Model);
@@ -2409,8 +2440,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MagicEffect_FieldIndex enu = (MagicEffect_FieldIndex)index;
             switch (enu)
             {
-                case MagicEffect_FieldIndex.Description:
-                case MagicEffect_FieldIndex.Icon:
                 case MagicEffect_FieldIndex.Model:
                 case MagicEffect_FieldIndex.Flags:
                 case MagicEffect_FieldIndex.BaseCost:
@@ -2421,10 +2450,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MagicEffect_FieldIndex.Light:
                 case MagicEffect_FieldIndex.ProjectileSpeed:
                 case MagicEffect_FieldIndex.EffectShader:
-                case MagicEffect_FieldIndex.CounterEffects:
                     return true;
+                case MagicEffect_FieldIndex.Description:
+                    return obj.Description_Property.HasBeenSet;
+                case MagicEffect_FieldIndex.Icon:
+                    return obj.Icon_Property.HasBeenSet;
                 case MagicEffect_FieldIndex.SubData:
                     return obj.SubData_Property.HasBeenSet;
+                case MagicEffect_FieldIndex.CounterEffects:
+                    return obj.CounterEffects.HasBeenSet;
                 default:
                     return NamedMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -2474,8 +2508,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IMagicEffect item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.Description = default(String);
-            item.Icon = default(FilePath);
+            item.Description_Property.Unset(cmds.ToUnsetParams());
+            item.Icon_Property.Unset(cmds.ToUnsetParams());
             item.Model = default(Model);
             item.Flags = default(MagicEffect.MagicFlag);
             item.BaseCost = default(Single);
@@ -2505,8 +2539,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MagicEffect_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Description = object.Equals(item.Description, rhs.Description);
-            ret.Icon = object.Equals(item.Icon, rhs.Icon);
+            ret.Description = item.Description_Property.Equals(rhs.Description_Property, (l, r) => object.Equals(l, r));
+            ret.Icon = item.Icon_Property.Equals(rhs.Icon_Property, (l, r) => object.Equals(l, r));
             ret.Model = new MaskItem<bool, Model_Mask<bool>>();
             ret.Model.Specific = ModelCommon.GetEqualsMask(item.Model, rhs.Model);
             ret.Model.Overall = ret.Model.Specific.AllEqual((b) => b);
@@ -2647,6 +2681,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IMagicEffectGetter item,
             MagicEffect_Mask<bool?> checkMask)
         {
+            if (checkMask.Description.HasValue && checkMask.Description.Value != item.Description_Property.HasBeenSet) return false;
+            if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_Property.HasBeenSet) return false;
             if (checkMask.SubData.Overall.HasValue && checkMask.SubData.Overall.Value != item.SubData_Property.HasBeenSet) return false;
             if (checkMask.SubData.Specific != null && (item.SubData_Property.Item == null || !item.SubData_Property.Item.HasBeenSet(checkMask.SubData.Specific))) return false;
             if (checkMask.CounterEffects.Overall.HasValue && checkMask.CounterEffects.Overall.Value != item.CounterEffects.HasBeenSet) return false;
@@ -2656,8 +2692,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static MagicEffect_Mask<bool> GetHasBeenSetMask(IMagicEffectGetter item)
         {
             var ret = new MagicEffect_Mask<bool>();
-            ret.Description = true;
-            ret.Icon = true;
+            ret.Description = item.Description_Property.HasBeenSet;
+            ret.Icon = item.Icon_Property.HasBeenSet;
             ret.Model = new MaskItem<bool, Model_Mask<bool>>(true, ModelCommon.GetHasBeenSetMask(item.Model_Property.Item));
             ret.Flags = true;
             ret.BaseCost = true;
@@ -2705,18 +2741,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.MagicEffect");
                     }
-                    StringXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Description),
-                        item: item.Description_Property,
-                        fieldIndex: (int)MagicEffect_FieldIndex.Description,
-                        errorMask: errorMask);
-                    FilePathXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Icon),
-                        item: item.Icon_Property,
-                        fieldIndex: (int)MagicEffect_FieldIndex.Icon,
-                        errorMask: errorMask);
+                    if (item.Description_Property.HasBeenSet)
+                    {
+                        StringXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Description),
+                            item: item.Description_Property,
+                            fieldIndex: (int)MagicEffect_FieldIndex.Description,
+                            errorMask: errorMask);
+                    }
+                    if (item.Icon_Property.HasBeenSet)
+                    {
+                        FilePathXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Icon),
+                            item: item.Icon_Property,
+                            fieldIndex: (int)MagicEffect_FieldIndex.Icon,
+                            errorMask: errorMask);
+                    }
                     LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Write(
                         writer: writer,
                         item: item.Model_Property,
@@ -2786,22 +2828,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             fieldIndex: (int)MagicEffect_FieldIndex.SubData,
                             errorMask: errorMask);
                     }
-                    ListXmlTranslation<FormID, Exception>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.CounterEffects),
-                        item: item.CounterEffects,
-                        fieldIndex: (int)MagicEffect_FieldIndex.CounterEffects,
-                        errorMask: errorMask,
-                        transl: (FormID subItem, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            FormIDXmlTranslation.Instance.Write(
-                                writer: writer,
-                                name: "Item",
-                                item: subItem,
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
-                        }
-                        );
+                    if (item.CounterEffects.HasBeenSet)
+                    {
+                        ListXmlTranslation<FormID, Exception>.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.CounterEffects),
+                            item: item.CounterEffects,
+                            fieldIndex: (int)MagicEffect_FieldIndex.CounterEffects,
+                            errorMask: errorMask,
+                            transl: (FormID subItem, bool listDoMasks, out Exception listSubMask) =>
+                            {
+                                FormIDXmlTranslation.Instance.Write(
+                                    writer: writer,
+                                    name: "Item",
+                                    item: subItem,
+                                    doMasks: errorMask != null,
+                                    errorMask: out listSubMask);
+                            }
+                            );
+                    }
                 }
             }
             catch (Exception ex)

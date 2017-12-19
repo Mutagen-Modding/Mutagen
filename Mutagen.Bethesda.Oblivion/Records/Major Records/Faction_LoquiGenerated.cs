@@ -46,15 +46,15 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Flags
-        protected readonly INotifyingItem<Faction.FactionFlag> _Flags = NotifyingItem.Factory<Faction.FactionFlag>();
-        public INotifyingItem<Faction.FactionFlag> Flags_Property => _Flags;
+        protected readonly INotifyingSetItem<Faction.FactionFlag> _Flags = NotifyingSetItem.Factory<Faction.FactionFlag>(markAsSet: false);
+        public INotifyingSetItem<Faction.FactionFlag> Flags_Property => _Flags;
         public Faction.FactionFlag Flags
         {
             get => this._Flags.Item;
             set => this._Flags.Set(value);
         }
-        INotifyingItem<Faction.FactionFlag> IFaction.Flags_Property => this.Flags_Property;
-        INotifyingItemGetter<Faction.FactionFlag> IFactionGetter.Flags_Property => this.Flags_Property;
+        INotifyingSetItem<Faction.FactionFlag> IFaction.Flags_Property => this.Flags_Property;
+        INotifyingSetItemGetter<Faction.FactionFlag> IFactionGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region CrimeGoldMultiplier
         protected readonly INotifyingSetItem<Single> _CrimeGoldMultiplier = NotifyingSetItem.Factory<Single>(markAsSet: false);
@@ -133,7 +133,11 @@ namespace Mutagen.Bethesda.Oblivion
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
             if (!Relations.SequenceEqual(rhs.Relations)) return false;
-            if (Flags != rhs.Flags) return false;
+            if (Flags_Property.HasBeenSet != rhs.Flags_Property.HasBeenSet) return false;
+            if (Flags_Property.HasBeenSet)
+            {
+                if (Flags != rhs.Flags) return false;
+            }
             if (CrimeGoldMultiplier_Property.HasBeenSet != rhs.CrimeGoldMultiplier_Property.HasBeenSet) return false;
             if (CrimeGoldMultiplier_Property.HasBeenSet)
             {
@@ -147,7 +151,10 @@ namespace Mutagen.Bethesda.Oblivion
         {
             int ret = 0;
             ret = HashHelper.GetHashCode(Relations).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
+            if (Flags_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
+            }
             if (CrimeGoldMultiplier_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(CrimeGoldMultiplier).CombineHashCode(ret);
@@ -912,9 +919,12 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 case "RNAM":
+                case "MNAM":
+                case "FNAM":
+                case "INAM":
                     var RankstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<Rank, MaskItem<Exception, Rank_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
-                        triggeringRecord: Faction_Registration.RNAM_HEADER,
+                        triggeringRecord: Rank_Registration.TriggeringRecordTypes,
                         fieldIndex: (int)Faction_FieldIndex.Ranks,
                         objType: ObjectType.Subrecord,
                         errorMask: errorMask,
@@ -1094,7 +1104,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new INotifyingList<Relation> Relations { get; }
         new Faction.FactionFlag Flags { get; set; }
-        new INotifyingItem<Faction.FactionFlag> Flags_Property { get; }
+        new INotifyingSetItem<Faction.FactionFlag> Flags_Property { get; }
 
         new Single CrimeGoldMultiplier { get; set; }
         new INotifyingSetItem<Single> CrimeGoldMultiplier_Property { get; }
@@ -1109,7 +1119,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Flags
         Faction.FactionFlag Flags { get; }
-        INotifyingItemGetter<Faction.FactionFlag> Flags_Property { get; }
+        INotifyingSetItemGetter<Faction.FactionFlag> Flags_Property { get; }
 
         #endregion
         #region CrimeGoldMultiplier
@@ -1312,6 +1322,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType CNAM_HEADER = new RecordType("CNAM");
         public static readonly RecordType RNAM_HEADER = new RecordType("RNAM");
+        public static readonly RecordType MNAM_HEADER = new RecordType("MNAM");
+        public static readonly RecordType FNAM_HEADER = new RecordType("FNAM");
+        public static readonly RecordType INAM_HEADER = new RecordType("INAM");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = FACT_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 4;
@@ -1465,8 +1478,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Flags_Property.Set(
-                        value: rhs.Flags,
+                    item.Flags_Property.SetToWithDefault(
+                        rhs: rhs.Flags_Property,
+                        def: def?.Flags_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1536,10 +1550,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Faction_FieldIndex.Relations:
-                case Faction_FieldIndex.Flags:
                 case Faction_FieldIndex.Ranks:
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
+                case Faction_FieldIndex.Flags:
+                    obj.Flags_Property.HasBeenSet = on;
+                    break;
                 case Faction_FieldIndex.CrimeGoldMultiplier:
                     obj.CrimeGoldMultiplier_Property.HasBeenSet = on;
                     break;
@@ -1561,7 +1577,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Relations.Unset(cmds);
                     break;
                 case Faction_FieldIndex.Flags:
-                    obj.Flags = default(Faction.FactionFlag);
+                    obj.Flags_Property.Unset(cmds);
                     break;
                 case Faction_FieldIndex.CrimeGoldMultiplier:
                     obj.CrimeGoldMultiplier_Property.Unset(cmds);
@@ -1583,9 +1599,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Faction_FieldIndex.Relations:
-                case Faction_FieldIndex.Flags:
                 case Faction_FieldIndex.Ranks:
                     return true;
+                case Faction_FieldIndex.Flags:
+                    return obj.Flags_Property.HasBeenSet;
                 case Faction_FieldIndex.CrimeGoldMultiplier:
                     return obj.CrimeGoldMultiplier_Property.HasBeenSet;
                 default:
@@ -1618,7 +1635,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NotifyingUnsetParameters? cmds = null)
         {
             item.Relations.Unset(cmds.ToUnsetParams());
-            item.Flags = default(Faction.FactionFlag);
+            item.Flags_Property.Unset(cmds.ToUnsetParams());
             item.CrimeGoldMultiplier_Property.Unset(cmds.ToUnsetParams());
             item.Ranks.Unset(cmds.ToUnsetParams());
         }
@@ -1665,7 +1682,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ret.Relations = new MaskItem<bool, IEnumerable<MaskItem<bool, Relation_Mask<bool>>>>();
                 ret.Relations.Overall = false;
             }
-            ret.Flags = item.Flags == rhs.Flags;
+            ret.Flags = item.Flags_Property.Equals(rhs.Flags_Property, (l, r) => l == r);
             ret.CrimeGoldMultiplier = item.CrimeGoldMultiplier_Property.Equals(rhs.CrimeGoldMultiplier_Property, (l, r) => l == r);
             if (item.Ranks.HasBeenSet == rhs.Ranks.HasBeenSet)
             {
@@ -1777,6 +1794,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Faction_Mask<bool?> checkMask)
         {
             if (checkMask.Relations.Overall.HasValue && checkMask.Relations.Overall.Value != item.Relations.HasBeenSet) return false;
+            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_Property.HasBeenSet) return false;
             if (checkMask.CrimeGoldMultiplier.HasValue && checkMask.CrimeGoldMultiplier.Value != item.CrimeGoldMultiplier_Property.HasBeenSet) return false;
             if (checkMask.Ranks.Overall.HasValue && checkMask.Ranks.Overall.Value != item.Ranks.HasBeenSet) return false;
             return true;
@@ -1786,7 +1804,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var ret = new Faction_Mask<bool>();
             ret.Relations = new MaskItem<bool, IEnumerable<MaskItem<bool, Relation_Mask<bool>>>>(item.Relations.HasBeenSet, item.Relations.Select((i) => new MaskItem<bool, Relation_Mask<bool>>(true, i.GetHasBeenSetMask())));
-            ret.Flags = true;
+            ret.Flags = item.Flags_Property.HasBeenSet;
             ret.CrimeGoldMultiplier = item.CrimeGoldMultiplier_Property.HasBeenSet;
             ret.Ranks = new MaskItem<bool, IEnumerable<MaskItem<bool, Rank_Mask<bool>>>>(item.Ranks.HasBeenSet, item.Ranks.Select((i) => new MaskItem<bool, Rank_Mask<bool>>(true, i.GetHasBeenSetMask())));
             return ret;
@@ -1840,12 +1858,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 errorMask: out listSubMask);
                         }
                         );
-                    EnumXmlTranslation<Faction.FactionFlag>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Flags),
-                        item: item.Flags_Property,
-                        fieldIndex: (int)Faction_FieldIndex.Flags,
-                        errorMask: errorMask);
+                    if (item.Flags_Property.HasBeenSet)
+                    {
+                        EnumXmlTranslation<Faction.FactionFlag>.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Flags),
+                            item: item.Flags_Property,
+                            fieldIndex: (int)Faction_FieldIndex.Flags,
+                            errorMask: errorMask);
+                    }
                     if (item.CrimeGoldMultiplier_Property.HasBeenSet)
                     {
                         FloatXmlTranslation.Instance.Write(

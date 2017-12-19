@@ -37,26 +37,26 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Icon
-        protected readonly INotifyingItem<FilePath> _Icon = NotifyingItem.Factory<FilePath>();
-        public INotifyingItem<FilePath> Icon_Property => _Icon;
+        protected readonly INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
+        public INotifyingSetItem<FilePath> Icon_Property => _Icon;
         public FilePath Icon
         {
             get => this._Icon.Item;
             set => this._Icon.Set(value);
         }
-        INotifyingItem<FilePath> IEye.Icon_Property => this.Icon_Property;
-        INotifyingItemGetter<FilePath> IEyeGetter.Icon_Property => this.Icon_Property;
+        INotifyingSetItem<FilePath> IEye.Icon_Property => this.Icon_Property;
+        INotifyingSetItemGetter<FilePath> IEyeGetter.Icon_Property => this.Icon_Property;
         #endregion
         #region Flags
-        protected readonly INotifyingItem<Eye.Flag> _Flags = NotifyingItem.Factory<Eye.Flag>();
-        public INotifyingItem<Eye.Flag> Flags_Property => _Flags;
+        protected readonly INotifyingSetItem<Eye.Flag> _Flags = NotifyingSetItem.Factory<Eye.Flag>(markAsSet: false);
+        public INotifyingSetItem<Eye.Flag> Flags_Property => _Flags;
         public Eye.Flag Flags
         {
             get => this._Flags.Item;
             set => this._Flags.Set(value);
         }
-        INotifyingItem<Eye.Flag> IEye.Flags_Property => this.Flags_Property;
-        INotifyingItemGetter<Eye.Flag> IEyeGetter.Flags_Property => this.Flags_Property;
+        INotifyingSetItem<Eye.Flag> IEye.Flags_Property => this.Flags_Property;
+        INotifyingSetItemGetter<Eye.Flag> IEyeGetter.Flags_Property => this.Flags_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -114,16 +114,30 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (!object.Equals(Icon, rhs.Icon)) return false;
-            if (Flags != rhs.Flags) return false;
+            if (Icon_Property.HasBeenSet != rhs.Icon_Property.HasBeenSet) return false;
+            if (Icon_Property.HasBeenSet)
+            {
+                if (!object.Equals(Icon, rhs.Icon)) return false;
+            }
+            if (Flags_Property.HasBeenSet != rhs.Flags_Property.HasBeenSet) return false;
+            if (Flags_Property.HasBeenSet)
+            {
+                if (Flags != rhs.Flags) return false;
+            }
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = HashHelper.GetHashCode(Icon).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
+            if (Icon_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Icon).CombineHashCode(ret);
+            }
+            if (Flags_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
+            }
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -975,10 +989,10 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IEye : IEyeGetter, INamedMajorRecord, ILoquiClass<IEye, IEyeGetter>, ILoquiClass<Eye, IEyeGetter>
     {
         new FilePath Icon { get; set; }
-        new INotifyingItem<FilePath> Icon_Property { get; }
+        new INotifyingSetItem<FilePath> Icon_Property { get; }
 
         new Eye.Flag Flags { get; set; }
-        new INotifyingItem<Eye.Flag> Flags_Property { get; }
+        new INotifyingSetItem<Eye.Flag> Flags_Property { get; }
 
     }
 
@@ -986,12 +1000,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Icon
         FilePath Icon { get; }
-        INotifyingItemGetter<FilePath> Icon_Property { get; }
+        INotifyingSetItemGetter<FilePath> Icon_Property { get; }
 
         #endregion
         #region Flags
         Eye.Flag Flags { get; }
-        INotifyingItemGetter<Eye.Flag> Flags_Property { get; }
+        INotifyingSetItemGetter<Eye.Flag> Flags_Property { get; }
 
         #endregion
 
@@ -1279,8 +1293,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Icon_Property.Set(
-                        value: rhs.Icon,
+                    item.Icon_Property.SetToWithDefault(
+                        rhs: rhs.Icon_Property,
+                        def: def?.Icon_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1293,8 +1308,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Flags_Property.Set(
-                        value: rhs.Flags,
+                    item.Flags_Property.SetToWithDefault(
+                        rhs: rhs.Flags_Property,
+                        def: def?.Flags_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1317,9 +1333,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Eye_FieldIndex.Icon:
+                    obj.Icon_Property.HasBeenSet = on;
+                    break;
                 case Eye_FieldIndex.Flags:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
+                    obj.Flags_Property.HasBeenSet = on;
+                    break;
                 default:
                     NamedMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
@@ -1335,10 +1353,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Eye_FieldIndex.Icon:
-                    obj.Icon = default(FilePath);
+                    obj.Icon_Property.Unset(cmds);
                     break;
                 case Eye_FieldIndex.Flags:
-                    obj.Flags = default(Eye.Flag);
+                    obj.Flags_Property.Unset(cmds);
                     break;
                 default:
                     NamedMajorRecordCommon.UnsetNthObject(index, obj);
@@ -1354,8 +1372,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Eye_FieldIndex.Icon:
+                    return obj.Icon_Property.HasBeenSet;
                 case Eye_FieldIndex.Flags:
-                    return true;
+                    return obj.Flags_Property.HasBeenSet;
                 default:
                     return NamedMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -1381,8 +1400,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEye item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.Icon = default(FilePath);
-            item.Flags = default(Eye.Flag);
+            item.Icon_Property.Unset(cmds.ToUnsetParams());
+            item.Flags_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static Eye_Mask<bool> GetEqualsMask(
@@ -1400,8 +1419,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Eye_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Icon = object.Equals(item.Icon, rhs.Icon);
-            ret.Flags = item.Flags == rhs.Flags;
+            ret.Icon = item.Icon_Property.Equals(rhs.Icon_Property, (l, r) => object.Equals(l, r));
+            ret.Flags = item.Flags_Property.Equals(rhs.Flags_Property, (l, r) => l == r);
             NamedMajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -1448,14 +1467,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IEyeGetter item,
             Eye_Mask<bool?> checkMask)
         {
+            if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_Property.HasBeenSet) return false;
+            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_Property.HasBeenSet) return false;
             return true;
         }
 
         public static Eye_Mask<bool> GetHasBeenSetMask(IEyeGetter item)
         {
             var ret = new Eye_Mask<bool>();
-            ret.Icon = true;
-            ret.Flags = true;
+            ret.Icon = item.Icon_Property.HasBeenSet;
+            ret.Flags = item.Flags_Property.HasBeenSet;
             return ret;
         }
 
@@ -1491,18 +1512,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.Eye");
                     }
-                    FilePathXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Icon),
-                        item: item.Icon_Property,
-                        fieldIndex: (int)Eye_FieldIndex.Icon,
-                        errorMask: errorMask);
-                    EnumXmlTranslation<Eye.Flag>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Flags),
-                        item: item.Flags_Property,
-                        fieldIndex: (int)Eye_FieldIndex.Flags,
-                        errorMask: errorMask);
+                    if (item.Icon_Property.HasBeenSet)
+                    {
+                        FilePathXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Icon),
+                            item: item.Icon_Property,
+                            fieldIndex: (int)Eye_FieldIndex.Icon,
+                            errorMask: errorMask);
+                    }
+                    if (item.Flags_Property.HasBeenSet)
+                    {
+                        EnumXmlTranslation<Eye.Flag>.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Flags),
+                            item: item.Flags_Property,
+                            fieldIndex: (int)Eye_FieldIndex.Flags,
+                            errorMask: errorMask);
+                    }
                 }
             }
             catch (Exception ex)

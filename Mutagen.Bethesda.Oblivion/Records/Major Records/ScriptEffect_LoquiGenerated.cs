@@ -81,15 +81,15 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<ScriptEffect.Flag> IScriptEffectGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region Name
-        protected readonly INotifyingItem<String> _Name = NotifyingItem.Factory<String>();
-        public INotifyingItem<String> Name_Property => _Name;
+        protected readonly INotifyingSetItem<String> _Name = NotifyingSetItem.Factory<String>(markAsSet: false);
+        public INotifyingSetItem<String> Name_Property => _Name;
         public String Name
         {
             get => this._Name.Item;
             set => this._Name.Set(value);
         }
-        INotifyingItem<String> IScriptEffect.Name_Property => this.Name_Property;
-        INotifyingItemGetter<String> IScriptEffectGetter.Name_Property => this.Name_Property;
+        INotifyingSetItem<String> IScriptEffect.Name_Property => this.Name_Property;
+        INotifyingSetItemGetter<String> IScriptEffectGetter.Name_Property => this.Name_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -154,7 +154,11 @@ namespace Mutagen.Bethesda.Oblivion
             if (MagicSchool != rhs.MagicSchool) return false;
             if (VisualEffect != rhs.VisualEffect) return false;
             if (Flags != rhs.Flags) return false;
-            if (!object.Equals(Name, rhs.Name)) return false;
+            if (Name_Property.HasBeenSet != rhs.Name_Property.HasBeenSet) return false;
+            if (Name_Property.HasBeenSet)
+            {
+                if (!object.Equals(Name, rhs.Name)) return false;
+            }
             return true;
         }
 
@@ -165,7 +169,10 @@ namespace Mutagen.Bethesda.Oblivion
             ret = HashHelper.GetHashCode(MagicSchool).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(VisualEffect).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
+            if (Name_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
+            }
             return ret;
         }
 
@@ -1062,7 +1069,7 @@ namespace Mutagen.Bethesda.Oblivion
         new INotifyingItem<ScriptEffect.Flag> Flags_Property { get; }
 
         new String Name { get; set; }
-        new INotifyingItem<String> Name_Property { get; }
+        new INotifyingSetItem<String> Name_Property { get; }
 
     }
 
@@ -1090,7 +1097,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Name
         String Name { get; }
-        INotifyingItemGetter<String> Name_Property { get; }
+        INotifyingSetItemGetter<String> Name_Property { get; }
 
         #endregion
 
@@ -1461,8 +1468,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Name_Property.Set(
-                        value: rhs.Name,
+                    item.Name_Property.SetToWithDefault(
+                        rhs: rhs.Name_Property,
+                        def: def?.Name_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1488,9 +1496,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ScriptEffect_FieldIndex.MagicSchool:
                 case ScriptEffect_FieldIndex.VisualEffect:
                 case ScriptEffect_FieldIndex.Flags:
-                case ScriptEffect_FieldIndex.Name:
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
+                case ScriptEffect_FieldIndex.Name:
+                    obj.Name_Property.HasBeenSet = on;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1517,7 +1527,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Flags = default(ScriptEffect.Flag);
                     break;
                 case ScriptEffect_FieldIndex.Name:
-                    obj.Name = default(String);
+                    obj.Name_Property.Unset(cmds);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1535,8 +1545,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ScriptEffect_FieldIndex.MagicSchool:
                 case ScriptEffect_FieldIndex.VisualEffect:
                 case ScriptEffect_FieldIndex.Flags:
-                case ScriptEffect_FieldIndex.Name:
                     return true;
+                case ScriptEffect_FieldIndex.Name:
+                    return obj.Name_Property.HasBeenSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1572,7 +1583,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.MagicSchool = default(MagicSchool);
             item.VisualEffect = default(FormID);
             item.Flags = default(ScriptEffect.Flag);
-            item.Name = default(String);
+            item.Name_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static ScriptEffect_Mask<bool> GetEqualsMask(
@@ -1594,7 +1605,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.MagicSchool = item.MagicSchool == rhs.MagicSchool;
             ret.VisualEffect = item.VisualEffect == rhs.VisualEffect;
             ret.Flags = item.Flags == rhs.Flags;
-            ret.Name = object.Equals(item.Name, rhs.Name);
+            ret.Name = item.Name_Property.Equals(rhs.Name_Property, (l, r) => object.Equals(l, r));
         }
 
         public static string ToString(
@@ -1652,6 +1663,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IScriptEffectGetter item,
             ScriptEffect_Mask<bool?> checkMask)
         {
+            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_Property.HasBeenSet) return false;
             return true;
         }
 
@@ -1662,7 +1674,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.MagicSchool = true;
             ret.VisualEffect = true;
             ret.Flags = true;
-            ret.Name = true;
+            ret.Name = item.Name_Property.HasBeenSet;
             return ret;
         }
 
@@ -1722,12 +1734,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item: item.Flags_Property,
                         fieldIndex: (int)ScriptEffect_FieldIndex.Flags,
                         errorMask: errorMask);
-                    StringXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Name),
-                        item: item.Name_Property,
-                        fieldIndex: (int)ScriptEffect_FieldIndex.Name,
-                        errorMask: errorMask);
+                    if (item.Name_Property.HasBeenSet)
+                    {
+                        StringXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Name),
+                            item: item.Name_Property,
+                            fieldIndex: (int)ScriptEffect_FieldIndex.Name,
+                            errorMask: errorMask);
+                    }
                 }
             }
             catch (Exception ex)

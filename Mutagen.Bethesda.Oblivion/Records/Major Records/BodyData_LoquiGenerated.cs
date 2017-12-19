@@ -756,6 +756,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "MODL":
+                case "MODB":
                     if (!first) return false;
                     item._Model.SetIfSucceeded(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         frame: frame.Spawn(snapToFinalPosition: false),
@@ -763,9 +764,10 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 case "INDX":
+                case "ICON":
                     var BodyPartstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<BodyPart, MaskItem<Exception, BodyPart_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
-                        triggeringRecord: BodyData_Registration.INDX_HEADER,
+                        triggeringRecord: BodyPart_Registration.TriggeringRecordTypes,
                         fieldIndex: (int)BodyData_FieldIndex.BodyParts,
                         objType: ObjectType.Subrecord,
                         errorMask: errorMask,
@@ -1109,8 +1111,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
+        public static readonly RecordType MODB_HEADER = new RecordType("MODB");
         public static readonly RecordType INDX_HEADER = new RecordType("INDX");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = MODL_HEADER;
+        public static readonly RecordType ICON_HEADER = new RecordType("ICON");
+        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
+        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        {
+            return new CollectionGetterWrapper<RecordType>(
+                new HashSet<RecordType>(
+                    new RecordType[]
+                    {
+                        MODL_HEADER,
+                        MODB_HEADER
+                    })
+            );
+        });
         public const int NumStructFields = 0;
         public const int NumTypedFields = 2;
         #region Interface

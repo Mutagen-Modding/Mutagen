@@ -69,15 +69,15 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte[]> IMajorRecordGetter.Version_Property => this.Version_Property;
         #endregion
         #region EditorID
-        protected readonly INotifyingItem<String> _EditorID = NotifyingItem.Factory<String>();
-        public INotifyingItem<String> EditorID_Property => _EditorID;
+        protected readonly INotifyingSetItem<String> _EditorID = NotifyingSetItem.Factory<String>(markAsSet: false);
+        public INotifyingSetItem<String> EditorID_Property => _EditorID;
         public String EditorID
         {
             get => this._EditorID.Item;
             set => this._EditorID.Set(value);
         }
-        INotifyingItem<String> IMajorRecord.EditorID_Property => this.EditorID_Property;
-        INotifyingItemGetter<String> IMajorRecordGetter.EditorID_Property => this.EditorID_Property;
+        INotifyingSetItem<String> IMajorRecord.EditorID_Property => this.EditorID_Property;
+        INotifyingSetItemGetter<String> IMajorRecordGetter.EditorID_Property => this.EditorID_Property;
         #endregion
         #region RecordType
         protected readonly INotifyingItem<RecordType> _RecordType = NotifyingItem.Factory<RecordType>();
@@ -151,7 +151,11 @@ namespace Mutagen.Bethesda.Oblivion
             if (!MajorRecordFlags.EqualsFast(rhs.MajorRecordFlags)) return false;
             if (FormID != rhs.FormID) return false;
             if (!Version.EqualsFast(rhs.Version)) return false;
-            if (!object.Equals(EditorID, rhs.EditorID)) return false;
+            if (EditorID_Property.HasBeenSet != rhs.EditorID_Property.HasBeenSet) return false;
+            if (EditorID_Property.HasBeenSet)
+            {
+                if (!object.Equals(EditorID, rhs.EditorID)) return false;
+            }
             if (!object.Equals(RecordType, rhs.RecordType)) return false;
             return true;
         }
@@ -162,7 +166,10 @@ namespace Mutagen.Bethesda.Oblivion
             ret = HashHelper.GetHashCode(MajorRecordFlags).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(FormID).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Version).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(EditorID).CombineHashCode(ret);
+            if (EditorID_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(EditorID).CombineHashCode(ret);
+            }
             ret = HashHelper.GetHashCode(RecordType).CombineHashCode(ret);
             return ret;
         }
@@ -685,7 +692,7 @@ namespace Mutagen.Bethesda.Oblivion
         new INotifyingItem<Byte[]> Version_Property { get; }
 
         new String EditorID { get; set; }
-        new INotifyingItem<String> EditorID_Property { get; }
+        new INotifyingSetItem<String> EditorID_Property { get; }
 
     }
 
@@ -708,7 +715,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region EditorID
         String EditorID { get; }
-        INotifyingItemGetter<String> EditorID_Property { get; }
+        INotifyingSetItemGetter<String> EditorID_Property { get; }
 
         #endregion
         #region RecordType
@@ -1056,8 +1063,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.EditorID_Property.Set(
-                        value: rhs.EditorID,
+                    item.EditorID_Property.SetToWithDefault(
+                        rhs: rhs.EditorID_Property,
+                        def: def?.EditorID_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1084,9 +1092,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MajorRecord_FieldIndex.MajorRecordFlags:
                 case MajorRecord_FieldIndex.FormID:
                 case MajorRecord_FieldIndex.Version:
-                case MajorRecord_FieldIndex.EditorID:
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
+                case MajorRecord_FieldIndex.EditorID:
+                    obj.EditorID_Property.HasBeenSet = on;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1111,7 +1121,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Version = default(Byte[]);
                     break;
                 case MajorRecord_FieldIndex.EditorID:
-                    obj.EditorID = default(String);
+                    obj.EditorID_Property.Unset(cmds);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1128,9 +1138,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MajorRecord_FieldIndex.MajorRecordFlags:
                 case MajorRecord_FieldIndex.FormID:
                 case MajorRecord_FieldIndex.Version:
-                case MajorRecord_FieldIndex.EditorID:
                 case MajorRecord_FieldIndex.RecordType:
                     return true;
+                case MajorRecord_FieldIndex.EditorID:
+                    return obj.EditorID_Property.HasBeenSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1164,7 +1175,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.MajorRecordFlags = default(Byte[]);
             item.Version = default(Byte[]);
-            item.EditorID = default(String);
+            item.EditorID_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static MajorRecord_Mask<bool> GetEqualsMask(
@@ -1185,7 +1196,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.MajorRecordFlags = item.MajorRecordFlags.EqualsFast(rhs.MajorRecordFlags);
             ret.FormID = item.FormID == rhs.FormID;
             ret.Version = item.Version.EqualsFast(rhs.Version);
-            ret.EditorID = object.Equals(item.EditorID, rhs.EditorID);
+            ret.EditorID = item.EditorID_Property.Equals(rhs.EditorID_Property, (l, r) => object.Equals(l, r));
             ret.RecordType = object.Equals(item.RecordType, rhs.RecordType);
         }
 
@@ -1244,6 +1255,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IMajorRecordGetter item,
             MajorRecord_Mask<bool?> checkMask)
         {
+            if (checkMask.EditorID.HasValue && checkMask.EditorID.Value != item.EditorID_Property.HasBeenSet) return false;
             return true;
         }
 
@@ -1253,7 +1265,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.MajorRecordFlags = true;
             ret.FormID = true;
             ret.Version = true;
-            ret.EditorID = true;
+            ret.EditorID = item.EditorID_Property.HasBeenSet;
             ret.RecordType = true;
             return ret;
         }
@@ -1308,12 +1320,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item: item.Version_Property,
                         fieldIndex: (int)MajorRecord_FieldIndex.Version,
                         errorMask: errorMask);
-                    StringXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.EditorID),
-                        item: item.EditorID_Property,
-                        fieldIndex: (int)MajorRecord_FieldIndex.EditorID,
-                        errorMask: errorMask);
+                    if (item.EditorID_Property.HasBeenSet)
+                    {
+                        StringXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.EditorID),
+                            item: item.EditorID_Property,
+                            fieldIndex: (int)MajorRecord_FieldIndex.EditorID,
+                            errorMask: errorMask);
+                    }
                 }
             }
             catch (Exception ex)
