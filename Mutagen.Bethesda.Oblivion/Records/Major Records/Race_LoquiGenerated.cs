@@ -5197,6 +5197,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
             }
         }
+
+        public override bool IsInError()
+        {
+            if (Overall != null) return true;
+            if (Description != null) return true;
+            if (Spells != null) return true;
+            if (Relations != null) return true;
+            if (SkillBoosts != null) return true;
+            if (Fluff != null) return true;
+            if (MaleHeight != null) return true;
+            if (FemaleHeight != null) return true;
+            if (MaleWeight != null) return true;
+            if (FemaleWeight != null) return true;
+            if (Flags != null) return true;
+            if (Voices != null) return true;
+            if (DefaultHair != null) return true;
+            if (DefaultHairColor != null) return true;
+            if (FaceGenMainClamp != null) return true;
+            if (FaceGenFaceClamp != null) return true;
+            if (RaceStats != null) return true;
+            if (FaceData != null) return true;
+            if (BodyData != null) return true;
+            if (Hairs != null) return true;
+            if (Eyes != null) return true;
+            if (FaceGenData != null) return true;
+            if (Unknown != null) return true;
+            return false;
+        }
         #endregion
 
         #region To String

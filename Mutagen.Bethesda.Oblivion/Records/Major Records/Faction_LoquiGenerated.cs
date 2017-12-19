@@ -2290,6 +2290,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
             }
         }
+
+        public override bool IsInError()
+        {
+            if (Overall != null) return true;
+            if (Relations != null) return true;
+            if (Flags != null) return true;
+            if (CrimeGoldMultiplier != null) return true;
+            if (Ranks != null) return true;
+            return false;
+        }
         #endregion
 
         #region To String

@@ -2758,6 +2758,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
             }
         }
+
+        public override bool IsInError()
+        {
+            if (Overall != null) return true;
+            if (Description != null) return true;
+            if (Icon != null) return true;
+            if (PrimaryAttributes != null) return true;
+            if (Specialization != null) return true;
+            if (SecondaryAttributes != null) return true;
+            if (Flags != null) return true;
+            if (ClassServices != null) return true;
+            if (Training != null) return true;
+            return false;
+        }
         #endregion
 
         #region To String

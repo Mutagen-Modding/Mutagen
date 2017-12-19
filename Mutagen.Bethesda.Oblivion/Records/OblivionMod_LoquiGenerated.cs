@@ -3620,6 +3620,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
+
+        public bool IsInError()
+        {
+            if (Overall != null) return true;
+            if (TES4 != null) return true;
+            if (GameSettings != null) return true;
+            if (Globals != null) return true;
+            if (Classes != null) return true;
+            if (Factions != null) return true;
+            if (Hairs != null) return true;
+            if (Eyes != null) return true;
+            if (Races != null) return true;
+            if (Sounds != null) return true;
+            if (Skills != null) return true;
+            if (MagicEffects != null) return true;
+            if (Scripts != null) return true;
+            if (LandTextures != null) return true;
+            return false;
+        }
         #endregion
 
         #region To String

@@ -1049,6 +1049,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
             }
         }
+
+        public override bool IsInError()
+        {
+            if (Overall != null) return true;
+            return false;
+        }
         #endregion
 
         #region To String

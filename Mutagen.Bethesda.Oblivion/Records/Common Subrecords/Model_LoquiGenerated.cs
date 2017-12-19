@@ -1675,6 +1675,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
+
+        public bool IsInError()
+        {
+            if (Overall != null) return true;
+            if (File != null) return true;
+            if (BoundRadius != null) return true;
+            return false;
+        }
         #endregion
 
         #region To String

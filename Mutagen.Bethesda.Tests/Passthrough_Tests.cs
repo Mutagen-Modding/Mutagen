@@ -50,14 +50,18 @@ namespace Mutagen.Bethesda.Tests
                 substitutions.Add(24134, 0);
                 RangeCollection sourceSkip = new RangeCollection();
                 RangeCollection targetSkip = new RangeCollection();
-                AssertFilesEqual(
+                var lowPrioEx = AssertFilesEqual(
                     Properties.Settings.Default.OblivionESM, 
                     outputPath, 
                     substitutions,
                     sourceSkips: sourceSkip,
                     targetSkips: targetSkip);
-                Assert.Null(inputErrMask);
-                Assert.Null(outputErrMask);
+                Assert.False(inputErrMask?.IsInError() ?? false);
+                Assert.False(outputErrMask?.IsInError() ?? false);
+                if (lowPrioEx != null)
+                {
+                    throw lowPrioEx;
+                }
             }
         }
 
@@ -123,7 +127,7 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
-        private void AssertFilesEqual(
+        private Exception AssertFilesEqual(
             string prototypePath,
             string path2,
             Substitutions substitutions = null,
@@ -147,14 +151,15 @@ namespace Mutagen.Bethesda.Tests
                     }
                     if (prototypeReader.Position != prototypeReader.Length)
                     {
-                        throw new ArgumentException($"Stream {prototypePath} had more data past position 0x{prototypeReader.Position} than {path2}");
+                        return new ArgumentException($"Stream {prototypePath} had more data past position 0x{prototypeReader.Position} than {path2}");
                     }
                     if (reader2.Position != reader2.Length)
                     {
-                        throw new ArgumentException($"Stream {path2} had more data past position 0x{reader2.Position} than {prototypePath}");
+                        return new ArgumentException($"Stream {path2} had more data past position 0x{reader2.Position} than {prototypePath}");
                     }
                 }
             }
+            return null;
         }
 
         private IEnumerable<RangeInt64> ProcessDifferences(

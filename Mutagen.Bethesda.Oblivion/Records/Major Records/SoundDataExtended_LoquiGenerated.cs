@@ -1889,6 +1889,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
             }
         }
+
+        public override bool IsInError()
+        {
+            if (Overall != null) return true;
+            if (StaticAttenuation != null) return true;
+            if (StopTime != null) return true;
+            if (StartTime != null) return true;
+            return false;
+        }
         #endregion
 
         #region To String

@@ -2956,6 +2956,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
             }
         }
+
+        public override bool IsInError()
+        {
+            if (Overall != null) return true;
+            if (Skill != null) return true;
+            if (Description != null) return true;
+            if (Icon != null) return true;
+            if (Action != null) return true;
+            if (Attribute != null) return true;
+            if (Specialization != null) return true;
+            if (UseValueFirst != null) return true;
+            if (UseValueSecond != null) return true;
+            if (ApprenticeText != null) return true;
+            if (JourneymanText != null) return true;
+            if (ExpertText != null) return true;
+            if (MasterText != null) return true;
+            return false;
+        }
         #endregion
 
         #region To String

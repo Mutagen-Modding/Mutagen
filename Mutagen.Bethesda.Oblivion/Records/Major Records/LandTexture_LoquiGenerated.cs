@@ -2140,6 +2140,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
             }
         }
+
+        public override bool IsInError()
+        {
+            if (Overall != null) return true;
+            if (Icon != null) return true;
+            if (Havok != null) return true;
+            if (TextureSpecularExponent != null) return true;
+            if (PotentialGrass != null) return true;
+            return false;
+        }
         #endregion
 
         #region To String

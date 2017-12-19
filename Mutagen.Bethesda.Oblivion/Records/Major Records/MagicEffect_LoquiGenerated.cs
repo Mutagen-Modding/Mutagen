@@ -3408,6 +3408,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
             }
         }
+
+        public override bool IsInError()
+        {
+            if (Overall != null) return true;
+            if (Description != null) return true;
+            if (Icon != null) return true;
+            if (Model != null) return true;
+            if (Flags != null) return true;
+            if (BaseCost != null) return true;
+            if (Unused != null) return true;
+            if (MagicSchool != null) return true;
+            if (Resistance != null) return true;
+            if (CounterEffectCount != null) return true;
+            if (Light != null) return true;
+            if (ProjectileSpeed != null) return true;
+            if (EffectShader != null) return true;
+            if (SubData != null) return true;
+            if (CounterEffects != null) return true;
+            return false;
+        }
         #endregion
 
         #region To String

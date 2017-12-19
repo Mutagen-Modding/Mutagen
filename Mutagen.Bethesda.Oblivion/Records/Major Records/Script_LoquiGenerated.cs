@@ -2415,6 +2415,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
             }
         }
+
+        public override bool IsInError()
+        {
+            if (Overall != null) return true;
+            if (MetadataSummary != null) return true;
+            if (CompiledScript != null) return true;
+            if (SourceCode != null) return true;
+            if (LocalVariables != null) return true;
+            if (References != null) return true;
+            return false;
+        }
         #endregion
 
         #region To String

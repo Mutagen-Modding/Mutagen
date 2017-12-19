@@ -2343,6 +2343,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
+
+        public bool IsInError()
+        {
+            if (Overall != null) return true;
+            if (Strength != null) return true;
+            if (Intelligence != null) return true;
+            if (Willpower != null) return true;
+            if (Agility != null) return true;
+            if (Speed != null) return true;
+            if (Endurance != null) return true;
+            if (Personality != null) return true;
+            if (Luck != null) return true;
+            return false;
+        }
         #endregion
 
         #region To String

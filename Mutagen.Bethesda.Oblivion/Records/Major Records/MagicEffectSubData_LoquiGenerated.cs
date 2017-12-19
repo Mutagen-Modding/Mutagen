@@ -2225,6 +2225,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
+
+        public bool IsInError()
+        {
+            if (Overall != null) return true;
+            if (EnchantEffect != null) return true;
+            if (CastingSound != null) return true;
+            if (BoltSound != null) return true;
+            if (HitSound != null) return true;
+            if (AreaSound != null) return true;
+            if (ConstantEffectEnchantmentFactor != null) return true;
+            if (ConstantEffectBarterFactor != null) return true;
+            return false;
+        }
         #endregion
 
         #region To String

@@ -2255,6 +2255,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
             }
         }
+
+        public override bool IsInError()
+        {
+            if (Overall != null) return true;
+            if (Type != null) return true;
+            if (ChargeAmount != null) return true;
+            if (EnchantCost != null) return true;
+            if (Flags != null) return true;
+            if (Effects != null) return true;
+            return false;
+        }
         #endregion
 
         #region To String

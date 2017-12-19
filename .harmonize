@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>a8558c57c52089a52c2765ce726677f00b0c498f</Sha>
+         <Sha>f989b600c9cf646c29a3e53c643b264c2cf2926a</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>12-12-2017 18:52:15</CommitDate>
-         <Description>ObjectGeneration.LoadField optional throwException bool</Description>
+         <CommitDate>12-18-2017 19:26:07</CommitDate>
+         <Description>ErrorMask.IsInError()</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

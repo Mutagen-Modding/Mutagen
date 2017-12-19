@@ -1335,6 +1335,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
             }
         }
+
+        public override bool IsInError()
+        {
+            if (Overall != null) return true;
+            if (TypeChar != null) return true;
+            if (RawFloat != null) return true;
+            return false;
+        }
         #endregion
 
         #region To String

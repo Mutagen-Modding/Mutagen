@@ -1923,6 +1923,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
+
+        public bool IsInError()
+        {
+            if (Overall != null) return true;
+            if (RankNumber != null) return true;
+            if (MaleName != null) return true;
+            if (FemaleName != null) return true;
+            if (Insignia != null) return true;
+            return false;
+        }
         #endregion
 
         #region To String
