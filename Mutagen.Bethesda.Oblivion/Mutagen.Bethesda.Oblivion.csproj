@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="us-ascii"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -184,15 +184,6 @@
     <Compile Include="Records\Major Records\MagicEffect_LoquiGenerated.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\MajorRecord.cs">
-      <DependentUpon>MajorRecord.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\MajorRecord_LoquiGenerated.cs">
-      <DependentUpon>MajorRecord.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\NamedMajorRecord_LoquiGenerated.cs">
-      <DependentUpon>NamedMajorRecord.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\Race.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
@@ -257,7 +248,6 @@
     <Compile Include="Records\OblivionMod_LoquiGenerated.cs">
       <DependentUpon>OblivionMod.xml</DependentUpon>
     </Compile>
-    <Compile Include="ProtocolDefinition_Oblivion.cs" />
     <Compile Include="Utility.cs" />
     <Compile Include="Records\Major Records\ScriptReference_LoquiGenerated.cs">
       <DependentUpon>Script.xml</DependentUpon>
@@ -280,6 +270,7 @@
     <Compile Include="Records\Major Records\MagicEffectSubData_LoquiGenerated.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
+    <Compile Include="ProtocolDefinition_Oblivion.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Records\Common Subrecords\Model.xml">
@@ -325,12 +316,6 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\MagicEffect.xml">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Records\Major Records\MajorRecord.xml">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Records\Major Records\NamedMajorRecord.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Race.xml">

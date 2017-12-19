@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Race" objType="Record" recordType="RACE" baseClass="NamedMajorRecord" GUID="265136e6-60a6-4ade-a7c4-b31197fb95e5" ID="25">
+  <Object name="Race" objType="Record" recordType="RACE" baseClass="Bethesda.NamedMajorRecord" GUID="265136e6-60a6-4ade-a7c4-b31197fb95e5" ID="25">
     <Fields>
       <String name="Description" recordType="DESC" />
       <List name="Spells">

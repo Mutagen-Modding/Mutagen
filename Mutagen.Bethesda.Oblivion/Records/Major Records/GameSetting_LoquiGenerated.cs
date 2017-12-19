@@ -12,6 +12,8 @@ using Loqui;
 using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda;
+using Mutagen.Bethesda.Internals;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;

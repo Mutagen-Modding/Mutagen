@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Internals;
 
 namespace Mutagen.Bethesda.Oblivion
 {

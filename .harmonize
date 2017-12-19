@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>a8558c57c52089a52c2765ce726677f00b0c498f</Sha>
+         <Sha>47b95b74cbb8a0dd885d2821305b85b74b1fae7b</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>12-12-2017 18:52:15</CommitDate>
-         <Description>ObjectGeneration.LoadField optional throwException bool</Description>
+         <CommitDate>12-18-2017 18:56:36</CommitDate>
+         <Description>Merge branch 'Dev' into HarmonizeGit2</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

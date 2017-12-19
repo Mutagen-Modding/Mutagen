@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="MajorRecord" objType="Record" abstract="true" GUID="c30a3850-c815-4c80-b058-aadd0b17a147" ID="6">
+  <Object name="MajorRecord" objType="Record" abstract="true" GUID="1382b2d8-9016-424e-923f-502a4417cbc7" ID="1">
     <Fields>
       <ByteArray name="MajorRecordFlags" length="4" nullable="NotNull" />
       <FormID name="FormID" protected="true" />
       <ByteArray name="Version" length="4" nullable="NotNull" />
       <String name="EditorID" recordType="EDID" />
-      <UnsafeObject name="RecordType" derivative="true" >
+      <UnsafeObject name="RecordType" derivative="true">
         <TargetType>RecordType</TargetType>
       </UnsafeObject>
     </Fields>

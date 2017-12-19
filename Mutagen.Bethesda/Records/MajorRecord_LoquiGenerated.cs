@@ -11,7 +11,7 @@ using System.Text;
 using Loqui;
 using Noggog;
 using Noggog.Notifying;
-using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Internals;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -20,7 +20,7 @@ using Loqui.Xml;
 using System.Diagnostics;
 using Mutagen.Bethesda.Binary;
 
-namespace Mutagen.Bethesda.Oblivion
+namespace Mutagen.Bethesda
 {
     #region Class
     public abstract partial class MajorRecord : IMajorRecord, ILoquiObjectSetter, IEquatable<MajorRecord>
@@ -723,7 +723,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Internals
 {
     #region Field Index
     public enum MajorRecord_FieldIndex
@@ -741,14 +741,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly MajorRecord_Registration Instance = new MajorRecord_Registration();
 
-        public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
+        public static ProtocolKey ProtocolKey => ProtocolDefinition_Bethesda.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 6,
+            protocolKey: ProtocolDefinition_Bethesda.ProtocolKey,
+            msgID: 1,
             version: 0);
 
-        public const string GUID = "c30a3850-c815-4c80-b058-aadd0b17a147";
+        public const string GUID = "1382b2d8-9016-424e-923f-502a4417cbc7";
 
         public const ushort FieldCount = 5;
 
@@ -764,11 +764,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type CommonType = typeof(MajorRecordCommon);
 
-        public const string FullName = "Mutagen.Bethesda.Oblivion.MajorRecord";
+        public const string FullName = "Mutagen.Bethesda.MajorRecord";
 
         public const string Name = "MajorRecord";
 
-        public const string Namespace = "Mutagen.Bethesda.Oblivion";
+        public const string Namespace = "Mutagen.Bethesda";
 
         public const byte GenericCount = 0;
 
@@ -1284,11 +1284,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.MajorRecord"))
+                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.MajorRecord"))
                 {
                     if (name != null)
                     {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.MajorRecord");
+                        writer.WriteAttributeString("type", "Mutagen.Bethesda.MajorRecord");
                     }
                     ByteArrayXmlTranslation.Instance.Write(
                         writer: writer,
