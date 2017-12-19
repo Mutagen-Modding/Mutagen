@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Oblivion;
+using Mutagen.Bethesda;
+using Mutagen.Bethesda.Internals;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -4383,7 +4385,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     record: Race_Registration.RACE_HEADER,
                     type: ObjectType.Record))
                 {
-                    Write_Binary_Embedded(
+                    MajorRecordCommon.Write_Binary_Embedded(
                         item: item,
                         writer: writer,
                         errorMask: errorMask);
@@ -4400,17 +4402,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         #endregion
-
-        public static void Write_Binary_Embedded(
-            IRaceGetter item,
-            MutagenWriter writer,
-            Func<Race_ErrorMask> errorMask)
-        {
-            MajorRecordCommon.Write_Binary_Embedded(
-                item: item,
-                writer: writer,
-                errorMask: errorMask);
-        }
 
         public static void Write_Binary_RecordTypes(
             IRaceGetter item,

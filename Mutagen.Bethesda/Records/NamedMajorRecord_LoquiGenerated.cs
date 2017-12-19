@@ -11,7 +11,8 @@ using System.Text;
 using Loqui;
 using Noggog;
 using Noggog.Notifying;
-using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -20,7 +21,7 @@ using Loqui.Xml;
 using System.Diagnostics;
 using Mutagen.Bethesda.Binary;
 
-namespace Mutagen.Bethesda.Oblivion
+namespace Mutagen.Bethesda
 {
     #region Class
     public abstract partial class NamedMajorRecord : MajorRecord, INamedMajorRecord, ILoquiObjectSetter, IEquatable<NamedMajorRecord>
@@ -550,7 +551,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Internals
 {
     #region Field Index
     public enum NamedMajorRecord_FieldIndex
@@ -564,14 +565,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly NamedMajorRecord_Registration Instance = new NamedMajorRecord_Registration();
 
-        public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
+        public static ProtocolKey ProtocolKey => ProtocolDefinition_Bethesda.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 17,
+            protocolKey: ProtocolDefinition_Bethesda.ProtocolKey,
+            msgID: 2,
             version: 0);
 
-        public const string GUID = "1de9f12c-ab00-42cf-aab3-9d778a849361";
+        public const string GUID = "492d4810-c631-49fc-8358-a68f4d1af93d";
 
         public const ushort FieldCount = 1;
 
@@ -587,11 +588,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type CommonType = typeof(NamedMajorRecordCommon);
 
-        public const string FullName = "Mutagen.Bethesda.Oblivion.NamedMajorRecord";
+        public const string FullName = "Mutagen.Bethesda.NamedMajorRecord";
 
         public const string Name = "NamedMajorRecord";
 
-        public const string Namespace = "Mutagen.Bethesda.Oblivion";
+        public const string Namespace = "Mutagen.Bethesda";
 
         public const byte GenericCount = 0;
 
@@ -994,11 +995,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.NamedMajorRecord"))
+                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.NamedMajorRecord"))
                 {
                     if (name != null)
                     {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.NamedMajorRecord");
+                        writer.WriteAttributeString("type", "Mutagen.Bethesda.NamedMajorRecord");
                     }
                     if (item.Name_Property.HasBeenSet)
                     {

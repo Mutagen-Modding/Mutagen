@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Enchantment" objType="Record" recordType="ENCH" baseClass="NamedMajorRecord" GUID="70c1ef12-4d5f-4f6a-8899-5518fcba82ed" ID="55">
+  <Object name="Enchantment" objType="Record" recordType="ENCH" baseClass="Bethesda.NamedMajorRecord" GUID="70c1ef12-4d5f-4f6a-8899-5518fcba82ed" ID="55">
     <Fields>
       <Data recordType="ENIT">
         <Fields>

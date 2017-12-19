@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="GameSetting" recordType="GMST" baseClass="MajorRecord" objType="Record" abstract="true" GUID="6ce31534-6f55-4575-a914-20e70476f6ad" ID="7">
+  <Object name="GameSetting" recordType="GMST" baseClass="Bethesda.MajorRecord" objType="Record" abstract="true" GUID="6ce31534-6f55-4575-a914-20e70476f6ad" ID="7">
     <Fields>
     </Fields>
   </Object>

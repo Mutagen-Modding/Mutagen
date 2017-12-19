@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Sound" objType="Record" baseClass="MajorRecord" recordType="SOUN" GUID="449f0e34-9512-4a5f-a83f-7e3dbb0cee42" ID="39">
+  <Object name="Sound" objType="Record" baseClass="Bethesda.MajorRecord" recordType="SOUN" GUID="449f0e34-9512-4a5f-a83f-7e3dbb0cee42" ID="39">
     <Fields>
       <FilePath name="File" recordType="FNAM" />
       <RefDirect name="Data" refName="SoundData" />

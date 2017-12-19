@@ -1835,10 +1835,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             try
             {
-                Write_Binary_Embedded(
-                    item: item,
-                    writer: writer,
-                    errorMask: errorMask);
                 Write_Binary_RecordTypes(
                     item: item,
                     writer: writer,
@@ -1851,13 +1847,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         #endregion
-
-        public static void Write_Binary_Embedded(
-            IScriptEffectGetter item,
-            MutagenWriter writer,
-            Func<ScriptEffect_ErrorMask> errorMask)
-        {
-        }
 
         public static void Write_Binary_RecordTypes(
             IScriptEffectGetter item,

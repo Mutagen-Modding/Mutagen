@@ -865,6 +865,16 @@ namespace Mutagen.Bethesda.Oblivion
                         item: ret,
                         frame: frame,
                         errorMask: errorMask);
+                    bool first = true;
+                    while (!frame.Complete)
+                    {
+                        if (!Fill_Binary_RecordTypes(
+                            item: ret,
+                            frame: frame,
+                            first: first,
+                            errorMask: errorMask)) break;
+                        first = false;
+                    }
                 }
             }
             catch (Exception ex)
@@ -880,6 +890,53 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<EnchantmentEffect_ErrorMask> errorMask)
         {
+        }
+
+        protected static bool Fill_Binary_RecordTypes(
+            EnchantmentEffect item,
+            MutagenFrame frame,
+            bool first,
+            Func<EnchantmentEffect_ErrorMask> errorMask)
+        {
+            var nextRecordType = HeaderTranslation.GetNextSubRecordType(
+                frame: frame,
+                contentLength: out var contentLength);
+            switch (nextRecordType.Type)
+            {
+                case "EFIT":
+                    if (!first) return false;
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    item._MagicEffect.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                        frame: frame,
+                        fieldIndex: (int)EnchantmentEffect_FieldIndex.MagicEffect,
+                        errorMask: errorMask));
+                    item._Magnitude.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                        frame: frame,
+                        fieldIndex: (int)EnchantmentEffect_FieldIndex.Magnitude,
+                        errorMask: errorMask));
+                    item._Area.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                        frame: frame,
+                        fieldIndex: (int)EnchantmentEffect_FieldIndex.Area,
+                        errorMask: errorMask));
+                    item._Duration.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                        frame: frame,
+                        fieldIndex: (int)EnchantmentEffect_FieldIndex.Duration,
+                        errorMask: errorMask));
+                    var TypetryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<EnchantmentEffect.EffectType>.Instance.Parse(
+                        frame: frame.Spawn(new ContentLength(4)),
+                        fieldIndex: (int)EnchantmentEffect_FieldIndex.Type,
+                        errorMask: errorMask);
+                    item._Type.SetIfSucceeded(TypetryGet);
+                    var ActorValuetryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
+                        frame: frame.Spawn(new ContentLength(4)),
+                        fieldIndex: (int)EnchantmentEffect_FieldIndex.ActorValue,
+                        errorMask: errorMask);
+                    item._ActorValue.SetIfSucceeded(ActorValuetryGet);
+                    break;
+                default:
+                    return false;
+            }
+            return true;
         }
 
         #endregion
@@ -1883,7 +1940,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             try
             {
-                Write_Binary_Embedded(
+                Write_Binary_RecordTypes(
                     item: item,
                     writer: writer,
                     errorMask: errorMask);
@@ -1896,11 +1953,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         #endregion
 
-        public static void Write_Binary_Embedded(
+        public static void Write_Binary_RecordTypes(
             IEnchantmentEffectGetter item,
             MutagenWriter writer,
             Func<EnchantmentEffect_ErrorMask> errorMask)
         {
+            using (HeaderExport.ExportSubRecordHeader(writer, EnchantmentEffect_Registration.EFIT_HEADER))
+            {
+                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.MagicEffect_Property,
+                    fieldIndex: (int)EnchantmentEffect_FieldIndex.MagicEffect,
+                    errorMask: errorMask);
+                Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Magnitude_Property,
+                    fieldIndex: (int)EnchantmentEffect_FieldIndex.Magnitude,
+                    errorMask: errorMask);
+                Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Area_Property,
+                    fieldIndex: (int)EnchantmentEffect_FieldIndex.Area,
+                    errorMask: errorMask);
+                Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Duration_Property,
+                    fieldIndex: (int)EnchantmentEffect_FieldIndex.Duration,
+                    errorMask: errorMask);
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<EnchantmentEffect.EffectType>.Instance.Write(
+                    writer,
+                    item.Type_Property,
+                    length: new ContentLength(4),
+                    fieldIndex: (int)EnchantmentEffect_FieldIndex.Type,
+                    errorMask: errorMask);
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
+                    writer,
+                    item.ActorValue_Property,
+                    length: new ContentLength(4),
+                    fieldIndex: (int)EnchantmentEffect_FieldIndex.ActorValue,
+                    errorMask: errorMask);
+            }
         }
 
         #endregion

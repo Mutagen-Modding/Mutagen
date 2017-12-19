@@ -1,5 +1,5 @@
 ﻿using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Internals;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,12 +8,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda.Oblivion
+namespace Mutagen.Bethesda
 {
     [DebuggerDisplay("{GetType().Name} {this.EditorID?.ToString()} {this.FormID.ToString()}")]
     public partial class MajorRecord
     {
-        internal static void Fill_Binary(
+        public static void Fill_Binary(
             MutagenFrame frame,
             MajorRecord record,
             bool doMasks,
