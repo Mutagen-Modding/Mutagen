@@ -1182,6 +1182,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum Script_FieldIndex
     {
+        MajorRecordFlags = 0,
+        FormID = 1,
+        Version = 2,
+        EditorID = 3,
+        RecordType = 4,
         MetadataSummary = 5,
         CompiledScript = 6,
         SourceCode = 7,
@@ -1904,6 +1909,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.LocalVariables = new MaskItem<bool, IEnumerable<MaskItem<bool, LocalVariable_Mask<bool>>>>(item.LocalVariables.HasBeenSet, item.LocalVariables.Select((i) => new MaskItem<bool, LocalVariable_Mask<bool>>(true, i.GetHasBeenSetMask())));
             ret.References = new MaskItem<bool, IEnumerable<MaskItem<bool, ScriptReference_Mask<bool>>>>(item.References.HasBeenSet, item.References.Select((i) => new MaskItem<bool, ScriptReference_Mask<bool>>(true, i.GetHasBeenSetMask())));
             return ret;
+        }
+
+        public static Script_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Script_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlags:
+                    return (Script_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormID:
+                    return (Script_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (Script_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (Script_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.RecordType:
+                    return (Script_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
         }
 
         #region XML Translation

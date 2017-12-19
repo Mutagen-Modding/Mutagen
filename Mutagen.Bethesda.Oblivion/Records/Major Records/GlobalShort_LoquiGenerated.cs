@@ -905,6 +905,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum GlobalShort_FieldIndex
     {
+        MajorRecordFlags = 0,
+        FormID = 1,
+        Version = 2,
+        EditorID = 3,
+        RecordType = 4,
+        TypeChar = 5,
+        RawFloat = 6,
         Data = 7,
     }
     #endregion
@@ -1297,6 +1304,60 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new GlobalShort_Mask<bool>();
             ret.Data = true;
             return ret;
+        }
+
+        public static GlobalShort_FieldIndex? ConvertFieldIndex(Global_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static GlobalShort_FieldIndex ConvertFieldIndex(Global_FieldIndex index)
+        {
+            switch (index)
+            {
+                case Global_FieldIndex.MajorRecordFlags:
+                    return (GlobalShort_FieldIndex)((int)index);
+                case Global_FieldIndex.FormID:
+                    return (GlobalShort_FieldIndex)((int)index);
+                case Global_FieldIndex.Version:
+                    return (GlobalShort_FieldIndex)((int)index);
+                case Global_FieldIndex.EditorID:
+                    return (GlobalShort_FieldIndex)((int)index);
+                case Global_FieldIndex.RecordType:
+                    return (GlobalShort_FieldIndex)((int)index);
+                case Global_FieldIndex.TypeChar:
+                    return (GlobalShort_FieldIndex)((int)index);
+                case Global_FieldIndex.RawFloat:
+                    return (GlobalShort_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+
+        public static GlobalShort_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static GlobalShort_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlags:
+                    return (GlobalShort_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormID:
+                    return (GlobalShort_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (GlobalShort_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (GlobalShort_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.RecordType:
+                    return (GlobalShort_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
         }
 
         #region XML Translation

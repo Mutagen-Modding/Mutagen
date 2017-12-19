@@ -1105,6 +1105,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum LandTexture_FieldIndex
     {
+        MajorRecordFlags = 0,
+        FormID = 1,
+        Version = 2,
+        EditorID = 3,
+        RecordType = 4,
         Icon = 5,
         Havok = 6,
         TextureSpecularExponent = 7,
@@ -1723,6 +1728,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.TextureSpecularExponent = item.TextureSpecularExponent_Property.HasBeenSet;
             ret.PotentialGrass = new MaskItem<bool, IEnumerable<bool>>(item.PotentialGrass.HasBeenSet, null);
             return ret;
+        }
+
+        public static LandTexture_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static LandTexture_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlags:
+                    return (LandTexture_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormID:
+                    return (LandTexture_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (LandTexture_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (LandTexture_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.RecordType:
+                    return (LandTexture_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
         }
 
         #region XML Translation

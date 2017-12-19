@@ -1090,6 +1090,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum SoundDataExtended_FieldIndex
     {
+        MinimumAttenuationDistance = 0,
+        MaximumAttenuationDistance = 1,
+        FrequencyAdjustment = 2,
+        Flags = 3,
         StaticAttenuation = 4,
         StopTime = 5,
         StartTime = 6,
@@ -1579,6 +1583,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.StopTime = true;
             ret.StartTime = true;
             return ret;
+        }
+
+        public static SoundDataExtended_FieldIndex? ConvertFieldIndex(SoundData_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static SoundDataExtended_FieldIndex ConvertFieldIndex(SoundData_FieldIndex index)
+        {
+            switch (index)
+            {
+                case SoundData_FieldIndex.MinimumAttenuationDistance:
+                    return (SoundDataExtended_FieldIndex)((int)index);
+                case SoundData_FieldIndex.MaximumAttenuationDistance:
+                    return (SoundDataExtended_FieldIndex)((int)index);
+                case SoundData_FieldIndex.FrequencyAdjustment:
+                    return (SoundDataExtended_FieldIndex)((int)index);
+                case SoundData_FieldIndex.Flags:
+                    return (SoundDataExtended_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
         }
 
         #region XML Translation

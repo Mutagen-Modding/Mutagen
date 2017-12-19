@@ -475,6 +475,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum GameSetting_FieldIndex
     {
+        MajorRecordFlags = 0,
+        FormID = 1,
+        Version = 2,
+        EditorID = 3,
+        RecordType = 4,
     }
     #endregion
 
@@ -836,6 +841,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var ret = new GameSetting_Mask<bool>();
             return ret;
+        }
+
+        public static GameSetting_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static GameSetting_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlags:
+                    return (GameSetting_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormID:
+                    return (GameSetting_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (GameSetting_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (GameSetting_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.RecordType:
+                    return (GameSetting_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
         }
 
         #region XML Translation

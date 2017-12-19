@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>9c2dae4a88921ba7cb0312b5b785ec4d74d7fe66</Sha>
+         <Sha>1e9c53b602d49baa2f1dbd812dd6309e9da5a690</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>12-18-2017 20:11:12</CommitDate>
-         <Description>TypeGeneration.Notifying and HasBeenSet members switched to HasBeenSetItems to better manage overrides</Description>
+         <CommitDate>12-19-2017 17:46:32</CommitDate>
+         <Description>Subclasses generate field index enum converters for base classes</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

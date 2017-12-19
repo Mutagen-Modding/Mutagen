@@ -1344,6 +1344,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum Class_FieldIndex
     {
+        MajorRecordFlags = 0,
+        FormID = 1,
+        Version = 2,
+        EditorID = 3,
+        RecordType = 4,
+        Name = 5,
         Description = 6,
         Icon = 7,
         PrimaryAttributes = 8,
@@ -2158,6 +2164,58 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.ClassServices = true;
             ret.Training = new MaskItem<bool, ClassTraining_Mask<bool>>(item.Training_Property.HasBeenSet, ClassTrainingCommon.GetHasBeenSetMask(item.Training_Property.Item));
             return ret;
+        }
+
+        public static Class_FieldIndex? ConvertFieldIndex(NamedMajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Class_FieldIndex ConvertFieldIndex(NamedMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case NamedMajorRecord_FieldIndex.MajorRecordFlags:
+                    return (Class_FieldIndex)((int)index);
+                case NamedMajorRecord_FieldIndex.FormID:
+                    return (Class_FieldIndex)((int)index);
+                case NamedMajorRecord_FieldIndex.Version:
+                    return (Class_FieldIndex)((int)index);
+                case NamedMajorRecord_FieldIndex.EditorID:
+                    return (Class_FieldIndex)((int)index);
+                case NamedMajorRecord_FieldIndex.RecordType:
+                    return (Class_FieldIndex)((int)index);
+                case NamedMajorRecord_FieldIndex.Name:
+                    return (Class_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+
+        public static Class_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Class_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlags:
+                    return (Class_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormID:
+                    return (Class_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (Class_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (Class_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.RecordType:
+                    return (Class_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
         }
 
         #region XML Translation

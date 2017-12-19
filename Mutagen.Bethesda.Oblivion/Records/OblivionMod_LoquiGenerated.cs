@@ -3805,6 +3805,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (MagicEffects != null) return true;
             if (Scripts != null) return true;
             if (LandTextures != null) return true;
+            if (Enchantments != null) return true;
             return false;
         }
         #endregion

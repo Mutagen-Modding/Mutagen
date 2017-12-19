@@ -872,6 +872,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum Spell_FieldIndex
     {
+        MajorRecordFlags = 0,
+        FormID = 1,
+        Version = 2,
+        EditorID = 3,
+        RecordType = 4,
+        Name = 5,
     }
     #endregion
 
@@ -1233,6 +1239,58 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var ret = new Spell_Mask<bool>();
             return ret;
+        }
+
+        public static Spell_FieldIndex? ConvertFieldIndex(NamedMajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Spell_FieldIndex ConvertFieldIndex(NamedMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case NamedMajorRecord_FieldIndex.MajorRecordFlags:
+                    return (Spell_FieldIndex)((int)index);
+                case NamedMajorRecord_FieldIndex.FormID:
+                    return (Spell_FieldIndex)((int)index);
+                case NamedMajorRecord_FieldIndex.Version:
+                    return (Spell_FieldIndex)((int)index);
+                case NamedMajorRecord_FieldIndex.EditorID:
+                    return (Spell_FieldIndex)((int)index);
+                case NamedMajorRecord_FieldIndex.RecordType:
+                    return (Spell_FieldIndex)((int)index);
+                case NamedMajorRecord_FieldIndex.Name:
+                    return (Spell_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+
+        public static Spell_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Spell_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlags:
+                    return (Spell_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormID:
+                    return (Spell_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (Spell_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (Spell_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.RecordType:
+                    return (Spell_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
         }
 
         #region XML Translation

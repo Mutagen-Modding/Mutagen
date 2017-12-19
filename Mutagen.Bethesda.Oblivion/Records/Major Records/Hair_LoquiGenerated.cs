@@ -1070,6 +1070,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum Hair_FieldIndex
     {
+        MajorRecordFlags = 0,
+        FormID = 1,
+        Version = 2,
+        EditorID = 3,
+        RecordType = 4,
+        Name = 5,
         Model = 6,
         Icon = 7,
         Flags = 8,
@@ -1613,6 +1619,58 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Icon = item.Icon_Property.HasBeenSet;
             ret.Flags = item.Flags_Property.HasBeenSet;
             return ret;
+        }
+
+        public static Hair_FieldIndex? ConvertFieldIndex(NamedMajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Hair_FieldIndex ConvertFieldIndex(NamedMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case NamedMajorRecord_FieldIndex.MajorRecordFlags:
+                    return (Hair_FieldIndex)((int)index);
+                case NamedMajorRecord_FieldIndex.FormID:
+                    return (Hair_FieldIndex)((int)index);
+                case NamedMajorRecord_FieldIndex.Version:
+                    return (Hair_FieldIndex)((int)index);
+                case NamedMajorRecord_FieldIndex.EditorID:
+                    return (Hair_FieldIndex)((int)index);
+                case NamedMajorRecord_FieldIndex.RecordType:
+                    return (Hair_FieldIndex)((int)index);
+                case NamedMajorRecord_FieldIndex.Name:
+                    return (Hair_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+
+        public static Hair_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Hair_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlags:
+                    return (Hair_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormID:
+                    return (Hair_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (Hair_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (Hair_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.RecordType:
+                    return (Hair_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
         }
 
         #region XML Translation
