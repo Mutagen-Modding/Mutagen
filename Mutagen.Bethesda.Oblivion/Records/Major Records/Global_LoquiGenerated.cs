@@ -508,7 +508,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static bool Fill_Binary_RecordTypes(
+        protected static TryGet<Global_FieldIndex?> Fill_Binary_RecordTypes(
             Global item,
             MutagenFrame frame,
             Func<Global_ErrorMask> errorMask)
@@ -527,22 +527,20 @@ namespace Mutagen.Bethesda.Oblivion
                             fieldIndex: (int)Global_FieldIndex.TypeChar,
                             errorMask: errorMask);
                     }
-                    break;
+                    return TryGet<Global_FieldIndex?>.Succeed(Global_FieldIndex.TypeChar);
                 case "FLTV":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._RawFloat.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)Global_FieldIndex.RawFloat,
                         errorMask: errorMask));
-                    break;
+                    return TryGet<Global_FieldIndex?>.Succeed(Global_FieldIndex.RawFloat);
                 default:
-                    MajorRecord.Fill_Binary_RecordTypes(
+                    return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
-                        errorMask: errorMask);
-                    break;
+                        errorMask: errorMask).Bubble((i) => GlobalCommon.ConvertFieldIndex(i));
             }
-            return true;
         }
 
         #endregion

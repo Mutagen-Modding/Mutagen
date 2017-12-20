@@ -2,8 +2,8 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Model" objType="Subrecord" GUID="b989dfe1-feb4-4492-9a94-897f6be0c20a" ID="20">
     <Fields>
-      <FilePath name="File" recordType="MODL" />
-      <Float name="BoundRadius" recordType="MODB" />
+      <FilePath name="File" recordType="MODL" hasBeenSet="False" />
+      <Float name="BoundRadius" recordType="MODB" hasBeenSet="False" />
     </Fields>
   </Object>
 </Loqui>

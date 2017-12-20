@@ -311,26 +311,26 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 if (typelessStruct)
                                 {
-                                    fg.AppendLine("bool first = true;");
+                                    fg.AppendLine($"{obj.FieldIndexName}? lastParsed = null;");
                                 }
                                 fg.AppendLine($"while (!frame.Complete)");
                                 using (new BraceWrapper(fg))
                                 {
                                     using (var args = new ArgsWrapper(fg,
-                                        $"if (!Fill_{ModuleNickname}_RecordTypes",
-                                        suffixLine: ") break"))
+                                        $"var parsed = Fill_{ModuleNickname}_RecordTypes"))
                                     {
                                         args.Add("item: ret");
                                         args.Add("frame: frame");
                                         if (typelessStruct)
                                         {
-                                            args.Add("first: first");
+                                            args.Add("lastParsed: lastParsed");
                                         }
                                         args.Add("errorMask: errorMask");
                                     }
+                                    fg.AppendLine("if (parsed.Failed) break;");
                                     if (typelessStruct)
                                     {
-                                        fg.AppendLine("first = false;");
+                                        fg.AppendLine("lastParsed = parsed.Value;");
                                     }
                                 }
                             }
@@ -391,14 +391,14 @@ namespace Mutagen.Bethesda.Generation
             if (HasRecordTypeFields(obj))
             {
                 using (var args = new FunctionWrapper(fg,
-                    $"protected static bool Fill_{ModuleNickname}_RecordTypes{obj.Mask_GenericClause(MaskType.Error)}",
+                    $"protected static TryGet<{obj.FieldIndexName}?> Fill_{ModuleNickname}_RecordTypes{obj.Mask_GenericClause(MaskType.Error)}",
                     wheres: obj.GenericTypes_ErrorMaskWheres))
                 {
                     args.Add($"{obj.ObjectName} item");
                     args.Add("MutagenFrame frame");
                     if (typelessStruct)
                     {
-                        args.Add($"bool first");
+                        args.Add($"{obj.FieldIndexName}? lastParsed");
                     }
                     args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
                 }
@@ -444,6 +444,7 @@ namespace Mutagen.Bethesda.Generation
                             }
 
                             if (!generator.ShouldGenerateCopyIn(field.Field)) continue;
+                            var dataSet = field.Field as DataType;
                             foreach (var gen in data.GenerationTypes)
                             {
                                 foreach (var trigger in gen.Key)
@@ -454,11 +455,25 @@ namespace Mutagen.Bethesda.Generation
                                 {
                                     if (typelessStruct && data.IsTriggerForObject)
                                     {
-                                        fg.AppendLine($"if (!first) return false;");
+                                        if (dataSet != null)
+                                        {
+                                            fg.AppendLine($"if (lastParsed.HasValue && lastParsed.Value >= {dataSet.SubFields.Last().IndexEnumName}) return TryGet<{obj.FieldIndexName}?>.Failure;");
+                                        }
+                                        else
+                                        {
+                                            fg.AppendLine($"if (lastParsed.HasValue && lastParsed.Value >= {field.Field.IndexEnumName}) return TryGet<{obj.FieldIndexName}?>.Failure;");
+                                        }
                                     }
 
                                     GenerateFillSnippet(obj, fg, gen.Value, generator);
-                                    fg.AppendLine("break;");
+                                    if (dataSet != null)
+                                    {
+                                        fg.AppendLine($"return TryGet<{obj.FieldIndexName}?>.Succeed({dataSet.SubFields.Last().IndexEnumName});");
+                                    }
+                                    else
+                                    {
+                                        fg.AppendLine($"return TryGet<{obj.FieldIndexName}?>.Succeed({field.Field.IndexEnumName});");
+                                    }
                                 }
                             }
                         }
@@ -491,7 +506,7 @@ namespace Mutagen.Bethesda.Generation
                                     using (new BraceWrapper(fg))
                                     {
                                         GenerateFillSnippet(obj, fg, field.Field, generator);
-                                        fg.AppendLine("break;");
+                                        fg.AppendLine($"return TryGet<{obj.FieldIndexName}?>.Failure;");
                                     }
                                 }
                             }
@@ -500,20 +515,20 @@ namespace Mutagen.Bethesda.Generation
                             if (obj.HasBaseObject && obj.BaseClassTrail().Any((b) => HasRecordTypeFields(b)))
                             {
                                 using (var args = new ArgsWrapper(fg,
-                                    $"{obj.BaseClass.Name}.Fill_{ModuleNickname}_RecordTypes"))
+                                    $"return {obj.BaseClass.Name}.Fill_{ModuleNickname}_RecordTypes",
+                                    suffixLine: $".Bubble((i) => {obj.ExtCommonName}.ConvertFieldIndex(i))"))
                                 {
                                     args.Add("item: item");
                                     args.Add("frame: frame");
                                     args.Add($"errorMask: errorMask");
                                 }
-                                fg.AppendLine("break;");
                             }
                             else
                             {
                                 var failOnUnknown = obj.GetObjectData().FailOnUnknown;
                                 if (mutaObjType == ObjectType.Subrecord)
                                 {
-                                    fg.AppendLine("return false;");
+                                    fg.AppendLine($"return TryGet<{obj.FieldIndexName}?>.Failure;");
                                 }
                                 else if (failOnUnknown)
                                 {
@@ -539,12 +554,11 @@ namespace Mutagen.Bethesda.Generation
                                             throw new NotImplementedException();
                                     }
                                     fg.AppendLine($"frame.Position += contentLength{addString};");
-                                    fg.AppendLine($"break;");
+                                    fg.AppendLine($"return TryGet<{obj.FieldIndexName}?>.Succeed(null);");
                                 }
                             }
                         }
                     }
-                    fg.AppendLine("return true;");
                 }
                 fg.AppendLine();
             }
@@ -566,7 +580,7 @@ namespace Mutagen.Bethesda.Generation
                     if (!subGenerator.ShouldGenerateCopyIn(subfield)) continue;
                     if (set.BreakIndices.Contains(i))
                     {
-                        fg.AppendLine("if (frame.Complete) return true;");
+                        fg.AppendLine($"if (frame.Complete) return TryGet<{obj.FieldIndexName}?>.Succeed({set.SubFields.TryGet(i - 1)?.IndexEnumName ?? "null"});");
                     }
                     GenerateFillSnippet(obj, fg, subfield, subGenerator);
                 }

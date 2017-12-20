@@ -49,12 +49,12 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Race.FaceIndex> IFacePartGetter.Index_Property => this.Index_Property;
         #endregion
         #region Model
-        private readonly INotifyingItem<Model> _Model = new NotifyingItem<Model>();
-        public INotifyingItem<Model> Model_Property => this._Model;
+        private readonly INotifyingSetItem<Model> _Model = new NotifyingSetItem<Model>();
+        public INotifyingSetItem<Model> Model_Property => this._Model;
         Model IFacePartGetter.Model => this.Model;
         public Model Model { get => _Model.Item; set => _Model.Item = value; }
-        INotifyingItem<Model> IFacePart.Model_Property => this.Model_Property;
-        INotifyingItemGetter<Model> IFacePartGetter.Model_Property => this.Model_Property;
+        INotifyingSetItem<Model> IFacePart.Model_Property => this.Model_Property;
+        INotifyingSetItemGetter<Model> IFacePartGetter.Model_Property => this.Model_Property;
         #endregion
         #region Icon
         protected readonly INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
@@ -131,7 +131,11 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (Index != rhs.Index) return false;
             }
-            if (!object.Equals(Model, rhs.Model)) return false;
+            if (Model_Property.HasBeenSet != rhs.Model_Property.HasBeenSet) return false;
+            if (Model_Property.HasBeenSet)
+            {
+                if (!object.Equals(Model, rhs.Model)) return false;
+            }
             if (Icon_Property.HasBeenSet != rhs.Icon_Property.HasBeenSet) return false;
             if (Icon_Property.HasBeenSet)
             {
@@ -147,7 +151,10 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(Index).CombineHashCode(ret);
             }
-            ret = HashHelper.GetHashCode(Model).CombineHashCode(ret);
+            if (Model_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Model).CombineHashCode(ret);
+            }
             if (Icon_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(Icon).CombineHashCode(ret);
@@ -753,15 +760,16 @@ namespace Mutagen.Bethesda.Oblivion
                         item: ret,
                         frame: frame,
                         errorMask: errorMask);
-                    bool first = true;
+                    FacePart_FieldIndex? lastParsed = null;
                     while (!frame.Complete)
                     {
-                        if (!Fill_Binary_RecordTypes(
+                        var parsed = Fill_Binary_RecordTypes(
                             item: ret,
                             frame: frame,
-                            first: first,
-                            errorMask: errorMask)) break;
-                        first = false;
+                            lastParsed: lastParsed,
+                            errorMask: errorMask);
+                        if (parsed.Failed) break;
+                        lastParsed = parsed.Value;
                     }
                 }
             }
@@ -780,10 +788,10 @@ namespace Mutagen.Bethesda.Oblivion
         {
         }
 
-        protected static bool Fill_Binary_RecordTypes(
+        protected static TryGet<FacePart_FieldIndex?> Fill_Binary_RecordTypes(
             FacePart item,
             MutagenFrame frame,
-            bool first,
+            FacePart_FieldIndex? lastParsed,
             Func<FacePart_ErrorMask> errorMask)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -792,34 +800,33 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "INDX":
-                    if (!first) return false;
+                    if (lastParsed.HasValue && lastParsed.Value >= FacePart_FieldIndex.Index) return TryGet<FacePart_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var IndextryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Race.FaceIndex>.Instance.Parse(
                         frame.Spawn(contentLength),
                         fieldIndex: (int)FacePart_FieldIndex.Index,
                         errorMask: errorMask);
                     item._Index.SetIfSucceeded(IndextryGet);
-                    break;
+                    return TryGet<FacePart_FieldIndex?>.Succeed(FacePart_FieldIndex.Index);
                 case "MODL":
-                case "MODB":
-                    if (!first) return false;
+                    if (lastParsed.HasValue && lastParsed.Value >= FacePart_FieldIndex.Model) return TryGet<FacePart_FieldIndex?>.Failure;
                     item._Model.SetIfSucceeded(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)FacePart_FieldIndex.Model,
                         errorMask: errorMask));
-                    break;
+                    return TryGet<FacePart_FieldIndex?>.Succeed(FacePart_FieldIndex.Model);
                 case "ICON":
+                    if (lastParsed.HasValue && lastParsed.Value >= FacePart_FieldIndex.Icon) return TryGet<FacePart_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var tryGet = Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)FacePart_FieldIndex.Icon,
                         errorMask: errorMask);
                     item._Icon.SetIfSucceeded(tryGet);
-                    break;
+                    return TryGet<FacePart_FieldIndex?>.Succeed(FacePart_FieldIndex.Icon);
                 default:
-                    return false;
+                    return TryGet<FacePart_FieldIndex?>.Failure;
             }
-            return true;
         }
 
         #endregion
@@ -985,7 +992,7 @@ namespace Mutagen.Bethesda.Oblivion
         new INotifyingSetItem<Race.FaceIndex> Index_Property { get; }
 
         new Model Model { get; set; }
-        new INotifyingItem<Model> Model_Property { get; }
+        new INotifyingSetItem<Model> Model_Property { get; }
 
         new FilePath Icon { get; set; }
         new INotifyingSetItem<FilePath> Icon_Property { get; }
@@ -1001,7 +1008,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Model
         Model Model { get; }
-        INotifyingItemGetter<Model> Model_Property { get; }
+        INotifyingSetItemGetter<Model> Model_Property { get; }
 
         #endregion
         #region Icon
@@ -1185,7 +1192,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly RecordType INDX_HEADER = new RecordType("INDX");
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
-        public static readonly RecordType MODB_HEADER = new RecordType("MODB");
         public static readonly RecordType ICON_HEADER = new RecordType("ICON");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
@@ -1196,7 +1202,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         INDX_HEADER,
                         MODL_HEADER,
-                        MODB_HEADER
+                        ICON_HEADER
                     })
             );
         });
@@ -1327,46 +1333,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    switch (copyMask?.Model?.Overall ?? CopyOption.Reference)
-                    {
-                        case CopyOption.Reference:
-                            item.Model = rhs.Model;
-                            break;
-                        case CopyOption.CopyIn:
-                            ModelCommon.CopyFieldsFrom(
-                                item: item.Model,
-                                rhs: rhs.Model,
-                                def: def?.Model,
-                                doMasks: doMasks,
-                                errorMask: (doMasks ? new Func<Model_ErrorMask>(() =>
-                                {
-                                    var baseMask = errorMask();
-                                    if (baseMask.Model.Specific == null)
-                                    {
-                                        baseMask.Model = new MaskItem<Exception, Model_ErrorMask>(null, new Model_ErrorMask());
-                                    }
-                                    return baseMask.Model.Specific;
-                                }
-                                ) : null),
-                                copyMask: copyMask?.Model.Specific,
-                                cmds: cmds);
-                            break;
-                        case CopyOption.MakeCopy:
-                            if (rhs.Model == null)
+                    item.Model_Property.SetToWithDefault(
+                        rhs.Model_Property,
+                        def?.Model_Property,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.Model.Overall ?? CopyOption.Reference)
                             {
-                                item.Model = null;
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    ModelCommon.CopyFieldsFrom(
+                                        item: item.Model,
+                                        rhs: rhs.Model,
+                                        def: def?.Model,
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<Model_ErrorMask>(() =>
+                                        {
+                                            var baseMask = errorMask();
+                                            if (baseMask.Model.Specific == null)
+                                            {
+                                                baseMask.Model = new MaskItem<Exception, Model_ErrorMask>(null, new Model_ErrorMask());
+                                            }
+                                            return baseMask.Model.Specific;
+                                        }
+                                        ) : null),
+                                        copyMask: copyMask?.Model.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(Model);
+                                    return Model.Copy(
+                                        r,
+                                        copyMask?.Model?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Model?.Overall}. Cannot execute copy.");
                             }
-                            else
-                            {
-                                item.Model = Model.Copy(
-                                    rhs.Model,
-                                    copyMask?.Model?.Specific,
-                                    def?.Model);
-                            }
-                            break;
-                        default:
-                            throw new NotImplementedException($"Unknown CopyOption {copyMask?.Model?.Overall}. Cannot execute copy.");
-                    }
+                        }
+                        );
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1402,11 +1408,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FacePart_FieldIndex enu = (FacePart_FieldIndex)index;
             switch (enu)
             {
-                case FacePart_FieldIndex.Model:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 case FacePart_FieldIndex.Index:
                     obj.Index_Property.HasBeenSet = on;
+                    break;
+                case FacePart_FieldIndex.Model:
+                    obj.Model_Property.HasBeenSet = on;
                     break;
                 case FacePart_FieldIndex.Icon:
                     obj.Icon_Property.HasBeenSet = on;
@@ -1428,7 +1434,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Index_Property.Unset(cmds);
                     break;
                 case FacePart_FieldIndex.Model:
-                    obj.Model = default(Model);
+                    obj.Model_Property.Unset(cmds);
                     break;
                 case FacePart_FieldIndex.Icon:
                     obj.Icon_Property.Unset(cmds);
@@ -1445,10 +1451,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FacePart_FieldIndex enu = (FacePart_FieldIndex)index;
             switch (enu)
             {
-                case FacePart_FieldIndex.Model:
-                    return true;
                 case FacePart_FieldIndex.Index:
                     return obj.Index_Property.HasBeenSet;
+                case FacePart_FieldIndex.Model:
+                    return obj.Model_Property.HasBeenSet;
                 case FacePart_FieldIndex.Icon:
                     return obj.Icon_Property.HasBeenSet;
                 default:
@@ -1479,7 +1485,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NotifyingUnsetParameters? cmds = null)
         {
             item.Index_Property.Unset(cmds.ToUnsetParams());
-            item.Model = default(Model);
+            item.Model_Property.Unset(cmds.ToUnsetParams());
             item.Icon_Property.Unset(cmds.ToUnsetParams());
         }
 
@@ -1499,9 +1505,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Index = item.Index_Property.Equals(rhs.Index_Property, (l, r) => l == r);
-            ret.Model = new MaskItem<bool, Model_Mask<bool>>();
-            ret.Model.Specific = ModelCommon.GetEqualsMask(item.Model, rhs.Model);
-            ret.Model.Overall = ret.Model.Specific.AllEqual((b) => b);
+            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs));
             ret.Icon = item.Icon_Property.Equals(rhs.Icon_Property, (l, r) => object.Equals(l, r));
         }
 
@@ -1553,6 +1557,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FacePart_Mask<bool?> checkMask)
         {
             if (checkMask.Index.HasValue && checkMask.Index.Value != item.Index_Property.HasBeenSet) return false;
+            if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_Property.HasBeenSet) return false;
+            if (checkMask.Model.Specific != null && (item.Model_Property.Item == null || !item.Model_Property.Item.HasBeenSet(checkMask.Model.Specific))) return false;
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_Property.HasBeenSet) return false;
             return true;
         }
@@ -1561,7 +1567,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var ret = new FacePart_Mask<bool>();
             ret.Index = item.Index_Property.HasBeenSet;
-            ret.Model = new MaskItem<bool, Model_Mask<bool>>(true, ModelCommon.GetHasBeenSetMask(item.Model_Property.Item));
+            ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_Property.HasBeenSet, ModelCommon.GetHasBeenSetMask(item.Model_Property.Item));
             ret.Icon = item.Icon_Property.HasBeenSet;
             return ret;
         }
@@ -1607,12 +1613,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             fieldIndex: (int)FacePart_FieldIndex.Index,
                             errorMask: errorMask);
                     }
-                    LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Write(
-                        writer: writer,
-                        item: item.Model_Property,
-                        name: nameof(item.Model),
-                        fieldIndex: (int)FacePart_FieldIndex.Model,
-                        errorMask: errorMask);
+                    if (item.Model_Property.HasBeenSet)
+                    {
+                        LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Write(
+                            writer: writer,
+                            item: item.Model_Property,
+                            name: nameof(item.Model),
+                            fieldIndex: (int)FacePart_FieldIndex.Model,
+                            errorMask: errorMask);
+                    }
                     if (item.Icon_Property.HasBeenSet)
                     {
                         FilePathXmlTranslation.Instance.Write(

@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte[]> ITES4Getter.Fluff_Property => this.Fluff_Property;
         #endregion
         #region Header
-        private readonly INotifyingItem<Header> _Header = new NotifyingItemConvertWrapper<Header>(
+        private readonly INotifyingSetItem<Header> _Header = new NotifyingSetItemConvertWrapper<Header>(
             defaultVal: new Header(),
             incomingConverter: (change) =>
             {
@@ -60,11 +60,11 @@ namespace Mutagen.Bethesda.Oblivion
                 return TryGet<Header>.Succeed(change.New);
             }
         );
-        public INotifyingItem<Header> Header_Property => this._Header;
+        public INotifyingSetItem<Header> Header_Property => this._Header;
         Header ITES4Getter.Header => this.Header;
         public Header Header { get => _Header.Item; set => _Header.Item = value; }
-        INotifyingItem<Header> ITES4.Header_Property => this.Header_Property;
-        INotifyingItemGetter<Header> ITES4Getter.Header_Property => this.Header_Property;
+        INotifyingSetItem<Header> ITES4.Header_Property => this.Header_Property;
+        INotifyingSetItemGetter<Header> ITES4Getter.Header_Property => this.Header_Property;
         #endregion
         #region TypeOffsets
         protected readonly INotifyingSetItem<Byte[]> _TypeOffsets = NotifyingSetItem.Factory<Byte[]>(markAsSet: false);
@@ -179,7 +179,11 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!Fluff.EqualsFast(rhs.Fluff)) return false;
-            if (!object.Equals(Header, rhs.Header)) return false;
+            if (Header_Property.HasBeenSet != rhs.Header_Property.HasBeenSet) return false;
+            if (Header_Property.HasBeenSet)
+            {
+                if (!object.Equals(Header, rhs.Header)) return false;
+            }
             if (TypeOffsets_Property.HasBeenSet != rhs.TypeOffsets_Property.HasBeenSet) return false;
             if (TypeOffsets_Property.HasBeenSet)
             {
@@ -200,7 +204,11 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!object.Equals(Description, rhs.Description)) return false;
             }
-            if (!MasterReferences.SequenceEqual(rhs.MasterReferences)) return false;
+            if (MasterReferences.HasBeenSet != rhs.MasterReferences.HasBeenSet) return false;
+            if (MasterReferences.HasBeenSet)
+            {
+                if (!MasterReferences.SequenceEqual(rhs.MasterReferences)) return false;
+            }
             return true;
         }
 
@@ -208,7 +216,10 @@ namespace Mutagen.Bethesda.Oblivion
         {
             int ret = 0;
             ret = HashHelper.GetHashCode(Fluff).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Header).CombineHashCode(ret);
+            if (Header_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Header).CombineHashCode(ret);
+            }
             if (TypeOffsets_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(TypeOffsets).CombineHashCode(ret);
@@ -225,7 +236,10 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(Description).CombineHashCode(ret);
             }
-            ret = HashHelper.GetHashCode(MasterReferences).CombineHashCode(ret);
+            if (MasterReferences.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(MasterReferences).CombineHashCode(ret);
+            }
             return ret;
         }
 
@@ -895,10 +909,11 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask);
                     while (!frame.Complete)
                     {
-                        if (!Fill_Binary_RecordTypes(
+                        var parsed = Fill_Binary_RecordTypes(
                             item: ret,
                             frame: frame,
-                            errorMask: errorMask)) break;
+                            errorMask: errorMask);
+                        if (parsed.Failed) break;
                     }
                 }
             }
@@ -923,7 +938,7 @@ namespace Mutagen.Bethesda.Oblivion
             item._Fluff.SetIfSucceeded(FlufftryGet);
         }
 
-        protected static bool Fill_Binary_RecordTypes(
+        protected static TryGet<TES4_FieldIndex?> Fill_Binary_RecordTypes(
             TES4 item,
             MutagenFrame frame,
             Func<TES4_ErrorMask> errorMask)
@@ -938,7 +953,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         fieldIndex: (int)TES4_FieldIndex.Header,
                         errorMask: errorMask));
-                    break;
+                    return TryGet<TES4_FieldIndex?>.Succeed(TES4_FieldIndex.Header);
                 case "OFST":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var TypeOffsetstryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
@@ -946,7 +961,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)TES4_FieldIndex.TypeOffsets,
                         errorMask: errorMask);
                     item._TypeOffsets.SetIfSucceeded(TypeOffsetstryGet);
-                    break;
+                    return TryGet<TES4_FieldIndex?>.Succeed(TES4_FieldIndex.TypeOffsets);
                 case "DELE":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var DeletedtryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
@@ -954,7 +969,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)TES4_FieldIndex.Deleted,
                         errorMask: errorMask);
                     item._Deleted.SetIfSucceeded(DeletedtryGet);
-                    break;
+                    return TryGet<TES4_FieldIndex?>.Succeed(TES4_FieldIndex.Deleted);
                 case "CNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var AuthortryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -962,7 +977,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)TES4_FieldIndex.Author,
                         errorMask: errorMask);
                     item._Author.SetIfSucceeded(AuthortryGet);
-                    break;
+                    return TryGet<TES4_FieldIndex?>.Succeed(TES4_FieldIndex.Author);
                 case "SNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var DescriptiontryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -970,7 +985,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)TES4_FieldIndex.Description,
                         errorMask: errorMask);
                     item._Description.SetIfSucceeded(DescriptiontryGet);
-                    break;
+                    return TryGet<TES4_FieldIndex?>.Succeed(TES4_FieldIndex.Description);
                 case "MAST":
                 case "DATA":
                     var MasterReferencestryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<MasterReference, MaskItem<Exception, MasterReference_ErrorMask>>.Instance.ParseRepeatedItem(
@@ -988,13 +1003,12 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         );
                     item._MasterReferences.SetIfSucceeded(MasterReferencestryGet);
-                    break;
+                    return TryGet<TES4_FieldIndex?>.Succeed(TES4_FieldIndex.MasterReferences);
                 default:
                     errorMask().Warnings.Add($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength + Constants.SUBRECORD_LENGTH;
-                    break;
+                    return TryGet<TES4_FieldIndex?>.Succeed(null);
             }
-            return true;
         }
 
         #endregion
@@ -1196,7 +1210,7 @@ namespace Mutagen.Bethesda.Oblivion
         new INotifyingItem<Byte[]> Fluff_Property { get; }
 
         new Header Header { get; set; }
-        new INotifyingItem<Header> Header_Property { get; }
+        new INotifyingSetItem<Header> Header_Property { get; }
 
         new Byte[] TypeOffsets { get; set; }
         new INotifyingSetItem<Byte[]> TypeOffsets_Property { get; }
@@ -1222,7 +1236,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Header
         Header Header { get; }
-        INotifyingItemGetter<Header> Header_Property { get; }
+        INotifyingSetItemGetter<Header> Header_Property { get; }
 
         #endregion
         #region TypeOffsets
@@ -1606,46 +1620,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    switch (copyMask?.Header?.Overall ?? CopyOption.Reference)
-                    {
-                        case CopyOption.Reference:
-                            item.Header = rhs.Header;
-                            break;
-                        case CopyOption.CopyIn:
-                            HeaderCommon.CopyFieldsFrom(
-                                item: item.Header,
-                                rhs: rhs.Header,
-                                def: def?.Header,
-                                doMasks: doMasks,
-                                errorMask: (doMasks ? new Func<Header_ErrorMask>(() =>
-                                {
-                                    var baseMask = errorMask();
-                                    if (baseMask.Header.Specific == null)
-                                    {
-                                        baseMask.Header = new MaskItem<Exception, Header_ErrorMask>(null, new Header_ErrorMask());
-                                    }
-                                    return baseMask.Header.Specific;
-                                }
-                                ) : null),
-                                copyMask: copyMask?.Header.Specific,
-                                cmds: cmds);
-                            break;
-                        case CopyOption.MakeCopy:
-                            if (rhs.Header == null)
+                    item.Header_Property.SetToWithDefault(
+                        rhs.Header_Property,
+                        def?.Header_Property,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.Header.Overall ?? CopyOption.Reference)
                             {
-                                item.Header = null;
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    HeaderCommon.CopyFieldsFrom(
+                                        item: item.Header,
+                                        rhs: rhs.Header,
+                                        def: def?.Header,
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<Header_ErrorMask>(() =>
+                                        {
+                                            var baseMask = errorMask();
+                                            if (baseMask.Header.Specific == null)
+                                            {
+                                                baseMask.Header = new MaskItem<Exception, Header_ErrorMask>(null, new Header_ErrorMask());
+                                            }
+                                            return baseMask.Header.Specific;
+                                        }
+                                        ) : null),
+                                        copyMask: copyMask?.Header.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(Header);
+                                    return Header.Copy(
+                                        r,
+                                        copyMask?.Header?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Header?.Overall}. Cannot execute copy.");
                             }
-                            else
-                            {
-                                item.Header = Header.Copy(
-                                    rhs.Header,
-                                    copyMask?.Header?.Specific,
-                                    def?.Header);
-                            }
-                            break;
-                        default:
-                            throw new NotImplementedException($"Unknown CopyOption {copyMask?.Header?.Overall}. Cannot execute copy.");
-                    }
+                        }
+                        );
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -1759,10 +1773,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case TES4_FieldIndex.Fluff:
-                case TES4_FieldIndex.Header:
-                case TES4_FieldIndex.MasterReferences:
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
+                case TES4_FieldIndex.Header:
+                    obj.Header_Property.HasBeenSet = on;
+                    break;
                 case TES4_FieldIndex.TypeOffsets:
                     obj.TypeOffsets_Property.HasBeenSet = on;
                     break;
@@ -1774,6 +1789,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case TES4_FieldIndex.Description:
                     obj.Description_Property.HasBeenSet = on;
+                    break;
+                case TES4_FieldIndex.MasterReferences:
+                    obj.MasterReferences.HasBeenSet = on;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1792,7 +1810,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Fluff = default(Byte[]);
                     break;
                 case TES4_FieldIndex.Header:
-                    obj.Header = default(Header);
+                    obj.Header_Property.Unset(cmds);
                     break;
                 case TES4_FieldIndex.TypeOffsets:
                     obj.TypeOffsets_Property.Unset(cmds);
@@ -1822,9 +1840,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case TES4_FieldIndex.Fluff:
-                case TES4_FieldIndex.Header:
-                case TES4_FieldIndex.MasterReferences:
                     return true;
+                case TES4_FieldIndex.Header:
+                    return obj.Header_Property.HasBeenSet;
                 case TES4_FieldIndex.TypeOffsets:
                     return obj.TypeOffsets_Property.HasBeenSet;
                 case TES4_FieldIndex.Deleted:
@@ -1833,6 +1851,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.Author_Property.HasBeenSet;
                 case TES4_FieldIndex.Description:
                     return obj.Description_Property.HasBeenSet;
+                case TES4_FieldIndex.MasterReferences:
+                    return obj.MasterReferences.HasBeenSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1869,7 +1889,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NotifyingUnsetParameters? cmds = null)
         {
             item.Fluff = default(Byte[]);
-            item.Header = default(Header);
+            item.Header_Property.Unset(cmds.ToUnsetParams());
             item.TypeOffsets_Property.Unset(cmds.ToUnsetParams());
             item.Deleted_Property.Unset(cmds.ToUnsetParams());
             item.Author_Property.Unset(cmds.ToUnsetParams());
@@ -1893,9 +1913,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Fluff = item.Fluff.EqualsFast(rhs.Fluff);
-            ret.Header = new MaskItem<bool, Header_Mask<bool>>();
-            ret.Header.Specific = HeaderCommon.GetEqualsMask(item.Header, rhs.Header);
-            ret.Header.Overall = ret.Header.Specific.AllEqual((b) => b);
+            ret.Header = item.Header_Property.LoquiEqualsHelper(rhs.Header_Property, (loqLhs, loqRhs) => HeaderCommon.GetEqualsMask(loqLhs, loqRhs));
             ret.TypeOffsets = item.TypeOffsets_Property.Equals(rhs.TypeOffsets_Property, (l, r) => l.EqualsFast(r));
             ret.Deleted = item.Deleted_Property.Equals(rhs.Deleted_Property, (l, r) => l.EqualsFast(r));
             ret.Author = item.Author_Property.Equals(rhs.Author_Property, (l, r) => object.Equals(l, r));
@@ -1908,9 +1926,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ret.MasterReferences.Specific = item.MasterReferences.SelectAgainst<MasterReference, MaskItem<bool, MasterReference_Mask<bool>>>(rhs.MasterReferences, ((l, r) =>
                     {
                         MaskItem<bool, MasterReference_Mask<bool>> itemRet;
-                        itemRet = new MaskItem<bool, MasterReference_Mask<bool>>();
-                        itemRet.Specific = MasterReferenceCommon.GetEqualsMask(l, r);
-                        itemRet.Overall = itemRet.Specific.AllEqual((b) => b);
+                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => MasterReferenceCommon.GetEqualsMask(loqLhs, loqRhs));
                         return itemRet;
                     }
                     ), out ret.MasterReferences.Overall);
@@ -2006,6 +2022,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this ITES4Getter item,
             TES4_Mask<bool?> checkMask)
         {
+            if (checkMask.Header.Overall.HasValue && checkMask.Header.Overall.Value != item.Header_Property.HasBeenSet) return false;
+            if (checkMask.Header.Specific != null && (item.Header_Property.Item == null || !item.Header_Property.Item.HasBeenSet(checkMask.Header.Specific))) return false;
             if (checkMask.TypeOffsets.HasValue && checkMask.TypeOffsets.Value != item.TypeOffsets_Property.HasBeenSet) return false;
             if (checkMask.Deleted.HasValue && checkMask.Deleted.Value != item.Deleted_Property.HasBeenSet) return false;
             if (checkMask.Author.HasValue && checkMask.Author.Value != item.Author_Property.HasBeenSet) return false;
@@ -2018,7 +2036,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var ret = new TES4_Mask<bool>();
             ret.Fluff = true;
-            ret.Header = new MaskItem<bool, Header_Mask<bool>>(true, HeaderCommon.GetHasBeenSetMask(item.Header_Property.Item));
+            ret.Header = new MaskItem<bool, Header_Mask<bool>>(item.Header_Property.HasBeenSet, HeaderCommon.GetHasBeenSetMask(item.Header_Property.Item));
             ret.TypeOffsets = item.TypeOffsets_Property.HasBeenSet;
             ret.Deleted = item.Deleted_Property.HasBeenSet;
             ret.Author = item.Author_Property.HasBeenSet;
@@ -2065,12 +2083,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item: item.Fluff_Property,
                         fieldIndex: (int)TES4_FieldIndex.Fluff,
                         errorMask: errorMask);
-                    LoquiXmlTranslation<Header, Header_ErrorMask>.Instance.Write(
-                        writer: writer,
-                        item: item.Header_Property,
-                        name: nameof(item.Header),
-                        fieldIndex: (int)TES4_FieldIndex.Header,
-                        errorMask: errorMask);
+                    if (item.Header_Property.HasBeenSet)
+                    {
+                        LoquiXmlTranslation<Header, Header_ErrorMask>.Instance.Write(
+                            writer: writer,
+                            item: item.Header_Property,
+                            name: nameof(item.Header),
+                            fieldIndex: (int)TES4_FieldIndex.Header,
+                            errorMask: errorMask);
+                    }
                     if (item.TypeOffsets_Property.HasBeenSet)
                     {
                         ByteArrayXmlTranslation.Instance.Write(
@@ -2107,22 +2128,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             fieldIndex: (int)TES4_FieldIndex.Description,
                             errorMask: errorMask);
                     }
-                    ListXmlTranslation<MasterReference, MaskItem<Exception, MasterReference_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.MasterReferences),
-                        item: item.MasterReferences,
-                        fieldIndex: (int)TES4_FieldIndex.MasterReferences,
-                        errorMask: errorMask,
-                        transl: (MasterReference subItem, bool listDoMasks, out MaskItem<Exception, MasterReference_ErrorMask> listSubMask) =>
-                        {
-                            LoquiXmlTranslation<MasterReference, MasterReference_ErrorMask>.Instance.Write(
-                                writer: writer,
-                                item: subItem,
-                                name: "Item",
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
-                        }
-                        );
+                    if (item.MasterReferences.HasBeenSet)
+                    {
+                        ListXmlTranslation<MasterReference, MaskItem<Exception, MasterReference_ErrorMask>>.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.MasterReferences),
+                            item: item.MasterReferences,
+                            fieldIndex: (int)TES4_FieldIndex.MasterReferences,
+                            errorMask: errorMask,
+                            transl: (MasterReference subItem, bool listDoMasks, out MaskItem<Exception, MasterReference_ErrorMask> listSubMask) =>
+                            {
+                                LoquiXmlTranslation<MasterReference, MasterReference_ErrorMask>.Instance.Write(
+                                    writer: writer,
+                                    item: subItem,
+                                    name: "Item",
+                                    doMasks: errorMask != null,
+                                    errorMask: out listSubMask);
+                            }
+                            );
+                    }
                 }
             }
             catch (Exception ex)

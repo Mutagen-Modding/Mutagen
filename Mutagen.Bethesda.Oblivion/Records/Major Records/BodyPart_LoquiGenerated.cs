@@ -728,15 +728,16 @@ namespace Mutagen.Bethesda.Oblivion
                         item: ret,
                         frame: frame,
                         errorMask: errorMask);
-                    bool first = true;
+                    BodyPart_FieldIndex? lastParsed = null;
                     while (!frame.Complete)
                     {
-                        if (!Fill_Binary_RecordTypes(
+                        var parsed = Fill_Binary_RecordTypes(
                             item: ret,
                             frame: frame,
-                            first: first,
-                            errorMask: errorMask)) break;
-                        first = false;
+                            lastParsed: lastParsed,
+                            errorMask: errorMask);
+                        if (parsed.Failed) break;
+                        lastParsed = parsed.Value;
                     }
                 }
             }
@@ -755,10 +756,10 @@ namespace Mutagen.Bethesda.Oblivion
         {
         }
 
-        protected static bool Fill_Binary_RecordTypes(
+        protected static TryGet<BodyPart_FieldIndex?> Fill_Binary_RecordTypes(
             BodyPart item,
             MutagenFrame frame,
-            bool first,
+            BodyPart_FieldIndex? lastParsed,
             Func<BodyPart_ErrorMask> errorMask)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -767,27 +768,26 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "INDX":
-                    if (!first) return false;
+                    if (lastParsed.HasValue && lastParsed.Value >= BodyPart_FieldIndex.Index) return TryGet<BodyPart_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var IndextryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Race.BodyIndex>.Instance.Parse(
                         frame.Spawn(contentLength),
                         fieldIndex: (int)BodyPart_FieldIndex.Index,
                         errorMask: errorMask);
                     item._Index.SetIfSucceeded(IndextryGet);
-                    break;
+                    return TryGet<BodyPart_FieldIndex?>.Succeed(BodyPart_FieldIndex.Index);
                 case "ICON":
-                    if (!first) return false;
+                    if (lastParsed.HasValue && lastParsed.Value >= BodyPart_FieldIndex.Icon) return TryGet<BodyPart_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var tryGet = Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)BodyPart_FieldIndex.Icon,
                         errorMask: errorMask);
                     item._Icon.SetIfSucceeded(tryGet);
-                    break;
+                    return TryGet<BodyPart_FieldIndex?>.Succeed(BodyPart_FieldIndex.Icon);
                 default:
-                    return false;
+                    return TryGet<BodyPart_FieldIndex?>.Failure;
             }
-            return true;
         }
 
         #endregion

@@ -965,10 +965,11 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask);
                     while (!frame.Complete)
                     {
-                        if (!Fill_Binary_RecordTypes(
+                        var parsed = Fill_Binary_RecordTypes(
                             item: ret,
                             frame: frame,
-                            errorMask: errorMask)) break;
+                            errorMask: errorMask);
+                        if (parsed.Failed) break;
                     }
                 }
             }
@@ -991,7 +992,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static bool Fill_Binary_RecordTypes(
+        protected static TryGet<Class_FieldIndex?> Fill_Binary_RecordTypes(
             Class item,
             MutagenFrame frame,
             Func<Class_ErrorMask> errorMask)
@@ -1008,7 +1009,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)Class_FieldIndex.Description,
                         errorMask: errorMask);
                     item._Description.SetIfSucceeded(DescriptiontryGet);
-                    break;
+                    return TryGet<Class_FieldIndex?>.Succeed(Class_FieldIndex.Description);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var tryGet = Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
@@ -1016,7 +1017,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)Class_FieldIndex.Icon,
                         errorMask: errorMask);
                     item._Icon.SetIfSucceeded(tryGet);
-                    break;
+                    return TryGet<Class_FieldIndex?>.Succeed(Class_FieldIndex.Icon);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var PrimaryAttributestryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<ActorValue, Exception>.Instance.ParseRepeatedItem(
@@ -1062,20 +1063,18 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)Class_FieldIndex.ClassServices,
                         errorMask: errorMask);
                     item._ClassServices.SetIfSucceeded(ClassServicestryGet);
-                    if (frame.Complete) return true;
+                    if (frame.Complete) return TryGet<Class_FieldIndex?>.Succeed(Class_FieldIndex.ClassServices);
                     item._Training.SetIfSucceeded(LoquiBinaryTranslation<ClassTraining, ClassTraining_ErrorMask>.Instance.Parse(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)Class_FieldIndex.Training,
                         errorMask: errorMask));
-                    break;
+                    return TryGet<Class_FieldIndex?>.Succeed(Class_FieldIndex.Training);
                 default:
-                    NamedMajorRecord.Fill_Binary_RecordTypes(
+                    return NamedMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
-                        errorMask: errorMask);
-                    break;
+                        errorMask: errorMask).Bubble((i) => ClassCommon.ConvertFieldIndex(i));
             }
-            return true;
         }
 
         #endregion

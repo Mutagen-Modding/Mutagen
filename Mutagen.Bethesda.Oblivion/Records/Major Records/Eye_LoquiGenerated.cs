@@ -784,10 +784,11 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask);
                     while (!frame.Complete)
                     {
-                        if (!Fill_Binary_RecordTypes(
+                        var parsed = Fill_Binary_RecordTypes(
                             item: ret,
                             frame: frame,
-                            errorMask: errorMask)) break;
+                            errorMask: errorMask);
+                        if (parsed.Failed) break;
                     }
                 }
             }
@@ -810,7 +811,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static bool Fill_Binary_RecordTypes(
+        protected static TryGet<Eye_FieldIndex?> Fill_Binary_RecordTypes(
             Eye item,
             MutagenFrame frame,
             Func<Eye_ErrorMask> errorMask)
@@ -827,7 +828,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)Eye_FieldIndex.Icon,
                         errorMask: errorMask);
                     item._Icon.SetIfSucceeded(tryGet);
-                    break;
+                    return TryGet<Eye_FieldIndex?>.Succeed(Eye_FieldIndex.Icon);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Eye.Flag>.Instance.Parse(
@@ -835,15 +836,13 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)Eye_FieldIndex.Flags,
                         errorMask: errorMask);
                     item._Flags.SetIfSucceeded(FlagstryGet);
-                    break;
+                    return TryGet<Eye_FieldIndex?>.Succeed(Eye_FieldIndex.Flags);
                 default:
-                    NamedMajorRecord.Fill_Binary_RecordTypes(
+                    return NamedMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
-                        errorMask: errorMask);
-                    break;
+                        errorMask: errorMask).Bubble((i) => EyeCommon.ConvertFieldIndex(i));
             }
-            return true;
         }
 
         #endregion

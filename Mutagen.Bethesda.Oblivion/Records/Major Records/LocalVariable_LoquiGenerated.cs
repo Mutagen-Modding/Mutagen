@@ -725,15 +725,16 @@ namespace Mutagen.Bethesda.Oblivion
                         item: ret,
                         frame: frame,
                         errorMask: errorMask);
-                    bool first = true;
+                    LocalVariable_FieldIndex? lastParsed = null;
                     while (!frame.Complete)
                     {
-                        if (!Fill_Binary_RecordTypes(
+                        var parsed = Fill_Binary_RecordTypes(
                             item: ret,
                             frame: frame,
-                            first: first,
-                            errorMask: errorMask)) break;
-                        first = false;
+                            lastParsed: lastParsed,
+                            errorMask: errorMask);
+                        if (parsed.Failed) break;
+                        lastParsed = parsed.Value;
                     }
                 }
             }
@@ -752,10 +753,10 @@ namespace Mutagen.Bethesda.Oblivion
         {
         }
 
-        protected static bool Fill_Binary_RecordTypes(
+        protected static TryGet<LocalVariable_FieldIndex?> Fill_Binary_RecordTypes(
             LocalVariable item,
             MutagenFrame frame,
-            bool first,
+            LocalVariable_FieldIndex? lastParsed,
             Func<LocalVariable_ErrorMask> errorMask)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -764,25 +765,24 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "SLSD":
-                    if (!first) return false;
+                    if (lastParsed.HasValue && lastParsed.Value >= LocalVariable_FieldIndex.Data) return TryGet<LocalVariable_FieldIndex?>.Failure;
                     item._Data.SetIfSucceeded(LoquiBinaryTranslation<LocalVariableData, LocalVariableData_ErrorMask>.Instance.Parse(
                         frame: frame,
                         fieldIndex: (int)LocalVariable_FieldIndex.Data,
                         errorMask: errorMask));
-                    break;
+                    return TryGet<LocalVariable_FieldIndex?>.Succeed(LocalVariable_FieldIndex.Data);
                 case "SCVR":
-                    if (!first) return false;
+                    if (lastParsed.HasValue && lastParsed.Value >= LocalVariable_FieldIndex.Name) return TryGet<LocalVariable_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var NametryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)LocalVariable_FieldIndex.Name,
                         errorMask: errorMask);
                     item._Name.SetIfSucceeded(NametryGet);
-                    break;
+                    return TryGet<LocalVariable_FieldIndex?>.Succeed(LocalVariable_FieldIndex.Name);
                 default:
-                    return false;
+                    return TryGet<LocalVariable_FieldIndex?>.Failure;
             }
-            return true;
         }
 
         #endregion

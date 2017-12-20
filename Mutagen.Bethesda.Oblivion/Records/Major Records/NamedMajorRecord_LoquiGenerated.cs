@@ -450,7 +450,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        protected static bool Fill_Binary_RecordTypes(
+        protected static TryGet<NamedMajorRecord_FieldIndex?> Fill_Binary_RecordTypes(
             NamedMajorRecord item,
             MutagenFrame frame,
             Func<NamedMajorRecord_ErrorMask> errorMask)
@@ -467,15 +467,13 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)NamedMajorRecord_FieldIndex.Name,
                         errorMask: errorMask);
                     item._Name.SetIfSucceeded(NametryGet);
-                    break;
+                    return TryGet<NamedMajorRecord_FieldIndex?>.Succeed(NamedMajorRecord_FieldIndex.Name);
                 default:
-                    MajorRecord.Fill_Binary_RecordTypes(
+                    return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
-                        errorMask: errorMask);
-                    break;
+                        errorMask: errorMask).Bubble((i) => NamedMajorRecordCommon.ConvertFieldIndex(i));
             }
-            return true;
         }
 
         #endregion

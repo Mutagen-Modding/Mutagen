@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region TES4
-        private readonly INotifyingItem<TES4> _TES4 = new NotifyingItemConvertWrapper<TES4>(
+        private readonly INotifyingSetItem<TES4> _TES4 = new NotifyingSetItemConvertWrapper<TES4>(
             defaultVal: new TES4(),
             incomingConverter: (change) =>
             {
@@ -49,115 +49,115 @@ namespace Mutagen.Bethesda.Oblivion
                 return TryGet<TES4>.Succeed(change.New);
             }
         );
-        public INotifyingItem<TES4> TES4_Property => this._TES4;
+        public INotifyingSetItem<TES4> TES4_Property => this._TES4;
         TES4 IOblivionModGetter.TES4 => this.TES4;
         public TES4 TES4 { get => _TES4.Item; set => _TES4.Item = value; }
-        INotifyingItem<TES4> IOblivionMod.TES4_Property => this.TES4_Property;
-        INotifyingItemGetter<TES4> IOblivionModGetter.TES4_Property => this.TES4_Property;
+        INotifyingSetItem<TES4> IOblivionMod.TES4_Property => this.TES4_Property;
+        INotifyingSetItemGetter<TES4> IOblivionModGetter.TES4_Property => this.TES4_Property;
         #endregion
         #region GameSettings
-        private readonly INotifyingItem<Group<GameSetting>> _GameSettings = new NotifyingItem<Group<GameSetting>>();
-        public INotifyingItem<Group<GameSetting>> GameSettings_Property => this._GameSettings;
+        private readonly INotifyingSetItem<Group<GameSetting>> _GameSettings = new NotifyingSetItem<Group<GameSetting>>();
+        public INotifyingSetItem<Group<GameSetting>> GameSettings_Property => this._GameSettings;
         Group<GameSetting> IOblivionModGetter.GameSettings => this.GameSettings;
         public Group<GameSetting> GameSettings { get => _GameSettings.Item; set => _GameSettings.Item = value; }
-        INotifyingItem<Group<GameSetting>> IOblivionMod.GameSettings_Property => this.GameSettings_Property;
-        INotifyingItemGetter<Group<GameSetting>> IOblivionModGetter.GameSettings_Property => this.GameSettings_Property;
+        INotifyingSetItem<Group<GameSetting>> IOblivionMod.GameSettings_Property => this.GameSettings_Property;
+        INotifyingSetItemGetter<Group<GameSetting>> IOblivionModGetter.GameSettings_Property => this.GameSettings_Property;
         #endregion
         #region Globals
-        private readonly INotifyingItem<Group<Global>> _Globals = new NotifyingItem<Group<Global>>();
-        public INotifyingItem<Group<Global>> Globals_Property => this._Globals;
+        private readonly INotifyingSetItem<Group<Global>> _Globals = new NotifyingSetItem<Group<Global>>();
+        public INotifyingSetItem<Group<Global>> Globals_Property => this._Globals;
         Group<Global> IOblivionModGetter.Globals => this.Globals;
         public Group<Global> Globals { get => _Globals.Item; set => _Globals.Item = value; }
-        INotifyingItem<Group<Global>> IOblivionMod.Globals_Property => this.Globals_Property;
-        INotifyingItemGetter<Group<Global>> IOblivionModGetter.Globals_Property => this.Globals_Property;
+        INotifyingSetItem<Group<Global>> IOblivionMod.Globals_Property => this.Globals_Property;
+        INotifyingSetItemGetter<Group<Global>> IOblivionModGetter.Globals_Property => this.Globals_Property;
         #endregion
         #region Classes
-        private readonly INotifyingItem<Group<Class>> _Classes = new NotifyingItem<Group<Class>>();
-        public INotifyingItem<Group<Class>> Classes_Property => this._Classes;
+        private readonly INotifyingSetItem<Group<Class>> _Classes = new NotifyingSetItem<Group<Class>>();
+        public INotifyingSetItem<Group<Class>> Classes_Property => this._Classes;
         Group<Class> IOblivionModGetter.Classes => this.Classes;
         public Group<Class> Classes { get => _Classes.Item; set => _Classes.Item = value; }
-        INotifyingItem<Group<Class>> IOblivionMod.Classes_Property => this.Classes_Property;
-        INotifyingItemGetter<Group<Class>> IOblivionModGetter.Classes_Property => this.Classes_Property;
+        INotifyingSetItem<Group<Class>> IOblivionMod.Classes_Property => this.Classes_Property;
+        INotifyingSetItemGetter<Group<Class>> IOblivionModGetter.Classes_Property => this.Classes_Property;
         #endregion
         #region Factions
-        private readonly INotifyingItem<Group<Faction>> _Factions = new NotifyingItem<Group<Faction>>();
-        public INotifyingItem<Group<Faction>> Factions_Property => this._Factions;
+        private readonly INotifyingSetItem<Group<Faction>> _Factions = new NotifyingSetItem<Group<Faction>>();
+        public INotifyingSetItem<Group<Faction>> Factions_Property => this._Factions;
         Group<Faction> IOblivionModGetter.Factions => this.Factions;
         public Group<Faction> Factions { get => _Factions.Item; set => _Factions.Item = value; }
-        INotifyingItem<Group<Faction>> IOblivionMod.Factions_Property => this.Factions_Property;
-        INotifyingItemGetter<Group<Faction>> IOblivionModGetter.Factions_Property => this.Factions_Property;
+        INotifyingSetItem<Group<Faction>> IOblivionMod.Factions_Property => this.Factions_Property;
+        INotifyingSetItemGetter<Group<Faction>> IOblivionModGetter.Factions_Property => this.Factions_Property;
         #endregion
         #region Hairs
-        private readonly INotifyingItem<Group<Hair>> _Hairs = new NotifyingItem<Group<Hair>>();
-        public INotifyingItem<Group<Hair>> Hairs_Property => this._Hairs;
+        private readonly INotifyingSetItem<Group<Hair>> _Hairs = new NotifyingSetItem<Group<Hair>>();
+        public INotifyingSetItem<Group<Hair>> Hairs_Property => this._Hairs;
         Group<Hair> IOblivionModGetter.Hairs => this.Hairs;
         public Group<Hair> Hairs { get => _Hairs.Item; set => _Hairs.Item = value; }
-        INotifyingItem<Group<Hair>> IOblivionMod.Hairs_Property => this.Hairs_Property;
-        INotifyingItemGetter<Group<Hair>> IOblivionModGetter.Hairs_Property => this.Hairs_Property;
+        INotifyingSetItem<Group<Hair>> IOblivionMod.Hairs_Property => this.Hairs_Property;
+        INotifyingSetItemGetter<Group<Hair>> IOblivionModGetter.Hairs_Property => this.Hairs_Property;
         #endregion
         #region Eyes
-        private readonly INotifyingItem<Group<Eye>> _Eyes = new NotifyingItem<Group<Eye>>();
-        public INotifyingItem<Group<Eye>> Eyes_Property => this._Eyes;
+        private readonly INotifyingSetItem<Group<Eye>> _Eyes = new NotifyingSetItem<Group<Eye>>();
+        public INotifyingSetItem<Group<Eye>> Eyes_Property => this._Eyes;
         Group<Eye> IOblivionModGetter.Eyes => this.Eyes;
         public Group<Eye> Eyes { get => _Eyes.Item; set => _Eyes.Item = value; }
-        INotifyingItem<Group<Eye>> IOblivionMod.Eyes_Property => this.Eyes_Property;
-        INotifyingItemGetter<Group<Eye>> IOblivionModGetter.Eyes_Property => this.Eyes_Property;
+        INotifyingSetItem<Group<Eye>> IOblivionMod.Eyes_Property => this.Eyes_Property;
+        INotifyingSetItemGetter<Group<Eye>> IOblivionModGetter.Eyes_Property => this.Eyes_Property;
         #endregion
         #region Races
-        private readonly INotifyingItem<Group<Race>> _Races = new NotifyingItem<Group<Race>>();
-        public INotifyingItem<Group<Race>> Races_Property => this._Races;
+        private readonly INotifyingSetItem<Group<Race>> _Races = new NotifyingSetItem<Group<Race>>();
+        public INotifyingSetItem<Group<Race>> Races_Property => this._Races;
         Group<Race> IOblivionModGetter.Races => this.Races;
         public Group<Race> Races { get => _Races.Item; set => _Races.Item = value; }
-        INotifyingItem<Group<Race>> IOblivionMod.Races_Property => this.Races_Property;
-        INotifyingItemGetter<Group<Race>> IOblivionModGetter.Races_Property => this.Races_Property;
+        INotifyingSetItem<Group<Race>> IOblivionMod.Races_Property => this.Races_Property;
+        INotifyingSetItemGetter<Group<Race>> IOblivionModGetter.Races_Property => this.Races_Property;
         #endregion
         #region Sounds
-        private readonly INotifyingItem<Group<Sound>> _Sounds = new NotifyingItem<Group<Sound>>();
-        public INotifyingItem<Group<Sound>> Sounds_Property => this._Sounds;
+        private readonly INotifyingSetItem<Group<Sound>> _Sounds = new NotifyingSetItem<Group<Sound>>();
+        public INotifyingSetItem<Group<Sound>> Sounds_Property => this._Sounds;
         Group<Sound> IOblivionModGetter.Sounds => this.Sounds;
         public Group<Sound> Sounds { get => _Sounds.Item; set => _Sounds.Item = value; }
-        INotifyingItem<Group<Sound>> IOblivionMod.Sounds_Property => this.Sounds_Property;
-        INotifyingItemGetter<Group<Sound>> IOblivionModGetter.Sounds_Property => this.Sounds_Property;
+        INotifyingSetItem<Group<Sound>> IOblivionMod.Sounds_Property => this.Sounds_Property;
+        INotifyingSetItemGetter<Group<Sound>> IOblivionModGetter.Sounds_Property => this.Sounds_Property;
         #endregion
         #region Skills
-        private readonly INotifyingItem<Group<SkillRecord>> _Skills = new NotifyingItem<Group<SkillRecord>>();
-        public INotifyingItem<Group<SkillRecord>> Skills_Property => this._Skills;
+        private readonly INotifyingSetItem<Group<SkillRecord>> _Skills = new NotifyingSetItem<Group<SkillRecord>>();
+        public INotifyingSetItem<Group<SkillRecord>> Skills_Property => this._Skills;
         Group<SkillRecord> IOblivionModGetter.Skills => this.Skills;
         public Group<SkillRecord> Skills { get => _Skills.Item; set => _Skills.Item = value; }
-        INotifyingItem<Group<SkillRecord>> IOblivionMod.Skills_Property => this.Skills_Property;
-        INotifyingItemGetter<Group<SkillRecord>> IOblivionModGetter.Skills_Property => this.Skills_Property;
+        INotifyingSetItem<Group<SkillRecord>> IOblivionMod.Skills_Property => this.Skills_Property;
+        INotifyingSetItemGetter<Group<SkillRecord>> IOblivionModGetter.Skills_Property => this.Skills_Property;
         #endregion
         #region MagicEffects
-        private readonly INotifyingItem<Group<MagicEffect>> _MagicEffects = new NotifyingItem<Group<MagicEffect>>();
-        public INotifyingItem<Group<MagicEffect>> MagicEffects_Property => this._MagicEffects;
+        private readonly INotifyingSetItem<Group<MagicEffect>> _MagicEffects = new NotifyingSetItem<Group<MagicEffect>>();
+        public INotifyingSetItem<Group<MagicEffect>> MagicEffects_Property => this._MagicEffects;
         Group<MagicEffect> IOblivionModGetter.MagicEffects => this.MagicEffects;
         public Group<MagicEffect> MagicEffects { get => _MagicEffects.Item; set => _MagicEffects.Item = value; }
-        INotifyingItem<Group<MagicEffect>> IOblivionMod.MagicEffects_Property => this.MagicEffects_Property;
-        INotifyingItemGetter<Group<MagicEffect>> IOblivionModGetter.MagicEffects_Property => this.MagicEffects_Property;
+        INotifyingSetItem<Group<MagicEffect>> IOblivionMod.MagicEffects_Property => this.MagicEffects_Property;
+        INotifyingSetItemGetter<Group<MagicEffect>> IOblivionModGetter.MagicEffects_Property => this.MagicEffects_Property;
         #endregion
         #region Scripts
-        private readonly INotifyingItem<Group<Script>> _Scripts = new NotifyingItem<Group<Script>>();
-        public INotifyingItem<Group<Script>> Scripts_Property => this._Scripts;
+        private readonly INotifyingSetItem<Group<Script>> _Scripts = new NotifyingSetItem<Group<Script>>();
+        public INotifyingSetItem<Group<Script>> Scripts_Property => this._Scripts;
         Group<Script> IOblivionModGetter.Scripts => this.Scripts;
         public Group<Script> Scripts { get => _Scripts.Item; set => _Scripts.Item = value; }
-        INotifyingItem<Group<Script>> IOblivionMod.Scripts_Property => this.Scripts_Property;
-        INotifyingItemGetter<Group<Script>> IOblivionModGetter.Scripts_Property => this.Scripts_Property;
+        INotifyingSetItem<Group<Script>> IOblivionMod.Scripts_Property => this.Scripts_Property;
+        INotifyingSetItemGetter<Group<Script>> IOblivionModGetter.Scripts_Property => this.Scripts_Property;
         #endregion
         #region LandTextures
-        private readonly INotifyingItem<Group<LandTexture>> _LandTextures = new NotifyingItem<Group<LandTexture>>();
-        public INotifyingItem<Group<LandTexture>> LandTextures_Property => this._LandTextures;
+        private readonly INotifyingSetItem<Group<LandTexture>> _LandTextures = new NotifyingSetItem<Group<LandTexture>>();
+        public INotifyingSetItem<Group<LandTexture>> LandTextures_Property => this._LandTextures;
         Group<LandTexture> IOblivionModGetter.LandTextures => this.LandTextures;
         public Group<LandTexture> LandTextures { get => _LandTextures.Item; set => _LandTextures.Item = value; }
-        INotifyingItem<Group<LandTexture>> IOblivionMod.LandTextures_Property => this.LandTextures_Property;
-        INotifyingItemGetter<Group<LandTexture>> IOblivionModGetter.LandTextures_Property => this.LandTextures_Property;
+        INotifyingSetItem<Group<LandTexture>> IOblivionMod.LandTextures_Property => this.LandTextures_Property;
+        INotifyingSetItemGetter<Group<LandTexture>> IOblivionModGetter.LandTextures_Property => this.LandTextures_Property;
         #endregion
         #region Enchantments
-        private readonly INotifyingItem<Group<Enchantment>> _Enchantments = new NotifyingItem<Group<Enchantment>>();
-        public INotifyingItem<Group<Enchantment>> Enchantments_Property => this._Enchantments;
+        private readonly INotifyingSetItem<Group<Enchantment>> _Enchantments = new NotifyingSetItem<Group<Enchantment>>();
+        public INotifyingSetItem<Group<Enchantment>> Enchantments_Property => this._Enchantments;
         Group<Enchantment> IOblivionModGetter.Enchantments => this.Enchantments;
         public Group<Enchantment> Enchantments { get => _Enchantments.Item; set => _Enchantments.Item = value; }
-        INotifyingItem<Group<Enchantment>> IOblivionMod.Enchantments_Property => this.Enchantments_Property;
-        INotifyingItemGetter<Group<Enchantment>> IOblivionModGetter.Enchantments_Property => this.Enchantments_Property;
+        INotifyingSetItem<Group<Enchantment>> IOblivionMod.Enchantments_Property => this.Enchantments_Property;
+        INotifyingSetItemGetter<Group<Enchantment>> IOblivionModGetter.Enchantments_Property => this.Enchantments_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -218,40 +218,138 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(OblivionMod rhs)
         {
             if (rhs == null) return false;
-            if (!object.Equals(TES4, rhs.TES4)) return false;
-            if (!object.Equals(GameSettings, rhs.GameSettings)) return false;
-            if (!object.Equals(Globals, rhs.Globals)) return false;
-            if (!object.Equals(Classes, rhs.Classes)) return false;
-            if (!object.Equals(Factions, rhs.Factions)) return false;
-            if (!object.Equals(Hairs, rhs.Hairs)) return false;
-            if (!object.Equals(Eyes, rhs.Eyes)) return false;
-            if (!object.Equals(Races, rhs.Races)) return false;
-            if (!object.Equals(Sounds, rhs.Sounds)) return false;
-            if (!object.Equals(Skills, rhs.Skills)) return false;
-            if (!object.Equals(MagicEffects, rhs.MagicEffects)) return false;
-            if (!object.Equals(Scripts, rhs.Scripts)) return false;
-            if (!object.Equals(LandTextures, rhs.LandTextures)) return false;
-            if (!object.Equals(Enchantments, rhs.Enchantments)) return false;
+            if (TES4_Property.HasBeenSet != rhs.TES4_Property.HasBeenSet) return false;
+            if (TES4_Property.HasBeenSet)
+            {
+                if (!object.Equals(TES4, rhs.TES4)) return false;
+            }
+            if (GameSettings_Property.HasBeenSet != rhs.GameSettings_Property.HasBeenSet) return false;
+            if (GameSettings_Property.HasBeenSet)
+            {
+                if (!object.Equals(GameSettings, rhs.GameSettings)) return false;
+            }
+            if (Globals_Property.HasBeenSet != rhs.Globals_Property.HasBeenSet) return false;
+            if (Globals_Property.HasBeenSet)
+            {
+                if (!object.Equals(Globals, rhs.Globals)) return false;
+            }
+            if (Classes_Property.HasBeenSet != rhs.Classes_Property.HasBeenSet) return false;
+            if (Classes_Property.HasBeenSet)
+            {
+                if (!object.Equals(Classes, rhs.Classes)) return false;
+            }
+            if (Factions_Property.HasBeenSet != rhs.Factions_Property.HasBeenSet) return false;
+            if (Factions_Property.HasBeenSet)
+            {
+                if (!object.Equals(Factions, rhs.Factions)) return false;
+            }
+            if (Hairs_Property.HasBeenSet != rhs.Hairs_Property.HasBeenSet) return false;
+            if (Hairs_Property.HasBeenSet)
+            {
+                if (!object.Equals(Hairs, rhs.Hairs)) return false;
+            }
+            if (Eyes_Property.HasBeenSet != rhs.Eyes_Property.HasBeenSet) return false;
+            if (Eyes_Property.HasBeenSet)
+            {
+                if (!object.Equals(Eyes, rhs.Eyes)) return false;
+            }
+            if (Races_Property.HasBeenSet != rhs.Races_Property.HasBeenSet) return false;
+            if (Races_Property.HasBeenSet)
+            {
+                if (!object.Equals(Races, rhs.Races)) return false;
+            }
+            if (Sounds_Property.HasBeenSet != rhs.Sounds_Property.HasBeenSet) return false;
+            if (Sounds_Property.HasBeenSet)
+            {
+                if (!object.Equals(Sounds, rhs.Sounds)) return false;
+            }
+            if (Skills_Property.HasBeenSet != rhs.Skills_Property.HasBeenSet) return false;
+            if (Skills_Property.HasBeenSet)
+            {
+                if (!object.Equals(Skills, rhs.Skills)) return false;
+            }
+            if (MagicEffects_Property.HasBeenSet != rhs.MagicEffects_Property.HasBeenSet) return false;
+            if (MagicEffects_Property.HasBeenSet)
+            {
+                if (!object.Equals(MagicEffects, rhs.MagicEffects)) return false;
+            }
+            if (Scripts_Property.HasBeenSet != rhs.Scripts_Property.HasBeenSet) return false;
+            if (Scripts_Property.HasBeenSet)
+            {
+                if (!object.Equals(Scripts, rhs.Scripts)) return false;
+            }
+            if (LandTextures_Property.HasBeenSet != rhs.LandTextures_Property.HasBeenSet) return false;
+            if (LandTextures_Property.HasBeenSet)
+            {
+                if (!object.Equals(LandTextures, rhs.LandTextures)) return false;
+            }
+            if (Enchantments_Property.HasBeenSet != rhs.Enchantments_Property.HasBeenSet) return false;
+            if (Enchantments_Property.HasBeenSet)
+            {
+                if (!object.Equals(Enchantments, rhs.Enchantments)) return false;
+            }
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = HashHelper.GetHashCode(TES4).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(GameSettings).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Globals).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Classes).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Factions).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Hairs).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Eyes).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Races).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Sounds).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Skills).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(MagicEffects).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Scripts).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(LandTextures).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Enchantments).CombineHashCode(ret);
+            if (TES4_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(TES4).CombineHashCode(ret);
+            }
+            if (GameSettings_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(GameSettings).CombineHashCode(ret);
+            }
+            if (Globals_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Globals).CombineHashCode(ret);
+            }
+            if (Classes_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Classes).CombineHashCode(ret);
+            }
+            if (Factions_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Factions).CombineHashCode(ret);
+            }
+            if (Hairs_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Hairs).CombineHashCode(ret);
+            }
+            if (Eyes_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Eyes).CombineHashCode(ret);
+            }
+            if (Races_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Races).CombineHashCode(ret);
+            }
+            if (Sounds_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Sounds).CombineHashCode(ret);
+            }
+            if (Skills_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Skills).CombineHashCode(ret);
+            }
+            if (MagicEffects_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(MagicEffects).CombineHashCode(ret);
+            }
+            if (Scripts_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Scripts).CombineHashCode(ret);
+            }
+            if (LandTextures_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(LandTextures).CombineHashCode(ret);
+            }
+            if (Enchantments_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Enchantments).CombineHashCode(ret);
+            }
             return ret;
         }
 
@@ -1008,10 +1106,11 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask);
                     while (!frame.Complete)
                     {
-                        if (!Fill_Binary_RecordTypes(
+                        var parsed = Fill_Binary_RecordTypes(
                             item: ret,
                             frame: frame,
-                            errorMask: errorMask)) break;
+                            errorMask: errorMask);
+                        if (parsed.Failed) break;
                     }
                 }
             }
@@ -1030,7 +1129,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
         }
 
-        protected static bool Fill_Binary_RecordTypes(
+        protected static TryGet<OblivionMod_FieldIndex?> Fill_Binary_RecordTypes(
             OblivionMod item,
             MutagenFrame frame,
             Func<OblivionMod_ErrorMask> errorMask)
@@ -1045,91 +1144,90 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         fieldIndex: (int)OblivionMod_FieldIndex.TES4,
                         errorMask: errorMask));
-                    break;
+                    return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.TES4);
                 case "GMST":
                     item._GameSettings.SetIfSucceeded(LoquiBinaryTranslation<Group<GameSetting>, Group_ErrorMask<GameSetting_ErrorMask>>.Instance.Parse(
                         frame: frame,
                         fieldIndex: (int)OblivionMod_FieldIndex.GameSettings,
                         errorMask: errorMask));
-                    break;
+                    return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.GameSettings);
                 case "GLOB":
                     item._Globals.SetIfSucceeded(LoquiBinaryTranslation<Group<Global>, Group_ErrorMask<Global_ErrorMask>>.Instance.Parse(
                         frame: frame,
                         fieldIndex: (int)OblivionMod_FieldIndex.Globals,
                         errorMask: errorMask));
-                    break;
+                    return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Globals);
                 case "CLAS":
                     item._Classes.SetIfSucceeded(LoquiBinaryTranslation<Group<Class>, Group_ErrorMask<Class_ErrorMask>>.Instance.Parse(
                         frame: frame,
                         fieldIndex: (int)OblivionMod_FieldIndex.Classes,
                         errorMask: errorMask));
-                    break;
+                    return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Classes);
                 case "FACT":
                     item._Factions.SetIfSucceeded(LoquiBinaryTranslation<Group<Faction>, Group_ErrorMask<Faction_ErrorMask>>.Instance.Parse(
                         frame: frame,
                         fieldIndex: (int)OblivionMod_FieldIndex.Factions,
                         errorMask: errorMask));
-                    break;
+                    return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Factions);
                 case "HAIR":
                     item._Hairs.SetIfSucceeded(LoquiBinaryTranslation<Group<Hair>, Group_ErrorMask<Hair_ErrorMask>>.Instance.Parse(
                         frame: frame,
                         fieldIndex: (int)OblivionMod_FieldIndex.Hairs,
                         errorMask: errorMask));
-                    break;
+                    return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Hairs);
                 case "EYES":
                     item._Eyes.SetIfSucceeded(LoquiBinaryTranslation<Group<Eye>, Group_ErrorMask<Eye_ErrorMask>>.Instance.Parse(
                         frame: frame,
                         fieldIndex: (int)OblivionMod_FieldIndex.Eyes,
                         errorMask: errorMask));
-                    break;
+                    return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Eyes);
                 case "RACE":
                     item._Races.SetIfSucceeded(LoquiBinaryTranslation<Group<Race>, Group_ErrorMask<Race_ErrorMask>>.Instance.Parse(
                         frame: frame,
                         fieldIndex: (int)OblivionMod_FieldIndex.Races,
                         errorMask: errorMask));
-                    break;
+                    return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Races);
                 case "SOUN":
                     item._Sounds.SetIfSucceeded(LoquiBinaryTranslation<Group<Sound>, Group_ErrorMask<Sound_ErrorMask>>.Instance.Parse(
                         frame: frame,
                         fieldIndex: (int)OblivionMod_FieldIndex.Sounds,
                         errorMask: errorMask));
-                    break;
+                    return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Sounds);
                 case "SKIL":
                     item._Skills.SetIfSucceeded(LoquiBinaryTranslation<Group<SkillRecord>, Group_ErrorMask<SkillRecord_ErrorMask>>.Instance.Parse(
                         frame: frame,
                         fieldIndex: (int)OblivionMod_FieldIndex.Skills,
                         errorMask: errorMask));
-                    break;
+                    return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Skills);
                 case "MGEF":
                     item._MagicEffects.SetIfSucceeded(LoquiBinaryTranslation<Group<MagicEffect>, Group_ErrorMask<MagicEffect_ErrorMask>>.Instance.Parse(
                         frame: frame,
                         fieldIndex: (int)OblivionMod_FieldIndex.MagicEffects,
                         errorMask: errorMask));
-                    break;
+                    return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.MagicEffects);
                 case "SCPT":
                     item._Scripts.SetIfSucceeded(LoquiBinaryTranslation<Group<Script>, Group_ErrorMask<Script_ErrorMask>>.Instance.Parse(
                         frame: frame,
                         fieldIndex: (int)OblivionMod_FieldIndex.Scripts,
                         errorMask: errorMask));
-                    break;
+                    return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Scripts);
                 case "LTEX":
                     item._LandTextures.SetIfSucceeded(LoquiBinaryTranslation<Group<LandTexture>, Group_ErrorMask<LandTexture_ErrorMask>>.Instance.Parse(
                         frame: frame,
                         fieldIndex: (int)OblivionMod_FieldIndex.LandTextures,
                         errorMask: errorMask));
-                    break;
+                    return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.LandTextures);
                 case "ENCH":
                     item._Enchantments.SetIfSucceeded(LoquiBinaryTranslation<Group<Enchantment>, Group_ErrorMask<Enchantment_ErrorMask>>.Instance.Parse(
                         frame: frame,
                         fieldIndex: (int)OblivionMod_FieldIndex.Enchantments,
                         errorMask: errorMask));
-                    break;
+                    return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Enchantments);
                 default:
                     errorMask().Warnings.Add($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength;
-                    break;
+                    return TryGet<OblivionMod_FieldIndex?>.Succeed(null);
             }
-            return true;
         }
 
         #endregion
@@ -1402,46 +1500,46 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IOblivionMod : IOblivionModGetter, ILoquiClass<IOblivionMod, IOblivionModGetter>, ILoquiClass<OblivionMod, IOblivionModGetter>
     {
         new TES4 TES4 { get; set; }
-        new INotifyingItem<TES4> TES4_Property { get; }
+        new INotifyingSetItem<TES4> TES4_Property { get; }
 
         new Group<GameSetting> GameSettings { get; set; }
-        new INotifyingItem<Group<GameSetting>> GameSettings_Property { get; }
+        new INotifyingSetItem<Group<GameSetting>> GameSettings_Property { get; }
 
         new Group<Global> Globals { get; set; }
-        new INotifyingItem<Group<Global>> Globals_Property { get; }
+        new INotifyingSetItem<Group<Global>> Globals_Property { get; }
 
         new Group<Class> Classes { get; set; }
-        new INotifyingItem<Group<Class>> Classes_Property { get; }
+        new INotifyingSetItem<Group<Class>> Classes_Property { get; }
 
         new Group<Faction> Factions { get; set; }
-        new INotifyingItem<Group<Faction>> Factions_Property { get; }
+        new INotifyingSetItem<Group<Faction>> Factions_Property { get; }
 
         new Group<Hair> Hairs { get; set; }
-        new INotifyingItem<Group<Hair>> Hairs_Property { get; }
+        new INotifyingSetItem<Group<Hair>> Hairs_Property { get; }
 
         new Group<Eye> Eyes { get; set; }
-        new INotifyingItem<Group<Eye>> Eyes_Property { get; }
+        new INotifyingSetItem<Group<Eye>> Eyes_Property { get; }
 
         new Group<Race> Races { get; set; }
-        new INotifyingItem<Group<Race>> Races_Property { get; }
+        new INotifyingSetItem<Group<Race>> Races_Property { get; }
 
         new Group<Sound> Sounds { get; set; }
-        new INotifyingItem<Group<Sound>> Sounds_Property { get; }
+        new INotifyingSetItem<Group<Sound>> Sounds_Property { get; }
 
         new Group<SkillRecord> Skills { get; set; }
-        new INotifyingItem<Group<SkillRecord>> Skills_Property { get; }
+        new INotifyingSetItem<Group<SkillRecord>> Skills_Property { get; }
 
         new Group<MagicEffect> MagicEffects { get; set; }
-        new INotifyingItem<Group<MagicEffect>> MagicEffects_Property { get; }
+        new INotifyingSetItem<Group<MagicEffect>> MagicEffects_Property { get; }
 
         new Group<Script> Scripts { get; set; }
-        new INotifyingItem<Group<Script>> Scripts_Property { get; }
+        new INotifyingSetItem<Group<Script>> Scripts_Property { get; }
 
         new Group<LandTexture> LandTextures { get; set; }
-        new INotifyingItem<Group<LandTexture>> LandTextures_Property { get; }
+        new INotifyingSetItem<Group<LandTexture>> LandTextures_Property { get; }
 
         new Group<Enchantment> Enchantments { get; set; }
-        new INotifyingItem<Group<Enchantment>> Enchantments_Property { get; }
+        new INotifyingSetItem<Group<Enchantment>> Enchantments_Property { get; }
 
     }
 
@@ -1449,72 +1547,72 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region TES4
         TES4 TES4 { get; }
-        INotifyingItemGetter<TES4> TES4_Property { get; }
+        INotifyingSetItemGetter<TES4> TES4_Property { get; }
 
         #endregion
         #region GameSettings
         Group<GameSetting> GameSettings { get; }
-        INotifyingItemGetter<Group<GameSetting>> GameSettings_Property { get; }
+        INotifyingSetItemGetter<Group<GameSetting>> GameSettings_Property { get; }
 
         #endregion
         #region Globals
         Group<Global> Globals { get; }
-        INotifyingItemGetter<Group<Global>> Globals_Property { get; }
+        INotifyingSetItemGetter<Group<Global>> Globals_Property { get; }
 
         #endregion
         #region Classes
         Group<Class> Classes { get; }
-        INotifyingItemGetter<Group<Class>> Classes_Property { get; }
+        INotifyingSetItemGetter<Group<Class>> Classes_Property { get; }
 
         #endregion
         #region Factions
         Group<Faction> Factions { get; }
-        INotifyingItemGetter<Group<Faction>> Factions_Property { get; }
+        INotifyingSetItemGetter<Group<Faction>> Factions_Property { get; }
 
         #endregion
         #region Hairs
         Group<Hair> Hairs { get; }
-        INotifyingItemGetter<Group<Hair>> Hairs_Property { get; }
+        INotifyingSetItemGetter<Group<Hair>> Hairs_Property { get; }
 
         #endregion
         #region Eyes
         Group<Eye> Eyes { get; }
-        INotifyingItemGetter<Group<Eye>> Eyes_Property { get; }
+        INotifyingSetItemGetter<Group<Eye>> Eyes_Property { get; }
 
         #endregion
         #region Races
         Group<Race> Races { get; }
-        INotifyingItemGetter<Group<Race>> Races_Property { get; }
+        INotifyingSetItemGetter<Group<Race>> Races_Property { get; }
 
         #endregion
         #region Sounds
         Group<Sound> Sounds { get; }
-        INotifyingItemGetter<Group<Sound>> Sounds_Property { get; }
+        INotifyingSetItemGetter<Group<Sound>> Sounds_Property { get; }
 
         #endregion
         #region Skills
         Group<SkillRecord> Skills { get; }
-        INotifyingItemGetter<Group<SkillRecord>> Skills_Property { get; }
+        INotifyingSetItemGetter<Group<SkillRecord>> Skills_Property { get; }
 
         #endregion
         #region MagicEffects
         Group<MagicEffect> MagicEffects { get; }
-        INotifyingItemGetter<Group<MagicEffect>> MagicEffects_Property { get; }
+        INotifyingSetItemGetter<Group<MagicEffect>> MagicEffects_Property { get; }
 
         #endregion
         #region Scripts
         Group<Script> Scripts { get; }
-        INotifyingItemGetter<Group<Script>> Scripts_Property { get; }
+        INotifyingSetItemGetter<Group<Script>> Scripts_Property { get; }
 
         #endregion
         #region LandTextures
         Group<LandTexture> LandTextures { get; }
-        INotifyingItemGetter<Group<LandTexture>> LandTextures_Property { get; }
+        INotifyingSetItemGetter<Group<LandTexture>> LandTextures_Property { get; }
 
         #endregion
         #region Enchantments
         Group<Enchantment> Enchantments { get; }
-        INotifyingItemGetter<Group<Enchantment>> Enchantments_Property { get; }
+        INotifyingSetItemGetter<Group<Enchantment>> Enchantments_Property { get; }
 
         #endregion
 
@@ -1836,7 +1934,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType SCPT_HEADER = new RecordType("SCPT");
         public static readonly RecordType LTEX_HEADER = new RecordType("LTEX");
         public static readonly RecordType ENCH_HEADER = new RecordType("ENCH");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = TES4_HEADER;
+        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
+        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        {
+            return new CollectionGetterWrapper<RecordType>(
+                new HashSet<RecordType>(
+                    new RecordType[]
+                    {
+                        TES4_HEADER,
+                        GMST_HEADER,
+                        GLOB_HEADER,
+                        CLAS_HEADER,
+                        FACT_HEADER,
+                        HAIR_HEADER,
+                        EYES_HEADER,
+                        RACE_HEADER,
+                        SOUN_HEADER,
+                        SKIL_HEADER,
+                        MGEF_HEADER,
+                        SCPT_HEADER,
+                        LTEX_HEADER,
+                        ENCH_HEADER
+                    })
+            );
+        });
         public const int NumStructFields = 0;
         public const int NumTypedFields = 14;
         #region Interface
@@ -1949,46 +2070,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    switch (copyMask?.TES4?.Overall ?? CopyOption.Reference)
-                    {
-                        case CopyOption.Reference:
-                            item.TES4 = rhs.TES4;
-                            break;
-                        case CopyOption.CopyIn:
-                            TES4Common.CopyFieldsFrom(
-                                item: item.TES4,
-                                rhs: rhs.TES4,
-                                def: def?.TES4,
-                                doMasks: doMasks,
-                                errorMask: (doMasks ? new Func<TES4_ErrorMask>(() =>
-                                {
-                                    var baseMask = errorMask();
-                                    if (baseMask.TES4.Specific == null)
-                                    {
-                                        baseMask.TES4 = new MaskItem<Exception, TES4_ErrorMask>(null, new TES4_ErrorMask());
-                                    }
-                                    return baseMask.TES4.Specific;
-                                }
-                                ) : null),
-                                copyMask: copyMask?.TES4.Specific,
-                                cmds: cmds);
-                            break;
-                        case CopyOption.MakeCopy:
-                            if (rhs.TES4 == null)
+                    item.TES4_Property.SetToWithDefault(
+                        rhs.TES4_Property,
+                        def?.TES4_Property,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.TES4.Overall ?? CopyOption.Reference)
                             {
-                                item.TES4 = null;
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    TES4Common.CopyFieldsFrom(
+                                        item: item.TES4,
+                                        rhs: rhs.TES4,
+                                        def: def?.TES4,
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<TES4_ErrorMask>(() =>
+                                        {
+                                            var baseMask = errorMask();
+                                            if (baseMask.TES4.Specific == null)
+                                            {
+                                                baseMask.TES4 = new MaskItem<Exception, TES4_ErrorMask>(null, new TES4_ErrorMask());
+                                            }
+                                            return baseMask.TES4.Specific;
+                                        }
+                                        ) : null),
+                                        copyMask: copyMask?.TES4.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(TES4);
+                                    return TES4.Copy(
+                                        r,
+                                        copyMask?.TES4?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.TES4?.Overall}. Cannot execute copy.");
                             }
-                            else
-                            {
-                                item.TES4 = TES4.Copy(
-                                    rhs.TES4,
-                                    copyMask?.TES4?.Specific,
-                                    def?.TES4);
-                            }
-                            break;
-                        default:
-                            throw new NotImplementedException($"Unknown CopyOption {copyMask?.TES4?.Overall}. Cannot execute copy.");
-                    }
+                        }
+                        );
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -2000,46 +2121,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    switch (copyMask?.GameSettings?.Overall ?? CopyOption.Reference)
-                    {
-                        case CopyOption.Reference:
-                            item.GameSettings = rhs.GameSettings;
-                            break;
-                        case CopyOption.CopyIn:
-                            GroupCommon.CopyFieldsFrom(
-                                item: item.GameSettings,
-                                rhs: rhs.GameSettings,
-                                def: def?.GameSettings,
-                                doMasks: doMasks,
-                                errorMask: (doMasks ? new Func<Group_ErrorMask<GameSetting_ErrorMask>>(() =>
-                                {
-                                    var baseMask = errorMask();
-                                    if (baseMask.GameSettings.Specific == null)
-                                    {
-                                        baseMask.GameSettings = new MaskItem<Exception, Group_ErrorMask<GameSetting_ErrorMask>>(null, new Group_ErrorMask<GameSetting_ErrorMask>());
-                                    }
-                                    return baseMask.GameSettings.Specific;
-                                }
-                                ) : null),
-                                copyMask: copyMask?.GameSettings.Specific,
-                                cmds: cmds);
-                            break;
-                        case CopyOption.MakeCopy:
-                            if (rhs.GameSettings == null)
+                    item.GameSettings_Property.SetToWithDefault(
+                        rhs.GameSettings_Property,
+                        def?.GameSettings_Property,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.GameSettings.Overall ?? CopyOption.Reference)
                             {
-                                item.GameSettings = null;
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    GroupCommon.CopyFieldsFrom(
+                                        item: item.GameSettings,
+                                        rhs: rhs.GameSettings,
+                                        def: def?.GameSettings,
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<Group_ErrorMask<GameSetting_ErrorMask>>(() =>
+                                        {
+                                            var baseMask = errorMask();
+                                            if (baseMask.GameSettings.Specific == null)
+                                            {
+                                                baseMask.GameSettings = new MaskItem<Exception, Group_ErrorMask<GameSetting_ErrorMask>>(null, new Group_ErrorMask<GameSetting_ErrorMask>());
+                                            }
+                                            return baseMask.GameSettings.Specific;
+                                        }
+                                        ) : null),
+                                        copyMask: copyMask?.GameSettings.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(Group<GameSetting>);
+                                    return Group<GameSetting>.Copy(
+                                        r,
+                                        copyMask?.GameSettings?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.GameSettings?.Overall}. Cannot execute copy.");
                             }
-                            else
-                            {
-                                item.GameSettings = Group<GameSetting>.Copy(
-                                    rhs.GameSettings,
-                                    copyMask?.GameSettings?.Specific,
-                                    def?.GameSettings);
-                            }
-                            break;
-                        default:
-                            throw new NotImplementedException($"Unknown CopyOption {copyMask?.GameSettings?.Overall}. Cannot execute copy.");
-                    }
+                        }
+                        );
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -2051,46 +2172,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    switch (copyMask?.Globals?.Overall ?? CopyOption.Reference)
-                    {
-                        case CopyOption.Reference:
-                            item.Globals = rhs.Globals;
-                            break;
-                        case CopyOption.CopyIn:
-                            GroupCommon.CopyFieldsFrom(
-                                item: item.Globals,
-                                rhs: rhs.Globals,
-                                def: def?.Globals,
-                                doMasks: doMasks,
-                                errorMask: (doMasks ? new Func<Group_ErrorMask<Global_ErrorMask>>(() =>
-                                {
-                                    var baseMask = errorMask();
-                                    if (baseMask.Globals.Specific == null)
-                                    {
-                                        baseMask.Globals = new MaskItem<Exception, Group_ErrorMask<Global_ErrorMask>>(null, new Group_ErrorMask<Global_ErrorMask>());
-                                    }
-                                    return baseMask.Globals.Specific;
-                                }
-                                ) : null),
-                                copyMask: copyMask?.Globals.Specific,
-                                cmds: cmds);
-                            break;
-                        case CopyOption.MakeCopy:
-                            if (rhs.Globals == null)
+                    item.Globals_Property.SetToWithDefault(
+                        rhs.Globals_Property,
+                        def?.Globals_Property,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.Globals.Overall ?? CopyOption.Reference)
                             {
-                                item.Globals = null;
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    GroupCommon.CopyFieldsFrom(
+                                        item: item.Globals,
+                                        rhs: rhs.Globals,
+                                        def: def?.Globals,
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<Group_ErrorMask<Global_ErrorMask>>(() =>
+                                        {
+                                            var baseMask = errorMask();
+                                            if (baseMask.Globals.Specific == null)
+                                            {
+                                                baseMask.Globals = new MaskItem<Exception, Group_ErrorMask<Global_ErrorMask>>(null, new Group_ErrorMask<Global_ErrorMask>());
+                                            }
+                                            return baseMask.Globals.Specific;
+                                        }
+                                        ) : null),
+                                        copyMask: copyMask?.Globals.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(Group<Global>);
+                                    return Group<Global>.Copy(
+                                        r,
+                                        copyMask?.Globals?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Globals?.Overall}. Cannot execute copy.");
                             }
-                            else
-                            {
-                                item.Globals = Group<Global>.Copy(
-                                    rhs.Globals,
-                                    copyMask?.Globals?.Specific,
-                                    def?.Globals);
-                            }
-                            break;
-                        default:
-                            throw new NotImplementedException($"Unknown CopyOption {copyMask?.Globals?.Overall}. Cannot execute copy.");
-                    }
+                        }
+                        );
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -2102,46 +2223,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    switch (copyMask?.Classes?.Overall ?? CopyOption.Reference)
-                    {
-                        case CopyOption.Reference:
-                            item.Classes = rhs.Classes;
-                            break;
-                        case CopyOption.CopyIn:
-                            GroupCommon.CopyFieldsFrom(
-                                item: item.Classes,
-                                rhs: rhs.Classes,
-                                def: def?.Classes,
-                                doMasks: doMasks,
-                                errorMask: (doMasks ? new Func<Group_ErrorMask<Class_ErrorMask>>(() =>
-                                {
-                                    var baseMask = errorMask();
-                                    if (baseMask.Classes.Specific == null)
-                                    {
-                                        baseMask.Classes = new MaskItem<Exception, Group_ErrorMask<Class_ErrorMask>>(null, new Group_ErrorMask<Class_ErrorMask>());
-                                    }
-                                    return baseMask.Classes.Specific;
-                                }
-                                ) : null),
-                                copyMask: copyMask?.Classes.Specific,
-                                cmds: cmds);
-                            break;
-                        case CopyOption.MakeCopy:
-                            if (rhs.Classes == null)
+                    item.Classes_Property.SetToWithDefault(
+                        rhs.Classes_Property,
+                        def?.Classes_Property,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.Classes.Overall ?? CopyOption.Reference)
                             {
-                                item.Classes = null;
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    GroupCommon.CopyFieldsFrom(
+                                        item: item.Classes,
+                                        rhs: rhs.Classes,
+                                        def: def?.Classes,
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<Group_ErrorMask<Class_ErrorMask>>(() =>
+                                        {
+                                            var baseMask = errorMask();
+                                            if (baseMask.Classes.Specific == null)
+                                            {
+                                                baseMask.Classes = new MaskItem<Exception, Group_ErrorMask<Class_ErrorMask>>(null, new Group_ErrorMask<Class_ErrorMask>());
+                                            }
+                                            return baseMask.Classes.Specific;
+                                        }
+                                        ) : null),
+                                        copyMask: copyMask?.Classes.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(Group<Class>);
+                                    return Group<Class>.Copy(
+                                        r,
+                                        copyMask?.Classes?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Classes?.Overall}. Cannot execute copy.");
                             }
-                            else
-                            {
-                                item.Classes = Group<Class>.Copy(
-                                    rhs.Classes,
-                                    copyMask?.Classes?.Specific,
-                                    def?.Classes);
-                            }
-                            break;
-                        default:
-                            throw new NotImplementedException($"Unknown CopyOption {copyMask?.Classes?.Overall}. Cannot execute copy.");
-                    }
+                        }
+                        );
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -2153,46 +2274,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    switch (copyMask?.Factions?.Overall ?? CopyOption.Reference)
-                    {
-                        case CopyOption.Reference:
-                            item.Factions = rhs.Factions;
-                            break;
-                        case CopyOption.CopyIn:
-                            GroupCommon.CopyFieldsFrom(
-                                item: item.Factions,
-                                rhs: rhs.Factions,
-                                def: def?.Factions,
-                                doMasks: doMasks,
-                                errorMask: (doMasks ? new Func<Group_ErrorMask<Faction_ErrorMask>>(() =>
-                                {
-                                    var baseMask = errorMask();
-                                    if (baseMask.Factions.Specific == null)
-                                    {
-                                        baseMask.Factions = new MaskItem<Exception, Group_ErrorMask<Faction_ErrorMask>>(null, new Group_ErrorMask<Faction_ErrorMask>());
-                                    }
-                                    return baseMask.Factions.Specific;
-                                }
-                                ) : null),
-                                copyMask: copyMask?.Factions.Specific,
-                                cmds: cmds);
-                            break;
-                        case CopyOption.MakeCopy:
-                            if (rhs.Factions == null)
+                    item.Factions_Property.SetToWithDefault(
+                        rhs.Factions_Property,
+                        def?.Factions_Property,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.Factions.Overall ?? CopyOption.Reference)
                             {
-                                item.Factions = null;
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    GroupCommon.CopyFieldsFrom(
+                                        item: item.Factions,
+                                        rhs: rhs.Factions,
+                                        def: def?.Factions,
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<Group_ErrorMask<Faction_ErrorMask>>(() =>
+                                        {
+                                            var baseMask = errorMask();
+                                            if (baseMask.Factions.Specific == null)
+                                            {
+                                                baseMask.Factions = new MaskItem<Exception, Group_ErrorMask<Faction_ErrorMask>>(null, new Group_ErrorMask<Faction_ErrorMask>());
+                                            }
+                                            return baseMask.Factions.Specific;
+                                        }
+                                        ) : null),
+                                        copyMask: copyMask?.Factions.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(Group<Faction>);
+                                    return Group<Faction>.Copy(
+                                        r,
+                                        copyMask?.Factions?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Factions?.Overall}. Cannot execute copy.");
                             }
-                            else
-                            {
-                                item.Factions = Group<Faction>.Copy(
-                                    rhs.Factions,
-                                    copyMask?.Factions?.Specific,
-                                    def?.Factions);
-                            }
-                            break;
-                        default:
-                            throw new NotImplementedException($"Unknown CopyOption {copyMask?.Factions?.Overall}. Cannot execute copy.");
-                    }
+                        }
+                        );
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -2204,46 +2325,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    switch (copyMask?.Hairs?.Overall ?? CopyOption.Reference)
-                    {
-                        case CopyOption.Reference:
-                            item.Hairs = rhs.Hairs;
-                            break;
-                        case CopyOption.CopyIn:
-                            GroupCommon.CopyFieldsFrom(
-                                item: item.Hairs,
-                                rhs: rhs.Hairs,
-                                def: def?.Hairs,
-                                doMasks: doMasks,
-                                errorMask: (doMasks ? new Func<Group_ErrorMask<Hair_ErrorMask>>(() =>
-                                {
-                                    var baseMask = errorMask();
-                                    if (baseMask.Hairs.Specific == null)
-                                    {
-                                        baseMask.Hairs = new MaskItem<Exception, Group_ErrorMask<Hair_ErrorMask>>(null, new Group_ErrorMask<Hair_ErrorMask>());
-                                    }
-                                    return baseMask.Hairs.Specific;
-                                }
-                                ) : null),
-                                copyMask: copyMask?.Hairs.Specific,
-                                cmds: cmds);
-                            break;
-                        case CopyOption.MakeCopy:
-                            if (rhs.Hairs == null)
+                    item.Hairs_Property.SetToWithDefault(
+                        rhs.Hairs_Property,
+                        def?.Hairs_Property,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.Hairs.Overall ?? CopyOption.Reference)
                             {
-                                item.Hairs = null;
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    GroupCommon.CopyFieldsFrom(
+                                        item: item.Hairs,
+                                        rhs: rhs.Hairs,
+                                        def: def?.Hairs,
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<Group_ErrorMask<Hair_ErrorMask>>(() =>
+                                        {
+                                            var baseMask = errorMask();
+                                            if (baseMask.Hairs.Specific == null)
+                                            {
+                                                baseMask.Hairs = new MaskItem<Exception, Group_ErrorMask<Hair_ErrorMask>>(null, new Group_ErrorMask<Hair_ErrorMask>());
+                                            }
+                                            return baseMask.Hairs.Specific;
+                                        }
+                                        ) : null),
+                                        copyMask: copyMask?.Hairs.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(Group<Hair>);
+                                    return Group<Hair>.Copy(
+                                        r,
+                                        copyMask?.Hairs?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Hairs?.Overall}. Cannot execute copy.");
                             }
-                            else
-                            {
-                                item.Hairs = Group<Hair>.Copy(
-                                    rhs.Hairs,
-                                    copyMask?.Hairs?.Specific,
-                                    def?.Hairs);
-                            }
-                            break;
-                        default:
-                            throw new NotImplementedException($"Unknown CopyOption {copyMask?.Hairs?.Overall}. Cannot execute copy.");
-                    }
+                        }
+                        );
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -2255,46 +2376,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    switch (copyMask?.Eyes?.Overall ?? CopyOption.Reference)
-                    {
-                        case CopyOption.Reference:
-                            item.Eyes = rhs.Eyes;
-                            break;
-                        case CopyOption.CopyIn:
-                            GroupCommon.CopyFieldsFrom(
-                                item: item.Eyes,
-                                rhs: rhs.Eyes,
-                                def: def?.Eyes,
-                                doMasks: doMasks,
-                                errorMask: (doMasks ? new Func<Group_ErrorMask<Eye_ErrorMask>>(() =>
-                                {
-                                    var baseMask = errorMask();
-                                    if (baseMask.Eyes.Specific == null)
-                                    {
-                                        baseMask.Eyes = new MaskItem<Exception, Group_ErrorMask<Eye_ErrorMask>>(null, new Group_ErrorMask<Eye_ErrorMask>());
-                                    }
-                                    return baseMask.Eyes.Specific;
-                                }
-                                ) : null),
-                                copyMask: copyMask?.Eyes.Specific,
-                                cmds: cmds);
-                            break;
-                        case CopyOption.MakeCopy:
-                            if (rhs.Eyes == null)
+                    item.Eyes_Property.SetToWithDefault(
+                        rhs.Eyes_Property,
+                        def?.Eyes_Property,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.Eyes.Overall ?? CopyOption.Reference)
                             {
-                                item.Eyes = null;
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    GroupCommon.CopyFieldsFrom(
+                                        item: item.Eyes,
+                                        rhs: rhs.Eyes,
+                                        def: def?.Eyes,
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<Group_ErrorMask<Eye_ErrorMask>>(() =>
+                                        {
+                                            var baseMask = errorMask();
+                                            if (baseMask.Eyes.Specific == null)
+                                            {
+                                                baseMask.Eyes = new MaskItem<Exception, Group_ErrorMask<Eye_ErrorMask>>(null, new Group_ErrorMask<Eye_ErrorMask>());
+                                            }
+                                            return baseMask.Eyes.Specific;
+                                        }
+                                        ) : null),
+                                        copyMask: copyMask?.Eyes.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(Group<Eye>);
+                                    return Group<Eye>.Copy(
+                                        r,
+                                        copyMask?.Eyes?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Eyes?.Overall}. Cannot execute copy.");
                             }
-                            else
-                            {
-                                item.Eyes = Group<Eye>.Copy(
-                                    rhs.Eyes,
-                                    copyMask?.Eyes?.Specific,
-                                    def?.Eyes);
-                            }
-                            break;
-                        default:
-                            throw new NotImplementedException($"Unknown CopyOption {copyMask?.Eyes?.Overall}. Cannot execute copy.");
-                    }
+                        }
+                        );
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -2306,46 +2427,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    switch (copyMask?.Races?.Overall ?? CopyOption.Reference)
-                    {
-                        case CopyOption.Reference:
-                            item.Races = rhs.Races;
-                            break;
-                        case CopyOption.CopyIn:
-                            GroupCommon.CopyFieldsFrom(
-                                item: item.Races,
-                                rhs: rhs.Races,
-                                def: def?.Races,
-                                doMasks: doMasks,
-                                errorMask: (doMasks ? new Func<Group_ErrorMask<Race_ErrorMask>>(() =>
-                                {
-                                    var baseMask = errorMask();
-                                    if (baseMask.Races.Specific == null)
-                                    {
-                                        baseMask.Races = new MaskItem<Exception, Group_ErrorMask<Race_ErrorMask>>(null, new Group_ErrorMask<Race_ErrorMask>());
-                                    }
-                                    return baseMask.Races.Specific;
-                                }
-                                ) : null),
-                                copyMask: copyMask?.Races.Specific,
-                                cmds: cmds);
-                            break;
-                        case CopyOption.MakeCopy:
-                            if (rhs.Races == null)
+                    item.Races_Property.SetToWithDefault(
+                        rhs.Races_Property,
+                        def?.Races_Property,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.Races.Overall ?? CopyOption.Reference)
                             {
-                                item.Races = null;
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    GroupCommon.CopyFieldsFrom(
+                                        item: item.Races,
+                                        rhs: rhs.Races,
+                                        def: def?.Races,
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<Group_ErrorMask<Race_ErrorMask>>(() =>
+                                        {
+                                            var baseMask = errorMask();
+                                            if (baseMask.Races.Specific == null)
+                                            {
+                                                baseMask.Races = new MaskItem<Exception, Group_ErrorMask<Race_ErrorMask>>(null, new Group_ErrorMask<Race_ErrorMask>());
+                                            }
+                                            return baseMask.Races.Specific;
+                                        }
+                                        ) : null),
+                                        copyMask: copyMask?.Races.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(Group<Race>);
+                                    return Group<Race>.Copy(
+                                        r,
+                                        copyMask?.Races?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Races?.Overall}. Cannot execute copy.");
                             }
-                            else
-                            {
-                                item.Races = Group<Race>.Copy(
-                                    rhs.Races,
-                                    copyMask?.Races?.Specific,
-                                    def?.Races);
-                            }
-                            break;
-                        default:
-                            throw new NotImplementedException($"Unknown CopyOption {copyMask?.Races?.Overall}. Cannot execute copy.");
-                    }
+                        }
+                        );
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -2357,46 +2478,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    switch (copyMask?.Sounds?.Overall ?? CopyOption.Reference)
-                    {
-                        case CopyOption.Reference:
-                            item.Sounds = rhs.Sounds;
-                            break;
-                        case CopyOption.CopyIn:
-                            GroupCommon.CopyFieldsFrom(
-                                item: item.Sounds,
-                                rhs: rhs.Sounds,
-                                def: def?.Sounds,
-                                doMasks: doMasks,
-                                errorMask: (doMasks ? new Func<Group_ErrorMask<Sound_ErrorMask>>(() =>
-                                {
-                                    var baseMask = errorMask();
-                                    if (baseMask.Sounds.Specific == null)
-                                    {
-                                        baseMask.Sounds = new MaskItem<Exception, Group_ErrorMask<Sound_ErrorMask>>(null, new Group_ErrorMask<Sound_ErrorMask>());
-                                    }
-                                    return baseMask.Sounds.Specific;
-                                }
-                                ) : null),
-                                copyMask: copyMask?.Sounds.Specific,
-                                cmds: cmds);
-                            break;
-                        case CopyOption.MakeCopy:
-                            if (rhs.Sounds == null)
+                    item.Sounds_Property.SetToWithDefault(
+                        rhs.Sounds_Property,
+                        def?.Sounds_Property,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.Sounds.Overall ?? CopyOption.Reference)
                             {
-                                item.Sounds = null;
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    GroupCommon.CopyFieldsFrom(
+                                        item: item.Sounds,
+                                        rhs: rhs.Sounds,
+                                        def: def?.Sounds,
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<Group_ErrorMask<Sound_ErrorMask>>(() =>
+                                        {
+                                            var baseMask = errorMask();
+                                            if (baseMask.Sounds.Specific == null)
+                                            {
+                                                baseMask.Sounds = new MaskItem<Exception, Group_ErrorMask<Sound_ErrorMask>>(null, new Group_ErrorMask<Sound_ErrorMask>());
+                                            }
+                                            return baseMask.Sounds.Specific;
+                                        }
+                                        ) : null),
+                                        copyMask: copyMask?.Sounds.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(Group<Sound>);
+                                    return Group<Sound>.Copy(
+                                        r,
+                                        copyMask?.Sounds?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Sounds?.Overall}. Cannot execute copy.");
                             }
-                            else
-                            {
-                                item.Sounds = Group<Sound>.Copy(
-                                    rhs.Sounds,
-                                    copyMask?.Sounds?.Specific,
-                                    def?.Sounds);
-                            }
-                            break;
-                        default:
-                            throw new NotImplementedException($"Unknown CopyOption {copyMask?.Sounds?.Overall}. Cannot execute copy.");
-                    }
+                        }
+                        );
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -2408,46 +2529,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    switch (copyMask?.Skills?.Overall ?? CopyOption.Reference)
-                    {
-                        case CopyOption.Reference:
-                            item.Skills = rhs.Skills;
-                            break;
-                        case CopyOption.CopyIn:
-                            GroupCommon.CopyFieldsFrom(
-                                item: item.Skills,
-                                rhs: rhs.Skills,
-                                def: def?.Skills,
-                                doMasks: doMasks,
-                                errorMask: (doMasks ? new Func<Group_ErrorMask<SkillRecord_ErrorMask>>(() =>
-                                {
-                                    var baseMask = errorMask();
-                                    if (baseMask.Skills.Specific == null)
-                                    {
-                                        baseMask.Skills = new MaskItem<Exception, Group_ErrorMask<SkillRecord_ErrorMask>>(null, new Group_ErrorMask<SkillRecord_ErrorMask>());
-                                    }
-                                    return baseMask.Skills.Specific;
-                                }
-                                ) : null),
-                                copyMask: copyMask?.Skills.Specific,
-                                cmds: cmds);
-                            break;
-                        case CopyOption.MakeCopy:
-                            if (rhs.Skills == null)
+                    item.Skills_Property.SetToWithDefault(
+                        rhs.Skills_Property,
+                        def?.Skills_Property,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.Skills.Overall ?? CopyOption.Reference)
                             {
-                                item.Skills = null;
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    GroupCommon.CopyFieldsFrom(
+                                        item: item.Skills,
+                                        rhs: rhs.Skills,
+                                        def: def?.Skills,
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<Group_ErrorMask<SkillRecord_ErrorMask>>(() =>
+                                        {
+                                            var baseMask = errorMask();
+                                            if (baseMask.Skills.Specific == null)
+                                            {
+                                                baseMask.Skills = new MaskItem<Exception, Group_ErrorMask<SkillRecord_ErrorMask>>(null, new Group_ErrorMask<SkillRecord_ErrorMask>());
+                                            }
+                                            return baseMask.Skills.Specific;
+                                        }
+                                        ) : null),
+                                        copyMask: copyMask?.Skills.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(Group<SkillRecord>);
+                                    return Group<SkillRecord>.Copy(
+                                        r,
+                                        copyMask?.Skills?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Skills?.Overall}. Cannot execute copy.");
                             }
-                            else
-                            {
-                                item.Skills = Group<SkillRecord>.Copy(
-                                    rhs.Skills,
-                                    copyMask?.Skills?.Specific,
-                                    def?.Skills);
-                            }
-                            break;
-                        default:
-                            throw new NotImplementedException($"Unknown CopyOption {copyMask?.Skills?.Overall}. Cannot execute copy.");
-                    }
+                        }
+                        );
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -2459,46 +2580,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    switch (copyMask?.MagicEffects?.Overall ?? CopyOption.Reference)
-                    {
-                        case CopyOption.Reference:
-                            item.MagicEffects = rhs.MagicEffects;
-                            break;
-                        case CopyOption.CopyIn:
-                            GroupCommon.CopyFieldsFrom(
-                                item: item.MagicEffects,
-                                rhs: rhs.MagicEffects,
-                                def: def?.MagicEffects,
-                                doMasks: doMasks,
-                                errorMask: (doMasks ? new Func<Group_ErrorMask<MagicEffect_ErrorMask>>(() =>
-                                {
-                                    var baseMask = errorMask();
-                                    if (baseMask.MagicEffects.Specific == null)
-                                    {
-                                        baseMask.MagicEffects = new MaskItem<Exception, Group_ErrorMask<MagicEffect_ErrorMask>>(null, new Group_ErrorMask<MagicEffect_ErrorMask>());
-                                    }
-                                    return baseMask.MagicEffects.Specific;
-                                }
-                                ) : null),
-                                copyMask: copyMask?.MagicEffects.Specific,
-                                cmds: cmds);
-                            break;
-                        case CopyOption.MakeCopy:
-                            if (rhs.MagicEffects == null)
+                    item.MagicEffects_Property.SetToWithDefault(
+                        rhs.MagicEffects_Property,
+                        def?.MagicEffects_Property,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.MagicEffects.Overall ?? CopyOption.Reference)
                             {
-                                item.MagicEffects = null;
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    GroupCommon.CopyFieldsFrom(
+                                        item: item.MagicEffects,
+                                        rhs: rhs.MagicEffects,
+                                        def: def?.MagicEffects,
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<Group_ErrorMask<MagicEffect_ErrorMask>>(() =>
+                                        {
+                                            var baseMask = errorMask();
+                                            if (baseMask.MagicEffects.Specific == null)
+                                            {
+                                                baseMask.MagicEffects = new MaskItem<Exception, Group_ErrorMask<MagicEffect_ErrorMask>>(null, new Group_ErrorMask<MagicEffect_ErrorMask>());
+                                            }
+                                            return baseMask.MagicEffects.Specific;
+                                        }
+                                        ) : null),
+                                        copyMask: copyMask?.MagicEffects.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(Group<MagicEffect>);
+                                    return Group<MagicEffect>.Copy(
+                                        r,
+                                        copyMask?.MagicEffects?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.MagicEffects?.Overall}. Cannot execute copy.");
                             }
-                            else
-                            {
-                                item.MagicEffects = Group<MagicEffect>.Copy(
-                                    rhs.MagicEffects,
-                                    copyMask?.MagicEffects?.Specific,
-                                    def?.MagicEffects);
-                            }
-                            break;
-                        default:
-                            throw new NotImplementedException($"Unknown CopyOption {copyMask?.MagicEffects?.Overall}. Cannot execute copy.");
-                    }
+                        }
+                        );
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -2510,46 +2631,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    switch (copyMask?.Scripts?.Overall ?? CopyOption.Reference)
-                    {
-                        case CopyOption.Reference:
-                            item.Scripts = rhs.Scripts;
-                            break;
-                        case CopyOption.CopyIn:
-                            GroupCommon.CopyFieldsFrom(
-                                item: item.Scripts,
-                                rhs: rhs.Scripts,
-                                def: def?.Scripts,
-                                doMasks: doMasks,
-                                errorMask: (doMasks ? new Func<Group_ErrorMask<Script_ErrorMask>>(() =>
-                                {
-                                    var baseMask = errorMask();
-                                    if (baseMask.Scripts.Specific == null)
-                                    {
-                                        baseMask.Scripts = new MaskItem<Exception, Group_ErrorMask<Script_ErrorMask>>(null, new Group_ErrorMask<Script_ErrorMask>());
-                                    }
-                                    return baseMask.Scripts.Specific;
-                                }
-                                ) : null),
-                                copyMask: copyMask?.Scripts.Specific,
-                                cmds: cmds);
-                            break;
-                        case CopyOption.MakeCopy:
-                            if (rhs.Scripts == null)
+                    item.Scripts_Property.SetToWithDefault(
+                        rhs.Scripts_Property,
+                        def?.Scripts_Property,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.Scripts.Overall ?? CopyOption.Reference)
                             {
-                                item.Scripts = null;
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    GroupCommon.CopyFieldsFrom(
+                                        item: item.Scripts,
+                                        rhs: rhs.Scripts,
+                                        def: def?.Scripts,
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<Group_ErrorMask<Script_ErrorMask>>(() =>
+                                        {
+                                            var baseMask = errorMask();
+                                            if (baseMask.Scripts.Specific == null)
+                                            {
+                                                baseMask.Scripts = new MaskItem<Exception, Group_ErrorMask<Script_ErrorMask>>(null, new Group_ErrorMask<Script_ErrorMask>());
+                                            }
+                                            return baseMask.Scripts.Specific;
+                                        }
+                                        ) : null),
+                                        copyMask: copyMask?.Scripts.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(Group<Script>);
+                                    return Group<Script>.Copy(
+                                        r,
+                                        copyMask?.Scripts?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Scripts?.Overall}. Cannot execute copy.");
                             }
-                            else
-                            {
-                                item.Scripts = Group<Script>.Copy(
-                                    rhs.Scripts,
-                                    copyMask?.Scripts?.Specific,
-                                    def?.Scripts);
-                            }
-                            break;
-                        default:
-                            throw new NotImplementedException($"Unknown CopyOption {copyMask?.Scripts?.Overall}. Cannot execute copy.");
-                    }
+                        }
+                        );
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -2561,46 +2682,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    switch (copyMask?.LandTextures?.Overall ?? CopyOption.Reference)
-                    {
-                        case CopyOption.Reference:
-                            item.LandTextures = rhs.LandTextures;
-                            break;
-                        case CopyOption.CopyIn:
-                            GroupCommon.CopyFieldsFrom(
-                                item: item.LandTextures,
-                                rhs: rhs.LandTextures,
-                                def: def?.LandTextures,
-                                doMasks: doMasks,
-                                errorMask: (doMasks ? new Func<Group_ErrorMask<LandTexture_ErrorMask>>(() =>
-                                {
-                                    var baseMask = errorMask();
-                                    if (baseMask.LandTextures.Specific == null)
-                                    {
-                                        baseMask.LandTextures = new MaskItem<Exception, Group_ErrorMask<LandTexture_ErrorMask>>(null, new Group_ErrorMask<LandTexture_ErrorMask>());
-                                    }
-                                    return baseMask.LandTextures.Specific;
-                                }
-                                ) : null),
-                                copyMask: copyMask?.LandTextures.Specific,
-                                cmds: cmds);
-                            break;
-                        case CopyOption.MakeCopy:
-                            if (rhs.LandTextures == null)
+                    item.LandTextures_Property.SetToWithDefault(
+                        rhs.LandTextures_Property,
+                        def?.LandTextures_Property,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.LandTextures.Overall ?? CopyOption.Reference)
                             {
-                                item.LandTextures = null;
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    GroupCommon.CopyFieldsFrom(
+                                        item: item.LandTextures,
+                                        rhs: rhs.LandTextures,
+                                        def: def?.LandTextures,
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<Group_ErrorMask<LandTexture_ErrorMask>>(() =>
+                                        {
+                                            var baseMask = errorMask();
+                                            if (baseMask.LandTextures.Specific == null)
+                                            {
+                                                baseMask.LandTextures = new MaskItem<Exception, Group_ErrorMask<LandTexture_ErrorMask>>(null, new Group_ErrorMask<LandTexture_ErrorMask>());
+                                            }
+                                            return baseMask.LandTextures.Specific;
+                                        }
+                                        ) : null),
+                                        copyMask: copyMask?.LandTextures.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(Group<LandTexture>);
+                                    return Group<LandTexture>.Copy(
+                                        r,
+                                        copyMask?.LandTextures?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.LandTextures?.Overall}. Cannot execute copy.");
                             }
-                            else
-                            {
-                                item.LandTextures = Group<LandTexture>.Copy(
-                                    rhs.LandTextures,
-                                    copyMask?.LandTextures?.Specific,
-                                    def?.LandTextures);
-                            }
-                            break;
-                        default:
-                            throw new NotImplementedException($"Unknown CopyOption {copyMask?.LandTextures?.Overall}. Cannot execute copy.");
-                    }
+                        }
+                        );
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -2612,46 +2733,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    switch (copyMask?.Enchantments?.Overall ?? CopyOption.Reference)
-                    {
-                        case CopyOption.Reference:
-                            item.Enchantments = rhs.Enchantments;
-                            break;
-                        case CopyOption.CopyIn:
-                            GroupCommon.CopyFieldsFrom(
-                                item: item.Enchantments,
-                                rhs: rhs.Enchantments,
-                                def: def?.Enchantments,
-                                doMasks: doMasks,
-                                errorMask: (doMasks ? new Func<Group_ErrorMask<Enchantment_ErrorMask>>(() =>
-                                {
-                                    var baseMask = errorMask();
-                                    if (baseMask.Enchantments.Specific == null)
-                                    {
-                                        baseMask.Enchantments = new MaskItem<Exception, Group_ErrorMask<Enchantment_ErrorMask>>(null, new Group_ErrorMask<Enchantment_ErrorMask>());
-                                    }
-                                    return baseMask.Enchantments.Specific;
-                                }
-                                ) : null),
-                                copyMask: copyMask?.Enchantments.Specific,
-                                cmds: cmds);
-                            break;
-                        case CopyOption.MakeCopy:
-                            if (rhs.Enchantments == null)
+                    item.Enchantments_Property.SetToWithDefault(
+                        rhs.Enchantments_Property,
+                        def?.Enchantments_Property,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.Enchantments.Overall ?? CopyOption.Reference)
                             {
-                                item.Enchantments = null;
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    GroupCommon.CopyFieldsFrom(
+                                        item: item.Enchantments,
+                                        rhs: rhs.Enchantments,
+                                        def: def?.Enchantments,
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<Group_ErrorMask<Enchantment_ErrorMask>>(() =>
+                                        {
+                                            var baseMask = errorMask();
+                                            if (baseMask.Enchantments.Specific == null)
+                                            {
+                                                baseMask.Enchantments = new MaskItem<Exception, Group_ErrorMask<Enchantment_ErrorMask>>(null, new Group_ErrorMask<Enchantment_ErrorMask>());
+                                            }
+                                            return baseMask.Enchantments.Specific;
+                                        }
+                                        ) : null),
+                                        copyMask: copyMask?.Enchantments.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(Group<Enchantment>);
+                                    return Group<Enchantment>.Copy(
+                                        r,
+                                        copyMask?.Enchantments?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Enchantments?.Overall}. Cannot execute copy.");
                             }
-                            else
-                            {
-                                item.Enchantments = Group<Enchantment>.Copy(
-                                    rhs.Enchantments,
-                                    copyMask?.Enchantments?.Specific,
-                                    def?.Enchantments);
-                            }
-                            break;
-                        default:
-                            throw new NotImplementedException($"Unknown CopyOption {copyMask?.Enchantments?.Overall}. Cannot execute copy.");
-                    }
+                        }
+                        );
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -2673,21 +2794,47 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case OblivionMod_FieldIndex.TES4:
+                    obj.TES4_Property.HasBeenSet = on;
+                    break;
                 case OblivionMod_FieldIndex.GameSettings:
+                    obj.GameSettings_Property.HasBeenSet = on;
+                    break;
                 case OblivionMod_FieldIndex.Globals:
+                    obj.Globals_Property.HasBeenSet = on;
+                    break;
                 case OblivionMod_FieldIndex.Classes:
+                    obj.Classes_Property.HasBeenSet = on;
+                    break;
                 case OblivionMod_FieldIndex.Factions:
+                    obj.Factions_Property.HasBeenSet = on;
+                    break;
                 case OblivionMod_FieldIndex.Hairs:
+                    obj.Hairs_Property.HasBeenSet = on;
+                    break;
                 case OblivionMod_FieldIndex.Eyes:
+                    obj.Eyes_Property.HasBeenSet = on;
+                    break;
                 case OblivionMod_FieldIndex.Races:
+                    obj.Races_Property.HasBeenSet = on;
+                    break;
                 case OblivionMod_FieldIndex.Sounds:
+                    obj.Sounds_Property.HasBeenSet = on;
+                    break;
                 case OblivionMod_FieldIndex.Skills:
+                    obj.Skills_Property.HasBeenSet = on;
+                    break;
                 case OblivionMod_FieldIndex.MagicEffects:
+                    obj.MagicEffects_Property.HasBeenSet = on;
+                    break;
                 case OblivionMod_FieldIndex.Scripts:
+                    obj.Scripts_Property.HasBeenSet = on;
+                    break;
                 case OblivionMod_FieldIndex.LandTextures:
+                    obj.LandTextures_Property.HasBeenSet = on;
+                    break;
                 case OblivionMod_FieldIndex.Enchantments:
-                    if (on) break;
-                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
+                    obj.Enchantments_Property.HasBeenSet = on;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2702,46 +2849,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case OblivionMod_FieldIndex.TES4:
-                    obj.TES4 = default(TES4);
+                    obj.TES4_Property.Unset(cmds);
                     break;
                 case OblivionMod_FieldIndex.GameSettings:
-                    obj.GameSettings = default(Group<GameSetting>);
+                    obj.GameSettings_Property.Unset(cmds);
                     break;
                 case OblivionMod_FieldIndex.Globals:
-                    obj.Globals = default(Group<Global>);
+                    obj.Globals_Property.Unset(cmds);
                     break;
                 case OblivionMod_FieldIndex.Classes:
-                    obj.Classes = default(Group<Class>);
+                    obj.Classes_Property.Unset(cmds);
                     break;
                 case OblivionMod_FieldIndex.Factions:
-                    obj.Factions = default(Group<Faction>);
+                    obj.Factions_Property.Unset(cmds);
                     break;
                 case OblivionMod_FieldIndex.Hairs:
-                    obj.Hairs = default(Group<Hair>);
+                    obj.Hairs_Property.Unset(cmds);
                     break;
                 case OblivionMod_FieldIndex.Eyes:
-                    obj.Eyes = default(Group<Eye>);
+                    obj.Eyes_Property.Unset(cmds);
                     break;
                 case OblivionMod_FieldIndex.Races:
-                    obj.Races = default(Group<Race>);
+                    obj.Races_Property.Unset(cmds);
                     break;
                 case OblivionMod_FieldIndex.Sounds:
-                    obj.Sounds = default(Group<Sound>);
+                    obj.Sounds_Property.Unset(cmds);
                     break;
                 case OblivionMod_FieldIndex.Skills:
-                    obj.Skills = default(Group<SkillRecord>);
+                    obj.Skills_Property.Unset(cmds);
                     break;
                 case OblivionMod_FieldIndex.MagicEffects:
-                    obj.MagicEffects = default(Group<MagicEffect>);
+                    obj.MagicEffects_Property.Unset(cmds);
                     break;
                 case OblivionMod_FieldIndex.Scripts:
-                    obj.Scripts = default(Group<Script>);
+                    obj.Scripts_Property.Unset(cmds);
                     break;
                 case OblivionMod_FieldIndex.LandTextures:
-                    obj.LandTextures = default(Group<LandTexture>);
+                    obj.LandTextures_Property.Unset(cmds);
                     break;
                 case OblivionMod_FieldIndex.Enchantments:
-                    obj.Enchantments = default(Group<Enchantment>);
+                    obj.Enchantments_Property.Unset(cmds);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2756,20 +2903,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case OblivionMod_FieldIndex.TES4:
+                    return obj.TES4_Property.HasBeenSet;
                 case OblivionMod_FieldIndex.GameSettings:
+                    return obj.GameSettings_Property.HasBeenSet;
                 case OblivionMod_FieldIndex.Globals:
+                    return obj.Globals_Property.HasBeenSet;
                 case OblivionMod_FieldIndex.Classes:
+                    return obj.Classes_Property.HasBeenSet;
                 case OblivionMod_FieldIndex.Factions:
+                    return obj.Factions_Property.HasBeenSet;
                 case OblivionMod_FieldIndex.Hairs:
+                    return obj.Hairs_Property.HasBeenSet;
                 case OblivionMod_FieldIndex.Eyes:
+                    return obj.Eyes_Property.HasBeenSet;
                 case OblivionMod_FieldIndex.Races:
+                    return obj.Races_Property.HasBeenSet;
                 case OblivionMod_FieldIndex.Sounds:
+                    return obj.Sounds_Property.HasBeenSet;
                 case OblivionMod_FieldIndex.Skills:
+                    return obj.Skills_Property.HasBeenSet;
                 case OblivionMod_FieldIndex.MagicEffects:
+                    return obj.MagicEffects_Property.HasBeenSet;
                 case OblivionMod_FieldIndex.Scripts:
+                    return obj.Scripts_Property.HasBeenSet;
                 case OblivionMod_FieldIndex.LandTextures:
+                    return obj.LandTextures_Property.HasBeenSet;
                 case OblivionMod_FieldIndex.Enchantments:
-                    return true;
+                    return obj.Enchantments_Property.HasBeenSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2819,20 +2979,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IOblivionMod item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.TES4 = default(TES4);
-            item.GameSettings = default(Group<GameSetting>);
-            item.Globals = default(Group<Global>);
-            item.Classes = default(Group<Class>);
-            item.Factions = default(Group<Faction>);
-            item.Hairs = default(Group<Hair>);
-            item.Eyes = default(Group<Eye>);
-            item.Races = default(Group<Race>);
-            item.Sounds = default(Group<Sound>);
-            item.Skills = default(Group<SkillRecord>);
-            item.MagicEffects = default(Group<MagicEffect>);
-            item.Scripts = default(Group<Script>);
-            item.LandTextures = default(Group<LandTexture>);
-            item.Enchantments = default(Group<Enchantment>);
+            item.TES4_Property.Unset(cmds.ToUnsetParams());
+            item.GameSettings_Property.Unset(cmds.ToUnsetParams());
+            item.Globals_Property.Unset(cmds.ToUnsetParams());
+            item.Classes_Property.Unset(cmds.ToUnsetParams());
+            item.Factions_Property.Unset(cmds.ToUnsetParams());
+            item.Hairs_Property.Unset(cmds.ToUnsetParams());
+            item.Eyes_Property.Unset(cmds.ToUnsetParams());
+            item.Races_Property.Unset(cmds.ToUnsetParams());
+            item.Sounds_Property.Unset(cmds.ToUnsetParams());
+            item.Skills_Property.Unset(cmds.ToUnsetParams());
+            item.MagicEffects_Property.Unset(cmds.ToUnsetParams());
+            item.Scripts_Property.Unset(cmds.ToUnsetParams());
+            item.LandTextures_Property.Unset(cmds.ToUnsetParams());
+            item.Enchantments_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static OblivionMod_Mask<bool> GetEqualsMask(
@@ -2850,48 +3010,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             OblivionMod_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.TES4 = new MaskItem<bool, TES4_Mask<bool>>();
-            ret.TES4.Specific = TES4Common.GetEqualsMask(item.TES4, rhs.TES4);
-            ret.TES4.Overall = ret.TES4.Specific.AllEqual((b) => b);
-            ret.GameSettings = new MaskItem<bool, Group_Mask<bool>>();
-            ret.GameSettings.Specific = GroupCommon.GetEqualsMask(item.GameSettings, rhs.GameSettings);
-            ret.GameSettings.Overall = ret.GameSettings.Specific.AllEqual((b) => b);
-            ret.Globals = new MaskItem<bool, Group_Mask<bool>>();
-            ret.Globals.Specific = GroupCommon.GetEqualsMask(item.Globals, rhs.Globals);
-            ret.Globals.Overall = ret.Globals.Specific.AllEqual((b) => b);
-            ret.Classes = new MaskItem<bool, Group_Mask<bool>>();
-            ret.Classes.Specific = GroupCommon.GetEqualsMask(item.Classes, rhs.Classes);
-            ret.Classes.Overall = ret.Classes.Specific.AllEqual((b) => b);
-            ret.Factions = new MaskItem<bool, Group_Mask<bool>>();
-            ret.Factions.Specific = GroupCommon.GetEqualsMask(item.Factions, rhs.Factions);
-            ret.Factions.Overall = ret.Factions.Specific.AllEqual((b) => b);
-            ret.Hairs = new MaskItem<bool, Group_Mask<bool>>();
-            ret.Hairs.Specific = GroupCommon.GetEqualsMask(item.Hairs, rhs.Hairs);
-            ret.Hairs.Overall = ret.Hairs.Specific.AllEqual((b) => b);
-            ret.Eyes = new MaskItem<bool, Group_Mask<bool>>();
-            ret.Eyes.Specific = GroupCommon.GetEqualsMask(item.Eyes, rhs.Eyes);
-            ret.Eyes.Overall = ret.Eyes.Specific.AllEqual((b) => b);
-            ret.Races = new MaskItem<bool, Group_Mask<bool>>();
-            ret.Races.Specific = GroupCommon.GetEqualsMask(item.Races, rhs.Races);
-            ret.Races.Overall = ret.Races.Specific.AllEqual((b) => b);
-            ret.Sounds = new MaskItem<bool, Group_Mask<bool>>();
-            ret.Sounds.Specific = GroupCommon.GetEqualsMask(item.Sounds, rhs.Sounds);
-            ret.Sounds.Overall = ret.Sounds.Specific.AllEqual((b) => b);
-            ret.Skills = new MaskItem<bool, Group_Mask<bool>>();
-            ret.Skills.Specific = GroupCommon.GetEqualsMask(item.Skills, rhs.Skills);
-            ret.Skills.Overall = ret.Skills.Specific.AllEqual((b) => b);
-            ret.MagicEffects = new MaskItem<bool, Group_Mask<bool>>();
-            ret.MagicEffects.Specific = GroupCommon.GetEqualsMask(item.MagicEffects, rhs.MagicEffects);
-            ret.MagicEffects.Overall = ret.MagicEffects.Specific.AllEqual((b) => b);
-            ret.Scripts = new MaskItem<bool, Group_Mask<bool>>();
-            ret.Scripts.Specific = GroupCommon.GetEqualsMask(item.Scripts, rhs.Scripts);
-            ret.Scripts.Overall = ret.Scripts.Specific.AllEqual((b) => b);
-            ret.LandTextures = new MaskItem<bool, Group_Mask<bool>>();
-            ret.LandTextures.Specific = GroupCommon.GetEqualsMask(item.LandTextures, rhs.LandTextures);
-            ret.LandTextures.Overall = ret.LandTextures.Specific.AllEqual((b) => b);
-            ret.Enchantments = new MaskItem<bool, Group_Mask<bool>>();
-            ret.Enchantments.Specific = GroupCommon.GetEqualsMask(item.Enchantments, rhs.Enchantments);
-            ret.Enchantments.Overall = ret.Enchantments.Specific.AllEqual((b) => b);
+            ret.TES4 = item.TES4_Property.LoquiEqualsHelper(rhs.TES4_Property, (loqLhs, loqRhs) => TES4Common.GetEqualsMask(loqLhs, loqRhs));
+            ret.GameSettings = item.GameSettings_Property.LoquiEqualsHelper(rhs.GameSettings_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Globals = item.Globals_Property.LoquiEqualsHelper(rhs.Globals_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Classes = item.Classes_Property.LoquiEqualsHelper(rhs.Classes_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Factions = item.Factions_Property.LoquiEqualsHelper(rhs.Factions_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Hairs = item.Hairs_Property.LoquiEqualsHelper(rhs.Hairs_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Eyes = item.Eyes_Property.LoquiEqualsHelper(rhs.Eyes_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Races = item.Races_Property.LoquiEqualsHelper(rhs.Races_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Sounds = item.Sounds_Property.LoquiEqualsHelper(rhs.Sounds_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Skills = item.Skills_Property.LoquiEqualsHelper(rhs.Skills_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.MagicEffects = item.MagicEffects_Property.LoquiEqualsHelper(rhs.MagicEffects_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Scripts = item.Scripts_Property.LoquiEqualsHelper(rhs.Scripts_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.LandTextures = item.LandTextures_Property.LoquiEqualsHelper(rhs.LandTextures_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Enchantments = item.Enchantments_Property.LoquiEqualsHelper(rhs.Enchantments_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
         }
 
         public static string ToString(
@@ -2985,26 +3117,54 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IOblivionModGetter item,
             OblivionMod_Mask<bool?> checkMask)
         {
+            if (checkMask.TES4.Overall.HasValue && checkMask.TES4.Overall.Value != item.TES4_Property.HasBeenSet) return false;
+            if (checkMask.TES4.Specific != null && (item.TES4_Property.Item == null || !item.TES4_Property.Item.HasBeenSet(checkMask.TES4.Specific))) return false;
+            if (checkMask.GameSettings.Overall.HasValue && checkMask.GameSettings.Overall.Value != item.GameSettings_Property.HasBeenSet) return false;
+            if (checkMask.GameSettings.Specific != null && (item.GameSettings_Property.Item == null || !item.GameSettings_Property.Item.HasBeenSet(checkMask.GameSettings.Specific))) return false;
+            if (checkMask.Globals.Overall.HasValue && checkMask.Globals.Overall.Value != item.Globals_Property.HasBeenSet) return false;
+            if (checkMask.Globals.Specific != null && (item.Globals_Property.Item == null || !item.Globals_Property.Item.HasBeenSet(checkMask.Globals.Specific))) return false;
+            if (checkMask.Classes.Overall.HasValue && checkMask.Classes.Overall.Value != item.Classes_Property.HasBeenSet) return false;
+            if (checkMask.Classes.Specific != null && (item.Classes_Property.Item == null || !item.Classes_Property.Item.HasBeenSet(checkMask.Classes.Specific))) return false;
+            if (checkMask.Factions.Overall.HasValue && checkMask.Factions.Overall.Value != item.Factions_Property.HasBeenSet) return false;
+            if (checkMask.Factions.Specific != null && (item.Factions_Property.Item == null || !item.Factions_Property.Item.HasBeenSet(checkMask.Factions.Specific))) return false;
+            if (checkMask.Hairs.Overall.HasValue && checkMask.Hairs.Overall.Value != item.Hairs_Property.HasBeenSet) return false;
+            if (checkMask.Hairs.Specific != null && (item.Hairs_Property.Item == null || !item.Hairs_Property.Item.HasBeenSet(checkMask.Hairs.Specific))) return false;
+            if (checkMask.Eyes.Overall.HasValue && checkMask.Eyes.Overall.Value != item.Eyes_Property.HasBeenSet) return false;
+            if (checkMask.Eyes.Specific != null && (item.Eyes_Property.Item == null || !item.Eyes_Property.Item.HasBeenSet(checkMask.Eyes.Specific))) return false;
+            if (checkMask.Races.Overall.HasValue && checkMask.Races.Overall.Value != item.Races_Property.HasBeenSet) return false;
+            if (checkMask.Races.Specific != null && (item.Races_Property.Item == null || !item.Races_Property.Item.HasBeenSet(checkMask.Races.Specific))) return false;
+            if (checkMask.Sounds.Overall.HasValue && checkMask.Sounds.Overall.Value != item.Sounds_Property.HasBeenSet) return false;
+            if (checkMask.Sounds.Specific != null && (item.Sounds_Property.Item == null || !item.Sounds_Property.Item.HasBeenSet(checkMask.Sounds.Specific))) return false;
+            if (checkMask.Skills.Overall.HasValue && checkMask.Skills.Overall.Value != item.Skills_Property.HasBeenSet) return false;
+            if (checkMask.Skills.Specific != null && (item.Skills_Property.Item == null || !item.Skills_Property.Item.HasBeenSet(checkMask.Skills.Specific))) return false;
+            if (checkMask.MagicEffects.Overall.HasValue && checkMask.MagicEffects.Overall.Value != item.MagicEffects_Property.HasBeenSet) return false;
+            if (checkMask.MagicEffects.Specific != null && (item.MagicEffects_Property.Item == null || !item.MagicEffects_Property.Item.HasBeenSet(checkMask.MagicEffects.Specific))) return false;
+            if (checkMask.Scripts.Overall.HasValue && checkMask.Scripts.Overall.Value != item.Scripts_Property.HasBeenSet) return false;
+            if (checkMask.Scripts.Specific != null && (item.Scripts_Property.Item == null || !item.Scripts_Property.Item.HasBeenSet(checkMask.Scripts.Specific))) return false;
+            if (checkMask.LandTextures.Overall.HasValue && checkMask.LandTextures.Overall.Value != item.LandTextures_Property.HasBeenSet) return false;
+            if (checkMask.LandTextures.Specific != null && (item.LandTextures_Property.Item == null || !item.LandTextures_Property.Item.HasBeenSet(checkMask.LandTextures.Specific))) return false;
+            if (checkMask.Enchantments.Overall.HasValue && checkMask.Enchantments.Overall.Value != item.Enchantments_Property.HasBeenSet) return false;
+            if (checkMask.Enchantments.Specific != null && (item.Enchantments_Property.Item == null || !item.Enchantments_Property.Item.HasBeenSet(checkMask.Enchantments.Specific))) return false;
             return true;
         }
 
         public static OblivionMod_Mask<bool> GetHasBeenSetMask(IOblivionModGetter item)
         {
             var ret = new OblivionMod_Mask<bool>();
-            ret.TES4 = new MaskItem<bool, TES4_Mask<bool>>(true, TES4Common.GetHasBeenSetMask(item.TES4_Property.Item));
-            ret.GameSettings = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.GameSettings_Property.Item));
-            ret.Globals = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Globals_Property.Item));
-            ret.Classes = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Classes_Property.Item));
-            ret.Factions = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Factions_Property.Item));
-            ret.Hairs = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Hairs_Property.Item));
-            ret.Eyes = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Eyes_Property.Item));
-            ret.Races = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Races_Property.Item));
-            ret.Sounds = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Sounds_Property.Item));
-            ret.Skills = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Skills_Property.Item));
-            ret.MagicEffects = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.MagicEffects_Property.Item));
-            ret.Scripts = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Scripts_Property.Item));
-            ret.LandTextures = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.LandTextures_Property.Item));
-            ret.Enchantments = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Enchantments_Property.Item));
+            ret.TES4 = new MaskItem<bool, TES4_Mask<bool>>(item.TES4_Property.HasBeenSet, TES4Common.GetHasBeenSetMask(item.TES4_Property.Item));
+            ret.GameSettings = new MaskItem<bool, Group_Mask<bool>>(item.GameSettings_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.GameSettings_Property.Item));
+            ret.Globals = new MaskItem<bool, Group_Mask<bool>>(item.Globals_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.Globals_Property.Item));
+            ret.Classes = new MaskItem<bool, Group_Mask<bool>>(item.Classes_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.Classes_Property.Item));
+            ret.Factions = new MaskItem<bool, Group_Mask<bool>>(item.Factions_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.Factions_Property.Item));
+            ret.Hairs = new MaskItem<bool, Group_Mask<bool>>(item.Hairs_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.Hairs_Property.Item));
+            ret.Eyes = new MaskItem<bool, Group_Mask<bool>>(item.Eyes_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.Eyes_Property.Item));
+            ret.Races = new MaskItem<bool, Group_Mask<bool>>(item.Races_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.Races_Property.Item));
+            ret.Sounds = new MaskItem<bool, Group_Mask<bool>>(item.Sounds_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.Sounds_Property.Item));
+            ret.Skills = new MaskItem<bool, Group_Mask<bool>>(item.Skills_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.Skills_Property.Item));
+            ret.MagicEffects = new MaskItem<bool, Group_Mask<bool>>(item.MagicEffects_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.MagicEffects_Property.Item));
+            ret.Scripts = new MaskItem<bool, Group_Mask<bool>>(item.Scripts_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.Scripts_Property.Item));
+            ret.LandTextures = new MaskItem<bool, Group_Mask<bool>>(item.LandTextures_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.LandTextures_Property.Item));
+            ret.Enchantments = new MaskItem<bool, Group_Mask<bool>>(item.Enchantments_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.Enchantments_Property.Item));
             return ret;
         }
 
@@ -3040,90 +3200,132 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.OblivionMod");
                     }
-                    LoquiXmlTranslation<TES4, TES4_ErrorMask>.Instance.Write(
-                        writer: writer,
-                        item: item.TES4_Property,
-                        name: nameof(item.TES4),
-                        fieldIndex: (int)OblivionMod_FieldIndex.TES4,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<GameSetting>, Group_ErrorMask<GameSetting_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.GameSettings_Property,
-                        name: nameof(item.GameSettings),
-                        fieldIndex: (int)OblivionMod_FieldIndex.GameSettings,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<Global>, Group_ErrorMask<Global_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Globals_Property,
-                        name: nameof(item.Globals),
-                        fieldIndex: (int)OblivionMod_FieldIndex.Globals,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<Class>, Group_ErrorMask<Class_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Classes_Property,
-                        name: nameof(item.Classes),
-                        fieldIndex: (int)OblivionMod_FieldIndex.Classes,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<Faction>, Group_ErrorMask<Faction_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Factions_Property,
-                        name: nameof(item.Factions),
-                        fieldIndex: (int)OblivionMod_FieldIndex.Factions,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<Hair>, Group_ErrorMask<Hair_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Hairs_Property,
-                        name: nameof(item.Hairs),
-                        fieldIndex: (int)OblivionMod_FieldIndex.Hairs,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<Eye>, Group_ErrorMask<Eye_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Eyes_Property,
-                        name: nameof(item.Eyes),
-                        fieldIndex: (int)OblivionMod_FieldIndex.Eyes,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<Race>, Group_ErrorMask<Race_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Races_Property,
-                        name: nameof(item.Races),
-                        fieldIndex: (int)OblivionMod_FieldIndex.Races,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<Sound>, Group_ErrorMask<Sound_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Sounds_Property,
-                        name: nameof(item.Sounds),
-                        fieldIndex: (int)OblivionMod_FieldIndex.Sounds,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<SkillRecord>, Group_ErrorMask<SkillRecord_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Skills_Property,
-                        name: nameof(item.Skills),
-                        fieldIndex: (int)OblivionMod_FieldIndex.Skills,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<MagicEffect>, Group_ErrorMask<MagicEffect_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.MagicEffects_Property,
-                        name: nameof(item.MagicEffects),
-                        fieldIndex: (int)OblivionMod_FieldIndex.MagicEffects,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<Script>, Group_ErrorMask<Script_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Scripts_Property,
-                        name: nameof(item.Scripts),
-                        fieldIndex: (int)OblivionMod_FieldIndex.Scripts,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<LandTexture>, Group_ErrorMask<LandTexture_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.LandTextures_Property,
-                        name: nameof(item.LandTextures),
-                        fieldIndex: (int)OblivionMod_FieldIndex.LandTextures,
-                        errorMask: errorMask);
-                    LoquiXmlTranslation<Group<Enchantment>, Group_ErrorMask<Enchantment_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.Enchantments_Property,
-                        name: nameof(item.Enchantments),
-                        fieldIndex: (int)OblivionMod_FieldIndex.Enchantments,
-                        errorMask: errorMask);
+                    if (item.TES4_Property.HasBeenSet)
+                    {
+                        LoquiXmlTranslation<TES4, TES4_ErrorMask>.Instance.Write(
+                            writer: writer,
+                            item: item.TES4_Property,
+                            name: nameof(item.TES4),
+                            fieldIndex: (int)OblivionMod_FieldIndex.TES4,
+                            errorMask: errorMask);
+                    }
+                    if (item.GameSettings_Property.HasBeenSet)
+                    {
+                        LoquiXmlTranslation<Group<GameSetting>, Group_ErrorMask<GameSetting_ErrorMask>>.Instance.Write(
+                            writer: writer,
+                            item: item.GameSettings_Property,
+                            name: nameof(item.GameSettings),
+                            fieldIndex: (int)OblivionMod_FieldIndex.GameSettings,
+                            errorMask: errorMask);
+                    }
+                    if (item.Globals_Property.HasBeenSet)
+                    {
+                        LoquiXmlTranslation<Group<Global>, Group_ErrorMask<Global_ErrorMask>>.Instance.Write(
+                            writer: writer,
+                            item: item.Globals_Property,
+                            name: nameof(item.Globals),
+                            fieldIndex: (int)OblivionMod_FieldIndex.Globals,
+                            errorMask: errorMask);
+                    }
+                    if (item.Classes_Property.HasBeenSet)
+                    {
+                        LoquiXmlTranslation<Group<Class>, Group_ErrorMask<Class_ErrorMask>>.Instance.Write(
+                            writer: writer,
+                            item: item.Classes_Property,
+                            name: nameof(item.Classes),
+                            fieldIndex: (int)OblivionMod_FieldIndex.Classes,
+                            errorMask: errorMask);
+                    }
+                    if (item.Factions_Property.HasBeenSet)
+                    {
+                        LoquiXmlTranslation<Group<Faction>, Group_ErrorMask<Faction_ErrorMask>>.Instance.Write(
+                            writer: writer,
+                            item: item.Factions_Property,
+                            name: nameof(item.Factions),
+                            fieldIndex: (int)OblivionMod_FieldIndex.Factions,
+                            errorMask: errorMask);
+                    }
+                    if (item.Hairs_Property.HasBeenSet)
+                    {
+                        LoquiXmlTranslation<Group<Hair>, Group_ErrorMask<Hair_ErrorMask>>.Instance.Write(
+                            writer: writer,
+                            item: item.Hairs_Property,
+                            name: nameof(item.Hairs),
+                            fieldIndex: (int)OblivionMod_FieldIndex.Hairs,
+                            errorMask: errorMask);
+                    }
+                    if (item.Eyes_Property.HasBeenSet)
+                    {
+                        LoquiXmlTranslation<Group<Eye>, Group_ErrorMask<Eye_ErrorMask>>.Instance.Write(
+                            writer: writer,
+                            item: item.Eyes_Property,
+                            name: nameof(item.Eyes),
+                            fieldIndex: (int)OblivionMod_FieldIndex.Eyes,
+                            errorMask: errorMask);
+                    }
+                    if (item.Races_Property.HasBeenSet)
+                    {
+                        LoquiXmlTranslation<Group<Race>, Group_ErrorMask<Race_ErrorMask>>.Instance.Write(
+                            writer: writer,
+                            item: item.Races_Property,
+                            name: nameof(item.Races),
+                            fieldIndex: (int)OblivionMod_FieldIndex.Races,
+                            errorMask: errorMask);
+                    }
+                    if (item.Sounds_Property.HasBeenSet)
+                    {
+                        LoquiXmlTranslation<Group<Sound>, Group_ErrorMask<Sound_ErrorMask>>.Instance.Write(
+                            writer: writer,
+                            item: item.Sounds_Property,
+                            name: nameof(item.Sounds),
+                            fieldIndex: (int)OblivionMod_FieldIndex.Sounds,
+                            errorMask: errorMask);
+                    }
+                    if (item.Skills_Property.HasBeenSet)
+                    {
+                        LoquiXmlTranslation<Group<SkillRecord>, Group_ErrorMask<SkillRecord_ErrorMask>>.Instance.Write(
+                            writer: writer,
+                            item: item.Skills_Property,
+                            name: nameof(item.Skills),
+                            fieldIndex: (int)OblivionMod_FieldIndex.Skills,
+                            errorMask: errorMask);
+                    }
+                    if (item.MagicEffects_Property.HasBeenSet)
+                    {
+                        LoquiXmlTranslation<Group<MagicEffect>, Group_ErrorMask<MagicEffect_ErrorMask>>.Instance.Write(
+                            writer: writer,
+                            item: item.MagicEffects_Property,
+                            name: nameof(item.MagicEffects),
+                            fieldIndex: (int)OblivionMod_FieldIndex.MagicEffects,
+                            errorMask: errorMask);
+                    }
+                    if (item.Scripts_Property.HasBeenSet)
+                    {
+                        LoquiXmlTranslation<Group<Script>, Group_ErrorMask<Script_ErrorMask>>.Instance.Write(
+                            writer: writer,
+                            item: item.Scripts_Property,
+                            name: nameof(item.Scripts),
+                            fieldIndex: (int)OblivionMod_FieldIndex.Scripts,
+                            errorMask: errorMask);
+                    }
+                    if (item.LandTextures_Property.HasBeenSet)
+                    {
+                        LoquiXmlTranslation<Group<LandTexture>, Group_ErrorMask<LandTexture_ErrorMask>>.Instance.Write(
+                            writer: writer,
+                            item: item.LandTextures_Property,
+                            name: nameof(item.LandTextures),
+                            fieldIndex: (int)OblivionMod_FieldIndex.LandTextures,
+                            errorMask: errorMask);
+                    }
+                    if (item.Enchantments_Property.HasBeenSet)
+                    {
+                        LoquiXmlTranslation<Group<Enchantment>, Group_ErrorMask<Enchantment_ErrorMask>>.Instance.Write(
+                            writer: writer,
+                            item: item.Enchantments_Property,
+                            name: nameof(item.Enchantments),
+                            fieldIndex: (int)OblivionMod_FieldIndex.Enchantments,
+                            errorMask: errorMask);
+                    }
                 }
             }
             catch (Exception ex)

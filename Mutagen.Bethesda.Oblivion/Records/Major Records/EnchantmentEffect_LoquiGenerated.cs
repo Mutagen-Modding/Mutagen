@@ -823,15 +823,16 @@ namespace Mutagen.Bethesda.Oblivion
                         item: ret,
                         frame: frame,
                         errorMask: errorMask);
-                    bool first = true;
+                    EnchantmentEffect_FieldIndex? lastParsed = null;
                     while (!frame.Complete)
                     {
-                        if (!Fill_Binary_RecordTypes(
+                        var parsed = Fill_Binary_RecordTypes(
                             item: ret,
                             frame: frame,
-                            first: first,
-                            errorMask: errorMask)) break;
-                        first = false;
+                            lastParsed: lastParsed,
+                            errorMask: errorMask);
+                        if (parsed.Failed) break;
+                        lastParsed = parsed.Value;
                     }
                 }
             }
@@ -850,10 +851,10 @@ namespace Mutagen.Bethesda.Oblivion
         {
         }
 
-        protected static bool Fill_Binary_RecordTypes(
+        protected static TryGet<EnchantmentEffect_FieldIndex?> Fill_Binary_RecordTypes(
             EnchantmentEffect item,
             MutagenFrame frame,
-            bool first,
+            EnchantmentEffect_FieldIndex? lastParsed,
             Func<EnchantmentEffect_ErrorMask> errorMask)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -862,7 +863,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "EFIT":
-                    if (!first) return false;
+                    if (lastParsed.HasValue && lastParsed.Value >= EnchantmentEffect_FieldIndex.ActorValue) return TryGet<EnchantmentEffect_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._MagicEffect.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame,
@@ -890,11 +891,10 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)EnchantmentEffect_FieldIndex.ActorValue,
                         errorMask: errorMask);
                     item._ActorValue.SetIfSucceeded(ActorValuetryGet);
-                    break;
+                    return TryGet<EnchantmentEffect_FieldIndex?>.Succeed(EnchantmentEffect_FieldIndex.ActorValue);
                 default:
-                    return false;
+                    return TryGet<EnchantmentEffect_FieldIndex?>.Failure;
             }
-            return true;
         }
 
         #endregion

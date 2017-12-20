@@ -749,10 +749,11 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask);
                     while (!frame.Complete)
                     {
-                        if (!Fill_Binary_RecordTypes(
+                        var parsed = Fill_Binary_RecordTypes(
                             item: ret,
                             frame: frame,
-                            errorMask: errorMask)) break;
+                            errorMask: errorMask);
+                        if (parsed.Failed) break;
                     }
                 }
             }
@@ -775,7 +776,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static bool Fill_Binary_RecordTypes(
+        protected static TryGet<GameSettingString_FieldIndex?> Fill_Binary_RecordTypes(
             GameSettingString item,
             MutagenFrame frame,
             Func<GameSettingString_ErrorMask> errorMask)
@@ -792,15 +793,13 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)GameSettingString_FieldIndex.Data,
                         errorMask: errorMask);
                     item._Data.SetIfSucceeded(DatatryGet);
-                    break;
+                    return TryGet<GameSettingString_FieldIndex?>.Succeed(GameSettingString_FieldIndex.Data);
                 default:
-                    GameSetting.Fill_Binary_RecordTypes(
+                    return GameSetting.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
-                        errorMask: errorMask);
-                    break;
+                        errorMask: errorMask).Bubble((i) => GameSettingStringCommon.ConvertFieldIndex(i));
             }
-            return true;
         }
 
         #endregion

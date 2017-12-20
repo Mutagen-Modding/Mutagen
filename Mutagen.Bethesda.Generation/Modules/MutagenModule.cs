@@ -182,7 +182,6 @@ namespace Mutagen.Bethesda.Generation
             var recordAttr = node.GetAttribute("recordType");
             if (recordAttr != null)
             {
-                field.HasBeenSetProperty.SetIfNotSet(true);
                 data.RecordType = new RecordType(recordAttr);
             }
             var markerAttr = node.GetAttribute("markerType");
@@ -413,6 +412,11 @@ namespace Mutagen.Bethesda.Generation
                     obj,
                     contLoqui,
                     subData);
+            }
+
+            if (data.HasTrigger)
+            {
+                field.HasBeenSetProperty.SetIfNotSet(true);
             }
         }
 

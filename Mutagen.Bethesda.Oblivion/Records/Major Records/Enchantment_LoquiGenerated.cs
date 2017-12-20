@@ -149,7 +149,11 @@ namespace Mutagen.Bethesda.Oblivion
             if (ChargeAmount != rhs.ChargeAmount) return false;
             if (EnchantCost != rhs.EnchantCost) return false;
             if (Flags != rhs.Flags) return false;
-            if (!Effects.SequenceEqual(rhs.Effects)) return false;
+            if (Effects.HasBeenSet != rhs.Effects.HasBeenSet) return false;
+            if (Effects.HasBeenSet)
+            {
+                if (!Effects.SequenceEqual(rhs.Effects)) return false;
+            }
             return true;
         }
 
@@ -160,7 +164,10 @@ namespace Mutagen.Bethesda.Oblivion
             ret = HashHelper.GetHashCode(ChargeAmount).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(EnchantCost).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Effects).CombineHashCode(ret);
+            if (Effects.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Effects).CombineHashCode(ret);
+            }
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -858,10 +865,11 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask);
                     while (!frame.Complete)
                     {
-                        if (!Fill_Binary_RecordTypes(
+                        var parsed = Fill_Binary_RecordTypes(
                             item: ret,
                             frame: frame,
-                            errorMask: errorMask)) break;
+                            errorMask: errorMask);
+                        if (parsed.Failed) break;
                     }
                 }
             }
@@ -884,7 +892,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static bool Fill_Binary_RecordTypes(
+        protected static TryGet<Enchantment_FieldIndex?> Fill_Binary_RecordTypes(
             Enchantment item,
             MutagenFrame frame,
             Func<Enchantment_ErrorMask> errorMask)
@@ -914,7 +922,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)Enchantment_FieldIndex.Flags,
                         errorMask: errorMask);
                     item._Flags.SetIfSucceeded(FlagstryGet);
-                    break;
+                    return TryGet<Enchantment_FieldIndex?>.Succeed(Enchantment_FieldIndex.Flags);
                 case "EFIT":
                     var EffectstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<EnchantmentEffect, MaskItem<Exception, EnchantmentEffect_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
@@ -931,15 +939,13 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         );
                     item._Effects.SetIfSucceeded(EffectstryGet);
-                    break;
+                    return TryGet<Enchantment_FieldIndex?>.Succeed(Enchantment_FieldIndex.Effects);
                 default:
-                    NamedMajorRecord.Fill_Binary_RecordTypes(
+                    return NamedMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
-                        errorMask: errorMask);
-                    break;
+                        errorMask: errorMask).Bubble((i) => EnchantmentCommon.ConvertFieldIndex(i));
             }
-            return true;
         }
 
         #endregion
@@ -1580,9 +1586,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Enchantment_FieldIndex.ChargeAmount:
                 case Enchantment_FieldIndex.EnchantCost:
                 case Enchantment_FieldIndex.Flags:
-                case Enchantment_FieldIndex.Effects:
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
+                case Enchantment_FieldIndex.Effects:
+                    obj.Effects.HasBeenSet = on;
+                    break;
                 default:
                     NamedMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
@@ -1629,8 +1637,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Enchantment_FieldIndex.ChargeAmount:
                 case Enchantment_FieldIndex.EnchantCost:
                 case Enchantment_FieldIndex.Flags:
-                case Enchantment_FieldIndex.Effects:
                     return true;
+                case Enchantment_FieldIndex.Effects:
+                    return obj.Effects.HasBeenSet;
                 default:
                     return NamedMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -1696,9 +1705,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ret.Effects.Specific = item.Effects.SelectAgainst<EnchantmentEffect, MaskItem<bool, EnchantmentEffect_Mask<bool>>>(rhs.Effects, ((l, r) =>
                     {
                         MaskItem<bool, EnchantmentEffect_Mask<bool>> itemRet;
-                        itemRet = new MaskItem<bool, EnchantmentEffect_Mask<bool>>();
-                        itemRet.Specific = EnchantmentEffectCommon.GetEqualsMask(l, r);
-                        itemRet.Overall = itemRet.Specific.AllEqual((b) => b);
+                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => EnchantmentEffectCommon.GetEqualsMask(loqLhs, loqRhs));
                         return itemRet;
                     }
                     ), out ret.Effects.Overall);
@@ -1910,22 +1917,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item: item.Flags_Property,
                         fieldIndex: (int)Enchantment_FieldIndex.Flags,
                         errorMask: errorMask);
-                    ListXmlTranslation<EnchantmentEffect, MaskItem<Exception, EnchantmentEffect_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Effects),
-                        item: item.Effects,
-                        fieldIndex: (int)Enchantment_FieldIndex.Effects,
-                        errorMask: errorMask,
-                        transl: (EnchantmentEffect subItem, bool listDoMasks, out MaskItem<Exception, EnchantmentEffect_ErrorMask> listSubMask) =>
-                        {
-                            LoquiXmlTranslation<EnchantmentEffect, EnchantmentEffect_ErrorMask>.Instance.Write(
-                                writer: writer,
-                                item: subItem,
-                                name: "Item",
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
-                        }
-                        );
+                    if (item.Effects.HasBeenSet)
+                    {
+                        ListXmlTranslation<EnchantmentEffect, MaskItem<Exception, EnchantmentEffect_ErrorMask>>.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Effects),
+                            item: item.Effects,
+                            fieldIndex: (int)Enchantment_FieldIndex.Effects,
+                            errorMask: errorMask,
+                            transl: (EnchantmentEffect subItem, bool listDoMasks, out MaskItem<Exception, EnchantmentEffect_ErrorMask> listSubMask) =>
+                            {
+                                LoquiXmlTranslation<EnchantmentEffect, EnchantmentEffect_ErrorMask>.Instance.Write(
+                                    writer: writer,
+                                    item: subItem,
+                                    name: "Item",
+                                    doMasks: errorMask != null,
+                                    errorMask: out listSubMask);
+                            }
+                            );
+                    }
                 }
             }
             catch (Exception ex)

@@ -146,7 +146,11 @@ namespace Mutagen.Bethesda.Oblivion
             if (!object.Equals(ContainedRecordType, rhs.ContainedRecordType)) return false;
             if (GroupType != rhs.GroupType) return false;
             if (!LastModified.EqualsFast(rhs.LastModified)) return false;
-            if (!Items.SequenceEqual(rhs.Items)) return false;
+            if (Items.HasBeenSet != rhs.Items.HasBeenSet) return false;
+            if (Items.HasBeenSet)
+            {
+                if (!Items.SequenceEqual(rhs.Items)) return false;
+            }
             return true;
         }
 
@@ -156,7 +160,10 @@ namespace Mutagen.Bethesda.Oblivion
             ret = HashHelper.GetHashCode(ContainedRecordType).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(GroupType).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(LastModified).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Items).CombineHashCode(ret);
+            if (Items.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Items).CombineHashCode(ret);
+            }
             return ret;
         }
 
@@ -889,10 +896,11 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask);
                     while (!frame.Complete)
                     {
-                        if (!Fill_Binary_RecordTypes(
+                        var parsed = Fill_Binary_RecordTypes(
                             item: ret,
                             frame: frame,
-                            errorMask: errorMask)) break;
+                            errorMask: errorMask);
+                        if (parsed.Failed) break;
                     }
                 }
             }
@@ -929,7 +937,7 @@ namespace Mutagen.Bethesda.Oblivion
             item._LastModified.SetIfSucceeded(LastModifiedtryGet);
         }
 
-        protected static bool Fill_Binary_RecordTypes<T_ErrMask>(
+        protected static TryGet<Group_FieldIndex?> Fill_Binary_RecordTypes<T_ErrMask>(
             Group<T> item,
             MutagenFrame frame,
             Func<Group_ErrorMask<T_ErrMask>> errorMask)
@@ -958,13 +966,12 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             );
                         item._Items.SetIfSucceeded(ItemstryGet);
-                        break;
+                        return TryGet<Group_FieldIndex?>.Failure;
                     }
                     errorMask().Warnings.Add($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength + Constants.RECORD_LENGTH;
-                    break;
+                    return TryGet<Group_FieldIndex?>.Succeed(null);
             }
-            return true;
         }
 
         #endregion
@@ -1537,9 +1544,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     throw new ArgumentException($"Tried to set at a derivative index {index}");
                 case Group_FieldIndex.GroupType:
                 case Group_FieldIndex.LastModified:
-                case Group_FieldIndex.Items:
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
+                case Group_FieldIndex.Items:
+                    obj.Items.HasBeenSet = on;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1580,8 +1589,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Group_FieldIndex.ContainedRecordType:
                 case Group_FieldIndex.GroupType:
                 case Group_FieldIndex.LastModified:
-                case Group_FieldIndex.Items:
                     return true;
+                case Group_FieldIndex.Items:
+                    return obj.Items.HasBeenSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1645,9 +1655,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ret.Items.Specific = item.Items.SelectAgainst<T, MaskItem<bool, MajorRecord_Mask<bool>>>(rhs.Items, ((l, r) =>
                     {
                         MaskItem<bool, MajorRecord_Mask<bool>> itemRet;
-                        itemRet = new MaskItem<bool, MajorRecord_Mask<bool>>();
-                        itemRet.Specific = MajorRecordCommon.GetEqualsMask(l, r);
-                        itemRet.Overall = itemRet.Specific.AllEqual((b) => b);
+                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => MajorRecordCommon.GetEqualsMask(loqLhs, loqRhs));
                         return itemRet;
                     }
                     ), out ret.Items.Overall);
@@ -1797,22 +1805,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item: item.LastModified_Property,
                         fieldIndex: (int)Group_FieldIndex.LastModified,
                         errorMask: errorMask);
-                    ListXmlTranslation<T, MaskItem<Exception, T_ErrMask>>.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Items),
-                        item: item.Items,
-                        fieldIndex: (int)Group_FieldIndex.Items,
-                        errorMask: errorMask,
-                        transl: (T subItem, bool listDoMasks, out MaskItem<Exception, T_ErrMask> listSubMask) =>
-                        {
-                            LoquiXmlTranslation<T, T_ErrMask>.Instance.Write(
-                                writer: writer,
-                                item: subItem,
-                                name: "Item",
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
-                        }
-                        );
+                    if (item.Items.HasBeenSet)
+                    {
+                        ListXmlTranslation<T, MaskItem<Exception, T_ErrMask>>.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Items),
+                            item: item.Items,
+                            fieldIndex: (int)Group_FieldIndex.Items,
+                            errorMask: errorMask,
+                            transl: (T subItem, bool listDoMasks, out MaskItem<Exception, T_ErrMask> listSubMask) =>
+                            {
+                                LoquiXmlTranslation<T, T_ErrMask>.Instance.Write(
+                                    writer: writer,
+                                    item: subItem,
+                                    name: "Item",
+                                    doMasks: errorMask != null,
+                                    errorMask: out listSubMask);
+                            }
+                            );
+                    }
                 }
             }
             catch (Exception ex)
