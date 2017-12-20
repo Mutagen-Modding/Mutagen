@@ -471,6 +471,10 @@ namespace Mutagen.Bethesda.Generation
                                     {
                                         fg.AppendLine($"return TryGet<{obj.FieldIndexName}?>.Succeed({dataSet.SubFields.Last().IndexEnumName});");
                                     }
+                                    else if (field.Field is SpecialParseType special)
+                                    {
+                                        fg.AppendLine($"return TryGet<{obj.FieldIndexName}?>.Succeed(lastParsed);");
+                                    }
                                     else
                                     {
                                         fg.AppendLine($"return TryGet<{obj.FieldIndexName}?>.Succeed({field.Field.IndexEnumName});");

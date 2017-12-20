@@ -8,7 +8,7 @@
       <ByteArray name="Deleted" recordType="DELE" hasBeenSet="True" />
       <String name="Author" recordType="CNAM" maxLength="512" hasBeenSet="True" />
       <String name="Description" recordType="SNAM" maxLength="512" hasBeenSet="True" />
-      <RefList name="MasterReferences" refName="MasterReference" />
+      <RefList name="MasterReferences" refName="Bethesda.MasterReference" />
     </Fields>
   </Object>
 </Loqui>

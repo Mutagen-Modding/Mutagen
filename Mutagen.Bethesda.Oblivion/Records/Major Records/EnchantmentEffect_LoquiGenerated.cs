@@ -930,7 +930,7 @@ namespace Mutagen.Bethesda.Oblivion
                         item: item,
                         frame: frame,
                         errorMask: errorMask);
-                    break;
+                    return TryGet<EnchantmentEffect_FieldIndex?>.Succeed(lastParsed);
                 case "EFIT":
                     if (lastParsed.HasValue && lastParsed.Value >= EnchantmentEffect_FieldIndex.ActorValue) return TryGet<EnchantmentEffect_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;

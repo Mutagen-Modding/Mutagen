@@ -11,7 +11,7 @@ using System.Text;
 using Loqui;
 using Noggog;
 using Noggog.Notifying;
-using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Internals;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -20,7 +20,7 @@ using Loqui.Xml;
 using System.Diagnostics;
 using Mutagen.Bethesda.Binary;
 
-namespace Mutagen.Bethesda.Oblivion
+namespace Mutagen.Bethesda
 {
     #region Class
     public partial class MasterReference : IMasterReference, ILoquiObjectSetter, IEquatable<MasterReference>
@@ -964,7 +964,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Internals
 {
     #region Field Index
     public enum MasterReference_FieldIndex
@@ -979,14 +979,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly MasterReference_Registration Instance = new MasterReference_Registration();
 
-        public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
+        public static ProtocolKey ProtocolKey => ProtocolDefinition_Bethesda.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 5,
+            protocolKey: ProtocolDefinition_Bethesda.ProtocolKey,
+            msgID: 3,
             version: 0);
 
-        public const string GUID = "8f2ed19a-5edb-4f8f-9d29-43dc638aade9";
+        public const string GUID = "f1785555-cc72-4e7c-91b3-342cee7a1068";
 
         public const ushort FieldCount = 2;
 
@@ -1002,11 +1002,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type CommonType = typeof(MasterReferenceCommon);
 
-        public const string FullName = "Mutagen.Bethesda.Oblivion.MasterReference";
+        public const string FullName = "Mutagen.Bethesda.MasterReference";
 
         public const string Name = "MasterReference";
 
-        public const string Namespace = "Mutagen.Bethesda.Oblivion";
+        public const string Namespace = "Mutagen.Bethesda";
 
         public const byte GenericCount = 0;
 
@@ -1454,11 +1454,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.MasterReference"))
+                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.MasterReference"))
                 {
                     if (name != null)
                     {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.MasterReference");
+                        writer.WriteAttributeString("type", "Mutagen.Bethesda.MasterReference");
                     }
                     if (item.Master_Property.HasBeenSet)
                     {

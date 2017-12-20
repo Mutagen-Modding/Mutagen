@@ -61,9 +61,6 @@
     <Compile Include="Records\Header\Header_LoquiGenerated.cs">
       <DependentUpon>HEDR.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Header\MasterReference_LoquiGenerated.cs">
-      <DependentUpon>MasterReference.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Header\TES4_LoquiGenerated.cs">
       <DependentUpon>TES4.xml</DependentUpon>
     </Compile>
@@ -283,9 +280,6 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Header\HEDR.xml">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Records\Header\MasterReference.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Header\TES4.xml">
