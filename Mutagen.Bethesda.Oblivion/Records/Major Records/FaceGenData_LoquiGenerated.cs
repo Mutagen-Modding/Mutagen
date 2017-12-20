@@ -761,15 +761,16 @@ namespace Mutagen.Bethesda.Oblivion
                         item: ret,
                         frame: frame,
                         errorMask: errorMask);
-                    bool first = true;
+                    FaceGenData_FieldIndex? lastParsed = null;
                     while (!frame.Complete)
                     {
-                        if (!Fill_Binary_RecordTypes(
+                        var parsed = Fill_Binary_RecordTypes(
                             item: ret,
                             frame: frame,
-                            first: first,
-                            errorMask: errorMask)) break;
-                        first = false;
+                            lastParsed: lastParsed,
+                            errorMask: errorMask);
+                        if (parsed.Failed) break;
+                        lastParsed = parsed.Value;
                     }
                 }
             }
@@ -788,10 +789,10 @@ namespace Mutagen.Bethesda.Oblivion
         {
         }
 
-        protected static bool Fill_Binary_RecordTypes(
+        protected static TryGet<FaceGenData_FieldIndex?> Fill_Binary_RecordTypes(
             FaceGenData item,
             MutagenFrame frame,
-            bool first,
+            FaceGenData_FieldIndex? lastParsed,
             Func<FaceGenData_ErrorMask> errorMask)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -800,36 +801,35 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "FGGS":
-                    if (!first) return false;
+                    if (lastParsed.HasValue && lastParsed.Value >= FaceGenData_FieldIndex.SymmetricGeometry) return TryGet<FaceGenData_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var SymmetricGeometrytryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                         frame.Spawn(contentLength),
                         fieldIndex: (int)FaceGenData_FieldIndex.SymmetricGeometry,
                         errorMask: errorMask);
                     item._SymmetricGeometry.SetIfSucceeded(SymmetricGeometrytryGet);
-                    break;
+                    return TryGet<FaceGenData_FieldIndex?>.Succeed(FaceGenData_FieldIndex.SymmetricGeometry);
                 case "FGGA":
-                    if (!first) return false;
+                    if (lastParsed.HasValue && lastParsed.Value >= FaceGenData_FieldIndex.AsymmetricGeometry) return TryGet<FaceGenData_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var AsymmetricGeometrytryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                         frame.Spawn(contentLength),
                         fieldIndex: (int)FaceGenData_FieldIndex.AsymmetricGeometry,
                         errorMask: errorMask);
                     item._AsymmetricGeometry.SetIfSucceeded(AsymmetricGeometrytryGet);
-                    break;
+                    return TryGet<FaceGenData_FieldIndex?>.Succeed(FaceGenData_FieldIndex.AsymmetricGeometry);
                 case "FGTS":
-                    if (!first) return false;
+                    if (lastParsed.HasValue && lastParsed.Value >= FaceGenData_FieldIndex.SymmetricTexture) return TryGet<FaceGenData_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var SymmetricTexturetryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                         frame.Spawn(contentLength),
                         fieldIndex: (int)FaceGenData_FieldIndex.SymmetricTexture,
                         errorMask: errorMask);
                     item._SymmetricTexture.SetIfSucceeded(SymmetricTexturetryGet);
-                    break;
+                    return TryGet<FaceGenData_FieldIndex?>.Succeed(FaceGenData_FieldIndex.SymmetricTexture);
                 default:
-                    return false;
+                    return TryGet<FaceGenData_FieldIndex?>.Failure;
             }
-            return true;
         }
 
         #endregion

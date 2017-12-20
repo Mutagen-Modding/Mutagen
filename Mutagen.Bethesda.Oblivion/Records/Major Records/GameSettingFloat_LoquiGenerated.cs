@@ -752,10 +752,11 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask);
                     while (!frame.Complete)
                     {
-                        if (!Fill_Binary_RecordTypes(
+                        var parsed = Fill_Binary_RecordTypes(
                             item: ret,
                             frame: frame,
-                            errorMask: errorMask)) break;
+                            errorMask: errorMask);
+                        if (parsed.Failed) break;
                     }
                 }
             }
@@ -778,7 +779,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static bool Fill_Binary_RecordTypes(
+        protected static TryGet<GameSettingFloat_FieldIndex?> Fill_Binary_RecordTypes(
             GameSettingFloat item,
             MutagenFrame frame,
             Func<GameSettingFloat_ErrorMask> errorMask)
@@ -794,15 +795,13 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)GameSettingFloat_FieldIndex.Data,
                         errorMask: errorMask));
-                    break;
+                    return TryGet<GameSettingFloat_FieldIndex?>.Succeed(GameSettingFloat_FieldIndex.Data);
                 default:
-                    GameSetting.Fill_Binary_RecordTypes(
+                    return GameSetting.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
-                        errorMask: errorMask);
-                    break;
+                        errorMask: errorMask).Bubble((i) => GameSettingFloatCommon.ConvertFieldIndex(i));
             }
-            return true;
         }
 
         #endregion
@@ -961,6 +960,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum GameSettingFloat_FieldIndex
     {
+        MajorRecordFlags = 0,
+        FormID = 1,
+        Version = 2,
+        EditorID = 3,
+        RecordType = 4,
         Data = 5,
     }
     #endregion
@@ -1373,6 +1377,56 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new GameSettingFloat_Mask<bool>();
             ret.Data = item.Data_Property.HasBeenSet;
             return ret;
+        }
+
+        public static GameSettingFloat_FieldIndex? ConvertFieldIndex(GameSetting_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static GameSettingFloat_FieldIndex ConvertFieldIndex(GameSetting_FieldIndex index)
+        {
+            switch (index)
+            {
+                case GameSetting_FieldIndex.MajorRecordFlags:
+                    return (GameSettingFloat_FieldIndex)((int)index);
+                case GameSetting_FieldIndex.FormID:
+                    return (GameSettingFloat_FieldIndex)((int)index);
+                case GameSetting_FieldIndex.Version:
+                    return (GameSettingFloat_FieldIndex)((int)index);
+                case GameSetting_FieldIndex.EditorID:
+                    return (GameSettingFloat_FieldIndex)((int)index);
+                case GameSetting_FieldIndex.RecordType:
+                    return (GameSettingFloat_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+
+        public static GameSettingFloat_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static GameSettingFloat_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlags:
+                    return (GameSettingFloat_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormID:
+                    return (GameSettingFloat_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (GameSettingFloat_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (GameSettingFloat_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.RecordType:
+                    return (GameSettingFloat_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
         }
 
         #region XML Translation

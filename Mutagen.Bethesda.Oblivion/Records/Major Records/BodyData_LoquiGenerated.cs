@@ -731,15 +731,16 @@ namespace Mutagen.Bethesda.Oblivion
                         item: ret,
                         frame: frame,
                         errorMask: errorMask);
-                    bool first = true;
+                    BodyData_FieldIndex? lastParsed = null;
                     while (!frame.Complete)
                     {
-                        if (!Fill_Binary_RecordTypes(
+                        var parsed = Fill_Binary_RecordTypes(
                             item: ret,
                             frame: frame,
-                            first: first,
-                            errorMask: errorMask)) break;
-                        first = false;
+                            lastParsed: lastParsed,
+                            errorMask: errorMask);
+                        if (parsed.Failed) break;
+                        lastParsed = parsed.Value;
                     }
                 }
             }
@@ -758,10 +759,10 @@ namespace Mutagen.Bethesda.Oblivion
         {
         }
 
-        protected static bool Fill_Binary_RecordTypes(
+        protected static TryGet<BodyData_FieldIndex?> Fill_Binary_RecordTypes(
             BodyData item,
             MutagenFrame frame,
-            bool first,
+            BodyData_FieldIndex? lastParsed,
             Func<BodyData_ErrorMask> errorMask)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -770,16 +771,15 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "MODL":
-                case "MODB":
-                    if (!first) return false;
+                    if (lastParsed.HasValue && lastParsed.Value >= BodyData_FieldIndex.Model) return TryGet<BodyData_FieldIndex?>.Failure;
                     item._Model.SetIfSucceeded(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)BodyData_FieldIndex.Model,
                         errorMask: errorMask));
-                    break;
+                    return TryGet<BodyData_FieldIndex?>.Succeed(BodyData_FieldIndex.Model);
                 case "INDX":
                 case "ICON":
-                    if (!first) return false;
+                    if (lastParsed.HasValue && lastParsed.Value >= BodyData_FieldIndex.BodyParts) return TryGet<BodyData_FieldIndex?>.Failure;
                     var BodyPartstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<BodyPart, MaskItem<Exception, BodyPart_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: BodyPart_Registration.TriggeringRecordTypes,
@@ -795,11 +795,10 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         );
                     item._BodyParts.SetIfSucceeded(BodyPartstryGet);
-                    break;
+                    return TryGet<BodyData_FieldIndex?>.Succeed(BodyData_FieldIndex.BodyParts);
                 default:
-                    return false;
+                    return TryGet<BodyData_FieldIndex?>.Failure;
             }
-            return true;
         }
 
         #endregion
@@ -1126,7 +1125,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
-        public static readonly RecordType MODB_HEADER = new RecordType("MODB");
         public static readonly RecordType INDX_HEADER = new RecordType("INDX");
         public static readonly RecordType ICON_HEADER = new RecordType("ICON");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
@@ -1137,7 +1135,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     new RecordType[]
                     {
                         MODL_HEADER,
-                        MODB_HEADER,
                         INDX_HEADER,
                         ICON_HEADER
                     })

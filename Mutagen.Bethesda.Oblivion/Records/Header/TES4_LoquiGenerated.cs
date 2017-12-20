@@ -918,10 +918,11 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask);
                     while (!frame.Complete)
                     {
-                        if (!Fill_Binary_RecordTypes(
+                        var parsed = Fill_Binary_RecordTypes(
                             item: ret,
                             frame: frame,
-                            errorMask: errorMask)) break;
+                            errorMask: errorMask);
+                        if (parsed.Failed) break;
                     }
                 }
             }
@@ -946,7 +947,7 @@ namespace Mutagen.Bethesda.Oblivion
             item._Fluff.SetIfSucceeded(FlufftryGet);
         }
 
-        protected static bool Fill_Binary_RecordTypes(
+        protected static TryGet<TES4_FieldIndex?> Fill_Binary_RecordTypes(
             TES4 item,
             MutagenFrame frame,
             Func<TES4_ErrorMask> errorMask)
@@ -961,7 +962,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         fieldIndex: (int)TES4_FieldIndex.Header,
                         errorMask: errorMask));
-                    break;
+                    return TryGet<TES4_FieldIndex?>.Succeed(TES4_FieldIndex.Header);
                 case "OFST":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var TypeOffsetstryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
@@ -969,7 +970,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)TES4_FieldIndex.TypeOffsets,
                         errorMask: errorMask);
                     item._TypeOffsets.SetIfSucceeded(TypeOffsetstryGet);
-                    break;
+                    return TryGet<TES4_FieldIndex?>.Succeed(TES4_FieldIndex.TypeOffsets);
                 case "DELE":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var DeletedtryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
@@ -977,7 +978,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)TES4_FieldIndex.Deleted,
                         errorMask: errorMask);
                     item._Deleted.SetIfSucceeded(DeletedtryGet);
-                    break;
+                    return TryGet<TES4_FieldIndex?>.Succeed(TES4_FieldIndex.Deleted);
                 case "CNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var AuthortryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -985,7 +986,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)TES4_FieldIndex.Author,
                         errorMask: errorMask);
                     item._Author.SetIfSucceeded(AuthortryGet);
-                    break;
+                    return TryGet<TES4_FieldIndex?>.Succeed(TES4_FieldIndex.Author);
                 case "SNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var DescriptiontryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -993,7 +994,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)TES4_FieldIndex.Description,
                         errorMask: errorMask);
                     item._Description.SetIfSucceeded(DescriptiontryGet);
-                    break;
+                    return TryGet<TES4_FieldIndex?>.Succeed(TES4_FieldIndex.Description);
                 case "MAST":
                 case "DATA":
                     var MasterReferencestryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<MasterReference, MaskItem<Exception, MasterReference_ErrorMask>>.Instance.ParseRepeatedItem(
@@ -1011,13 +1012,12 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         );
                     item._MasterReferences.SetIfSucceeded(MasterReferencestryGet);
-                    break;
+                    return TryGet<TES4_FieldIndex?>.Succeed(TES4_FieldIndex.MasterReferences);
                 default:
                     errorMask().Warnings.Add($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength + Constants.SUBRECORD_LENGTH;
-                    break;
+                    return TryGet<TES4_FieldIndex?>.Succeed(null);
             }
-            return true;
         }
 
         #endregion

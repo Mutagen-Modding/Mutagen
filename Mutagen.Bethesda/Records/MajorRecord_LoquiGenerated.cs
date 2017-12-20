@@ -599,7 +599,7 @@ namespace Mutagen.Bethesda
             item._Version.SetIfSucceeded(VersiontryGet);
         }
 
-        protected static bool Fill_Binary_RecordTypes(
+        protected static TryGet<MajorRecord_FieldIndex?> Fill_Binary_RecordTypes(
             MajorRecord item,
             MutagenFrame frame,
             Func<MajorRecord_ErrorMask> errorMask)
@@ -616,13 +616,12 @@ namespace Mutagen.Bethesda
                         fieldIndex: (int)MajorRecord_FieldIndex.EditorID,
                         errorMask: errorMask);
                     item._EditorID.SetIfSucceeded(EditorIDtryGet);
-                    break;
+                    return TryGet<MajorRecord_FieldIndex?>.Succeed(MajorRecord_FieldIndex.EditorID);
                 default:
                     errorMask().Warnings.Add($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength + Constants.SUBRECORD_LENGTH;
-                    break;
+                    return TryGet<MajorRecord_FieldIndex?>.Succeed(null);
             }
-            return true;
         }
 
         #endregion

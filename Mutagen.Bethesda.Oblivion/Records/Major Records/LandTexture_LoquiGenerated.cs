@@ -834,10 +834,11 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask);
                     while (!frame.Complete)
                     {
-                        if (!Fill_Binary_RecordTypes(
+                        var parsed = Fill_Binary_RecordTypes(
                             item: ret,
                             frame: frame,
-                            errorMask: errorMask)) break;
+                            errorMask: errorMask);
+                        if (parsed.Failed) break;
                     }
                 }
             }
@@ -860,7 +861,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static bool Fill_Binary_RecordTypes(
+        protected static TryGet<LandTexture_FieldIndex?> Fill_Binary_RecordTypes(
             LandTexture item,
             MutagenFrame frame,
             Func<LandTexture_ErrorMask> errorMask)
@@ -877,20 +878,20 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)LandTexture_FieldIndex.Icon,
                         errorMask: errorMask);
                     item._Icon.SetIfSucceeded(tryGet);
-                    break;
+                    return TryGet<LandTexture_FieldIndex?>.Succeed(LandTexture_FieldIndex.Icon);
                 case "HNAM":
                     item._Havok.SetIfSucceeded(LoquiBinaryTranslation<HavokData, HavokData_ErrorMask>.Instance.Parse(
                         frame: frame,
                         fieldIndex: (int)LandTexture_FieldIndex.Havok,
                         errorMask: errorMask));
-                    break;
+                    return TryGet<LandTexture_FieldIndex?>.Succeed(LandTexture_FieldIndex.Havok);
                 case "SNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._TextureSpecularExponent.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)LandTexture_FieldIndex.TextureSpecularExponent,
                         errorMask: errorMask));
-                    break;
+                    return TryGet<LandTexture_FieldIndex?>.Succeed(LandTexture_FieldIndex.TextureSpecularExponent);
                 case "GNAM":
                     var PotentialGrasstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<FormID, Exception>.Instance.ParseRepeatedItem(
                         frame: frame,
@@ -908,15 +909,13 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         );
                     item._PotentialGrass.SetIfSucceeded(PotentialGrasstryGet);
-                    break;
+                    return TryGet<LandTexture_FieldIndex?>.Succeed(LandTexture_FieldIndex.PotentialGrass);
                 default:
-                    MajorRecord.Fill_Binary_RecordTypes(
+                    return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
-                        errorMask: errorMask);
-                    break;
+                        errorMask: errorMask).Bubble((i) => LandTextureCommon.ConvertFieldIndex(i));
             }
-            return true;
         }
 
         #endregion
@@ -1121,6 +1120,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum LandTexture_FieldIndex
     {
+        MajorRecordFlags = 0,
+        FormID = 1,
+        Version = 2,
+        EditorID = 3,
+        RecordType = 4,
         Icon = 5,
         Havok = 6,
         TextureSpecularExponent = 7,
@@ -1742,6 +1746,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.TextureSpecularExponent = item.TextureSpecularExponent_Property.HasBeenSet;
             ret.PotentialGrass = new MaskItem<bool, IEnumerable<bool>>(item.PotentialGrass.HasBeenSet, null);
             return ret;
+        }
+
+        public static LandTexture_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static LandTexture_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlags:
+                    return (LandTexture_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormID:
+                    return (LandTexture_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (LandTexture_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (LandTexture_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.RecordType:
+                    return (LandTexture_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
         }
 
         #region XML Translation

@@ -510,7 +510,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static bool Fill_Binary_RecordTypes(
+        protected static TryGet<Global_FieldIndex?> Fill_Binary_RecordTypes(
             Global item,
             MutagenFrame frame,
             Func<Global_ErrorMask> errorMask)
@@ -529,22 +529,20 @@ namespace Mutagen.Bethesda.Oblivion
                             fieldIndex: (int)Global_FieldIndex.TypeChar,
                             errorMask: errorMask);
                     }
-                    break;
+                    return TryGet<Global_FieldIndex?>.Succeed(Global_FieldIndex.TypeChar);
                 case "FLTV":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._RawFloat.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)Global_FieldIndex.RawFloat,
                         errorMask: errorMask));
-                    break;
+                    return TryGet<Global_FieldIndex?>.Succeed(Global_FieldIndex.RawFloat);
                 default:
-                    MajorRecord.Fill_Binary_RecordTypes(
+                    return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
-                        errorMask: errorMask);
-                    break;
+                        errorMask: errorMask).Bubble((i) => GlobalCommon.ConvertFieldIndex(i));
             }
-            return true;
         }
 
         #endregion
@@ -631,6 +629,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum Global_FieldIndex
     {
+        MajorRecordFlags = 0,
+        FormID = 1,
+        Version = 2,
+        EditorID = 3,
+        RecordType = 4,
         TypeChar = 5,
         RawFloat = 6,
     }
@@ -1073,6 +1076,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.TypeChar = item.TypeChar_Property.HasBeenSet;
             ret.RawFloat = item.RawFloat_Property.HasBeenSet;
             return ret;
+        }
+
+        public static Global_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Global_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlags:
+                    return (Global_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormID:
+                    return (Global_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (Global_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (Global_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.RecordType:
+                    return (Global_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
         }
 
         #region XML Translation

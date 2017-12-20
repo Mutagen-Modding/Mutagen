@@ -1002,10 +1002,11 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask);
                     while (!frame.Complete)
                     {
-                        if (!Fill_Binary_RecordTypes(
+                        var parsed = Fill_Binary_RecordTypes(
                             item: ret,
                             frame: frame,
-                            errorMask: errorMask)) break;
+                            errorMask: errorMask);
+                        if (parsed.Failed) break;
                     }
                 }
             }
@@ -1028,7 +1029,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static bool Fill_Binary_RecordTypes(
+        protected static TryGet<Class_FieldIndex?> Fill_Binary_RecordTypes(
             Class item,
             MutagenFrame frame,
             Func<Class_ErrorMask> errorMask)
@@ -1045,7 +1046,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)Class_FieldIndex.Description,
                         errorMask: errorMask);
                     item._Description.SetIfSucceeded(DescriptiontryGet);
-                    break;
+                    return TryGet<Class_FieldIndex?>.Succeed(Class_FieldIndex.Description);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var tryGet = Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
@@ -1053,7 +1054,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)Class_FieldIndex.Icon,
                         errorMask: errorMask);
                     item._Icon.SetIfSucceeded(tryGet);
-                    break;
+                    return TryGet<Class_FieldIndex?>.Succeed(Class_FieldIndex.Icon);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var PrimaryAttributestryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<ActorValue, Exception>.Instance.ParseRepeatedItem(
@@ -1099,20 +1100,18 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)Class_FieldIndex.ClassServices,
                         errorMask: errorMask);
                     item._ClassServices.SetIfSucceeded(ClassServicestryGet);
-                    if (frame.Complete) return true;
+                    if (frame.Complete) return TryGet<Class_FieldIndex?>.Succeed(Class_FieldIndex.ClassServices);
                     item._Training.SetIfSucceeded(LoquiBinaryTranslation<ClassTraining, ClassTraining_ErrorMask>.Instance.Parse(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)Class_FieldIndex.Training,
                         errorMask: errorMask));
-                    break;
+                    return TryGet<Class_FieldIndex?>.Succeed(Class_FieldIndex.Training);
                 default:
-                    NamedMajorRecord.Fill_Binary_RecordTypes(
+                    return NamedMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
-                        errorMask: errorMask);
-                    break;
+                        errorMask: errorMask).Bubble((i) => ClassCommon.ConvertFieldIndex(i));
             }
-            return true;
         }
 
         #endregion
@@ -1381,6 +1380,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum Class_FieldIndex
     {
+        MajorRecordFlags = 0,
+        FormID = 1,
+        Version = 2,
+        EditorID = 3,
+        RecordType = 4,
+        Name = 5,
         Description = 6,
         Icon = 7,
         PrimaryAttributes = 8,
@@ -2213,6 +2218,58 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.ClassServices = item.ClassServices_Property.HasBeenSet;
             ret.Training = new MaskItem<bool, ClassTraining_Mask<bool>>(item.Training_Property.HasBeenSet, ClassTrainingCommon.GetHasBeenSetMask(item.Training_Property.Item));
             return ret;
+        }
+
+        public static Class_FieldIndex? ConvertFieldIndex(NamedMajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Class_FieldIndex ConvertFieldIndex(NamedMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case NamedMajorRecord_FieldIndex.MajorRecordFlags:
+                    return (Class_FieldIndex)((int)index);
+                case NamedMajorRecord_FieldIndex.FormID:
+                    return (Class_FieldIndex)((int)index);
+                case NamedMajorRecord_FieldIndex.Version:
+                    return (Class_FieldIndex)((int)index);
+                case NamedMajorRecord_FieldIndex.EditorID:
+                    return (Class_FieldIndex)((int)index);
+                case NamedMajorRecord_FieldIndex.RecordType:
+                    return (Class_FieldIndex)((int)index);
+                case NamedMajorRecord_FieldIndex.Name:
+                    return (Class_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+
+        public static Class_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Class_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlags:
+                    return (Class_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormID:
+                    return (Class_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (Class_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (Class_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.RecordType:
+                    return (Class_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
         }
 
         #region XML Translation

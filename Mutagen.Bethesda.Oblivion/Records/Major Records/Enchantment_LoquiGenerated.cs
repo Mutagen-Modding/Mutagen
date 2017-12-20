@@ -896,10 +896,11 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask);
                     while (!frame.Complete)
                     {
-                        if (!Fill_Binary_RecordTypes(
+                        var parsed = Fill_Binary_RecordTypes(
                             item: ret,
                             frame: frame,
-                            errorMask: errorMask)) break;
+                            errorMask: errorMask);
+                        if (parsed.Failed) break;
                     }
                 }
             }
@@ -922,7 +923,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static bool Fill_Binary_RecordTypes(
+        protected static TryGet<Enchantment_FieldIndex?> Fill_Binary_RecordTypes(
             Enchantment item,
             MutagenFrame frame,
             Func<Enchantment_ErrorMask> errorMask)
@@ -952,7 +953,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)Enchantment_FieldIndex.Flags,
                         errorMask: errorMask);
                     item._Flags.SetIfSucceeded(FlagstryGet);
-                    break;
+                    return TryGet<Enchantment_FieldIndex?>.Succeed(Enchantment_FieldIndex.Flags);
                 case "EFIT":
                     var EffectstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<EnchantmentEffect, MaskItem<Exception, EnchantmentEffect_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
@@ -969,15 +970,13 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         );
                     item._Effects.SetIfSucceeded(EffectstryGet);
-                    break;
+                    return TryGet<Enchantment_FieldIndex?>.Succeed(Enchantment_FieldIndex.Effects);
                 default:
-                    NamedMajorRecord.Fill_Binary_RecordTypes(
+                    return NamedMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
-                        errorMask: errorMask);
-                    break;
+                        errorMask: errorMask).Bubble((i) => EnchantmentCommon.ConvertFieldIndex(i));
             }
-            return true;
         }
 
         #endregion
@@ -1200,6 +1199,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum Enchantment_FieldIndex
     {
+        MajorRecordFlags = 0,
+        FormID = 1,
+        Version = 2,
+        EditorID = 3,
+        RecordType = 4,
+        Name = 5,
         Type = 6,
         ChargeAmount = 7,
         EnchantCost = 8,
@@ -1850,6 +1855,58 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Flags = item.Flags_Property.HasBeenSet;
             ret.Effects = new MaskItem<bool, IEnumerable<MaskItem<bool, EnchantmentEffect_Mask<bool>>>>(item.Effects.HasBeenSet, item.Effects.Select((i) => new MaskItem<bool, EnchantmentEffect_Mask<bool>>(true, i.GetHasBeenSetMask())));
             return ret;
+        }
+
+        public static Enchantment_FieldIndex? ConvertFieldIndex(NamedMajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Enchantment_FieldIndex ConvertFieldIndex(NamedMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case NamedMajorRecord_FieldIndex.MajorRecordFlags:
+                    return (Enchantment_FieldIndex)((int)index);
+                case NamedMajorRecord_FieldIndex.FormID:
+                    return (Enchantment_FieldIndex)((int)index);
+                case NamedMajorRecord_FieldIndex.Version:
+                    return (Enchantment_FieldIndex)((int)index);
+                case NamedMajorRecord_FieldIndex.EditorID:
+                    return (Enchantment_FieldIndex)((int)index);
+                case NamedMajorRecord_FieldIndex.RecordType:
+                    return (Enchantment_FieldIndex)((int)index);
+                case NamedMajorRecord_FieldIndex.Name:
+                    return (Enchantment_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+
+        public static Enchantment_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Enchantment_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlags:
+                    return (Enchantment_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormID:
+                    return (Enchantment_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (Enchantment_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (Enchantment_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.RecordType:
+                    return (Enchantment_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
         }
 
         #region XML Translation

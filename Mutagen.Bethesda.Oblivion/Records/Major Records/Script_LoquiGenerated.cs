@@ -885,10 +885,11 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask);
                     while (!frame.Complete)
                     {
-                        if (!Fill_Binary_RecordTypes(
+                        var parsed = Fill_Binary_RecordTypes(
                             item: ret,
                             frame: frame,
-                            errorMask: errorMask)) break;
+                            errorMask: errorMask);
+                        if (parsed.Failed) break;
                     }
                 }
             }
@@ -911,7 +912,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static bool Fill_Binary_RecordTypes(
+        protected static TryGet<Script_FieldIndex?> Fill_Binary_RecordTypes(
             Script item,
             MutagenFrame frame,
             Func<Script_ErrorMask> errorMask)
@@ -939,7 +940,7 @@ namespace Mutagen.Bethesda.Oblivion
                         creator: errorMask,
                         index: (int)Script_FieldIndex.MetadataSummary,
                         errMaskObj: combined == null ? null : new MaskItem<Exception, ScriptMetaSummary_ErrorMask>(null, combined));
-                    break;
+                    return TryGet<Script_FieldIndex?>.Succeed(Script_FieldIndex.MetadataSummary);
                 case "SCDA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var CompiledScripttryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
@@ -947,7 +948,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)Script_FieldIndex.CompiledScript,
                         errorMask: errorMask);
                     item._CompiledScript.SetIfSucceeded(CompiledScripttryGet);
-                    break;
+                    return TryGet<Script_FieldIndex?>.Succeed(Script_FieldIndex.CompiledScript);
                 case "SCTX":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var SourceCodetryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
@@ -955,7 +956,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)Script_FieldIndex.SourceCode,
                         errorMask: errorMask);
                     item._SourceCode.SetIfSucceeded(SourceCodetryGet);
-                    break;
+                    return TryGet<Script_FieldIndex?>.Succeed(Script_FieldIndex.SourceCode);
                 case "SLSD":
                 case "SCVR":
                     var LocalVariablestryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<LocalVariable, MaskItem<Exception, LocalVariable_ErrorMask>>.Instance.ParseRepeatedItem(
@@ -973,7 +974,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         );
                     item._LocalVariables.SetIfSucceeded(LocalVariablestryGet);
-                    break;
+                    return TryGet<Script_FieldIndex?>.Succeed(Script_FieldIndex.LocalVariables);
                 case "SCRV":
                 case "SCRO":
                     var ReferencestryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<ScriptReference, MaskItem<Exception, ScriptReference_ErrorMask>>.Instance.ParseRepeatedItem(
@@ -991,15 +992,13 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         );
                     item._References.SetIfSucceeded(ReferencestryGet);
-                    break;
+                    return TryGet<Script_FieldIndex?>.Succeed(Script_FieldIndex.References);
                 default:
-                    MajorRecord.Fill_Binary_RecordTypes(
+                    return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
-                        errorMask: errorMask);
-                    break;
+                        errorMask: errorMask).Bubble((i) => ScriptCommon.ConvertFieldIndex(i));
             }
-            return true;
         }
 
         #endregion
@@ -1207,6 +1206,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum Script_FieldIndex
     {
+        MajorRecordFlags = 0,
+        FormID = 1,
+        Version = 2,
+        EditorID = 3,
+        RecordType = 4,
         MetadataSummary = 5,
         CompiledScript = 6,
         SourceCode = 7,
@@ -1930,6 +1934,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.LocalVariables = new MaskItem<bool, IEnumerable<MaskItem<bool, LocalVariable_Mask<bool>>>>(item.LocalVariables.HasBeenSet, item.LocalVariables.Select((i) => new MaskItem<bool, LocalVariable_Mask<bool>>(true, i.GetHasBeenSetMask())));
             ret.References = new MaskItem<bool, IEnumerable<MaskItem<bool, ScriptReference_Mask<bool>>>>(item.References.HasBeenSet, item.References.Select((i) => new MaskItem<bool, ScriptReference_Mask<bool>>(true, i.GetHasBeenSetMask())));
             return ret;
+        }
+
+        public static Script_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Script_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlags:
+                    return (Script_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormID:
+                    return (Script_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (Script_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (Script_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.RecordType:
+                    return (Script_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
         }
 
         #region XML Translation

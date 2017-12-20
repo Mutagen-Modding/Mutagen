@@ -1495,10 +1495,11 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask);
                     while (!frame.Complete)
                     {
-                        if (!Fill_Binary_RecordTypes(
+                        var parsed = Fill_Binary_RecordTypes(
                             item: ret,
                             frame: frame,
-                            errorMask: errorMask)) break;
+                            errorMask: errorMask);
+                        if (parsed.Failed) break;
                     }
                 }
             }
@@ -1521,7 +1522,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static bool Fill_Binary_RecordTypes(
+        protected static TryGet<Race_FieldIndex?> Fill_Binary_RecordTypes(
             Race item,
             MutagenFrame frame,
             Func<Race_ErrorMask> errorMask)
@@ -1538,7 +1539,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)Race_FieldIndex.Description,
                         errorMask: errorMask);
                     item._Description.SetIfSucceeded(DescriptiontryGet);
-                    break;
+                    return TryGet<Race_FieldIndex?>.Succeed(Race_FieldIndex.Description);
                 case "SPLO":
                     var SpellstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<FormID, Exception>.Instance.ParseRepeatedItem(
                         frame: frame,
@@ -1556,7 +1557,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         );
                     item._Spells.SetIfSucceeded(SpellstryGet);
-                    break;
+                    return TryGet<Race_FieldIndex?>.Succeed(Race_FieldIndex.Spells);
                 case "XNAM":
                     var RelationstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<Relation, MaskItem<Exception, Relation_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
@@ -1573,7 +1574,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         );
                     item._Relations.SetIfSucceeded(RelationstryGet);
-                    break;
+                    return TryGet<Race_FieldIndex?>.Succeed(Race_FieldIndex.Relations);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var SkillBooststryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<SkillBoost, MaskItem<Exception, SkillBoost_ErrorMask>>.Instance.ParseRepeatedItem(
@@ -1616,46 +1617,46 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)Race_FieldIndex.Flags,
                         errorMask: errorMask);
                     item._Flags.SetIfSucceeded(FlagstryGet);
-                    break;
+                    return TryGet<Race_FieldIndex?>.Succeed(Race_FieldIndex.Flags);
                 case "VNAM":
                     item._Voices.SetIfSucceeded(LoquiBinaryTranslation<RaceVoices, RaceVoices_ErrorMask>.Instance.Parse(
                         frame: frame,
                         fieldIndex: (int)Race_FieldIndex.Voices,
                         errorMask: errorMask));
-                    break;
+                    return TryGet<Race_FieldIndex?>.Succeed(Race_FieldIndex.Voices);
                 case "DNAM":
                     item._DefaultHair.SetIfSucceeded(LoquiBinaryTranslation<RaceHair, RaceHair_ErrorMask>.Instance.Parse(
                         frame: frame,
                         fieldIndex: (int)Race_FieldIndex.DefaultHair,
                         errorMask: errorMask));
-                    break;
+                    return TryGet<Race_FieldIndex?>.Succeed(Race_FieldIndex.DefaultHair);
                 case "CNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._DefaultHairColor.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)Race_FieldIndex.DefaultHairColor,
                         errorMask: errorMask));
-                    break;
+                    return TryGet<Race_FieldIndex?>.Succeed(Race_FieldIndex.DefaultHairColor);
                 case "PNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._FaceGenMainClamp.SetIfSucceeded(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)Race_FieldIndex.FaceGenMainClamp,
                         errorMask: errorMask));
-                    break;
+                    return TryGet<Race_FieldIndex?>.Succeed(Race_FieldIndex.FaceGenMainClamp);
                 case "UNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._FaceGenFaceClamp.SetIfSucceeded(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)Race_FieldIndex.FaceGenFaceClamp,
                         errorMask: errorMask));
-                    break;
+                    return TryGet<Race_FieldIndex?>.Succeed(Race_FieldIndex.FaceGenFaceClamp);
                 case "ATTR":
                     item._RaceStats.SetIfSucceeded(LoquiBinaryTranslation<RaceStatsGendered, RaceStatsGendered_ErrorMask>.Instance.Parse(
                         frame: frame,
                         fieldIndex: (int)Race_FieldIndex.RaceStats,
                         errorMask: errorMask));
-                    break;
+                    return TryGet<Race_FieldIndex?>.Succeed(Race_FieldIndex.RaceStats);
                 case "NAM0":
                     frame.Position += Constants.SUBRECORD_LENGTH + contentLength; // Skip marker
                     var FaceDatatryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<FacePart, MaskItem<Exception, FacePart_ErrorMask>>.Instance.ParseRepeatedItem(
@@ -1673,14 +1674,14 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         );
                     item._FaceData.SetIfSucceeded(FaceDatatryGet);
-                    break;
+                    return TryGet<Race_FieldIndex?>.Succeed(Race_FieldIndex.FaceData);
                 case "NAM1":
                     frame.Position += Constants.SUBRECORD_LENGTH + contentLength; // Skip marker
                     item._BodyData.SetIfSucceeded(LoquiBinaryTranslation<GenderedBodyData, GenderedBodyData_ErrorMask>.Instance.Parse(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)Race_FieldIndex.BodyData,
                         errorMask: errorMask));
-                    break;
+                    return TryGet<Race_FieldIndex?>.Succeed(Race_FieldIndex.BodyData);
                 case "HNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var HairstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<FormID, Exception>.Instance.ParseRepeatedItem(
@@ -1697,7 +1698,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         );
                     item._Hairs.SetIfSucceeded(HairstryGet);
-                    break;
+                    return TryGet<Race_FieldIndex?>.Succeed(Race_FieldIndex.Hairs);
                 case "ENAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var EyestryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<FormID, Exception>.Instance.ParseRepeatedItem(
@@ -1714,7 +1715,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         );
                     item._Eyes.SetIfSucceeded(EyestryGet);
-                    break;
+                    return TryGet<Race_FieldIndex?>.Succeed(Race_FieldIndex.Eyes);
                 case "FGGS":
                 case "FGGA":
                 case "FGTS":
@@ -1722,7 +1723,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)Race_FieldIndex.FaceGenData,
                         errorMask: errorMask));
-                    break;
+                    return TryGet<Race_FieldIndex?>.Succeed(Race_FieldIndex.FaceGenData);
                 case "SNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var UnknowntryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
@@ -1730,15 +1731,13 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)Race_FieldIndex.Unknown,
                         errorMask: errorMask);
                     item._Unknown.SetIfSucceeded(UnknowntryGet);
-                    break;
+                    return TryGet<Race_FieldIndex?>.Succeed(Race_FieldIndex.Unknown);
                 default:
-                    NamedMajorRecord.Fill_Binary_RecordTypes(
+                    return NamedMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
-                        errorMask: errorMask);
-                    break;
+                        errorMask: errorMask).Bubble((i) => RaceCommon.ConvertFieldIndex(i));
             }
-            return true;
         }
 
         #endregion
@@ -2227,6 +2226,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum Race_FieldIndex
     {
+        MajorRecordFlags = 0,
+        FormID = 1,
+        Version = 2,
+        EditorID = 3,
+        RecordType = 4,
+        Name = 5,
         Description = 6,
         Spells = 7,
         Relations = 8,
@@ -2632,7 +2637,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType NAM0_HEADER = new RecordType("NAM0");
         public static readonly RecordType INDX_HEADER = new RecordType("INDX");
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
-        public static readonly RecordType MODB_HEADER = new RecordType("MODB");
         public static readonly RecordType ICON_HEADER = new RecordType("ICON");
         public static readonly RecordType NAM1_HEADER = new RecordType("NAM1");
         public static readonly RecordType HNAM_HEADER = new RecordType("HNAM");
@@ -4053,6 +4057,58 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.FaceGenData = new MaskItem<bool, FaceGenData_Mask<bool>>(item.FaceGenData_Property.HasBeenSet, FaceGenDataCommon.GetHasBeenSetMask(item.FaceGenData_Property.Item));
             ret.Unknown = item.Unknown_Property.HasBeenSet;
             return ret;
+        }
+
+        public static Race_FieldIndex? ConvertFieldIndex(NamedMajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Race_FieldIndex ConvertFieldIndex(NamedMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case NamedMajorRecord_FieldIndex.MajorRecordFlags:
+                    return (Race_FieldIndex)((int)index);
+                case NamedMajorRecord_FieldIndex.FormID:
+                    return (Race_FieldIndex)((int)index);
+                case NamedMajorRecord_FieldIndex.Version:
+                    return (Race_FieldIndex)((int)index);
+                case NamedMajorRecord_FieldIndex.EditorID:
+                    return (Race_FieldIndex)((int)index);
+                case NamedMajorRecord_FieldIndex.RecordType:
+                    return (Race_FieldIndex)((int)index);
+                case NamedMajorRecord_FieldIndex.Name:
+                    return (Race_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+
+        public static Race_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Race_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlags:
+                    return (Race_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormID:
+                    return (Race_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (Race_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (Race_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.RecordType:
+                    return (Race_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
         }
 
         #region XML Translation

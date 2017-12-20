@@ -867,10 +867,11 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask);
                     while (!frame.Complete)
                     {
-                        if (!Fill_Binary_RecordTypes(
+                        var parsed = Fill_Binary_RecordTypes(
                             item: ret,
                             frame: frame,
-                            errorMask: errorMask)) break;
+                            errorMask: errorMask);
+                        if (parsed.Failed) break;
                     }
                 }
             }
@@ -893,7 +894,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static bool Fill_Binary_RecordTypes(
+        protected static TryGet<Faction_FieldIndex?> Fill_Binary_RecordTypes(
             Faction item,
             MutagenFrame frame,
             Func<Faction_ErrorMask> errorMask)
@@ -919,7 +920,7 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         );
                     item._Relations.SetIfSucceeded(RelationstryGet);
-                    break;
+                    return TryGet<Faction_FieldIndex?>.Succeed(Faction_FieldIndex.Relations);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Faction.FactionFlag>.Instance.Parse(
@@ -927,14 +928,14 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)Faction_FieldIndex.Flags,
                         errorMask: errorMask);
                     item._Flags.SetIfSucceeded(FlagstryGet);
-                    break;
+                    return TryGet<Faction_FieldIndex?>.Succeed(Faction_FieldIndex.Flags);
                 case "CNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._CrimeGoldMultiplier.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)Faction_FieldIndex.CrimeGoldMultiplier,
                         errorMask: errorMask));
-                    break;
+                    return TryGet<Faction_FieldIndex?>.Succeed(Faction_FieldIndex.CrimeGoldMultiplier);
                 case "RNAM":
                 case "MNAM":
                 case "FNAM":
@@ -954,15 +955,13 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         );
                     item._Ranks.SetIfSucceeded(RankstryGet);
-                    break;
+                    return TryGet<Faction_FieldIndex?>.Succeed(Faction_FieldIndex.Ranks);
                 default:
-                    NamedMajorRecord.Fill_Binary_RecordTypes(
+                    return NamedMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
-                        errorMask: errorMask);
-                    break;
+                        errorMask: errorMask).Bubble((i) => FactionCommon.ConvertFieldIndex(i));
             }
-            return true;
         }
 
         #endregion
@@ -1159,6 +1158,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum Faction_FieldIndex
     {
+        MajorRecordFlags = 0,
+        FormID = 1,
+        Version = 2,
+        EditorID = 3,
+        RecordType = 4,
+        Name = 5,
         Relations = 6,
         Flags = 7,
         CrimeGoldMultiplier = 8,
@@ -1824,6 +1829,58 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.CrimeGoldMultiplier = item.CrimeGoldMultiplier_Property.HasBeenSet;
             ret.Ranks = new MaskItem<bool, IEnumerable<MaskItem<bool, Rank_Mask<bool>>>>(item.Ranks.HasBeenSet, item.Ranks.Select((i) => new MaskItem<bool, Rank_Mask<bool>>(true, i.GetHasBeenSetMask())));
             return ret;
+        }
+
+        public static Faction_FieldIndex? ConvertFieldIndex(NamedMajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Faction_FieldIndex ConvertFieldIndex(NamedMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case NamedMajorRecord_FieldIndex.MajorRecordFlags:
+                    return (Faction_FieldIndex)((int)index);
+                case NamedMajorRecord_FieldIndex.FormID:
+                    return (Faction_FieldIndex)((int)index);
+                case NamedMajorRecord_FieldIndex.Version:
+                    return (Faction_FieldIndex)((int)index);
+                case NamedMajorRecord_FieldIndex.EditorID:
+                    return (Faction_FieldIndex)((int)index);
+                case NamedMajorRecord_FieldIndex.RecordType:
+                    return (Faction_FieldIndex)((int)index);
+                case NamedMajorRecord_FieldIndex.Name:
+                    return (Faction_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+
+        public static Faction_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Faction_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlags:
+                    return (Faction_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormID:
+                    return (Faction_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (Faction_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (Faction_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.RecordType:
+                    return (Faction_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
         }
 
         #region XML Translation

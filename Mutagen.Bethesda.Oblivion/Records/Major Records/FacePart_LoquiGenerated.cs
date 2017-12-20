@@ -760,15 +760,16 @@ namespace Mutagen.Bethesda.Oblivion
                         item: ret,
                         frame: frame,
                         errorMask: errorMask);
-                    bool first = true;
+                    FacePart_FieldIndex? lastParsed = null;
                     while (!frame.Complete)
                     {
-                        if (!Fill_Binary_RecordTypes(
+                        var parsed = Fill_Binary_RecordTypes(
                             item: ret,
                             frame: frame,
-                            first: first,
-                            errorMask: errorMask)) break;
-                        first = false;
+                            lastParsed: lastParsed,
+                            errorMask: errorMask);
+                        if (parsed.Failed) break;
+                        lastParsed = parsed.Value;
                     }
                 }
             }
@@ -787,10 +788,10 @@ namespace Mutagen.Bethesda.Oblivion
         {
         }
 
-        protected static bool Fill_Binary_RecordTypes(
+        protected static TryGet<FacePart_FieldIndex?> Fill_Binary_RecordTypes(
             FacePart item,
             MutagenFrame frame,
-            bool first,
+            FacePart_FieldIndex? lastParsed,
             Func<FacePart_ErrorMask> errorMask)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -799,35 +800,33 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "INDX":
-                    if (!first) return false;
+                    if (lastParsed.HasValue && lastParsed.Value >= FacePart_FieldIndex.Index) return TryGet<FacePart_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var IndextryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Race.FaceIndex>.Instance.Parse(
                         frame.Spawn(contentLength),
                         fieldIndex: (int)FacePart_FieldIndex.Index,
                         errorMask: errorMask);
                     item._Index.SetIfSucceeded(IndextryGet);
-                    break;
+                    return TryGet<FacePart_FieldIndex?>.Succeed(FacePart_FieldIndex.Index);
                 case "MODL":
-                case "MODB":
-                    if (!first) return false;
+                    if (lastParsed.HasValue && lastParsed.Value >= FacePart_FieldIndex.Model) return TryGet<FacePart_FieldIndex?>.Failure;
                     item._Model.SetIfSucceeded(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)FacePart_FieldIndex.Model,
                         errorMask: errorMask));
-                    break;
+                    return TryGet<FacePart_FieldIndex?>.Succeed(FacePart_FieldIndex.Model);
                 case "ICON":
-                    if (!first) return false;
+                    if (lastParsed.HasValue && lastParsed.Value >= FacePart_FieldIndex.Icon) return TryGet<FacePart_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var tryGet = Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)FacePart_FieldIndex.Icon,
                         errorMask: errorMask);
                     item._Icon.SetIfSucceeded(tryGet);
-                    break;
+                    return TryGet<FacePart_FieldIndex?>.Succeed(FacePart_FieldIndex.Icon);
                 default:
-                    return false;
+                    return TryGet<FacePart_FieldIndex?>.Failure;
             }
-            return true;
         }
 
         #endregion
@@ -1193,7 +1192,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly RecordType INDX_HEADER = new RecordType("INDX");
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
-        public static readonly RecordType MODB_HEADER = new RecordType("MODB");
         public static readonly RecordType ICON_HEADER = new RecordType("ICON");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
@@ -1204,7 +1202,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         INDX_HEADER,
                         MODL_HEADER,
-                        MODB_HEADER,
                         ICON_HEADER
                     })
             );

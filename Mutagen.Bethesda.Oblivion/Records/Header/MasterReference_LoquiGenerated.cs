@@ -727,15 +727,16 @@ namespace Mutagen.Bethesda.Oblivion
                         item: ret,
                         frame: frame,
                         errorMask: errorMask);
-                    bool first = true;
+                    MasterReference_FieldIndex? lastParsed = null;
                     while (!frame.Complete)
                     {
-                        if (!Fill_Binary_RecordTypes(
+                        var parsed = Fill_Binary_RecordTypes(
                             item: ret,
                             frame: frame,
-                            first: first,
-                            errorMask: errorMask)) break;
-                        first = false;
+                            lastParsed: lastParsed,
+                            errorMask: errorMask);
+                        if (parsed.Failed) break;
+                        lastParsed = parsed.Value;
                     }
                 }
             }
@@ -754,10 +755,10 @@ namespace Mutagen.Bethesda.Oblivion
         {
         }
 
-        protected static bool Fill_Binary_RecordTypes(
+        protected static TryGet<MasterReference_FieldIndex?> Fill_Binary_RecordTypes(
             MasterReference item,
             MutagenFrame frame,
-            bool first,
+            MasterReference_FieldIndex? lastParsed,
             Func<MasterReference_ErrorMask> errorMask)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -766,26 +767,25 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "MAST":
-                    if (!first) return false;
+                    if (lastParsed.HasValue && lastParsed.Value >= MasterReference_FieldIndex.Master) return TryGet<MasterReference_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var MastertryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)MasterReference_FieldIndex.Master,
                         errorMask: errorMask);
                     item._Master.SetIfSucceeded(MastertryGet);
-                    break;
+                    return TryGet<MasterReference_FieldIndex?>.Succeed(MasterReference_FieldIndex.Master);
                 case "DATA":
-                    if (!first) return false;
+                    if (lastParsed.HasValue && lastParsed.Value >= MasterReference_FieldIndex.FileSize) return TryGet<MasterReference_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._FileSize.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt64BinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)MasterReference_FieldIndex.FileSize,
                         errorMask: errorMask));
-                    break;
+                    return TryGet<MasterReference_FieldIndex?>.Succeed(MasterReference_FieldIndex.FileSize);
                 default:
-                    return false;
+                    return TryGet<MasterReference_FieldIndex?>.Failure;
             }
-            return true;
         }
 
         #endregion

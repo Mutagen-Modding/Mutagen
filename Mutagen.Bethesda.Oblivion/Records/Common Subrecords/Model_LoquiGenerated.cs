@@ -37,26 +37,26 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region File
-        protected readonly INotifyingSetItem<FilePath> _File = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
-        public INotifyingSetItem<FilePath> File_Property => _File;
+        protected readonly INotifyingItem<FilePath> _File = NotifyingItem.Factory<FilePath>();
+        public INotifyingItem<FilePath> File_Property => _File;
         public FilePath File
         {
             get => this._File.Item;
             set => this._File.Set(value);
         }
-        INotifyingSetItem<FilePath> IModel.File_Property => this.File_Property;
-        INotifyingSetItemGetter<FilePath> IModelGetter.File_Property => this.File_Property;
+        INotifyingItem<FilePath> IModel.File_Property => this.File_Property;
+        INotifyingItemGetter<FilePath> IModelGetter.File_Property => this.File_Property;
         #endregion
         #region BoundRadius
-        protected readonly INotifyingSetItem<Single> _BoundRadius = NotifyingSetItem.Factory<Single>(markAsSet: false);
-        public INotifyingSetItem<Single> BoundRadius_Property => _BoundRadius;
+        protected readonly INotifyingItem<Single> _BoundRadius = NotifyingItem.Factory<Single>();
+        public INotifyingItem<Single> BoundRadius_Property => _BoundRadius;
         public Single BoundRadius
         {
             get => this._BoundRadius.Item;
             set => this._BoundRadius.Set(value);
         }
-        INotifyingSetItem<Single> IModel.BoundRadius_Property => this.BoundRadius_Property;
-        INotifyingSetItemGetter<Single> IModelGetter.BoundRadius_Property => this.BoundRadius_Property;
+        INotifyingItem<Single> IModel.BoundRadius_Property => this.BoundRadius_Property;
+        INotifyingItemGetter<Single> IModelGetter.BoundRadius_Property => this.BoundRadius_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -117,30 +117,16 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(Model rhs)
         {
             if (rhs == null) return false;
-            if (File_Property.HasBeenSet != rhs.File_Property.HasBeenSet) return false;
-            if (File_Property.HasBeenSet)
-            {
-                if (!object.Equals(File, rhs.File)) return false;
-            }
-            if (BoundRadius_Property.HasBeenSet != rhs.BoundRadius_Property.HasBeenSet) return false;
-            if (BoundRadius_Property.HasBeenSet)
-            {
-                if (BoundRadius != rhs.BoundRadius) return false;
-            }
+            if (!object.Equals(File, rhs.File)) return false;
+            if (BoundRadius != rhs.BoundRadius) return false;
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            if (File_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(File).CombineHashCode(ret);
-            }
-            if (BoundRadius_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(BoundRadius).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(File).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(BoundRadius).CombineHashCode(ret);
             return ret;
         }
 
@@ -727,15 +713,16 @@ namespace Mutagen.Bethesda.Oblivion
                         item: ret,
                         frame: frame,
                         errorMask: errorMask);
-                    bool first = true;
+                    Model_FieldIndex? lastParsed = null;
                     while (!frame.Complete)
                     {
-                        if (!Fill_Binary_RecordTypes(
+                        var parsed = Fill_Binary_RecordTypes(
                             item: ret,
                             frame: frame,
-                            first: first,
-                            errorMask: errorMask)) break;
-                        first = false;
+                            lastParsed: lastParsed,
+                            errorMask: errorMask);
+                        if (parsed.Failed) break;
+                        lastParsed = parsed.Value;
                     }
                 }
             }
@@ -754,10 +741,10 @@ namespace Mutagen.Bethesda.Oblivion
         {
         }
 
-        protected static bool Fill_Binary_RecordTypes(
+        protected static TryGet<Model_FieldIndex?> Fill_Binary_RecordTypes(
             Model item,
             MutagenFrame frame,
-            bool first,
+            Model_FieldIndex? lastParsed,
             Func<Model_ErrorMask> errorMask)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -766,26 +753,24 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "MODL":
-                    if (!first) return false;
+                    if (lastParsed.HasValue && lastParsed.Value >= Model_FieldIndex.File) return TryGet<Model_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var tryGet = Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)Model_FieldIndex.File,
                         errorMask: errorMask);
                     item._File.SetIfSucceeded(tryGet);
-                    break;
+                    return TryGet<Model_FieldIndex?>.Succeed(Model_FieldIndex.File);
                 case "MODB":
-                    if (!first) return false;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._BoundRadius.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)Model_FieldIndex.BoundRadius,
                         errorMask: errorMask));
-                    break;
+                    return TryGet<Model_FieldIndex?>.Succeed(Model_FieldIndex.BoundRadius);
                 default:
-                    return false;
+                    return TryGet<Model_FieldIndex?>.Failure;
             }
-            return true;
         }
 
         #endregion
@@ -938,10 +923,10 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IModel : IModelGetter, ILoquiClass<IModel, IModelGetter>, ILoquiClass<Model, IModelGetter>
     {
         new FilePath File { get; set; }
-        new INotifyingSetItem<FilePath> File_Property { get; }
+        new INotifyingItem<FilePath> File_Property { get; }
 
         new Single BoundRadius { get; set; }
-        new INotifyingSetItem<Single> BoundRadius_Property { get; }
+        new INotifyingItem<Single> BoundRadius_Property { get; }
 
     }
 
@@ -949,12 +934,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region File
         FilePath File { get; }
-        INotifyingSetItemGetter<FilePath> File_Property { get; }
+        INotifyingItemGetter<FilePath> File_Property { get; }
 
         #endregion
         #region BoundRadius
         Single BoundRadius { get; }
-        INotifyingSetItemGetter<Single> BoundRadius_Property { get; }
+        INotifyingItemGetter<Single> BoundRadius_Property { get; }
 
         #endregion
 
@@ -1120,18 +1105,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
         public static readonly RecordType MODB_HEADER = new RecordType("MODB");
-        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
-        {
-            return new CollectionGetterWrapper<RecordType>(
-                new HashSet<RecordType>(
-                    new RecordType[]
-                    {
-                        MODL_HEADER,
-                        MODB_HEADER
-                    })
-            );
-        });
+        public static readonly RecordType TRIGGERING_RECORD_TYPE = MODL_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 2;
         #region Interface
@@ -1244,9 +1218,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.File_Property.SetToWithDefault(
-                        rhs: rhs.File_Property,
-                        def: def?.File_Property,
+                    item.File_Property.Set(
+                        value: rhs.File,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1259,9 +1232,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.BoundRadius_Property.SetToWithDefault(
-                        rhs: rhs.BoundRadius_Property,
-                        def: def?.BoundRadius_Property,
+                    item.BoundRadius_Property.Set(
+                        value: rhs.BoundRadius,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1284,11 +1256,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Model_FieldIndex.File:
-                    obj.File_Property.HasBeenSet = on;
-                    break;
                 case Model_FieldIndex.BoundRadius:
-                    obj.BoundRadius_Property.HasBeenSet = on;
-                    break;
+                    if (on) break;
+                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1303,10 +1273,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Model_FieldIndex.File:
-                    obj.File_Property.Unset(cmds);
+                    obj.File = default(FilePath);
                     break;
                 case Model_FieldIndex.BoundRadius:
-                    obj.BoundRadius_Property.Unset(cmds);
+                    obj.BoundRadius = default(Single);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1321,9 +1291,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Model_FieldIndex.File:
-                    return obj.File_Property.HasBeenSet;
                 case Model_FieldIndex.BoundRadius:
-                    return obj.BoundRadius_Property.HasBeenSet;
+                    return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1349,8 +1318,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IModel item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.File_Property.Unset(cmds.ToUnsetParams());
-            item.BoundRadius_Property.Unset(cmds.ToUnsetParams());
+            item.File = default(FilePath);
+            item.BoundRadius = default(Single);
         }
 
         public static Model_Mask<bool> GetEqualsMask(
@@ -1368,8 +1337,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Model_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.File = item.File_Property.Equals(rhs.File_Property, (l, r) => object.Equals(l, r));
-            ret.BoundRadius = item.BoundRadius_Property.Equals(rhs.BoundRadius_Property, (l, r) => l == r);
+            ret.File = object.Equals(item.File, rhs.File);
+            ret.BoundRadius = item.BoundRadius == rhs.BoundRadius;
         }
 
         public static string ToString(
@@ -1415,16 +1384,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IModelGetter item,
             Model_Mask<bool?> checkMask)
         {
-            if (checkMask.File.HasValue && checkMask.File.Value != item.File_Property.HasBeenSet) return false;
-            if (checkMask.BoundRadius.HasValue && checkMask.BoundRadius.Value != item.BoundRadius_Property.HasBeenSet) return false;
             return true;
         }
 
         public static Model_Mask<bool> GetHasBeenSetMask(IModelGetter item)
         {
             var ret = new Model_Mask<bool>();
-            ret.File = item.File_Property.HasBeenSet;
-            ret.BoundRadius = item.BoundRadius_Property.HasBeenSet;
+            ret.File = true;
+            ret.BoundRadius = true;
             return ret;
         }
 
@@ -1460,24 +1427,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.Model");
                     }
-                    if (item.File_Property.HasBeenSet)
-                    {
-                        FilePathXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.File),
-                            item: item.File_Property,
-                            fieldIndex: (int)Model_FieldIndex.File,
-                            errorMask: errorMask);
-                    }
-                    if (item.BoundRadius_Property.HasBeenSet)
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.BoundRadius),
-                            item: item.BoundRadius_Property,
-                            fieldIndex: (int)Model_FieldIndex.BoundRadius,
-                            errorMask: errorMask);
-                    }
+                    FilePathXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.File),
+                        item: item.File_Property,
+                        fieldIndex: (int)Model_FieldIndex.File,
+                        errorMask: errorMask);
+                    FloatXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.BoundRadius),
+                        item: item.BoundRadius_Property,
+                        fieldIndex: (int)Model_FieldIndex.BoundRadius,
+                        errorMask: errorMask);
                 }
             }
             catch (Exception ex)

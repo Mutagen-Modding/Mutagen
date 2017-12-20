@@ -413,6 +413,11 @@ namespace Mutagen.Bethesda.Generation
                     contLoqui,
                     subData);
             }
+
+            if (data.HasTrigger)
+            {
+                field.HasBeenSetProperty.SetIfNotSet(true);
+            }
         }
 
         private void SetTriggeringRecordAccessors(ObjectGeneration obj, TypeGeneration field, MutagenFieldData data)

@@ -921,10 +921,11 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask);
                     while (!frame.Complete)
                     {
-                        if (!Fill_Binary_RecordTypes(
+                        var parsed = Fill_Binary_RecordTypes(
                             item: ret,
                             frame: frame,
-                            errorMask: errorMask)) break;
+                            errorMask: errorMask);
+                        if (parsed.Failed) break;
                     }
                 }
             }
@@ -961,7 +962,7 @@ namespace Mutagen.Bethesda.Oblivion
             item._LastModified.SetIfSucceeded(LastModifiedtryGet);
         }
 
-        protected static bool Fill_Binary_RecordTypes<T_ErrMask>(
+        protected static TryGet<Group_FieldIndex?> Fill_Binary_RecordTypes<T_ErrMask>(
             Group<T> item,
             MutagenFrame frame,
             Func<Group_ErrorMask<T_ErrMask>> errorMask)
@@ -990,13 +991,12 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             );
                         item._Items.SetIfSucceeded(ItemstryGet);
-                        break;
+                        return TryGet<Group_FieldIndex?>.Failure;
                     }
                     errorMask().Warnings.Add($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength + Constants.RECORD_LENGTH;
-                    break;
+                    return TryGet<Group_FieldIndex?>.Succeed(null);
             }
-            return true;
         }
 
         #endregion

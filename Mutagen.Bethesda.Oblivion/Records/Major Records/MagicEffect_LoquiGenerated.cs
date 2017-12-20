@@ -1200,10 +1200,11 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask);
                     while (!frame.Complete)
                     {
-                        if (!Fill_Binary_RecordTypes(
+                        var parsed = Fill_Binary_RecordTypes(
                             item: ret,
                             frame: frame,
-                            errorMask: errorMask)) break;
+                            errorMask: errorMask);
+                        if (parsed.Failed) break;
                     }
                 }
             }
@@ -1226,7 +1227,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static bool Fill_Binary_RecordTypes(
+        protected static TryGet<MagicEffect_FieldIndex?> Fill_Binary_RecordTypes(
             MagicEffect item,
             MutagenFrame frame,
             Func<MagicEffect_ErrorMask> errorMask)
@@ -1243,7 +1244,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)MagicEffect_FieldIndex.Description,
                         errorMask: errorMask);
                     item._Description.SetIfSucceeded(DescriptiontryGet);
-                    break;
+                    return TryGet<MagicEffect_FieldIndex?>.Succeed(MagicEffect_FieldIndex.Description);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var tryGet = Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
@@ -1251,14 +1252,13 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)MagicEffect_FieldIndex.Icon,
                         errorMask: errorMask);
                     item._Icon.SetIfSucceeded(tryGet);
-                    break;
+                    return TryGet<MagicEffect_FieldIndex?>.Succeed(MagicEffect_FieldIndex.Icon);
                 case "MODL":
-                case "MODB":
                     item._Model.SetIfSucceeded(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)MagicEffect_FieldIndex.Model,
                         errorMask: errorMask));
-                    break;
+                    return TryGet<MagicEffect_FieldIndex?>.Succeed(MagicEffect_FieldIndex.Model);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicEffect.MagicFlag>.Instance.Parse(
@@ -1301,12 +1301,12 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         fieldIndex: (int)MagicEffect_FieldIndex.EffectShader,
                         errorMask: errorMask));
-                    if (frame.Complete) return true;
+                    if (frame.Complete) return TryGet<MagicEffect_FieldIndex?>.Succeed(MagicEffect_FieldIndex.EffectShader);
                     item._SubData.SetIfSucceeded(LoquiBinaryTranslation<MagicEffectSubData, MagicEffectSubData_ErrorMask>.Instance.Parse(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)MagicEffect_FieldIndex.SubData,
                         errorMask: errorMask));
-                    break;
+                    return TryGet<MagicEffect_FieldIndex?>.Succeed(MagicEffect_FieldIndex.SubData);
                 case "ESCE":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var CounterEffectstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<FormID, Exception>.Instance.ParseRepeatedItem(
@@ -1323,15 +1323,13 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         );
                     item._CounterEffects.SetIfSucceeded(CounterEffectstryGet);
-                    break;
+                    return TryGet<MagicEffect_FieldIndex?>.Succeed(MagicEffect_FieldIndex.CounterEffects);
                 default:
-                    NamedMajorRecord.Fill_Binary_RecordTypes(
+                    return NamedMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
-                        errorMask: errorMask);
-                    break;
+                        errorMask: errorMask).Bubble((i) => MagicEffectCommon.ConvertFieldIndex(i));
             }
-            return true;
         }
 
         #endregion
@@ -1716,6 +1714,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum MagicEffect_FieldIndex
     {
+        MajorRecordFlags = 0,
+        FormID = 1,
+        Version = 2,
+        EditorID = 3,
+        RecordType = 4,
+        Name = 5,
         Description = 6,
         Icon = 7,
         Model = 8,
@@ -2015,7 +2019,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType DESC_HEADER = new RecordType("DESC");
         public static readonly RecordType ICON_HEADER = new RecordType("ICON");
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
-        public static readonly RecordType MODB_HEADER = new RecordType("MODB");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType ESCE_HEADER = new RecordType("ESCE");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = MGEF_HEADER;
@@ -2826,6 +2829,58 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.SubData = new MaskItem<bool, MagicEffectSubData_Mask<bool>>(item.SubData_Property.HasBeenSet, MagicEffectSubDataCommon.GetHasBeenSetMask(item.SubData_Property.Item));
             ret.CounterEffects = new MaskItem<bool, IEnumerable<bool>>(item.CounterEffects.HasBeenSet, null);
             return ret;
+        }
+
+        public static MagicEffect_FieldIndex? ConvertFieldIndex(NamedMajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static MagicEffect_FieldIndex ConvertFieldIndex(NamedMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case NamedMajorRecord_FieldIndex.MajorRecordFlags:
+                    return (MagicEffect_FieldIndex)((int)index);
+                case NamedMajorRecord_FieldIndex.FormID:
+                    return (MagicEffect_FieldIndex)((int)index);
+                case NamedMajorRecord_FieldIndex.Version:
+                    return (MagicEffect_FieldIndex)((int)index);
+                case NamedMajorRecord_FieldIndex.EditorID:
+                    return (MagicEffect_FieldIndex)((int)index);
+                case NamedMajorRecord_FieldIndex.RecordType:
+                    return (MagicEffect_FieldIndex)((int)index);
+                case NamedMajorRecord_FieldIndex.Name:
+                    return (MagicEffect_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+
+        public static MagicEffect_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static MagicEffect_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlags:
+                    return (MagicEffect_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormID:
+                    return (MagicEffect_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (MagicEffect_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (MagicEffect_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.RecordType:
+                    return (MagicEffect_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
         }
 
         #region XML Translation

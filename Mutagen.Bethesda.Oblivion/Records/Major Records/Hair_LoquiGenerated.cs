@@ -818,10 +818,11 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask);
                     while (!frame.Complete)
                     {
-                        if (!Fill_Binary_RecordTypes(
+                        var parsed = Fill_Binary_RecordTypes(
                             item: ret,
                             frame: frame,
-                            errorMask: errorMask)) break;
+                            errorMask: errorMask);
+                        if (parsed.Failed) break;
                     }
                 }
             }
@@ -844,7 +845,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static bool Fill_Binary_RecordTypes(
+        protected static TryGet<Hair_FieldIndex?> Fill_Binary_RecordTypes(
             Hair item,
             MutagenFrame frame,
             Func<Hair_ErrorMask> errorMask)
@@ -855,12 +856,11 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "MODL":
-                case "MODB":
                     item._Model.SetIfSucceeded(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         frame: frame.Spawn(snapToFinalPosition: false),
                         fieldIndex: (int)Hair_FieldIndex.Model,
                         errorMask: errorMask));
-                    break;
+                    return TryGet<Hair_FieldIndex?>.Succeed(Hair_FieldIndex.Model);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var tryGet = Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
@@ -868,7 +868,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)Hair_FieldIndex.Icon,
                         errorMask: errorMask);
                     item._Icon.SetIfSucceeded(tryGet);
-                    break;
+                    return TryGet<Hair_FieldIndex?>.Succeed(Hair_FieldIndex.Icon);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Hair.HairFlag>.Instance.Parse(
@@ -876,15 +876,13 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)Hair_FieldIndex.Flags,
                         errorMask: errorMask);
                     item._Flags.SetIfSucceeded(FlagstryGet);
-                    break;
+                    return TryGet<Hair_FieldIndex?>.Succeed(Hair_FieldIndex.Flags);
                 default:
-                    NamedMajorRecord.Fill_Binary_RecordTypes(
+                    return NamedMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
-                        errorMask: errorMask);
-                    break;
+                        errorMask: errorMask).Bubble((i) => HairCommon.ConvertFieldIndex(i));
             }
-            return true;
         }
 
         #endregion
@@ -1079,6 +1077,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum Hair_FieldIndex
     {
+        MajorRecordFlags = 0,
+        FormID = 1,
+        Version = 2,
+        EditorID = 3,
+        RecordType = 4,
+        Name = 5,
         Model = 6,
         Icon = 7,
         Flags = 8,
@@ -1243,7 +1247,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly RecordType HAIR_HEADER = new RecordType("HAIR");
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
-        public static readonly RecordType MODB_HEADER = new RecordType("MODB");
         public static readonly RecordType ICON_HEADER = new RecordType("ICON");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = HAIR_HEADER;
@@ -1622,6 +1625,58 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Icon = item.Icon_Property.HasBeenSet;
             ret.Flags = item.Flags_Property.HasBeenSet;
             return ret;
+        }
+
+        public static Hair_FieldIndex? ConvertFieldIndex(NamedMajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Hair_FieldIndex ConvertFieldIndex(NamedMajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case NamedMajorRecord_FieldIndex.MajorRecordFlags:
+                    return (Hair_FieldIndex)((int)index);
+                case NamedMajorRecord_FieldIndex.FormID:
+                    return (Hair_FieldIndex)((int)index);
+                case NamedMajorRecord_FieldIndex.Version:
+                    return (Hair_FieldIndex)((int)index);
+                case NamedMajorRecord_FieldIndex.EditorID:
+                    return (Hair_FieldIndex)((int)index);
+                case NamedMajorRecord_FieldIndex.RecordType:
+                    return (Hair_FieldIndex)((int)index);
+                case NamedMajorRecord_FieldIndex.Name:
+                    return (Hair_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
+        }
+
+        public static Hair_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Hair_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlags:
+                    return (Hair_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormID:
+                    return (Hair_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (Hair_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (Hair_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.RecordType:
+                    return (Hair_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
         }
 
         #region XML Translation

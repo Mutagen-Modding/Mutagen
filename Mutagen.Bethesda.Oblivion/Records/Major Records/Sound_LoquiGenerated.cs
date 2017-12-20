@@ -759,10 +759,11 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask);
                     while (!frame.Complete)
                     {
-                        if (!Fill_Binary_RecordTypes(
+                        var parsed = Fill_Binary_RecordTypes(
                             item: ret,
                             frame: frame,
-                            errorMask: errorMask)) break;
+                            errorMask: errorMask);
+                        if (parsed.Failed) break;
                     }
                 }
             }
@@ -785,7 +786,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static bool Fill_Binary_RecordTypes(
+        protected static TryGet<Sound_FieldIndex?> Fill_Binary_RecordTypes(
             Sound item,
             MutagenFrame frame,
             Func<Sound_ErrorMask> errorMask)
@@ -802,27 +803,25 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)Sound_FieldIndex.File,
                         errorMask: errorMask);
                     item._File.SetIfSucceeded(tryGet);
-                    break;
+                    return TryGet<Sound_FieldIndex?>.Succeed(Sound_FieldIndex.File);
                 case "SNDD":
                     item._Data.SetIfSucceeded(LoquiBinaryTranslation<SoundData, SoundData_ErrorMask>.Instance.Parse(
                         frame: frame,
                         fieldIndex: (int)Sound_FieldIndex.Data,
                         errorMask: errorMask));
-                    break;
+                    return TryGet<Sound_FieldIndex?>.Succeed(Sound_FieldIndex.Data);
                 case "SNDX":
                     item._Data.SetIfSucceeded(LoquiBinaryTranslation<SoundDataExtended, SoundDataExtended_ErrorMask>.Instance.Parse(
                         frame: frame,
                         fieldIndex: (int)Sound_FieldIndex.Data,
                         errorMask: errorMask));
-                    break;
+                    return TryGet<Sound_FieldIndex?>.Succeed(Sound_FieldIndex.Data);
                 default:
-                    MajorRecord.Fill_Binary_RecordTypes(
+                    return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
-                        errorMask: errorMask);
-                    break;
+                        errorMask: errorMask).Bubble((i) => SoundCommon.ConvertFieldIndex(i));
             }
-            return true;
         }
 
         #endregion
@@ -999,6 +998,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum Sound_FieldIndex
     {
+        MajorRecordFlags = 0,
+        FormID = 1,
+        Version = 2,
+        EditorID = 3,
+        RecordType = 4,
         File = 5,
         Data = 6,
     }
@@ -1496,6 +1500,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.File = item.File_Property.HasBeenSet;
             ret.Data = new MaskItem<bool, SoundData_Mask<bool>>(item.Data_Property.HasBeenSet, SoundDataCommon.GetHasBeenSetMask(item.Data_Property.Item));
             return ret;
+        }
+
+        public static Sound_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Sound_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlags:
+                    return (Sound_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormID:
+                    return (Sound_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (Sound_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (Sound_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.RecordType:
+                    return (Sound_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
         }
 
         #region XML Translation

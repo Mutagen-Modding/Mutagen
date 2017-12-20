@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>c0c451c25193b8dc676b8d81ae8887146d6f027d</Sha>
+         <Sha>25bffd2ea5f77f720590ff89d85a267337be39a8</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>12-17-2017 15:23:30</CommitDate>
-         <Description>DirectoryPath/FilePath API extended</Description>
+         <CommitDate>12-18-2017 20:09:32</CommitDate>
+         <Description>IHasBeenSetExt GetOrDefault and SetIfNotSet convenience functions</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>53b81503b1b9caa1f5ad97809f8d63076088bd0f</Sha>
+         <Sha>948627a6364e238e0ac9f5ec2931dd73a973976a</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>12-18-2017 19:31:46</CommitDate>
-         <Description>Merge branch 'HarmonizeGit2' into HarmonizeGit1</Description>
+         <CommitDate>12-19-2017 18:48:47</CommitDate>
+         <Description>Merge branch 'HarmonizeGit2' into Dev</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

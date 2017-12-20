@@ -18,8 +18,8 @@ namespace Mutagen.Bethesda.Generation
             await base.Load(node, requireName);
             this.IntegrateField = false;
             this.Static = node.GetAttribute<bool>("static");
-            this.Notifying = false;
-            this.HasBeenSet = false;
+            this.NotifyingProperty.Item = false;
+            this.HasBeenSetProperty.Item = false;
         }
     }
 }
