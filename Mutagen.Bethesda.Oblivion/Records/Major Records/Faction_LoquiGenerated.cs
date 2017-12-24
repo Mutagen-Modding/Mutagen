@@ -492,77 +492,45 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Relations":
-                    {
-                        MaskItem<Exception, IEnumerable<MaskItem<Exception, Relation_ErrorMask>>> subMask;
-                        var listTryGet = ListXmlTranslation<Relation, MaskItem<Exception, Relation_ErrorMask>>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            maskObj: out subMask,
-                            transl: (XElement r, bool listDoMasks, out MaskItem<Exception, Relation_ErrorMask> listSubMask) =>
-                            {
-                                return LoquiXmlTranslation<Relation, Relation_ErrorMask>.Instance.Parse(
-                                    root: r,
-                                    doMasks: listDoMasks,
-                                    errorMask: out listSubMask);
-                            }
-                            );
-                        item._Relations.SetIfSucceeded(listTryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Faction_FieldIndex.Relations,
-                            subMask);
-                    }
+                    item._Relations.SetIfSucceeded(ListXmlTranslation<Relation, MaskItem<Exception, Relation_ErrorMask>>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)Faction_FieldIndex.Relations,
+                        errorMask: errorMask,
+                        transl: (XElement r, bool listDoMasks, out MaskItem<Exception, Relation_ErrorMask> listSubMask) =>
+                        {
+                            return LoquiXmlTranslation<Relation, Relation_ErrorMask>.Instance.Parse(
+                                root: r,
+                                doMasks: listDoMasks,
+                                errorMask: out listSubMask);
+                        }
+                        ));
                     break;
                 case "Flags":
-                    {
-                        Exception subMask;
-                        var tryGet = EnumXmlTranslation<Faction.FactionFlag>.Instance.Parse(
-                            root,
-                            nullable: false,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Flags.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Faction_FieldIndex.Flags,
-                            subMask);
-                    }
+                    item._Flags.SetIfSucceeded(EnumXmlTranslation<Faction.FactionFlag>.Instance.Parse(
+                        root,
+                        nullable: false,
+                        fieldIndex: (int)Faction_FieldIndex.Flags,
+                        errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "CrimeGoldMultiplier":
-                    {
-                        Exception subMask;
-                        var tryGet = FloatXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._CrimeGoldMultiplier.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Faction_FieldIndex.CrimeGoldMultiplier,
-                            subMask);
-                    }
+                    item._CrimeGoldMultiplier.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)Faction_FieldIndex.CrimeGoldMultiplier,
+                        errorMask: errorMask));
                     break;
                 case "Ranks":
-                    {
-                        MaskItem<Exception, IEnumerable<MaskItem<Exception, Rank_ErrorMask>>> subMask;
-                        var listTryGet = ListXmlTranslation<Rank, MaskItem<Exception, Rank_ErrorMask>>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            maskObj: out subMask,
-                            transl: (XElement r, bool listDoMasks, out MaskItem<Exception, Rank_ErrorMask> listSubMask) =>
-                            {
-                                return LoquiXmlTranslation<Rank, Rank_ErrorMask>.Instance.Parse(
-                                    root: r,
-                                    doMasks: listDoMasks,
-                                    errorMask: out listSubMask);
-                            }
-                            );
-                        item._Ranks.SetIfSucceeded(listTryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Faction_FieldIndex.Ranks,
-                            subMask);
-                    }
+                    item._Ranks.SetIfSucceeded(ListXmlTranslation<Rank, MaskItem<Exception, Rank_ErrorMask>>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)Faction_FieldIndex.Ranks,
+                        errorMask: errorMask,
+                        transl: (XElement r, bool listDoMasks, out MaskItem<Exception, Rank_ErrorMask> listSubMask) =>
+                        {
+                            return LoquiXmlTranslation<Rank, Rank_ErrorMask>.Instance.Parse(
+                                root: r,
+                                doMasks: listDoMasks,
+                                errorMask: out listSubMask);
+                        }
+                        ));
                     break;
                 default:
                     NamedMajorRecord.Fill_XML_Internal(
@@ -2148,29 +2116,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override bool AllEqual(Func<T, bool> eval)
         {
             if (!base.AllEqual(eval)) return false;
-            if (Relations != null)
+            if (this.Relations != null)
             {
                 if (!eval(this.Relations.Overall)) return false;
-                if (Relations.Specific != null)
+                if (this.Relations.Specific != null)
                 {
-                    foreach (var item in Relations.Specific)
+                    foreach (var item in this.Relations.Specific)
                     {
                         if (!eval(item.Overall)) return false;
-                        if (!item.Specific?.AllEqual(eval) ?? false) return false;
+                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
                     }
                 }
             }
             if (!eval(this.Flags)) return false;
             if (!eval(this.CrimeGoldMultiplier)) return false;
-            if (Ranks != null)
+            if (this.Ranks != null)
             {
                 if (!eval(this.Ranks.Overall)) return false;
-                if (Ranks.Specific != null)
+                if (this.Ranks.Specific != null)
                 {
-                    foreach (var item in Ranks.Specific)
+                    foreach (var item in this.Ranks.Specific)
                     {
                         if (!eval(item.Overall)) return false;
-                        if (!item.Specific?.AllEqual(eval) ?? false) return false;
+                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
                     }
                 }
             }

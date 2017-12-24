@@ -690,212 +690,100 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Description":
-                    {
-                        Exception subMask;
-                        var tryGet = StringXmlTranslation.Instance.Parse(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Description.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicEffect_FieldIndex.Description,
-                            subMask);
-                    }
+                    item._Description.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                        root,
+                        fieldIndex: (int)MagicEffect_FieldIndex.Description,
+                        errorMask: errorMask));
                     break;
                 case "Icon":
-                    {
-                        Exception subMask;
-                        var tryGet = FilePathXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Icon.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicEffect_FieldIndex.Icon,
-                            subMask);
-                    }
+                    item._Icon.SetIfSucceeded(FilePathXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)MagicEffect_FieldIndex.Icon,
+                        errorMask: errorMask));
                     break;
                 case "Model":
-                    {
-                        MaskItem<Exception, Model_ErrorMask> subMask;
-                        var tryGet = LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Model.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicEffect_FieldIndex.Model,
-                            subMask);
-                    }
+                    item._Model.SetIfSucceeded(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)MagicEffect_FieldIndex.Model,
+                        errorMask: errorMask));
                     break;
                 case "Flags":
-                    {
-                        Exception subMask;
-                        var tryGet = EnumXmlTranslation<MagicEffect.MagicFlag>.Instance.Parse(
-                            root,
-                            nullable: false,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Flags.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicEffect_FieldIndex.Flags,
-                            subMask);
-                    }
+                    item._Flags.SetIfSucceeded(EnumXmlTranslation<MagicEffect.MagicFlag>.Instance.Parse(
+                        root,
+                        nullable: false,
+                        fieldIndex: (int)MagicEffect_FieldIndex.Flags,
+                        errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "BaseCost":
-                    {
-                        Exception subMask;
-                        var tryGet = FloatXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._BaseCost.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicEffect_FieldIndex.BaseCost,
-                            subMask);
-                    }
+                    item._BaseCost.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)MagicEffect_FieldIndex.BaseCost,
+                        errorMask: errorMask));
                     break;
                 case "Unused":
-                    {
-                        Exception subMask;
-                        var tryGet = ByteArrayXmlTranslation.Instance.Parse(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Unused.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicEffect_FieldIndex.Unused,
-                            subMask);
-                    }
+                    item._Unused.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                        root,
+                        fieldIndex: (int)MagicEffect_FieldIndex.Unused,
+                        errorMask: errorMask));
                     break;
                 case "MagicSchool":
-                    {
-                        Exception subMask;
-                        var tryGet = EnumXmlTranslation<MagicSchool>.Instance.Parse(
-                            root,
-                            nullable: false,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._MagicSchool.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicEffect_FieldIndex.MagicSchool,
-                            subMask);
-                    }
+                    item._MagicSchool.SetIfSucceeded(EnumXmlTranslation<MagicSchool>.Instance.Parse(
+                        root,
+                        nullable: false,
+                        fieldIndex: (int)MagicEffect_FieldIndex.MagicSchool,
+                        errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "Resistance":
-                    {
-                        Exception subMask;
-                        var tryGet = EnumXmlTranslation<Resistance>.Instance.Parse(
-                            root,
-                            nullable: false,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Resistance.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicEffect_FieldIndex.Resistance,
-                            subMask);
-                    }
+                    item._Resistance.SetIfSucceeded(EnumXmlTranslation<Resistance>.Instance.Parse(
+                        root,
+                        nullable: false,
+                        fieldIndex: (int)MagicEffect_FieldIndex.Resistance,
+                        errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "CounterEffectCount":
-                    {
-                        Exception subMask;
-                        var tryGet = UInt32XmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._CounterEffectCount.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicEffect_FieldIndex.CounterEffectCount,
-                            subMask);
-                    }
+                    item._CounterEffectCount.SetIfSucceeded(UInt32XmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)MagicEffect_FieldIndex.CounterEffectCount,
+                        errorMask: errorMask));
                     break;
                 case "Light":
-                    {
-                        Exception subMask;
-                        var tryGet = FormIDXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Light.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicEffect_FieldIndex.Light,
-                            subMask);
-                    }
+                    item._Light.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)MagicEffect_FieldIndex.Light,
+                        errorMask: errorMask));
                     break;
                 case "ProjectileSpeed":
-                    {
-                        Exception subMask;
-                        var tryGet = FloatXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._ProjectileSpeed.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicEffect_FieldIndex.ProjectileSpeed,
-                            subMask);
-                    }
+                    item._ProjectileSpeed.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)MagicEffect_FieldIndex.ProjectileSpeed,
+                        errorMask: errorMask));
                     break;
                 case "EffectShader":
-                    {
-                        Exception subMask;
-                        var tryGet = FormIDXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._EffectShader.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicEffect_FieldIndex.EffectShader,
-                            subMask);
-                    }
+                    item._EffectShader.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)MagicEffect_FieldIndex.EffectShader,
+                        errorMask: errorMask));
                     break;
                 case "SubData":
-                    {
-                        MaskItem<Exception, MagicEffectSubData_ErrorMask> subMask;
-                        var tryGet = LoquiXmlTranslation<MagicEffectSubData, MagicEffectSubData_ErrorMask>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._SubData.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicEffect_FieldIndex.SubData,
-                            subMask);
-                    }
+                    item._SubData.SetIfSucceeded(LoquiXmlTranslation<MagicEffectSubData, MagicEffectSubData_ErrorMask>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)MagicEffect_FieldIndex.SubData,
+                        errorMask: errorMask));
                     break;
                 case "CounterEffects":
-                    {
-                        MaskItem<Exception, IEnumerable<Exception>> subMask;
-                        var listTryGet = ListXmlTranslation<FormID, Exception>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            maskObj: out subMask,
-                            transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
-                            {
-                                return FormIDXmlTranslation.Instance.Parse(
-                                    r,
-                                    nullable: false,
-                                    doMasks: listDoMasks,
-                                    errorMask: out listSubMask).Bubble((o) => o.Value);
-                            }
-                            );
-                        item._CounterEffects.SetIfSucceeded(listTryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicEffect_FieldIndex.CounterEffects,
-                            subMask);
-                    }
+                    item._CounterEffects.SetIfSucceeded(ListXmlTranslation<FormID, Exception>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)MagicEffect_FieldIndex.CounterEffects,
+                        errorMask: errorMask,
+                        transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
+                        {
+                            return FormIDXmlTranslation.Instance.Parse(
+                                r,
+                                nullable: false,
+                                doMasks: listDoMasks,
+                                errorMask: out listSubMask).Bubble((o) => o.Value);
+                        }
+                        ));
                     break;
                 default:
                     NamedMajorRecord.Fill_XML_Internal(
@@ -3320,7 +3208,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Model != null)
             {
                 if (!eval(this.Model.Overall)) return false;
-                if (Model.Specific != null && !Model.Specific.AllEqual(eval)) return false;
+                if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
             }
             if (!eval(this.Flags)) return false;
             if (!eval(this.BaseCost)) return false;
@@ -3334,14 +3222,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (SubData != null)
             {
                 if (!eval(this.SubData.Overall)) return false;
-                if (SubData.Specific != null && !SubData.Specific.AllEqual(eval)) return false;
+                if (this.SubData.Specific != null && !this.SubData.Specific.AllEqual(eval)) return false;
             }
-            if (CounterEffects != null)
+            if (this.CounterEffects != null)
             {
                 if (!eval(this.CounterEffects.Overall)) return false;
-                if (CounterEffects.Specific != null)
+                if (this.CounterEffects.Specific != null)
                 {
-                    foreach (var item in CounterEffects.Specific)
+                    foreach (var item in this.CounterEffects.Specific)
                     {
                         if (!eval(item)) return false;
                     }

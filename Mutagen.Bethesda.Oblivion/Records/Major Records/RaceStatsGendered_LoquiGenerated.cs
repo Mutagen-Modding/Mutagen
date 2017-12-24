@@ -426,32 +426,16 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Male":
-                    {
-                        MaskItem<Exception, RaceStats_ErrorMask> subMask;
-                        var tryGet = LoquiXmlTranslation<RaceStats, RaceStats_ErrorMask>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Male.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)RaceStatsGendered_FieldIndex.Male,
-                            subMask);
-                    }
+                    item._Male.SetIfSucceeded(LoquiXmlTranslation<RaceStats, RaceStats_ErrorMask>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)RaceStatsGendered_FieldIndex.Male,
+                        errorMask: errorMask));
                     break;
                 case "Female":
-                    {
-                        MaskItem<Exception, RaceStats_ErrorMask> subMask;
-                        var tryGet = LoquiXmlTranslation<RaceStats, RaceStats_ErrorMask>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Female.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)RaceStatsGendered_FieldIndex.Female,
-                            subMask);
-                    }
+                    item._Female.SetIfSucceeded(LoquiXmlTranslation<RaceStats, RaceStats_ErrorMask>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)RaceStatsGendered_FieldIndex.Female,
+                        errorMask: errorMask));
                     break;
                 default:
                     break;
@@ -1632,12 +1616,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Male != null)
             {
                 if (!eval(this.Male.Overall)) return false;
-                if (Male.Specific != null && !Male.Specific.AllEqual(eval)) return false;
+                if (this.Male.Specific != null && !this.Male.Specific.AllEqual(eval)) return false;
             }
             if (Female != null)
             {
                 if (!eval(this.Female.Overall)) return false;
-                if (Female.Specific != null && !Female.Specific.AllEqual(eval)) return false;
+                if (this.Female.Specific != null && !this.Female.Specific.AllEqual(eval)) return false;
             }
             return true;
         }

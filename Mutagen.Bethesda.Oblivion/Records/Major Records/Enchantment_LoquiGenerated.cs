@@ -514,84 +514,44 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Type":
-                    {
-                        Exception subMask;
-                        var tryGet = EnumXmlTranslation<Enchantment.EnchantmentType>.Instance.Parse(
-                            root,
-                            nullable: false,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Type.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Enchantment_FieldIndex.Type,
-                            subMask);
-                    }
+                    item._Type.SetIfSucceeded(EnumXmlTranslation<Enchantment.EnchantmentType>.Instance.Parse(
+                        root,
+                        nullable: false,
+                        fieldIndex: (int)Enchantment_FieldIndex.Type,
+                        errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "ChargeAmount":
-                    {
-                        Exception subMask;
-                        var tryGet = UInt32XmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._ChargeAmount.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Enchantment_FieldIndex.ChargeAmount,
-                            subMask);
-                    }
+                    item._ChargeAmount.SetIfSucceeded(UInt32XmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)Enchantment_FieldIndex.ChargeAmount,
+                        errorMask: errorMask));
                     break;
                 case "EnchantCost":
-                    {
-                        Exception subMask;
-                        var tryGet = UInt32XmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._EnchantCost.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Enchantment_FieldIndex.EnchantCost,
-                            subMask);
-                    }
+                    item._EnchantCost.SetIfSucceeded(UInt32XmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)Enchantment_FieldIndex.EnchantCost,
+                        errorMask: errorMask));
                     break;
                 case "Flags":
-                    {
-                        Exception subMask;
-                        var tryGet = EnumXmlTranslation<Enchantment.Flag>.Instance.Parse(
-                            root,
-                            nullable: false,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Flags.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Enchantment_FieldIndex.Flags,
-                            subMask);
-                    }
+                    item._Flags.SetIfSucceeded(EnumXmlTranslation<Enchantment.Flag>.Instance.Parse(
+                        root,
+                        nullable: false,
+                        fieldIndex: (int)Enchantment_FieldIndex.Flags,
+                        errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "Effects":
-                    {
-                        MaskItem<Exception, IEnumerable<MaskItem<Exception, EnchantmentEffect_ErrorMask>>> subMask;
-                        var listTryGet = ListXmlTranslation<EnchantmentEffect, MaskItem<Exception, EnchantmentEffect_ErrorMask>>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            maskObj: out subMask,
-                            transl: (XElement r, bool listDoMasks, out MaskItem<Exception, EnchantmentEffect_ErrorMask> listSubMask) =>
-                            {
-                                return LoquiXmlTranslation<EnchantmentEffect, EnchantmentEffect_ErrorMask>.Instance.Parse(
-                                    root: r,
-                                    doMasks: listDoMasks,
-                                    errorMask: out listSubMask);
-                            }
-                            );
-                        item._Effects.SetIfSucceeded(listTryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Enchantment_FieldIndex.Effects,
-                            subMask);
-                    }
+                    item._Effects.SetIfSucceeded(ListXmlTranslation<EnchantmentEffect, MaskItem<Exception, EnchantmentEffect_ErrorMask>>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)Enchantment_FieldIndex.Effects,
+                        errorMask: errorMask,
+                        transl: (XElement r, bool listDoMasks, out MaskItem<Exception, EnchantmentEffect_ErrorMask> listSubMask) =>
+                        {
+                            return LoquiXmlTranslation<EnchantmentEffect, EnchantmentEffect_ErrorMask>.Instance.Parse(
+                                root: r,
+                                doMasks: listDoMasks,
+                                errorMask: out listSubMask);
+                        }
+                        ));
                     break;
                 default:
                     NamedMajorRecord.Fill_XML_Internal(
@@ -2177,15 +2137,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!eval(this.ChargeAmount)) return false;
             if (!eval(this.EnchantCost)) return false;
             if (!eval(this.Flags)) return false;
-            if (Effects != null)
+            if (this.Effects != null)
             {
                 if (!eval(this.Effects.Overall)) return false;
-                if (Effects.Specific != null)
+                if (this.Effects.Specific != null)
                 {
-                    foreach (var item in Effects.Specific)
+                    foreach (var item in this.Effects.Specific)
                     {
                         if (!eval(item.Overall)) return false;
-                        if (!item.Specific?.AllEqual(eval) ?? false) return false;
+                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
                     }
                 }
             }

@@ -104,7 +104,7 @@ namespace Mutagen.Bethesda.Generation
             string doMaskAccessor,
             string maskAccessor)
         {
-            GenerateCopyInRet(fg, objGen, typeGen, nodeAccessor, $"var {typeGen.Name}tryGet = ", doMaskAccessor, maskAccessor);
+            GenerateCopyInRet(fg, objGen, typeGen, nodeAccessor, new Accessor($"var {typeGen.Name}tryGet = "), doMaskAccessor, maskAccessor);
             if (itemAccessor.PropertyAccess != null)
             {
                 fg.AppendLine($"{itemAccessor.PropertyAccess}.{nameof(INotifyingCollectionExt.SetIfSucceeded)}({typeGen.Name}tryGet);");
@@ -123,8 +123,8 @@ namespace Mutagen.Bethesda.Generation
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,
-            string nodeAccessor, 
-            string retAccessor,
+            string nodeAccessor,
+            Accessor retAccessor,
             string doMaskAccessor,
             string maskAccessor)
         {
@@ -149,7 +149,7 @@ namespace Mutagen.Bethesda.Generation
 
             var subMaskStr = subTransl.MaskModule.GetMaskModule(list.SubTypeGeneration.GetType()).GetErrorMaskTypeStr(list.SubTypeGeneration);
             using (var args = new ArgsWrapper(fg,
-                $"{retAccessor}{this.Namespace}ListBinaryTranslation<{list.SubTypeGeneration.TypeName}, {subMaskStr}>.Instance.ParseRepeatedItem"))
+                $"{retAccessor.DirectAccess}{this.Namespace}ListBinaryTranslation<{list.SubTypeGeneration.TypeName}, {subMaskStr}>.Instance.ParseRepeatedItem"))
             {
                 if (listBinaryType == ListBinaryType.Amount)
                 {
@@ -188,7 +188,7 @@ namespace Mutagen.Bethesda.Generation
                     using (new BraceWrapper(gen))
                     {
                         var xmlGen = this.Module.GetTypeGeneration(list.SubTypeGeneration.GetType());
-                        xmlGen.GenerateCopyInRet(gen, objGen, list.SubTypeGeneration, "r", "return ", "listDoMasks", "listSubMask");
+                        xmlGen.GenerateCopyInRet(gen, objGen, list.SubTypeGeneration, "r", new Accessor("return "), "listDoMasks", "listSubMask");
                     }
                 });
             }

@@ -479,69 +479,37 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Icon":
-                    {
-                        Exception subMask;
-                        var tryGet = FilePathXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Icon.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)LandTexture_FieldIndex.Icon,
-                            subMask);
-                    }
+                    item._Icon.SetIfSucceeded(FilePathXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)LandTexture_FieldIndex.Icon,
+                        errorMask: errorMask));
                     break;
                 case "Havok":
-                    {
-                        MaskItem<Exception, HavokData_ErrorMask> subMask;
-                        var tryGet = LoquiXmlTranslation<HavokData, HavokData_ErrorMask>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Havok.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)LandTexture_FieldIndex.Havok,
-                            subMask);
-                    }
+                    item._Havok.SetIfSucceeded(LoquiXmlTranslation<HavokData, HavokData_ErrorMask>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)LandTexture_FieldIndex.Havok,
+                        errorMask: errorMask));
                     break;
                 case "TextureSpecularExponent":
-                    {
-                        Exception subMask;
-                        var tryGet = ByteXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._TextureSpecularExponent.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)LandTexture_FieldIndex.TextureSpecularExponent,
-                            subMask);
-                    }
+                    item._TextureSpecularExponent.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)LandTexture_FieldIndex.TextureSpecularExponent,
+                        errorMask: errorMask));
                     break;
                 case "PotentialGrass":
-                    {
-                        MaskItem<Exception, IEnumerable<Exception>> subMask;
-                        var listTryGet = ListXmlTranslation<FormID, Exception>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            maskObj: out subMask,
-                            transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
-                            {
-                                return FormIDXmlTranslation.Instance.Parse(
-                                    r,
-                                    nullable: false,
-                                    doMasks: listDoMasks,
-                                    errorMask: out listSubMask).Bubble((o) => o.Value);
-                            }
-                            );
-                        item._PotentialGrass.SetIfSucceeded(listTryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)LandTexture_FieldIndex.PotentialGrass,
-                            subMask);
-                    }
+                    item._PotentialGrass.SetIfSucceeded(ListXmlTranslation<FormID, Exception>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)LandTexture_FieldIndex.PotentialGrass,
+                        errorMask: errorMask,
+                        transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
+                        {
+                            return FormIDXmlTranslation.Instance.Parse(
+                                r,
+                                nullable: false,
+                                doMasks: listDoMasks,
+                                errorMask: out listSubMask).Bubble((o) => o.Value);
+                        }
+                        ));
                     break;
                 default:
                     MajorRecord.Fill_XML_Internal(
@@ -2024,15 +1992,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Havok != null)
             {
                 if (!eval(this.Havok.Overall)) return false;
-                if (Havok.Specific != null && !Havok.Specific.AllEqual(eval)) return false;
+                if (this.Havok.Specific != null && !this.Havok.Specific.AllEqual(eval)) return false;
             }
             if (!eval(this.TextureSpecularExponent)) return false;
-            if (PotentialGrass != null)
+            if (this.PotentialGrass != null)
             {
                 if (!eval(this.PotentialGrass.Overall)) return false;
-                if (PotentialGrass.Specific != null)
+                if (this.PotentialGrass.Specific != null)
                 {
-                    foreach (var item in PotentialGrass.Specific)
+                    foreach (var item in this.PotentialGrass.Specific)
                     {
                         if (!eval(item)) return false;
                     }

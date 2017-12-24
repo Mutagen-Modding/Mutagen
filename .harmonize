@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>b151ad7ce9b4f6673ffd042acfdabd4245a65f6f</Sha>
+         <Sha>02708de43a30a9bd4a68a9a253a423b07bd62c28</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>12-19-2017 22:53:39</CommitDate>
-         <Description>LoquiType uses ObjectNamedKey</Description>
+         <CommitDate>12-24-2017 14:00:37</CommitDate>
+         <Description>Merge remote-tracking branch 'origin/XmlRefactor' into Dev</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

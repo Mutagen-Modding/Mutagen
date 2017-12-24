@@ -511,90 +511,42 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "MagicEffect":
-                    {
-                        Exception subMask;
-                        var tryGet = FormIDXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._MagicEffect.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)EnchantmentEffect_FieldIndex.MagicEffect,
-                            subMask);
-                    }
+                    item._MagicEffect.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)EnchantmentEffect_FieldIndex.MagicEffect,
+                        errorMask: errorMask));
                     break;
                 case "Magnitude":
-                    {
-                        Exception subMask;
-                        var tryGet = UInt32XmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Magnitude.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)EnchantmentEffect_FieldIndex.Magnitude,
-                            subMask);
-                    }
+                    item._Magnitude.SetIfSucceeded(UInt32XmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)EnchantmentEffect_FieldIndex.Magnitude,
+                        errorMask: errorMask));
                     break;
                 case "Area":
-                    {
-                        Exception subMask;
-                        var tryGet = UInt32XmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Area.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)EnchantmentEffect_FieldIndex.Area,
-                            subMask);
-                    }
+                    item._Area.SetIfSucceeded(UInt32XmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)EnchantmentEffect_FieldIndex.Area,
+                        errorMask: errorMask));
                     break;
                 case "Duration":
-                    {
-                        Exception subMask;
-                        var tryGet = UInt32XmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Duration.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)EnchantmentEffect_FieldIndex.Duration,
-                            subMask);
-                    }
+                    item._Duration.SetIfSucceeded(UInt32XmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)EnchantmentEffect_FieldIndex.Duration,
+                        errorMask: errorMask));
                     break;
                 case "Type":
-                    {
-                        Exception subMask;
-                        var tryGet = EnumXmlTranslation<EnchantmentEffect.EffectType>.Instance.Parse(
-                            root,
-                            nullable: false,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Type.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)EnchantmentEffect_FieldIndex.Type,
-                            subMask);
-                    }
+                    item._Type.SetIfSucceeded(EnumXmlTranslation<EnchantmentEffect.EffectType>.Instance.Parse(
+                        root,
+                        nullable: false,
+                        fieldIndex: (int)EnchantmentEffect_FieldIndex.Type,
+                        errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "ActorValue":
-                    {
-                        Exception subMask;
-                        var tryGet = EnumXmlTranslation<ActorValue>.Instance.Parse(
-                            root,
-                            nullable: false,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._ActorValue.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)EnchantmentEffect_FieldIndex.ActorValue,
-                            subMask);
-                    }
+                    item._ActorValue.SetIfSucceeded(EnumXmlTranslation<ActorValue>.Instance.Parse(
+                        root,
+                        nullable: false,
+                        fieldIndex: (int)EnchantmentEffect_FieldIndex.ActorValue,
+                        errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 default:
                     break;

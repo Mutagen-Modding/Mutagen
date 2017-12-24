@@ -429,32 +429,16 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Data":
-                    {
-                        MaskItem<Exception, LocalVariableData_ErrorMask> subMask;
-                        var tryGet = LoquiXmlTranslation<LocalVariableData, LocalVariableData_ErrorMask>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Data.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)LocalVariable_FieldIndex.Data,
-                            subMask);
-                    }
+                    item._Data.SetIfSucceeded(LoquiXmlTranslation<LocalVariableData, LocalVariableData_ErrorMask>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)LocalVariable_FieldIndex.Data,
+                        errorMask: errorMask));
                     break;
                 case "Name":
-                    {
-                        Exception subMask;
-                        var tryGet = StringXmlTranslation.Instance.Parse(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Name.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)LocalVariable_FieldIndex.Name,
-                            subMask);
-                    }
+                    item._Name.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                        root,
+                        fieldIndex: (int)LocalVariable_FieldIndex.Name,
+                        errorMask: errorMask));
                     break;
                 default:
                     break;
@@ -1637,7 +1621,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Data != null)
             {
                 if (!eval(this.Data.Overall)) return false;
-                if (Data.Specific != null && !Data.Specific.AllEqual(eval)) return false;
+                if (this.Data.Specific != null && !this.Data.Specific.AllEqual(eval)) return false;
             }
             if (!eval(this.Name)) return false;
             return true;

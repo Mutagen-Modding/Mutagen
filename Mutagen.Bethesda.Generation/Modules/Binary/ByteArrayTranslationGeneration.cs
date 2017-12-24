@@ -88,13 +88,13 @@ namespace Mutagen.Bethesda.Generation
             ObjectGeneration objGen,
             TypeGeneration typeGen,
             string nodeAccessor,
-            string retAccessor,
+            Accessor retAccessor,
             string doMaskAccessor,
             string maskAccessor)
         {
             var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
             using (var args = new ArgsWrapper(fg,
-                $"{retAccessor}{this.Namespace}ByteArrayBinaryTranslation.Instance.Parse",
+                $"{retAccessor.DirectAccess}{this.Namespace}ByteArrayBinaryTranslation.Instance.Parse",
                 (this.Nullable ? string.Empty : $".Bubble((o) => o.Value)")))
             {
                 args.Add(nodeAccessor);

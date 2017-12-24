@@ -451,47 +451,23 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Material":
-                    {
-                        Exception subMask;
-                        var tryGet = EnumXmlTranslation<HavokData.MaterialType>.Instance.Parse(
-                            root,
-                            nullable: false,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Material.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)HavokData_FieldIndex.Material,
-                            subMask);
-                    }
+                    item._Material.SetIfSucceeded(EnumXmlTranslation<HavokData.MaterialType>.Instance.Parse(
+                        root,
+                        nullable: false,
+                        fieldIndex: (int)HavokData_FieldIndex.Material,
+                        errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "Friction":
-                    {
-                        Exception subMask;
-                        var tryGet = ByteXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Friction.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)HavokData_FieldIndex.Friction,
-                            subMask);
-                    }
+                    item._Friction.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)HavokData_FieldIndex.Friction,
+                        errorMask: errorMask));
                     break;
                 case "Restitution":
-                    {
-                        Exception subMask;
-                        var tryGet = ByteXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Restitution.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)HavokData_FieldIndex.Restitution,
-                            subMask);
-                    }
+                    item._Restitution.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)HavokData_FieldIndex.Restitution,
+                        errorMask: errorMask));
                     break;
                 default:
                     break;

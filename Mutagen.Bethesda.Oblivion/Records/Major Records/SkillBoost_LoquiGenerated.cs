@@ -431,33 +431,17 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Skill":
-                    {
-                        Exception subMask;
-                        var tryGet = EnumXmlTranslation<ActorValue>.Instance.Parse(
-                            root,
-                            nullable: false,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Skill.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)SkillBoost_FieldIndex.Skill,
-                            subMask);
-                    }
+                    item._Skill.SetIfSucceeded(EnumXmlTranslation<ActorValue>.Instance.Parse(
+                        root,
+                        nullable: false,
+                        fieldIndex: (int)SkillBoost_FieldIndex.Skill,
+                        errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "Boost":
-                    {
-                        Exception subMask;
-                        var tryGet = Int8XmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Boost.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)SkillBoost_FieldIndex.Boost,
-                            subMask);
-                    }
+                    item._Boost.SetIfSucceeded(Int8XmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)SkillBoost_FieldIndex.Boost,
+                        errorMask: errorMask));
                     break;
                 default:
                     break;

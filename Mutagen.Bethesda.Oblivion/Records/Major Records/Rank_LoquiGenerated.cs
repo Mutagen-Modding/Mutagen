@@ -471,60 +471,28 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "RankNumber":
-                    {
-                        Exception subMask;
-                        var tryGet = Int32XmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._RankNumber.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Rank_FieldIndex.RankNumber,
-                            subMask);
-                    }
+                    item._RankNumber.SetIfSucceeded(Int32XmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)Rank_FieldIndex.RankNumber,
+                        errorMask: errorMask));
                     break;
                 case "MaleName":
-                    {
-                        Exception subMask;
-                        var tryGet = StringXmlTranslation.Instance.Parse(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._MaleName.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Rank_FieldIndex.MaleName,
-                            subMask);
-                    }
+                    item._MaleName.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                        root,
+                        fieldIndex: (int)Rank_FieldIndex.MaleName,
+                        errorMask: errorMask));
                     break;
                 case "FemaleName":
-                    {
-                        Exception subMask;
-                        var tryGet = StringXmlTranslation.Instance.Parse(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._FemaleName.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Rank_FieldIndex.FemaleName,
-                            subMask);
-                    }
+                    item._FemaleName.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                        root,
+                        fieldIndex: (int)Rank_FieldIndex.FemaleName,
+                        errorMask: errorMask));
                     break;
                 case "Insignia":
-                    {
-                        Exception subMask;
-                        var tryGet = FilePathXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Insignia.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Rank_FieldIndex.Insignia,
-                            subMask);
-                    }
+                    item._Insignia.SetIfSucceeded(FilePathXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)Rank_FieldIndex.Insignia,
+                        errorMask: errorMask));
                     break;
                 default:
                     break;

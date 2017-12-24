@@ -523,68 +523,36 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "ContainedRecordType":
-                    {
-                        Exception subMask;
-                        var tryGet = StringXmlTranslation.Instance.Parse(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._ContainedRecordType.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Group_FieldIndex.ContainedRecordType,
-                            subMask);
-                    }
+                    item._ContainedRecordType.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                        root,
+                        fieldIndex: (int)Group_FieldIndex.ContainedRecordType,
+                        errorMask: errorMask));
                     break;
                 case "GroupType":
-                    {
-                        Exception subMask;
-                        var tryGet = Int32XmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._GroupType.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Group_FieldIndex.GroupType,
-                            subMask);
-                    }
+                    item._GroupType.SetIfSucceeded(Int32XmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)Group_FieldIndex.GroupType,
+                        errorMask: errorMask));
                     break;
                 case "LastModified":
-                    {
-                        Exception subMask;
-                        var tryGet = ByteArrayXmlTranslation.Instance.Parse(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._LastModified.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Group_FieldIndex.LastModified,
-                            subMask);
-                    }
+                    item._LastModified.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                        root,
+                        fieldIndex: (int)Group_FieldIndex.LastModified,
+                        errorMask: errorMask));
                     break;
                 case "Items":
-                    {
-                        MaskItem<Exception, IEnumerable<MaskItem<Exception, T_ErrMask>>> subMask;
-                        var listTryGet = ListXmlTranslation<T, MaskItem<Exception, T_ErrMask>>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            maskObj: out subMask,
-                            transl: (XElement r, bool listDoMasks, out MaskItem<Exception, T_ErrMask> listSubMask) =>
-                            {
-                                return LoquiXmlTranslation<T, T_ErrMask>.Instance.Parse(
-                                    root: r,
-                                    doMasks: listDoMasks,
-                                    errorMask: out listSubMask);
-                            }
-                            );
-                        item._Items.SetIfSucceeded(listTryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Group_FieldIndex.Items,
-                            subMask);
-                    }
+                    item._Items.SetIfSucceeded(ListXmlTranslation<T, MaskItem<Exception, T_ErrMask>>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)Group_FieldIndex.Items,
+                        errorMask: errorMask,
+                        transl: (XElement r, bool listDoMasks, out MaskItem<Exception, T_ErrMask> listSubMask) =>
+                        {
+                            return LoquiXmlTranslation<T, T_ErrMask>.Instance.Parse(
+                                root: r,
+                                doMasks: listDoMasks,
+                                errorMask: out listSubMask);
+                        }
+                        ));
                     break;
                 default:
                     break;
@@ -2036,15 +2004,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!eval(this.ContainedRecordType)) return false;
             if (!eval(this.GroupType)) return false;
             if (!eval(this.LastModified)) return false;
-            if (Items != null)
+            if (this.Items != null)
             {
                 if (!eval(this.Items.Overall)) return false;
-                if (Items.Specific != null)
+                if (this.Items.Specific != null)
                 {
-                    foreach (var item in Items.Specific)
+                    foreach (var item in this.Items.Specific)
                     {
                         if (!eval(item.Overall)) return false;
-                        if (!item.Specific?.AllEqual(eval) ?? false) return false;
+                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
                     }
                 }
             }

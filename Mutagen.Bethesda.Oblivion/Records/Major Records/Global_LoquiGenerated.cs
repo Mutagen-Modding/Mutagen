@@ -300,32 +300,16 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "TypeChar":
-                    {
-                        Exception subMask;
-                        var tryGet = CharXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._TypeChar.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Global_FieldIndex.TypeChar,
-                            subMask);
-                    }
+                    item._TypeChar.SetIfSucceeded(CharXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)Global_FieldIndex.TypeChar,
+                        errorMask: errorMask));
                     break;
                 case "RawFloat":
-                    {
-                        Exception subMask;
-                        var tryGet = FloatXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._RawFloat.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Global_FieldIndex.RawFloat,
-                            subMask);
-                    }
+                    item._RawFloat.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)Global_FieldIndex.RawFloat,
+                        errorMask: errorMask));
                     break;
                 default:
                     MajorRecord.Fill_XML_Internal(

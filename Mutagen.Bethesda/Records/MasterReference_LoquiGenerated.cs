@@ -431,32 +431,16 @@ namespace Mutagen.Bethesda
             switch (name)
             {
                 case "Master":
-                    {
-                        Exception subMask;
-                        var tryGet = StringXmlTranslation.Instance.Parse(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Master.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MasterReference_FieldIndex.Master,
-                            subMask);
-                    }
+                    item._Master.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                        root,
+                        fieldIndex: (int)MasterReference_FieldIndex.Master,
+                        errorMask: errorMask));
                     break;
                 case "FileSize":
-                    {
-                        Exception subMask;
-                        var tryGet = UInt64XmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._FileSize.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MasterReference_FieldIndex.FileSize,
-                            subMask);
-                    }
+                    item._FileSize.SetIfSucceeded(UInt64XmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)MasterReference_FieldIndex.FileSize,
+                        errorMask: errorMask));
                     break;
                 default:
                     break;

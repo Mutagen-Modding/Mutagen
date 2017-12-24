@@ -41,10 +41,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         static partial void SpecialWrite_MagicEffectInitial(IEnchantmentEffectGetter item, MutagenWriter writer, Func<EnchantmentEffect_ErrorMask> errorMask)
         {
-            using (HeaderExport.ExportSubRecordHeader(writer, EnchantmentEffect_Registration.EFID_HEADER))
-            {
-                writer.Write(item.MagicEffect);
-            }
+            //using (HeaderExport.ExportSubRecordHeader(writer, EnchantmentEffect_Registration.EFID_HEADER))
+            //{
+            //    writer.Write(item.MagicEffect);
+            //}
         }
     }
 }

@@ -449,47 +449,23 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Index":
-                    {
-                        Exception subMask;
-                        var tryGet = EnumXmlTranslation<Race.FaceIndex>.Instance.Parse(
-                            root,
-                            nullable: false,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Index.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)FacePart_FieldIndex.Index,
-                            subMask);
-                    }
+                    item._Index.SetIfSucceeded(EnumXmlTranslation<Race.FaceIndex>.Instance.Parse(
+                        root,
+                        nullable: false,
+                        fieldIndex: (int)FacePart_FieldIndex.Index,
+                        errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "Model":
-                    {
-                        MaskItem<Exception, Model_ErrorMask> subMask;
-                        var tryGet = LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Model.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)FacePart_FieldIndex.Model,
-                            subMask);
-                    }
+                    item._Model.SetIfSucceeded(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)FacePart_FieldIndex.Model,
+                        errorMask: errorMask));
                     break;
                 case "Icon":
-                    {
-                        Exception subMask;
-                        var tryGet = FilePathXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Icon.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)FacePart_FieldIndex.Icon,
-                            subMask);
-                    }
+                    item._Icon.SetIfSucceeded(FilePathXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)FacePart_FieldIndex.Icon,
+                        errorMask: errorMask));
                     break;
                 default:
                     break;
@@ -1768,7 +1744,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Model != null)
             {
                 if (!eval(this.Model.Overall)) return false;
-                if (Model.Specific != null && !Model.Specific.AllEqual(eval)) return false;
+                if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
             }
             if (!eval(this.Icon)) return false;
             return true;

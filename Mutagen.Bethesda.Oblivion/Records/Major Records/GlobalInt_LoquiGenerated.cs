@@ -435,18 +435,10 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Data":
-                    {
-                        Exception subMask;
-                        var tryGet = Int32XmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Data.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)GlobalInt_FieldIndex.Data,
-                            subMask);
-                    }
+                    item._Data.SetIfSucceeded(Int32XmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)GlobalInt_FieldIndex.Data,
+                        errorMask: errorMask));
                     break;
                 default:
                     Global.Fill_XML_Internal(

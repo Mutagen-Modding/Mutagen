@@ -361,74 +361,34 @@ namespace Mutagen.Bethesda
             switch (name)
             {
                 case "MajorRecordFlags":
-                    {
-                        Exception subMask;
-                        var tryGet = ByteArrayXmlTranslation.Instance.Parse(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._MajorRecordFlags.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MajorRecord_FieldIndex.MajorRecordFlags,
-                            subMask);
-                    }
+                    item._MajorRecordFlags.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                        root,
+                        fieldIndex: (int)MajorRecord_FieldIndex.MajorRecordFlags,
+                        errorMask: errorMask));
                     break;
                 case "FormID":
-                    {
-                        Exception subMask;
-                        var tryGet = FormIDXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._FormID.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MajorRecord_FieldIndex.FormID,
-                            subMask);
-                    }
+                    item._FormID.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)MajorRecord_FieldIndex.FormID,
+                        errorMask: errorMask));
                     break;
                 case "Version":
-                    {
-                        Exception subMask;
-                        var tryGet = ByteArrayXmlTranslation.Instance.Parse(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Version.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MajorRecord_FieldIndex.Version,
-                            subMask);
-                    }
+                    item._Version.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                        root,
+                        fieldIndex: (int)MajorRecord_FieldIndex.Version,
+                        errorMask: errorMask));
                     break;
                 case "EditorID":
-                    {
-                        Exception subMask;
-                        var tryGet = StringXmlTranslation.Instance.Parse(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._EditorID.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MajorRecord_FieldIndex.EditorID,
-                            subMask);
-                    }
+                    item._EditorID.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                        root,
+                        fieldIndex: (int)MajorRecord_FieldIndex.EditorID,
+                        errorMask: errorMask));
                     break;
                 case "RecordType":
-                    {
-                        object subMask;
-                        var tryGet = WildcardXmlTranslation.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            maskObj: out subMask);
-                        item._RecordType.SetIfSucceeded(tryGet.Bubble<RecordType>(i => (RecordType)i));
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MajorRecord_FieldIndex.RecordType,
-                            subMask);
-                    }
+                    item._RecordType.SetIfSucceeded(WildcardXmlTranslation.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)MajorRecord_FieldIndex.RecordType,
+                        errorMask: errorMask).Bubble<RecordType>(i => (RecordType)i));
                     break;
                 default:
                     break;

@@ -492,75 +492,35 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Fluff":
-                    {
-                        Exception subMask;
-                        var tryGet = ByteArrayXmlTranslation.Instance.Parse(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Fluff.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)ScriptMetaSummary_FieldIndex.Fluff,
-                            subMask);
-                    }
+                    item._Fluff.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                        root,
+                        fieldIndex: (int)ScriptMetaSummary_FieldIndex.Fluff,
+                        errorMask: errorMask));
                     break;
                 case "RefCount":
-                    {
-                        Exception subMask;
-                        var tryGet = UInt32XmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._RefCount.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)ScriptMetaSummary_FieldIndex.RefCount,
-                            subMask);
-                    }
+                    item._RefCount.SetIfSucceeded(UInt32XmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)ScriptMetaSummary_FieldIndex.RefCount,
+                        errorMask: errorMask));
                     break;
                 case "CompiledSize":
-                    {
-                        Exception subMask;
-                        var tryGet = Int32XmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._CompiledSize.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)ScriptMetaSummary_FieldIndex.CompiledSize,
-                            subMask);
-                    }
+                    item._CompiledSize.SetIfSucceeded(Int32XmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)ScriptMetaSummary_FieldIndex.CompiledSize,
+                        errorMask: errorMask));
                     break;
                 case "VariableCount":
-                    {
-                        Exception subMask;
-                        var tryGet = UInt32XmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._VariableCount.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)ScriptMetaSummary_FieldIndex.VariableCount,
-                            subMask);
-                    }
+                    item._VariableCount.SetIfSucceeded(UInt32XmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)ScriptMetaSummary_FieldIndex.VariableCount,
+                        errorMask: errorMask));
                     break;
                 case "Type":
-                    {
-                        Exception subMask;
-                        var tryGet = EnumXmlTranslation<Script.ScriptType>.Instance.Parse(
-                            root,
-                            nullable: false,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Type.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)ScriptMetaSummary_FieldIndex.Type,
-                            subMask);
-                    }
+                    item._Type.SetIfSucceeded(EnumXmlTranslation<Script.ScriptType>.Instance.Parse(
+                        root,
+                        nullable: false,
+                        fieldIndex: (int)ScriptMetaSummary_FieldIndex.Type,
+                        errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 default:
                     break;

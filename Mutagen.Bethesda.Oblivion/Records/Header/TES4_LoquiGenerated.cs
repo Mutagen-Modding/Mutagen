@@ -541,110 +541,54 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Fluff":
-                    {
-                        Exception subMask;
-                        var tryGet = ByteArrayXmlTranslation.Instance.Parse(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Fluff.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)TES4_FieldIndex.Fluff,
-                            subMask);
-                    }
+                    item._Fluff.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                        root,
+                        fieldIndex: (int)TES4_FieldIndex.Fluff,
+                        errorMask: errorMask));
                     break;
                 case "Header":
-                    {
-                        MaskItem<Exception, Header_ErrorMask> subMask;
-                        var tryGet = LoquiXmlTranslation<Header, Header_ErrorMask>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Header.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)TES4_FieldIndex.Header,
-                            subMask);
-                    }
+                    item._Header.SetIfSucceeded(LoquiXmlTranslation<Header, Header_ErrorMask>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)TES4_FieldIndex.Header,
+                        errorMask: errorMask));
                     break;
                 case "TypeOffsets":
-                    {
-                        Exception subMask;
-                        var tryGet = ByteArrayXmlTranslation.Instance.Parse(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._TypeOffsets.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)TES4_FieldIndex.TypeOffsets,
-                            subMask);
-                    }
+                    item._TypeOffsets.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                        root,
+                        fieldIndex: (int)TES4_FieldIndex.TypeOffsets,
+                        errorMask: errorMask));
                     break;
                 case "Deleted":
-                    {
-                        Exception subMask;
-                        var tryGet = ByteArrayXmlTranslation.Instance.Parse(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Deleted.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)TES4_FieldIndex.Deleted,
-                            subMask);
-                    }
+                    item._Deleted.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                        root,
+                        fieldIndex: (int)TES4_FieldIndex.Deleted,
+                        errorMask: errorMask));
                     break;
                 case "Author":
-                    {
-                        Exception subMask;
-                        var tryGet = StringXmlTranslation.Instance.Parse(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Author.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)TES4_FieldIndex.Author,
-                            subMask);
-                    }
+                    item._Author.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                        root,
+                        fieldIndex: (int)TES4_FieldIndex.Author,
+                        errorMask: errorMask));
                     break;
                 case "Description":
-                    {
-                        Exception subMask;
-                        var tryGet = StringXmlTranslation.Instance.Parse(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Description.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)TES4_FieldIndex.Description,
-                            subMask);
-                    }
+                    item._Description.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                        root,
+                        fieldIndex: (int)TES4_FieldIndex.Description,
+                        errorMask: errorMask));
                     break;
                 case "MasterReferences":
-                    {
-                        MaskItem<Exception, IEnumerable<MaskItem<Exception, MasterReference_ErrorMask>>> subMask;
-                        var listTryGet = ListXmlTranslation<MasterReference, MaskItem<Exception, MasterReference_ErrorMask>>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            maskObj: out subMask,
-                            transl: (XElement r, bool listDoMasks, out MaskItem<Exception, MasterReference_ErrorMask> listSubMask) =>
-                            {
-                                return LoquiXmlTranslation<MasterReference, MasterReference_ErrorMask>.Instance.Parse(
-                                    root: r,
-                                    doMasks: listDoMasks,
-                                    errorMask: out listSubMask);
-                            }
-                            );
-                        item._MasterReferences.SetIfSucceeded(listTryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)TES4_FieldIndex.MasterReferences,
-                            subMask);
-                    }
+                    item._MasterReferences.SetIfSucceeded(ListXmlTranslation<MasterReference, MaskItem<Exception, MasterReference_ErrorMask>>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)TES4_FieldIndex.MasterReferences,
+                        errorMask: errorMask,
+                        transl: (XElement r, bool listDoMasks, out MaskItem<Exception, MasterReference_ErrorMask> listSubMask) =>
+                        {
+                            return LoquiXmlTranslation<MasterReference, MasterReference_ErrorMask>.Instance.Parse(
+                                root: r,
+                                doMasks: listDoMasks,
+                                errorMask: out listSubMask);
+                        }
+                        ));
                     break;
                 default:
                     break;
@@ -2365,21 +2309,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Header != null)
             {
                 if (!eval(this.Header.Overall)) return false;
-                if (Header.Specific != null && !Header.Specific.AllEqual(eval)) return false;
+                if (this.Header.Specific != null && !this.Header.Specific.AllEqual(eval)) return false;
             }
             if (!eval(this.TypeOffsets)) return false;
             if (!eval(this.Deleted)) return false;
             if (!eval(this.Author)) return false;
             if (!eval(this.Description)) return false;
-            if (MasterReferences != null)
+            if (this.MasterReferences != null)
             {
                 if (!eval(this.MasterReferences.Overall)) return false;
-                if (MasterReferences.Specific != null)
+                if (this.MasterReferences.Specific != null)
                 {
-                    foreach (var item in MasterReferences.Specific)
+                    foreach (var item in this.MasterReferences.Specific)
                     {
                         if (!eval(item.Overall)) return false;
-                        if (!item.Specific?.AllEqual(eval) ?? false) return false;
+                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
                     }
                 }
             }

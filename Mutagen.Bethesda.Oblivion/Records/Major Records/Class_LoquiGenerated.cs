@@ -569,135 +569,71 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Description":
-                    {
-                        Exception subMask;
-                        var tryGet = StringXmlTranslation.Instance.Parse(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Description.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Class_FieldIndex.Description,
-                            subMask);
-                    }
+                    item._Description.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                        root,
+                        fieldIndex: (int)Class_FieldIndex.Description,
+                        errorMask: errorMask));
                     break;
                 case "Icon":
-                    {
-                        Exception subMask;
-                        var tryGet = FilePathXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Icon.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Class_FieldIndex.Icon,
-                            subMask);
-                    }
+                    item._Icon.SetIfSucceeded(FilePathXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)Class_FieldIndex.Icon,
+                        errorMask: errorMask));
                     break;
                 case "PrimaryAttributes":
-                    {
-                        MaskItem<Exception, IEnumerable<Exception>> subMask;
-                        var listTryGet = ListXmlTranslation<ActorValue, Exception>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            maskObj: out subMask,
-                            transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
-                            {
-                                return EnumXmlTranslation<ActorValue>.Instance.ParseNonNull(
-                                    r,
-                                    doMasks: listDoMasks,
-                                    errorMask: out listSubMask);
-                            }
-                            );
-                        item._PrimaryAttributes.SetIfSucceeded(listTryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Class_FieldIndex.PrimaryAttributes,
-                            subMask);
-                    }
+                    item._PrimaryAttributes.SetIfSucceeded(ListXmlTranslation<ActorValue, Exception>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)Class_FieldIndex.PrimaryAttributes,
+                        errorMask: errorMask,
+                        transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
+                        {
+                            return EnumXmlTranslation<ActorValue>.Instance.ParseNonNull(
+                                r,
+                                doMasks: listDoMasks,
+                                errorMask: out listSubMask);
+                        }
+                        ));
                     break;
                 case "Specialization":
-                    {
-                        Exception subMask;
-                        var tryGet = EnumXmlTranslation<Class.SpecializationFlag>.Instance.Parse(
-                            root,
-                            nullable: false,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Specialization.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Class_FieldIndex.Specialization,
-                            subMask);
-                    }
+                    item._Specialization.SetIfSucceeded(EnumXmlTranslation<Class.SpecializationFlag>.Instance.Parse(
+                        root,
+                        nullable: false,
+                        fieldIndex: (int)Class_FieldIndex.Specialization,
+                        errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "SecondaryAttributes":
-                    {
-                        MaskItem<Exception, IEnumerable<Exception>> subMask;
-                        var listTryGet = ListXmlTranslation<ActorValue, Exception>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            maskObj: out subMask,
-                            transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
-                            {
-                                return EnumXmlTranslation<ActorValue>.Instance.ParseNonNull(
-                                    r,
-                                    doMasks: listDoMasks,
-                                    errorMask: out listSubMask);
-                            }
-                            );
-                        item._SecondaryAttributes.SetIfSucceeded(listTryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Class_FieldIndex.SecondaryAttributes,
-                            subMask);
-                    }
+                    item._SecondaryAttributes.SetIfSucceeded(ListXmlTranslation<ActorValue, Exception>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)Class_FieldIndex.SecondaryAttributes,
+                        errorMask: errorMask,
+                        transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
+                        {
+                            return EnumXmlTranslation<ActorValue>.Instance.ParseNonNull(
+                                r,
+                                doMasks: listDoMasks,
+                                errorMask: out listSubMask);
+                        }
+                        ));
                     break;
                 case "Flags":
-                    {
-                        Exception subMask;
-                        var tryGet = EnumXmlTranslation<ClassFlag>.Instance.Parse(
-                            root,
-                            nullable: false,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Flags.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Class_FieldIndex.Flags,
-                            subMask);
-                    }
+                    item._Flags.SetIfSucceeded(EnumXmlTranslation<ClassFlag>.Instance.Parse(
+                        root,
+                        nullable: false,
+                        fieldIndex: (int)Class_FieldIndex.Flags,
+                        errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "ClassServices":
-                    {
-                        Exception subMask;
-                        var tryGet = EnumXmlTranslation<ClassService>.Instance.Parse(
-                            root,
-                            nullable: false,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._ClassServices.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Class_FieldIndex.ClassServices,
-                            subMask);
-                    }
+                    item._ClassServices.SetIfSucceeded(EnumXmlTranslation<ClassService>.Instance.Parse(
+                        root,
+                        nullable: false,
+                        fieldIndex: (int)Class_FieldIndex.ClassServices,
+                        errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "Training":
-                    {
-                        MaskItem<Exception, ClassTraining_ErrorMask> subMask;
-                        var tryGet = LoquiXmlTranslation<ClassTraining, ClassTraining_ErrorMask>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Training.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Class_FieldIndex.Training,
-                            subMask);
-                    }
+                    item._Training.SetIfSucceeded(LoquiXmlTranslation<ClassTraining, ClassTraining_ErrorMask>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)Class_FieldIndex.Training,
+                        errorMask: errorMask));
                     break;
                 default:
                     NamedMajorRecord.Fill_XML_Internal(
@@ -2618,24 +2554,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!base.AllEqual(eval)) return false;
             if (!eval(this.Description)) return false;
             if (!eval(this.Icon)) return false;
-            if (PrimaryAttributes != null)
+            if (this.PrimaryAttributes != null)
             {
                 if (!eval(this.PrimaryAttributes.Overall)) return false;
-                if (PrimaryAttributes.Specific != null)
+                if (this.PrimaryAttributes.Specific != null)
                 {
-                    foreach (var item in PrimaryAttributes.Specific)
+                    foreach (var item in this.PrimaryAttributes.Specific)
                     {
                         if (!eval(item)) return false;
                     }
                 }
             }
             if (!eval(this.Specialization)) return false;
-            if (SecondaryAttributes != null)
+            if (this.SecondaryAttributes != null)
             {
                 if (!eval(this.SecondaryAttributes.Overall)) return false;
-                if (SecondaryAttributes.Specific != null)
+                if (this.SecondaryAttributes.Specific != null)
                 {
-                    foreach (var item in SecondaryAttributes.Specific)
+                    foreach (var item in this.SecondaryAttributes.Specific)
                     {
                         if (!eval(item)) return false;
                     }
@@ -2646,7 +2582,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Training != null)
             {
                 if (!eval(this.Training.Overall)) return false;
-                if (Training.Specific != null && !Training.Specific.AllEqual(eval)) return false;
+                if (this.Training.Specific != null && !this.Training.Specific.AllEqual(eval)) return false;
             }
             return true;
         }

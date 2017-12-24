@@ -451,46 +451,22 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "SymmetricGeometry":
-                    {
-                        Exception subMask;
-                        var tryGet = ByteArrayXmlTranslation.Instance.Parse(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._SymmetricGeometry.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)FaceGenData_FieldIndex.SymmetricGeometry,
-                            subMask);
-                    }
+                    item._SymmetricGeometry.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                        root,
+                        fieldIndex: (int)FaceGenData_FieldIndex.SymmetricGeometry,
+                        errorMask: errorMask));
                     break;
                 case "AsymmetricGeometry":
-                    {
-                        Exception subMask;
-                        var tryGet = ByteArrayXmlTranslation.Instance.Parse(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._AsymmetricGeometry.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)FaceGenData_FieldIndex.AsymmetricGeometry,
-                            subMask);
-                    }
+                    item._AsymmetricGeometry.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                        root,
+                        fieldIndex: (int)FaceGenData_FieldIndex.AsymmetricGeometry,
+                        errorMask: errorMask));
                     break;
                 case "SymmetricTexture":
-                    {
-                        Exception subMask;
-                        var tryGet = ByteArrayXmlTranslation.Instance.Parse(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._SymmetricTexture.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)FaceGenData_FieldIndex.SymmetricTexture,
-                            subMask);
-                    }
+                    item._SymmetricTexture.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                        root,
+                        fieldIndex: (int)FaceGenData_FieldIndex.SymmetricTexture,
+                        errorMask: errorMask));
                     break;
                 default:
                     break;

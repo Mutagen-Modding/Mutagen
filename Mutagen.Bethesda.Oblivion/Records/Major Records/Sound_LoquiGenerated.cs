@@ -441,32 +441,16 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "File":
-                    {
-                        Exception subMask;
-                        var tryGet = FilePathXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._File.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Sound_FieldIndex.File,
-                            subMask);
-                    }
+                    item._File.SetIfSucceeded(FilePathXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)Sound_FieldIndex.File,
+                        errorMask: errorMask));
                     break;
                 case "Data":
-                    {
-                        MaskItem<Exception, SoundData_ErrorMask> subMask;
-                        var tryGet = LoquiXmlTranslation<SoundData, SoundData_ErrorMask>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Data.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Sound_FieldIndex.Data,
-                            subMask);
-                    }
+                    item._Data.SetIfSucceeded(LoquiXmlTranslation<SoundData, SoundData_ErrorMask>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)Sound_FieldIndex.Data,
+                        errorMask: errorMask));
                     break;
                 default:
                     MajorRecord.Fill_XML_Internal(
@@ -1719,7 +1703,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Data != null)
             {
                 if (!eval(this.Data.Overall)) return false;
-                if (Data.Specific != null && !Data.Specific.AllEqual(eval)) return false;
+                if (this.Data.Specific != null && !this.Data.Specific.AllEqual(eval)) return false;
             }
             return true;
         }

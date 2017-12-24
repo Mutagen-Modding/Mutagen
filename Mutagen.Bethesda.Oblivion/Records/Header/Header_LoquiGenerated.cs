@@ -451,46 +451,22 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Version":
-                    {
-                        Exception subMask;
-                        var tryGet = FloatXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Version.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Header_FieldIndex.Version,
-                            subMask);
-                    }
+                    item._Version.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)Header_FieldIndex.Version,
+                        errorMask: errorMask));
                     break;
                 case "NumRecords":
-                    {
-                        Exception subMask;
-                        var tryGet = Int32XmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._NumRecords.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Header_FieldIndex.NumRecords,
-                            subMask);
-                    }
+                    item._NumRecords.SetIfSucceeded(Int32XmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)Header_FieldIndex.NumRecords,
+                        errorMask: errorMask));
                     break;
                 case "NextObjectID":
-                    {
-                        Exception subMask;
-                        var tryGet = UInt32XmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._NextObjectID.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Header_FieldIndex.NextObjectID,
-                            subMask);
-                    }
+                    item._NextObjectID.SetIfSucceeded(UInt32XmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)Header_FieldIndex.NextObjectID,
+                        errorMask: errorMask));
                     break;
                 default:
                     break;

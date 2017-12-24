@@ -455,33 +455,17 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Icon":
-                    {
-                        Exception subMask;
-                        var tryGet = FilePathXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Icon.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Eye_FieldIndex.Icon,
-                            subMask);
-                    }
+                    item._Icon.SetIfSucceeded(FilePathXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)Eye_FieldIndex.Icon,
+                        errorMask: errorMask));
                     break;
                 case "Flags":
-                    {
-                        Exception subMask;
-                        var tryGet = EnumXmlTranslation<Eye.Flag>.Instance.Parse(
-                            root,
-                            nullable: false,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Flags.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Eye_FieldIndex.Flags,
-                            subMask);
-                    }
+                    item._Flags.SetIfSucceeded(EnumXmlTranslation<Eye.Flag>.Instance.Parse(
+                        root,
+                        nullable: false,
+                        fieldIndex: (int)Eye_FieldIndex.Flags,
+                        errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 default:
                     NamedMajorRecord.Fill_XML_Internal(

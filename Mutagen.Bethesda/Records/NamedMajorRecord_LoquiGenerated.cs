@@ -280,18 +280,10 @@ namespace Mutagen.Bethesda
             switch (name)
             {
                 case "Name":
-                    {
-                        Exception subMask;
-                        var tryGet = StringXmlTranslation.Instance.Parse(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Name.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)NamedMajorRecord_FieldIndex.Name,
-                            subMask);
-                    }
+                    item._Name.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                        root,
+                        fieldIndex: (int)NamedMajorRecord_FieldIndex.Name,
+                        errorMask: errorMask));
                     break;
                 default:
                     MajorRecord.Fill_XML_Internal(

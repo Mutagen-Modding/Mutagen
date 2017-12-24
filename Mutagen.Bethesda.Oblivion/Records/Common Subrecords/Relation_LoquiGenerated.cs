@@ -431,32 +431,16 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Faction":
-                    {
-                        Exception subMask;
-                        var tryGet = FormIDXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Faction.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Relation_FieldIndex.Faction,
-                            subMask);
-                    }
+                    item._Faction.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)Relation_FieldIndex.Faction,
+                        errorMask: errorMask));
                     break;
                 case "Modifier":
-                    {
-                        Exception subMask;
-                        var tryGet = Int32XmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Modifier.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Relation_FieldIndex.Modifier,
-                            subMask);
-                    }
+                    item._Modifier.SetIfSucceeded(Int32XmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)Relation_FieldIndex.Modifier,
+                        errorMask: errorMask));
                     break;
                 default:
                     break;

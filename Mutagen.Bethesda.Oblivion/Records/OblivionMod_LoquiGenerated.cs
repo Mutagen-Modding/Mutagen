@@ -640,200 +640,88 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "TES4":
-                    {
-                        MaskItem<Exception, TES4_ErrorMask> subMask;
-                        var tryGet = LoquiXmlTranslation<TES4, TES4_ErrorMask>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._TES4.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)OblivionMod_FieldIndex.TES4,
-                            subMask);
-                    }
+                    item._TES4.SetIfSucceeded(LoquiXmlTranslation<TES4, TES4_ErrorMask>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)OblivionMod_FieldIndex.TES4,
+                        errorMask: errorMask));
                     break;
                 case "GameSettings":
-                    {
-                        MaskItem<Exception, Group_ErrorMask<GameSetting_ErrorMask>> subMask;
-                        var tryGet = LoquiXmlTranslation<Group<GameSetting>, Group_ErrorMask<GameSetting_ErrorMask>>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._GameSettings.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)OblivionMod_FieldIndex.GameSettings,
-                            subMask);
-                    }
+                    item._GameSettings.SetIfSucceeded(LoquiXmlTranslation<Group<GameSetting>, Group_ErrorMask<GameSetting_ErrorMask>>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)OblivionMod_FieldIndex.GameSettings,
+                        errorMask: errorMask));
                     break;
                 case "Globals":
-                    {
-                        MaskItem<Exception, Group_ErrorMask<Global_ErrorMask>> subMask;
-                        var tryGet = LoquiXmlTranslation<Group<Global>, Group_ErrorMask<Global_ErrorMask>>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Globals.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)OblivionMod_FieldIndex.Globals,
-                            subMask);
-                    }
+                    item._Globals.SetIfSucceeded(LoquiXmlTranslation<Group<Global>, Group_ErrorMask<Global_ErrorMask>>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Globals,
+                        errorMask: errorMask));
                     break;
                 case "Classes":
-                    {
-                        MaskItem<Exception, Group_ErrorMask<Class_ErrorMask>> subMask;
-                        var tryGet = LoquiXmlTranslation<Group<Class>, Group_ErrorMask<Class_ErrorMask>>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Classes.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)OblivionMod_FieldIndex.Classes,
-                            subMask);
-                    }
+                    item._Classes.SetIfSucceeded(LoquiXmlTranslation<Group<Class>, Group_ErrorMask<Class_ErrorMask>>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Classes,
+                        errorMask: errorMask));
                     break;
                 case "Factions":
-                    {
-                        MaskItem<Exception, Group_ErrorMask<Faction_ErrorMask>> subMask;
-                        var tryGet = LoquiXmlTranslation<Group<Faction>, Group_ErrorMask<Faction_ErrorMask>>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Factions.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)OblivionMod_FieldIndex.Factions,
-                            subMask);
-                    }
+                    item._Factions.SetIfSucceeded(LoquiXmlTranslation<Group<Faction>, Group_ErrorMask<Faction_ErrorMask>>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Factions,
+                        errorMask: errorMask));
                     break;
                 case "Hairs":
-                    {
-                        MaskItem<Exception, Group_ErrorMask<Hair_ErrorMask>> subMask;
-                        var tryGet = LoquiXmlTranslation<Group<Hair>, Group_ErrorMask<Hair_ErrorMask>>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Hairs.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)OblivionMod_FieldIndex.Hairs,
-                            subMask);
-                    }
+                    item._Hairs.SetIfSucceeded(LoquiXmlTranslation<Group<Hair>, Group_ErrorMask<Hair_ErrorMask>>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Hairs,
+                        errorMask: errorMask));
                     break;
                 case "Eyes":
-                    {
-                        MaskItem<Exception, Group_ErrorMask<Eye_ErrorMask>> subMask;
-                        var tryGet = LoquiXmlTranslation<Group<Eye>, Group_ErrorMask<Eye_ErrorMask>>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Eyes.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)OblivionMod_FieldIndex.Eyes,
-                            subMask);
-                    }
+                    item._Eyes.SetIfSucceeded(LoquiXmlTranslation<Group<Eye>, Group_ErrorMask<Eye_ErrorMask>>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Eyes,
+                        errorMask: errorMask));
                     break;
                 case "Races":
-                    {
-                        MaskItem<Exception, Group_ErrorMask<Race_ErrorMask>> subMask;
-                        var tryGet = LoquiXmlTranslation<Group<Race>, Group_ErrorMask<Race_ErrorMask>>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Races.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)OblivionMod_FieldIndex.Races,
-                            subMask);
-                    }
+                    item._Races.SetIfSucceeded(LoquiXmlTranslation<Group<Race>, Group_ErrorMask<Race_ErrorMask>>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Races,
+                        errorMask: errorMask));
                     break;
                 case "Sounds":
-                    {
-                        MaskItem<Exception, Group_ErrorMask<Sound_ErrorMask>> subMask;
-                        var tryGet = LoquiXmlTranslation<Group<Sound>, Group_ErrorMask<Sound_ErrorMask>>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Sounds.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)OblivionMod_FieldIndex.Sounds,
-                            subMask);
-                    }
+                    item._Sounds.SetIfSucceeded(LoquiXmlTranslation<Group<Sound>, Group_ErrorMask<Sound_ErrorMask>>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Sounds,
+                        errorMask: errorMask));
                     break;
                 case "Skills":
-                    {
-                        MaskItem<Exception, Group_ErrorMask<SkillRecord_ErrorMask>> subMask;
-                        var tryGet = LoquiXmlTranslation<Group<SkillRecord>, Group_ErrorMask<SkillRecord_ErrorMask>>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Skills.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)OblivionMod_FieldIndex.Skills,
-                            subMask);
-                    }
+                    item._Skills.SetIfSucceeded(LoquiXmlTranslation<Group<SkillRecord>, Group_ErrorMask<SkillRecord_ErrorMask>>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Skills,
+                        errorMask: errorMask));
                     break;
                 case "MagicEffects":
-                    {
-                        MaskItem<Exception, Group_ErrorMask<MagicEffect_ErrorMask>> subMask;
-                        var tryGet = LoquiXmlTranslation<Group<MagicEffect>, Group_ErrorMask<MagicEffect_ErrorMask>>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._MagicEffects.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)OblivionMod_FieldIndex.MagicEffects,
-                            subMask);
-                    }
+                    item._MagicEffects.SetIfSucceeded(LoquiXmlTranslation<Group<MagicEffect>, Group_ErrorMask<MagicEffect_ErrorMask>>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)OblivionMod_FieldIndex.MagicEffects,
+                        errorMask: errorMask));
                     break;
                 case "Scripts":
-                    {
-                        MaskItem<Exception, Group_ErrorMask<Script_ErrorMask>> subMask;
-                        var tryGet = LoquiXmlTranslation<Group<Script>, Group_ErrorMask<Script_ErrorMask>>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Scripts.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)OblivionMod_FieldIndex.Scripts,
-                            subMask);
-                    }
+                    item._Scripts.SetIfSucceeded(LoquiXmlTranslation<Group<Script>, Group_ErrorMask<Script_ErrorMask>>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Scripts,
+                        errorMask: errorMask));
                     break;
                 case "LandTextures":
-                    {
-                        MaskItem<Exception, Group_ErrorMask<LandTexture_ErrorMask>> subMask;
-                        var tryGet = LoquiXmlTranslation<Group<LandTexture>, Group_ErrorMask<LandTexture_ErrorMask>>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._LandTextures.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)OblivionMod_FieldIndex.LandTextures,
-                            subMask);
-                    }
+                    item._LandTextures.SetIfSucceeded(LoquiXmlTranslation<Group<LandTexture>, Group_ErrorMask<LandTexture_ErrorMask>>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)OblivionMod_FieldIndex.LandTextures,
+                        errorMask: errorMask));
                     break;
                 case "Enchantments":
-                    {
-                        MaskItem<Exception, Group_ErrorMask<Enchantment_ErrorMask>> subMask;
-                        var tryGet = LoquiXmlTranslation<Group<Enchantment>, Group_ErrorMask<Enchantment_ErrorMask>>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Enchantments.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)OblivionMod_FieldIndex.Enchantments,
-                            subMask);
-                    }
+                    item._Enchantments.SetIfSucceeded(LoquiXmlTranslation<Group<Enchantment>, Group_ErrorMask<Enchantment_ErrorMask>>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Enchantments,
+                        errorMask: errorMask));
                     break;
                 default:
                     break;
@@ -3556,72 +3444,72 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (TES4 != null)
             {
                 if (!eval(this.TES4.Overall)) return false;
-                if (TES4.Specific != null && !TES4.Specific.AllEqual(eval)) return false;
+                if (this.TES4.Specific != null && !this.TES4.Specific.AllEqual(eval)) return false;
             }
             if (GameSettings != null)
             {
                 if (!eval(this.GameSettings.Overall)) return false;
-                if (GameSettings.Specific != null && !GameSettings.Specific.AllEqual(eval)) return false;
+                if (this.GameSettings.Specific != null && !this.GameSettings.Specific.AllEqual(eval)) return false;
             }
             if (Globals != null)
             {
                 if (!eval(this.Globals.Overall)) return false;
-                if (Globals.Specific != null && !Globals.Specific.AllEqual(eval)) return false;
+                if (this.Globals.Specific != null && !this.Globals.Specific.AllEqual(eval)) return false;
             }
             if (Classes != null)
             {
                 if (!eval(this.Classes.Overall)) return false;
-                if (Classes.Specific != null && !Classes.Specific.AllEqual(eval)) return false;
+                if (this.Classes.Specific != null && !this.Classes.Specific.AllEqual(eval)) return false;
             }
             if (Factions != null)
             {
                 if (!eval(this.Factions.Overall)) return false;
-                if (Factions.Specific != null && !Factions.Specific.AllEqual(eval)) return false;
+                if (this.Factions.Specific != null && !this.Factions.Specific.AllEqual(eval)) return false;
             }
             if (Hairs != null)
             {
                 if (!eval(this.Hairs.Overall)) return false;
-                if (Hairs.Specific != null && !Hairs.Specific.AllEqual(eval)) return false;
+                if (this.Hairs.Specific != null && !this.Hairs.Specific.AllEqual(eval)) return false;
             }
             if (Eyes != null)
             {
                 if (!eval(this.Eyes.Overall)) return false;
-                if (Eyes.Specific != null && !Eyes.Specific.AllEqual(eval)) return false;
+                if (this.Eyes.Specific != null && !this.Eyes.Specific.AllEqual(eval)) return false;
             }
             if (Races != null)
             {
                 if (!eval(this.Races.Overall)) return false;
-                if (Races.Specific != null && !Races.Specific.AllEqual(eval)) return false;
+                if (this.Races.Specific != null && !this.Races.Specific.AllEqual(eval)) return false;
             }
             if (Sounds != null)
             {
                 if (!eval(this.Sounds.Overall)) return false;
-                if (Sounds.Specific != null && !Sounds.Specific.AllEqual(eval)) return false;
+                if (this.Sounds.Specific != null && !this.Sounds.Specific.AllEqual(eval)) return false;
             }
             if (Skills != null)
             {
                 if (!eval(this.Skills.Overall)) return false;
-                if (Skills.Specific != null && !Skills.Specific.AllEqual(eval)) return false;
+                if (this.Skills.Specific != null && !this.Skills.Specific.AllEqual(eval)) return false;
             }
             if (MagicEffects != null)
             {
                 if (!eval(this.MagicEffects.Overall)) return false;
-                if (MagicEffects.Specific != null && !MagicEffects.Specific.AllEqual(eval)) return false;
+                if (this.MagicEffects.Specific != null && !this.MagicEffects.Specific.AllEqual(eval)) return false;
             }
             if (Scripts != null)
             {
                 if (!eval(this.Scripts.Overall)) return false;
-                if (Scripts.Specific != null && !Scripts.Specific.AllEqual(eval)) return false;
+                if (this.Scripts.Specific != null && !this.Scripts.Specific.AllEqual(eval)) return false;
             }
             if (LandTextures != null)
             {
                 if (!eval(this.LandTextures.Overall)) return false;
-                if (LandTextures.Specific != null && !LandTextures.Specific.AllEqual(eval)) return false;
+                if (this.LandTextures.Specific != null && !this.LandTextures.Specific.AllEqual(eval)) return false;
             }
             if (Enchantments != null)
             {
                 if (!eval(this.Enchantments.Overall)) return false;
-                if (Enchantments.Specific != null && !Enchantments.Specific.AllEqual(eval)) return false;
+                if (this.Enchantments.Specific != null && !this.Enchantments.Specific.AllEqual(eval)) return false;
             }
             return true;
         }

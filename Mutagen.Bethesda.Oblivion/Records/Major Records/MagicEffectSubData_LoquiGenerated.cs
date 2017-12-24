@@ -531,102 +531,46 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "EnchantEffect":
-                    {
-                        Exception subMask;
-                        var tryGet = FormIDXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._EnchantEffect.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicEffectSubData_FieldIndex.EnchantEffect,
-                            subMask);
-                    }
+                    item._EnchantEffect.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)MagicEffectSubData_FieldIndex.EnchantEffect,
+                        errorMask: errorMask));
                     break;
                 case "CastingSound":
-                    {
-                        Exception subMask;
-                        var tryGet = FormIDXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._CastingSound.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicEffectSubData_FieldIndex.CastingSound,
-                            subMask);
-                    }
+                    item._CastingSound.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)MagicEffectSubData_FieldIndex.CastingSound,
+                        errorMask: errorMask));
                     break;
                 case "BoltSound":
-                    {
-                        Exception subMask;
-                        var tryGet = FormIDXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._BoltSound.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicEffectSubData_FieldIndex.BoltSound,
-                            subMask);
-                    }
+                    item._BoltSound.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)MagicEffectSubData_FieldIndex.BoltSound,
+                        errorMask: errorMask));
                     break;
                 case "HitSound":
-                    {
-                        Exception subMask;
-                        var tryGet = FormIDXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._HitSound.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicEffectSubData_FieldIndex.HitSound,
-                            subMask);
-                    }
+                    item._HitSound.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)MagicEffectSubData_FieldIndex.HitSound,
+                        errorMask: errorMask));
                     break;
                 case "AreaSound":
-                    {
-                        Exception subMask;
-                        var tryGet = FormIDXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._AreaSound.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicEffectSubData_FieldIndex.AreaSound,
-                            subMask);
-                    }
+                    item._AreaSound.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)MagicEffectSubData_FieldIndex.AreaSound,
+                        errorMask: errorMask));
                     break;
                 case "ConstantEffectEnchantmentFactor":
-                    {
-                        Exception subMask;
-                        var tryGet = FloatXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._ConstantEffectEnchantmentFactor.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor,
-                            subMask);
-                    }
+                    item._ConstantEffectEnchantmentFactor.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor,
+                        errorMask: errorMask));
                     break;
                 case "ConstantEffectBarterFactor":
-                    {
-                        Exception subMask;
-                        var tryGet = FloatXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._ConstantEffectBarterFactor.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor,
-                            subMask);
-                    }
+                    item._ConstantEffectBarterFactor.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor,
+                        errorMask: errorMask));
                     break;
                 default:
                     break;

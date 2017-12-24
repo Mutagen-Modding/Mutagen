@@ -471,61 +471,29 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "MinimumAttenuationDistance":
-                    {
-                        Exception subMask;
-                        var tryGet = UInt16XmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._MinimumAttenuationDistance.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)SoundData_FieldIndex.MinimumAttenuationDistance,
-                            subMask);
-                    }
+                    item._MinimumAttenuationDistance.SetIfSucceeded(UInt16XmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)SoundData_FieldIndex.MinimumAttenuationDistance,
+                        errorMask: errorMask));
                     break;
                 case "MaximumAttenuationDistance":
-                    {
-                        Exception subMask;
-                        var tryGet = UInt16XmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._MaximumAttenuationDistance.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)SoundData_FieldIndex.MaximumAttenuationDistance,
-                            subMask);
-                    }
+                    item._MaximumAttenuationDistance.SetIfSucceeded(UInt16XmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)SoundData_FieldIndex.MaximumAttenuationDistance,
+                        errorMask: errorMask));
                     break;
                 case "FrequencyAdjustment":
-                    {
-                        Exception subMask;
-                        var tryGet = Int8XmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._FrequencyAdjustment.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)SoundData_FieldIndex.FrequencyAdjustment,
-                            subMask);
-                    }
+                    item._FrequencyAdjustment.SetIfSucceeded(Int8XmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)SoundData_FieldIndex.FrequencyAdjustment,
+                        errorMask: errorMask));
                     break;
                 case "Flags":
-                    {
-                        Exception subMask;
-                        var tryGet = EnumXmlTranslation<SoundData.Flag>.Instance.Parse(
-                            root,
-                            nullable: false,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Flags.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)SoundData_FieldIndex.Flags,
-                            subMask);
-                    }
+                    item._Flags.SetIfSucceeded(EnumXmlTranslation<SoundData.Flag>.Instance.Parse(
+                        root,
+                        nullable: false,
+                        fieldIndex: (int)SoundData_FieldIndex.Flags,
+                        errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 default:
                     break;

@@ -833,364 +833,188 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Description":
-                    {
-                        Exception subMask;
-                        var tryGet = StringXmlTranslation.Instance.Parse(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Description.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Race_FieldIndex.Description,
-                            subMask);
-                    }
+                    item._Description.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                        root,
+                        fieldIndex: (int)Race_FieldIndex.Description,
+                        errorMask: errorMask));
                     break;
                 case "Spells":
-                    {
-                        MaskItem<Exception, IEnumerable<Exception>> subMask;
-                        var listTryGet = ListXmlTranslation<FormID, Exception>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            maskObj: out subMask,
-                            transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
-                            {
-                                return FormIDXmlTranslation.Instance.Parse(
-                                    r,
-                                    nullable: false,
-                                    doMasks: listDoMasks,
-                                    errorMask: out listSubMask).Bubble((o) => o.Value);
-                            }
-                            );
-                        item._Spells.SetIfSucceeded(listTryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Race_FieldIndex.Spells,
-                            subMask);
-                    }
+                    item._Spells.SetIfSucceeded(ListXmlTranslation<FormID, Exception>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)Race_FieldIndex.Spells,
+                        errorMask: errorMask,
+                        transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
+                        {
+                            return FormIDXmlTranslation.Instance.Parse(
+                                r,
+                                nullable: false,
+                                doMasks: listDoMasks,
+                                errorMask: out listSubMask).Bubble((o) => o.Value);
+                        }
+                        ));
                     break;
                 case "Relations":
-                    {
-                        MaskItem<Exception, IEnumerable<MaskItem<Exception, Relation_ErrorMask>>> subMask;
-                        var listTryGet = ListXmlTranslation<Relation, MaskItem<Exception, Relation_ErrorMask>>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            maskObj: out subMask,
-                            transl: (XElement r, bool listDoMasks, out MaskItem<Exception, Relation_ErrorMask> listSubMask) =>
-                            {
-                                return LoquiXmlTranslation<Relation, Relation_ErrorMask>.Instance.Parse(
-                                    root: r,
-                                    doMasks: listDoMasks,
-                                    errorMask: out listSubMask);
-                            }
-                            );
-                        item._Relations.SetIfSucceeded(listTryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Race_FieldIndex.Relations,
-                            subMask);
-                    }
+                    item._Relations.SetIfSucceeded(ListXmlTranslation<Relation, MaskItem<Exception, Relation_ErrorMask>>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)Race_FieldIndex.Relations,
+                        errorMask: errorMask,
+                        transl: (XElement r, bool listDoMasks, out MaskItem<Exception, Relation_ErrorMask> listSubMask) =>
+                        {
+                            return LoquiXmlTranslation<Relation, Relation_ErrorMask>.Instance.Parse(
+                                root: r,
+                                doMasks: listDoMasks,
+                                errorMask: out listSubMask);
+                        }
+                        ));
                     break;
                 case "SkillBoosts":
-                    {
-                        MaskItem<Exception, IEnumerable<MaskItem<Exception, SkillBoost_ErrorMask>>> subMask;
-                        var listTryGet = ListXmlTranslation<SkillBoost, MaskItem<Exception, SkillBoost_ErrorMask>>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            maskObj: out subMask,
-                            transl: (XElement r, bool listDoMasks, out MaskItem<Exception, SkillBoost_ErrorMask> listSubMask) =>
-                            {
-                                return LoquiXmlTranslation<SkillBoost, SkillBoost_ErrorMask>.Instance.Parse(
-                                    root: r,
-                                    doMasks: listDoMasks,
-                                    errorMask: out listSubMask);
-                            }
-                            );
-                        item._SkillBoosts.SetIfSucceeded(listTryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Race_FieldIndex.SkillBoosts,
-                            subMask);
-                    }
+                    item._SkillBoosts.SetIfSucceeded(ListXmlTranslation<SkillBoost, MaskItem<Exception, SkillBoost_ErrorMask>>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)Race_FieldIndex.SkillBoosts,
+                        errorMask: errorMask,
+                        transl: (XElement r, bool listDoMasks, out MaskItem<Exception, SkillBoost_ErrorMask> listSubMask) =>
+                        {
+                            return LoquiXmlTranslation<SkillBoost, SkillBoost_ErrorMask>.Instance.Parse(
+                                root: r,
+                                doMasks: listDoMasks,
+                                errorMask: out listSubMask);
+                        }
+                        ));
                     break;
                 case "Fluff":
-                    {
-                        Exception subMask;
-                        var tryGet = ByteArrayXmlTranslation.Instance.Parse(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Fluff.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Race_FieldIndex.Fluff,
-                            subMask);
-                    }
+                    item._Fluff.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                        root,
+                        fieldIndex: (int)Race_FieldIndex.Fluff,
+                        errorMask: errorMask));
                     break;
                 case "MaleHeight":
-                    {
-                        Exception subMask;
-                        var tryGet = FloatXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._MaleHeight.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Race_FieldIndex.MaleHeight,
-                            subMask);
-                    }
+                    item._MaleHeight.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)Race_FieldIndex.MaleHeight,
+                        errorMask: errorMask));
                     break;
                 case "FemaleHeight":
-                    {
-                        Exception subMask;
-                        var tryGet = FloatXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._FemaleHeight.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Race_FieldIndex.FemaleHeight,
-                            subMask);
-                    }
+                    item._FemaleHeight.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)Race_FieldIndex.FemaleHeight,
+                        errorMask: errorMask));
                     break;
                 case "MaleWeight":
-                    {
-                        Exception subMask;
-                        var tryGet = FloatXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._MaleWeight.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Race_FieldIndex.MaleWeight,
-                            subMask);
-                    }
+                    item._MaleWeight.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)Race_FieldIndex.MaleWeight,
+                        errorMask: errorMask));
                     break;
                 case "FemaleWeight":
-                    {
-                        Exception subMask;
-                        var tryGet = FloatXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._FemaleWeight.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Race_FieldIndex.FemaleWeight,
-                            subMask);
-                    }
+                    item._FemaleWeight.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)Race_FieldIndex.FemaleWeight,
+                        errorMask: errorMask));
                     break;
                 case "Flags":
-                    {
-                        Exception subMask;
-                        var tryGet = EnumXmlTranslation<Race.Flag>.Instance.Parse(
-                            root,
-                            nullable: false,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Flags.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Race_FieldIndex.Flags,
-                            subMask);
-                    }
+                    item._Flags.SetIfSucceeded(EnumXmlTranslation<Race.Flag>.Instance.Parse(
+                        root,
+                        nullable: false,
+                        fieldIndex: (int)Race_FieldIndex.Flags,
+                        errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "Voices":
-                    {
-                        MaskItem<Exception, RaceVoices_ErrorMask> subMask;
-                        var tryGet = LoquiXmlTranslation<RaceVoices, RaceVoices_ErrorMask>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Voices.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Race_FieldIndex.Voices,
-                            subMask);
-                    }
+                    item._Voices.SetIfSucceeded(LoquiXmlTranslation<RaceVoices, RaceVoices_ErrorMask>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)Race_FieldIndex.Voices,
+                        errorMask: errorMask));
                     break;
                 case "DefaultHair":
-                    {
-                        MaskItem<Exception, RaceHair_ErrorMask> subMask;
-                        var tryGet = LoquiXmlTranslation<RaceHair, RaceHair_ErrorMask>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._DefaultHair.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Race_FieldIndex.DefaultHair,
-                            subMask);
-                    }
+                    item._DefaultHair.SetIfSucceeded(LoquiXmlTranslation<RaceHair, RaceHair_ErrorMask>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)Race_FieldIndex.DefaultHair,
+                        errorMask: errorMask));
                     break;
                 case "DefaultHairColor":
-                    {
-                        Exception subMask;
-                        var tryGet = ByteXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._DefaultHairColor.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Race_FieldIndex.DefaultHairColor,
-                            subMask);
-                    }
+                    item._DefaultHairColor.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)Race_FieldIndex.DefaultHairColor,
+                        errorMask: errorMask));
                     break;
                 case "FaceGenMainClamp":
-                    {
-                        Exception subMask;
-                        var tryGet = Int32XmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._FaceGenMainClamp.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Race_FieldIndex.FaceGenMainClamp,
-                            subMask);
-                    }
+                    item._FaceGenMainClamp.SetIfSucceeded(Int32XmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)Race_FieldIndex.FaceGenMainClamp,
+                        errorMask: errorMask));
                     break;
                 case "FaceGenFaceClamp":
-                    {
-                        Exception subMask;
-                        var tryGet = Int32XmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._FaceGenFaceClamp.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Race_FieldIndex.FaceGenFaceClamp,
-                            subMask);
-                    }
+                    item._FaceGenFaceClamp.SetIfSucceeded(Int32XmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)Race_FieldIndex.FaceGenFaceClamp,
+                        errorMask: errorMask));
                     break;
                 case "RaceStats":
-                    {
-                        MaskItem<Exception, RaceStatsGendered_ErrorMask> subMask;
-                        var tryGet = LoquiXmlTranslation<RaceStatsGendered, RaceStatsGendered_ErrorMask>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._RaceStats.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Race_FieldIndex.RaceStats,
-                            subMask);
-                    }
+                    item._RaceStats.SetIfSucceeded(LoquiXmlTranslation<RaceStatsGendered, RaceStatsGendered_ErrorMask>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)Race_FieldIndex.RaceStats,
+                        errorMask: errorMask));
                     break;
                 case "FaceData":
-                    {
-                        MaskItem<Exception, IEnumerable<MaskItem<Exception, FacePart_ErrorMask>>> subMask;
-                        var listTryGet = ListXmlTranslation<FacePart, MaskItem<Exception, FacePart_ErrorMask>>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            maskObj: out subMask,
-                            transl: (XElement r, bool listDoMasks, out MaskItem<Exception, FacePart_ErrorMask> listSubMask) =>
-                            {
-                                return LoquiXmlTranslation<FacePart, FacePart_ErrorMask>.Instance.Parse(
-                                    root: r,
-                                    doMasks: listDoMasks,
-                                    errorMask: out listSubMask);
-                            }
-                            );
-                        item._FaceData.SetIfSucceeded(listTryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Race_FieldIndex.FaceData,
-                            subMask);
-                    }
+                    item._FaceData.SetIfSucceeded(ListXmlTranslation<FacePart, MaskItem<Exception, FacePart_ErrorMask>>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)Race_FieldIndex.FaceData,
+                        errorMask: errorMask,
+                        transl: (XElement r, bool listDoMasks, out MaskItem<Exception, FacePart_ErrorMask> listSubMask) =>
+                        {
+                            return LoquiXmlTranslation<FacePart, FacePart_ErrorMask>.Instance.Parse(
+                                root: r,
+                                doMasks: listDoMasks,
+                                errorMask: out listSubMask);
+                        }
+                        ));
                     break;
                 case "BodyData":
-                    {
-                        MaskItem<Exception, GenderedBodyData_ErrorMask> subMask;
-                        var tryGet = LoquiXmlTranslation<GenderedBodyData, GenderedBodyData_ErrorMask>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._BodyData.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Race_FieldIndex.BodyData,
-                            subMask);
-                    }
+                    item._BodyData.SetIfSucceeded(LoquiXmlTranslation<GenderedBodyData, GenderedBodyData_ErrorMask>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)Race_FieldIndex.BodyData,
+                        errorMask: errorMask));
                     break;
                 case "Hairs":
-                    {
-                        MaskItem<Exception, IEnumerable<Exception>> subMask;
-                        var listTryGet = ListXmlTranslation<FormID, Exception>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            maskObj: out subMask,
-                            transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
-                            {
-                                return FormIDXmlTranslation.Instance.Parse(
-                                    r,
-                                    nullable: false,
-                                    doMasks: listDoMasks,
-                                    errorMask: out listSubMask).Bubble((o) => o.Value);
-                            }
-                            );
-                        item._Hairs.SetIfSucceeded(listTryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Race_FieldIndex.Hairs,
-                            subMask);
-                    }
+                    item._Hairs.SetIfSucceeded(ListXmlTranslation<FormID, Exception>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)Race_FieldIndex.Hairs,
+                        errorMask: errorMask,
+                        transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
+                        {
+                            return FormIDXmlTranslation.Instance.Parse(
+                                r,
+                                nullable: false,
+                                doMasks: listDoMasks,
+                                errorMask: out listSubMask).Bubble((o) => o.Value);
+                        }
+                        ));
                     break;
                 case "Eyes":
-                    {
-                        MaskItem<Exception, IEnumerable<Exception>> subMask;
-                        var listTryGet = ListXmlTranslation<FormID, Exception>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            maskObj: out subMask,
-                            transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
-                            {
-                                return FormIDXmlTranslation.Instance.Parse(
-                                    r,
-                                    nullable: false,
-                                    doMasks: listDoMasks,
-                                    errorMask: out listSubMask).Bubble((o) => o.Value);
-                            }
-                            );
-                        item._Eyes.SetIfSucceeded(listTryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Race_FieldIndex.Eyes,
-                            subMask);
-                    }
+                    item._Eyes.SetIfSucceeded(ListXmlTranslation<FormID, Exception>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)Race_FieldIndex.Eyes,
+                        errorMask: errorMask,
+                        transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
+                        {
+                            return FormIDXmlTranslation.Instance.Parse(
+                                r,
+                                nullable: false,
+                                doMasks: listDoMasks,
+                                errorMask: out listSubMask).Bubble((o) => o.Value);
+                        }
+                        ));
                     break;
                 case "FaceGenData":
-                    {
-                        MaskItem<Exception, FaceGenData_ErrorMask> subMask;
-                        var tryGet = LoquiXmlTranslation<FaceGenData, FaceGenData_ErrorMask>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._FaceGenData.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Race_FieldIndex.FaceGenData,
-                            subMask);
-                    }
+                    item._FaceGenData.SetIfSucceeded(LoquiXmlTranslation<FaceGenData, FaceGenData_ErrorMask>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)Race_FieldIndex.FaceGenData,
+                        errorMask: errorMask));
                     break;
                 case "Unknown":
-                    {
-                        Exception subMask;
-                        var tryGet = ByteArrayXmlTranslation.Instance.Parse(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Unknown.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Race_FieldIndex.Unknown,
-                            subMask);
-                    }
+                    item._Unknown.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                        root,
+                        fieldIndex: (int)Race_FieldIndex.Unknown,
+                        errorMask: errorMask));
                     break;
                 default:
                     NamedMajorRecord.Fill_XML_Internal(
@@ -3696,7 +3520,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     ret.SkillBoosts.Specific = item.SkillBoosts.SelectAgainst<SkillBoost, MaskItem<bool, SkillBoost_Mask<bool>>>(rhs.SkillBoosts, ((l, r) =>
                     {
                         MaskItem<bool, SkillBoost_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => SkillBoostCommon.GetEqualsMask(loqLhs, loqRhs));
+                        itemRet = new MaskItem<bool, SkillBoost_Mask<bool>>();
+                        itemRet.Specific = SkillBoostCommon.GetEqualsMask(l, r);
+                        itemRet.Overall = itemRet.Specific.AllEqual((b) => b);
                         return itemRet;
                     }
                     ), out ret.SkillBoosts.Overall);
@@ -4792,38 +4618,38 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (!base.AllEqual(eval)) return false;
             if (!eval(this.Description)) return false;
-            if (Spells != null)
+            if (this.Spells != null)
             {
                 if (!eval(this.Spells.Overall)) return false;
-                if (Spells.Specific != null)
+                if (this.Spells.Specific != null)
                 {
-                    foreach (var item in Spells.Specific)
+                    foreach (var item in this.Spells.Specific)
                     {
                         if (!eval(item)) return false;
                     }
                 }
             }
-            if (Relations != null)
+            if (this.Relations != null)
             {
                 if (!eval(this.Relations.Overall)) return false;
-                if (Relations.Specific != null)
+                if (this.Relations.Specific != null)
                 {
-                    foreach (var item in Relations.Specific)
+                    foreach (var item in this.Relations.Specific)
                     {
                         if (!eval(item.Overall)) return false;
-                        if (!item.Specific?.AllEqual(eval) ?? false) return false;
+                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
                     }
                 }
             }
-            if (SkillBoosts != null)
+            if (this.SkillBoosts != null)
             {
                 if (!eval(this.SkillBoosts.Overall)) return false;
-                if (SkillBoosts.Specific != null)
+                if (this.SkillBoosts.Specific != null)
                 {
-                    foreach (var item in SkillBoosts.Specific)
+                    foreach (var item in this.SkillBoosts.Specific)
                     {
                         if (!eval(item.Overall)) return false;
-                        if (!item.Specific?.AllEqual(eval) ?? false) return false;
+                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
                     }
                 }
             }
@@ -4836,12 +4662,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Voices != null)
             {
                 if (!eval(this.Voices.Overall)) return false;
-                if (Voices.Specific != null && !Voices.Specific.AllEqual(eval)) return false;
+                if (this.Voices.Specific != null && !this.Voices.Specific.AllEqual(eval)) return false;
             }
             if (DefaultHair != null)
             {
                 if (!eval(this.DefaultHair.Overall)) return false;
-                if (DefaultHair.Specific != null && !DefaultHair.Specific.AllEqual(eval)) return false;
+                if (this.DefaultHair.Specific != null && !this.DefaultHair.Specific.AllEqual(eval)) return false;
             }
             if (!eval(this.DefaultHairColor)) return false;
             if (!eval(this.FaceGenMainClamp)) return false;
@@ -4849,42 +4675,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (RaceStats != null)
             {
                 if (!eval(this.RaceStats.Overall)) return false;
-                if (RaceStats.Specific != null && !RaceStats.Specific.AllEqual(eval)) return false;
+                if (this.RaceStats.Specific != null && !this.RaceStats.Specific.AllEqual(eval)) return false;
             }
-            if (FaceData != null)
+            if (this.FaceData != null)
             {
                 if (!eval(this.FaceData.Overall)) return false;
-                if (FaceData.Specific != null)
+                if (this.FaceData.Specific != null)
                 {
-                    foreach (var item in FaceData.Specific)
+                    foreach (var item in this.FaceData.Specific)
                     {
                         if (!eval(item.Overall)) return false;
-                        if (!item.Specific?.AllEqual(eval) ?? false) return false;
+                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
                     }
                 }
             }
             if (BodyData != null)
             {
                 if (!eval(this.BodyData.Overall)) return false;
-                if (BodyData.Specific != null && !BodyData.Specific.AllEqual(eval)) return false;
+                if (this.BodyData.Specific != null && !this.BodyData.Specific.AllEqual(eval)) return false;
             }
-            if (Hairs != null)
+            if (this.Hairs != null)
             {
                 if (!eval(this.Hairs.Overall)) return false;
-                if (Hairs.Specific != null)
+                if (this.Hairs.Specific != null)
                 {
-                    foreach (var item in Hairs.Specific)
+                    foreach (var item in this.Hairs.Specific)
                     {
                         if (!eval(item)) return false;
                     }
                 }
             }
-            if (Eyes != null)
+            if (this.Eyes != null)
             {
                 if (!eval(this.Eyes.Overall)) return false;
-                if (Eyes.Specific != null)
+                if (this.Eyes.Specific != null)
                 {
-                    foreach (var item in Eyes.Specific)
+                    foreach (var item in this.Eyes.Specific)
                     {
                         if (!eval(item)) return false;
                     }
@@ -4893,7 +4719,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (FaceGenData != null)
             {
                 if (!eval(this.FaceGenData.Overall)) return false;
-                if (FaceGenData.Specific != null && !FaceGenData.Specific.AllEqual(eval)) return false;
+                if (this.FaceGenData.Specific != null && !this.FaceGenData.Specific.AllEqual(eval)) return false;
             }
             if (!eval(this.Unknown)) return false;
             return true;

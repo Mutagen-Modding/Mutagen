@@ -454,47 +454,23 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "TrainedSkill":
-                    {
-                        Exception subMask;
-                        var tryGet = EnumXmlTranslation<Skill>.Instance.Parse(
-                            root,
-                            nullable: false,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._TrainedSkill.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)ClassTraining_FieldIndex.TrainedSkill,
-                            subMask);
-                    }
+                    item._TrainedSkill.SetIfSucceeded(EnumXmlTranslation<Skill>.Instance.Parse(
+                        root,
+                        nullable: false,
+                        fieldIndex: (int)ClassTraining_FieldIndex.TrainedSkill,
+                        errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "MaximumTrainingLevel":
-                    {
-                        Exception subMask;
-                        var tryGet = ByteXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._MaximumTrainingLevel.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)ClassTraining_FieldIndex.MaximumTrainingLevel,
-                            subMask);
-                    }
+                    item._MaximumTrainingLevel.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)ClassTraining_FieldIndex.MaximumTrainingLevel,
+                        errorMask: errorMask));
                     break;
                 case "Fluff":
-                    {
-                        Exception subMask;
-                        var tryGet = ByteArrayXmlTranslation.Instance.Parse(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Fluff.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)ClassTraining_FieldIndex.Fluff,
-                            subMask);
-                    }
+                    item._Fluff.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                        root,
+                        fieldIndex: (int)ClassTraining_FieldIndex.Fluff,
+                        errorMask: errorMask));
                     break;
                 default:
                     break;

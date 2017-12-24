@@ -466,46 +466,22 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "StaticAttenuation":
-                    {
-                        Exception subMask;
-                        var tryGet = FloatXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._StaticAttenuation.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)SoundDataExtended_FieldIndex.StaticAttenuation,
-                            subMask);
-                    }
+                    item._StaticAttenuation.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)SoundDataExtended_FieldIndex.StaticAttenuation,
+                        errorMask: errorMask));
                     break;
                 case "StopTime":
-                    {
-                        Exception subMask;
-                        var tryGet = FloatXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._StopTime.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)SoundDataExtended_FieldIndex.StopTime,
-                            subMask);
-                    }
+                    item._StopTime.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)SoundDataExtended_FieldIndex.StopTime,
+                        errorMask: errorMask));
                     break;
                 case "StartTime":
-                    {
-                        Exception subMask;
-                        var tryGet = FloatXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._StartTime.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)SoundDataExtended_FieldIndex.StartTime,
-                            subMask);
-                    }
+                    item._StartTime.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)SoundDataExtended_FieldIndex.StartTime,
+                        errorMask: errorMask));
                     break;
                 default:
                     SoundData.Fill_XML_Internal(

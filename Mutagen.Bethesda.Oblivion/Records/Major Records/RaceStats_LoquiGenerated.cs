@@ -551,116 +551,52 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Strength":
-                    {
-                        Exception subMask;
-                        var tryGet = ByteXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Strength.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)RaceStats_FieldIndex.Strength,
-                            subMask);
-                    }
+                    item._Strength.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)RaceStats_FieldIndex.Strength,
+                        errorMask: errorMask));
                     break;
                 case "Intelligence":
-                    {
-                        Exception subMask;
-                        var tryGet = ByteXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Intelligence.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)RaceStats_FieldIndex.Intelligence,
-                            subMask);
-                    }
+                    item._Intelligence.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)RaceStats_FieldIndex.Intelligence,
+                        errorMask: errorMask));
                     break;
                 case "Willpower":
-                    {
-                        Exception subMask;
-                        var tryGet = ByteXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Willpower.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)RaceStats_FieldIndex.Willpower,
-                            subMask);
-                    }
+                    item._Willpower.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)RaceStats_FieldIndex.Willpower,
+                        errorMask: errorMask));
                     break;
                 case "Agility":
-                    {
-                        Exception subMask;
-                        var tryGet = ByteXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Agility.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)RaceStats_FieldIndex.Agility,
-                            subMask);
-                    }
+                    item._Agility.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)RaceStats_FieldIndex.Agility,
+                        errorMask: errorMask));
                     break;
                 case "Speed":
-                    {
-                        Exception subMask;
-                        var tryGet = ByteXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Speed.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)RaceStats_FieldIndex.Speed,
-                            subMask);
-                    }
+                    item._Speed.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)RaceStats_FieldIndex.Speed,
+                        errorMask: errorMask));
                     break;
                 case "Endurance":
-                    {
-                        Exception subMask;
-                        var tryGet = ByteXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Endurance.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)RaceStats_FieldIndex.Endurance,
-                            subMask);
-                    }
+                    item._Endurance.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)RaceStats_FieldIndex.Endurance,
+                        errorMask: errorMask));
                     break;
                 case "Personality":
-                    {
-                        Exception subMask;
-                        var tryGet = ByteXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Personality.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)RaceStats_FieldIndex.Personality,
-                            subMask);
-                    }
+                    item._Personality.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)RaceStats_FieldIndex.Personality,
+                        errorMask: errorMask));
                     break;
                 case "Luck":
-                    {
-                        Exception subMask;
-                        var tryGet = ByteXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Luck.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)RaceStats_FieldIndex.Luck,
-                            subMask);
-                    }
+                    item._Luck.SetIfSucceeded(ByteXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)RaceStats_FieldIndex.Luck,
+                        errorMask: errorMask));
                     break;
                 default:
                     break;

@@ -427,40 +427,24 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Model":
-                    {
-                        MaskItem<Exception, Model_ErrorMask> subMask;
-                        var tryGet = LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Model.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)BodyData_FieldIndex.Model,
-                            subMask);
-                    }
+                    item._Model.SetIfSucceeded(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)BodyData_FieldIndex.Model,
+                        errorMask: errorMask));
                     break;
                 case "BodyParts":
-                    {
-                        MaskItem<Exception, IEnumerable<MaskItem<Exception, BodyPart_ErrorMask>>> subMask;
-                        var listTryGet = ListXmlTranslation<BodyPart, MaskItem<Exception, BodyPart_ErrorMask>>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            maskObj: out subMask,
-                            transl: (XElement r, bool listDoMasks, out MaskItem<Exception, BodyPart_ErrorMask> listSubMask) =>
-                            {
-                                return LoquiXmlTranslation<BodyPart, BodyPart_ErrorMask>.Instance.Parse(
-                                    root: r,
-                                    doMasks: listDoMasks,
-                                    errorMask: out listSubMask);
-                            }
-                            );
-                        item._BodyParts.SetIfSucceeded(listTryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)BodyData_FieldIndex.BodyParts,
-                            subMask);
-                    }
+                    item._BodyParts.SetIfSucceeded(ListXmlTranslation<BodyPart, MaskItem<Exception, BodyPart_ErrorMask>>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)BodyData_FieldIndex.BodyParts,
+                        errorMask: errorMask,
+                        transl: (XElement r, bool listDoMasks, out MaskItem<Exception, BodyPart_ErrorMask> listSubMask) =>
+                        {
+                            return LoquiXmlTranslation<BodyPart, BodyPart_ErrorMask>.Instance.Parse(
+                                root: r,
+                                doMasks: listDoMasks,
+                                errorMask: out listSubMask);
+                        }
+                        ));
                     break;
                 default:
                     break;
@@ -1719,17 +1703,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Model != null)
             {
                 if (!eval(this.Model.Overall)) return false;
-                if (Model.Specific != null && !Model.Specific.AllEqual(eval)) return false;
+                if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
             }
-            if (BodyParts != null)
+            if (this.BodyParts != null)
             {
                 if (!eval(this.BodyParts.Overall)) return false;
-                if (BodyParts.Specific != null)
+                if (this.BodyParts.Specific != null)
                 {
-                    foreach (var item in BodyParts.Specific)
+                    foreach (var item in this.BodyParts.Specific)
                     {
                         if (!eval(item.Overall)) return false;
-                        if (!item.Specific?.AllEqual(eval) ?? false) return false;
+                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
                     }
                 }
             }

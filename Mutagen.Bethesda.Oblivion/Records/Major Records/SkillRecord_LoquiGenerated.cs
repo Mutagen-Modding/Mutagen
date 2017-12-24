@@ -643,176 +643,80 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Skill":
-                    {
-                        Exception subMask;
-                        var tryGet = EnumXmlTranslation<ActorValue>.Instance.Parse(
-                            root,
-                            nullable: false,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Skill.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)SkillRecord_FieldIndex.Skill,
-                            subMask);
-                    }
+                    item._Skill.SetIfSucceeded(EnumXmlTranslation<ActorValue>.Instance.Parse(
+                        root,
+                        nullable: false,
+                        fieldIndex: (int)SkillRecord_FieldIndex.Skill,
+                        errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "Description":
-                    {
-                        Exception subMask;
-                        var tryGet = StringXmlTranslation.Instance.Parse(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Description.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)SkillRecord_FieldIndex.Description,
-                            subMask);
-                    }
+                    item._Description.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                        root,
+                        fieldIndex: (int)SkillRecord_FieldIndex.Description,
+                        errorMask: errorMask));
                     break;
                 case "Icon":
-                    {
-                        Exception subMask;
-                        var tryGet = FilePathXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Icon.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)SkillRecord_FieldIndex.Icon,
-                            subMask);
-                    }
+                    item._Icon.SetIfSucceeded(FilePathXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)SkillRecord_FieldIndex.Icon,
+                        errorMask: errorMask));
                     break;
                 case "Action":
-                    {
-                        Exception subMask;
-                        var tryGet = EnumXmlTranslation<ActorValue>.Instance.Parse(
-                            root,
-                            nullable: false,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Action.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)SkillRecord_FieldIndex.Action,
-                            subMask);
-                    }
+                    item._Action.SetIfSucceeded(EnumXmlTranslation<ActorValue>.Instance.Parse(
+                        root,
+                        nullable: false,
+                        fieldIndex: (int)SkillRecord_FieldIndex.Action,
+                        errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "Attribute":
-                    {
-                        Exception subMask;
-                        var tryGet = EnumXmlTranslation<ActorValue>.Instance.Parse(
-                            root,
-                            nullable: false,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Attribute.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)SkillRecord_FieldIndex.Attribute,
-                            subMask);
-                    }
+                    item._Attribute.SetIfSucceeded(EnumXmlTranslation<ActorValue>.Instance.Parse(
+                        root,
+                        nullable: false,
+                        fieldIndex: (int)SkillRecord_FieldIndex.Attribute,
+                        errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "Specialization":
-                    {
-                        Exception subMask;
-                        var tryGet = EnumXmlTranslation<Specialization>.Instance.Parse(
-                            root,
-                            nullable: false,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._Specialization.SetIfSucceeded(tryGet.Bubble((o) => o.Value));
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)SkillRecord_FieldIndex.Specialization,
-                            subMask);
-                    }
+                    item._Specialization.SetIfSucceeded(EnumXmlTranslation<Specialization>.Instance.Parse(
+                        root,
+                        nullable: false,
+                        fieldIndex: (int)SkillRecord_FieldIndex.Specialization,
+                        errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "UseValueFirst":
-                    {
-                        Exception subMask;
-                        var tryGet = FloatXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._UseValueFirst.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)SkillRecord_FieldIndex.UseValueFirst,
-                            subMask);
-                    }
+                    item._UseValueFirst.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)SkillRecord_FieldIndex.UseValueFirst,
+                        errorMask: errorMask));
                     break;
                 case "UseValueSecond":
-                    {
-                        Exception subMask;
-                        var tryGet = FloatXmlTranslation.Instance.ParseNonNull(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._UseValueSecond.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)SkillRecord_FieldIndex.UseValueSecond,
-                            subMask);
-                    }
+                    item._UseValueSecond.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)SkillRecord_FieldIndex.UseValueSecond,
+                        errorMask: errorMask));
                     break;
                 case "ApprenticeText":
-                    {
-                        Exception subMask;
-                        var tryGet = StringXmlTranslation.Instance.Parse(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._ApprenticeText.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)SkillRecord_FieldIndex.ApprenticeText,
-                            subMask);
-                    }
+                    item._ApprenticeText.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                        root,
+                        fieldIndex: (int)SkillRecord_FieldIndex.ApprenticeText,
+                        errorMask: errorMask));
                     break;
                 case "JourneymanText":
-                    {
-                        Exception subMask;
-                        var tryGet = StringXmlTranslation.Instance.Parse(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._JourneymanText.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)SkillRecord_FieldIndex.JourneymanText,
-                            subMask);
-                    }
+                    item._JourneymanText.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                        root,
+                        fieldIndex: (int)SkillRecord_FieldIndex.JourneymanText,
+                        errorMask: errorMask));
                     break;
                 case "ExpertText":
-                    {
-                        Exception subMask;
-                        var tryGet = StringXmlTranslation.Instance.Parse(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._ExpertText.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)SkillRecord_FieldIndex.ExpertText,
-                            subMask);
-                    }
+                    item._ExpertText.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                        root,
+                        fieldIndex: (int)SkillRecord_FieldIndex.ExpertText,
+                        errorMask: errorMask));
                     break;
                 case "MasterText":
-                    {
-                        Exception subMask;
-                        var tryGet = StringXmlTranslation.Instance.Parse(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._MasterText.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)SkillRecord_FieldIndex.MasterText,
-                            subMask);
-                    }
+                    item._MasterText.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                        root,
+                        fieldIndex: (int)SkillRecord_FieldIndex.MasterText,
+                        errorMask: errorMask));
                     break;
                 default:
                     MajorRecord.Fill_XML_Internal(

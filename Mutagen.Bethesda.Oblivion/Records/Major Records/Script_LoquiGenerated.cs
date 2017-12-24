@@ -500,99 +500,62 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "MetadataSummary":
-                    {
-                        MaskItem<Exception, ScriptMetaSummary_ErrorMask> subMask;
-                        var tmp = ScriptMetaSummary.Create_XML(
+                    ScriptMetaSummaryCommon.CopyFieldsFrom(
+                        item: item._MetadataSummary_Object,
+                        rhs: ScriptMetaSummary.Create_XML(
                             root: root,
                             doMasks: errorMask != null,
-                            errorMask: out ScriptMetaSummary_ErrorMask createMask);
-                        ScriptMetaSummaryCommon.CopyFieldsFrom(
-                            item: item._MetadataSummary_Object,
-                            rhs: tmp,
-                            def: null,
-                            cmds: null,
-                            copyMask: null,
-                            doMasks: errorMask != null,
-                            errorMask: out ScriptMetaSummary_ErrorMask copyMask);
-                        var loquiMask = ScriptMetaSummary_ErrorMask.Combine(createMask, copyMask);
-                        subMask = loquiMask == null ? null : new MaskItem<Exception, ScriptMetaSummary_ErrorMask>(null, loquiMask);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Script_FieldIndex.MetadataSummary,
-                            subMask);
-                    }
+                            errorMask: out ScriptMetaSummary_ErrorMask MetadataSummarycreateMask)
+                        ,
+                        def: null,
+                        cmds: null,
+                        copyMask: null,
+                        doMasks: errorMask != null,
+                        errorMask: out ScriptMetaSummary_ErrorMask MetadataSummarycopyMask);
+                    ErrorMask.HandleErrorMask(
+                        errorMask,
+                        index: (int)Script_FieldIndex.MetadataSummary,
+                        errMaskObj: MaskItem<Exception, ScriptMetaSummary_ErrorMask>.WrapValue(ScriptMetaSummary_ErrorMask.Combine(MetadataSummarycreateMask, MetadataSummarycopyMask)));
                     break;
                 case "CompiledScript":
-                    {
-                        Exception subMask;
-                        var tryGet = ByteArrayXmlTranslation.Instance.Parse(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._CompiledScript.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Script_FieldIndex.CompiledScript,
-                            subMask);
-                    }
+                    item._CompiledScript.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                        root,
+                        fieldIndex: (int)Script_FieldIndex.CompiledScript,
+                        errorMask: errorMask));
                     break;
                 case "SourceCode":
-                    {
-                        Exception subMask;
-                        var tryGet = StringXmlTranslation.Instance.Parse(
-                            root,
-                            doMasks: errorMask != null,
-                            errorMask: out subMask);
-                        item._SourceCode.SetIfSucceeded(tryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Script_FieldIndex.SourceCode,
-                            subMask);
-                    }
+                    item._SourceCode.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                        root,
+                        fieldIndex: (int)Script_FieldIndex.SourceCode,
+                        errorMask: errorMask));
                     break;
                 case "LocalVariables":
-                    {
-                        MaskItem<Exception, IEnumerable<MaskItem<Exception, LocalVariable_ErrorMask>>> subMask;
-                        var listTryGet = ListXmlTranslation<LocalVariable, MaskItem<Exception, LocalVariable_ErrorMask>>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            maskObj: out subMask,
-                            transl: (XElement r, bool listDoMasks, out MaskItem<Exception, LocalVariable_ErrorMask> listSubMask) =>
-                            {
-                                return LoquiXmlTranslation<LocalVariable, LocalVariable_ErrorMask>.Instance.Parse(
-                                    root: r,
-                                    doMasks: listDoMasks,
-                                    errorMask: out listSubMask);
-                            }
-                            );
-                        item._LocalVariables.SetIfSucceeded(listTryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Script_FieldIndex.LocalVariables,
-                            subMask);
-                    }
+                    item._LocalVariables.SetIfSucceeded(ListXmlTranslation<LocalVariable, MaskItem<Exception, LocalVariable_ErrorMask>>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)Script_FieldIndex.LocalVariables,
+                        errorMask: errorMask,
+                        transl: (XElement r, bool listDoMasks, out MaskItem<Exception, LocalVariable_ErrorMask> listSubMask) =>
+                        {
+                            return LoquiXmlTranslation<LocalVariable, LocalVariable_ErrorMask>.Instance.Parse(
+                                root: r,
+                                doMasks: listDoMasks,
+                                errorMask: out listSubMask);
+                        }
+                        ));
                     break;
                 case "References":
-                    {
-                        MaskItem<Exception, IEnumerable<MaskItem<Exception, ScriptReference_ErrorMask>>> subMask;
-                        var listTryGet = ListXmlTranslation<ScriptReference, MaskItem<Exception, ScriptReference_ErrorMask>>.Instance.Parse(
-                            root: root,
-                            doMasks: errorMask != null,
-                            maskObj: out subMask,
-                            transl: (XElement r, bool listDoMasks, out MaskItem<Exception, ScriptReference_ErrorMask> listSubMask) =>
-                            {
-                                return LoquiXmlTranslation<ScriptReference, ScriptReference_ErrorMask>.Instance.Parse(
-                                    root: r,
-                                    doMasks: listDoMasks,
-                                    errorMask: out listSubMask);
-                            }
-                            );
-                        item._References.SetIfSucceeded(listTryGet);
-                        ErrorMask.HandleErrorMask(
-                            errorMask,
-                            (int)Script_FieldIndex.References,
-                            subMask);
-                    }
+                    item._References.SetIfSucceeded(ListXmlTranslation<ScriptReference, MaskItem<Exception, ScriptReference_ErrorMask>>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)Script_FieldIndex.References,
+                        errorMask: errorMask,
+                        transl: (XElement r, bool listDoMasks, out MaskItem<Exception, ScriptReference_ErrorMask> listSubMask) =>
+                        {
+                            return LoquiXmlTranslation<ScriptReference, ScriptReference_ErrorMask>.Instance.Parse(
+                                root: r,
+                                doMasks: listDoMasks,
+                                errorMask: out listSubMask);
+                        }
+                        ));
                     break;
                 default:
                     MajorRecord.Fill_XML_Internal(
@@ -2247,31 +2210,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (MetadataSummary != null)
             {
                 if (!eval(this.MetadataSummary.Overall)) return false;
-                if (MetadataSummary.Specific != null && !MetadataSummary.Specific.AllEqual(eval)) return false;
+                if (this.MetadataSummary.Specific != null && !this.MetadataSummary.Specific.AllEqual(eval)) return false;
             }
             if (!eval(this.CompiledScript)) return false;
             if (!eval(this.SourceCode)) return false;
-            if (LocalVariables != null)
+            if (this.LocalVariables != null)
             {
                 if (!eval(this.LocalVariables.Overall)) return false;
-                if (LocalVariables.Specific != null)
+                if (this.LocalVariables.Specific != null)
                 {
-                    foreach (var item in LocalVariables.Specific)
+                    foreach (var item in this.LocalVariables.Specific)
                     {
                         if (!eval(item.Overall)) return false;
-                        if (!item.Specific?.AllEqual(eval) ?? false) return false;
+                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
                     }
                 }
             }
-            if (References != null)
+            if (this.References != null)
             {
                 if (!eval(this.References.Overall)) return false;
-                if (References.Specific != null)
+                if (this.References.Specific != null)
                 {
-                    foreach (var item in References.Specific)
+                    foreach (var item in this.References.Specific)
                     {
                         if (!eval(item.Overall)) return false;
-                        if (!item.Specific?.AllEqual(eval) ?? false) return false;
+                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
                     }
                 }
             }
