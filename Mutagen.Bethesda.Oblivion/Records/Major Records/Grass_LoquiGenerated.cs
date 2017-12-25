@@ -12,6 +12,8 @@ using Loqui;
 using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda;
+using Mutagen.Bethesda.Internals;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -23,118 +25,82 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Relation : IRelation, ILoquiObjectSetter, IEquatable<Relation>
+    public partial class Grass : MajorRecord, IGrass, ILoquiObjectSetter, IEquatable<Grass>
     {
-        ILoquiRegistration ILoquiObject.Registration => Relation_Registration.Instance;
-        public static Relation_Registration Registration => Relation_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Grass_Registration.Instance;
+        public new static Grass_Registration Registration => Grass_Registration.Instance;
 
         #region Ctor
-        public Relation()
+        public Grass()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Faction
-        public FormIDLink<Faction> Faction_Property { get; } = new FormIDLink<Faction>();
-        public Faction Faction { get => Faction_Property.Item; set => Faction_Property.Item = value; }
-        FormIDLink<Faction> IRelationGetter.Faction_Property => this.Faction_Property;
-        #endregion
-        #region Modifier
-        protected readonly INotifyingSetItem<Int32> _Modifier = NotifyingSetItem.Factory<Int32>(markAsSet: false);
-        public INotifyingSetItem<Int32> Modifier_Property => _Modifier;
-        public Int32 Modifier
-        {
-            get => this._Modifier.Item;
-            set => this._Modifier.Set(value);
-        }
-        INotifyingSetItem<Int32> IRelation.Modifier_Property => this.Modifier_Property;
-        INotifyingSetItemGetter<Int32> IRelationGetter.Modifier_Property => this.Modifier_Property;
-        #endregion
 
         #region Loqui Getter Interface
 
-        protected object GetNthObject(ushort index) => RelationCommon.GetNthObject(index, this);
-        object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
+        protected override object GetNthObject(ushort index) => GrassCommon.GetNthObject(index, this);
 
-        protected bool GetNthObjectHasBeenSet(ushort index) => RelationCommon.GetNthObjectHasBeenSet(index, this);
-        bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
+        protected override bool GetNthObjectHasBeenSet(ushort index) => GrassCommon.GetNthObjectHasBeenSet(index, this);
 
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => RelationCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => this.UnsetNthObject(index, cmds);
+        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => GrassCommon.UnsetNthObject(index, this, cmds);
 
         #endregion
 
         #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
+        protected override void SetNthObjectHasBeenSet(ushort index, bool on)
         {
-            RelationCommon.SetNthObjectHasBeenSet(index, on, this);
+            GrassCommon.SetNthObjectHasBeenSet(index, on, this);
         }
-        void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
 
         #endregion
 
         #region To String
         public override string ToString()
         {
-            return RelationCommon.ToString(this, printMask: null);
+            return GrassCommon.ToString(this, printMask: null);
         }
 
         public string ToString(
             string name = null,
-            Relation_Mask<bool> printMask = null)
+            Grass_Mask<bool> printMask = null)
         {
-            return RelationCommon.ToString(this, name: name, printMask: printMask);
+            return GrassCommon.ToString(this, name: name, printMask: printMask);
         }
 
-        public void ToString(
+        public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            RelationCommon.ToString(this, fg, name: name, printMask: null);
+            GrassCommon.ToString(this, fg, name: name, printMask: null);
         }
 
         #endregion
 
-        public Relation_Mask<bool> GetHasBeenSetMask()
+        public new Grass_Mask<bool> GetHasBeenSetMask()
         {
-            return RelationCommon.GetHasBeenSetMask(this);
+            return GrassCommon.GetHasBeenSetMask(this);
         }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is Relation rhs)) return false;
+            if (!(obj is Grass rhs)) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(Relation rhs)
+        public bool Equals(Grass rhs)
         {
             if (rhs == null) return false;
-            if (Faction_Property.HasBeenSet != rhs.Faction_Property.HasBeenSet) return false;
-            if (Faction_Property.HasBeenSet)
-            {
-                if (Faction != rhs.Faction) return false;
-            }
-            if (Modifier_Property.HasBeenSet != rhs.Modifier_Property.HasBeenSet) return false;
-            if (Modifier_Property.HasBeenSet)
-            {
-                if (Modifier != rhs.Modifier) return false;
-            }
+            if (!base.Equals(rhs)) return false;
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            if (Faction_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Faction).CombineHashCode(ret);
-            }
-            if (Modifier_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Modifier).CombineHashCode(ret);
-            }
+            ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
 
@@ -144,7 +110,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region XML Translation
         #region XML Create
         [DebuggerStepThrough]
-        public static Relation Create_XML(XElement root)
+        public new static Grass Create_XML(XElement root)
         {
             return Create_XML(
                 root: root,
@@ -153,9 +119,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static Relation Create_XML(
+        public static Grass Create_XML(
             XElement root,
-            out Relation_ErrorMask errorMask)
+            out Grass_ErrorMask errorMask)
         {
             return Create_XML(
                 root: root,
@@ -164,10 +130,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static Relation Create_XML(
+        public static Grass Create_XML(
             XElement root,
             bool doMasks,
-            out Relation_ErrorMask errorMask)
+            out Grass_ErrorMask errorMask)
         {
             var ret = Create_XML(
                 root: root,
@@ -177,26 +143,26 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static (Relation Object, Relation_ErrorMask ErrorMask) Create_XML(
+        public static (Grass Object, Grass_ErrorMask ErrorMask) Create_XML(
             XElement root,
             bool doMasks)
         {
-            Relation_ErrorMask errMaskRet = null;
+            Grass_ErrorMask errMaskRet = null;
             var ret = Create_XML_Internal(
                 root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Relation_ErrorMask()) : default(Func<Relation_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Grass_ErrorMask()) : default(Func<Grass_ErrorMask>));
             return (ret, errMaskRet);
         }
 
-        public static Relation Create_XML(string path)
+        public static Grass Create_XML(string path)
         {
             var root = XDocument.Load(path).Root;
             return Create_XML(root: root);
         }
 
-        public static Relation Create_XML(
+        public static Grass Create_XML(
             string path,
-            out Relation_ErrorMask errorMask)
+            out Grass_ErrorMask errorMask)
         {
             var root = XDocument.Load(path).Root;
             return Create_XML(
@@ -204,15 +170,15 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: out errorMask);
         }
 
-        public static Relation Create_XML(Stream stream)
+        public static Grass Create_XML(Stream stream)
         {
             var root = XDocument.Load(stream).Root;
             return Create_XML(root: root);
         }
 
-        public static Relation Create_XML(
+        public static Grass Create_XML(
             Stream stream,
-            out Relation_ErrorMask errorMask)
+            out Grass_ErrorMask errorMask)
         {
             var root = XDocument.Load(stream).Root;
             return Create_XML(
@@ -223,11 +189,11 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region XML Copy In
-        public void CopyIn_XML(
+        public override void CopyIn_XML(
             XElement root,
             NotifyingFireParameters? cmds = null)
         {
-            LoquiXmlTranslation<Relation, Relation_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<Grass, Grass_ErrorMask>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
@@ -238,10 +204,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void CopyIn_XML(
             XElement root,
-            out Relation_ErrorMask errorMask,
+            out Grass_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
-            LoquiXmlTranslation<Relation, Relation_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<Grass, Grass_ErrorMask>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
@@ -262,7 +228,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_XML(
             string path,
-            out Relation_ErrorMask errorMask,
+            out Grass_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             var root = XDocument.Load(path).Root;
@@ -284,7 +250,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_XML(
             Stream stream,
-            out Relation_ErrorMask errorMask,
+            out Grass_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             var root = XDocument.Load(stream).Root;
@@ -294,15 +260,27 @@ namespace Mutagen.Bethesda.Oblivion
                 cmds: cmds);
         }
 
+        public override void CopyIn_XML(
+            XElement root,
+            out MajorRecord_ErrorMask errorMask,
+            NotifyingFireParameters? cmds = null)
+        {
+            this.CopyIn_XML(
+                root: root,
+                errorMask: out Grass_ErrorMask errMask,
+                cmds: cmds);
+            errorMask = errMask;
+        }
+
         #endregion
 
         #region XML Write
         public virtual void Write_XML(
             XmlWriter writer,
-            out Relation_ErrorMask errorMask,
+            out Grass_ErrorMask errorMask,
             string name = null)
         {
-            errorMask = (Relation_ErrorMask)this.Write_XML_Internal(
+            errorMask = (Grass_ErrorMask)this.Write_XML_Internal(
                 writer: writer,
                 name: name,
                 doMasks: true);
@@ -310,7 +288,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_XML(
             string path,
-            out Relation_ErrorMask errorMask,
+            out Grass_ErrorMask errorMask,
             string name = null)
         {
             using (var writer = new XmlTextWriter(path, Encoding.ASCII))
@@ -326,7 +304,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_XML(
             Stream stream,
-            out Relation_ErrorMask errorMask,
+            out Grass_ErrorMask errorMask,
             string name = null)
         {
             using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
@@ -340,7 +318,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public void Write_XML(
+        public override void Write_XML(
             XmlWriter writer,
             string name = null)
         {
@@ -350,7 +328,7 @@ namespace Mutagen.Bethesda.Oblivion
                 doMasks: false);
         }
 
-        public void Write_XML(
+        public override void Write_XML(
             string path,
             string name = null)
         {
@@ -364,7 +342,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public void Write_XML(
+        public override void Write_XML(
             Stream stream,
             string name = null)
         {
@@ -378,12 +356,12 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        protected object Write_XML_Internal(
+        protected override object Write_XML_Internal(
             XmlWriter writer,
             bool doMasks,
             string name = null)
         {
-            RelationCommon.Write_XML(
+            GrassCommon.Write_XML(
                 writer: writer,
                 item: this,
                 doMasks: doMasks,
@@ -392,11 +370,11 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static Relation Create_XML_Internal(
+        private static Grass Create_XML_Internal(
             XElement root,
-            Func<Relation_ErrorMask> errorMask)
+            Func<Grass_ErrorMask> errorMask)
         {
-            var ret = new Relation();
+            var ret = new Grass();
             try
             {
                 foreach (var elem in root.Elements())
@@ -417,26 +395,19 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static void Fill_XML_Internal(
-            Relation item,
+            Grass item,
             XElement root,
             string name,
-            Func<Relation_ErrorMask> errorMask)
+            Func<Grass_ErrorMask> errorMask)
         {
             switch (name)
             {
-                case "Faction":
-                    item.Faction_Property.SetIfSucceeded(RawFormIDXmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)Relation_FieldIndex.Faction,
-                        errorMask: errorMask));
-                    break;
-                case "Modifier":
-                    item._Modifier.SetIfSucceeded(Int32XmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)Relation_FieldIndex.Modifier,
-                        errorMask: errorMask));
-                    break;
                 default:
+                    MajorRecord.Fill_XML_Internal(
+                        item: item,
+                        root: root,
+                        name: name,
+                        errorMask: errorMask);
                     break;
             }
         }
@@ -446,7 +417,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public static Relation Create_Binary(MutagenFrame frame)
+        public new static Grass Create_Binary(MutagenFrame frame)
         {
             return Create_Binary(
                 frame: frame,
@@ -455,9 +426,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static Relation Create_Binary(
+        public static Grass Create_Binary(
             MutagenFrame frame,
-            out Relation_ErrorMask errorMask)
+            out Grass_ErrorMask errorMask)
         {
             return Create_Binary(
                 frame: frame,
@@ -466,10 +437,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static Relation Create_Binary(
+        public static Grass Create_Binary(
             MutagenFrame frame,
             bool doMasks,
-            out Relation_ErrorMask errorMask)
+            out Grass_ErrorMask errorMask)
         {
             var ret = Create_Binary(
                 frame: frame,
@@ -479,18 +450,18 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static (Relation Object, Relation_ErrorMask ErrorMask) Create_Binary(
+        public static (Grass Object, Grass_ErrorMask ErrorMask) Create_Binary(
             MutagenFrame frame,
             bool doMasks)
         {
-            Relation_ErrorMask errMaskRet = null;
+            Grass_ErrorMask errMaskRet = null;
             var ret = Create_Binary_Internal(
                 frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Relation_ErrorMask()) : default(Func<Relation_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Grass_ErrorMask()) : default(Func<Grass_ErrorMask>));
             return (ret, errMaskRet);
         }
 
-        public static Relation Create_Binary(string path)
+        public static Grass Create_Binary(string path)
         {
             using (var reader = new MutagenReader(path))
             {
@@ -499,9 +470,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public static Relation Create_Binary(
+        public static Grass Create_Binary(
             string path,
-            out Relation_ErrorMask errorMask)
+            out Grass_ErrorMask errorMask)
         {
             using (var reader = new MutagenReader(path))
             {
@@ -512,7 +483,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public static Relation Create_Binary(Stream stream)
+        public static Grass Create_Binary(Stream stream)
         {
             using (var reader = new MutagenReader(stream))
             {
@@ -521,9 +492,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public static Relation Create_Binary(
+        public static Grass Create_Binary(
             Stream stream,
-            out Relation_ErrorMask errorMask)
+            out Grass_ErrorMask errorMask)
         {
             using (var reader = new MutagenReader(stream))
             {
@@ -537,11 +508,11 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Copy In
-        public void CopyIn_Binary(
+        public override void CopyIn_Binary(
             MutagenFrame frame,
             NotifyingFireParameters? cmds = null)
         {
-            LoquiBinaryTranslation<Relation, Relation_ErrorMask>.Instance.CopyIn(
+            LoquiBinaryTranslation<Grass, Grass_ErrorMask>.Instance.CopyIn(
                 frame: frame,
                 item: this,
                 skipProtected: true,
@@ -552,10 +523,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void CopyIn_Binary(
             MutagenFrame frame,
-            out Relation_ErrorMask errorMask,
+            out Grass_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
-            LoquiBinaryTranslation<Relation, Relation_ErrorMask>.Instance.CopyIn(
+            LoquiBinaryTranslation<Grass, Grass_ErrorMask>.Instance.CopyIn(
                 frame: frame,
                 item: this,
                 skipProtected: true,
@@ -579,7 +550,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_Binary(
             string path,
-            out Relation_ErrorMask errorMask,
+            out Grass_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             using (var reader = new MutagenReader(path))
@@ -607,7 +578,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_Binary(
             Stream stream,
-            out Relation_ErrorMask errorMask,
+            out Grass_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             using (var reader = new MutagenReader(stream))
@@ -620,21 +591,33 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public override void CopyIn_Binary(
+            MutagenFrame frame,
+            out MajorRecord_ErrorMask errorMask,
+            NotifyingFireParameters? cmds = null)
+        {
+            this.CopyIn_Binary(
+                frame: frame,
+                errorMask: out Grass_ErrorMask errMask,
+                cmds: cmds);
+            errorMask = errMask;
+        }
+
         #endregion
 
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
-            out Relation_ErrorMask errorMask)
+            out Grass_ErrorMask errorMask)
         {
-            errorMask = (Relation_ErrorMask)this.Write_Binary_Internal(
+            errorMask = (Grass_ErrorMask)this.Write_Binary_Internal(
                 writer: writer,
                 doMasks: true);
         }
 
         public virtual void Write_Binary(
             string path,
-            out Relation_ErrorMask errorMask)
+            out Grass_ErrorMask errorMask)
         {
             using (var writer = new MutagenWriter(path))
             {
@@ -646,7 +629,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             Stream stream,
-            out Relation_ErrorMask errorMask)
+            out Grass_ErrorMask errorMask)
         {
             using (var writer = new MutagenWriter(stream))
             {
@@ -656,14 +639,14 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public void Write_Binary(MutagenWriter writer)
+        public override void Write_Binary(MutagenWriter writer)
         {
             this.Write_Binary_Internal(
                 writer: writer,
                 doMasks: false);
         }
 
-        public void Write_Binary(string path)
+        public override void Write_Binary(string path)
         {
             using (var writer = new MutagenWriter(path))
             {
@@ -671,7 +654,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public void Write_Binary(Stream stream)
+        public override void Write_Binary(Stream stream)
         {
             using (var writer = new MutagenWriter(stream))
             {
@@ -679,11 +662,11 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        protected object Write_Binary_Internal(
+        protected override object Write_Binary_Internal(
             MutagenWriter writer,
             bool doMasks)
         {
-            RelationCommon.Write_Binary(
+            GrassCommon.Write_Binary(
                 writer: writer,
                 item: this,
                 doMasks: doMasks,
@@ -692,16 +675,16 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static Relation Create_Binary_Internal(
+        private static Grass Create_Binary_Internal(
             MutagenFrame frame,
-            Func<Relation_ErrorMask> errorMask)
+            Func<Grass_ErrorMask> errorMask)
         {
-            var ret = new Relation();
+            var ret = new Grass();
             try
             {
-                frame = frame.Spawn(HeaderTranslation.ParseSubrecord(
+                frame = frame.Spawn(HeaderTranslation.ParseRecord(
                     frame,
-                    Relation_Registration.XNAM_HEADER));
+                    Grass_Registration.GRAS_HEADER));
                 using (frame)
                 {
                     Fill_Binary_Structs(
@@ -719,47 +702,41 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static void Fill_Binary_Structs(
-            Relation item,
+            Grass item,
             MutagenFrame frame,
-            Func<Relation_ErrorMask> errorMask)
+            Func<Grass_ErrorMask> errorMask)
         {
-            if (frame.Complete) return;
-            item.Faction_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
+            MajorRecord.Fill_Binary_Structs(
+                item: item,
                 frame: frame,
-                fieldIndex: (int)Relation_FieldIndex.Faction,
-                errorMask: errorMask));
-            if (frame.Complete) return;
-            item._Modifier.SetIfSucceeded(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                frame: frame,
-                fieldIndex: (int)Relation_FieldIndex.Modifier,
-                errorMask: errorMask));
+                errorMask: errorMask);
         }
 
         #endregion
 
-        public Relation Copy(
-            Relation_CopyMask copyMask = null,
-            IRelationGetter def = null)
+        public Grass Copy(
+            Grass_CopyMask copyMask = null,
+            IGrassGetter def = null)
         {
-            return Relation.Copy(
+            return Grass.Copy(
                 this,
                 copyMask: copyMask,
                 def: def);
         }
 
-        public static Relation Copy(
-            IRelation item,
-            Relation_CopyMask copyMask = null,
-            IRelationGetter def = null)
+        public static Grass Copy(
+            IGrass item,
+            Grass_CopyMask copyMask = null,
+            IGrassGetter def = null)
         {
-            Relation ret;
-            if (item.GetType().Equals(typeof(Relation)))
+            Grass ret;
+            if (item.GetType().Equals(typeof(Grass)))
             {
-                ret = new Relation();
+                ret = new Grass();
             }
             else
             {
-                ret = (Relation)Activator.CreateInstance(item.GetType());
+                ret = (Grass)Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom(
                 item,
@@ -770,14 +747,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static CopyType CopyGeneric<CopyType>(
             CopyType item,
-            Relation_CopyMask copyMask = null,
-            IRelationGetter def = null)
-            where CopyType : class, IRelation
+            Grass_CopyMask copyMask = null,
+            IGrassGetter def = null)
+            where CopyType : class, IGrass
         {
             CopyType ret;
-            if (item.GetType().Equals(typeof(Relation)))
+            if (item.GetType().Equals(typeof(Grass)))
             {
-                ret = new Relation() as CopyType;
+                ret = new Grass() as CopyType;
             }
             else
             {
@@ -793,12 +770,12 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Relation Copy_ToLoqui(
-            IRelationGetter item,
-            Relation_CopyMask copyMask = null,
-            IRelationGetter def = null)
+        public static Grass Copy_ToLoqui(
+            IGrassGetter item,
+            Grass_CopyMask copyMask = null,
+            IGrassGetter def = null)
         {
-            var ret = new Relation();
+            var ret = new Grass();
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
@@ -806,74 +783,47 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds) => this.SetNthObject(index, obj, cmds);
-        protected void SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds = null)
+        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds = null)
         {
-            Relation_FieldIndex enu = (Relation_FieldIndex)index;
+            Grass_FieldIndex enu = (Grass_FieldIndex)index;
             switch (enu)
             {
-                case Relation_FieldIndex.Faction:
-                    this.Faction_Property.Set(
-                        (FormIDLink<Faction>)obj,
-                        cmds);
-                    break;
-                case Relation_FieldIndex.Modifier:
-                    this._Modifier.Set(
-                        (Int32)obj,
-                        cmds);
-                    break;
                 default:
-                    throw new ArgumentException($"Index is out of range: {index}");
+                    base.SetNthObject(index, obj, cmds);
+                    break;
             }
         }
 
-        partial void ClearPartial(NotifyingUnsetParameters? cmds);
-
-        protected void CallClearPartial_Internal(NotifyingUnsetParameters? cmds)
-        {
-            ClearPartial(cmds);
-        }
-
-        public void Clear(NotifyingUnsetParameters? cmds = null)
+        public override void Clear(NotifyingUnsetParameters? cmds = null)
         {
             CallClearPartial_Internal(cmds);
-            RelationCommon.Clear(this, cmds);
+            GrassCommon.Clear(this, cmds);
         }
 
 
-        public static Relation Create(IEnumerable<KeyValuePair<ushort, object>> fields)
+        public new static Grass Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
-            var ret = new Relation();
+            var ret = new Grass();
             foreach (var pair in fields)
             {
-                CopyInInternal_Relation(ret, pair);
+                CopyInInternal_Grass(ret, pair);
             }
             return ret;
         }
 
-        protected static void CopyInInternal_Relation(Relation obj, KeyValuePair<ushort, object> pair)
+        protected new static void CopyInInternal_Grass(Grass obj, KeyValuePair<ushort, object> pair)
         {
-            if (!EnumExt.TryParse(pair.Key, out Relation_FieldIndex enu))
+            if (!EnumExt.TryParse(pair.Key, out Grass_FieldIndex enu))
             {
-                throw new ArgumentException($"Unknown index: {pair.Key}");
+                CopyInInternal_MajorRecord(obj, pair);
             }
             switch (enu)
             {
-                case Relation_FieldIndex.Faction:
-                    obj.Faction_Property.Set(
-                        (FormIDLink<Faction>)pair.Value,
-                        null);
-                    break;
-                case Relation_FieldIndex.Modifier:
-                    obj._Modifier.Set(
-                        (Int32)pair.Value,
-                        null);
-                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Relation obj)
+        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Grass obj)
         {
             ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
         }
@@ -882,25 +832,12 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IRelation : IRelationGetter, ILoquiClass<IRelation, IRelationGetter>, ILoquiClass<Relation, IRelationGetter>
+    public interface IGrass : IGrassGetter, IMajorRecord, ILoquiClass<IGrass, IGrassGetter>, ILoquiClass<Grass, IGrassGetter>
     {
-        new Int32 Modifier { get; set; }
-        new INotifyingSetItem<Int32> Modifier_Property { get; }
-
     }
 
-    public interface IRelationGetter : ILoquiObject
+    public interface IGrassGetter : IMajorRecordGetter
     {
-        #region Faction
-        Faction Faction { get; }
-        FormIDLink<Faction> Faction_Property { get; }
-
-        #endregion
-        #region Modifier
-        Int32 Modifier { get; }
-        INotifyingSetItemGetter<Int32> Modifier_Property { get; }
-
-        #endregion
 
     }
 
@@ -911,44 +848,47 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     #region Field Index
-    public enum Relation_FieldIndex
+    public enum Grass_FieldIndex
     {
-        Faction = 0,
-        Modifier = 1,
+        MajorRecordFlags = 0,
+        FormID = 1,
+        Version = 2,
+        EditorID = 3,
+        RecordType = 4,
     }
     #endregion
 
     #region Registration
-    public class Relation_Registration : ILoquiRegistration
+    public class Grass_Registration : ILoquiRegistration
     {
-        public static readonly Relation_Registration Instance = new Relation_Registration();
+        public static readonly Grass_Registration Instance = new Grass_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 23,
+            msgID: 58,
             version: 0);
 
-        public const string GUID = "1a14276a-e5c3-4feb-8bf0-1d16878e7eb9";
+        public const string GUID = "08091e89-54fe-4950-b16d-c11d6c7faef3";
 
-        public const ushort FieldCount = 2;
+        public const ushort FieldCount = 0;
 
-        public static readonly Type MaskType = typeof(Relation_Mask<>);
+        public static readonly Type MaskType = typeof(Grass_Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Relation_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Grass_ErrorMask);
 
-        public static readonly Type ClassType = typeof(Relation);
+        public static readonly Type ClassType = typeof(Grass);
 
-        public static readonly Type GetterType = typeof(IRelationGetter);
+        public static readonly Type GetterType = typeof(IGrassGetter);
 
-        public static readonly Type SetterType = typeof(IRelation);
+        public static readonly Type SetterType = typeof(IGrass);
 
-        public static readonly Type CommonType = typeof(RelationCommon);
+        public static readonly Type CommonType = typeof(GrassCommon);
 
-        public const string FullName = "Mutagen.Bethesda.Oblivion.Relation";
+        public const string FullName = "Mutagen.Bethesda.Oblivion.Grass";
 
-        public const string Name = "Relation";
+        public const string Name = "Grass";
 
         public const string Namespace = "Mutagen.Bethesda.Oblivion";
 
@@ -960,10 +900,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (str.Upper)
             {
-                case "FACTION":
-                    return (ushort)Relation_FieldIndex.Faction;
-                case "MODIFIER":
-                    return (ushort)Relation_FieldIndex.Modifier;
                 default:
                     return null;
             }
@@ -971,100 +907,77 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            Relation_FieldIndex enu = (Relation_FieldIndex)index;
+            Grass_FieldIndex enu = (Grass_FieldIndex)index;
             switch (enu)
             {
-                case Relation_FieldIndex.Faction:
-                case Relation_FieldIndex.Modifier:
-                    return false;
                 default:
-                    throw new ArgumentException($"Index is out of range: {index}");
+                    return MajorRecord_Registration.GetNthIsEnumerable(index);
             }
         }
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            Relation_FieldIndex enu = (Relation_FieldIndex)index;
+            Grass_FieldIndex enu = (Grass_FieldIndex)index;
             switch (enu)
             {
-                case Relation_FieldIndex.Faction:
-                case Relation_FieldIndex.Modifier:
-                    return false;
                 default:
-                    throw new ArgumentException($"Index is out of range: {index}");
+                    return MajorRecord_Registration.GetNthIsLoqui(index);
             }
         }
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            Relation_FieldIndex enu = (Relation_FieldIndex)index;
+            Grass_FieldIndex enu = (Grass_FieldIndex)index;
             switch (enu)
             {
-                case Relation_FieldIndex.Faction:
-                case Relation_FieldIndex.Modifier:
-                    return false;
                 default:
-                    throw new ArgumentException($"Index is out of range: {index}");
+                    return MajorRecord_Registration.GetNthIsSingleton(index);
             }
         }
 
         public static string GetNthName(ushort index)
         {
-            Relation_FieldIndex enu = (Relation_FieldIndex)index;
+            Grass_FieldIndex enu = (Grass_FieldIndex)index;
             switch (enu)
             {
-                case Relation_FieldIndex.Faction:
-                    return "Faction";
-                case Relation_FieldIndex.Modifier:
-                    return "Modifier";
                 default:
-                    throw new ArgumentException($"Index is out of range: {index}");
+                    return MajorRecord_Registration.GetNthName(index);
             }
         }
 
         public static bool IsNthDerivative(ushort index)
         {
-            Relation_FieldIndex enu = (Relation_FieldIndex)index;
+            Grass_FieldIndex enu = (Grass_FieldIndex)index;
             switch (enu)
             {
-                case Relation_FieldIndex.Faction:
-                case Relation_FieldIndex.Modifier:
-                    return false;
                 default:
-                    throw new ArgumentException($"Index is out of range: {index}");
+                    return MajorRecord_Registration.IsNthDerivative(index);
             }
         }
 
         public static bool IsProtected(ushort index)
         {
-            Relation_FieldIndex enu = (Relation_FieldIndex)index;
+            Grass_FieldIndex enu = (Grass_FieldIndex)index;
             switch (enu)
             {
-                case Relation_FieldIndex.Faction:
-                case Relation_FieldIndex.Modifier:
-                    return false;
                 default:
-                    throw new ArgumentException($"Index is out of range: {index}");
+                    return MajorRecord_Registration.IsProtected(index);
             }
         }
 
         public static Type GetNthType(ushort index)
         {
-            Relation_FieldIndex enu = (Relation_FieldIndex)index;
+            Grass_FieldIndex enu = (Grass_FieldIndex)index;
             switch (enu)
             {
-                case Relation_FieldIndex.Faction:
-                    return typeof(FormIDLink<Faction>);
-                case Relation_FieldIndex.Modifier:
-                    return typeof(Int32);
                 default:
-                    throw new ArgumentException($"Index is out of range: {index}");
+                    return MajorRecord_Registration.GetNthType(index);
             }
         }
 
-        public static readonly RecordType XNAM_HEADER = new RecordType("XNAM");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = XNAM_HEADER;
-        public const int NumStructFields = 2;
+        public static readonly RecordType GRAS_HEADER = new RecordType("GRAS");
+        public static readonly RecordType TRIGGERING_RECORD_TYPE = GRAS_HEADER;
+        public const int NumStructFields = 0;
         public const int NumTypedFields = 0;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -1096,17 +1009,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Extensions
-    public static partial class RelationCommon
+    public static partial class GrassCommon
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IRelation item,
-            IRelationGetter rhs,
-            Relation_CopyMask copyMask = null,
-            IRelationGetter def = null,
+            this IGrass item,
+            IGrassGetter rhs,
+            Grass_CopyMask copyMask = null,
+            IGrassGetter def = null,
             NotifyingFireParameters? cmds = null)
         {
-            RelationCommon.CopyFieldsFrom(
+            GrassCommon.CopyFieldsFrom(
                 item: item,
                 rhs: rhs,
                 def: def,
@@ -1117,14 +1030,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void CopyFieldsFrom(
-            this IRelation item,
-            IRelationGetter rhs,
-            out Relation_ErrorMask errorMask,
-            Relation_CopyMask copyMask = null,
-            IRelationGetter def = null,
+            this IGrass item,
+            IGrassGetter rhs,
+            out Grass_ErrorMask errorMask,
+            Grass_CopyMask copyMask = null,
+            IGrassGetter def = null,
             NotifyingFireParameters? cmds = null)
         {
-            RelationCommon.CopyFieldsFrom(
+            GrassCommon.CopyFieldsFrom(
                 item: item,
                 rhs: rhs,
                 def: def,
@@ -1135,20 +1048,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void CopyFieldsFrom(
-            this IRelation item,
-            IRelationGetter rhs,
-            IRelationGetter def,
+            this IGrass item,
+            IGrassGetter rhs,
+            IGrassGetter def,
             bool doMasks,
-            out Relation_ErrorMask errorMask,
-            Relation_CopyMask copyMask,
+            out Grass_ErrorMask errorMask,
+            Grass_CopyMask copyMask,
             NotifyingFireParameters? cmds)
         {
-            Relation_ErrorMask retErrorMask = null;
-            Func<Relation_ErrorMask> maskGetter = () =>
+            Grass_ErrorMask retErrorMask = null;
+            Func<Grass_ErrorMask> maskGetter = () =>
             {
                 if (retErrorMask == null)
                 {
-                    retErrorMask = new Relation_ErrorMask();
+                    retErrorMask = new Grass_ErrorMask();
                 }
                 return retErrorMask;
             };
@@ -1164,44 +1077,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void CopyFieldsFrom(
-            this IRelation item,
-            IRelationGetter rhs,
-            IRelationGetter def,
+            this IGrass item,
+            IGrassGetter rhs,
+            IGrassGetter def,
             bool doMasks,
-            Func<Relation_ErrorMask> errorMask,
-            Relation_CopyMask copyMask,
+            Func<Grass_ErrorMask> errorMask,
+            Grass_CopyMask copyMask,
             NotifyingFireParameters? cmds)
         {
-            if (copyMask?.Faction ?? true)
-            {
-                try
-                {
-                    item.Faction_Property.SetToWithDefault(
-                        rhs: rhs.Faction_Property,
-                        def: def?.Faction_Property,
-                        cmds: cmds);
-                }
-                catch (Exception ex)
-                when (doMasks)
-                {
-                    errorMask().SetNthException((int)Relation_FieldIndex.Faction, ex);
-                }
-            }
-            if (copyMask?.Modifier ?? true)
-            {
-                try
-                {
-                    item.Modifier_Property.SetToWithDefault(
-                        rhs: rhs.Modifier_Property,
-                        def: def?.Modifier_Property,
-                        cmds: cmds);
-                }
-                catch (Exception ex)
-                when (doMasks)
-                {
-                    errorMask().SetNthException((int)Relation_FieldIndex.Modifier, ex);
-                }
-            }
+            MajorRecordCommon.CopyFieldsFrom(
+                item,
+                rhs,
+                def,
+                doMasks,
+                errorMask,
+                copyMask,
+                cmds);
         }
 
         #endregion
@@ -1209,105 +1100,84 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void SetNthObjectHasBeenSet(
             ushort index,
             bool on,
-            IRelation obj,
+            IGrass obj,
             NotifyingFireParameters? cmds = null)
         {
-            Relation_FieldIndex enu = (Relation_FieldIndex)index;
+            Grass_FieldIndex enu = (Grass_FieldIndex)index;
             switch (enu)
             {
-                case Relation_FieldIndex.Faction:
-                    obj.Faction_Property.HasBeenSet = on;
-                    break;
-                case Relation_FieldIndex.Modifier:
-                    obj.Modifier_Property.HasBeenSet = on;
-                    break;
                 default:
-                    throw new ArgumentException($"Index is out of range: {index}");
+                    MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
+                    break;
             }
         }
 
         public static void UnsetNthObject(
             ushort index,
-            IRelation obj,
+            IGrass obj,
             NotifyingUnsetParameters? cmds = null)
         {
-            Relation_FieldIndex enu = (Relation_FieldIndex)index;
+            Grass_FieldIndex enu = (Grass_FieldIndex)index;
             switch (enu)
             {
-                case Relation_FieldIndex.Faction:
-                    obj.Faction_Property.Unset(cmds);
-                    break;
-                case Relation_FieldIndex.Modifier:
-                    obj.Modifier_Property.Unset(cmds);
-                    break;
                 default:
-                    throw new ArgumentException($"Index is out of range: {index}");
+                    MajorRecordCommon.UnsetNthObject(index, obj);
+                    break;
             }
         }
 
         public static bool GetNthObjectHasBeenSet(
             ushort index,
-            IRelation obj)
+            IGrass obj)
         {
-            Relation_FieldIndex enu = (Relation_FieldIndex)index;
+            Grass_FieldIndex enu = (Grass_FieldIndex)index;
             switch (enu)
             {
-                case Relation_FieldIndex.Faction:
-                    return obj.Faction_Property.HasBeenSet;
-                case Relation_FieldIndex.Modifier:
-                    return obj.Modifier_Property.HasBeenSet;
                 default:
-                    throw new ArgumentException($"Index is out of range: {index}");
+                    return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
         }
 
         public static object GetNthObject(
             ushort index,
-            IRelationGetter obj)
+            IGrassGetter obj)
         {
-            Relation_FieldIndex enu = (Relation_FieldIndex)index;
+            Grass_FieldIndex enu = (Grass_FieldIndex)index;
             switch (enu)
             {
-                case Relation_FieldIndex.Faction:
-                    return obj.Faction;
-                case Relation_FieldIndex.Modifier:
-                    return obj.Modifier;
                 default:
-                    throw new ArgumentException($"Index is out of range: {index}");
+                    return MajorRecordCommon.GetNthObject(index, obj);
             }
         }
 
         public static void Clear(
-            IRelation item,
+            IGrass item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.Faction_Property.Unset(cmds.ToUnsetParams());
-            item.Modifier_Property.Unset(cmds.ToUnsetParams());
         }
 
-        public static Relation_Mask<bool> GetEqualsMask(
-            this IRelationGetter item,
-            IRelationGetter rhs)
+        public static Grass_Mask<bool> GetEqualsMask(
+            this IGrassGetter item,
+            IGrassGetter rhs)
         {
-            var ret = new Relation_Mask<bool>();
+            var ret = new Grass_Mask<bool>();
             FillEqualsMask(item, rhs, ret);
             return ret;
         }
 
         public static void FillEqualsMask(
-            IRelationGetter item,
-            IRelationGetter rhs,
-            Relation_Mask<bool> ret)
+            IGrassGetter item,
+            IGrassGetter rhs,
+            Grass_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Faction = item.Faction_Property.Equals(rhs.Faction_Property, (l, r) => l == r);
-            ret.Modifier = item.Modifier_Property.Equals(rhs.Modifier_Property, (l, r) => l == r);
+            MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
-            this IRelationGetter item,
+            this IGrassGetter item,
             string name = null,
-            Relation_Mask<bool> printMask = null)
+            Grass_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             item.ToString(fg, name, printMask);
@@ -1315,100 +1185,95 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void ToString(
-            this IRelationGetter item,
+            this IGrassGetter item,
             FileGeneration fg,
             string name = null,
-            Relation_Mask<bool> printMask = null)
+            Grass_Mask<bool> printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(Relation)} =>");
+                fg.AppendLine($"{nameof(Grass)} =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(Relation)}) =>");
+                fg.AppendLine($"{name} ({nameof(Grass)}) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Faction ?? true)
-                {
-                    fg.AppendLine($"Faction => {item.Faction}");
-                }
-                if (printMask?.Modifier ?? true)
-                {
-                    fg.AppendLine($"Modifier => {item.Modifier}");
-                }
             }
             fg.AppendLine("]");
         }
 
         public static bool HasBeenSet(
-            this IRelationGetter item,
-            Relation_Mask<bool?> checkMask)
+            this IGrassGetter item,
+            Grass_Mask<bool?> checkMask)
         {
-            if (checkMask.Faction.HasValue && checkMask.Faction.Value != item.Faction_Property.HasBeenSet) return false;
-            if (checkMask.Modifier.HasValue && checkMask.Modifier.Value != item.Modifier_Property.HasBeenSet) return false;
             return true;
         }
 
-        public static Relation_Mask<bool> GetHasBeenSetMask(IRelationGetter item)
+        public static Grass_Mask<bool> GetHasBeenSetMask(IGrassGetter item)
         {
-            var ret = new Relation_Mask<bool>();
-            ret.Faction = item.Faction_Property.HasBeenSet;
-            ret.Modifier = item.Modifier_Property.HasBeenSet;
+            var ret = new Grass_Mask<bool>();
             return ret;
+        }
+
+        public static Grass_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
+        {
+            if (!index.HasValue) return null;
+            return ConvertFieldIndex(index: index.Value);
+        }
+
+        public static Grass_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        {
+            switch (index)
+            {
+                case MajorRecord_FieldIndex.MajorRecordFlags:
+                    return (Grass_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormID:
+                    return (Grass_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (Grass_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (Grass_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.RecordType:
+                    return (Grass_FieldIndex)((int)index);
+                default:
+                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
+            }
         }
 
         #region XML Translation
         #region XML Write
         public static void Write_XML(
             XmlWriter writer,
-            IRelationGetter item,
+            IGrassGetter item,
             bool doMasks,
-            out Relation_ErrorMask errorMask,
+            out Grass_ErrorMask errorMask,
             string name = null)
         {
-            Relation_ErrorMask errMaskRet = null;
+            Grass_ErrorMask errMaskRet = null;
             Write_XML_Internal(
                 writer: writer,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Relation_ErrorMask()) : default(Func<Relation_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Grass_ErrorMask()) : default(Func<Grass_ErrorMask>));
             errorMask = errMaskRet;
         }
 
         private static void Write_XML_Internal(
             XmlWriter writer,
-            IRelationGetter item,
-            Func<Relation_ErrorMask> errorMask,
+            IGrassGetter item,
+            Func<Grass_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.Relation"))
+                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.Grass"))
                 {
                     if (name != null)
                     {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.Relation");
-                    }
-                    if (item.Faction_Property.HasBeenSet)
-                    {
-                        RawFormIDXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Faction),
-                            item: item.Faction?.FormID,
-                            fieldIndex: (int)Relation_FieldIndex.Faction,
-                            errorMask: errorMask);
-                    }
-                    if (item.Modifier_Property.HasBeenSet)
-                    {
-                        Int32XmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Modifier),
-                            item: item.Modifier_Property,
-                            fieldIndex: (int)Relation_FieldIndex.Modifier,
-                            errorMask: errorMask);
+                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.Grass");
                     }
                 }
             }
@@ -1426,31 +1291,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Binary Write
         public static void Write_Binary(
             MutagenWriter writer,
-            IRelationGetter item,
+            IGrassGetter item,
             bool doMasks,
-            out Relation_ErrorMask errorMask)
+            out Grass_ErrorMask errorMask)
         {
-            Relation_ErrorMask errMaskRet = null;
+            Grass_ErrorMask errMaskRet = null;
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Relation_ErrorMask()) : default(Func<Relation_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Grass_ErrorMask()) : default(Func<Grass_ErrorMask>));
             errorMask = errMaskRet;
         }
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
-            IRelationGetter item,
-            Func<Relation_ErrorMask> errorMask)
+            IGrassGetter item,
+            Func<Grass_ErrorMask> errorMask)
         {
             try
             {
                 using (HeaderExport.ExportHeader(
                     writer: writer,
-                    record: Relation_Registration.XNAM_HEADER,
-                    type: ObjectType.Subrecord))
+                    record: Grass_Registration.GRAS_HEADER,
+                    type: ObjectType.Record))
                 {
-                    Write_Binary_Embedded(
+                    MajorRecordCommon.Write_Binary_Embedded(
+                        item: item,
+                        writer: writer,
+                        errorMask: errorMask);
+                    MajorRecordCommon.Write_Binary_RecordTypes(
                         item: item,
                         writer: writer,
                         errorMask: errorMask);
@@ -1464,23 +1333,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         #endregion
 
-        public static void Write_Binary_Embedded(
-            IRelationGetter item,
-            MutagenWriter writer,
-            Func<Relation_ErrorMask> errorMask)
-        {
-            Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Faction?.FormID,
-                fieldIndex: (int)Relation_FieldIndex.Faction,
-                errorMask: errorMask);
-            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Modifier_Property,
-                fieldIndex: (int)Relation_FieldIndex.Modifier,
-                errorMask: errorMask);
-        }
-
         #endregion
 
     }
@@ -1489,76 +1341,66 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Modules
 
     #region Mask
-    public class Relation_Mask<T> : IMask<T>, IEquatable<Relation_Mask<T>>
+    public class Grass_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<Grass_Mask<T>>
     {
         #region Ctors
-        public Relation_Mask()
+        public Grass_Mask()
         {
         }
 
-        public Relation_Mask(T initialValue)
+        public Grass_Mask(T initialValue)
         {
-            this.Faction = initialValue;
-            this.Modifier = initialValue;
         }
-        #endregion
-
-        #region Members
-        public T Faction;
-        public T Modifier;
         #endregion
 
         #region Equals
         public override bool Equals(object obj)
         {
-            if (!(obj is Relation_Mask<T> rhs)) return false;
+            if (!(obj is Grass_Mask<T> rhs)) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(Relation_Mask<T> rhs)
+        public bool Equals(Grass_Mask<T> rhs)
         {
             if (rhs == null) return false;
-            if (!object.Equals(this.Faction, rhs.Faction)) return false;
-            if (!object.Equals(this.Modifier, rhs.Modifier)) return false;
+            if (!base.Equals(rhs)) return false;
             return true;
         }
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = ret.CombineHashCode(this.Faction?.GetHashCode());
-            ret = ret.CombineHashCode(this.Modifier?.GetHashCode());
+            ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
 
         #endregion
 
         #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
+        public override bool AllEqual(Func<T, bool> eval)
         {
-            if (!eval(this.Faction)) return false;
-            if (!eval(this.Modifier)) return false;
+            if (!base.AllEqual(eval)) return false;
             return true;
         }
         #endregion
 
         #region Translate
-        public Relation_Mask<R> Translate<R>(Func<T, R> eval)
+        public new Grass_Mask<R> Translate<R>(Func<T, R> eval)
         {
-            var ret = new Relation_Mask<R>();
+            var ret = new Grass_Mask<R>();
             this.Translate_InternalFill(ret, eval);
             return ret;
         }
 
-        protected void Translate_InternalFill<R>(Relation_Mask<R> obj, Func<T, R> eval)
+        protected void Translate_InternalFill<R>(Grass_Mask<R> obj, Func<T, R> eval)
         {
-            obj.Faction = eval(this.Faction);
-            obj.Modifier = eval(this.Modifier);
+            base.Translate_InternalFill(obj, eval);
         }
         #endregion
 
         #region Clear Enumerables
-        public void ClearEnumerables()
+        public override void ClearEnumerables()
         {
+            base.ClearEnumerables();
         }
         #endregion
 
@@ -1568,27 +1410,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(Relation_Mask<bool> printMask = null)
+        public string ToString(Grass_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, Relation_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, Grass_Mask<bool> printMask = null)
         {
-            fg.AppendLine($"{nameof(Relation_Mask<T>)} =>");
+            fg.AppendLine($"{nameof(Grass_Mask<T>)} =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Faction ?? true)
-                {
-                    fg.AppendLine($"Faction => {Faction}");
-                }
-                if (printMask?.Modifier ?? true)
-                {
-                    fg.AppendLine($"Modifier => {Modifier}");
-                }
             }
             fg.AppendLine("]");
         }
@@ -1596,64 +1430,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class Relation_ErrorMask : IErrorMask, IErrorMask<Relation_ErrorMask>
+    public class Grass_ErrorMask : MajorRecord_ErrorMask, IErrorMask<Grass_ErrorMask>
     {
-        #region Members
-        public Exception Overall { get; set; }
-        private List<string> _warnings;
-        public List<string> Warnings
-        {
-            get
-            {
-                if (_warnings == null)
-                {
-                    _warnings = new List<string>();
-                }
-                return _warnings;
-            }
-        }
-        public Exception Faction;
-        public Exception Modifier;
-        #endregion
-
         #region IErrorMask
-        public void SetNthException(int index, Exception ex)
+        public override void SetNthException(int index, Exception ex)
         {
-            Relation_FieldIndex enu = (Relation_FieldIndex)index;
+            Grass_FieldIndex enu = (Grass_FieldIndex)index;
             switch (enu)
             {
-                case Relation_FieldIndex.Faction:
-                    this.Faction = ex;
-                    break;
-                case Relation_FieldIndex.Modifier:
-                    this.Modifier = ex;
-                    break;
                 default:
-                    throw new ArgumentException($"Index is out of range: {index}");
+                    base.SetNthException(index, ex);
+                    break;
             }
         }
 
-        public void SetNthMask(int index, object obj)
+        public override void SetNthMask(int index, object obj)
         {
-            Relation_FieldIndex enu = (Relation_FieldIndex)index;
+            Grass_FieldIndex enu = (Grass_FieldIndex)index;
             switch (enu)
             {
-                case Relation_FieldIndex.Faction:
-                    this.Faction = (Exception)obj;
-                    break;
-                case Relation_FieldIndex.Modifier:
-                    this.Modifier = (Exception)obj;
-                    break;
                 default:
-                    throw new ArgumentException($"Index is out of range: {index}");
+                    base.SetNthMask(index, obj);
+                    break;
             }
         }
 
-        public bool IsInError()
+        public override bool IsInError()
         {
             if (Overall != null) return true;
-            if (Faction != null) return true;
-            if (Modifier != null) return true;
             return false;
         }
         #endregion
@@ -1666,9 +1470,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg)
+        public override void ToString(FileGeneration fg)
         {
-            fg.AppendLine("Relation_ErrorMask =>");
+            fg.AppendLine("Grass_ErrorMask =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
@@ -1686,22 +1490,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             fg.AppendLine("]");
         }
-        protected void ToString_FillInternal(FileGeneration fg)
+        protected override void ToString_FillInternal(FileGeneration fg)
         {
-            fg.AppendLine($"Faction => {Faction}");
-            fg.AppendLine($"Modifier => {Modifier}");
+            base.ToString_FillInternal(fg);
         }
         #endregion
 
         #region Combine
-        public Relation_ErrorMask Combine(Relation_ErrorMask rhs)
+        public Grass_ErrorMask Combine(Grass_ErrorMask rhs)
         {
-            var ret = new Relation_ErrorMask();
-            ret.Faction = this.Faction.Combine(rhs.Faction);
-            ret.Modifier = this.Modifier.Combine(rhs.Modifier);
+            var ret = new Grass_ErrorMask();
             return ret;
         }
-        public static Relation_ErrorMask Combine(Relation_ErrorMask lhs, Relation_ErrorMask rhs)
+        public static Grass_ErrorMask Combine(Grass_ErrorMask lhs, Grass_ErrorMask rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -1709,13 +1510,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Relation_CopyMask
+    public class Grass_CopyMask : MajorRecord_CopyMask
     {
-        #region Members
-        public bool Faction;
-        public bool Modifier;
-        #endregion
-
     }
     #endregion
 

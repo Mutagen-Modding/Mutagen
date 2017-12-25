@@ -70,11 +70,11 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Byte> ILandTextureGetter.TextureSpecularExponent_Property => this.TextureSpecularExponent_Property;
         #endregion
         #region PotentialGrass
-        private readonly INotifyingList<FormID> _PotentialGrass = new NotifyingList<FormID>();
-        public INotifyingList<FormID> PotentialGrass => _PotentialGrass;
+        private readonly INotifyingList<FormIDLink<Grass>> _PotentialGrass = new NotifyingList<FormIDLink<Grass>>();
+        public INotifyingList<FormIDLink<Grass>> PotentialGrass => _PotentialGrass;
         #region Interface Members
-        INotifyingList<FormID> ILandTexture.PotentialGrass => _PotentialGrass;
-        INotifyingListGetter<FormID> ILandTextureGetter.PotentialGrass => _PotentialGrass;
+        INotifyingList<FormIDLink<Grass>> ILandTexture.PotentialGrass => _PotentialGrass;
+        INotifyingListGetter<FormIDLink<Grass>> ILandTextureGetter.PotentialGrass => _PotentialGrass;
         #endregion
 
         #endregion
@@ -497,17 +497,17 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 case "PotentialGrass":
-                    item._PotentialGrass.SetIfSucceeded(ListXmlTranslation<FormID, Exception>.Instance.Parse(
+                    item._PotentialGrass.SetIfSucceeded(ListXmlTranslation<FormIDLink<Grass>, Exception>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)LandTexture_FieldIndex.PotentialGrass,
                         errorMask: errorMask,
                         transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
                         {
-                            return FormIDXmlTranslation.Instance.Parse(
+                            return RawFormIDXmlTranslation.Instance.Parse(
                                 r,
                                 nullable: false,
                                 doMasks: listDoMasks,
-                                errorMask: out listSubMask).Bubble((o) => o.Value);
+                                errorMask: out listSubMask).Bubble((o) => new FormIDLink<Grass>(o.Value));
                         }
                         ));
                     break;
@@ -861,7 +861,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     return TryGet<LandTexture_FieldIndex?>.Succeed(LandTexture_FieldIndex.TextureSpecularExponent);
                 case "GNAM":
-                    var PotentialGrasstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<FormID, Exception>.Instance.ParseRepeatedItem(
+                    var PotentialGrasstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Grass>, Exception>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: LandTexture_Registration.GNAM_HEADER,
                         fieldIndex: (int)LandTexture_FieldIndex.PotentialGrass,
@@ -870,10 +870,10 @@ namespace Mutagen.Bethesda.Oblivion
                         transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
                         {
                             r.Position += Constants.SUBRECORD_LENGTH;
-                            return Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                            return Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
                                 r,
                                 doMasks: listDoMasks,
-                                errorMask: out listSubMask);
+                                errorMask: out listSubMask).Bubble((o) => new FormIDLink<Grass>(o));
                         }
                         );
                     item._PotentialGrass.SetIfSucceeded(PotentialGrasstryGet);
@@ -978,7 +978,7 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case LandTexture_FieldIndex.PotentialGrass:
-                    this._PotentialGrass.SetTo((IEnumerable<FormID>)obj, cmds);
+                    this._PotentialGrass.SetTo((IEnumerable<FormIDLink<Grass>>)obj, cmds);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -1027,7 +1027,7 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case LandTexture_FieldIndex.PotentialGrass:
-                    obj._PotentialGrass.SetTo((IEnumerable<FormID>)pair.Value, null);
+                    obj._PotentialGrass.SetTo((IEnumerable<FormIDLink<Grass>>)pair.Value, null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1053,7 +1053,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Byte TextureSpecularExponent { get; set; }
         new INotifyingSetItem<Byte> TextureSpecularExponent_Property { get; }
 
-        new INotifyingList<FormID> PotentialGrass { get; }
+        new INotifyingList<FormIDLink<Grass>> PotentialGrass { get; }
     }
 
     public interface ILandTextureGetter : IMajorRecordGetter
@@ -1074,7 +1074,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region PotentialGrass
-        INotifyingListGetter<FormID> PotentialGrass { get; }
+        INotifyingListGetter<FormIDLink<Grass>> PotentialGrass { get; }
         #endregion
 
     }
@@ -1262,7 +1262,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LandTexture_FieldIndex.TextureSpecularExponent:
                     return typeof(Byte);
                 case LandTexture_FieldIndex.PotentialGrass:
-                    return typeof(NotifyingList<FormID>);
+                    return typeof(NotifyingList<FormIDLink<Grass>>);
                 default:
                     return MajorRecord_Registration.GetNthType(index);
             }
@@ -1616,7 +1616,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 if (item.PotentialGrass.HasBeenSet)
                 {
                     ret.PotentialGrass = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.PotentialGrass.Specific = item.PotentialGrass.SelectAgainst<FormID, bool>(rhs.PotentialGrass, ((l, r) => object.Equals(l, r)), out ret.PotentialGrass.Overall);
+                    ret.PotentialGrass.Specific = item.PotentialGrass.SelectAgainst<FormIDLink<Grass>, bool>(rhs.PotentialGrass, ((l, r) => object.Equals(l, r)), out ret.PotentialGrass.Overall);
                     ret.PotentialGrass.Overall = ret.PotentialGrass.Overall && ret.PotentialGrass.Specific.All((b) => b);
                 }
                 else
@@ -1802,18 +1802,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.PotentialGrass.HasBeenSet)
                     {
-                        ListXmlTranslation<FormID, Exception>.Instance.Write(
+                        ListXmlTranslation<FormIDLink<Grass>, Exception>.Instance.Write(
                             writer: writer,
                             name: nameof(item.PotentialGrass),
                             item: item.PotentialGrass,
                             fieldIndex: (int)LandTexture_FieldIndex.PotentialGrass,
                             errorMask: errorMask,
-                            transl: (FormID subItem, bool listDoMasks, out Exception listSubMask) =>
+                            transl: (FormIDLink<Grass> subItem, bool listDoMasks, out Exception listSubMask) =>
                             {
-                                FormIDXmlTranslation.Instance.Write(
+                                RawFormIDXmlTranslation.Instance.Write(
                                     writer: writer,
                                     name: "Item",
-                                    item: subItem,
+                                    item: subItem?.FormID,
                                     doMasks: errorMask != null,
                                     errorMask: out listSubMask);
                             }
@@ -1905,16 +1905,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: LandTexture_Registration.SNAM_HEADER,
                 nullable: false);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormID, Exception>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Grass>, Exception>.Instance.Write(
                 writer: writer,
                 item: item.PotentialGrass,
                 fieldIndex: (int)LandTexture_FieldIndex.PotentialGrass,
                 errorMask: errorMask,
-                transl: (FormID subItem, bool listDoMasks, out Exception listSubMask) =>
+                transl: (FormIDLink<Grass> subItem, bool listDoMasks, out Exception listSubMask) =>
                 {
-                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                    Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: subItem,
+                        item: subItem?.FormID,
                         doMasks: listDoMasks,
                         errorMask: out listSubMask,
                         header: LandTexture_Registration.GNAM_HEADER,

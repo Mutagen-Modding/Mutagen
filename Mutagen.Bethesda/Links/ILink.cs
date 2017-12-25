@@ -7,12 +7,10 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
 {
-    public class FormIDLink<T>
-       where T : MajorRecord
+    public interface ILink<T> : INotifyingItem<T>
+        where T : IMajorRecord
     {
-        public FormIDLink(INotifyingListGetter<IMasterReference> masterList)
-        {
-
-        }
+        bool Linked { get; }
+        RawFormID FormID { get; }
     }
 }

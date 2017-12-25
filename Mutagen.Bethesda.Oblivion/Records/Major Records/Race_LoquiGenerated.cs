@@ -51,11 +51,11 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<String> IRaceGetter.Description_Property => this.Description_Property;
         #endregion
         #region Spells
-        private readonly INotifyingList<FormID> _Spells = new NotifyingList<FormID>();
-        public INotifyingList<FormID> Spells => _Spells;
+        private readonly INotifyingList<FormIDLink<Spell>> _Spells = new NotifyingList<FormIDLink<Spell>>();
+        public INotifyingList<FormIDLink<Spell>> Spells => _Spells;
         #region Interface Members
-        INotifyingList<FormID> IRace.Spells => _Spells;
-        INotifyingListGetter<FormID> IRaceGetter.Spells => _Spells;
+        INotifyingList<FormIDLink<Spell>> IRace.Spells => _Spells;
+        INotifyingListGetter<FormIDLink<Spell>> IRaceGetter.Spells => _Spells;
         #endregion
 
         #endregion
@@ -220,20 +220,20 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<GenderedBodyData> IRaceGetter.BodyData_Property => this.BodyData_Property;
         #endregion
         #region Hairs
-        private readonly INotifyingList<FormID> _Hairs = new NotifyingList<FormID>();
-        public INotifyingList<FormID> Hairs => _Hairs;
+        private readonly INotifyingList<FormIDLink<Hair>> _Hairs = new NotifyingList<FormIDLink<Hair>>();
+        public INotifyingList<FormIDLink<Hair>> Hairs => _Hairs;
         #region Interface Members
-        INotifyingList<FormID> IRace.Hairs => _Hairs;
-        INotifyingListGetter<FormID> IRaceGetter.Hairs => _Hairs;
+        INotifyingList<FormIDLink<Hair>> IRace.Hairs => _Hairs;
+        INotifyingListGetter<FormIDLink<Hair>> IRaceGetter.Hairs => _Hairs;
         #endregion
 
         #endregion
         #region Eyes
-        private readonly INotifyingList<FormID> _Eyes = new NotifyingList<FormID>();
-        public INotifyingList<FormID> Eyes => _Eyes;
+        private readonly INotifyingList<FormIDLink<Eye>> _Eyes = new NotifyingList<FormIDLink<Eye>>();
+        public INotifyingList<FormIDLink<Eye>> Eyes => _Eyes;
         #region Interface Members
-        INotifyingList<FormID> IRace.Eyes => _Eyes;
-        INotifyingListGetter<FormID> IRaceGetter.Eyes => _Eyes;
+        INotifyingList<FormIDLink<Eye>> IRace.Eyes => _Eyes;
+        INotifyingListGetter<FormIDLink<Eye>> IRaceGetter.Eyes => _Eyes;
         #endregion
 
         #endregion
@@ -839,17 +839,17 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 case "Spells":
-                    item._Spells.SetIfSucceeded(ListXmlTranslation<FormID, Exception>.Instance.Parse(
+                    item._Spells.SetIfSucceeded(ListXmlTranslation<FormIDLink<Spell>, Exception>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Race_FieldIndex.Spells,
                         errorMask: errorMask,
                         transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
                         {
-                            return FormIDXmlTranslation.Instance.Parse(
+                            return RawFormIDXmlTranslation.Instance.Parse(
                                 r,
                                 nullable: false,
                                 doMasks: listDoMasks,
-                                errorMask: out listSubMask).Bubble((o) => o.Value);
+                                errorMask: out listSubMask).Bubble((o) => new FormIDLink<Spell>(o.Value));
                         }
                         ));
                     break;
@@ -975,32 +975,32 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 case "Hairs":
-                    item._Hairs.SetIfSucceeded(ListXmlTranslation<FormID, Exception>.Instance.Parse(
+                    item._Hairs.SetIfSucceeded(ListXmlTranslation<FormIDLink<Hair>, Exception>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Race_FieldIndex.Hairs,
                         errorMask: errorMask,
                         transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
                         {
-                            return FormIDXmlTranslation.Instance.Parse(
+                            return RawFormIDXmlTranslation.Instance.Parse(
                                 r,
                                 nullable: false,
                                 doMasks: listDoMasks,
-                                errorMask: out listSubMask).Bubble((o) => o.Value);
+                                errorMask: out listSubMask).Bubble((o) => new FormIDLink<Hair>(o.Value));
                         }
                         ));
                     break;
                 case "Eyes":
-                    item._Eyes.SetIfSucceeded(ListXmlTranslation<FormID, Exception>.Instance.Parse(
+                    item._Eyes.SetIfSucceeded(ListXmlTranslation<FormIDLink<Eye>, Exception>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Race_FieldIndex.Eyes,
                         errorMask: errorMask,
                         transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
                         {
-                            return FormIDXmlTranslation.Instance.Parse(
+                            return RawFormIDXmlTranslation.Instance.Parse(
                                 r,
                                 nullable: false,
                                 doMasks: listDoMasks,
-                                errorMask: out listSubMask).Bubble((o) => o.Value);
+                                errorMask: out listSubMask).Bubble((o) => new FormIDLink<Eye>(o.Value));
                         }
                         ));
                     break;
@@ -1365,7 +1365,7 @@ namespace Mutagen.Bethesda.Oblivion
                     item._Description.SetIfSucceeded(DescriptiontryGet);
                     return TryGet<Race_FieldIndex?>.Succeed(Race_FieldIndex.Description);
                 case "SPLO":
-                    var SpellstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<FormID, Exception>.Instance.ParseRepeatedItem(
+                    var SpellstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Spell>, Exception>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: Race_Registration.SPLO_HEADER,
                         fieldIndex: (int)Race_FieldIndex.Spells,
@@ -1374,10 +1374,10 @@ namespace Mutagen.Bethesda.Oblivion
                         transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
                         {
                             r.Position += Constants.SUBRECORD_LENGTH;
-                            return Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                            return Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
                                 r,
                                 doMasks: listDoMasks,
-                                errorMask: out listSubMask);
+                                errorMask: out listSubMask).Bubble((o) => new FormIDLink<Spell>(o));
                         }
                         );
                     item._Spells.SetIfSucceeded(SpellstryGet);
@@ -1508,34 +1508,34 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<Race_FieldIndex?>.Succeed(Race_FieldIndex.BodyData);
                 case "HNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var HairstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<FormID, Exception>.Instance.ParseRepeatedItem(
+                    var HairstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Hair>, Exception>.Instance.ParseRepeatedItem(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)Race_FieldIndex.Hairs,
                         objType: ObjectType.Subrecord,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
                         {
-                            return Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                            return Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
                                 r,
                                 doMasks: listDoMasks,
-                                errorMask: out listSubMask);
+                                errorMask: out listSubMask).Bubble((o) => new FormIDLink<Hair>(o));
                         }
                         );
                     item._Hairs.SetIfSucceeded(HairstryGet);
                     return TryGet<Race_FieldIndex?>.Succeed(Race_FieldIndex.Hairs);
                 case "ENAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var EyestryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<FormID, Exception>.Instance.ParseRepeatedItem(
+                    var EyestryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Eye>, Exception>.Instance.ParseRepeatedItem(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)Race_FieldIndex.Eyes,
                         objType: ObjectType.Subrecord,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
                         {
-                            return Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                            return Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
                                 r,
                                 doMasks: listDoMasks,
-                                errorMask: out listSubMask);
+                                errorMask: out listSubMask).Bubble((o) => new FormIDLink<Eye>(o));
                         }
                         );
                     item._Eyes.SetIfSucceeded(EyestryGet);
@@ -1646,7 +1646,7 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case Race_FieldIndex.Spells:
-                    this._Spells.SetTo((IEnumerable<FormID>)obj, cmds);
+                    this._Spells.SetTo((IEnumerable<FormIDLink<Spell>>)obj, cmds);
                     break;
                 case Race_FieldIndex.Relations:
                     this._Relations.SetTo((IEnumerable<Relation>)obj, cmds);
@@ -1723,10 +1723,10 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case Race_FieldIndex.Hairs:
-                    this._Hairs.SetTo((IEnumerable<FormID>)obj, cmds);
+                    this._Hairs.SetTo((IEnumerable<FormIDLink<Hair>>)obj, cmds);
                     break;
                 case Race_FieldIndex.Eyes:
-                    this._Eyes.SetTo((IEnumerable<FormID>)obj, cmds);
+                    this._Eyes.SetTo((IEnumerable<FormIDLink<Eye>>)obj, cmds);
                     break;
                 case Race_FieldIndex.FaceGenData:
                     this._FaceGenData.Set(
@@ -1775,7 +1775,7 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case Race_FieldIndex.Spells:
-                    obj._Spells.SetTo((IEnumerable<FormID>)pair.Value, null);
+                    obj._Spells.SetTo((IEnumerable<FormIDLink<Spell>>)pair.Value, null);
                     break;
                 case Race_FieldIndex.Relations:
                     obj._Relations.SetTo((IEnumerable<Relation>)pair.Value, null);
@@ -1852,10 +1852,10 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case Race_FieldIndex.Hairs:
-                    obj._Hairs.SetTo((IEnumerable<FormID>)pair.Value, null);
+                    obj._Hairs.SetTo((IEnumerable<FormIDLink<Hair>>)pair.Value, null);
                     break;
                 case Race_FieldIndex.Eyes:
-                    obj._Eyes.SetTo((IEnumerable<FormID>)pair.Value, null);
+                    obj._Eyes.SetTo((IEnumerable<FormIDLink<Eye>>)pair.Value, null);
                     break;
                 case Race_FieldIndex.FaceGenData:
                     obj._FaceGenData.Set(
@@ -1885,7 +1885,7 @@ namespace Mutagen.Bethesda.Oblivion
         new String Description { get; set; }
         new INotifyingSetItem<String> Description_Property { get; }
 
-        new INotifyingList<FormID> Spells { get; }
+        new INotifyingList<FormIDLink<Spell>> Spells { get; }
         new INotifyingList<Relation> Relations { get; }
         new INotifyingList<SkillBoost> SkillBoosts { get; }
         new Byte[] Fluff { get; set; }
@@ -1928,8 +1928,8 @@ namespace Mutagen.Bethesda.Oblivion
         new GenderedBodyData BodyData { get; set; }
         new INotifyingSetItem<GenderedBodyData> BodyData_Property { get; }
 
-        new INotifyingList<FormID> Hairs { get; }
-        new INotifyingList<FormID> Eyes { get; }
+        new INotifyingList<FormIDLink<Hair>> Hairs { get; }
+        new INotifyingList<FormIDLink<Eye>> Eyes { get; }
         new FaceGenData FaceGenData { get; set; }
         new INotifyingSetItem<FaceGenData> FaceGenData_Property { get; }
 
@@ -1946,7 +1946,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Spells
-        INotifyingListGetter<FormID> Spells { get; }
+        INotifyingListGetter<FormIDLink<Spell>> Spells { get; }
         #endregion
         #region Relations
         INotifyingListGetter<Relation> Relations { get; }
@@ -2023,10 +2023,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Hairs
-        INotifyingListGetter<FormID> Hairs { get; }
+        INotifyingListGetter<FormIDLink<Hair>> Hairs { get; }
         #endregion
         #region Eyes
-        INotifyingListGetter<FormID> Eyes { get; }
+        INotifyingListGetter<FormIDLink<Eye>> Eyes { get; }
         #endregion
         #region FaceGenData
         FaceGenData FaceGenData { get; }
@@ -2401,7 +2401,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.Description:
                     return typeof(String);
                 case Race_FieldIndex.Spells:
-                    return typeof(NotifyingList<FormID>);
+                    return typeof(NotifyingList<FormIDLink<Spell>>);
                 case Race_FieldIndex.Relations:
                     return typeof(NotifyingList<Relation>);
                 case Race_FieldIndex.SkillBoosts:
@@ -2435,9 +2435,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.BodyData:
                     return typeof(GenderedBodyData);
                 case Race_FieldIndex.Hairs:
-                    return typeof(NotifyingList<FormID>);
+                    return typeof(NotifyingList<FormIDLink<Hair>>);
                 case Race_FieldIndex.Eyes:
-                    return typeof(NotifyingList<FormID>);
+                    return typeof(NotifyingList<FormIDLink<Eye>>);
                 case Race_FieldIndex.FaceGenData:
                     return typeof(FaceGenData);
                 case Race_FieldIndex.Unknown:
@@ -3473,7 +3473,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 if (item.Spells.HasBeenSet)
                 {
                     ret.Spells = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.Spells.Specific = item.Spells.SelectAgainst<FormID, bool>(rhs.Spells, ((l, r) => object.Equals(l, r)), out ret.Spells.Overall);
+                    ret.Spells.Specific = item.Spells.SelectAgainst<FormIDLink<Spell>, bool>(rhs.Spells, ((l, r) => object.Equals(l, r)), out ret.Spells.Overall);
                     ret.Spells.Overall = ret.Spells.Overall && ret.Spells.Specific.All((b) => b);
                 }
                 else
@@ -3582,7 +3582,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 if (item.Hairs.HasBeenSet)
                 {
                     ret.Hairs = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.Hairs.Specific = item.Hairs.SelectAgainst<FormID, bool>(rhs.Hairs, ((l, r) => object.Equals(l, r)), out ret.Hairs.Overall);
+                    ret.Hairs.Specific = item.Hairs.SelectAgainst<FormIDLink<Hair>, bool>(rhs.Hairs, ((l, r) => object.Equals(l, r)), out ret.Hairs.Overall);
                     ret.Hairs.Overall = ret.Hairs.Overall && ret.Hairs.Specific.All((b) => b);
                 }
                 else
@@ -3601,7 +3601,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 if (item.Eyes.HasBeenSet)
                 {
                     ret.Eyes = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.Eyes.Specific = item.Eyes.SelectAgainst<FormID, bool>(rhs.Eyes, ((l, r) => object.Equals(l, r)), out ret.Eyes.Overall);
+                    ret.Eyes.Specific = item.Eyes.SelectAgainst<FormIDLink<Eye>, bool>(rhs.Eyes, ((l, r) => object.Equals(l, r)), out ret.Eyes.Overall);
                     ret.Eyes.Overall = ret.Eyes.Overall && ret.Eyes.Specific.All((b) => b);
                 }
                 else
@@ -3980,18 +3980,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.Spells.HasBeenSet)
                     {
-                        ListXmlTranslation<FormID, Exception>.Instance.Write(
+                        ListXmlTranslation<FormIDLink<Spell>, Exception>.Instance.Write(
                             writer: writer,
                             name: nameof(item.Spells),
                             item: item.Spells,
                             fieldIndex: (int)Race_FieldIndex.Spells,
                             errorMask: errorMask,
-                            transl: (FormID subItem, bool listDoMasks, out Exception listSubMask) =>
+                            transl: (FormIDLink<Spell> subItem, bool listDoMasks, out Exception listSubMask) =>
                             {
-                                FormIDXmlTranslation.Instance.Write(
+                                RawFormIDXmlTranslation.Instance.Write(
                                     writer: writer,
                                     name: "Item",
-                                    item: subItem,
+                                    item: subItem?.FormID,
                                     doMasks: errorMask != null,
                                     errorMask: out listSubMask);
                             }
@@ -4173,18 +4173,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.Hairs.HasBeenSet)
                     {
-                        ListXmlTranslation<FormID, Exception>.Instance.Write(
+                        ListXmlTranslation<FormIDLink<Hair>, Exception>.Instance.Write(
                             writer: writer,
                             name: nameof(item.Hairs),
                             item: item.Hairs,
                             fieldIndex: (int)Race_FieldIndex.Hairs,
                             errorMask: errorMask,
-                            transl: (FormID subItem, bool listDoMasks, out Exception listSubMask) =>
+                            transl: (FormIDLink<Hair> subItem, bool listDoMasks, out Exception listSubMask) =>
                             {
-                                FormIDXmlTranslation.Instance.Write(
+                                RawFormIDXmlTranslation.Instance.Write(
                                     writer: writer,
                                     name: "Item",
-                                    item: subItem,
+                                    item: subItem?.FormID,
                                     doMasks: errorMask != null,
                                     errorMask: out listSubMask);
                             }
@@ -4192,18 +4192,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.Eyes.HasBeenSet)
                     {
-                        ListXmlTranslation<FormID, Exception>.Instance.Write(
+                        ListXmlTranslation<FormIDLink<Eye>, Exception>.Instance.Write(
                             writer: writer,
                             name: nameof(item.Eyes),
                             item: item.Eyes,
                             fieldIndex: (int)Race_FieldIndex.Eyes,
                             errorMask: errorMask,
-                            transl: (FormID subItem, bool listDoMasks, out Exception listSubMask) =>
+                            transl: (FormIDLink<Eye> subItem, bool listDoMasks, out Exception listSubMask) =>
                             {
-                                FormIDXmlTranslation.Instance.Write(
+                                RawFormIDXmlTranslation.Instance.Write(
                                     writer: writer,
                                     name: "Item",
-                                    item: subItem,
+                                    item: subItem?.FormID,
                                     doMasks: errorMask != null,
                                     errorMask: out listSubMask);
                             }
@@ -4301,16 +4301,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: Race_Registration.DESC_HEADER,
                 nullable: false);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormID, Exception>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Spell>, Exception>.Instance.Write(
                 writer: writer,
                 item: item.Spells,
                 fieldIndex: (int)Race_FieldIndex.Spells,
                 errorMask: errorMask,
-                transl: (FormID subItem, bool listDoMasks, out Exception listSubMask) =>
+                transl: (FormIDLink<Spell> subItem, bool listDoMasks, out Exception listSubMask) =>
                 {
-                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                    Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: subItem,
+                        item: subItem?.FormID,
                         doMasks: listDoMasks,
                         errorMask: out listSubMask,
                         header: Race_Registration.SPLO_HEADER,
@@ -4436,32 +4436,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.BodyData_Property,
                 fieldIndex: (int)Race_FieldIndex.BodyData,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormID, Exception>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Hair>, Exception>.Instance.Write(
                 writer: writer,
                 item: item.Hairs,
                 fieldIndex: (int)Race_FieldIndex.Hairs,
                 recordType: Race_Registration.HNAM_HEADER,
                 errorMask: errorMask,
-                transl: (FormID subItem, bool listDoMasks, out Exception listSubMask) =>
+                transl: (FormIDLink<Hair> subItem, bool listDoMasks, out Exception listSubMask) =>
                 {
-                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                    Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: subItem,
+                        item: subItem?.FormID,
                         doMasks: listDoMasks,
                         errorMask: out listSubMask);
                 }
                 );
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormID, Exception>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Eye>, Exception>.Instance.Write(
                 writer: writer,
                 item: item.Eyes,
                 fieldIndex: (int)Race_FieldIndex.Eyes,
                 recordType: Race_Registration.ENAM_HEADER,
                 errorMask: errorMask,
-                transl: (FormID subItem, bool listDoMasks, out Exception listSubMask) =>
+                transl: (FormIDLink<Eye> subItem, bool listDoMasks, out Exception listSubMask) =>
                 {
-                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                    Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: subItem,
+                        item: subItem?.FormID,
                         doMasks: listDoMasks,
                         errorMask: out listSubMask);
                 }

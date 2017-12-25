@@ -20,10 +20,13 @@ namespace Mutagen.Bethesda.Generation
                 HasBeenSetDefault = true
             };
             gen.XmlTranslation.ShouldGenerateXSD = false;
-            gen.XmlTranslation.AddTypeAssociation<FormIDType>(new PrimitiveXmlTranslationGeneration<FormID>());
+            gen.XmlTranslation.AddTypeAssociation<FormIDLinkType>(new FormIDLinkXmlTranslationGeneration());
+            gen.XmlTranslation.AddTypeAssociation<RawFormIDType>(new PrimitiveXmlTranslationGeneration<RawFormID>());
+            gen.MaskModule.AddTypeAssociation<FormIDLinkType>(MaskModule.TypicalField);
             gen.GenerationModules.Add(new MutagenModule());
             gen.Add(new BinaryTranslationModule(gen));
-            gen.AddTypeAssociation<FormIDType>("FormID");
+            gen.AddTypeAssociation<FormIDLinkType>("FormID");
+            gen.AddTypeAssociation<RawFormIDType>("RawFormID");
             gen.AddTypeAssociation<BufferType>("Buffer");
             gen.AddTypeAssociation<DataType>("Data");
             gen.AddTypeAssociation<SpecialParseType>("SpecialParse");

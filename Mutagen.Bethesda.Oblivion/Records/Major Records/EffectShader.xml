@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="EffectShader" objType="Record" recordType="EFSH" baseClass="Bethesda.MajorRecord" GUID="2fe14395-5518-4c4a-85ff-7aba6d405e2b" ID="57">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

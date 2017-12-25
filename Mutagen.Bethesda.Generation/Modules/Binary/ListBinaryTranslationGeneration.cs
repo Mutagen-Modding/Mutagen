@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda.Generation
             FileGeneration fg,
             ObjectGeneration objGen,
             TypeGeneration typeGen,
-            string nodeAccessor,
+            string nodeAccessor, 
             Accessor retAccessor,
             string doMaskAccessor,
             string maskAccessor)
@@ -187,8 +187,8 @@ namespace Mutagen.Bethesda.Generation
                     gen.AppendLine($"transl: (MutagenFrame r, bool listDoMasks, out {typeGen.ProtoGen.Gen.MaskModule.GetMaskModule(list.SubTypeGeneration.GetType()).GetErrorMaskTypeStr(list.SubTypeGeneration)} listSubMask) =>");
                     using (new BraceWrapper(gen))
                     {
-                        var xmlGen = this.Module.GetTypeGeneration(list.SubTypeGeneration.GetType());
-                        xmlGen.GenerateCopyInRet(gen, objGen, list.SubTypeGeneration, "r", new Accessor("return "), "listDoMasks", "listSubMask");
+                        var subGen = this.Module.GetTypeGeneration(list.SubTypeGeneration.GetType());
+                        subGen.GenerateCopyInRet(gen, objGen, list.SubTypeGeneration, "r", new Accessor("return "), "listDoMasks", "listSubMask");
                     }
                 });
             }

@@ -369,7 +369,8 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration field,
             MutagenFieldData data)
         {
-            if (field is LoquiType loqui)
+            if (field is LoquiType loqui
+                && !(field is FormIDLinkType))
             {
                 IEnumerable<RecordType> trigRecTypes = await TaskExt.AwaitOrDefaultValue(loqui.TargetObjectGeneration?.TryGetTriggeringRecordTypes());
                 if (loqui.TargetObjectGeneration != null

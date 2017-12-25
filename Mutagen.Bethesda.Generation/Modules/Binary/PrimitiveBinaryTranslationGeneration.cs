@@ -20,6 +20,11 @@ namespace Mutagen.Bethesda.Generation
             this.typeName = typeName ?? typeof(T).GetName().Replace("?", string.Empty);
         }
 
+        protected virtual string ItemWriteAccess(Accessor itemAccessor)
+        {
+            return itemAccessor.PropertyOrDirectAccess;
+        }
+
         public override void GenerateWrite(
             FileGeneration fg,
             ObjectGeneration objGen,
@@ -34,7 +39,7 @@ namespace Mutagen.Bethesda.Generation
                 $"{this.Namespace}{this.typeName}BinaryTranslation.Instance.Write"))
             {
                 args.Add($"writer: {writerAccessor}");
-                args.Add($"item: {itemAccessor.PropertyOrDirectAccess}");
+                args.Add($"item: {ItemWriteAccess(itemAccessor)}");
                 if (typeGen.HasIndex)
                 {
                     args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");

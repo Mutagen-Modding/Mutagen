@@ -50,14 +50,14 @@ namespace Mutagen.Bethesda
         INotifyingSetItemGetter<Byte[]> IMajorRecordGetter.MajorRecordFlags_Property => this.MajorRecordFlags_Property;
         #endregion
         #region FormID
-        protected readonly INotifyingSetItem<FormID> _FormID = NotifyingSetItem.Factory<FormID>(markAsSet: false);
-        public INotifyingSetItemGetter<FormID> FormID_Property => _FormID;
-        public FormID FormID
+        protected readonly INotifyingSetItem<RawFormID> _FormID = NotifyingSetItem.Factory<RawFormID>(markAsSet: false);
+        public INotifyingSetItemGetter<RawFormID> FormID_Property => _FormID;
+        public RawFormID FormID
         {
             get => this._FormID.Item;
             protected set => this._FormID.Set(value);
         }
-        INotifyingSetItemGetter<FormID> IMajorRecordGetter.FormID_Property => this.FormID_Property;
+        INotifyingSetItemGetter<RawFormID> IMajorRecordGetter.FormID_Property => this.FormID_Property;
         #endregion
         #region Version
         protected readonly INotifyingSetItem<Byte[]> _Version = NotifyingSetItem.Factory<Byte[]>(
@@ -367,7 +367,7 @@ namespace Mutagen.Bethesda
                         errorMask: errorMask));
                     break;
                 case "FormID":
-                    item._FormID.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item._FormID.SetIfSucceeded(RawFormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)MajorRecord_FieldIndex.FormID,
                         errorMask: errorMask));
@@ -547,7 +547,7 @@ namespace Mutagen.Bethesda
                 errorMask: errorMask);
             item._MajorRecordFlags.SetIfSucceeded(MajorRecordFlagstryGet);
             if (frame.Complete) return;
-            item._FormID.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+            item._FormID.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)MajorRecord_FieldIndex.FormID,
                 errorMask: errorMask));
@@ -601,7 +601,7 @@ namespace Mutagen.Bethesda
                     break;
                 case MajorRecord_FieldIndex.FormID:
                     this._FormID.Set(
-                        (FormID)obj,
+                        (RawFormID)obj,
                         cmds);
                     break;
                 case MajorRecord_FieldIndex.Version:
@@ -648,7 +648,7 @@ namespace Mutagen.Bethesda
                     break;
                 case MajorRecord_FieldIndex.FormID:
                     obj._FormID.Set(
-                        (FormID)pair.Value,
+                        (RawFormID)pair.Value,
                         null);
                     break;
                 case MajorRecord_FieldIndex.Version:
@@ -695,8 +695,8 @@ namespace Mutagen.Bethesda
 
         #endregion
         #region FormID
-        FormID FormID { get; }
-        INotifyingSetItemGetter<FormID> FormID_Property { get; }
+        RawFormID FormID { get; }
+        INotifyingSetItemGetter<RawFormID> FormID_Property { get; }
 
         #endregion
         #region Version
@@ -901,7 +901,7 @@ namespace Mutagen.Bethesda.Internals
                 case MajorRecord_FieldIndex.MajorRecordFlags:
                     return typeof(Byte[]);
                 case MajorRecord_FieldIndex.FormID:
-                    return typeof(FormID);
+                    return typeof(RawFormID);
                 case MajorRecord_FieldIndex.Version:
                     return typeof(Byte[]);
                 case MajorRecord_FieldIndex.EditorID:
@@ -1316,7 +1316,7 @@ namespace Mutagen.Bethesda.Internals
                     }
                     if (item.FormID_Property.HasBeenSet)
                     {
-                        FormIDXmlTranslation.Instance.Write(
+                        RawFormIDXmlTranslation.Instance.Write(
                             writer: writer,
                             name: nameof(item.FormID),
                             item: item.FormID_Property,
@@ -1403,7 +1403,7 @@ namespace Mutagen.Bethesda.Internals
                 item: item.MajorRecordFlags_Property,
                 fieldIndex: (int)MajorRecord_FieldIndex.MajorRecordFlags,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FormID_Property,
                 fieldIndex: (int)MajorRecord_FieldIndex.FormID,

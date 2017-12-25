@@ -37,15 +37,9 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region MagicEffect
-        protected readonly INotifyingSetItem<FormID> _MagicEffect = NotifyingSetItem.Factory<FormID>(markAsSet: false);
-        public INotifyingSetItem<FormID> MagicEffect_Property => _MagicEffect;
-        public FormID MagicEffect
-        {
-            get => this._MagicEffect.Item;
-            set => this._MagicEffect.Set(value);
-        }
-        INotifyingSetItem<FormID> IEnchantmentEffect.MagicEffect_Property => this.MagicEffect_Property;
-        INotifyingSetItemGetter<FormID> IEnchantmentEffectGetter.MagicEffect_Property => this.MagicEffect_Property;
+        public FormIDLink<MagicEffect> MagicEffect_Property { get; } = new FormIDLink<MagicEffect>();
+        public MagicEffect MagicEffect { get => MagicEffect_Property.Item; set => MagicEffect_Property.Item = value; }
+        FormIDLink<MagicEffect> IEnchantmentEffectGetter.MagicEffect_Property => this.MagicEffect_Property;
         #endregion
         #region Magnitude
         protected readonly INotifyingSetItem<UInt32> _Magnitude = NotifyingSetItem.Factory<UInt32>(markAsSet: false);
@@ -511,7 +505,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "MagicEffect":
-                    item._MagicEffect.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
+                    item.MagicEffect_Property.SetIfSucceeded(RawFormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)EnchantmentEffect_FieldIndex.MagicEffect,
                         errorMask: errorMask));
@@ -886,7 +880,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "EFIT":
                     if (lastParsed.HasValue && lastParsed.Value >= EnchantmentEffect_FieldIndex.ActorValue) return TryGet<EnchantmentEffect_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._MagicEffect.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
+                    item.MagicEffect_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
                         frame: frame,
                         fieldIndex: (int)EnchantmentEffect_FieldIndex.MagicEffect,
                         errorMask: errorMask));
@@ -996,8 +990,8 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case EnchantmentEffect_FieldIndex.MagicEffect:
-                    this._MagicEffect.Set(
-                        (FormID)obj,
+                    this.MagicEffect_Property.Set(
+                        (FormIDLink<MagicEffect>)obj,
                         cmds);
                     break;
                 case EnchantmentEffect_FieldIndex.Magnitude:
@@ -1063,8 +1057,8 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case EnchantmentEffect_FieldIndex.MagicEffect:
-                    obj._MagicEffect.Set(
-                        (FormID)pair.Value,
+                    obj.MagicEffect_Property.Set(
+                        (FormIDLink<MagicEffect>)pair.Value,
                         null);
                     break;
                 case EnchantmentEffect_FieldIndex.Magnitude:
@@ -1107,9 +1101,6 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public interface IEnchantmentEffect : IEnchantmentEffectGetter, ILoquiClass<IEnchantmentEffect, IEnchantmentEffectGetter>, ILoquiClass<EnchantmentEffect, IEnchantmentEffectGetter>
     {
-        new FormID MagicEffect { get; set; }
-        new INotifyingSetItem<FormID> MagicEffect_Property { get; }
-
         new UInt32 Magnitude { get; set; }
         new INotifyingSetItem<UInt32> Magnitude_Property { get; }
 
@@ -1130,8 +1121,8 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IEnchantmentEffectGetter : ILoquiObject
     {
         #region MagicEffect
-        FormID MagicEffect { get; }
-        INotifyingSetItemGetter<FormID> MagicEffect_Property { get; }
+        MagicEffect MagicEffect { get; }
+        FormIDLink<MagicEffect> MagicEffect_Property { get; }
 
         #endregion
         #region Magnitude
@@ -1352,7 +1343,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case EnchantmentEffect_FieldIndex.MagicEffect:
-                    return typeof(FormID);
+                    return typeof(FormIDLink<MagicEffect>);
                 case EnchantmentEffect_FieldIndex.Magnitude:
                     return typeof(UInt32);
                 case EnchantmentEffect_FieldIndex.Area:
@@ -1833,10 +1824,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.MagicEffect_Property.HasBeenSet)
                     {
-                        FormIDXmlTranslation.Instance.Write(
+                        RawFormIDXmlTranslation.Instance.Write(
                             writer: writer,
                             name: nameof(item.MagicEffect),
-                            item: item.MagicEffect_Property,
+                            item: item.MagicEffect?.FormID,
                             fieldIndex: (int)EnchantmentEffect_FieldIndex.MagicEffect,
                             errorMask: errorMask);
                     }
@@ -1944,9 +1935,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask);
             using (HeaderExport.ExportSubRecordHeader(writer, EnchantmentEffect_Registration.EFIT_HEADER))
             {
-                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.MagicEffect_Property,
+                    item: item.MagicEffect?.FormID,
                     fieldIndex: (int)EnchantmentEffect_FieldIndex.MagicEffect,
                     errorMask: errorMask);
                 Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(

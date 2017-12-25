@@ -166,7 +166,7 @@ namespace Mutagen.Bethesda.Binary
                     errorMask = null;
                     return;
                 }
-                throw new ArgumentException("Non optional string was null.");
+                throw new ArgumentException("Non optional item was null.");
             }
             try
             {

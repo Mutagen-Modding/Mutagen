@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="Windows-1252"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -242,6 +242,9 @@
       <DependentUpon>Spell.xml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Records\OblivionMod.cs">
+      <DependentUpon>OblivionMod.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\OblivionMod_LoquiGenerated.cs">
       <DependentUpon>OblivionMod.xml</DependentUpon>
     </Compile>
@@ -268,6 +271,15 @@
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
     <Compile Include="ProtocolDefinition_Oblivion.cs" />
+    <Compile Include="Records\Major Records\EffectShader_LoquiGenerated.cs">
+      <DependentUpon>EffectShader.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Grass_LoquiGenerated.cs">
+      <DependentUpon>Grass.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Light_LoquiGenerated.cs">
+      <DependentUpon>Light.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Records\Common Subrecords\Model.xml">
@@ -288,6 +300,9 @@
     <Content Include="Records\Major Records\Class.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Records\Major Records\EffectShader.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Records\Major Records\Enchantment.xml">
       <SubType>Designer</SubType>
     </Content>
@@ -303,10 +318,16 @@
     <Content Include="Records\Major Records\Global.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Records\Major Records\Grass.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Records\Major Records\Hair.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\LandTexture.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\Light.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\MagicEffect.xml">
