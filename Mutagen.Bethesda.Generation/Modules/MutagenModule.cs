@@ -365,6 +365,16 @@ namespace Mutagen.Bethesda.Generation
             TypeGeneration field,
             MutagenFieldData data)
         {
+            if (field is ContainerType contType
+                && contType.SubTypeGeneration is LoquiType contLoqui)
+            {
+                var subData = contLoqui.CustomData.TryCreateValue(Constants.DATA_KEY, () => new MutagenFieldData(contLoqui)) as MutagenFieldData;
+                await SetRecordTrigger(
+                    obj,
+                    contLoqui,
+                    subData);
+            }
+
             if (field is LoquiType loqui
                 && !(field is FormIDLinkType))
             {
@@ -428,16 +438,6 @@ namespace Mutagen.Bethesda.Generation
             }
 
             SetTriggeringRecordAccessors(obj, field, data);
-
-            if (field is ContainerType contType
-                && contType.SubTypeGeneration is LoquiType contLoqui)
-            {
-                var subData = contLoqui.CustomData.TryCreateValue(Constants.DATA_KEY, () => new MutagenFieldData(contLoqui)) as MutagenFieldData;
-                await SetRecordTrigger(
-                    obj,
-                    contLoqui,
-                    subData);
-            }
 
             if (data.HasTrigger)
             {
