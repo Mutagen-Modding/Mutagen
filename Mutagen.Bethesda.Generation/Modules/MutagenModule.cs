@@ -348,18 +348,30 @@ namespace Mutagen.Bethesda.Generation
         {
             foreach (var field in obj.IterateFields())
             {
-                if (!(field is LoquiType loqui)) continue;
-                if (loqui.TargetObjectGeneration == null) continue;
-                var inheritingObjs = await loqui.TargetObjectGeneration.InheritingObjects();
-                var data = loqui.GetFieldData();
-                foreach (var subObj in inheritingObjs)
+                if (field is LoquiType loqui)
                 {
-                    var subRecs = await subObj.TryGetTriggeringRecordTypes();
-                    if (subRecs.Failed) continue;
-                    foreach (var subRec in subRecs.Value)
-                    {
-                        data.SubLoquiTypes.Add(subRec, subObj);
-                    }
+                    await AddLoquiSubTypes(loqui);
+                }
+                else if (field is ListType list
+                    && list.SubTypeGeneration is LoquiType listLoqui)
+                {
+                    await AddLoquiSubTypes(listLoqui);
+                }
+            }
+        }
+
+        private async Task AddLoquiSubTypes(LoquiType loqui)
+        {
+            if (loqui.TargetObjectGeneration == null || loqui.GenericDef != null) return;
+            var inheritingObjs = await loqui.TargetObjectGeneration.InheritingObjects();
+            var data = loqui.GetFieldData();
+            foreach (var subObj in inheritingObjs)
+            {
+                var subRecs = await subObj.TryGetTriggeringRecordTypes();
+                if (subRecs.Failed) continue;
+                foreach (var subRec in subRecs.Value)
+                {
+                    data.SubLoquiTypes.Add(subRec, subObj);
                 }
             }
         }
