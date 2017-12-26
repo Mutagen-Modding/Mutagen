@@ -414,14 +414,17 @@ namespace Mutagen.Bethesda.Generation
             {
                 if (listType.SubTypeGeneration is LoquiType subListLoqui)
                 {
-                    IEnumerable<RecordType> trigRecTypes = await TaskExt.AwaitOrDefaultValue(subListLoqui.TargetObjectGeneration?.TryGetTriggeringRecordTypes());
-                    if (trigRecTypes != null)
-                    {
-                        data.TriggeringRecordTypes.Add(trigRecTypes);
-                    }
-                    else if (subListLoqui.GenericDef != null)
+                    if (subListLoqui.GenericDef != null)
                     {
                         data.TriggeringRecordAccessors.Add($"{subListLoqui.GenericDef.Name}_RecordType");
+                    }
+                    else
+                    {
+                        var subData = subListLoqui.GetFieldData();
+                        foreach (var gen in subData.GenerationTypes)
+                        {
+                            data.TriggeringRecordTypes.Add(gen.Key);
+                        }
                     }
                 }
                 else
