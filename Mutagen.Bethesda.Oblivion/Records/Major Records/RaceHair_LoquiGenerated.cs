@@ -37,14 +37,14 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Male
-        public FormIDLink<Hair> Male_Property { get; } = new FormIDLink<Hair>();
+        public FormIDSetLink<Hair> Male_Property { get; } = new FormIDSetLink<Hair>();
         public Hair Male { get => Male_Property.Item; set => Male_Property.Item = value; }
-        FormIDLink<Hair> IRaceHairGetter.Male_Property => this.Male_Property;
+        FormIDSetLink<Hair> IRaceHairGetter.Male_Property => this.Male_Property;
         #endregion
         #region Female
-        public FormIDLink<Hair> Female_Property { get; } = new FormIDLink<Hair>();
+        public FormIDSetLink<Hair> Female_Property { get; } = new FormIDSetLink<Hair>();
         public Hair Female { get => Female_Property.Item; set => Female_Property.Item = value; }
-        FormIDLink<Hair> IRaceHairGetter.Female_Property => this.Female_Property;
+        FormIDSetLink<Hair> IRaceHairGetter.Female_Property => this.Female_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -808,12 +808,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RaceHair_FieldIndex.Male:
                     this.Male_Property.Set(
-                        (FormIDLink<Hair>)obj,
+                        (FormIDSetLink<Hair>)obj,
                         cmds);
                     break;
                 case RaceHair_FieldIndex.Female:
                     this.Female_Property.Set(
-                        (FormIDLink<Hair>)obj,
+                        (FormIDSetLink<Hair>)obj,
                         cmds);
                     break;
                 default:
@@ -855,12 +855,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RaceHair_FieldIndex.Male:
                     obj.Male_Property.Set(
-                        (FormIDLink<Hair>)pair.Value,
+                        (FormIDSetLink<Hair>)pair.Value,
                         null);
                     break;
                 case RaceHair_FieldIndex.Female:
                     obj.Female_Property.Set(
-                        (FormIDLink<Hair>)pair.Value,
+                        (FormIDSetLink<Hair>)pair.Value,
                         null);
                     break;
                 default:
@@ -884,12 +884,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Male
         Hair Male { get; }
-        FormIDLink<Hair> Male_Property { get; }
+        FormIDSetLink<Hair> Male_Property { get; }
 
         #endregion
         #region Female
         Hair Female { get; }
-        FormIDLink<Hair> Female_Property { get; }
+        FormIDSetLink<Hair> Female_Property { get; }
 
         #endregion
 
@@ -1045,9 +1045,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RaceHair_FieldIndex.Male:
-                    return typeof(FormIDLink<Hair>);
+                    return typeof(FormIDSetLink<Hair>);
                 case RaceHair_FieldIndex.Female:
-                    return typeof(FormIDLink<Hair>);
+                    return typeof(FormIDSetLink<Hair>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1462,12 +1462,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Male?.FormID,
+                item: item.Male_Property,
                 fieldIndex: (int)RaceHair_FieldIndex.Male,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Female?.FormID,
+                item: item.Female_Property,
                 fieldIndex: (int)RaceHair_FieldIndex.Female,
                 errorMask: errorMask);
         }

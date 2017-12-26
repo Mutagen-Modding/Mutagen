@@ -51,11 +51,11 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<String> IRaceGetter.Description_Property => this.Description_Property;
         #endregion
         #region Spells
-        private readonly INotifyingList<FormIDLink<Spell>> _Spells = new NotifyingList<FormIDLink<Spell>>();
-        public INotifyingList<FormIDLink<Spell>> Spells => _Spells;
+        private readonly INotifyingList<FormIDSetLink<Spell>> _Spells = new NotifyingList<FormIDSetLink<Spell>>();
+        public INotifyingList<FormIDSetLink<Spell>> Spells => _Spells;
         #region Interface Members
-        INotifyingList<FormIDLink<Spell>> IRace.Spells => _Spells;
-        INotifyingListGetter<FormIDLink<Spell>> IRaceGetter.Spells => _Spells;
+        INotifyingList<FormIDSetLink<Spell>> IRace.Spells => _Spells;
+        INotifyingListGetter<FormIDSetLink<Spell>> IRaceGetter.Spells => _Spells;
         #endregion
 
         #endregion
@@ -839,7 +839,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 case "Spells":
-                    item._Spells.SetIfSucceeded(ListXmlTranslation<FormIDLink<Spell>, Exception>.Instance.Parse(
+                    item._Spells.SetIfSucceeded(ListXmlTranslation<FormIDSetLink<Spell>, Exception>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Race_FieldIndex.Spells,
                         errorMask: errorMask,
@@ -849,7 +849,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 r,
                                 nullable: false,
                                 doMasks: listDoMasks,
-                                errorMask: out listSubMask).Bubble((o) => new FormIDLink<Spell>(o.Value));
+                                errorMask: out listSubMask).Bubble((o) => new FormIDSetLink<Spell>(o.Value));
                         }
                         ));
                     break;
@@ -1365,7 +1365,7 @@ namespace Mutagen.Bethesda.Oblivion
                     item._Description.SetIfSucceeded(DescriptiontryGet);
                     return TryGet<Race_FieldIndex?>.Succeed(Race_FieldIndex.Description);
                 case "SPLO":
-                    var SpellstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Spell>, Exception>.Instance.ParseRepeatedItem(
+                    var SpellstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Spell>, Exception>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: Race_Registration.SPLO_HEADER,
                         fieldIndex: (int)Race_FieldIndex.Spells,
@@ -1377,7 +1377,7 @@ namespace Mutagen.Bethesda.Oblivion
                             return Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
                                 r,
                                 doMasks: listDoMasks,
-                                errorMask: out listSubMask).Bubble((o) => new FormIDLink<Spell>(o));
+                                errorMask: out listSubMask).Bubble((o) => new FormIDSetLink<Spell>(o));
                         }
                         );
                     item._Spells.SetIfSucceeded(SpellstryGet);
@@ -1646,7 +1646,7 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case Race_FieldIndex.Spells:
-                    this._Spells.SetTo((IEnumerable<FormIDLink<Spell>>)obj, cmds);
+                    this._Spells.SetTo((IEnumerable<FormIDSetLink<Spell>>)obj, cmds);
                     break;
                 case Race_FieldIndex.Relations:
                     this._Relations.SetTo((IEnumerable<Relation>)obj, cmds);
@@ -1775,7 +1775,7 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case Race_FieldIndex.Spells:
-                    obj._Spells.SetTo((IEnumerable<FormIDLink<Spell>>)pair.Value, null);
+                    obj._Spells.SetTo((IEnumerable<FormIDSetLink<Spell>>)pair.Value, null);
                     break;
                 case Race_FieldIndex.Relations:
                     obj._Relations.SetTo((IEnumerable<Relation>)pair.Value, null);
@@ -1885,7 +1885,7 @@ namespace Mutagen.Bethesda.Oblivion
         new String Description { get; set; }
         new INotifyingSetItem<String> Description_Property { get; }
 
-        new INotifyingList<FormIDLink<Spell>> Spells { get; }
+        new INotifyingList<FormIDSetLink<Spell>> Spells { get; }
         new INotifyingList<Relation> Relations { get; }
         new INotifyingList<SkillBoost> SkillBoosts { get; }
         new Byte[] Fluff { get; set; }
@@ -1946,7 +1946,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Spells
-        INotifyingListGetter<FormIDLink<Spell>> Spells { get; }
+        INotifyingListGetter<FormIDSetLink<Spell>> Spells { get; }
         #endregion
         #region Relations
         INotifyingListGetter<Relation> Relations { get; }
@@ -2401,7 +2401,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Race_FieldIndex.Description:
                     return typeof(String);
                 case Race_FieldIndex.Spells:
-                    return typeof(NotifyingList<FormIDLink<Spell>>);
+                    return typeof(NotifyingList<FormIDSetLink<Spell>>);
                 case Race_FieldIndex.Relations:
                     return typeof(NotifyingList<Relation>);
                 case Race_FieldIndex.SkillBoosts:
@@ -3473,7 +3473,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 if (item.Spells.HasBeenSet)
                 {
                     ret.Spells = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.Spells.Specific = item.Spells.SelectAgainst<FormIDLink<Spell>, bool>(rhs.Spells, ((l, r) => object.Equals(l, r)), out ret.Spells.Overall);
+                    ret.Spells.Specific = item.Spells.SelectAgainst<FormIDSetLink<Spell>, bool>(rhs.Spells, ((l, r) => object.Equals(l, r)), out ret.Spells.Overall);
                     ret.Spells.Overall = ret.Spells.Overall && ret.Spells.Specific.All((b) => b);
                 }
                 else
@@ -3980,13 +3980,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.Spells.HasBeenSet)
                     {
-                        ListXmlTranslation<FormIDLink<Spell>, Exception>.Instance.Write(
+                        ListXmlTranslation<FormIDSetLink<Spell>, Exception>.Instance.Write(
                             writer: writer,
                             name: nameof(item.Spells),
                             item: item.Spells,
                             fieldIndex: (int)Race_FieldIndex.Spells,
                             errorMask: errorMask,
-                            transl: (FormIDLink<Spell> subItem, bool listDoMasks, out Exception listSubMask) =>
+                            transl: (FormIDSetLink<Spell> subItem, bool listDoMasks, out Exception listSubMask) =>
                             {
                                 RawFormIDXmlTranslation.Instance.Write(
                                     writer: writer,
@@ -4301,16 +4301,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: Race_Registration.DESC_HEADER,
                 nullable: false);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Spell>, Exception>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Spell>, Exception>.Instance.Write(
                 writer: writer,
                 item: item.Spells,
                 fieldIndex: (int)Race_FieldIndex.Spells,
                 errorMask: errorMask,
-                transl: (FormIDLink<Spell> subItem, bool listDoMasks, out Exception listSubMask) =>
+                transl: (FormIDSetLink<Spell> subItem, bool listDoMasks, out Exception listSubMask) =>
                 {
                     Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: subItem?.FormID,
+                        item: subItem,
                         doMasks: listDoMasks,
                         errorMask: out listSubMask,
                         header: Race_Registration.SPLO_HEADER,
@@ -4446,7 +4446,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: subItem?.FormID,
+                        item: subItem,
                         doMasks: listDoMasks,
                         errorMask: out listSubMask);
                 }
@@ -4461,7 +4461,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: subItem?.FormID,
+                        item: subItem,
                         doMasks: listDoMasks,
                         errorMask: out listSubMask);
                 }

@@ -48,9 +48,9 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Int32> IScriptReferenceGetter.VariableIndex_Property => this.VariableIndex_Property;
         #endregion
         #region Reference
-        public FormIDLink<MajorRecord> Reference_Property { get; } = new FormIDLink<MajorRecord>();
+        public FormIDSetLink<MajorRecord> Reference_Property { get; } = new FormIDSetLink<MajorRecord>();
         public MajorRecord Reference { get => Reference_Property.Item; set => Reference_Property.Item = value; }
-        FormIDLink<MajorRecord> IScriptReferenceGetter.Reference_Property => this.Reference_Property;
+        FormIDSetLink<MajorRecord> IScriptReferenceGetter.Reference_Property => this.Reference_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -849,7 +849,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case ScriptReference_FieldIndex.Reference:
                     this.Reference_Property.Set(
-                        (FormIDLink<MajorRecord>)obj,
+                        (FormIDSetLink<MajorRecord>)obj,
                         cmds);
                     break;
                 default:
@@ -896,7 +896,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case ScriptReference_FieldIndex.Reference:
                     obj.Reference_Property.Set(
-                        (FormIDLink<MajorRecord>)pair.Value,
+                        (FormIDSetLink<MajorRecord>)pair.Value,
                         null);
                     break;
                 default:
@@ -928,7 +928,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Reference
         MajorRecord Reference { get; }
-        FormIDLink<MajorRecord> Reference_Property { get; }
+        FormIDSetLink<MajorRecord> Reference_Property { get; }
 
         #endregion
 
@@ -1086,7 +1086,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ScriptReference_FieldIndex.VariableIndex:
                     return typeof(Int32);
                 case ScriptReference_FieldIndex.Reference:
-                    return typeof(FormIDLink<MajorRecord>);
+                    return typeof(FormIDSetLink<MajorRecord>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1514,7 +1514,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 nullable: false);
             Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Reference?.FormID,
+                item: item.Reference_Property,
                 fieldIndex: (int)ScriptReference_FieldIndex.Reference,
                 errorMask: errorMask,
                 header: ScriptReference_Registration.SCRO_HEADER,

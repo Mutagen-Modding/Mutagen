@@ -9,19 +9,20 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
 {
-    public class FormIDLink<T> : NotifyingItem<T>, IFormIDLink<T>, IEquatable<FormIDLink<T>>
+    public class FormIDSetLink<T> : NotifyingSetItem<T>, IFormIDLink<T>, IEquatable<FormIDLink<T>>
        where T : MajorRecord
     {
-        public bool Linked => this.Item != null;
+        public bool Linked => this.HasBeenSet && this.Item != null;
         public RawFormID? UnlinkedForm { get; private set; }
         public RawFormID FormID => LinkExt.GetFormID(this);
 
-        public FormIDLink()
+        public FormIDSetLink()
         {
             this.Subscribe(UpdateUnlinkedForm);
         }
 
-        public FormIDLink(RawFormID unlinkedForm)
+        public FormIDSetLink(RawFormID unlinkedForm)
+            : base(markAsSet: true)
         {
             this.UnlinkedForm = unlinkedForm;
             this.Subscribe(UpdateUnlinkedForm);
@@ -38,12 +39,12 @@ namespace Mutagen.Bethesda
             this.UnlinkedForm = formID.Value;
         }
 
-        public static bool operator ==(FormIDLink<T> lhs, FormIDLink<T> rhs)
+        public static bool operator ==(FormIDSetLink<T> lhs, FormIDSetLink<T> rhs)
         {
             return lhs.FormID.Equals(rhs.FormID);
         }
 
-        public static bool operator !=(FormIDLink<T> lhs, FormIDLink<T> rhs)
+        public static bool operator !=(FormIDSetLink<T> lhs, FormIDSetLink<T> rhs)
         {
             return !lhs.FormID.Equals(rhs.FormID);
         }

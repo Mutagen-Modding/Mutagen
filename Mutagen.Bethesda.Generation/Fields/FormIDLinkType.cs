@@ -16,7 +16,7 @@ namespace Mutagen.Bethesda.Generation
         private RawFormIDType RawFormID = new RawFormIDType();
         private LoquiType loquiType = new LoquiType();
 
-        public override string TypeName => $"FormIDLink<{loquiType.TypeName}>";
+        public override string TypeName => $"FormID{(this.HasBeenSet ? "Set" : string.Empty)}Link<{loquiType.TypeName}>";
 
         public override Type Type => typeof(RawFormID);
 
@@ -35,7 +35,7 @@ namespace Mutagen.Bethesda.Generation
 
         public override void GenerateForClass(FileGeneration fg)
         {
-            fg.AppendLine($"public FormIDLink<{loquiType.TypeName}> {this.Property} {{ get; }} = new FormIDLink<{loquiType.TargetObjectGeneration.Name}>();");
+            fg.AppendLine($"public FormID{(this.HasBeenSet ? "Set" : string.Empty)}Link<{loquiType.TypeName}> {this.Property} {{ get; }} = new FormID{(this.HasBeenSet ? "Set" : string.Empty)}Link<{loquiType.TargetObjectGeneration.Name}>();");
             fg.AppendLine($"public {loquiType.TypeName} {this.Name} {{ get => {this.Property}.Item; {(this.Protected ? string.Empty : $"set => {this.Property}.Item = value; ")}}}");
             fg.AppendLine($"{this.TypeName} {this.ObjectGen.Getter_InterfaceStr}.{this.Property} => this.{this.Property};");
         }

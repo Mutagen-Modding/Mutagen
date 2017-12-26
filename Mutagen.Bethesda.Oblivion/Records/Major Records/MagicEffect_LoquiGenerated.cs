@@ -138,9 +138,9 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<UInt32> IMagicEffectGetter.CounterEffectCount_Property => this.CounterEffectCount_Property;
         #endregion
         #region Light
-        public FormIDLink<Light> Light_Property { get; } = new FormIDLink<Light>();
+        public FormIDSetLink<Light> Light_Property { get; } = new FormIDSetLink<Light>();
         public Light Light { get => Light_Property.Item; set => Light_Property.Item = value; }
-        FormIDLink<Light> IMagicEffectGetter.Light_Property => this.Light_Property;
+        FormIDSetLink<Light> IMagicEffectGetter.Light_Property => this.Light_Property;
         #endregion
         #region ProjectileSpeed
         protected readonly INotifyingSetItem<Single> _ProjectileSpeed = NotifyingSetItem.Factory<Single>(markAsSet: false);
@@ -154,9 +154,9 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Single> IMagicEffectGetter.ProjectileSpeed_Property => this.ProjectileSpeed_Property;
         #endregion
         #region EffectShader
-        public FormIDLink<EffectShader> EffectShader_Property { get; } = new FormIDLink<EffectShader>();
+        public FormIDSetLink<EffectShader> EffectShader_Property { get; } = new FormIDSetLink<EffectShader>();
         public EffectShader EffectShader { get => EffectShader_Property.Item; set => EffectShader_Property.Item = value; }
-        FormIDLink<EffectShader> IMagicEffectGetter.EffectShader_Property => this.EffectShader_Property;
+        FormIDSetLink<EffectShader> IMagicEffectGetter.EffectShader_Property => this.EffectShader_Property;
         #endregion
         #region SubData
         private readonly INotifyingSetItem<MagicEffectSubData> _SubData = new NotifyingSetItem<MagicEffectSubData>();
@@ -1331,7 +1331,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case MagicEffect_FieldIndex.Light:
                     this.Light_Property.Set(
-                        (FormIDLink<Light>)obj,
+                        (FormIDSetLink<Light>)obj,
                         cmds);
                     break;
                 case MagicEffect_FieldIndex.ProjectileSpeed:
@@ -1341,7 +1341,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case MagicEffect_FieldIndex.EffectShader:
                     this.EffectShader_Property.Set(
-                        (FormIDLink<EffectShader>)obj,
+                        (FormIDSetLink<EffectShader>)obj,
                         cmds);
                     break;
                 case MagicEffect_FieldIndex.SubData:
@@ -1430,7 +1430,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case MagicEffect_FieldIndex.Light:
                     obj.Light_Property.Set(
-                        (FormIDLink<Light>)pair.Value,
+                        (FormIDSetLink<Light>)pair.Value,
                         null);
                     break;
                 case MagicEffect_FieldIndex.ProjectileSpeed:
@@ -1440,7 +1440,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case MagicEffect_FieldIndex.EffectShader:
                     obj.EffectShader_Property.Set(
-                        (FormIDLink<EffectShader>)pair.Value,
+                        (FormIDSetLink<EffectShader>)pair.Value,
                         null);
                     break;
                 case MagicEffect_FieldIndex.SubData:
@@ -1551,7 +1551,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Light
         Light Light { get; }
-        FormIDLink<Light> Light_Property { get; }
+        FormIDSetLink<Light> Light_Property { get; }
 
         #endregion
         #region ProjectileSpeed
@@ -1561,7 +1561,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region EffectShader
         EffectShader EffectShader { get; }
-        FormIDLink<EffectShader> EffectShader_Property { get; }
+        FormIDSetLink<EffectShader> EffectShader_Property { get; }
 
         #endregion
         #region SubData
@@ -1871,11 +1871,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MagicEffect_FieldIndex.CounterEffectCount:
                     return typeof(UInt32);
                 case MagicEffect_FieldIndex.Light:
-                    return typeof(FormIDLink<Light>);
+                    return typeof(FormIDSetLink<Light>);
                 case MagicEffect_FieldIndex.ProjectileSpeed:
                     return typeof(Single);
                 case MagicEffect_FieldIndex.EffectShader:
-                    return typeof(FormIDLink<EffectShader>);
+                    return typeof(FormIDSetLink<EffectShader>);
                 case MagicEffect_FieldIndex.SubData:
                     return typeof(MagicEffectSubData);
                 case MagicEffect_FieldIndex.CounterEffects:
@@ -3044,7 +3044,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask);
                 Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.Light?.FormID,
+                    item: item.Light_Property,
                     fieldIndex: (int)MagicEffect_FieldIndex.Light,
                     errorMask: errorMask);
                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
@@ -3054,7 +3054,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask);
                 Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.EffectShader?.FormID,
+                    item: item.EffectShader_Property,
                     fieldIndex: (int)MagicEffect_FieldIndex.EffectShader,
                     errorMask: errorMask);
                 LoquiBinaryTranslation<MagicEffectSubData, MagicEffectSubData_ErrorMask>.Instance.Write(
@@ -3073,7 +3073,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: subItem?.FormID,
+                        item: subItem,
                         doMasks: listDoMasks,
                         errorMask: out listSubMask);
                 }

@@ -37,9 +37,9 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Faction
-        public FormIDLink<Faction> Faction_Property { get; } = new FormIDLink<Faction>();
+        public FormIDSetLink<Faction> Faction_Property { get; } = new FormIDSetLink<Faction>();
         public Faction Faction { get => Faction_Property.Item; set => Faction_Property.Item = value; }
-        FormIDLink<Faction> IRelationGetter.Faction_Property => this.Faction_Property;
+        FormIDSetLink<Faction> IRelationGetter.Faction_Property => this.Faction_Property;
         #endregion
         #region Modifier
         protected readonly INotifyingSetItem<Int32> _Modifier = NotifyingSetItem.Factory<Int32>(markAsSet: false);
@@ -814,7 +814,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case Relation_FieldIndex.Faction:
                     this.Faction_Property.Set(
-                        (FormIDLink<Faction>)obj,
+                        (FormIDSetLink<Faction>)obj,
                         cmds);
                     break;
                 case Relation_FieldIndex.Modifier:
@@ -861,7 +861,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case Relation_FieldIndex.Faction:
                     obj.Faction_Property.Set(
-                        (FormIDLink<Faction>)pair.Value,
+                        (FormIDSetLink<Faction>)pair.Value,
                         null);
                     break;
                 case Relation_FieldIndex.Modifier:
@@ -893,7 +893,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Faction
         Faction Faction { get; }
-        FormIDLink<Faction> Faction_Property { get; }
+        FormIDSetLink<Faction> Faction_Property { get; }
 
         #endregion
         #region Modifier
@@ -1054,7 +1054,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Relation_FieldIndex.Faction:
-                    return typeof(FormIDLink<Faction>);
+                    return typeof(FormIDSetLink<Faction>);
                 case Relation_FieldIndex.Modifier:
                     return typeof(Int32);
                 default:
@@ -1471,7 +1471,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Faction?.FormID,
+                item: item.Faction_Property,
                 fieldIndex: (int)Relation_FieldIndex.Faction,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(

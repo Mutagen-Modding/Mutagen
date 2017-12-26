@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>25bffd2ea5f77f720590ff89d85a267337be39a8</Sha>
+         <Sha>a5c884d229b5c06a0006391045cad8d2fc0be3de</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>12-18-2017 20:09:32</CommitDate>
-         <Description>IHasBeenSetExt GetOrDefault and SetIfNotSet convenience functions</Description>
+         <CommitDate>12-26-2017 01:30:27</CommitDate>
+         <Description>NotifyingSetItem.SetToWithDefault bugfix</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

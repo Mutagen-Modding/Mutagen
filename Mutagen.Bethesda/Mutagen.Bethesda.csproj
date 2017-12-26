@@ -44,7 +44,10 @@
     <Compile Include="ContentLength.cs" />
     <Compile Include="FileLocation.cs" />
     <Compile Include="Links\EDIDLink.cs" />
+    <Compile Include="Links\FormIDSetLink.cs" />
+    <Compile Include="Links\IFormIDLink.cs" />
     <Compile Include="Links\ILink.cs" />
+    <Compile Include="Links\LinkExt.cs" />
     <Compile Include="Links\NamedFormID.cs" />
     <Compile Include="Links\RawFormID.cs" />
     <Compile Include="Links\FormIDLink.cs" />

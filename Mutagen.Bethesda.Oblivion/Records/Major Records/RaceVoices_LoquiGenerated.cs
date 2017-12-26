@@ -37,14 +37,14 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Male
-        public FormIDLink<Race> Male_Property { get; } = new FormIDLink<Race>();
+        public FormIDSetLink<Race> Male_Property { get; } = new FormIDSetLink<Race>();
         public Race Male { get => Male_Property.Item; set => Male_Property.Item = value; }
-        FormIDLink<Race> IRaceVoicesGetter.Male_Property => this.Male_Property;
+        FormIDSetLink<Race> IRaceVoicesGetter.Male_Property => this.Male_Property;
         #endregion
         #region Female
-        public FormIDLink<Race> Female_Property { get; } = new FormIDLink<Race>();
+        public FormIDSetLink<Race> Female_Property { get; } = new FormIDSetLink<Race>();
         public Race Female { get => Female_Property.Item; set => Female_Property.Item = value; }
-        FormIDLink<Race> IRaceVoicesGetter.Female_Property => this.Female_Property;
+        FormIDSetLink<Race> IRaceVoicesGetter.Female_Property => this.Female_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -808,12 +808,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RaceVoices_FieldIndex.Male:
                     this.Male_Property.Set(
-                        (FormIDLink<Race>)obj,
+                        (FormIDSetLink<Race>)obj,
                         cmds);
                     break;
                 case RaceVoices_FieldIndex.Female:
                     this.Female_Property.Set(
-                        (FormIDLink<Race>)obj,
+                        (FormIDSetLink<Race>)obj,
                         cmds);
                     break;
                 default:
@@ -855,12 +855,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RaceVoices_FieldIndex.Male:
                     obj.Male_Property.Set(
-                        (FormIDLink<Race>)pair.Value,
+                        (FormIDSetLink<Race>)pair.Value,
                         null);
                     break;
                 case RaceVoices_FieldIndex.Female:
                     obj.Female_Property.Set(
-                        (FormIDLink<Race>)pair.Value,
+                        (FormIDSetLink<Race>)pair.Value,
                         null);
                     break;
                 default:
@@ -884,12 +884,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Male
         Race Male { get; }
-        FormIDLink<Race> Male_Property { get; }
+        FormIDSetLink<Race> Male_Property { get; }
 
         #endregion
         #region Female
         Race Female { get; }
-        FormIDLink<Race> Female_Property { get; }
+        FormIDSetLink<Race> Female_Property { get; }
 
         #endregion
 
@@ -1045,9 +1045,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RaceVoices_FieldIndex.Male:
-                    return typeof(FormIDLink<Race>);
+                    return typeof(FormIDSetLink<Race>);
                 case RaceVoices_FieldIndex.Female:
-                    return typeof(FormIDLink<Race>);
+                    return typeof(FormIDSetLink<Race>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1462,12 +1462,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Male?.FormID,
+                item: item.Male_Property,
                 fieldIndex: (int)RaceVoices_FieldIndex.Male,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
                 writer: writer,
-                item: item.Female?.FormID,
+                item: item.Female_Property,
                 fieldIndex: (int)RaceVoices_FieldIndex.Female,
                 errorMask: errorMask);
         }

@@ -37,9 +37,9 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Script
-        public FormIDLink<Script> Script_Property { get; } = new FormIDLink<Script>();
+        public FormIDSetLink<Script> Script_Property { get; } = new FormIDSetLink<Script>();
         public Script Script { get => Script_Property.Item; set => Script_Property.Item = value; }
-        FormIDLink<Script> IScriptEffectGetter.Script_Property => this.Script_Property;
+        FormIDSetLink<Script> IScriptEffectGetter.Script_Property => this.Script_Property;
         #endregion
         #region MagicSchool
         protected readonly INotifyingSetItem<MagicSchool> _MagicSchool = NotifyingSetItem.Factory<MagicSchool>(markAsSet: false);
@@ -53,9 +53,9 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<MagicSchool> IScriptEffectGetter.MagicSchool_Property => this.MagicSchool_Property;
         #endregion
         #region VisualEffect
-        public FormIDLink<MagicEffect> VisualEffect_Property { get; } = new FormIDLink<MagicEffect>();
+        public FormIDSetLink<MagicEffect> VisualEffect_Property { get; } = new FormIDSetLink<MagicEffect>();
         public MagicEffect VisualEffect { get => VisualEffect_Property.Item; set => VisualEffect_Property.Item = value; }
-        FormIDLink<MagicEffect> IScriptEffectGetter.VisualEffect_Property => this.VisualEffect_Property;
+        FormIDSetLink<MagicEffect> IScriptEffectGetter.VisualEffect_Property => this.VisualEffect_Property;
         #endregion
         #region Flags
         protected readonly INotifyingSetItem<ScriptEffect.Flag> _Flags = NotifyingSetItem.Factory<ScriptEffect.Flag>(markAsSet: false);
@@ -932,7 +932,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case ScriptEffect_FieldIndex.Script:
                     this.Script_Property.Set(
-                        (FormIDLink<Script>)obj,
+                        (FormIDSetLink<Script>)obj,
                         cmds);
                     break;
                 case ScriptEffect_FieldIndex.MagicSchool:
@@ -942,7 +942,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case ScriptEffect_FieldIndex.VisualEffect:
                     this.VisualEffect_Property.Set(
-                        (FormIDLink<MagicEffect>)obj,
+                        (FormIDSetLink<MagicEffect>)obj,
                         cmds);
                     break;
                 case ScriptEffect_FieldIndex.Flags:
@@ -994,7 +994,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case ScriptEffect_FieldIndex.Script:
                     obj.Script_Property.Set(
-                        (FormIDLink<Script>)pair.Value,
+                        (FormIDSetLink<Script>)pair.Value,
                         null);
                     break;
                 case ScriptEffect_FieldIndex.MagicSchool:
@@ -1004,7 +1004,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case ScriptEffect_FieldIndex.VisualEffect:
                     obj.VisualEffect_Property.Set(
-                        (FormIDLink<MagicEffect>)pair.Value,
+                        (FormIDSetLink<MagicEffect>)pair.Value,
                         null);
                     break;
                 case ScriptEffect_FieldIndex.Flags:
@@ -1047,7 +1047,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Script
         Script Script { get; }
-        FormIDLink<Script> Script_Property { get; }
+        FormIDSetLink<Script> Script_Property { get; }
 
         #endregion
         #region MagicSchool
@@ -1057,7 +1057,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region VisualEffect
         MagicEffect VisualEffect { get; }
-        FormIDLink<MagicEffect> VisualEffect_Property { get; }
+        FormIDSetLink<MagicEffect> VisualEffect_Property { get; }
 
         #endregion
         #region Flags
@@ -1253,11 +1253,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case ScriptEffect_FieldIndex.Script:
-                    return typeof(FormIDLink<Script>);
+                    return typeof(FormIDSetLink<Script>);
                 case ScriptEffect_FieldIndex.MagicSchool:
                     return typeof(MagicSchool);
                 case ScriptEffect_FieldIndex.VisualEffect:
-                    return typeof(FormIDLink<MagicEffect>);
+                    return typeof(FormIDSetLink<MagicEffect>);
                 case ScriptEffect_FieldIndex.Flags:
                     return typeof(ScriptEffect.Flag);
                 case ScriptEffect_FieldIndex.Name:
@@ -1799,7 +1799,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.Script?.FormID,
+                    item: item.Script_Property,
                     fieldIndex: (int)ScriptEffect_FieldIndex.Script,
                     errorMask: errorMask);
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicSchool>.Instance.Write(
@@ -1810,7 +1810,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask: errorMask);
                 Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.VisualEffect?.FormID,
+                    item: item.VisualEffect_Property,
                     fieldIndex: (int)ScriptEffect_FieldIndex.VisualEffect,
                     errorMask: errorMask);
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<ScriptEffect.Flag>.Instance.Write(
