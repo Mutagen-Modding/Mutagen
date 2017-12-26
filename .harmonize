@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>060d1ddf9366b56350b8a3b42ddc1e7389227cc6</Sha>
+         <Sha>2aba3c029ae3cce39839f92ead89fb2dbab3507e</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>12-25-2017 01:50:10</CommitDate>
-         <Description>Exposed LoquiType ref node parsing as a function</Description>
+         <CommitDate>12-26-2017 14:53:44</CommitDate>
+         <Description>WiredBaseClassTask.   Moved directly inheriting object logic to end of Load instead of start of Resolve</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

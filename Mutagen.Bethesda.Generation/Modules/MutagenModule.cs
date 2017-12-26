@@ -344,22 +344,6 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        public override async Task Resolve(ObjectGeneration obj)
-        {
-            foreach (var field in obj.IterateFields())
-            {
-                if (field is LoquiType loqui)
-                {
-                    await AddLoquiSubTypes(loqui);
-                }
-                else if (field is ListType list
-                    && list.SubTypeGeneration is LoquiType listLoqui)
-                {
-                    await AddLoquiSubTypes(listLoqui);
-                }
-            }
-        }
-
         private async Task AddLoquiSubTypes(LoquiType loqui)
         {
             if (loqui.TargetObjectGeneration == null || loqui.GenericDef != null) return;
@@ -413,6 +397,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     data.TriggeringRecordAccessors.Add($"{loqui.GenericDef.Name}_RecordType");
                 }
+                await AddLoquiSubTypes(loqui);
             }
             else if (field is LoquiListType loquiList
                 && !data.RecordType.HasValue)
