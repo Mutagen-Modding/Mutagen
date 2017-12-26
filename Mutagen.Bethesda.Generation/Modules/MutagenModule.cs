@@ -399,20 +399,6 @@ namespace Mutagen.Bethesda.Generation
                 }
                 await AddLoquiSubTypes(loqui);
             }
-            else if (field is LoquiListType loquiList
-                && !data.RecordType.HasValue)
-            {
-                loqui = loquiList.SubTypeGeneration as LoquiType;
-                var trigRecTypes = await TaskExt.AwaitOrDefault(loqui.TargetObjectGeneration?.TryGetTriggeringRecordTypes());
-                if (trigRecTypes.Succeeded)
-                {
-                    data.TriggeringRecordTypes.Add(trigRecTypes.Value);
-                }
-                else if (loqui.GenericDef != null)
-                {
-                    data.TriggeringRecordAccessors.Add($"{loqui.GenericDef.Name}_RecordType");
-                }
-            }
             else if (field is ListType listType
                 && !data.RecordType.HasValue)
             {
