@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Generation
         public HashSet<RecordType> TriggeringRecordTypes { get; } = new HashSet<Mutagen.Bethesda.RecordType>();
         public HashSet<string> TriggeringRecordAccessors = new HashSet<string>();
         public string TriggeringRecordSetAccessor;
-        public bool HasTrigger => this.TriggeringRecordAccessors.Count > 0;
+        public bool HasTrigger => this.TriggeringRecordAccessors.Count > 0 || SubLoquiTypes.Count > 0;
         public bool Optional;
         public long? Length;
         public bool IncludeInLength;
