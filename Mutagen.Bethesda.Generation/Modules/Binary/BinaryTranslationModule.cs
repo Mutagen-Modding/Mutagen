@@ -449,6 +449,10 @@ namespace Mutagen.Bethesda.Generation
                             var dataSet = field.Field as DataType;
                             foreach (var gen in data.GenerationTypes)
                             {
+                                if (gen.Value is LoquiType loqui)
+                                {
+                                    if (loqui.TargetObjectGeneration?.Abstract ?? false) continue;
+                                }
                                 foreach (var trigger in gen.Key)
                                 {
                                     fg.AppendLine($"case \"{trigger.Type}\":");
