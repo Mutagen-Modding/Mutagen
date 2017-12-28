@@ -905,7 +905,15 @@ namespace Mutagen.Bethesda.Oblivion
             Rank_CopyMask copyMask = null,
             IRankGetter def = null)
         {
-            var ret = new Rank();
+            Rank ret;
+            if (item.GetType().Equals(typeof(Rank)))
+            {
+                ret = new Rank() as Rank;
+            }
+            else
+            {
+                ret = (Rank)Activator.CreateInstance(item.GetType());
+            }
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,

@@ -825,7 +825,15 @@ namespace Mutagen.Bethesda.Oblivion
             GlobalInt_CopyMask copyMask = null,
             IGlobalIntGetter def = null)
         {
-            var ret = new GlobalInt();
+            GlobalInt ret;
+            if (item.GetType().Equals(typeof(GlobalInt)))
+            {
+                ret = new GlobalInt() as GlobalInt;
+            }
+            else
+            {
+                ret = (GlobalInt)Activator.CreateInstance(item.GetType());
+            }
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,

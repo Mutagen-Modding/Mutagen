@@ -1034,7 +1034,15 @@ namespace Mutagen.Bethesda.Oblivion
             IGroupGetter<T> def = null)
             where T_CopyMask : MajorRecord_CopyMask, new()
         {
-            var ret = new Group<T>();
+            Group<T> ret;
+            if (item.GetType().Equals(typeof(Group<T>)))
+            {
+                ret = new Group<T>() as Group<T>;
+            }
+            else
+            {
+                ret = (Group<T>)Activator.CreateInstance(item.GetType());
+            }
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,

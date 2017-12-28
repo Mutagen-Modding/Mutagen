@@ -1029,7 +1029,15 @@ namespace Mutagen.Bethesda.Oblivion
             TES4_CopyMask copyMask = null,
             ITES4Getter def = null)
         {
-            var ret = new TES4();
+            TES4 ret;
+            if (item.GetType().Equals(typeof(TES4)))
+            {
+                ret = new TES4() as TES4;
+            }
+            else
+            {
+                ret = (TES4)Activator.CreateInstance(item.GetType());
+            }
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,

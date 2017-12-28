@@ -922,7 +922,15 @@ namespace Mutagen.Bethesda.Oblivion
             SoundData_CopyMask copyMask = null,
             ISoundDataGetter def = null)
         {
-            var ret = new SoundData();
+            SoundData ret;
+            if (item.GetType().Equals(typeof(SoundData)))
+            {
+                ret = new SoundData() as SoundData;
+            }
+            else
+            {
+                ret = (SoundData)Activator.CreateInstance(item.GetType());
+            }
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
@@ -1250,7 +1258,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static readonly RecordType SNDD_HEADER = new RecordType("SNDD");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = SNDD_HEADER;
+        public static readonly RecordType SNDX_HEADER = new RecordType("SNDX");
+        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
+        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        {
+            return new CollectionGetterWrapper<RecordType>(
+                new HashSet<RecordType>(
+                    new RecordType[]
+                    {
+                        SNDD_HEADER,
+                        SNDX_HEADER
+                    })
+            );
+        });
         public const int NumStructFields = 4;
         public const int NumTypedFields = 0;
         #region Interface

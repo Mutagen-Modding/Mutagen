@@ -1627,7 +1627,15 @@ namespace Mutagen.Bethesda.Oblivion
             Race_CopyMask copyMask = null,
             IRaceGetter def = null)
         {
-            var ret = new Race();
+            Race ret;
+            if (item.GetType().Equals(typeof(Race)))
+            {
+                ret = new Race() as Race;
+            }
+            else
+            {
+                ret = (Race)Activator.CreateInstance(item.GetType());
+            }
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,

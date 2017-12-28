@@ -829,7 +829,15 @@ namespace Mutagen.Bethesda.Oblivion
             GenderedBodyData_CopyMask copyMask = null,
             IGenderedBodyDataGetter def = null)
         {
-            var ret = new GenderedBodyData();
+            GenderedBodyData ret;
+            if (item.GetType().Equals(typeof(GenderedBodyData)))
+            {
+                ret = new GenderedBodyData() as GenderedBodyData;
+            }
+            else
+            {
+                ret = (GenderedBodyData)Activator.CreateInstance(item.GetType());
+            }
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,

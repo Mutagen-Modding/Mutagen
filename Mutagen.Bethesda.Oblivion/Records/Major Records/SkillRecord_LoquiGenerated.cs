@@ -1199,7 +1199,15 @@ namespace Mutagen.Bethesda.Oblivion
             SkillRecord_CopyMask copyMask = null,
             ISkillRecordGetter def = null)
         {
-            var ret = new SkillRecord();
+            SkillRecord ret;
+            if (item.GetType().Equals(typeof(SkillRecord)))
+            {
+                ret = new SkillRecord() as SkillRecord;
+            }
+            else
+            {
+                ret = (SkillRecord)Activator.CreateInstance(item.GetType());
+            }
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,

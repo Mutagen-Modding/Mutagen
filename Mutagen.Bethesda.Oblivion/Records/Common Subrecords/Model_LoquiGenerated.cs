@@ -820,7 +820,15 @@ namespace Mutagen.Bethesda.Oblivion
             Model_CopyMask copyMask = null,
             IModelGetter def = null)
         {
-            var ret = new Model();
+            Model ret;
+            if (item.GetType().Equals(typeof(Model)))
+            {
+                ret = new Model() as Model;
+            }
+            else
+            {
+                ret = (Model)Activator.CreateInstance(item.GetType());
+            }
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,

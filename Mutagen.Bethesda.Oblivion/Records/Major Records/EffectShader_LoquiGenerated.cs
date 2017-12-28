@@ -775,7 +775,15 @@ namespace Mutagen.Bethesda.Oblivion
             EffectShader_CopyMask copyMask = null,
             IEffectShaderGetter def = null)
         {
-            var ret = new EffectShader();
+            EffectShader ret;
+            if (item.GetType().Equals(typeof(EffectShader)))
+            {
+                ret = new EffectShader() as EffectShader;
+            }
+            else
+            {
+                ret = (EffectShader)Activator.CreateInstance(item.GetType());
+            }
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,

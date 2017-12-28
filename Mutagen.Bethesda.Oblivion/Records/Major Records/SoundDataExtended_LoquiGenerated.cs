@@ -959,7 +959,15 @@ namespace Mutagen.Bethesda.Oblivion
             SoundDataExtended_CopyMask copyMask = null,
             ISoundDataExtendedGetter def = null)
         {
-            var ret = new SoundDataExtended();
+            SoundDataExtended ret;
+            if (item.GetType().Equals(typeof(SoundDataExtended)))
+            {
+                ret = new SoundDataExtended() as SoundDataExtended;
+            }
+            else
+            {
+                ret = (SoundDataExtended)Activator.CreateInstance(item.GetType());
+            }
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,

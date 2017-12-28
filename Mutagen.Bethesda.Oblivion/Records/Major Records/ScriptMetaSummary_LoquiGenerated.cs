@@ -927,7 +927,15 @@ namespace Mutagen.Bethesda.Oblivion
             ScriptMetaSummary_CopyMask copyMask = null,
             IScriptMetaSummaryGetter def = null)
         {
-            var ret = new ScriptMetaSummary();
+            ScriptMetaSummary ret;
+            if (item.GetType().Equals(typeof(ScriptMetaSummary)))
+            {
+                ret = new ScriptMetaSummary() as ScriptMetaSummary;
+            }
+            else
+            {
+                ret = (ScriptMetaSummary)Activator.CreateInstance(item.GetType());
+            }
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,

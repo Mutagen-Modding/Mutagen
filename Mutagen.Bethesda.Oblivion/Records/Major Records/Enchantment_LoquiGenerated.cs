@@ -1002,7 +1002,15 @@ namespace Mutagen.Bethesda.Oblivion
             Enchantment_CopyMask copyMask = null,
             IEnchantmentGetter def = null)
         {
-            var ret = new Enchantment();
+            Enchantment ret;
+            if (item.GetType().Equals(typeof(Enchantment)))
+            {
+                ret = new Enchantment() as Enchantment;
+            }
+            else
+            {
+                ret = (Enchantment)Activator.CreateInstance(item.GetType());
+            }
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,

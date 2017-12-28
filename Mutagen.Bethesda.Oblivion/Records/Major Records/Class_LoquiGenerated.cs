@@ -1113,7 +1113,15 @@ namespace Mutagen.Bethesda.Oblivion
             Class_CopyMask copyMask = null,
             IClassGetter def = null)
         {
-            var ret = new Class();
+            Class ret;
+            if (item.GetType().Equals(typeof(Class)))
+            {
+                ret = new Class() as Class;
+            }
+            else
+            {
+                ret = (Class)Activator.CreateInstance(item.GetType());
+            }
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,

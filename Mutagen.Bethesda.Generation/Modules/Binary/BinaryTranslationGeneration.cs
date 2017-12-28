@@ -34,6 +34,7 @@ namespace Mutagen.Bethesda.Generation
         public abstract void GenerateCopyInRet(
             FileGeneration fg,
             ObjectGeneration objGen,
+            TypeGeneration targetGen,
             TypeGeneration typeGen,
             string readerAccessor,
             Accessor retAccessor,

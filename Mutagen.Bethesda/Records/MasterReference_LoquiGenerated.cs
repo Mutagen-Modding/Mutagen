@@ -835,7 +835,15 @@ namespace Mutagen.Bethesda
             MasterReference_CopyMask copyMask = null,
             IMasterReferenceGetter def = null)
         {
-            var ret = new MasterReference();
+            MasterReference ret;
+            if (item.GetType().Equals(typeof(MasterReference)))
+            {
+                ret = new MasterReference() as MasterReference;
+            }
+            else
+            {
+                ret = (MasterReference)Activator.CreateInstance(item.GetType());
+            }
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,

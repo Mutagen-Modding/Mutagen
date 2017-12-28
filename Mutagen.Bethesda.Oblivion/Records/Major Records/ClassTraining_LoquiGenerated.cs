@@ -838,7 +838,15 @@ namespace Mutagen.Bethesda.Oblivion
             ClassTraining_CopyMask copyMask = null,
             IClassTrainingGetter def = null)
         {
-            var ret = new ClassTraining();
+            ClassTraining ret;
+            if (item.GetType().Equals(typeof(ClassTraining)))
+            {
+                ret = new ClassTraining() as ClassTraining;
+            }
+            else
+            {
+                ret = (ClassTraining)Activator.CreateInstance(item.GetType());
+            }
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,

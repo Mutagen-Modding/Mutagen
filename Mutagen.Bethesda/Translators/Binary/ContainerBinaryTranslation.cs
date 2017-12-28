@@ -13,40 +13,9 @@ namespace Mutagen.Bethesda.Binary
 {
     public abstract class ContainerBinaryTranslation<T, M> : IBinaryTranslation<IEnumerable<T>, MaskItem<Exception, IEnumerable<M>>>
     {
-        public TryGet<IEnumerable<T>> Parse(MutagenFrame reader, bool doMasks, out MaskItem<Exception, IEnumerable<M>> maskObj)
+        TryGet<IEnumerable<T>> IBinaryTranslation<IEnumerable<T>, MaskItem<Exception, IEnumerable<M>>>.Parse(MutagenFrame reader, bool doMasks, out MaskItem<Exception, IEnumerable<M>> maskObj)
         {
-            var transl = BinaryTranslator<T, M>.Translator;
-            if (transl.Item.Failed)
-            {
-                throw new ArgumentException($"No XML Translator available for {typeof(T)}. {transl.Item.Reason}");
-            }
-            return Parse(
-                reader,
-                doMasks,
-                out maskObj,
-                transl: (MutagenFrame r, bool internalDoMasks, out M obj) => transl.Item.Value.Parse(reader: r, doMasks: internalDoMasks, maskObj: out obj));
-        }
-
-        public TryGet<IEnumerable<T>> Parse(
-            MutagenFrame reader,
-            bool doMasks,
-            out MaskItem<Exception, IEnumerable<M>> maskObj,
-            BinarySubParseDelegate<T, M> transl)
-        {
-            try
-            {
-                List<M> maskList = null;
-                var ret = new List<T>();
-                throw new NotImplementedException();
-                maskObj = maskList == null ? null : new MaskItem<Exception, IEnumerable<M>>(null, maskList);
-                return TryGet<IEnumerable<T>>.Succeed(ret);
-            }
-            catch (Exception ex)
-            when (doMasks)
-            {
-                maskObj = new MaskItem<Exception, IEnumerable<M>>(ex, null);
-                return TryGet<IEnumerable<T>>.Failure;
-            }
+            throw new NotImplementedException();
         }
 
         public TryGet<IEnumerable<T>> ParseRepeatedItem(
@@ -107,7 +76,7 @@ namespace Mutagen.Bethesda.Binary
             ICollectionGetter<RecordType> triggeringRecord,
             ObjectType objType,
             out MaskItem<Exception, IEnumerable<M>> errorMask,
-            BinarySubParseDelegate<T, M> transl)
+            BinarySubParseRecordDelegate<T, M> transl)
         {
             var safeFrame = frame.Spawn(snapToFinalPosition: false);
             try
@@ -119,7 +88,7 @@ namespace Mutagen.Bethesda.Binary
                     var nextRecord = HeaderTranslation.GetNextRecordType(frame);
                     if (!triggeringRecord.Contains(nextRecord)) break;
                     var startingPos = frame.Position;
-                    var get = transl(safeFrame, doMasks, out var subMaskObj);
+                    var get = transl(safeFrame, nextRecord, doMasks, out var subMaskObj);
                     if (get.Succeeded)
                     {
                         ret.Add(get.Value);
@@ -224,7 +193,7 @@ namespace Mutagen.Bethesda.Binary
             ICollectionGetter<RecordType> triggeringRecord,
             ObjectType objType,
             Func<Mask> errorMask,
-            BinarySubParseDelegate<T, M> transl)
+            BinarySubParseRecordDelegate<T, M> transl)
             where Mask : IErrorMask
         {
             var ret = this.ParseRepeatedItem(
@@ -234,6 +203,29 @@ namespace Mutagen.Bethesda.Binary
                 objType: objType,
                 errorMask: out var err,
                 transl: transl);
+            ErrorMask.HandleErrorMask(
+                errorMask,
+                fieldIndex,
+                err);
+            return ret;
+        }
+
+        public TryGet<IEnumerable<T>> ParseRepeatedItem<Mask>(
+            MutagenFrame frame,
+            int fieldIndex,
+            ICollectionGetter<RecordType> triggeringRecord,
+            ObjectType objType,
+            Func<Mask> errorMask,
+            BinarySubParseDelegate<T, M> transl)
+            where Mask : IErrorMask
+        {
+            var ret = this.ParseRepeatedItem(
+                frame: frame,
+                triggeringRecord: triggeringRecord,
+                doMasks: errorMask != null,
+                objType: objType,
+                errorMask: out var err,
+                transl: (MutagenFrame reader, RecordType header, bool doMasks, out M maskObj) => transl(reader, doMasks, out maskObj));
             ErrorMask.HandleErrorMask(
                 errorMask,
                 fieldIndex,

@@ -825,7 +825,15 @@ namespace Mutagen.Bethesda.Oblivion
             GlobalShort_CopyMask copyMask = null,
             IGlobalShortGetter def = null)
         {
-            var ret = new GlobalShort();
+            GlobalShort ret;
+            if (item.GetType().Equals(typeof(GlobalShort)))
+            {
+                ret = new GlobalShort() as GlobalShort;
+            }
+            else
+            {
+                ret = (GlobalShort)Activator.CreateInstance(item.GetType());
+            }
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,

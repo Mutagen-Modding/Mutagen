@@ -32,9 +32,12 @@ namespace Mutagen.Bethesda.Generation
 
         private IEnumerable<KeyValuePair<IEnumerable<RecordType>, TypeGeneration>> GetGenerationTypes()
         {
-            yield return new KeyValuePair<IEnumerable<RecordType>, TypeGeneration>(
-                this.TriggeringRecordTypes,
-                this.SourceTypeGeneration);
+            if (this.TriggeringRecordTypes.Count > 0)
+            {
+                yield return new KeyValuePair<IEnumerable<RecordType>, TypeGeneration>(
+                    this.TriggeringRecordTypes,
+                    this.SourceTypeGeneration);
+            }
             if (!(this.SourceTypeGeneration is LoquiType loqui)) yield break;
             foreach (var subType in this.SubLoquiTypes
                 .GroupBy((g) => g.Value))

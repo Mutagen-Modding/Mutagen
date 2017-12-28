@@ -86,6 +86,7 @@ namespace Mutagen.Bethesda.Generation
         public override void GenerateCopyInRet(
             FileGeneration fg,
             ObjectGeneration objGen,
+            TypeGeneration targetGen,
             TypeGeneration typeGen,
             string nodeAccessor,
             Accessor retAccessor,

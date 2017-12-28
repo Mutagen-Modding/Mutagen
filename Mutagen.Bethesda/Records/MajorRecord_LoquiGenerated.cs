@@ -586,6 +586,59 @@ namespace Mutagen.Bethesda
 
         #endregion
 
+        public MajorRecord Copy(
+            MajorRecord_CopyMask copyMask = null,
+            IMajorRecordGetter def = null)
+        {
+            return MajorRecord.Copy(
+                this,
+                copyMask: copyMask,
+                def: def);
+        }
+
+        public static MajorRecord Copy(
+            IMajorRecord item,
+            MajorRecord_CopyMask copyMask = null,
+            IMajorRecordGetter def = null)
+        {
+            MajorRecord ret = (MajorRecord)Activator.CreateInstance(item.GetType());
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+
+        public static CopyType CopyGeneric<CopyType>(
+            CopyType item,
+            MajorRecord_CopyMask copyMask = null,
+            IMajorRecordGetter def = null)
+            where CopyType : class, IMajorRecord
+        {
+            CopyType ret = (CopyType)Activator.CreateInstance(item.GetType());
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                doMasks: false,
+                errorMask: null,
+                cmds: null,
+                def: def);
+            return ret;
+        }
+
+        public static MajorRecord Copy_ToLoqui(
+            IMajorRecordGetter item,
+            MajorRecord_CopyMask copyMask = null,
+            IMajorRecordGetter def = null)
+        {
+            MajorRecord ret = (MajorRecord)Activator.CreateInstance(item.GetType());
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds) => this.SetNthObject(index, obj, cmds);
         protected virtual void SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds = null)
         {
@@ -913,7 +966,53 @@ namespace Mutagen.Bethesda.Internals
             }
         }
 
+        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
+        public static readonly RecordType EFSH_HEADER = new RecordType("EFSH");
+        public static readonly RecordType GMST_HEADER = new RecordType("GMST");
+        public static readonly RecordType GLOB_HEADER = new RecordType("GLOB");
+        public static readonly RecordType GRAS_HEADER = new RecordType("GRAS");
+        public static readonly RecordType LTEX_HEADER = new RecordType("LTEX");
+        public static readonly RecordType LIGH_HEADER = new RecordType("LIGH");
+        public static readonly RecordType SCPT_HEADER = new RecordType("SCPT");
+        public static readonly RecordType SKIL_HEADER = new RecordType("SKIL");
+        public static readonly RecordType SOUN_HEADER = new RecordType("SOUN");
+        public static readonly RecordType CLAS_HEADER = new RecordType("CLAS");
+        public static readonly RecordType ENCH_HEADER = new RecordType("ENCH");
+        public static readonly RecordType EYES_HEADER = new RecordType("EYES");
+        public static readonly RecordType FACT_HEADER = new RecordType("FACT");
+        public static readonly RecordType HAIR_HEADER = new RecordType("HAIR");
+        public static readonly RecordType MGEF_HEADER = new RecordType("MGEF");
+        public static readonly RecordType RACE_HEADER = new RecordType("RACE");
+        public static readonly RecordType SPEL_HEADER = new RecordType("SPEL");
         public static readonly RecordType EDID_HEADER = new RecordType("EDID");
+        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
+        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        {
+            return new CollectionGetterWrapper<RecordType>(
+                new HashSet<RecordType>(
+                    new RecordType[]
+                    {
+                        FULL_HEADER,
+                        EFSH_HEADER,
+                        GMST_HEADER,
+                        GLOB_HEADER,
+                        GRAS_HEADER,
+                        LTEX_HEADER,
+                        LIGH_HEADER,
+                        SCPT_HEADER,
+                        SKIL_HEADER,
+                        SOUN_HEADER,
+                        CLAS_HEADER,
+                        ENCH_HEADER,
+                        EYES_HEADER,
+                        FACT_HEADER,
+                        HAIR_HEADER,
+                        MGEF_HEADER,
+                        RACE_HEADER,
+                        SPEL_HEADER
+                    })
+            );
+        });
         public const int NumStructFields = 4;
         public const int NumTypedFields = 1;
         #region Interface

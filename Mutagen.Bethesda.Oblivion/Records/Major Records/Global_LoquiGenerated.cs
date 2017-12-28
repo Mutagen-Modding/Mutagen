@@ -531,6 +531,59 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        public Global Copy(
+            Global_CopyMask copyMask = null,
+            IGlobalGetter def = null)
+        {
+            return Global.Copy(
+                this,
+                copyMask: copyMask,
+                def: def);
+        }
+
+        public static Global Copy(
+            IGlobal item,
+            Global_CopyMask copyMask = null,
+            IGlobalGetter def = null)
+        {
+            Global ret = (Global)Activator.CreateInstance(item.GetType());
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+
+        public static CopyType CopyGeneric<CopyType>(
+            CopyType item,
+            Global_CopyMask copyMask = null,
+            IGlobalGetter def = null)
+            where CopyType : class, IGlobal
+        {
+            CopyType ret = (CopyType)Activator.CreateInstance(item.GetType());
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                doMasks: false,
+                errorMask: null,
+                cmds: null,
+                def: def);
+            return ret;
+        }
+
+        public static Global Copy_ToLoqui(
+            IGlobalGetter item,
+            Global_CopyMask copyMask = null,
+            IGlobalGetter def = null)
+        {
+            Global ret = (Global)Activator.CreateInstance(item.GetType());
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds = null)
         {
             Global_FieldIndex enu = (Global_FieldIndex)index;

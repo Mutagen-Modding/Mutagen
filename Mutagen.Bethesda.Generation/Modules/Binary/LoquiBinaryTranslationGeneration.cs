@@ -167,17 +167,20 @@ namespace Mutagen.Bethesda.Generation
         public override void GenerateCopyInRet(
             FileGeneration fg,
             ObjectGeneration objGen,
+            TypeGeneration targetGen,
             TypeGeneration typeGen,
             string readerAccessor,
             Accessor retAccessor,
             string doMaskAccessor,
             string maskAccessor)
         {
+            var targetLoquiGen = targetGen as LoquiType;
             var loquiGen = typeGen as LoquiType;
             if (loquiGen.TargetObjectGeneration != null)
             {
                 using (var args = new ArgsWrapper(fg,
-                    $"{retAccessor.DirectAccess}LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}, {loquiGen.MaskItemString(MaskType.Error)}>.Instance.Parse"))
+                    $"{retAccessor.DirectAccess}LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}, {loquiGen.MaskItemString(MaskType.Error)}>.Instance.Parse",
+                    suffixLine: (targetGen == typeGen ? string.Empty : $".Bubble<{typeGen.TypeName}, {targetGen.TypeName}>()")))
                 {
                     args.Add($"frame: {readerAccessor}{(loquiGen.TargetObjectGeneration.GetObjectType() == ObjectType.Subrecord ? ".Spawn(snapToFinalPosition: false)" : null)}");
                     if (loquiGen.HasIndex)

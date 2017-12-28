@@ -837,7 +837,15 @@ namespace Mutagen.Bethesda.Oblivion
             HavokData_CopyMask copyMask = null,
             IHavokDataGetter def = null)
         {
-            var ret = new HavokData();
+            HavokData ret;
+            if (item.GetType().Equals(typeof(HavokData)))
+            {
+                ret = new HavokData() as HavokData;
+            }
+            else
+            {
+                ret = (HavokData)Activator.CreateInstance(item.GetType());
+            }
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,

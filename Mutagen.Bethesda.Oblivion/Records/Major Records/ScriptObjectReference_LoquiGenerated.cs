@@ -12,8 +12,7 @@ using Loqui;
 using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
-using Mutagen.Bethesda;
-using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Oblivion;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -25,34 +24,39 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Grass : MajorRecord, IGrass, ILoquiObjectSetter, IEquatable<Grass>
+    public partial class ScriptObjectReference : ScriptReference, IScriptObjectReference, ILoquiObjectSetter, IEquatable<ScriptObjectReference>
     {
-        ILoquiRegistration ILoquiObject.Registration => Grass_Registration.Instance;
-        public new static Grass_Registration Registration => Grass_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ScriptObjectReference_Registration.Instance;
+        public new static ScriptObjectReference_Registration Registration => ScriptObjectReference_Registration.Instance;
 
         #region Ctor
-        public Grass()
+        public ScriptObjectReference()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
+        #region Reference
+        public FormIDSetLink<MajorRecord> Reference_Property { get; } = new FormIDSetLink<MajorRecord>();
+        public MajorRecord Reference { get => Reference_Property.Item; set => Reference_Property.Item = value; }
+        FormIDSetLink<MajorRecord> IScriptObjectReferenceGetter.Reference_Property => this.Reference_Property;
+        #endregion
 
         #region Loqui Getter Interface
 
-        protected override object GetNthObject(ushort index) => GrassCommon.GetNthObject(index, this);
+        protected override object GetNthObject(ushort index) => ScriptObjectReferenceCommon.GetNthObject(index, this);
 
-        protected override bool GetNthObjectHasBeenSet(ushort index) => GrassCommon.GetNthObjectHasBeenSet(index, this);
+        protected override bool GetNthObjectHasBeenSet(ushort index) => ScriptObjectReferenceCommon.GetNthObjectHasBeenSet(index, this);
 
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => GrassCommon.UnsetNthObject(index, this, cmds);
+        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => ScriptObjectReferenceCommon.UnsetNthObject(index, this, cmds);
 
         #endregion
 
         #region Loqui Interface
         protected override void SetNthObjectHasBeenSet(ushort index, bool on)
         {
-            GrassCommon.SetNthObjectHasBeenSet(index, on, this);
+            ScriptObjectReferenceCommon.SetNthObjectHasBeenSet(index, on, this);
         }
 
         #endregion
@@ -60,46 +64,55 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
         public override string ToString()
         {
-            return GrassCommon.ToString(this, printMask: null);
+            return ScriptObjectReferenceCommon.ToString(this, printMask: null);
         }
 
         public string ToString(
             string name = null,
-            Grass_Mask<bool> printMask = null)
+            ScriptObjectReference_Mask<bool> printMask = null)
         {
-            return GrassCommon.ToString(this, name: name, printMask: printMask);
+            return ScriptObjectReferenceCommon.ToString(this, name: name, printMask: printMask);
         }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            GrassCommon.ToString(this, fg, name: name, printMask: null);
+            ScriptObjectReferenceCommon.ToString(this, fg, name: name, printMask: null);
         }
 
         #endregion
 
-        public new Grass_Mask<bool> GetHasBeenSetMask()
+        public new ScriptObjectReference_Mask<bool> GetHasBeenSetMask()
         {
-            return GrassCommon.GetHasBeenSetMask(this);
+            return ScriptObjectReferenceCommon.GetHasBeenSetMask(this);
         }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is Grass rhs)) return false;
+            if (!(obj is ScriptObjectReference rhs)) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(Grass rhs)
+        public bool Equals(ScriptObjectReference rhs)
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (Reference_Property.HasBeenSet != rhs.Reference_Property.HasBeenSet) return false;
+            if (Reference_Property.HasBeenSet)
+            {
+                if (Reference != rhs.Reference) return false;
+            }
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
+            if (Reference_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Reference).CombineHashCode(ret);
+            }
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -110,7 +123,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region XML Translation
         #region XML Create
         [DebuggerStepThrough]
-        public new static Grass Create_XML(XElement root)
+        public new static ScriptObjectReference Create_XML(XElement root)
         {
             return Create_XML(
                 root: root,
@@ -119,9 +132,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static Grass Create_XML(
+        public static ScriptObjectReference Create_XML(
             XElement root,
-            out Grass_ErrorMask errorMask)
+            out ScriptObjectReference_ErrorMask errorMask)
         {
             return Create_XML(
                 root: root,
@@ -130,10 +143,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static Grass Create_XML(
+        public static ScriptObjectReference Create_XML(
             XElement root,
             bool doMasks,
-            out Grass_ErrorMask errorMask)
+            out ScriptObjectReference_ErrorMask errorMask)
         {
             var ret = Create_XML(
                 root: root,
@@ -143,26 +156,26 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static (Grass Object, Grass_ErrorMask ErrorMask) Create_XML(
+        public static (ScriptObjectReference Object, ScriptObjectReference_ErrorMask ErrorMask) Create_XML(
             XElement root,
             bool doMasks)
         {
-            Grass_ErrorMask errMaskRet = null;
+            ScriptObjectReference_ErrorMask errMaskRet = null;
             var ret = Create_XML_Internal(
                 root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Grass_ErrorMask()) : default(Func<Grass_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new ScriptObjectReference_ErrorMask()) : default(Func<ScriptObjectReference_ErrorMask>));
             return (ret, errMaskRet);
         }
 
-        public static Grass Create_XML(string path)
+        public static ScriptObjectReference Create_XML(string path)
         {
             var root = XDocument.Load(path).Root;
             return Create_XML(root: root);
         }
 
-        public static Grass Create_XML(
+        public static ScriptObjectReference Create_XML(
             string path,
-            out Grass_ErrorMask errorMask)
+            out ScriptObjectReference_ErrorMask errorMask)
         {
             var root = XDocument.Load(path).Root;
             return Create_XML(
@@ -170,15 +183,15 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: out errorMask);
         }
 
-        public static Grass Create_XML(Stream stream)
+        public static ScriptObjectReference Create_XML(Stream stream)
         {
             var root = XDocument.Load(stream).Root;
             return Create_XML(root: root);
         }
 
-        public static Grass Create_XML(
+        public static ScriptObjectReference Create_XML(
             Stream stream,
-            out Grass_ErrorMask errorMask)
+            out ScriptObjectReference_ErrorMask errorMask)
         {
             var root = XDocument.Load(stream).Root;
             return Create_XML(
@@ -193,7 +206,7 @@ namespace Mutagen.Bethesda.Oblivion
             XElement root,
             NotifyingFireParameters? cmds = null)
         {
-            LoquiXmlTranslation<Grass, Grass_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<ScriptObjectReference, ScriptObjectReference_ErrorMask>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
@@ -204,10 +217,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void CopyIn_XML(
             XElement root,
-            out Grass_ErrorMask errorMask,
+            out ScriptObjectReference_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
-            LoquiXmlTranslation<Grass, Grass_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<ScriptObjectReference, ScriptObjectReference_ErrorMask>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
@@ -228,7 +241,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_XML(
             string path,
-            out Grass_ErrorMask errorMask,
+            out ScriptObjectReference_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             var root = XDocument.Load(path).Root;
@@ -250,7 +263,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_XML(
             Stream stream,
-            out Grass_ErrorMask errorMask,
+            out ScriptObjectReference_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             var root = XDocument.Load(stream).Root;
@@ -262,12 +275,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void CopyIn_XML(
             XElement root,
-            out MajorRecord_ErrorMask errorMask,
+            out ScriptReference_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             this.CopyIn_XML(
                 root: root,
-                errorMask: out Grass_ErrorMask errMask,
+                errorMask: out ScriptObjectReference_ErrorMask errMask,
                 cmds: cmds);
             errorMask = errMask;
         }
@@ -277,10 +290,10 @@ namespace Mutagen.Bethesda.Oblivion
         #region XML Write
         public virtual void Write_XML(
             XmlWriter writer,
-            out Grass_ErrorMask errorMask,
+            out ScriptObjectReference_ErrorMask errorMask,
             string name = null)
         {
-            errorMask = (Grass_ErrorMask)this.Write_XML_Internal(
+            errorMask = (ScriptObjectReference_ErrorMask)this.Write_XML_Internal(
                 writer: writer,
                 name: name,
                 doMasks: true);
@@ -288,7 +301,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_XML(
             string path,
-            out Grass_ErrorMask errorMask,
+            out ScriptObjectReference_ErrorMask errorMask,
             string name = null)
         {
             using (var writer = new XmlTextWriter(path, Encoding.ASCII))
@@ -304,7 +317,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_XML(
             Stream stream,
-            out Grass_ErrorMask errorMask,
+            out ScriptObjectReference_ErrorMask errorMask,
             string name = null)
         {
             using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
@@ -361,7 +374,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks,
             string name = null)
         {
-            GrassCommon.Write_XML(
+            ScriptObjectReferenceCommon.Write_XML(
                 writer: writer,
                 item: this,
                 doMasks: doMasks,
@@ -370,11 +383,11 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static Grass Create_XML_Internal(
+        private static ScriptObjectReference Create_XML_Internal(
             XElement root,
-            Func<Grass_ErrorMask> errorMask)
+            Func<ScriptObjectReference_ErrorMask> errorMask)
         {
-            var ret = new Grass();
+            var ret = new ScriptObjectReference();
             try
             {
                 foreach (var elem in root.Elements())
@@ -395,15 +408,21 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static void Fill_XML_Internal(
-            Grass item,
+            ScriptObjectReference item,
             XElement root,
             string name,
-            Func<Grass_ErrorMask> errorMask)
+            Func<ScriptObjectReference_ErrorMask> errorMask)
         {
             switch (name)
             {
+                case "Reference":
+                    item.Reference_Property.SetIfSucceeded(RawFormIDXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)ScriptObjectReference_FieldIndex.Reference,
+                        errorMask: errorMask));
+                    break;
                 default:
-                    MajorRecord.Fill_XML_Internal(
+                    ScriptReference.Fill_XML_Internal(
                         item: item,
                         root: root,
                         name: name,
@@ -417,7 +436,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public new static Grass Create_Binary(MutagenFrame frame)
+        public new static ScriptObjectReference Create_Binary(MutagenFrame frame)
         {
             return Create_Binary(
                 frame: frame,
@@ -426,9 +445,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static Grass Create_Binary(
+        public static ScriptObjectReference Create_Binary(
             MutagenFrame frame,
-            out Grass_ErrorMask errorMask)
+            out ScriptObjectReference_ErrorMask errorMask)
         {
             return Create_Binary(
                 frame: frame,
@@ -437,10 +456,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static Grass Create_Binary(
+        public static ScriptObjectReference Create_Binary(
             MutagenFrame frame,
             bool doMasks,
-            out Grass_ErrorMask errorMask)
+            out ScriptObjectReference_ErrorMask errorMask)
         {
             var ret = Create_Binary(
                 frame: frame,
@@ -450,18 +469,18 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static (Grass Object, Grass_ErrorMask ErrorMask) Create_Binary(
+        public static (ScriptObjectReference Object, ScriptObjectReference_ErrorMask ErrorMask) Create_Binary(
             MutagenFrame frame,
             bool doMasks)
         {
-            Grass_ErrorMask errMaskRet = null;
+            ScriptObjectReference_ErrorMask errMaskRet = null;
             var ret = Create_Binary_Internal(
                 frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Grass_ErrorMask()) : default(Func<Grass_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new ScriptObjectReference_ErrorMask()) : default(Func<ScriptObjectReference_ErrorMask>));
             return (ret, errMaskRet);
         }
 
-        public static Grass Create_Binary(string path)
+        public static ScriptObjectReference Create_Binary(string path)
         {
             using (var reader = new MutagenReader(path))
             {
@@ -470,9 +489,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public static Grass Create_Binary(
+        public static ScriptObjectReference Create_Binary(
             string path,
-            out Grass_ErrorMask errorMask)
+            out ScriptObjectReference_ErrorMask errorMask)
         {
             using (var reader = new MutagenReader(path))
             {
@@ -483,7 +502,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public static Grass Create_Binary(Stream stream)
+        public static ScriptObjectReference Create_Binary(Stream stream)
         {
             using (var reader = new MutagenReader(stream))
             {
@@ -492,9 +511,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public static Grass Create_Binary(
+        public static ScriptObjectReference Create_Binary(
             Stream stream,
-            out Grass_ErrorMask errorMask)
+            out ScriptObjectReference_ErrorMask errorMask)
         {
             using (var reader = new MutagenReader(stream))
             {
@@ -512,7 +531,7 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             NotifyingFireParameters? cmds = null)
         {
-            LoquiBinaryTranslation<Grass, Grass_ErrorMask>.Instance.CopyIn(
+            LoquiBinaryTranslation<ScriptObjectReference, ScriptObjectReference_ErrorMask>.Instance.CopyIn(
                 frame: frame,
                 item: this,
                 skipProtected: true,
@@ -523,10 +542,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void CopyIn_Binary(
             MutagenFrame frame,
-            out Grass_ErrorMask errorMask,
+            out ScriptObjectReference_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
-            LoquiBinaryTranslation<Grass, Grass_ErrorMask>.Instance.CopyIn(
+            LoquiBinaryTranslation<ScriptObjectReference, ScriptObjectReference_ErrorMask>.Instance.CopyIn(
                 frame: frame,
                 item: this,
                 skipProtected: true,
@@ -550,7 +569,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_Binary(
             string path,
-            out Grass_ErrorMask errorMask,
+            out ScriptObjectReference_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             using (var reader = new MutagenReader(path))
@@ -578,7 +597,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_Binary(
             Stream stream,
-            out Grass_ErrorMask errorMask,
+            out ScriptObjectReference_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             using (var reader = new MutagenReader(stream))
@@ -593,12 +612,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void CopyIn_Binary(
             MutagenFrame frame,
-            out MajorRecord_ErrorMask errorMask,
+            out ScriptReference_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             this.CopyIn_Binary(
                 frame: frame,
-                errorMask: out Grass_ErrorMask errMask,
+                errorMask: out ScriptObjectReference_ErrorMask errMask,
                 cmds: cmds);
             errorMask = errMask;
         }
@@ -608,16 +627,16 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
-            out Grass_ErrorMask errorMask)
+            out ScriptObjectReference_ErrorMask errorMask)
         {
-            errorMask = (Grass_ErrorMask)this.Write_Binary_Internal(
+            errorMask = (ScriptObjectReference_ErrorMask)this.Write_Binary_Internal(
                 writer: writer,
                 doMasks: true);
         }
 
         public virtual void Write_Binary(
             string path,
-            out Grass_ErrorMask errorMask)
+            out ScriptObjectReference_ErrorMask errorMask)
         {
             using (var writer = new MutagenWriter(path))
             {
@@ -629,7 +648,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             Stream stream,
-            out Grass_ErrorMask errorMask)
+            out ScriptObjectReference_ErrorMask errorMask)
         {
             using (var writer = new MutagenWriter(stream))
             {
@@ -666,7 +685,7 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenWriter writer,
             bool doMasks)
         {
-            GrassCommon.Write_Binary(
+            ScriptObjectReferenceCommon.Write_Binary(
                 writer: writer,
                 item: this,
                 doMasks: doMasks,
@@ -675,22 +694,30 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static Grass Create_Binary_Internal(
+        private static ScriptObjectReference Create_Binary_Internal(
             MutagenFrame frame,
-            Func<Grass_ErrorMask> errorMask)
+            Func<ScriptObjectReference_ErrorMask> errorMask)
         {
-            var ret = new Grass();
+            var ret = new ScriptObjectReference();
             try
             {
-                frame = frame.Spawn(HeaderTranslation.ParseRecord(
-                    frame,
-                    Grass_Registration.GRAS_HEADER));
                 using (frame)
                 {
                     Fill_Binary_Structs(
                         item: ret,
                         frame: frame,
                         errorMask: errorMask);
+                    ScriptObjectReference_FieldIndex? lastParsed = null;
+                    while (!frame.Complete)
+                    {
+                        var parsed = Fill_Binary_RecordTypes(
+                            item: ret,
+                            frame: frame,
+                            lastParsed: lastParsed,
+                            errorMask: errorMask);
+                        if (parsed.Failed) break;
+                        lastParsed = parsed.Value;
+                    }
                 }
             }
             catch (Exception ex)
@@ -702,41 +729,61 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static void Fill_Binary_Structs(
-            Grass item,
+            ScriptObjectReference item,
             MutagenFrame frame,
-            Func<Grass_ErrorMask> errorMask)
+            Func<ScriptObjectReference_ErrorMask> errorMask)
         {
-            MajorRecord.Fill_Binary_Structs(
-                item: item,
+        }
+
+        protected static TryGet<ScriptObjectReference_FieldIndex?> Fill_Binary_RecordTypes(
+            ScriptObjectReference item,
+            MutagenFrame frame,
+            ScriptObjectReference_FieldIndex? lastParsed,
+            Func<ScriptObjectReference_ErrorMask> errorMask)
+        {
+            var nextRecordType = HeaderTranslation.GetNextSubRecordType(
                 frame: frame,
-                errorMask: errorMask);
+                contentLength: out var contentLength);
+            switch (nextRecordType.Type)
+            {
+                case "SCRO":
+                    if (lastParsed.HasValue && lastParsed.Value >= ScriptObjectReference_FieldIndex.Reference) return TryGet<ScriptObjectReference_FieldIndex?>.Failure;
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    item.Reference_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
+                        frame: frame.Spawn(contentLength),
+                        fieldIndex: (int)ScriptObjectReference_FieldIndex.Reference,
+                        errorMask: errorMask));
+                    return TryGet<ScriptObjectReference_FieldIndex?>.Succeed(ScriptObjectReference_FieldIndex.Reference);
+                default:
+                    return TryGet<ScriptObjectReference_FieldIndex?>.Failure;
+            }
         }
 
         #endregion
 
-        public Grass Copy(
-            Grass_CopyMask copyMask = null,
-            IGrassGetter def = null)
+        public ScriptObjectReference Copy(
+            ScriptObjectReference_CopyMask copyMask = null,
+            IScriptObjectReferenceGetter def = null)
         {
-            return Grass.Copy(
+            return ScriptObjectReference.Copy(
                 this,
                 copyMask: copyMask,
                 def: def);
         }
 
-        public static Grass Copy(
-            IGrass item,
-            Grass_CopyMask copyMask = null,
-            IGrassGetter def = null)
+        public static ScriptObjectReference Copy(
+            IScriptObjectReference item,
+            ScriptObjectReference_CopyMask copyMask = null,
+            IScriptObjectReferenceGetter def = null)
         {
-            Grass ret;
-            if (item.GetType().Equals(typeof(Grass)))
+            ScriptObjectReference ret;
+            if (item.GetType().Equals(typeof(ScriptObjectReference)))
             {
-                ret = new Grass();
+                ret = new ScriptObjectReference();
             }
             else
             {
-                ret = (Grass)Activator.CreateInstance(item.GetType());
+                ret = (ScriptObjectReference)Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom(
                 item,
@@ -747,14 +794,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static CopyType CopyGeneric<CopyType>(
             CopyType item,
-            Grass_CopyMask copyMask = null,
-            IGrassGetter def = null)
-            where CopyType : class, IGrass
+            ScriptObjectReference_CopyMask copyMask = null,
+            IScriptObjectReferenceGetter def = null)
+            where CopyType : class, IScriptObjectReference
         {
             CopyType ret;
-            if (item.GetType().Equals(typeof(Grass)))
+            if (item.GetType().Equals(typeof(ScriptObjectReference)))
             {
-                ret = new Grass() as CopyType;
+                ret = new ScriptObjectReference() as CopyType;
             }
             else
             {
@@ -770,19 +817,19 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Grass Copy_ToLoqui(
-            IGrassGetter item,
-            Grass_CopyMask copyMask = null,
-            IGrassGetter def = null)
+        public static ScriptObjectReference Copy_ToLoqui(
+            IScriptObjectReferenceGetter item,
+            ScriptObjectReference_CopyMask copyMask = null,
+            IScriptObjectReferenceGetter def = null)
         {
-            Grass ret;
-            if (item.GetType().Equals(typeof(Grass)))
+            ScriptObjectReference ret;
+            if (item.GetType().Equals(typeof(ScriptObjectReference)))
             {
-                ret = new Grass() as Grass;
+                ret = new ScriptObjectReference() as ScriptObjectReference;
             }
             else
             {
-                ret = (Grass)Activator.CreateInstance(item.GetType());
+                ret = (ScriptObjectReference)Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom(
                 item,
@@ -793,9 +840,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds = null)
         {
-            Grass_FieldIndex enu = (Grass_FieldIndex)index;
+            ScriptObjectReference_FieldIndex enu = (ScriptObjectReference_FieldIndex)index;
             switch (enu)
             {
+                case ScriptObjectReference_FieldIndex.Reference:
+                    this.Reference_Property.Set(
+                        (FormIDSetLink<MajorRecord>)obj,
+                        cmds);
+                    break;
                 default:
                     base.SetNthObject(index, obj, cmds);
                     break;
@@ -805,33 +857,38 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Clear(NotifyingUnsetParameters? cmds = null)
         {
             CallClearPartial_Internal(cmds);
-            GrassCommon.Clear(this, cmds);
+            ScriptObjectReferenceCommon.Clear(this, cmds);
         }
 
 
-        public new static Grass Create(IEnumerable<KeyValuePair<ushort, object>> fields)
+        public new static ScriptObjectReference Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
-            var ret = new Grass();
+            var ret = new ScriptObjectReference();
             foreach (var pair in fields)
             {
-                CopyInInternal_Grass(ret, pair);
+                CopyInInternal_ScriptObjectReference(ret, pair);
             }
             return ret;
         }
 
-        protected new static void CopyInInternal_Grass(Grass obj, KeyValuePair<ushort, object> pair)
+        protected new static void CopyInInternal_ScriptObjectReference(ScriptObjectReference obj, KeyValuePair<ushort, object> pair)
         {
-            if (!EnumExt.TryParse(pair.Key, out Grass_FieldIndex enu))
+            if (!EnumExt.TryParse(pair.Key, out ScriptObjectReference_FieldIndex enu))
             {
-                CopyInInternal_MajorRecord(obj, pair);
+                CopyInInternal_ScriptReference(obj, pair);
             }
             switch (enu)
             {
+                case ScriptObjectReference_FieldIndex.Reference:
+                    obj.Reference_Property.Set(
+                        (FormIDSetLink<MajorRecord>)pair.Value,
+                        null);
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Grass obj)
+        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, ScriptObjectReference obj)
         {
             ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
         }
@@ -840,12 +897,17 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IGrass : IGrassGetter, IMajorRecord, ILoquiClass<IGrass, IGrassGetter>, ILoquiClass<Grass, IGrassGetter>
+    public interface IScriptObjectReference : IScriptObjectReferenceGetter, IScriptReference, ILoquiClass<IScriptObjectReference, IScriptObjectReferenceGetter>, ILoquiClass<ScriptObjectReference, IScriptObjectReferenceGetter>
     {
     }
 
-    public interface IGrassGetter : IMajorRecordGetter
+    public interface IScriptObjectReferenceGetter : IScriptReferenceGetter
     {
+        #region Reference
+        MajorRecord Reference { get; }
+        FormIDSetLink<MajorRecord> Reference_Property { get; }
+
+        #endregion
 
     }
 
@@ -856,47 +918,43 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     #region Field Index
-    public enum Grass_FieldIndex
+    public enum ScriptObjectReference_FieldIndex
     {
-        MajorRecordFlags = 0,
-        FormID = 1,
-        Version = 2,
-        EditorID = 3,
-        RecordType = 4,
+        Reference = 0,
     }
     #endregion
 
     #region Registration
-    public class Grass_Registration : ILoquiRegistration
+    public class ScriptObjectReference_Registration : ILoquiRegistration
     {
-        public static readonly Grass_Registration Instance = new Grass_Registration();
+        public static readonly ScriptObjectReference_Registration Instance = new ScriptObjectReference_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 58,
+            msgID: 61,
             version: 0);
 
-        public const string GUID = "08091e89-54fe-4950-b16d-c11d6c7faef3";
+        public const string GUID = "a00d44e0-398b-45a6-9e45-facc1da7a2b2";
 
-        public const ushort FieldCount = 0;
+        public const ushort FieldCount = 1;
 
-        public static readonly Type MaskType = typeof(Grass_Mask<>);
+        public static readonly Type MaskType = typeof(ScriptObjectReference_Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Grass_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(ScriptObjectReference_ErrorMask);
 
-        public static readonly Type ClassType = typeof(Grass);
+        public static readonly Type ClassType = typeof(ScriptObjectReference);
 
-        public static readonly Type GetterType = typeof(IGrassGetter);
+        public static readonly Type GetterType = typeof(IScriptObjectReferenceGetter);
 
-        public static readonly Type SetterType = typeof(IGrass);
+        public static readonly Type SetterType = typeof(IScriptObjectReference);
 
-        public static readonly Type CommonType = typeof(GrassCommon);
+        public static readonly Type CommonType = typeof(ScriptObjectReferenceCommon);
 
-        public const string FullName = "Mutagen.Bethesda.Oblivion.Grass";
+        public const string FullName = "Mutagen.Bethesda.Oblivion.ScriptObjectReference";
 
-        public const string Name = "Grass";
+        public const string Name = "ScriptObjectReference";
 
         public const string Namespace = "Mutagen.Bethesda.Oblivion";
 
@@ -908,6 +966,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (str.Upper)
             {
+                case "REFERENCE":
+                    return (ushort)ScriptObjectReference_FieldIndex.Reference;
                 default:
                     return null;
             }
@@ -915,78 +975,92 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            Grass_FieldIndex enu = (Grass_FieldIndex)index;
+            ScriptObjectReference_FieldIndex enu = (ScriptObjectReference_FieldIndex)index;
             switch (enu)
             {
+                case ScriptObjectReference_FieldIndex.Reference:
+                    return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsEnumerable(index);
+                    return ScriptReference_Registration.GetNthIsEnumerable(index);
             }
         }
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            Grass_FieldIndex enu = (Grass_FieldIndex)index;
+            ScriptObjectReference_FieldIndex enu = (ScriptObjectReference_FieldIndex)index;
             switch (enu)
             {
+                case ScriptObjectReference_FieldIndex.Reference:
+                    return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsLoqui(index);
+                    return ScriptReference_Registration.GetNthIsLoqui(index);
             }
         }
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            Grass_FieldIndex enu = (Grass_FieldIndex)index;
+            ScriptObjectReference_FieldIndex enu = (ScriptObjectReference_FieldIndex)index;
             switch (enu)
             {
+                case ScriptObjectReference_FieldIndex.Reference:
+                    return false;
                 default:
-                    return MajorRecord_Registration.GetNthIsSingleton(index);
+                    return ScriptReference_Registration.GetNthIsSingleton(index);
             }
         }
 
         public static string GetNthName(ushort index)
         {
-            Grass_FieldIndex enu = (Grass_FieldIndex)index;
+            ScriptObjectReference_FieldIndex enu = (ScriptObjectReference_FieldIndex)index;
             switch (enu)
             {
+                case ScriptObjectReference_FieldIndex.Reference:
+                    return "Reference";
                 default:
-                    return MajorRecord_Registration.GetNthName(index);
+                    return ScriptReference_Registration.GetNthName(index);
             }
         }
 
         public static bool IsNthDerivative(ushort index)
         {
-            Grass_FieldIndex enu = (Grass_FieldIndex)index;
+            ScriptObjectReference_FieldIndex enu = (ScriptObjectReference_FieldIndex)index;
             switch (enu)
             {
+                case ScriptObjectReference_FieldIndex.Reference:
+                    return false;
                 default:
-                    return MajorRecord_Registration.IsNthDerivative(index);
+                    return ScriptReference_Registration.IsNthDerivative(index);
             }
         }
 
         public static bool IsProtected(ushort index)
         {
-            Grass_FieldIndex enu = (Grass_FieldIndex)index;
+            ScriptObjectReference_FieldIndex enu = (ScriptObjectReference_FieldIndex)index;
             switch (enu)
             {
+                case ScriptObjectReference_FieldIndex.Reference:
+                    return false;
                 default:
-                    return MajorRecord_Registration.IsProtected(index);
+                    return ScriptReference_Registration.IsProtected(index);
             }
         }
 
         public static Type GetNthType(ushort index)
         {
-            Grass_FieldIndex enu = (Grass_FieldIndex)index;
+            ScriptObjectReference_FieldIndex enu = (ScriptObjectReference_FieldIndex)index;
             switch (enu)
             {
+                case ScriptObjectReference_FieldIndex.Reference:
+                    return typeof(FormIDSetLink<MajorRecord>);
                 default:
-                    return MajorRecord_Registration.GetNthType(index);
+                    return ScriptReference_Registration.GetNthType(index);
             }
         }
 
-        public static readonly RecordType GRAS_HEADER = new RecordType("GRAS");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = GRAS_HEADER;
+        public static readonly RecordType SCRO_HEADER = new RecordType("SCRO");
+        public static readonly RecordType TRIGGERING_RECORD_TYPE = SCRO_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 0;
+        public const int NumTypedFields = 1;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1017,17 +1091,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Extensions
-    public static partial class GrassCommon
+    public static partial class ScriptObjectReferenceCommon
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IGrass item,
-            IGrassGetter rhs,
-            Grass_CopyMask copyMask = null,
-            IGrassGetter def = null,
+            this IScriptObjectReference item,
+            IScriptObjectReferenceGetter rhs,
+            ScriptObjectReference_CopyMask copyMask = null,
+            IScriptObjectReferenceGetter def = null,
             NotifyingFireParameters? cmds = null)
         {
-            GrassCommon.CopyFieldsFrom(
+            ScriptObjectReferenceCommon.CopyFieldsFrom(
                 item: item,
                 rhs: rhs,
                 def: def,
@@ -1038,14 +1112,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void CopyFieldsFrom(
-            this IGrass item,
-            IGrassGetter rhs,
-            out Grass_ErrorMask errorMask,
-            Grass_CopyMask copyMask = null,
-            IGrassGetter def = null,
+            this IScriptObjectReference item,
+            IScriptObjectReferenceGetter rhs,
+            out ScriptObjectReference_ErrorMask errorMask,
+            ScriptObjectReference_CopyMask copyMask = null,
+            IScriptObjectReferenceGetter def = null,
             NotifyingFireParameters? cmds = null)
         {
-            GrassCommon.CopyFieldsFrom(
+            ScriptObjectReferenceCommon.CopyFieldsFrom(
                 item: item,
                 rhs: rhs,
                 def: def,
@@ -1056,20 +1130,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void CopyFieldsFrom(
-            this IGrass item,
-            IGrassGetter rhs,
-            IGrassGetter def,
+            this IScriptObjectReference item,
+            IScriptObjectReferenceGetter rhs,
+            IScriptObjectReferenceGetter def,
             bool doMasks,
-            out Grass_ErrorMask errorMask,
-            Grass_CopyMask copyMask,
+            out ScriptObjectReference_ErrorMask errorMask,
+            ScriptObjectReference_CopyMask copyMask,
             NotifyingFireParameters? cmds)
         {
-            Grass_ErrorMask retErrorMask = null;
-            Func<Grass_ErrorMask> maskGetter = () =>
+            ScriptObjectReference_ErrorMask retErrorMask = null;
+            Func<ScriptObjectReference_ErrorMask> maskGetter = () =>
             {
                 if (retErrorMask == null)
                 {
-                    retErrorMask = new Grass_ErrorMask();
+                    retErrorMask = new ScriptObjectReference_ErrorMask();
                 }
                 return retErrorMask;
             };
@@ -1085,15 +1159,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void CopyFieldsFrom(
-            this IGrass item,
-            IGrassGetter rhs,
-            IGrassGetter def,
+            this IScriptObjectReference item,
+            IScriptObjectReferenceGetter rhs,
+            IScriptObjectReferenceGetter def,
             bool doMasks,
-            Func<Grass_ErrorMask> errorMask,
-            Grass_CopyMask copyMask,
+            Func<ScriptObjectReference_ErrorMask> errorMask,
+            ScriptObjectReference_CopyMask copyMask,
             NotifyingFireParameters? cmds)
         {
-            MajorRecordCommon.CopyFieldsFrom(
+            ScriptReferenceCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1101,6 +1175,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask,
                 copyMask,
                 cmds);
+            if (copyMask?.Reference ?? true)
+            {
+                try
+                {
+                    item.Reference_Property.SetToWithDefault(
+                        rhs: rhs.Reference_Property,
+                        def: def?.Reference_Property,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)ScriptObjectReference_FieldIndex.Reference, ex);
+                }
+            }
         }
 
         #endregion
@@ -1108,84 +1197,96 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void SetNthObjectHasBeenSet(
             ushort index,
             bool on,
-            IGrass obj,
+            IScriptObjectReference obj,
             NotifyingFireParameters? cmds = null)
         {
-            Grass_FieldIndex enu = (Grass_FieldIndex)index;
+            ScriptObjectReference_FieldIndex enu = (ScriptObjectReference_FieldIndex)index;
             switch (enu)
             {
+                case ScriptObjectReference_FieldIndex.Reference:
+                    obj.Reference_Property.HasBeenSet = on;
+                    break;
                 default:
-                    MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
+                    ScriptReferenceCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
             }
         }
 
         public static void UnsetNthObject(
             ushort index,
-            IGrass obj,
+            IScriptObjectReference obj,
             NotifyingUnsetParameters? cmds = null)
         {
-            Grass_FieldIndex enu = (Grass_FieldIndex)index;
+            ScriptObjectReference_FieldIndex enu = (ScriptObjectReference_FieldIndex)index;
             switch (enu)
             {
+                case ScriptObjectReference_FieldIndex.Reference:
+                    obj.Reference_Property.Unset(cmds);
+                    break;
                 default:
-                    MajorRecordCommon.UnsetNthObject(index, obj);
+                    ScriptReferenceCommon.UnsetNthObject(index, obj);
                     break;
             }
         }
 
         public static bool GetNthObjectHasBeenSet(
             ushort index,
-            IGrass obj)
+            IScriptObjectReference obj)
         {
-            Grass_FieldIndex enu = (Grass_FieldIndex)index;
+            ScriptObjectReference_FieldIndex enu = (ScriptObjectReference_FieldIndex)index;
             switch (enu)
             {
+                case ScriptObjectReference_FieldIndex.Reference:
+                    return obj.Reference_Property.HasBeenSet;
                 default:
-                    return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
+                    return ScriptReferenceCommon.GetNthObjectHasBeenSet(index, obj);
             }
         }
 
         public static object GetNthObject(
             ushort index,
-            IGrassGetter obj)
+            IScriptObjectReferenceGetter obj)
         {
-            Grass_FieldIndex enu = (Grass_FieldIndex)index;
+            ScriptObjectReference_FieldIndex enu = (ScriptObjectReference_FieldIndex)index;
             switch (enu)
             {
+                case ScriptObjectReference_FieldIndex.Reference:
+                    return obj.Reference;
                 default:
-                    return MajorRecordCommon.GetNthObject(index, obj);
+                    return ScriptReferenceCommon.GetNthObject(index, obj);
             }
         }
 
         public static void Clear(
-            IGrass item,
+            IScriptObjectReference item,
             NotifyingUnsetParameters? cmds = null)
         {
+            item.Reference_Property.Unset(cmds.ToUnsetParams());
         }
 
-        public static Grass_Mask<bool> GetEqualsMask(
-            this IGrassGetter item,
-            IGrassGetter rhs)
+        public static ScriptObjectReference_Mask<bool> GetEqualsMask(
+            this IScriptObjectReferenceGetter item,
+            IScriptObjectReferenceGetter rhs)
         {
-            var ret = new Grass_Mask<bool>();
+            var ret = new ScriptObjectReference_Mask<bool>();
             FillEqualsMask(item, rhs, ret);
             return ret;
         }
 
         public static void FillEqualsMask(
-            IGrassGetter item,
-            IGrassGetter rhs,
-            Grass_Mask<bool> ret)
+            IScriptObjectReferenceGetter item,
+            IScriptObjectReferenceGetter rhs,
+            ScriptObjectReference_Mask<bool> ret)
         {
             if (rhs == null) return;
-            MajorRecordCommon.FillEqualsMask(item, rhs, ret);
+            ret.Reference = item.Reference_Property.Equals(rhs.Reference_Property, (l, r) => l == r);
+            ScriptReferenceCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
-            this IGrassGetter item,
+            this IScriptObjectReferenceGetter item,
             string name = null,
-            Grass_Mask<bool> printMask = null)
+            ScriptObjectReference_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             item.ToString(fg, name, printMask);
@@ -1193,59 +1294,55 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void ToString(
-            this IGrassGetter item,
+            this IScriptObjectReferenceGetter item,
             FileGeneration fg,
             string name = null,
-            Grass_Mask<bool> printMask = null)
+            ScriptObjectReference_Mask<bool> printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(Grass)} =>");
+                fg.AppendLine($"{nameof(ScriptObjectReference)} =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(Grass)}) =>");
+                fg.AppendLine($"{name} ({nameof(ScriptObjectReference)}) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
+                if (printMask?.Reference ?? true)
+                {
+                    fg.AppendLine($"Reference => {item.Reference}");
+                }
             }
             fg.AppendLine("]");
         }
 
         public static bool HasBeenSet(
-            this IGrassGetter item,
-            Grass_Mask<bool?> checkMask)
+            this IScriptObjectReferenceGetter item,
+            ScriptObjectReference_Mask<bool?> checkMask)
         {
+            if (checkMask.Reference.HasValue && checkMask.Reference.Value != item.Reference_Property.HasBeenSet) return false;
             return true;
         }
 
-        public static Grass_Mask<bool> GetHasBeenSetMask(IGrassGetter item)
+        public static ScriptObjectReference_Mask<bool> GetHasBeenSetMask(IScriptObjectReferenceGetter item)
         {
-            var ret = new Grass_Mask<bool>();
+            var ret = new ScriptObjectReference_Mask<bool>();
+            ret.Reference = item.Reference_Property.HasBeenSet;
             return ret;
         }
 
-        public static Grass_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
+        public static ScriptObjectReference_FieldIndex? ConvertFieldIndex(ScriptReference_FieldIndex? index)
         {
             if (!index.HasValue) return null;
             return ConvertFieldIndex(index: index.Value);
         }
 
-        public static Grass_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static ScriptObjectReference_FieldIndex ConvertFieldIndex(ScriptReference_FieldIndex index)
         {
             switch (index)
             {
-                case MajorRecord_FieldIndex.MajorRecordFlags:
-                    return (Grass_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.FormID:
-                    return (Grass_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.Version:
-                    return (Grass_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.EditorID:
-                    return (Grass_FieldIndex)((int)index);
-                case MajorRecord_FieldIndex.RecordType:
-                    return (Grass_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -1255,33 +1352,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region XML Write
         public static void Write_XML(
             XmlWriter writer,
-            IGrassGetter item,
+            IScriptObjectReferenceGetter item,
             bool doMasks,
-            out Grass_ErrorMask errorMask,
+            out ScriptObjectReference_ErrorMask errorMask,
             string name = null)
         {
-            Grass_ErrorMask errMaskRet = null;
+            ScriptObjectReference_ErrorMask errMaskRet = null;
             Write_XML_Internal(
                 writer: writer,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Grass_ErrorMask()) : default(Func<Grass_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new ScriptObjectReference_ErrorMask()) : default(Func<ScriptObjectReference_ErrorMask>));
             errorMask = errMaskRet;
         }
 
         private static void Write_XML_Internal(
             XmlWriter writer,
-            IGrassGetter item,
-            Func<Grass_ErrorMask> errorMask,
+            IScriptObjectReferenceGetter item,
+            Func<ScriptObjectReference_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.Grass"))
+                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.ScriptObjectReference"))
                 {
                     if (name != null)
                     {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.Grass");
+                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.ScriptObjectReference");
+                    }
+                    if (item.Reference_Property.HasBeenSet)
+                    {
+                        RawFormIDXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Reference),
+                            item: item.Reference?.FormID,
+                            fieldIndex: (int)ScriptObjectReference_FieldIndex.Reference,
+                            errorMask: errorMask);
                     }
                 }
             }
@@ -1299,39 +1405,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Binary Write
         public static void Write_Binary(
             MutagenWriter writer,
-            IGrassGetter item,
+            IScriptObjectReferenceGetter item,
             bool doMasks,
-            out Grass_ErrorMask errorMask)
+            out ScriptObjectReference_ErrorMask errorMask)
         {
-            Grass_ErrorMask errMaskRet = null;
+            ScriptObjectReference_ErrorMask errMaskRet = null;
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Grass_ErrorMask()) : default(Func<Grass_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new ScriptObjectReference_ErrorMask()) : default(Func<ScriptObjectReference_ErrorMask>));
             errorMask = errMaskRet;
         }
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
-            IGrassGetter item,
-            Func<Grass_ErrorMask> errorMask)
+            IScriptObjectReferenceGetter item,
+            Func<ScriptObjectReference_ErrorMask> errorMask)
         {
             try
             {
-                using (HeaderExport.ExportHeader(
+                Write_Binary_RecordTypes(
+                    item: item,
                     writer: writer,
-                    record: Grass_Registration.GRAS_HEADER,
-                    type: ObjectType.Record))
-                {
-                    MajorRecordCommon.Write_Binary_Embedded(
-                        item: item,
-                        writer: writer,
-                        errorMask: errorMask);
-                    MajorRecordCommon.Write_Binary_RecordTypes(
-                        item: item,
-                        writer: writer,
-                        errorMask: errorMask);
-                }
+                    errorMask: errorMask);
             }
             catch (Exception ex)
             when (errorMask != null)
@@ -1341,6 +1437,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         #endregion
 
+        public static void Write_Binary_RecordTypes(
+            IScriptObjectReferenceGetter item,
+            MutagenWriter writer,
+            Func<ScriptObjectReference_ErrorMask> errorMask)
+        {
+            Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Reference_Property,
+                fieldIndex: (int)ScriptObjectReference_FieldIndex.Reference,
+                errorMask: errorMask,
+                header: ScriptObjectReference_Registration.SCRO_HEADER,
+                nullable: false);
+        }
+
         #endregion
 
     }
@@ -1349,34 +1459,41 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Modules
 
     #region Mask
-    public class Grass_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<Grass_Mask<T>>
+    public class ScriptObjectReference_Mask<T> : ScriptReference_Mask<T>, IMask<T>, IEquatable<ScriptObjectReference_Mask<T>>
     {
         #region Ctors
-        public Grass_Mask()
+        public ScriptObjectReference_Mask()
         {
         }
 
-        public Grass_Mask(T initialValue)
+        public ScriptObjectReference_Mask(T initialValue)
         {
+            this.Reference = initialValue;
         }
+        #endregion
+
+        #region Members
+        public T Reference;
         #endregion
 
         #region Equals
         public override bool Equals(object obj)
         {
-            if (!(obj is Grass_Mask<T> rhs)) return false;
+            if (!(obj is ScriptObjectReference_Mask<T> rhs)) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(Grass_Mask<T> rhs)
+        public bool Equals(ScriptObjectReference_Mask<T> rhs)
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!object.Equals(this.Reference, rhs.Reference)) return false;
             return true;
         }
         public override int GetHashCode()
         {
             int ret = 0;
+            ret = ret.CombineHashCode(this.Reference?.GetHashCode());
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -1387,21 +1504,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override bool AllEqual(Func<T, bool> eval)
         {
             if (!base.AllEqual(eval)) return false;
+            if (!eval(this.Reference)) return false;
             return true;
         }
         #endregion
 
         #region Translate
-        public new Grass_Mask<R> Translate<R>(Func<T, R> eval)
+        public new ScriptObjectReference_Mask<R> Translate<R>(Func<T, R> eval)
         {
-            var ret = new Grass_Mask<R>();
+            var ret = new ScriptObjectReference_Mask<R>();
             this.Translate_InternalFill(ret, eval);
             return ret;
         }
 
-        protected void Translate_InternalFill<R>(Grass_Mask<R> obj, Func<T, R> eval)
+        protected void Translate_InternalFill<R>(ScriptObjectReference_Mask<R> obj, Func<T, R> eval)
         {
             base.Translate_InternalFill(obj, eval);
+            obj.Reference = eval(this.Reference);
         }
         #endregion
 
@@ -1418,19 +1537,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(Grass_Mask<bool> printMask = null)
+        public string ToString(ScriptObjectReference_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, Grass_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, ScriptObjectReference_Mask<bool> printMask = null)
         {
-            fg.AppendLine($"{nameof(Grass_Mask<T>)} =>");
+            fg.AppendLine($"{nameof(ScriptObjectReference_Mask<T>)} =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
+                if (printMask?.Reference ?? true)
+                {
+                    fg.AppendLine($"Reference => {Reference}");
+                }
             }
             fg.AppendLine("]");
         }
@@ -1438,14 +1561,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class Grass_ErrorMask : MajorRecord_ErrorMask, IErrorMask<Grass_ErrorMask>
+    public class ScriptObjectReference_ErrorMask : ScriptReference_ErrorMask, IErrorMask<ScriptObjectReference_ErrorMask>
     {
+        #region Members
+        public Exception Reference;
+        #endregion
+
         #region IErrorMask
         public override void SetNthException(int index, Exception ex)
         {
-            Grass_FieldIndex enu = (Grass_FieldIndex)index;
+            ScriptObjectReference_FieldIndex enu = (ScriptObjectReference_FieldIndex)index;
             switch (enu)
             {
+                case ScriptObjectReference_FieldIndex.Reference:
+                    this.Reference = ex;
+                    break;
                 default:
                     base.SetNthException(index, ex);
                     break;
@@ -1454,9 +1584,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void SetNthMask(int index, object obj)
         {
-            Grass_FieldIndex enu = (Grass_FieldIndex)index;
+            ScriptObjectReference_FieldIndex enu = (ScriptObjectReference_FieldIndex)index;
             switch (enu)
             {
+                case ScriptObjectReference_FieldIndex.Reference:
+                    this.Reference = (Exception)obj;
+                    break;
                 default:
                     base.SetNthMask(index, obj);
                     break;
@@ -1466,6 +1599,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override bool IsInError()
         {
             if (Overall != null) return true;
+            if (Reference != null) return true;
             return false;
         }
         #endregion
@@ -1480,7 +1614,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void ToString(FileGeneration fg)
         {
-            fg.AppendLine("Grass_ErrorMask =>");
+            fg.AppendLine("ScriptObjectReference_ErrorMask =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
@@ -1501,16 +1635,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override void ToString_FillInternal(FileGeneration fg)
         {
             base.ToString_FillInternal(fg);
+            fg.AppendLine($"Reference => {Reference}");
         }
         #endregion
 
         #region Combine
-        public Grass_ErrorMask Combine(Grass_ErrorMask rhs)
+        public ScriptObjectReference_ErrorMask Combine(ScriptObjectReference_ErrorMask rhs)
         {
-            var ret = new Grass_ErrorMask();
+            var ret = new ScriptObjectReference_ErrorMask();
+            ret.Reference = this.Reference.Combine(rhs.Reference);
             return ret;
         }
-        public static Grass_ErrorMask Combine(Grass_ErrorMask lhs, Grass_ErrorMask rhs)
+        public static ScriptObjectReference_ErrorMask Combine(ScriptObjectReference_ErrorMask lhs, ScriptObjectReference_ErrorMask rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -1518,8 +1654,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Grass_CopyMask : MajorRecord_CopyMask
+    public class ScriptObjectReference_CopyMask : ScriptReference_CopyMask
     {
+        #region Members
+        public bool Reference;
+        #endregion
+
     }
     #endregion
 

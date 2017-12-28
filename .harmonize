@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>a5c884d229b5c06a0006391045cad8d2fc0be3de</Sha>
+         <Sha>e8069e5eef986d76942b9552013fa997ddcca089</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>12-26-2017 01:30:27</CommitDate>
-         <Description>NotifyingSetItem.SetToWithDefault bugfix</Description>
+         <CommitDate>12-27-2017 01:00:58</CommitDate>
+         <Description>TryGet.Bubble without converter if natural inheritence</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>2aba3c029ae3cce39839f92ead89fb2dbab3507e</Sha>
+         <Sha>f57e033649f56811981082e641bcaecbb411b3e9</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>12-26-2017 14:53:44</CommitDate>
-         <Description>WiredBaseClassTask.   Moved directly inheriting object logic to end of Load instead of start of Resolve</Description>
+         <CommitDate>12-28-2017 16:41:37</CommitDate>
+         <Description>MaskItem.Bubble with implicit inheritence type conversion</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

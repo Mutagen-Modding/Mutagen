@@ -798,7 +798,15 @@ namespace Mutagen.Bethesda.Oblivion
             Relation_CopyMask copyMask = null,
             IRelationGetter def = null)
         {
-            var ret = new Relation();
+            Relation ret;
+            if (item.GetType().Equals(typeof(Relation)))
+            {
+                ret = new Relation() as Relation;
+            }
+            else
+            {
+                ret = (Relation)Activator.CreateInstance(item.GetType());
+            }
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,

@@ -926,7 +926,15 @@ namespace Mutagen.Bethesda.Oblivion
             MagicEffectSubData_CopyMask copyMask = null,
             IMagicEffectSubDataGetter def = null)
         {
-            var ret = new MagicEffectSubData();
+            MagicEffectSubData ret;
+            if (item.GetType().Equals(typeof(MagicEffectSubData)))
+            {
+                ret = new MagicEffectSubData() as MagicEffectSubData;
+            }
+            else
+            {
+                ret = (MagicEffectSubData)Activator.CreateInstance(item.GetType());
+            }
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,

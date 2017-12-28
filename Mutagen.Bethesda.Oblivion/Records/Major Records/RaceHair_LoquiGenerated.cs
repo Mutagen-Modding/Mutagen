@@ -792,7 +792,15 @@ namespace Mutagen.Bethesda.Oblivion
             RaceHair_CopyMask copyMask = null,
             IRaceHairGetter def = null)
         {
-            var ret = new RaceHair();
+            RaceHair ret;
+            if (item.GetType().Equals(typeof(RaceHair)))
+            {
+                ret = new RaceHair() as RaceHair;
+            }
+            else
+            {
+                ret = (RaceHair)Activator.CreateInstance(item.GetType());
+            }
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,

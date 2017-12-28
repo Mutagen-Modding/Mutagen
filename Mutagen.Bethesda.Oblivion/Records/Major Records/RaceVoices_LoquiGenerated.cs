@@ -792,7 +792,15 @@ namespace Mutagen.Bethesda.Oblivion
             RaceVoices_CopyMask copyMask = null,
             IRaceVoicesGetter def = null)
         {
-            var ret = new RaceVoices();
+            RaceVoices ret;
+            if (item.GetType().Equals(typeof(RaceVoices)))
+            {
+                ret = new RaceVoices() as RaceVoices;
+            }
+            else
+            {
+                ret = (RaceVoices)Activator.CreateInstance(item.GetType());
+            }
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,

@@ -10,7 +10,15 @@ namespace Mutagen.Bethesda.Generation
 {
     public class FormIDLinkBinaryTranslationGeneration : PrimitiveBinaryTranslationGeneration<RawFormID>
     {
-        public override void GenerateCopyInRet(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, string nodeAccessor, Accessor retAccessor, string doMaskAccessor, string maskAccessor)
+        public override void GenerateCopyInRet(
+            FileGeneration fg,
+            ObjectGeneration objGen,
+            TypeGeneration targetGen,
+            TypeGeneration typeGen,
+            string nodeAccessor, 
+            Accessor retAccessor,
+            string doMaskAccessor,
+            string maskAccessor)
         {
             FormIDLinkType linkType = typeGen as FormIDLinkType;
             if (typeGen.TryGetFieldData(out var data)

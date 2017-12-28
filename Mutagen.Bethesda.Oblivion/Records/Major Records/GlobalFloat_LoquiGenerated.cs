@@ -825,7 +825,15 @@ namespace Mutagen.Bethesda.Oblivion
             GlobalFloat_CopyMask copyMask = null,
             IGlobalFloatGetter def = null)
         {
-            var ret = new GlobalFloat();
+            GlobalFloat ret;
+            if (item.GetType().Equals(typeof(GlobalFloat)))
+            {
+                ret = new GlobalFloat() as GlobalFloat;
+            }
+            else
+            {
+                ret = (GlobalFloat)Activator.CreateInstance(item.GetType());
+            }
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,

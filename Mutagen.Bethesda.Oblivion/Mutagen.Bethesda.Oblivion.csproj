@@ -280,6 +280,12 @@
     <Compile Include="Records\Major Records\Light_LoquiGenerated.cs">
       <DependentUpon>Light.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\ScriptVariableReference_LoquiGenerated.cs">
+      <DependentUpon>Script.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ScriptObjectReference_LoquiGenerated.cs">
+      <DependentUpon>Script.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Records\Common Subrecords\Model.xml">

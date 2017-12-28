@@ -420,6 +420,59 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        public GameSetting Copy(
+            GameSetting_CopyMask copyMask = null,
+            IGameSettingGetter def = null)
+        {
+            return GameSetting.Copy(
+                this,
+                copyMask: copyMask,
+                def: def);
+        }
+
+        public static GameSetting Copy(
+            IGameSetting item,
+            GameSetting_CopyMask copyMask = null,
+            IGameSettingGetter def = null)
+        {
+            GameSetting ret = (GameSetting)Activator.CreateInstance(item.GetType());
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+
+        public static CopyType CopyGeneric<CopyType>(
+            CopyType item,
+            GameSetting_CopyMask copyMask = null,
+            IGameSettingGetter def = null)
+            where CopyType : class, IGameSetting
+        {
+            CopyType ret = (CopyType)Activator.CreateInstance(item.GetType());
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                doMasks: false,
+                errorMask: null,
+                cmds: null,
+                def: def);
+            return ret;
+        }
+
+        public static GameSetting Copy_ToLoqui(
+            IGameSettingGetter item,
+            GameSetting_CopyMask copyMask = null,
+            IGameSettingGetter def = null)
+        {
+            GameSetting ret = (GameSetting)Activator.CreateInstance(item.GetType());
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds = null)
         {
             GameSetting_FieldIndex enu = (GameSetting_FieldIndex)index;

@@ -799,7 +799,15 @@ namespace Mutagen.Bethesda.Oblivion
             Spell_CopyMask copyMask = null,
             ISpellGetter def = null)
         {
-            var ret = new Spell();
+            Spell ret;
+            if (item.GetType().Equals(typeof(Spell)))
+            {
+                ret = new Spell() as Spell;
+            }
+            else
+            {
+                ret = (Spell)Activator.CreateInstance(item.GetType());
+            }
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,

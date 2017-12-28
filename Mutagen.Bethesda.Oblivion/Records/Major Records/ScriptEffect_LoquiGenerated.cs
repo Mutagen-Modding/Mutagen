@@ -916,7 +916,15 @@ namespace Mutagen.Bethesda.Oblivion
             ScriptEffect_CopyMask copyMask = null,
             IScriptEffectGetter def = null)
         {
-            var ret = new ScriptEffect();
+            ScriptEffect ret;
+            if (item.GetType().Equals(typeof(ScriptEffect)))
+            {
+                ret = new ScriptEffect() as ScriptEffect;
+            }
+            else
+            {
+                ret = (ScriptEffect)Activator.CreateInstance(item.GetType());
+            }
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,

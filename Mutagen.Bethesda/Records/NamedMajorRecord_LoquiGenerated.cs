@@ -471,6 +471,59 @@ namespace Mutagen.Bethesda
 
         #endregion
 
+        public NamedMajorRecord Copy(
+            NamedMajorRecord_CopyMask copyMask = null,
+            INamedMajorRecordGetter def = null)
+        {
+            return NamedMajorRecord.Copy(
+                this,
+                copyMask: copyMask,
+                def: def);
+        }
+
+        public static NamedMajorRecord Copy(
+            INamedMajorRecord item,
+            NamedMajorRecord_CopyMask copyMask = null,
+            INamedMajorRecordGetter def = null)
+        {
+            NamedMajorRecord ret = (NamedMajorRecord)Activator.CreateInstance(item.GetType());
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+
+        public static CopyType CopyGeneric<CopyType>(
+            CopyType item,
+            NamedMajorRecord_CopyMask copyMask = null,
+            INamedMajorRecordGetter def = null)
+            where CopyType : class, INamedMajorRecord
+        {
+            CopyType ret = (CopyType)Activator.CreateInstance(item.GetType());
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                doMasks: false,
+                errorMask: null,
+                cmds: null,
+                def: def);
+            return ret;
+        }
+
+        public static NamedMajorRecord Copy_ToLoqui(
+            INamedMajorRecordGetter item,
+            NamedMajorRecord_CopyMask copyMask = null,
+            INamedMajorRecordGetter def = null)
+        {
+            NamedMajorRecord ret = (NamedMajorRecord)Activator.CreateInstance(item.GetType());
+            ret.CopyFieldsFrom(
+                item,
+                copyMask: copyMask,
+                def: def);
+            return ret;
+        }
+
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds = null)
         {
             NamedMajorRecord_FieldIndex enu = (NamedMajorRecord_FieldIndex)index;
@@ -689,7 +742,33 @@ namespace Mutagen.Bethesda.Internals
         }
 
         public static readonly RecordType FULL_HEADER = new RecordType("FULL");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = FULL_HEADER;
+        public static readonly RecordType CLAS_HEADER = new RecordType("CLAS");
+        public static readonly RecordType ENCH_HEADER = new RecordType("ENCH");
+        public static readonly RecordType EYES_HEADER = new RecordType("EYES");
+        public static readonly RecordType FACT_HEADER = new RecordType("FACT");
+        public static readonly RecordType HAIR_HEADER = new RecordType("HAIR");
+        public static readonly RecordType MGEF_HEADER = new RecordType("MGEF");
+        public static readonly RecordType RACE_HEADER = new RecordType("RACE");
+        public static readonly RecordType SPEL_HEADER = new RecordType("SPEL");
+        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
+        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
+        {
+            return new CollectionGetterWrapper<RecordType>(
+                new HashSet<RecordType>(
+                    new RecordType[]
+                    {
+                        FULL_HEADER,
+                        CLAS_HEADER,
+                        ENCH_HEADER,
+                        EYES_HEADER,
+                        FACT_HEADER,
+                        HAIR_HEADER,
+                        MGEF_HEADER,
+                        RACE_HEADER,
+                        SPEL_HEADER
+                    })
+            );
+        });
         public const int NumStructFields = 0;
         public const int NumTypedFields = 1;
         #region Interface

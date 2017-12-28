@@ -799,7 +799,15 @@ namespace Mutagen.Bethesda.Oblivion
             RaceStatsGendered_CopyMask copyMask = null,
             IRaceStatsGenderedGetter def = null)
         {
-            var ret = new RaceStatsGendered();
+            RaceStatsGendered ret;
+            if (item.GetType().Equals(typeof(RaceStatsGendered)))
+            {
+                ret = new RaceStatsGendered() as RaceStatsGendered;
+            }
+            else
+            {
+                ret = (RaceStatsGendered)Activator.CreateInstance(item.GetType());
+            }
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,

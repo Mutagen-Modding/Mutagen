@@ -924,7 +924,15 @@ namespace Mutagen.Bethesda.Oblivion
             Hair_CopyMask copyMask = null,
             IHairGetter def = null)
         {
-            var ret = new Hair();
+            Hair ret;
+            if (item.GetType().Equals(typeof(Hair)))
+            {
+                ret = new Hair() as Hair;
+            }
+            else
+            {
+                ret = (Hair)Activator.CreateInstance(item.GetType());
+            }
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,

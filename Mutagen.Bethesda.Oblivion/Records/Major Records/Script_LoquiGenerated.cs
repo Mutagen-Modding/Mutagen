@@ -946,12 +946,29 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)Script_FieldIndex.References,
                         objType: ObjectType.Subrecord,
                         errorMask: errorMask,
-                        transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, ScriptReference_ErrorMask> listSubMask) =>
+                        transl: (MutagenFrame r, RecordType header, bool listDoMasks, out MaskItem<Exception, ScriptReference_ErrorMask> listSubMask) =>
                         {
-                            return LoquiBinaryTranslation<ScriptReference, ScriptReference_ErrorMask>.Instance.Parse(
-                                frame: r.Spawn(snapToFinalPosition: false),
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask);
+                            TryGet<ScriptReference> ret;
+                            switch (header.Type)
+                            {
+                                case "SCRV":
+                                    ret = LoquiBinaryTranslation<ScriptVariableReference, ScriptVariableReference_ErrorMask>.Instance.Parse(
+                                        frame: r.Spawn(snapToFinalPosition: false),
+                                        doMasks: listDoMasks,
+                                        errorMask: out var SCRVSubMask).Bubble<ScriptVariableReference, ScriptReference>();
+                                    listSubMask = SCRVSubMask.Bubble<ScriptVariableReference_ErrorMask, ScriptReference_ErrorMask>();
+                                    break;
+                                case "SCRO":
+                                    ret = LoquiBinaryTranslation<ScriptObjectReference, ScriptObjectReference_ErrorMask>.Instance.Parse(
+                                        frame: r.Spawn(snapToFinalPosition: false),
+                                        doMasks: listDoMasks,
+                                        errorMask: out var SCROSubMask).Bubble<ScriptObjectReference, ScriptReference>();
+                                    listSubMask = SCROSubMask.Bubble<ScriptObjectReference_ErrorMask, ScriptReference_ErrorMask>();
+                                    break;
+                                default:
+                                    throw new NotImplementedException();
+                            }
+                            return ret;
                         }
                         );
                     item._References.SetIfSucceeded(ReferencestryGet);
@@ -1027,7 +1044,15 @@ namespace Mutagen.Bethesda.Oblivion
             Script_CopyMask copyMask = null,
             IScriptGetter def = null)
         {
-            var ret = new Script();
+            Script ret;
+            if (item.GetType().Equals(typeof(Script)))
+            {
+                ret = new Script() as Script;
+            }
+            else
+            {
+                ret = (Script)Activator.CreateInstance(item.GetType());
+            }
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,

@@ -776,7 +776,15 @@ namespace Mutagen.Bethesda.Oblivion
             LocalVariableData_CopyMask copyMask = null,
             ILocalVariableDataGetter def = null)
         {
-            var ret = new LocalVariableData();
+            LocalVariableData ret;
+            if (item.GetType().Equals(typeof(LocalVariableData)))
+            {
+                ret = new LocalVariableData() as LocalVariableData;
+            }
+            else
+            {
+                ret = (LocalVariableData)Activator.CreateInstance(item.GetType());
+            }
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,

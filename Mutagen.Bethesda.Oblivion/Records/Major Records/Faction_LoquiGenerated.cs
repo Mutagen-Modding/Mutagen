@@ -995,7 +995,15 @@ namespace Mutagen.Bethesda.Oblivion
             Faction_CopyMask copyMask = null,
             IFactionGetter def = null)
         {
-            var ret = new Faction();
+            Faction ret;
+            if (item.GetType().Equals(typeof(Faction)))
+            {
+                ret = new Faction() as Faction;
+            }
+            else
+            {
+                ret = (Faction)Activator.CreateInstance(item.GetType());
+            }
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,

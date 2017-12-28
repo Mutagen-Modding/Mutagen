@@ -1170,7 +1170,15 @@ namespace Mutagen.Bethesda.Oblivion
             OblivionMod_CopyMask copyMask = null,
             IOblivionModGetter def = null)
         {
-            var ret = new OblivionMod();
+            OblivionMod ret;
+            if (item.GetType().Equals(typeof(OblivionMod)))
+            {
+                ret = new OblivionMod() as OblivionMod;
+            }
+            else
+            {
+                ret = (OblivionMod)Activator.CreateInstance(item.GetType());
+            }
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,

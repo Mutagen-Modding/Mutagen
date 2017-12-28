@@ -871,7 +871,15 @@ namespace Mutagen.Bethesda.Oblivion
             Sound_CopyMask copyMask = null,
             ISoundGetter def = null)
         {
-            var ret = new Sound();
+            Sound ret;
+            if (item.GetType().Equals(typeof(Sound)))
+            {
+                ret = new Sound() as Sound;
+            }
+            else
+            {
+                ret = (Sound)Activator.CreateInstance(item.GetType());
+            }
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,

@@ -871,7 +871,15 @@ namespace Mutagen.Bethesda.Oblivion
             FaceGenData_CopyMask copyMask = null,
             IFaceGenDataGetter def = null)
         {
-            var ret = new FaceGenData();
+            FaceGenData ret;
+            if (item.GetType().Equals(typeof(FaceGenData)))
+            {
+                ret = new FaceGenData() as FaceGenData;
+            }
+            else
+            {
+                ret = (FaceGenData)Activator.CreateInstance(item.GetType());
+            }
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,

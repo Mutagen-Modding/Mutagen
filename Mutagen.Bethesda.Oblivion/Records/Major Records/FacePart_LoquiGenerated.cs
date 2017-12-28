@@ -868,7 +868,15 @@ namespace Mutagen.Bethesda.Oblivion
             FacePart_CopyMask copyMask = null,
             IFacePartGetter def = null)
         {
-            var ret = new FacePart();
+            FacePart ret;
+            if (item.GetType().Equals(typeof(FacePart)))
+            {
+                ret = new FacePart() as FacePart;
+            }
+            else
+            {
+                ret = (FacePart)Activator.CreateInstance(item.GetType());
+            }
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,

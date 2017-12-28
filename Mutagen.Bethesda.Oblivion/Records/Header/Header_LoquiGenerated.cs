@@ -835,7 +835,15 @@ namespace Mutagen.Bethesda.Oblivion
             Header_CopyMask copyMask = null,
             IHeaderGetter def = null)
         {
-            var ret = new Header();
+            Header ret;
+            if (item.GetType().Equals(typeof(Header)))
+            {
+                ret = new Header() as Header;
+            }
+            else
+            {
+                ret = (Header)Activator.CreateInstance(item.GetType());
+            }
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,

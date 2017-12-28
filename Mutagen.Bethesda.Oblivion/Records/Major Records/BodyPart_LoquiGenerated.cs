@@ -837,7 +837,15 @@ namespace Mutagen.Bethesda.Oblivion
             BodyPart_CopyMask copyMask = null,
             IBodyPartGetter def = null)
         {
-            var ret = new BodyPart();
+            BodyPart ret;
+            if (item.GetType().Equals(typeof(BodyPart)))
+            {
+                ret = new BodyPart() as BodyPart;
+            }
+            else
+            {
+                ret = (BodyPart)Activator.CreateInstance(item.GetType());
+            }
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,

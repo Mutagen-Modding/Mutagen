@@ -58,16 +58,15 @@ namespace Mutagen.Bethesda.Generation
 
         private async Task GenerateKnownRecordTypes(ObjectGeneration obj, FileGeneration fg)
         {
+            HashSet<RecordType> trigRecordTypes = new HashSet<RecordType>();
             HashSet<RecordType> recordTypes = new HashSet<RecordType>();
             if (obj.TryGetRecordType(out var recType))
             {
                 recordTypes.Add(recType);
             }
-            var trigRecType = await obj.TryGetTriggeringRecordTypes();
-            if (trigRecType.Succeeded)
-            {
-                recordTypes.Add(trigRecType.Value);
-            }
+            var trigRecType = await obj.GetObjectData().GenerationTypes;
+            trigRecordTypes.Add(trigRecType.SelectMany((kv) => kv.Key));
+            recordTypes.Add(trigRecordTypes);
             foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.FalseAndInclude, nonIntegrated: true))
             {
                 var data = field.GetFieldData();
@@ -95,10 +94,10 @@ namespace Mutagen.Bethesda.Generation
             {
                 fg.AppendLine($"public static readonly {nameof(RecordType)} {type.Type}_HEADER = new {nameof(RecordType)}(\"{type.Type}\");");
             }
-            var count = trigRecType.Value.Count();
+            var count = trigRecordTypes.Count();
             if (count == 1)
             {
-                fg.AppendLine($"public static readonly {nameof(RecordType)} {Mutagen.Bethesda.Constants.TRIGGERING_RECORDTYPE_MEMBER} = {trigRecType.Value.First().Type}_HEADER;");
+                fg.AppendLine($"public static readonly {nameof(RecordType)} {Mutagen.Bethesda.Constants.TRIGGERING_RECORDTYPE_MEMBER} = {trigRecordTypes.First().Type}_HEADER;");
             }
             else if (count > 1)
             {
@@ -117,7 +116,7 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 using (var comma = new CommaWrapper(fg))
                                 {
-                                    foreach (var trigger in trigRecType.Value)
+                                    foreach (var trigger in trigRecordTypes)
                                     {
                                         comma.Add($"{trigger.Type}_HEADER");
                                     }

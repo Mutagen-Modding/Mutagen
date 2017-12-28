@@ -949,7 +949,15 @@ namespace Mutagen.Bethesda.Oblivion
             LandTexture_CopyMask copyMask = null,
             ILandTextureGetter def = null)
         {
-            var ret = new LandTexture();
+            LandTexture ret;
+            if (item.GetType().Equals(typeof(LandTexture)))
+            {
+                ret = new LandTexture() as LandTexture;
+            }
+            else
+            {
+                ret = (LandTexture)Activator.CreateInstance(item.GetType());
+            }
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,

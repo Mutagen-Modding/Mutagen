@@ -894,7 +894,15 @@ namespace Mutagen.Bethesda.Oblivion
             Eye_CopyMask copyMask = null,
             IEyeGetter def = null)
         {
-            var ret = new Eye();
+            Eye ret;
+            if (item.GetType().Equals(typeof(Eye)))
+            {
+                ret = new Eye() as Eye;
+            }
+            else
+            {
+                ret = (Eye)Activator.CreateInstance(item.GetType());
+            }
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,

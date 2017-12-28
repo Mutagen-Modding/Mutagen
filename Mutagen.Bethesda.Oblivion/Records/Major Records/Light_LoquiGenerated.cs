@@ -775,7 +775,15 @@ namespace Mutagen.Bethesda.Oblivion
             Light_CopyMask copyMask = null,
             ILightGetter def = null)
         {
-            var ret = new Light();
+            Light ret;
+            if (item.GetType().Equals(typeof(Light)))
+            {
+                ret = new Light() as Light;
+            }
+            else
+            {
+                ret = (Light)Activator.CreateInstance(item.GetType());
+            }
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,

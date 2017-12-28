@@ -860,7 +860,15 @@ namespace Mutagen.Bethesda.Oblivion
             GameSettingString_CopyMask copyMask = null,
             IGameSettingStringGetter def = null)
         {
-            var ret = new GameSettingString();
+            GameSettingString ret;
+            if (item.GetType().Equals(typeof(GameSettingString)))
+            {
+                ret = new GameSettingString() as GameSettingString;
+            }
+            else
+            {
+                ret = (GameSettingString)Activator.CreateInstance(item.GetType());
+            }
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,

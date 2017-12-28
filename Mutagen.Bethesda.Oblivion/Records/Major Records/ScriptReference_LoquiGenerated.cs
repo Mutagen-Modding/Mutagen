@@ -23,7 +23,7 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class ScriptReference : IScriptReference, ILoquiObjectSetter, IEquatable<ScriptReference>
+    public abstract partial class ScriptReference : IScriptReference, ILoquiObjectSetter, IEquatable<ScriptReference>
     {
         ILoquiRegistration ILoquiObject.Registration => ScriptReference_Registration.Instance;
         public static ScriptReference_Registration Registration => ScriptReference_Registration.Instance;
@@ -36,38 +36,22 @@ namespace Mutagen.Bethesda.Oblivion
         partial void CustomCtor();
         #endregion
 
-        #region VariableIndex
-        protected readonly INotifyingSetItem<Int32> _VariableIndex = NotifyingSetItem.Factory<Int32>(markAsSet: false);
-        public INotifyingSetItem<Int32> VariableIndex_Property => _VariableIndex;
-        public Int32 VariableIndex
-        {
-            get => this._VariableIndex.Item;
-            set => this._VariableIndex.Set(value);
-        }
-        INotifyingSetItem<Int32> IScriptReference.VariableIndex_Property => this.VariableIndex_Property;
-        INotifyingSetItemGetter<Int32> IScriptReferenceGetter.VariableIndex_Property => this.VariableIndex_Property;
-        #endregion
-        #region Reference
-        public FormIDSetLink<MajorRecord> Reference_Property { get; } = new FormIDSetLink<MajorRecord>();
-        public MajorRecord Reference { get => Reference_Property.Item; set => Reference_Property.Item = value; }
-        FormIDSetLink<MajorRecord> IScriptReferenceGetter.Reference_Property => this.Reference_Property;
-        #endregion
 
         #region Loqui Getter Interface
 
-        protected object GetNthObject(ushort index) => ScriptReferenceCommon.GetNthObject(index, this);
+        protected virtual object GetNthObject(ushort index) => ScriptReferenceCommon.GetNthObject(index, this);
         object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
 
-        protected bool GetNthObjectHasBeenSet(ushort index) => ScriptReferenceCommon.GetNthObjectHasBeenSet(index, this);
+        protected virtual bool GetNthObjectHasBeenSet(ushort index) => ScriptReferenceCommon.GetNthObjectHasBeenSet(index, this);
         bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
 
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => ScriptReferenceCommon.UnsetNthObject(index, this, cmds);
+        protected virtual void UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => ScriptReferenceCommon.UnsetNthObject(index, this, cmds);
         void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => this.UnsetNthObject(index, cmds);
 
         #endregion
 
         #region Loqui Interface
-        protected void SetNthObjectHasBeenSet(ushort index, bool on)
+        protected virtual void SetNthObjectHasBeenSet(ushort index, bool on)
         {
             ScriptReferenceCommon.SetNthObjectHasBeenSet(index, on, this);
         }
@@ -88,7 +72,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ScriptReferenceCommon.ToString(this, name: name, printMask: printMask);
         }
 
-        public void ToString(
+        public virtual void ToString(
             FileGeneration fg,
             string name = null)
         {
@@ -111,30 +95,12 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(ScriptReference rhs)
         {
             if (rhs == null) return false;
-            if (VariableIndex_Property.HasBeenSet != rhs.VariableIndex_Property.HasBeenSet) return false;
-            if (VariableIndex_Property.HasBeenSet)
-            {
-                if (VariableIndex != rhs.VariableIndex) return false;
-            }
-            if (Reference_Property.HasBeenSet != rhs.Reference_Property.HasBeenSet) return false;
-            if (Reference_Property.HasBeenSet)
-            {
-                if (Reference != rhs.Reference) return false;
-            }
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            if (VariableIndex_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(VariableIndex).CombineHashCode(ret);
-            }
-            if (Reference_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Reference).CombineHashCode(ret);
-            }
             return ret;
         }
 
@@ -142,88 +108,8 @@ namespace Mutagen.Bethesda.Oblivion
 
 
         #region XML Translation
-        #region XML Create
-        [DebuggerStepThrough]
-        public static ScriptReference Create_XML(XElement root)
-        {
-            return Create_XML(
-                root: root,
-                doMasks: false,
-                errorMask: out var errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static ScriptReference Create_XML(
-            XElement root,
-            out ScriptReference_ErrorMask errorMask)
-        {
-            return Create_XML(
-                root: root,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static ScriptReference Create_XML(
-            XElement root,
-            bool doMasks,
-            out ScriptReference_ErrorMask errorMask)
-        {
-            var ret = Create_XML(
-                root: root,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
-        }
-
-        [DebuggerStepThrough]
-        public static (ScriptReference Object, ScriptReference_ErrorMask ErrorMask) Create_XML(
-            XElement root,
-            bool doMasks)
-        {
-            ScriptReference_ErrorMask errMaskRet = null;
-            var ret = Create_XML_Internal(
-                root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new ScriptReference_ErrorMask()) : default(Func<ScriptReference_ErrorMask>));
-            return (ret, errMaskRet);
-        }
-
-        public static ScriptReference Create_XML(string path)
-        {
-            var root = XDocument.Load(path).Root;
-            return Create_XML(root: root);
-        }
-
-        public static ScriptReference Create_XML(
-            string path,
-            out ScriptReference_ErrorMask errorMask)
-        {
-            var root = XDocument.Load(path).Root;
-            return Create_XML(
-                root: root,
-                errorMask: out errorMask);
-        }
-
-        public static ScriptReference Create_XML(Stream stream)
-        {
-            var root = XDocument.Load(stream).Root;
-            return Create_XML(root: root);
-        }
-
-        public static ScriptReference Create_XML(
-            Stream stream,
-            out ScriptReference_ErrorMask errorMask)
-        {
-            var root = XDocument.Load(stream).Root;
-            return Create_XML(
-                root: root,
-                errorMask: out errorMask);
-        }
-
-        #endregion
-
         #region XML Copy In
-        public void CopyIn_XML(
+        public virtual void CopyIn_XML(
             XElement root,
             NotifyingFireParameters? cmds = null)
         {
@@ -340,45 +226,17 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public void Write_XML(
+        public abstract void Write_XML(
             XmlWriter writer,
-            string name = null)
-        {
-            this.Write_XML_Internal(
-                writer: writer,
-                name: name,
-                doMasks: false);
-        }
-
-        public void Write_XML(
+            string name = null);
+        public abstract void Write_XML(
             string path,
-            string name = null)
-        {
-            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
-        }
-
-        public void Write_XML(
+            string name = null);
+        public abstract void Write_XML(
             Stream stream,
-            string name = null)
-        {
-            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.Indentation = 3;
-                Write_XML(
-                    writer: writer,
-                    name: name);
-            }
-        }
+            string name = null);
 
-        protected object Write_XML_Internal(
+        protected virtual object Write_XML_Internal(
             XmlWriter writer,
             bool doMasks,
             string name = null)
@@ -392,30 +250,6 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static ScriptReference Create_XML_Internal(
-            XElement root,
-            Func<ScriptReference_ErrorMask> errorMask)
-        {
-            var ret = new ScriptReference();
-            try
-            {
-                foreach (var elem in root.Elements())
-                {
-                    Fill_XML_Internal(
-                        item: ret,
-                        root: elem,
-                        name: elem.Name.LocalName,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
-
         protected static void Fill_XML_Internal(
             ScriptReference item,
             XElement root,
@@ -424,18 +258,6 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
-                case "VariableIndex":
-                    item._VariableIndex.SetIfSucceeded(Int32XmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)ScriptReference_FieldIndex.VariableIndex,
-                        errorMask: errorMask));
-                    break;
-                case "Reference":
-                    item.Reference_Property.SetIfSucceeded(RawFormIDXmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)ScriptReference_FieldIndex.Reference,
-                        errorMask: errorMask));
-                    break;
                 default:
                     break;
             }
@@ -444,100 +266,8 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Binary Translation
-        #region Binary Create
-        [DebuggerStepThrough]
-        public static ScriptReference Create_Binary(MutagenFrame frame)
-        {
-            return Create_Binary(
-                frame: frame,
-                doMasks: false,
-                errorMask: out var errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static ScriptReference Create_Binary(
-            MutagenFrame frame,
-            out ScriptReference_ErrorMask errorMask)
-        {
-            return Create_Binary(
-                frame: frame,
-                doMasks: true,
-                errorMask: out errorMask);
-        }
-
-        [DebuggerStepThrough]
-        public static ScriptReference Create_Binary(
-            MutagenFrame frame,
-            bool doMasks,
-            out ScriptReference_ErrorMask errorMask)
-        {
-            var ret = Create_Binary(
-                frame: frame,
-                doMasks: doMasks);
-            errorMask = ret.ErrorMask;
-            return ret.Object;
-        }
-
-        [DebuggerStepThrough]
-        public static (ScriptReference Object, ScriptReference_ErrorMask ErrorMask) Create_Binary(
-            MutagenFrame frame,
-            bool doMasks)
-        {
-            ScriptReference_ErrorMask errMaskRet = null;
-            var ret = Create_Binary_Internal(
-                frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new ScriptReference_ErrorMask()) : default(Func<ScriptReference_ErrorMask>));
-            return (ret, errMaskRet);
-        }
-
-        public static ScriptReference Create_Binary(string path)
-        {
-            using (var reader = new MutagenReader(path))
-            {
-                var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
-            }
-        }
-
-        public static ScriptReference Create_Binary(
-            string path,
-            out ScriptReference_ErrorMask errorMask)
-        {
-            using (var reader = new MutagenReader(path))
-            {
-                var frame = new MutagenFrame(reader);
-                return Create_Binary(
-                    frame: frame,
-                    errorMask: out errorMask);
-            }
-        }
-
-        public static ScriptReference Create_Binary(Stream stream)
-        {
-            using (var reader = new MutagenReader(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                return Create_Binary(frame: frame);
-            }
-        }
-
-        public static ScriptReference Create_Binary(
-            Stream stream,
-            out ScriptReference_ErrorMask errorMask)
-        {
-            using (var reader = new MutagenReader(stream))
-            {
-                var frame = new MutagenFrame(reader);
-                return Create_Binary(
-                    frame: frame,
-                    errorMask: out errorMask);
-            }
-        }
-
-        #endregion
-
         #region Binary Copy In
-        public void CopyIn_Binary(
+        public virtual void CopyIn_Binary(
             MutagenFrame frame,
             NotifyingFireParameters? cmds = null)
         {
@@ -656,30 +386,11 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public void Write_Binary(MutagenWriter writer)
-        {
-            this.Write_Binary_Internal(
-                writer: writer,
-                doMasks: false);
-        }
+        public abstract void Write_Binary(MutagenWriter writer);
+        public abstract void Write_Binary(string path);
+        public abstract void Write_Binary(Stream stream);
 
-        public void Write_Binary(string path)
-        {
-            using (var writer = new MutagenWriter(path))
-            {
-                Write_Binary(writer: writer);
-            }
-        }
-
-        public void Write_Binary(Stream stream)
-        {
-            using (var writer = new MutagenWriter(stream))
-            {
-                Write_Binary(writer: writer);
-            }
-        }
-
-        protected object Write_Binary_Internal(
+        protected virtual object Write_Binary_Internal(
             MutagenWriter writer,
             bool doMasks)
         {
@@ -691,79 +402,6 @@ namespace Mutagen.Bethesda.Oblivion
             return errorMask;
         }
         #endregion
-
-        private static ScriptReference Create_Binary_Internal(
-            MutagenFrame frame,
-            Func<ScriptReference_ErrorMask> errorMask)
-        {
-            var ret = new ScriptReference();
-            try
-            {
-                using (frame)
-                {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        errorMask: errorMask);
-                    ScriptReference_FieldIndex? lastParsed = null;
-                    while (!frame.Complete)
-                    {
-                        var parsed = Fill_Binary_RecordTypes(
-                            item: ret,
-                            frame: frame,
-                            lastParsed: lastParsed,
-                            errorMask: errorMask);
-                        if (parsed.Failed) break;
-                        lastParsed = parsed.Value;
-                    }
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
-        }
-
-        protected static void Fill_Binary_Structs(
-            ScriptReference item,
-            MutagenFrame frame,
-            Func<ScriptReference_ErrorMask> errorMask)
-        {
-        }
-
-        protected static TryGet<ScriptReference_FieldIndex?> Fill_Binary_RecordTypes(
-            ScriptReference item,
-            MutagenFrame frame,
-            ScriptReference_FieldIndex? lastParsed,
-            Func<ScriptReference_ErrorMask> errorMask)
-        {
-            var nextRecordType = HeaderTranslation.GetNextSubRecordType(
-                frame: frame,
-                contentLength: out var contentLength);
-            switch (nextRecordType.Type)
-            {
-                case "SCRV":
-                    if (lastParsed.HasValue && lastParsed.Value >= ScriptReference_FieldIndex.VariableIndex) return TryGet<ScriptReference_FieldIndex?>.Failure;
-                    frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._VariableIndex.SetIfSucceeded(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
-                        fieldIndex: (int)ScriptReference_FieldIndex.VariableIndex,
-                        errorMask: errorMask));
-                    return TryGet<ScriptReference_FieldIndex?>.Succeed(ScriptReference_FieldIndex.VariableIndex);
-                case "SCRO":
-                    if (lastParsed.HasValue && lastParsed.Value >= ScriptReference_FieldIndex.Reference) return TryGet<ScriptReference_FieldIndex?>.Failure;
-                    frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Reference_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
-                        fieldIndex: (int)ScriptReference_FieldIndex.Reference,
-                        errorMask: errorMask));
-                    return TryGet<ScriptReference_FieldIndex?>.Succeed(ScriptReference_FieldIndex.Reference);
-                default:
-                    return TryGet<ScriptReference_FieldIndex?>.Failure;
-            }
-        }
 
         #endregion
 
@@ -782,15 +420,7 @@ namespace Mutagen.Bethesda.Oblivion
             ScriptReference_CopyMask copyMask = null,
             IScriptReferenceGetter def = null)
         {
-            ScriptReference ret;
-            if (item.GetType().Equals(typeof(ScriptReference)))
-            {
-                ret = new ScriptReference();
-            }
-            else
-            {
-                ret = (ScriptReference)Activator.CreateInstance(item.GetType());
-            }
+            ScriptReference ret = (ScriptReference)Activator.CreateInstance(item.GetType());
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
@@ -804,15 +434,7 @@ namespace Mutagen.Bethesda.Oblivion
             IScriptReferenceGetter def = null)
             where CopyType : class, IScriptReference
         {
-            CopyType ret;
-            if (item.GetType().Equals(typeof(ScriptReference)))
-            {
-                ret = new ScriptReference() as CopyType;
-            }
-            else
-            {
-                ret = (CopyType)Activator.CreateInstance(item.GetType());
-            }
+            CopyType ret = (CopyType)Activator.CreateInstance(item.GetType());
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
@@ -828,7 +450,7 @@ namespace Mutagen.Bethesda.Oblivion
             ScriptReference_CopyMask copyMask = null,
             IScriptReferenceGetter def = null)
         {
-            var ret = new ScriptReference();
+            ScriptReference ret = (ScriptReference)Activator.CreateInstance(item.GetType());
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
@@ -837,21 +459,11 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds) => this.SetNthObject(index, obj, cmds);
-        protected void SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds = null)
+        protected virtual void SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds = null)
         {
             ScriptReference_FieldIndex enu = (ScriptReference_FieldIndex)index;
             switch (enu)
             {
-                case ScriptReference_FieldIndex.VariableIndex:
-                    this._VariableIndex.Set(
-                        (Int32)obj,
-                        cmds);
-                    break;
-                case ScriptReference_FieldIndex.Reference:
-                    this.Reference_Property.Set(
-                        (FormIDSetLink<MajorRecord>)obj,
-                        cmds);
-                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -864,22 +476,12 @@ namespace Mutagen.Bethesda.Oblivion
             ClearPartial(cmds);
         }
 
-        public void Clear(NotifyingUnsetParameters? cmds = null)
+        public virtual void Clear(NotifyingUnsetParameters? cmds = null)
         {
             CallClearPartial_Internal(cmds);
             ScriptReferenceCommon.Clear(this, cmds);
         }
 
-
-        public static ScriptReference Create(IEnumerable<KeyValuePair<ushort, object>> fields)
-        {
-            var ret = new ScriptReference();
-            foreach (var pair in fields)
-            {
-                CopyInInternal_ScriptReference(ret, pair);
-            }
-            return ret;
-        }
 
         protected static void CopyInInternal_ScriptReference(ScriptReference obj, KeyValuePair<ushort, object> pair)
         {
@@ -889,16 +491,6 @@ namespace Mutagen.Bethesda.Oblivion
             }
             switch (enu)
             {
-                case ScriptReference_FieldIndex.VariableIndex:
-                    obj._VariableIndex.Set(
-                        (Int32)pair.Value,
-                        null);
-                    break;
-                case ScriptReference_FieldIndex.Reference:
-                    obj.Reference_Property.Set(
-                        (FormIDSetLink<MajorRecord>)pair.Value,
-                        null);
-                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -914,23 +506,10 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public interface IScriptReference : IScriptReferenceGetter, ILoquiClass<IScriptReference, IScriptReferenceGetter>, ILoquiClass<ScriptReference, IScriptReferenceGetter>
     {
-        new Int32 VariableIndex { get; set; }
-        new INotifyingSetItem<Int32> VariableIndex_Property { get; }
-
     }
 
     public interface IScriptReferenceGetter : ILoquiObject
     {
-        #region VariableIndex
-        Int32 VariableIndex { get; }
-        INotifyingSetItemGetter<Int32> VariableIndex_Property { get; }
-
-        #endregion
-        #region Reference
-        MajorRecord Reference { get; }
-        FormIDSetLink<MajorRecord> Reference_Property { get; }
-
-        #endregion
 
     }
 
@@ -943,8 +522,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Field Index
     public enum ScriptReference_FieldIndex
     {
-        VariableIndex = 0,
-        Reference = 1,
     }
     #endregion
 
@@ -962,7 +539,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "5eb6ddcc-5ba8-4da7-87f5-99b6038a61c7";
 
-        public const ushort FieldCount = 2;
+        public const ushort FieldCount = 0;
 
         public static readonly Type MaskType = typeof(ScriptReference_Mask<>);
 
@@ -990,10 +567,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (str.Upper)
             {
-                case "VARIABLEINDEX":
-                    return (ushort)ScriptReference_FieldIndex.VariableIndex;
-                case "REFERENCE":
-                    return (ushort)ScriptReference_FieldIndex.Reference;
                 default:
                     return null;
             }
@@ -1004,9 +577,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptReference_FieldIndex enu = (ScriptReference_FieldIndex)index;
             switch (enu)
             {
-                case ScriptReference_FieldIndex.VariableIndex:
-                case ScriptReference_FieldIndex.Reference:
-                    return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1017,9 +587,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptReference_FieldIndex enu = (ScriptReference_FieldIndex)index;
             switch (enu)
             {
-                case ScriptReference_FieldIndex.VariableIndex:
-                case ScriptReference_FieldIndex.Reference:
-                    return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1030,9 +597,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptReference_FieldIndex enu = (ScriptReference_FieldIndex)index;
             switch (enu)
             {
-                case ScriptReference_FieldIndex.VariableIndex:
-                case ScriptReference_FieldIndex.Reference:
-                    return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1043,10 +607,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptReference_FieldIndex enu = (ScriptReference_FieldIndex)index;
             switch (enu)
             {
-                case ScriptReference_FieldIndex.VariableIndex:
-                    return "VariableIndex";
-                case ScriptReference_FieldIndex.Reference:
-                    return "Reference";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1057,9 +617,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptReference_FieldIndex enu = (ScriptReference_FieldIndex)index;
             switch (enu)
             {
-                case ScriptReference_FieldIndex.VariableIndex:
-                case ScriptReference_FieldIndex.Reference:
-                    return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1070,9 +627,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptReference_FieldIndex enu = (ScriptReference_FieldIndex)index;
             switch (enu)
             {
-                case ScriptReference_FieldIndex.VariableIndex:
-                case ScriptReference_FieldIndex.Reference:
-                    return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1083,10 +637,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptReference_FieldIndex enu = (ScriptReference_FieldIndex)index;
             switch (enu)
             {
-                case ScriptReference_FieldIndex.VariableIndex:
-                    return typeof(Int32);
-                case ScriptReference_FieldIndex.Reference:
-                    return typeof(FormIDSetLink<MajorRecord>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1107,7 +657,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             );
         });
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 2;
+        public const int NumTypedFields = 0;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1214,36 +764,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptReference_CopyMask copyMask,
             NotifyingFireParameters? cmds)
         {
-            if (copyMask?.VariableIndex ?? true)
-            {
-                try
-                {
-                    item.VariableIndex_Property.SetToWithDefault(
-                        rhs: rhs.VariableIndex_Property,
-                        def: def?.VariableIndex_Property,
-                        cmds: cmds);
-                }
-                catch (Exception ex)
-                when (doMasks)
-                {
-                    errorMask().SetNthException((int)ScriptReference_FieldIndex.VariableIndex, ex);
-                }
-            }
-            if (copyMask?.Reference ?? true)
-            {
-                try
-                {
-                    item.Reference_Property.SetToWithDefault(
-                        rhs: rhs.Reference_Property,
-                        def: def?.Reference_Property,
-                        cmds: cmds);
-                }
-                catch (Exception ex)
-                when (doMasks)
-                {
-                    errorMask().SetNthException((int)ScriptReference_FieldIndex.Reference, ex);
-                }
-            }
         }
 
         #endregion
@@ -1257,12 +777,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptReference_FieldIndex enu = (ScriptReference_FieldIndex)index;
             switch (enu)
             {
-                case ScriptReference_FieldIndex.VariableIndex:
-                    obj.VariableIndex_Property.HasBeenSet = on;
-                    break;
-                case ScriptReference_FieldIndex.Reference:
-                    obj.Reference_Property.HasBeenSet = on;
-                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1276,12 +790,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptReference_FieldIndex enu = (ScriptReference_FieldIndex)index;
             switch (enu)
             {
-                case ScriptReference_FieldIndex.VariableIndex:
-                    obj.VariableIndex_Property.Unset(cmds);
-                    break;
-                case ScriptReference_FieldIndex.Reference:
-                    obj.Reference_Property.Unset(cmds);
-                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1294,10 +802,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptReference_FieldIndex enu = (ScriptReference_FieldIndex)index;
             switch (enu)
             {
-                case ScriptReference_FieldIndex.VariableIndex:
-                    return obj.VariableIndex_Property.HasBeenSet;
-                case ScriptReference_FieldIndex.Reference:
-                    return obj.Reference_Property.HasBeenSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1310,10 +814,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptReference_FieldIndex enu = (ScriptReference_FieldIndex)index;
             switch (enu)
             {
-                case ScriptReference_FieldIndex.VariableIndex:
-                    return obj.VariableIndex;
-                case ScriptReference_FieldIndex.Reference:
-                    return obj.Reference;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1323,8 +823,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptReference item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.VariableIndex_Property.Unset(cmds.ToUnsetParams());
-            item.Reference_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static ScriptReference_Mask<bool> GetEqualsMask(
@@ -1342,8 +840,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptReference_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.VariableIndex = item.VariableIndex_Property.Equals(rhs.VariableIndex_Property, (l, r) => l == r);
-            ret.Reference = item.Reference_Property.Equals(rhs.Reference_Property, (l, r) => l == r);
         }
 
         public static string ToString(
@@ -1373,14 +869,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.VariableIndex ?? true)
-                {
-                    fg.AppendLine($"VariableIndex => {item.VariableIndex}");
-                }
-                if (printMask?.Reference ?? true)
-                {
-                    fg.AppendLine($"Reference => {item.Reference}");
-                }
             }
             fg.AppendLine("]");
         }
@@ -1389,16 +877,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IScriptReferenceGetter item,
             ScriptReference_Mask<bool?> checkMask)
         {
-            if (checkMask.VariableIndex.HasValue && checkMask.VariableIndex.Value != item.VariableIndex_Property.HasBeenSet) return false;
-            if (checkMask.Reference.HasValue && checkMask.Reference.Value != item.Reference_Property.HasBeenSet) return false;
             return true;
         }
 
         public static ScriptReference_Mask<bool> GetHasBeenSetMask(IScriptReferenceGetter item)
         {
             var ret = new ScriptReference_Mask<bool>();
-            ret.VariableIndex = item.VariableIndex_Property.HasBeenSet;
-            ret.Reference = item.Reference_Property.HasBeenSet;
             return ret;
         }
 
@@ -1433,24 +917,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (name != null)
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.ScriptReference");
-                    }
-                    if (item.VariableIndex_Property.HasBeenSet)
-                    {
-                        Int32XmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.VariableIndex),
-                            item: item.VariableIndex_Property,
-                            fieldIndex: (int)ScriptReference_FieldIndex.VariableIndex,
-                            errorMask: errorMask);
-                    }
-                    if (item.Reference_Property.HasBeenSet)
-                    {
-                        RawFormIDXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Reference),
-                            item: item.Reference?.FormID,
-                            fieldIndex: (int)ScriptReference_FieldIndex.Reference,
-                            errorMask: errorMask);
                     }
                 }
             }
@@ -1487,10 +953,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             try
             {
-                Write_Binary_RecordTypes(
-                    item: item,
-                    writer: writer,
-                    errorMask: errorMask);
             }
             catch (Exception ex)
             when (errorMask != null)
@@ -1499,27 +961,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         #endregion
-
-        public static void Write_Binary_RecordTypes(
-            IScriptReferenceGetter item,
-            MutagenWriter writer,
-            Func<ScriptReference_ErrorMask> errorMask)
-        {
-            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.VariableIndex_Property,
-                fieldIndex: (int)ScriptReference_FieldIndex.VariableIndex,
-                errorMask: errorMask,
-                header: ScriptReference_Registration.SCRV_HEADER,
-                nullable: false);
-            Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Reference_Property,
-                fieldIndex: (int)ScriptReference_FieldIndex.Reference,
-                errorMask: errorMask,
-                header: ScriptReference_Registration.SCRO_HEADER,
-                nullable: false);
-        }
 
         #endregion
 
@@ -1538,14 +979,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public ScriptReference_Mask(T initialValue)
         {
-            this.VariableIndex = initialValue;
-            this.Reference = initialValue;
         }
-        #endregion
-
-        #region Members
-        public T VariableIndex;
-        public T Reference;
         #endregion
 
         #region Equals
@@ -1558,25 +992,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Equals(ScriptReference_Mask<T> rhs)
         {
             if (rhs == null) return false;
-            if (!object.Equals(this.VariableIndex, rhs.VariableIndex)) return false;
-            if (!object.Equals(this.Reference, rhs.Reference)) return false;
             return true;
         }
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = ret.CombineHashCode(this.VariableIndex?.GetHashCode());
-            ret = ret.CombineHashCode(this.Reference?.GetHashCode());
             return ret;
         }
 
         #endregion
 
         #region All Equal
-        public bool AllEqual(Func<T, bool> eval)
+        public virtual bool AllEqual(Func<T, bool> eval)
         {
-            if (!eval(this.VariableIndex)) return false;
-            if (!eval(this.Reference)) return false;
             return true;
         }
         #endregion
@@ -1591,13 +1019,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         protected void Translate_InternalFill<R>(ScriptReference_Mask<R> obj, Func<T, R> eval)
         {
-            obj.VariableIndex = eval(this.VariableIndex);
-            obj.Reference = eval(this.Reference);
         }
         #endregion
 
         #region Clear Enumerables
-        public void ClearEnumerables()
+        public virtual void ClearEnumerables()
         {
         }
         #endregion
@@ -1621,14 +1047,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.VariableIndex ?? true)
-                {
-                    fg.AppendLine($"VariableIndex => {VariableIndex}");
-                }
-                if (printMask?.Reference ?? true)
-                {
-                    fg.AppendLine($"Reference => {Reference}");
-                }
             }
             fg.AppendLine("]");
         }
@@ -1652,48 +1070,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 return _warnings;
             }
         }
-        public Exception VariableIndex;
-        public Exception Reference;
         #endregion
 
         #region IErrorMask
-        public void SetNthException(int index, Exception ex)
+        public virtual void SetNthException(int index, Exception ex)
         {
             ScriptReference_FieldIndex enu = (ScriptReference_FieldIndex)index;
             switch (enu)
             {
-                case ScriptReference_FieldIndex.VariableIndex:
-                    this.VariableIndex = ex;
-                    break;
-                case ScriptReference_FieldIndex.Reference:
-                    this.Reference = ex;
-                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
-        public void SetNthMask(int index, object obj)
+        public virtual void SetNthMask(int index, object obj)
         {
             ScriptReference_FieldIndex enu = (ScriptReference_FieldIndex)index;
             switch (enu)
             {
-                case ScriptReference_FieldIndex.VariableIndex:
-                    this.VariableIndex = (Exception)obj;
-                    break;
-                case ScriptReference_FieldIndex.Reference:
-                    this.Reference = (Exception)obj;
-                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
         }
 
-        public bool IsInError()
+        public virtual bool IsInError()
         {
             if (Overall != null) return true;
-            if (VariableIndex != null) return true;
-            if (Reference != null) return true;
             return false;
         }
         #endregion
@@ -1706,7 +1108,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg)
+        public virtual void ToString(FileGeneration fg)
         {
             fg.AppendLine("ScriptReference_ErrorMask =>");
             fg.AppendLine("[");
@@ -1726,10 +1128,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             fg.AppendLine("]");
         }
-        protected void ToString_FillInternal(FileGeneration fg)
+        protected virtual void ToString_FillInternal(FileGeneration fg)
         {
-            fg.AppendLine($"VariableIndex => {VariableIndex}");
-            fg.AppendLine($"Reference => {Reference}");
         }
         #endregion
 
@@ -1737,8 +1137,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public ScriptReference_ErrorMask Combine(ScriptReference_ErrorMask rhs)
         {
             var ret = new ScriptReference_ErrorMask();
-            ret.VariableIndex = this.VariableIndex.Combine(rhs.VariableIndex);
-            ret.Reference = this.Reference.Combine(rhs.Reference);
             return ret;
         }
         public static ScriptReference_ErrorMask Combine(ScriptReference_ErrorMask lhs, ScriptReference_ErrorMask rhs)
@@ -1751,11 +1149,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class ScriptReference_CopyMask
     {
-        #region Members
-        public bool VariableIndex;
-        public bool Reference;
-        #endregion
-
     }
     #endregion
 

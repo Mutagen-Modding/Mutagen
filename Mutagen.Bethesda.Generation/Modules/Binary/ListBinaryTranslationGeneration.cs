@@ -85,9 +85,9 @@ namespace Mutagen.Bethesda.Generation
                         subTransl.GenerateWrite(
                             fg: gen,
                             objGen: objGen,
-                            typeGen: list.SubTypeGeneration, 
-                            writerAccessor: "writer", 
-                            itemAccessor: new Accessor($"subItem"), 
+                            typeGen: list.SubTypeGeneration,
+                            writerAccessor: "writer",
+                            itemAccessor: new Accessor($"subItem"),
                             doMaskAccessor: $"listDoMasks",
                             maskAccessor: $"listSubMask");
                     }
@@ -98,13 +98,13 @@ namespace Mutagen.Bethesda.Generation
         public override void GenerateCopyIn(
             FileGeneration fg,
             ObjectGeneration objGen,
-            TypeGeneration typeGen, 
-            string nodeAccessor, 
+            TypeGeneration typeGen,
+            string nodeAccessor,
             Accessor itemAccessor,
             string doMaskAccessor,
             string maskAccessor)
         {
-            GenerateCopyInRet(fg, objGen, typeGen, nodeAccessor, new Accessor($"var {typeGen.Name}tryGet = "), doMaskAccessor, maskAccessor);
+            GenerateCopyInRet(fg, objGen, typeGen, typeGen, nodeAccessor, new Accessor($"var {typeGen.Name}tryGet = "), doMaskAccessor, maskAccessor);
             if (itemAccessor.PropertyAccess != null)
             {
                 fg.AppendLine($"{itemAccessor.PropertyAccess}.{nameof(INotifyingCollectionExt.SetIfSucceeded)}({typeGen.Name}tryGet);");
@@ -122,8 +122,9 @@ namespace Mutagen.Bethesda.Generation
         public override void GenerateCopyInRet(
             FileGeneration fg,
             ObjectGeneration objGen,
+            TypeGeneration targetGen,
             TypeGeneration typeGen,
-            string nodeAccessor, 
+            string nodeAccessor,
             Accessor retAccessor,
             string doMaskAccessor,
             string maskAccessor)
@@ -184,11 +185,61 @@ namespace Mutagen.Bethesda.Generation
                 args.Add($"errorMask: {maskAccessor}");
                 args.Add((gen) =>
                 {
-                    gen.AppendLine($"transl: (MutagenFrame r, bool listDoMasks, out {typeGen.ProtoGen.Gen.MaskModule.GetMaskModule(list.SubTypeGeneration.GetType()).GetErrorMaskTypeStr(list.SubTypeGeneration)} listSubMask) =>");
+                    var subGenTypes = subData.GenerationTypes.ToList();
+                    gen.AppendLine($"transl: (MutagenFrame r{(subGenTypes.Count <= 1 ? string.Empty : ", RecordType header")}, bool listDoMasks, out {typeGen.ProtoGen.Gen.MaskModule.GetMaskModule(list.SubTypeGeneration.GetType()).GetErrorMaskTypeStr(list.SubTypeGeneration)} listSubMask) =>");
                     using (new BraceWrapper(gen))
                     {
                         var subGen = this.Module.GetTypeGeneration(list.SubTypeGeneration.GetType());
-                        subGen.GenerateCopyInRet(gen, objGen, list.SubTypeGeneration, "r", new Accessor("return "), "listDoMasks", "listSubMask");
+                        if (subGenTypes.Count <= 1)
+                        {
+                            subGen.GenerateCopyInRet(
+                                fg: gen,
+                                objGen: objGen,
+                                targetGen: list.SubTypeGeneration,
+                                typeGen: list.SubTypeGeneration,
+                                readerAccessor: "r",
+                                retAccessor: new Accessor("return "),
+                                doMaskAccessor: "listDoMasks",
+                                maskAccessor: "listSubMask");
+                        }
+                        else
+                        {
+                            gen.AppendLine($"TryGet<{list.SubTypeGeneration.TypeName}> ret;");
+                            gen.AppendLine("switch (header.Type)");
+                            using (new BraceWrapper(gen))
+                            {
+                                foreach (var item in subGenTypes)
+                                {
+                                    foreach (var trigger in item.Key)
+                                    {
+                                        gen.AppendLine($"case \"{trigger.Type}\":");
+                                    }
+                                    LoquiType targetLoqui = list.SubTypeGeneration as LoquiType;
+                                    LoquiType specificLoqui = item.Value as LoquiType;
+                                    var submaskName = $"{item.Key.First()}SubMask";
+                                    using (new DepthWrapper(gen))
+                                    {
+                                        subGen.GenerateCopyInRet(
+                                            fg: gen,
+                                            objGen: objGen,
+                                            targetGen: list.SubTypeGeneration,
+                                            typeGen: item.Value,
+                                            readerAccessor: "r",
+                                            retAccessor: new Accessor("ret = "),
+                                            doMaskAccessor: "listDoMasks",
+                                            maskAccessor: $"var {submaskName}");
+                                        gen.AppendLine($"listSubMask = {submaskName}.Bubble<{specificLoqui.MaskItemString(MaskType.Error)}, {targetLoqui.MaskItemString(MaskType.Error)}>();");
+                                        gen.AppendLine($"break;");
+                                    }
+                                }
+                                gen.AppendLine("default:");
+                                using (new DepthWrapper(gen))
+                                {
+                                    gen.AppendLine("throw new NotImplementedException();");
+                                }
+                            }
+                            gen.AppendLine($"return ret;");
+                        }
                     }
                 });
             }

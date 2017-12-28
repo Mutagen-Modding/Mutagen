@@ -803,7 +803,15 @@ namespace Mutagen.Bethesda.Oblivion
             SkillBoost_CopyMask copyMask = null,
             ISkillBoostGetter def = null)
         {
-            var ret = new SkillBoost();
+            SkillBoost ret;
+            if (item.GetType().Equals(typeof(SkillBoost)))
+            {
+                ret = new SkillBoost() as SkillBoost;
+            }
+            else
+            {
+                ret = (SkillBoost)Activator.CreateInstance(item.GetType());
+            }
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
