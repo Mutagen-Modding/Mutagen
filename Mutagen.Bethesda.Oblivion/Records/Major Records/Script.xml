@@ -5,9 +5,7 @@
       <RefDirect name="MetadataSummary" refName="ScriptMetaSummary" nullable="Singleton" />
       <ByteArray name="CompiledScript" recordType="SCDA" />
       <String name="SourceCode" recordType="SCTX" nullTerminate="false" />
-      <List name="LocalVariables">
-        <RefDirect refName="LocalVariable" />
-      </List>
+      <RefList name="LocalVariables" refName="LocalVariable" />
       <RefList name="References" refName="ScriptReference" />
     </Fields>
   </Object>
@@ -37,12 +35,12 @@
   </Object>
   <Object name="ScriptVariableReference" baseClass="ScriptReference" objType="Subrecord" GUID="fb87f678-c078-4acb-b943-fe3d2142a7be" ID="60">
     <Fields>
-      <Int32 name="VariableIndex" recordType="SCRV" />
+      <Int32 name="VariableIndex" recordType="SCRV" hasBeenSet="False" />
     </Fields>
   </Object>
   <Object name="ScriptObjectReference" baseClass="ScriptReference" objType="Subrecord" GUID="a00d44e0-398b-45a6-9e45-facc1da7a2b2" ID="61">
     <Fields>
-      <FormID name="Reference" recordType="SCRO" refName="Bethesda.MajorRecord" />
+      <FormID name="Reference" recordType="SCRO" refName="Bethesda.MajorRecord" hasBeenSet="False" />
     </Fields>
   </Object>
 </Loqui>

@@ -892,6 +892,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public interface IRelation : IRelationGetter, ILoquiClass<IRelation, IRelationGetter>, ILoquiClass<Relation, IRelationGetter>
     {
+        new Faction Faction { get; set; }
         new Int32 Modifier { get; set; }
         new INotifyingSetItem<Int32> Modifier_Property { get; }
 

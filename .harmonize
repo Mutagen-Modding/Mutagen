@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>e8069e5eef986d76942b9552013fa997ddcca089</Sha>
+         <Sha>f728488f78728e190ed919d1d79983bc9c952152</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>12-27-2017 01:00:58</CommitDate>
-         <Description>TryGet.Bubble without converter if natural inheritence</Description>
+         <CommitDate>01-02-2018 08:15:37</CommitDate>
+         <Description>Renamed NotifyingItem.Set cmd param to cmds</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>f57e033649f56811981082e641bcaecbb411b3e9</Sha>
+         <Sha>653b07f21e18c2c3f95129498c10a10d8594d824</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>12-28-2017 16:41:37</CommitDate>
-         <Description>MaskItem.Bubble with implicit inheritence type conversion</Description>
+         <CommitDate>01-02-2018 16:26:11</CommitDate>
+         <Description>Removed vestigial logic snippet</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

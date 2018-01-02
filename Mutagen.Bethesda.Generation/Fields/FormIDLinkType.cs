@@ -23,14 +23,15 @@ namespace Mutagen.Bethesda.Generation
         public override async Task Load(XElement node, bool requireName = true)
         {
             await base.Load(node, requireName);
+            this.NotifyingProperty.Set(true);
             loquiType.SetObjectGeneration(this.ObjectGen, setDefaults: true);
             loquiType.ParseRefNode(node);
             loquiType.Name = this.Name;
-            loquiType.HasBeenSetProperty.Set(this.HasBeenSet);
-            loquiType.NotifyingProperty.Set(this.Notifying);
             RawFormID.Name = this.Name;
-            RawFormID.HasBeenSetProperty.Set(this.HasBeenSet);
-            RawFormID.NotifyingProperty.Set(this.Notifying);
+            this.NotifyingProperty.Forward(loquiType.NotifyingProperty);
+            this.NotifyingProperty.Forward(RawFormID.NotifyingProperty);
+            this.HasBeenSetProperty.Forward(loquiType.HasBeenSetProperty);
+            this.HasBeenSetProperty.Forward(RawFormID.HasBeenSetProperty);
         }
 
         public override void GenerateForClass(FileGeneration fg)
@@ -51,6 +52,7 @@ namespace Mutagen.Bethesda.Generation
 
         public override void GenerateForInterface(FileGeneration fg)
         {
+            fg.AppendLine($"new {loquiType.TypeName} {this.Name} {{ get; set; }}");
         }
 
         public override string SkipCheck(string copyMaskAccessor)

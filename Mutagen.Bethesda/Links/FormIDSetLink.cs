@@ -25,18 +25,25 @@ namespace Mutagen.Bethesda
             : base(markAsSet: true)
         {
             this.UnlinkedForm = unlinkedForm;
+            this.HasBeenSet = true;
             this.Subscribe(UpdateUnlinkedForm);
         }
 
         private void UpdateUnlinkedForm(Change<T> change)
         {
             this.UnlinkedForm = change.New?.FormID ?? UnlinkedForm;
+            this.HasBeenSet = this.UnlinkedForm.HasValue;
         }
 
         public void SetIfSucceeded(TryGet<RawFormID> formID)
         {
-            if (formID.Failed) return;
+            if (formID.Failed)
+            {
+                this.Unset();
+                return;
+            }
             this.UnlinkedForm = formID.Value;
+            this.HasBeenSet = true;
         }
 
         public static bool operator ==(FormIDSetLink<T> lhs, FormIDSetLink<T> rhs)

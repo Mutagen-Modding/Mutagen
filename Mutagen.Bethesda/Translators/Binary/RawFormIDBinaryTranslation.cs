@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Binary
         {
             this.Write(
                 writer,
-                item.Item?.FormID ?? RawFormID.NULL,
+                item.FormID,
                 header,
                 nullable: nullable,
                 doMasks: errorMask != null,

@@ -38,9 +38,9 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Reference
-        public FormIDSetLink<MajorRecord> Reference_Property { get; } = new FormIDSetLink<MajorRecord>();
+        public FormIDLink<MajorRecord> Reference_Property { get; } = new FormIDLink<MajorRecord>();
         public MajorRecord Reference { get => Reference_Property.Item; set => Reference_Property.Item = value; }
-        FormIDSetLink<MajorRecord> IScriptObjectReferenceGetter.Reference_Property => this.Reference_Property;
+        FormIDLink<MajorRecord> IScriptObjectReferenceGetter.Reference_Property => this.Reference_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -98,21 +98,14 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (Reference_Property.HasBeenSet != rhs.Reference_Property.HasBeenSet) return false;
-            if (Reference_Property.HasBeenSet)
-            {
-                if (Reference != rhs.Reference) return false;
-            }
+            if (Reference != rhs.Reference) return false;
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            if (Reference_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Reference).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(Reference).CombineHashCode(ret);
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -845,7 +838,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case ScriptObjectReference_FieldIndex.Reference:
                     this.Reference_Property.Set(
-                        (FormIDSetLink<MajorRecord>)obj,
+                        (FormIDLink<MajorRecord>)obj,
                         cmds);
                     break;
                 default:
@@ -881,7 +874,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case ScriptObjectReference_FieldIndex.Reference:
                     obj.Reference_Property.Set(
-                        (FormIDSetLink<MajorRecord>)pair.Value,
+                        (FormIDLink<MajorRecord>)pair.Value,
                         null);
                     break;
                 default:
@@ -899,13 +892,14 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public interface IScriptObjectReference : IScriptObjectReferenceGetter, IScriptReference, ILoquiClass<IScriptObjectReference, IScriptObjectReferenceGetter>, ILoquiClass<ScriptObjectReference, IScriptObjectReferenceGetter>
     {
+        new MajorRecord Reference { get; set; }
     }
 
     public interface IScriptObjectReferenceGetter : IScriptReferenceGetter
     {
         #region Reference
         MajorRecord Reference { get; }
-        FormIDSetLink<MajorRecord> Reference_Property { get; }
+        FormIDLink<MajorRecord> Reference_Property { get; }
 
         #endregion
 
@@ -1051,7 +1045,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case ScriptObjectReference_FieldIndex.Reference:
-                    return typeof(FormIDSetLink<MajorRecord>);
+                    return typeof(FormIDLink<MajorRecord>);
                 default:
                     return ScriptReference_Registration.GetNthType(index);
             }
@@ -1179,9 +1173,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Reference_Property.SetToWithDefault(
-                        rhs: rhs.Reference_Property,
-                        def: def?.Reference_Property,
+                    item.Reference_Property.Set(
+                        value: rhs.Reference,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1204,8 +1197,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case ScriptObjectReference_FieldIndex.Reference:
-                    obj.Reference_Property.HasBeenSet = on;
-                    break;
+                    if (on) break;
+                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 default:
                     ScriptReferenceCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
@@ -1221,7 +1214,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case ScriptObjectReference_FieldIndex.Reference:
-                    obj.Reference_Property.Unset(cmds);
+                    obj.Reference = default(FormIDLink<MajorRecord>);
                     break;
                 default:
                     ScriptReferenceCommon.UnsetNthObject(index, obj);
@@ -1237,7 +1230,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case ScriptObjectReference_FieldIndex.Reference:
-                    return obj.Reference_Property.HasBeenSet;
+                    return true;
                 default:
                     return ScriptReferenceCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -1261,7 +1254,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptObjectReference item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.Reference_Property.Unset(cmds.ToUnsetParams());
+            item.Reference = default(FormIDLink<MajorRecord>);
         }
 
         public static ScriptObjectReference_Mask<bool> GetEqualsMask(
@@ -1279,7 +1272,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptObjectReference_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Reference = item.Reference_Property.Equals(rhs.Reference_Property, (l, r) => l == r);
+            ret.Reference = item.Reference == rhs.Reference;
             ScriptReferenceCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -1322,14 +1315,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IScriptObjectReferenceGetter item,
             ScriptObjectReference_Mask<bool?> checkMask)
         {
-            if (checkMask.Reference.HasValue && checkMask.Reference.Value != item.Reference_Property.HasBeenSet) return false;
             return true;
         }
 
         public static ScriptObjectReference_Mask<bool> GetHasBeenSetMask(IScriptObjectReferenceGetter item)
         {
             var ret = new ScriptObjectReference_Mask<bool>();
-            ret.Reference = item.Reference_Property.HasBeenSet;
+            ret.Reference = true;
             return ret;
         }
 
@@ -1380,15 +1372,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.ScriptObjectReference");
                     }
-                    if (item.Reference_Property.HasBeenSet)
-                    {
-                        RawFormIDXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Reference),
-                            item: item.Reference?.FormID,
-                            fieldIndex: (int)ScriptObjectReference_FieldIndex.Reference,
-                            errorMask: errorMask);
-                    }
+                    RawFormIDXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Reference),
+                        item: item.Reference?.FormID,
+                        fieldIndex: (int)ScriptObjectReference_FieldIndex.Reference,
+                        errorMask: errorMask);
                 }
             }
             catch (Exception ex)

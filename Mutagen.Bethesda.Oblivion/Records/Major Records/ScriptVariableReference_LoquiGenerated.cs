@@ -38,15 +38,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region VariableIndex
-        protected readonly INotifyingSetItem<Int32> _VariableIndex = NotifyingSetItem.Factory<Int32>(markAsSet: false);
-        public INotifyingSetItem<Int32> VariableIndex_Property => _VariableIndex;
+        protected readonly INotifyingItem<Int32> _VariableIndex = NotifyingItem.Factory<Int32>();
+        public INotifyingItem<Int32> VariableIndex_Property => _VariableIndex;
         public Int32 VariableIndex
         {
             get => this._VariableIndex.Item;
             set => this._VariableIndex.Set(value);
         }
-        INotifyingSetItem<Int32> IScriptVariableReference.VariableIndex_Property => this.VariableIndex_Property;
-        INotifyingSetItemGetter<Int32> IScriptVariableReferenceGetter.VariableIndex_Property => this.VariableIndex_Property;
+        INotifyingItem<Int32> IScriptVariableReference.VariableIndex_Property => this.VariableIndex_Property;
+        INotifyingItemGetter<Int32> IScriptVariableReferenceGetter.VariableIndex_Property => this.VariableIndex_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -104,21 +104,14 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (VariableIndex_Property.HasBeenSet != rhs.VariableIndex_Property.HasBeenSet) return false;
-            if (VariableIndex_Property.HasBeenSet)
-            {
-                if (VariableIndex != rhs.VariableIndex) return false;
-            }
+            if (VariableIndex != rhs.VariableIndex) return false;
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            if (VariableIndex_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(VariableIndex).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(VariableIndex).CombineHashCode(ret);
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -906,7 +899,7 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IScriptVariableReference : IScriptVariableReferenceGetter, IScriptReference, ILoquiClass<IScriptVariableReference, IScriptVariableReferenceGetter>, ILoquiClass<ScriptVariableReference, IScriptVariableReferenceGetter>
     {
         new Int32 VariableIndex { get; set; }
-        new INotifyingSetItem<Int32> VariableIndex_Property { get; }
+        new INotifyingItem<Int32> VariableIndex_Property { get; }
 
     }
 
@@ -914,7 +907,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region VariableIndex
         Int32 VariableIndex { get; }
-        INotifyingSetItemGetter<Int32> VariableIndex_Property { get; }
+        INotifyingItemGetter<Int32> VariableIndex_Property { get; }
 
         #endregion
 
@@ -1188,9 +1181,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.VariableIndex_Property.SetToWithDefault(
-                        rhs: rhs.VariableIndex_Property,
-                        def: def?.VariableIndex_Property,
+                    item.VariableIndex_Property.Set(
+                        value: rhs.VariableIndex,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1213,8 +1205,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case ScriptVariableReference_FieldIndex.VariableIndex:
-                    obj.VariableIndex_Property.HasBeenSet = on;
-                    break;
+                    if (on) break;
+                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 default:
                     ScriptReferenceCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
@@ -1230,7 +1222,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case ScriptVariableReference_FieldIndex.VariableIndex:
-                    obj.VariableIndex_Property.Unset(cmds);
+                    obj.VariableIndex = default(Int32);
                     break;
                 default:
                     ScriptReferenceCommon.UnsetNthObject(index, obj);
@@ -1246,7 +1238,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case ScriptVariableReference_FieldIndex.VariableIndex:
-                    return obj.VariableIndex_Property.HasBeenSet;
+                    return true;
                 default:
                     return ScriptReferenceCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -1270,7 +1262,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptVariableReference item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.VariableIndex_Property.Unset(cmds.ToUnsetParams());
+            item.VariableIndex = default(Int32);
         }
 
         public static ScriptVariableReference_Mask<bool> GetEqualsMask(
@@ -1288,7 +1280,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ScriptVariableReference_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.VariableIndex = item.VariableIndex_Property.Equals(rhs.VariableIndex_Property, (l, r) => l == r);
+            ret.VariableIndex = item.VariableIndex == rhs.VariableIndex;
             ScriptReferenceCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -1331,14 +1323,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IScriptVariableReferenceGetter item,
             ScriptVariableReference_Mask<bool?> checkMask)
         {
-            if (checkMask.VariableIndex.HasValue && checkMask.VariableIndex.Value != item.VariableIndex_Property.HasBeenSet) return false;
             return true;
         }
 
         public static ScriptVariableReference_Mask<bool> GetHasBeenSetMask(IScriptVariableReferenceGetter item)
         {
             var ret = new ScriptVariableReference_Mask<bool>();
-            ret.VariableIndex = item.VariableIndex_Property.HasBeenSet;
+            ret.VariableIndex = true;
             return ret;
         }
 
@@ -1389,15 +1380,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.ScriptVariableReference");
                     }
-                    if (item.VariableIndex_Property.HasBeenSet)
-                    {
-                        Int32XmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.VariableIndex),
-                            item: item.VariableIndex_Property,
-                            fieldIndex: (int)ScriptVariableReference_FieldIndex.VariableIndex,
-                            errorMask: errorMask);
-                    }
+                    Int32XmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.VariableIndex),
+                        item: item.VariableIndex_Property,
+                        fieldIndex: (int)ScriptVariableReference_FieldIndex.VariableIndex,
+                        errorMask: errorMask);
                 }
             }
             catch (Exception ex)

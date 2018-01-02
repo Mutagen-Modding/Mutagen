@@ -192,7 +192,7 @@
 
   <xs:complexType name="FormID" >
     <xs:complexContent>
-      <xs:extension base="RefDirect">
+      <xs:extension base="RefDirectField">
         <xs:attribute name="type" type="FormIDType" >
           <xs:annotation>
             <xs:documentation>

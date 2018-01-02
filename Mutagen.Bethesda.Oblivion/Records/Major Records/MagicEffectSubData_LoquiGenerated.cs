@@ -1070,6 +1070,11 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public interface IMagicEffectSubData : IMagicEffectSubDataGetter, ILoquiClass<IMagicEffectSubData, IMagicEffectSubDataGetter>, ILoquiClass<MagicEffectSubData, IMagicEffectSubDataGetter>
     {
+        new EffectShader EnchantEffect { get; set; }
+        new Sound CastingSound { get; set; }
+        new Sound BoltSound { get; set; }
+        new Sound HitSound { get; set; }
+        new Sound AreaSound { get; set; }
         new Single ConstantEffectEnchantmentFactor { get; set; }
         new INotifyingSetItem<Single> ConstantEffectEnchantmentFactor_Property { get; }
 

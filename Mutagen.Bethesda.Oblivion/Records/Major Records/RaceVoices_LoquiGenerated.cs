@@ -886,6 +886,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public interface IRaceVoices : IRaceVoicesGetter, ILoquiClass<IRaceVoices, IRaceVoicesGetter>, ILoquiClass<RaceVoices, IRaceVoicesGetter>
     {
+        new Race Male { get; set; }
+        new Race Female { get; set; }
     }
 
     public interface IRaceVoicesGetter : ILoquiObject

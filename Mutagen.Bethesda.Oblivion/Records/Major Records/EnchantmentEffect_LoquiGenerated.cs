@@ -1109,6 +1109,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public interface IEnchantmentEffect : IEnchantmentEffectGetter, ILoquiClass<IEnchantmentEffect, IEnchantmentEffectGetter>, ILoquiClass<EnchantmentEffect, IEnchantmentEffectGetter>
     {
+        new MagicEffect MagicEffect { get; set; }
         new UInt32 Magnitude { get; set; }
         new INotifyingSetItem<UInt32> Magnitude_Property { get; }
 

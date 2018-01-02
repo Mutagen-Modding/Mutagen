@@ -886,6 +886,8 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public interface IRaceHair : IRaceHairGetter, ILoquiClass<IRaceHair, IRaceHairGetter>, ILoquiClass<RaceHair, IRaceHairGetter>
     {
+        new Hair Male { get; set; }
+        new Hair Female { get; set; }
     }
 
     public interface IRaceHairGetter : ILoquiObject

@@ -1501,9 +1501,11 @@ namespace Mutagen.Bethesda.Oblivion
         new UInt32 CounterEffectCount { get; set; }
         new INotifyingSetItem<UInt32> CounterEffectCount_Property { get; }
 
+        new Light Light { get; set; }
         new Single ProjectileSpeed { get; set; }
         new INotifyingSetItem<Single> ProjectileSpeed_Property { get; }
 
+        new EffectShader EffectShader { get; set; }
         new MagicEffectSubData SubData { get; set; }
         new INotifyingSetItem<MagicEffectSubData> SubData_Property { get; }
 

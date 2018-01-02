@@ -1040,9 +1040,11 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public interface IScriptEffect : IScriptEffectGetter, ILoquiClass<IScriptEffect, IScriptEffectGetter>, ILoquiClass<ScriptEffect, IScriptEffectGetter>
     {
+        new Script Script { get; set; }
         new MagicSchool MagicSchool { get; set; }
         new INotifyingSetItem<MagicSchool> MagicSchool_Property { get; }
 
+        new MagicEffect VisualEffect { get; set; }
         new ScriptEffect.Flag Flags { get; set; }
         new INotifyingSetItem<ScriptEffect.Flag> Flags_Property { get; }
 
