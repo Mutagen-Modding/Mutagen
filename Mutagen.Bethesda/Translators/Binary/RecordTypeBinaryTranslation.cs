@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda.Binary
 
         protected override RecordType ParseValue(MutagenFrame reader)
         {
-            return HeaderTranslation.GetNextRecordType(reader);
+            return HeaderTranslation.ReadNextRecordType(reader);
         }
 
         protected override void WriteValue(MutagenWriter writer, RecordType item)
@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda.Binary
         {
             this.Write(
                 writer,
-                item.UnlinkedEDID,
+                item.EDID,
                 doMasks: doMasks,
                 errorMask: out errorMask);
         }
@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Binary
         {
             this.Write(
                 writer,
-                item.UnlinkedEDID,
+                item.EDID,
                 header,
                 nullable: nullable,
                 doMasks: errorMask != null,
@@ -85,7 +85,7 @@ namespace Mutagen.Bethesda.Binary
             if (!item.HasBeenSet) return;
             this.Write(
                 writer,
-                item.UnlinkedEDID,
+                item.EDID,
                 header,
                 nullable: nullable,
                 doMasks: errorMask != null,
@@ -107,7 +107,7 @@ namespace Mutagen.Bethesda.Binary
         {
             this.Write(
                 writer,
-                item.UnlinkedEDID,
+                item.EDID,
                 header,
                 nullable,
                 doMasks,
@@ -130,7 +130,7 @@ namespace Mutagen.Bethesda.Binary
             }
             this.Write(
                 writer,
-                item.UnlinkedEDID,
+                item.EDID,
                 header,
                 nullable,
                 doMasks,

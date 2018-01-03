@@ -10,6 +10,20 @@ namespace Mutagen.Bethesda.Generation
 {
     public class FormIDLinkBinaryTranslationGeneration : PrimitiveBinaryTranslationGeneration<RawFormID>
     {
+        public override string Typename(TypeGeneration typeGen)
+        {
+            FormIDLinkType linkType = typeGen as FormIDLinkType;
+            switch (linkType.FormIDType)
+            {
+                case FormIDLinkType.FormIDTypeEnum.Normal:
+                    return base.Typename(typeGen);
+                case FormIDLinkType.FormIDTypeEnum.EDIDChars:
+                    return "RecordType";
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
         public override void GenerateCopyInRet(
             FileGeneration fg,
             ObjectGeneration objGen,
@@ -30,7 +44,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 case FormIDLinkType.FormIDTypeEnum.Normal:
                     using (var args = new ArgsWrapper(fg,
-                        $"{retAccessor.DirectAccess}{this.Namespace}{this.typeName}BinaryTranslation.Instance.Parse",
+                        $"{retAccessor.DirectAccess}{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance.Parse",
                         suffixLine: $".Bubble((o) => new {linkType.TypeName}(o))"))
                     {
                         args.Add(nodeAccessor);
@@ -51,10 +65,54 @@ namespace Mutagen.Bethesda.Generation
                     break;
                 case FormIDLinkType.FormIDTypeEnum.EDIDChars:
                     fg.AppendLine($"{maskAccessor} = null;");
-                    fg.AppendLine($"return TryGet<{linkType.TypeName}>.Succeed(new {linkType.TypeName}(HeaderTranslation.GetNextRecordType(r)));");
+                    fg.AppendLine($"return TryGet<{linkType.TypeName}>.Succeed(new {linkType.TypeName}(HeaderTranslation.ReadNextRecordType(r)));");
                     break;
                 default:
                     throw new NotImplementedException();
+            }
+        }
+
+        public override void GenerateWrite(
+            FileGeneration fg, 
+            ObjectGeneration objGen,
+            TypeGeneration typeGen, 
+            string writerAccessor,
+            Accessor itemAccessor,
+            string doMaskAccessor,
+            string maskAccessor)
+        {
+            FormIDLinkType linkType = typeGen as FormIDLinkType;
+            switch (linkType.FormIDType)
+            {
+                case FormIDLinkType.FormIDTypeEnum.Normal:
+                    base.GenerateWrite(fg, objGen, typeGen, writerAccessor, itemAccessor, doMaskAccessor, maskAccessor);
+                    break;
+                case FormIDLinkType.FormIDTypeEnum.EDIDChars:
+                    var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
+                    using (var args = new ArgsWrapper(fg,
+                        $"{this.Namespace}RecordTypeBinaryTranslation.Instance.Write"))
+                    {
+                        args.Add($"writer: {writerAccessor}");
+                        args.Add($"item: {ItemWriteAccess(itemAccessor)}");
+                        if (typeGen.HasIndex)
+                        {
+                            args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
+                            args.Add($"errorMask: {maskAccessor}");
+                        }
+                        else
+                        {
+                            args.Add($"doMasks: {doMaskAccessor}");
+                            args.Add($"errorMask: out {maskAccessor}");
+                        }
+                        if (data.RecordType.HasValue)
+                        {
+                            args.Add($"header: {objGen.RecordTypeHeaderName(data.RecordType.Value)}");
+                            args.Add($"nullable: {(data.Optional ? "true" : "false")}");
+                        }
+                    }
+                    break;
+                default:
+                    break;
             }
         }
     }

@@ -830,7 +830,7 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)ScriptEffect_FieldIndex.MagicSchool,
                         errorMask: errorMask);
                     item._MagicSchool.SetIfSucceeded(MagicSchooltryGet);
-                    item.VisualEffect_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
+                    item.VisualEffect_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Parse(
                         frame: frame,
                         fieldIndex: (int)ScriptEffect_FieldIndex.VisualEffect,
                         errorMask: errorMask));
@@ -1818,7 +1818,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     length: new ContentLength(4),
                     fieldIndex: (int)ScriptEffect_FieldIndex.MagicSchool,
                     errorMask: errorMask);
-                Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.VisualEffect_Property,
                     fieldIndex: (int)ScriptEffect_FieldIndex.VisualEffect,

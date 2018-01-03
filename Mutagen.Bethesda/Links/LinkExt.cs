@@ -40,6 +40,13 @@ namespace Mutagen.Bethesda
             return $"{(link.Linked ? link.Item.EditorID : "UNLINKED")} [{typeof(T).Name}] ({link.FormID})";
         }
 
+        public static string ToString<T>(
+            this IEDIDLink<T> link)
+            where T : MajorRecord
+        {
+            return $"{(link.Linked ? link.Item.EditorID : "UNLINKED")} [{typeof(T).Name}] ({link.FormID}) ({link.EDID})";
+        }
+
         public static bool Equals(this ILink lhs, ILink rhs)
         {
             return lhs.FormID.Equals(rhs.FormID);

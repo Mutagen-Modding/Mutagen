@@ -880,7 +880,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "EFIT":
                     if (lastParsed.HasValue && lastParsed.Value >= EnchantmentEffect_FieldIndex.ActorValue) return TryGet<EnchantmentEffect_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.MagicEffect_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
+                    item.MagicEffect_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Parse(
                         frame: frame,
                         fieldIndex: (int)EnchantmentEffect_FieldIndex.MagicEffect,
                         errorMask: errorMask));
@@ -1944,7 +1944,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask);
             using (HeaderExport.ExportSubRecordHeader(writer, EnchantmentEffect_Registration.EFIT_HEADER))
             {
-                Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.MagicEffect_Property,
                     fieldIndex: (int)EnchantmentEffect_FieldIndex.MagicEffect,

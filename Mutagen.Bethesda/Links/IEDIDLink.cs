@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda
     public interface IEDIDLink<T> : ILink<T>
        where T : MajorRecord
     {
-        RecordType? UnlinkedEDID { get; }
+        RecordType EDID { get; }
     }
 
     public interface IEDIDSetLink<T> : IEDIDLink<T>, ISetLink<T>

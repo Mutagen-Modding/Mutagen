@@ -1193,7 +1193,7 @@ namespace Mutagen.Bethesda.Oblivion
                         transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
                         {
                             listSubMask = null;
-                            return TryGet<EDIDLink<MagicEffect>>.Succeed(new EDIDLink<MagicEffect>(HeaderTranslation.GetNextRecordType(r)));
+                            return TryGet<EDIDLink<MagicEffect>>.Succeed(new EDIDLink<MagicEffect>(HeaderTranslation.ReadNextRecordType(r)));
                         }
                         );
                     item._CounterEffects.SetIfSucceeded(CounterEffectstryGet);
@@ -3079,7 +3079,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 transl: (EDIDLink<MagicEffect> subItem, bool listDoMasks, out Exception listSubMask) =>
                 {
-                    Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
+                    Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: subItem,
                         doMasks: listDoMasks,

@@ -12,50 +12,49 @@ namespace Mutagen.Bethesda
        where T : MajorRecord
     {
         public static readonly RecordType UNLINKED = new RecordType("\0\0\0\0");
-        public RecordType? UnlinkedEDID { get; private set; } = UNLINKED;
+        public RecordType EDID { get; private set; } = UNLINKED;
 
         public EDIDLink()
             : base()
         {
-            this.Subscribe(UpdateUnlinked);
+            this.Subscribe(HandleItemChange, fireInitial: false);
         }
 
         public EDIDLink(RecordType unlinkedEDID)
             : this()
         {
-            this.UnlinkedEDID = unlinkedEDID;
-            this.Subscribe(UpdateUnlinked);
+            this.EDID = unlinkedEDID;
+            this.Subscribe(HandleItemChange, fireInitial: false);
         }
 
         public EDIDLink(RawFormID unlinkedForm)
             : base(unlinkedForm)
         {
-            this.Subscribe(UpdateUnlinked);
+            this.Subscribe(HandleItemChange, fireInitial: false);
         }
 
-        private void UpdateUnlinked(Change<T> change)
+        private void HandleItemChange(Change<T> change)
         {
-            var edid = change.New?.EditorID;
-            if (edid != null)
-            {
-                this.UnlinkedEDID = null;
-            }
-            else
-            {
-                this.UnlinkedEDID = UNLINKED;
-            }
+            this.EDID = EDIDLink<T>.UNLINKED;
+            change.Old?.EditorID_Property.Unsubscribe(this);
+            change.New?.EditorID_Property.Subscribe(this, UpdateUnlinked);
+        }
+
+        private void UpdateUnlinked(Change<string> change)
+        {
+            this.EDID = new RecordType(change.New);
         }
 
         public void SetIfSucceeded(TryGet<RecordType> item)
         {
             if (item.Failed) return;
-            this.UnlinkedEDID = item.Value;
+            this.EDID = item.Value;
         }
 
         public void SetIfSuccessful(TryGet<string> item)
         {
             if (!item.Succeeded) return;
-            this.UnlinkedEDID = new RecordType(item.Value);
+            this.EDID = new RecordType(item.Value);
         }
     }
 }

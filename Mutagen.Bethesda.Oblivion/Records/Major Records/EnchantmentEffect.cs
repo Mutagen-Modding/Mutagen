@@ -39,12 +39,15 @@ namespace Mutagen.Bethesda.Oblivion
             frame.Position = pos;
         }
 
-        static partial void SpecialWrite_MagicEffectInitial(IEnchantmentEffectGetter item, MutagenWriter writer, Func<EnchantmentEffect_ErrorMask> errorMask)
+        static partial void SpecialWrite_MagicEffectInitial(
+            IEnchantmentEffectGetter item, 
+            MutagenWriter writer, 
+            Func<EnchantmentEffect_ErrorMask> errorMask)
         {
-            //using (HeaderExport.ExportSubRecordHeader(writer, EnchantmentEffect_Registration.EFID_HEADER))
-            //{
-            //    writer.Write(item.MagicEffect_Property);
-            //}
+            using (HeaderExport.ExportSubRecordHeader(writer, EnchantmentEffect_Registration.EFID_HEADER))
+            {
+                writer.Write(item.MagicEffect_Property.EDID.Type);
+            }
         }
     }
 }

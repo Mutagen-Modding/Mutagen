@@ -10,7 +10,7 @@ namespace Mutagen.Bethesda.Generation
 {
     public class PrimitiveBinaryTranslationGeneration<T> : BinaryTranslationGeneration
     {
-        protected string typeName;
+        private string typeName;
         protected bool? nullable;
         public bool Nullable => nullable ?? false || typeof(T).GetName().EndsWith("?");
 
@@ -25,6 +25,8 @@ namespace Mutagen.Bethesda.Generation
             return itemAccessor.PropertyOrDirectAccess;
         }
 
+        public virtual string Typename(TypeGeneration typeGen) => typeName;
+
         public override void GenerateWrite(
             FileGeneration fg,
             ObjectGeneration objGen,
@@ -36,7 +38,7 @@ namespace Mutagen.Bethesda.Generation
         {
             var data = typeGen.CustomData[Constants.DATA_KEY] as MutagenFieldData;
             using (var args = new ArgsWrapper(fg,
-                $"{this.Namespace}{this.typeName}BinaryTranslation.Instance.Write"))
+                $"{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance.Write"))
             {
                 args.Add($"writer: {writerAccessor}");
                 args.Add($"item: {ItemWriteAccess(itemAccessor)}");
@@ -98,12 +100,12 @@ namespace Mutagen.Bethesda.Generation
             ArgsWrapper args;
             if (itemAccessor.PropertyAccess != null)
             {
-                args = new ArgsWrapper(fg, $"{itemAccessor.PropertyAccess}.{nameof(INotifyingCollectionExt.SetIfSucceeded)}({this.Namespace}{this.typeName}BinaryTranslation.Instance.Parse",
+                args = new ArgsWrapper(fg, $"{itemAccessor.PropertyAccess}.{nameof(INotifyingCollectionExt.SetIfSucceeded)}({this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance.Parse",
                     suffixLine: ")");
             }
             else
             {
-                args = new ArgsWrapper(fg, $"var {typeGen.Name}tryGet = {this.Namespace}{this.typeName}BinaryTranslation.Instance.Parse");
+                args = new ArgsWrapper(fg, $"var {typeGen.Name}tryGet = {this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance.Parse");
             }
             using (args)
             {
@@ -175,7 +177,7 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine("r.Position += Constants.SUBRECORD_LENGTH;");
             }
             using (var args = new ArgsWrapper(fg,
-                $"{retAccessor.DirectAccess}{this.Namespace}{this.typeName}BinaryTranslation.Instance.Parse"))
+                $"{retAccessor.DirectAccess}{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance.Parse"))
             {
                 args.Add(nodeAccessor);
                 args.Add($"doMasks: {doMaskAccessor}");
