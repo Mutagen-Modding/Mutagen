@@ -43,8 +43,10 @@
     <Compile Include="Constants.cs" />
     <Compile Include="ContentLength.cs" />
     <Compile Include="FileLocation.cs" />
+    <Compile Include="Links\EDIDSetLink.cs" />
     <Compile Include="Links\EDIDLink.cs" />
     <Compile Include="Links\FormIDSetLink.cs" />
+    <Compile Include="Links\IEDIDLink.cs" />
     <Compile Include="Links\IFormIDLink.cs" />
     <Compile Include="Links\ILink.cs" />
     <Compile Include="Links\LinkExt.cs" />
@@ -75,6 +77,7 @@
     <Compile Include="Translators\Binary\EnumBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\FilePathBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\FloatBinaryTranslation.cs" />
+    <Compile Include="Translators\Binary\EDIDFormIDBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\RawFormIDBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\HeaderExport.cs" />
     <Compile Include="Translators\Binary\HeaderTranslation.cs" />

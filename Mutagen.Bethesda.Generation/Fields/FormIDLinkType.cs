@@ -11,12 +11,19 @@ namespace Mutagen.Bethesda.Generation
 {
     public class FormIDLinkType : PrimitiveType
     {
+        public enum FormIDTypeEnum
+        {
+            Normal,
+            EDIDChars
+        }
+
         public override string ProtectedProperty => base.Property;
         public override string ProtectedName => base.ProtectedName;
         private RawFormIDType RawFormID = new RawFormIDType();
         private LoquiType loquiType = new LoquiType();
+        public FormIDTypeEnum FormIDType;
 
-        public override string TypeName => $"FormID{(this.HasBeenSet ? "Set" : string.Empty)}Link<{loquiType.TypeName}>";
+        public override string TypeName => $"{(this.FormIDType == FormIDTypeEnum.Normal ? "FormID" : "EDID")}{(this.HasBeenSet ? "Set" : string.Empty)}Link<{loquiType.TypeName}>";
 
         public override Type Type => typeof(RawFormID);
 
@@ -32,11 +39,24 @@ namespace Mutagen.Bethesda.Generation
             this.NotifyingProperty.Forward(RawFormID.NotifyingProperty);
             this.HasBeenSetProperty.Forward(loquiType.HasBeenSetProperty);
             this.HasBeenSetProperty.Forward(RawFormID.HasBeenSetProperty);
+            this.FormIDType = node.GetAttribute<FormIDTypeEnum>("type", defaultVal: FormIDTypeEnum.Normal);
         }
 
         public override void GenerateForClass(FileGeneration fg)
         {
-            fg.AppendLine($"public FormID{(this.HasBeenSet ? "Set" : string.Empty)}Link<{loquiType.TypeName}> {this.Property} {{ get; }} = new FormID{(this.HasBeenSet ? "Set" : string.Empty)}Link<{loquiType.TargetObjectGeneration.Name}>();");
+            string linkString;
+            switch (this.FormIDType)
+            {
+                case FormIDTypeEnum.Normal:
+                    linkString = "FormID";
+                    break;
+                case FormIDTypeEnum.EDIDChars:
+                    linkString = "EDID";
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+            fg.AppendLine($"public {TypeName} {this.Property} {{ get; }} = new {linkString}{(this.HasBeenSet ? "Set" : string.Empty)}Link<{loquiType.TargetObjectGeneration.Name}>();");
             fg.AppendLine($"public {loquiType.TypeName} {this.Name} {{ get => {this.Property}.Item; {(this.Protected ? string.Empty : $"set => {this.Property}.Item = value; ")}}}");
             fg.AppendLine($"{this.TypeName} {this.ObjectGen.Getter_InterfaceStr}.{this.Property} => this.{this.Property};");
         }

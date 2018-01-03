@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             //using (HeaderExport.ExportSubRecordHeader(writer, EnchantmentEffect_Registration.EFID_HEADER))
             //{
-            //    writer.Write(item.MagicEffect);
+            //    writer.Write(item.MagicEffect_Property);
             //}
         }
     }

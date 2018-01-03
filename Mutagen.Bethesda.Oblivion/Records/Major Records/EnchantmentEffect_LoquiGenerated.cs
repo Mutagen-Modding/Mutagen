@@ -37,9 +37,9 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region MagicEffect
-        public FormIDSetLink<MagicEffect> MagicEffect_Property { get; } = new FormIDSetLink<MagicEffect>();
+        public EDIDSetLink<MagicEffect> MagicEffect_Property { get; } = new EDIDSetLink<MagicEffect>();
         public MagicEffect MagicEffect { get => MagicEffect_Property.Item; set => MagicEffect_Property.Item = value; }
-        FormIDSetLink<MagicEffect> IEnchantmentEffectGetter.MagicEffect_Property => this.MagicEffect_Property;
+        EDIDSetLink<MagicEffect> IEnchantmentEffectGetter.MagicEffect_Property => this.MagicEffect_Property;
         #endregion
         #region Magnitude
         protected readonly INotifyingSetItem<UInt32> _Magnitude = NotifyingSetItem.Factory<UInt32>(markAsSet: false);
@@ -999,7 +999,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case EnchantmentEffect_FieldIndex.MagicEffect:
                     this.MagicEffect_Property.Set(
-                        (FormIDSetLink<MagicEffect>)obj,
+                        (EDIDSetLink<MagicEffect>)obj,
                         cmds);
                     break;
                 case EnchantmentEffect_FieldIndex.Magnitude:
@@ -1066,7 +1066,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case EnchantmentEffect_FieldIndex.MagicEffect:
                     obj.MagicEffect_Property.Set(
-                        (FormIDSetLink<MagicEffect>)pair.Value,
+                        (EDIDSetLink<MagicEffect>)pair.Value,
                         null);
                     break;
                 case EnchantmentEffect_FieldIndex.Magnitude:
@@ -1131,7 +1131,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region MagicEffect
         MagicEffect MagicEffect { get; }
-        FormIDSetLink<MagicEffect> MagicEffect_Property { get; }
+        EDIDSetLink<MagicEffect> MagicEffect_Property { get; }
 
         #endregion
         #region Magnitude
@@ -1352,7 +1352,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case EnchantmentEffect_FieldIndex.MagicEffect:
-                    return typeof(FormIDSetLink<MagicEffect>);
+                    return typeof(EDIDSetLink<MagicEffect>);
                 case EnchantmentEffect_FieldIndex.Magnitude:
                     return typeof(UInt32);
                 case EnchantmentEffect_FieldIndex.Area:

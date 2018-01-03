@@ -167,11 +167,11 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<MagicEffectSubData> IMagicEffectGetter.SubData_Property => this.SubData_Property;
         #endregion
         #region CounterEffects
-        private readonly INotifyingList<FormIDLink<MagicEffect>> _CounterEffects = new NotifyingList<FormIDLink<MagicEffect>>();
-        public INotifyingList<FormIDLink<MagicEffect>> CounterEffects => _CounterEffects;
+        private readonly INotifyingList<EDIDLink<MagicEffect>> _CounterEffects = new NotifyingList<EDIDLink<MagicEffect>>();
+        public INotifyingList<EDIDLink<MagicEffect>> CounterEffects => _CounterEffects;
         #region Interface Members
-        INotifyingList<FormIDLink<MagicEffect>> IMagicEffect.CounterEffects => _CounterEffects;
-        INotifyingListGetter<FormIDLink<MagicEffect>> IMagicEffectGetter.CounterEffects => _CounterEffects;
+        INotifyingList<EDIDLink<MagicEffect>> IMagicEffect.CounterEffects => _CounterEffects;
+        INotifyingListGetter<EDIDLink<MagicEffect>> IMagicEffectGetter.CounterEffects => _CounterEffects;
         #endregion
 
         #endregion
@@ -759,7 +759,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 case "CounterEffects":
-                    item._CounterEffects.SetIfSucceeded(ListXmlTranslation<FormIDLink<MagicEffect>, Exception>.Instance.Parse(
+                    item._CounterEffects.SetIfSucceeded(ListXmlTranslation<EDIDLink<MagicEffect>, Exception>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)MagicEffect_FieldIndex.CounterEffects,
                         errorMask: errorMask,
@@ -769,7 +769,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 r,
                                 nullable: false,
                                 doMasks: listDoMasks,
-                                errorMask: out listSubMask).Bubble((o) => new FormIDLink<MagicEffect>(o.Value));
+                                errorMask: out listSubMask).Bubble((o) => new EDIDLink<MagicEffect>(o.Value));
                         }
                         ));
                     break;
@@ -1185,17 +1185,15 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<MagicEffect_FieldIndex?>.Succeed(MagicEffect_FieldIndex.SubData);
                 case "ESCE":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var CounterEffectstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<MagicEffect>, Exception>.Instance.ParseRepeatedItem(
+                    var CounterEffectstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<EDIDLink<MagicEffect>, Exception>.Instance.ParseRepeatedItem(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)MagicEffect_FieldIndex.CounterEffects,
                         objType: ObjectType.Subrecord,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
                         {
-                            return Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
-                                r,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask).Bubble((o) => new FormIDLink<MagicEffect>(o));
+                            listSubMask = null;
+                            return TryGet<EDIDLink<MagicEffect>>.Succeed(new EDIDLink<MagicEffect>(HeaderTranslation.GetNextRecordType(r)));
                         }
                         );
                     item._CounterEffects.SetIfSucceeded(CounterEffectstryGet);
@@ -1358,7 +1356,7 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case MagicEffect_FieldIndex.CounterEffects:
-                    this._CounterEffects.SetTo((IEnumerable<FormIDLink<MagicEffect>>)obj, cmds);
+                    this._CounterEffects.SetTo((IEnumerable<EDIDLink<MagicEffect>>)obj, cmds);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -1457,7 +1455,7 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case MagicEffect_FieldIndex.CounterEffects:
-                    obj._CounterEffects.SetTo((IEnumerable<FormIDLink<MagicEffect>>)pair.Value, null);
+                    obj._CounterEffects.SetTo((IEnumerable<EDIDLink<MagicEffect>>)pair.Value, null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1509,7 +1507,7 @@ namespace Mutagen.Bethesda.Oblivion
         new MagicEffectSubData SubData { get; set; }
         new INotifyingSetItem<MagicEffectSubData> SubData_Property { get; }
 
-        new INotifyingList<FormIDLink<MagicEffect>> CounterEffects { get; }
+        new INotifyingList<EDIDLink<MagicEffect>> CounterEffects { get; }
     }
 
     public interface IMagicEffectGetter : INamedMajorRecordGetter
@@ -1580,7 +1578,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region CounterEffects
-        INotifyingListGetter<FormIDLink<MagicEffect>> CounterEffects { get; }
+        INotifyingListGetter<EDIDLink<MagicEffect>> CounterEffects { get; }
         #endregion
 
     }
@@ -1889,7 +1887,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MagicEffect_FieldIndex.SubData:
                     return typeof(MagicEffectSubData);
                 case MagicEffect_FieldIndex.CounterEffects:
-                    return typeof(NotifyingList<FormIDLink<MagicEffect>>);
+                    return typeof(NotifyingList<EDIDLink<MagicEffect>>);
                 default:
                     return NamedMajorRecord_Registration.GetNthType(index);
             }
@@ -2550,7 +2548,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 if (item.CounterEffects.HasBeenSet)
                 {
                     ret.CounterEffects = new MaskItem<bool, IEnumerable<bool>>();
-                    ret.CounterEffects.Specific = item.CounterEffects.SelectAgainst<FormIDLink<MagicEffect>, bool>(rhs.CounterEffects, ((l, r) => object.Equals(l, r)), out ret.CounterEffects.Overall);
+                    ret.CounterEffects.Specific = item.CounterEffects.SelectAgainst<EDIDLink<MagicEffect>, bool>(rhs.CounterEffects, ((l, r) => object.Equals(l, r)), out ret.CounterEffects.Overall);
                     ret.CounterEffects.Overall = ret.CounterEffects.Overall && ret.CounterEffects.Specific.All((b) => b);
                 }
                 else
@@ -2914,13 +2912,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.CounterEffects.HasBeenSet)
                     {
-                        ListXmlTranslation<FormIDLink<MagicEffect>, Exception>.Instance.Write(
+                        ListXmlTranslation<EDIDLink<MagicEffect>, Exception>.Instance.Write(
                             writer: writer,
                             name: nameof(item.CounterEffects),
                             item: item.CounterEffects,
                             fieldIndex: (int)MagicEffect_FieldIndex.CounterEffects,
                             errorMask: errorMask,
-                            transl: (FormIDLink<MagicEffect> subItem, bool listDoMasks, out Exception listSubMask) =>
+                            transl: (EDIDLink<MagicEffect> subItem, bool listDoMasks, out Exception listSubMask) =>
                             {
                                 RawFormIDXmlTranslation.Instance.Write(
                                     writer: writer,
@@ -3073,13 +3071,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)MagicEffect_FieldIndex.SubData,
                     errorMask: errorMask);
             }
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<MagicEffect>, Exception>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<EDIDLink<MagicEffect>, Exception>.Instance.Write(
                 writer: writer,
                 item: item.CounterEffects,
                 fieldIndex: (int)MagicEffect_FieldIndex.CounterEffects,
                 recordType: MagicEffect_Registration.ESCE_HEADER,
                 errorMask: errorMask,
-                transl: (FormIDLink<MagicEffect> subItem, bool listDoMasks, out Exception listSubMask) =>
+                transl: (EDIDLink<MagicEffect> subItem, bool listDoMasks, out Exception listSubMask) =>
                 {
                     Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
                         writer: writer,

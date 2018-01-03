@@ -53,9 +53,9 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<MagicSchool> IScriptEffectGetter.MagicSchool_Property => this.MagicSchool_Property;
         #endregion
         #region VisualEffect
-        public FormIDSetLink<MagicEffect> VisualEffect_Property { get; } = new FormIDSetLink<MagicEffect>();
+        public EDIDSetLink<MagicEffect> VisualEffect_Property { get; } = new EDIDSetLink<MagicEffect>();
         public MagicEffect VisualEffect { get => VisualEffect_Property.Item; set => VisualEffect_Property.Item = value; }
-        FormIDSetLink<MagicEffect> IScriptEffectGetter.VisualEffect_Property => this.VisualEffect_Property;
+        EDIDSetLink<MagicEffect> IScriptEffectGetter.VisualEffect_Property => this.VisualEffect_Property;
         #endregion
         #region Flags
         protected readonly INotifyingSetItem<ScriptEffect.Flag> _Flags = NotifyingSetItem.Factory<ScriptEffect.Flag>(markAsSet: false);
@@ -950,7 +950,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case ScriptEffect_FieldIndex.VisualEffect:
                     this.VisualEffect_Property.Set(
-                        (FormIDSetLink<MagicEffect>)obj,
+                        (EDIDSetLink<MagicEffect>)obj,
                         cmds);
                     break;
                 case ScriptEffect_FieldIndex.Flags:
@@ -1012,7 +1012,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case ScriptEffect_FieldIndex.VisualEffect:
                     obj.VisualEffect_Property.Set(
-                        (FormIDSetLink<MagicEffect>)pair.Value,
+                        (EDIDSetLink<MagicEffect>)pair.Value,
                         null);
                     break;
                 case ScriptEffect_FieldIndex.Flags:
@@ -1067,7 +1067,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region VisualEffect
         MagicEffect VisualEffect { get; }
-        FormIDSetLink<MagicEffect> VisualEffect_Property { get; }
+        EDIDSetLink<MagicEffect> VisualEffect_Property { get; }
 
         #endregion
         #region Flags
@@ -1267,7 +1267,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ScriptEffect_FieldIndex.MagicSchool:
                     return typeof(MagicSchool);
                 case ScriptEffect_FieldIndex.VisualEffect:
-                    return typeof(FormIDSetLink<MagicEffect>);
+                    return typeof(EDIDSetLink<MagicEffect>);
                 case ScriptEffect_FieldIndex.Flags:
                     return typeof(ScriptEffect.Flag);
                 case ScriptEffect_FieldIndex.Name:

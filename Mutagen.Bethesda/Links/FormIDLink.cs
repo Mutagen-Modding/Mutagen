@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
 {
-    public class FormIDLink<T> : NotifyingItem<T>, IFormIDLink<T>, IEquatable<FormIDLink<T>>
+    public class FormIDLink<T> : NotifyingItem<T>, IFormIDLink<T>, IEquatable<ILink<T>>
        where T : MajorRecord
     {
         public bool Linked => this.Item != null;
@@ -38,23 +38,23 @@ namespace Mutagen.Bethesda
             this.UnlinkedForm = formID.Value;
         }
 
-        public static bool operator ==(FormIDLink<T> lhs, FormIDLink<T> rhs)
+        public static bool operator ==(FormIDLink<T> lhs, IFormIDLink<T> rhs)
         {
             return lhs.FormID.Equals(rhs.FormID);
         }
 
-        public static bool operator !=(FormIDLink<T> lhs, FormIDLink<T> rhs)
+        public static bool operator !=(FormIDLink<T> lhs, IFormIDLink<T> rhs)
         {
             return !lhs.FormID.Equals(rhs.FormID);
         }
 
         public override bool Equals(object obj)
         {
-            if (!(obj is FormIDLink<T> rhs)) return false;
+            if (!(obj is ILink<T> rhs)) return false;
             return this.Equals(rhs);
         }
 
-        public bool Equals(FormIDLink<T> other) => LinkExt.Equals(this, other);
+        public bool Equals(ILink<T> other) => LinkExt.Equals(this, other);
 
         public override int GetHashCode() => LinkExt.HashCode(this);
 

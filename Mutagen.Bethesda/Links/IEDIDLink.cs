@@ -1,6 +1,4 @@
-﻿using Loqui;
-using Noggog.Notifying;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
 {
-    public interface IFormIDLink<T> : ILink<T>
+    public interface IEDIDLink<T> : ILink<T>
        where T : MajorRecord
     {
-        RawFormID? UnlinkedForm { get; }
+        RecordType? UnlinkedEDID { get; }
     }
 
-    public interface IFormIDSetLink<T> : IFormIDLink<T>, ISetLink<T>
+    public interface IEDIDSetLink<T> : IEDIDLink<T>, ISetLink<T>
        where T : MajorRecord
     {
     }

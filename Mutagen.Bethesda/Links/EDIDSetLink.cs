@@ -8,26 +8,25 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
 {
-    public class EDIDLink<T> : FormIDLink<T>, IEDIDLink<T>
+    public class EDIDSetLink<T> : FormIDSetLink<T>, IEDIDSetLink<T>
        where T : MajorRecord
     {
-        public static readonly RecordType UNLINKED = new RecordType("\0\0\0\0");
-        public RecordType? UnlinkedEDID { get; private set; } = UNLINKED;
+        public RecordType? UnlinkedEDID { get; private set; } = EDIDLink<T>.UNLINKED;
 
-        public EDIDLink()
+        public EDIDSetLink()
             : base()
         {
             this.Subscribe(UpdateUnlinked);
         }
 
-        public EDIDLink(RecordType unlinkedEDID)
+        public EDIDSetLink(RecordType unlinkedEDID)
             : this()
         {
             this.UnlinkedEDID = unlinkedEDID;
             this.Subscribe(UpdateUnlinked);
         }
 
-        public EDIDLink(RawFormID unlinkedForm)
+        public EDIDSetLink(RawFormID unlinkedForm)
             : base(unlinkedForm)
         {
             this.Subscribe(UpdateUnlinked);
@@ -42,7 +41,7 @@ namespace Mutagen.Bethesda
             }
             else
             {
-                this.UnlinkedEDID = UNLINKED;
+                this.UnlinkedEDID = EDIDLink<T>.UNLINKED;
             }
         }
 

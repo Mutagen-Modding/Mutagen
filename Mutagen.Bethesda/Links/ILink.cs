@@ -17,4 +17,9 @@ namespace Mutagen.Bethesda
         where T : IMajorRecord
     {
     }
+
+    public interface ISetLink<T> : ILink<T>, INotifyingSetItem<T>
+        where T : IMajorRecord
+    {
+    }
 }

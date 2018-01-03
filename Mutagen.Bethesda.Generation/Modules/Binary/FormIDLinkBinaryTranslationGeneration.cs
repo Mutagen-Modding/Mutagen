@@ -26,24 +26,35 @@ namespace Mutagen.Bethesda.Generation
             {
                 fg.AppendLine("r.Position += Constants.SUBRECORD_LENGTH;");
             }
-            using (var args = new ArgsWrapper(fg,
-                $"{retAccessor.DirectAccess}{this.Namespace}{this.typeName}BinaryTranslation.Instance.Parse",
-                suffixLine: $".Bubble((o) => new {linkType.TypeName}(o))"))
+            switch (linkType.FormIDType)
             {
-                args.Add(nodeAccessor);
-                args.Add($"doMasks: {doMaskAccessor}");
-                args.Add($"errorMask: out {maskAccessor}");
-                foreach (var arg in AdditionCopyInRetParameters(
-                    fg: fg,
-                    objGen: objGen,
-                    typeGen: typeGen,
-                    nodeAccessor: nodeAccessor,
-                    retAccessor: retAccessor,
-                    doMaskAccessor: doMaskAccessor,
-                    maskAccessor: maskAccessor))
-                {
-                    args.Add(arg);
-                }
+                case FormIDLinkType.FormIDTypeEnum.Normal:
+                    using (var args = new ArgsWrapper(fg,
+                        $"{retAccessor.DirectAccess}{this.Namespace}{this.typeName}BinaryTranslation.Instance.Parse",
+                        suffixLine: $".Bubble((o) => new {linkType.TypeName}(o))"))
+                    {
+                        args.Add(nodeAccessor);
+                        args.Add($"doMasks: {doMaskAccessor}");
+                        args.Add($"errorMask: out {maskAccessor}");
+                        foreach (var arg in AdditionCopyInRetParameters(
+                            fg: fg,
+                            objGen: objGen,
+                            typeGen: typeGen,
+                            nodeAccessor: nodeAccessor,
+                            retAccessor: retAccessor,
+                            doMaskAccessor: doMaskAccessor,
+                            maskAccessor: maskAccessor))
+                        {
+                            args.Add(arg);
+                        }
+                    }
+                    break;
+                case FormIDLinkType.FormIDTypeEnum.EDIDChars:
+                    fg.AppendLine($"{maskAccessor} = null;");
+                    fg.AppendLine($"return TryGet<{linkType.TypeName}>.Succeed(new {linkType.TypeName}(HeaderTranslation.GetNextRecordType(r)));");
+                    break;
+                default:
+                    throw new NotImplementedException();
             }
         }
     }

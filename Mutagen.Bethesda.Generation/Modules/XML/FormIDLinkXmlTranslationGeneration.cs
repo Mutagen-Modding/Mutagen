@@ -15,18 +15,21 @@ namespace Mutagen.Bethesda.Generation
             return $"{itemAccessor.DirectAccess}?.FormID";
         }
 
-        public override void GenerateCopyInRet(FileGeneration fg, TypeGeneration typeGen, string nodeAccessor, Accessor retAccessor, string doMaskAccessor, string maskAccessor)
+        public override void GenerateCopyInRet(
+            FileGeneration fg, 
+            TypeGeneration typeGen,
+            string nodeAccessor,
+            Accessor retAccessor, 
+            string doMaskAccessor, 
+            string maskAccessor)
         {
             FormIDLinkType linkType = typeGen as FormIDLinkType;
             using (var args = new ArgsWrapper(fg,
                 $"{retAccessor.DirectAccess}{this.TypeName}XmlTranslation.Instance.Parse",
-                (this.Nullable ? string.Empty : $".Bubble((o) => new {linkType.TypeName}(o.Value))")))
+                $".Bubble((o) => new {linkType.TypeName}(o.Value))"))
             {
                 args.Add(nodeAccessor);
-                if (CanBeNotNullable)
-                {
-                    args.Add($"nullable: {Nullable.ToString().ToLower()}");
-                }
+                args.Add($"nullable: {Nullable.ToString().ToLower()}");
                 args.Add($"doMasks: {doMaskAccessor}");
                 args.Add($"errorMask: out {maskAccessor}");
             }
