@@ -895,24 +895,27 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "ENIT":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var TypetryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Enchantment.EnchantmentType>.Instance.Parse(
-                        frame: frame.Spawn(new ContentLength(4)),
-                        fieldIndex: (int)Enchantment_FieldIndex.Type,
-                        errorMask: errorMask);
-                    item._Type.SetIfSucceeded(TypetryGet);
-                    item._ChargeAmount.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                        frame: frame,
-                        fieldIndex: (int)Enchantment_FieldIndex.ChargeAmount,
-                        errorMask: errorMask));
-                    item._EnchantCost.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                        frame: frame,
-                        fieldIndex: (int)Enchantment_FieldIndex.EnchantCost,
-                        errorMask: errorMask));
-                    var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Enchantment.Flag>.Instance.Parse(
-                        frame: frame.Spawn(new ContentLength(4)),
-                        fieldIndex: (int)Enchantment_FieldIndex.Flags,
-                        errorMask: errorMask);
-                    item._Flags.SetIfSucceeded(FlagstryGet);
+                    using (var dataFrame = frame.Spawn(contentLength))
+                    {
+                        var TypetryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Enchantment.EnchantmentType>.Instance.Parse(
+                            frame: dataFrame.Spawn(new ContentLength(4)),
+                            fieldIndex: (int)Enchantment_FieldIndex.Type,
+                            errorMask: errorMask);
+                        item._Type.SetIfSucceeded(TypetryGet);
+                        item._ChargeAmount.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            fieldIndex: (int)Enchantment_FieldIndex.ChargeAmount,
+                            errorMask: errorMask));
+                        item._EnchantCost.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            fieldIndex: (int)Enchantment_FieldIndex.EnchantCost,
+                            errorMask: errorMask));
+                        var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Enchantment.Flag>.Instance.Parse(
+                            frame: dataFrame.Spawn(new ContentLength(4)),
+                            fieldIndex: (int)Enchantment_FieldIndex.Flags,
+                            errorMask: errorMask);
+                        item._Flags.SetIfSucceeded(FlagstryGet);
+                    }
                     return TryGet<Enchantment_FieldIndex?>.Succeed(Enchantment_FieldIndex.Flags);
                 case "EFIT":
                     var EffectstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<EnchantmentEffect, MaskItem<Exception, EnchantmentEffect_ErrorMask>>.Instance.ParseRepeatedItem(

@@ -993,54 +993,57 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<Class_FieldIndex?>.Succeed(Class_FieldIndex.Icon);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var PrimaryAttributestryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<ActorValue, Exception>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        amount: 2,
-                        fieldIndex: (int)Class_FieldIndex.PrimaryAttributes,
-                        errorMask: errorMask,
-                        transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            return Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
-                                frame: r.Spawn(new ContentLength(4)),
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                    item._PrimaryAttributes.SetIfSucceeded(PrimaryAttributestryGet);
-                    var SpecializationtryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Class.SpecializationFlag>.Instance.Parse(
-                        frame: frame.Spawn(new ContentLength(4)),
-                        fieldIndex: (int)Class_FieldIndex.Specialization,
-                        errorMask: errorMask);
-                    item._Specialization.SetIfSucceeded(SpecializationtryGet);
-                    var SecondaryAttributestryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<ActorValue, Exception>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        amount: 7,
-                        fieldIndex: (int)Class_FieldIndex.SecondaryAttributes,
-                        errorMask: errorMask,
-                        transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
-                        {
-                            return Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
-                                frame: r.Spawn(new ContentLength(4)),
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                    item._SecondaryAttributes.SetIfSucceeded(SecondaryAttributestryGet);
-                    var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<ClassFlag>.Instance.Parse(
-                        frame: frame.Spawn(new ContentLength(4)),
-                        fieldIndex: (int)Class_FieldIndex.Flags,
-                        errorMask: errorMask);
-                    item._Flags.SetIfSucceeded(FlagstryGet);
-                    var ClassServicestryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<ClassService>.Instance.Parse(
-                        frame: frame.Spawn(new ContentLength(4)),
-                        fieldIndex: (int)Class_FieldIndex.ClassServices,
-                        errorMask: errorMask);
-                    item._ClassServices.SetIfSucceeded(ClassServicestryGet);
-                    if (frame.Complete) return TryGet<Class_FieldIndex?>.Succeed(Class_FieldIndex.ClassServices);
-                    item._Training.SetIfSucceeded(LoquiBinaryTranslation<ClassTraining, ClassTraining_ErrorMask>.Instance.Parse(
-                        frame: frame.Spawn(snapToFinalPosition: false),
-                        fieldIndex: (int)Class_FieldIndex.Training,
-                        errorMask: errorMask));
+                    using (var dataFrame = frame.Spawn(contentLength))
+                    {
+                        var PrimaryAttributestryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<ActorValue, Exception>.Instance.ParseRepeatedItem(
+                            frame: frame,
+                            amount: 2,
+                            fieldIndex: (int)Class_FieldIndex.PrimaryAttributes,
+                            errorMask: errorMask,
+                            transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
+                            {
+                                return Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
+                                    frame: r.Spawn(new ContentLength(4)),
+                                    doMasks: listDoMasks,
+                                    errorMask: out listSubMask);
+                            }
+                            );
+                        item._PrimaryAttributes.SetIfSucceeded(PrimaryAttributestryGet);
+                        var SpecializationtryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Class.SpecializationFlag>.Instance.Parse(
+                            frame: dataFrame.Spawn(new ContentLength(4)),
+                            fieldIndex: (int)Class_FieldIndex.Specialization,
+                            errorMask: errorMask);
+                        item._Specialization.SetIfSucceeded(SpecializationtryGet);
+                        var SecondaryAttributestryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<ActorValue, Exception>.Instance.ParseRepeatedItem(
+                            frame: frame,
+                            amount: 7,
+                            fieldIndex: (int)Class_FieldIndex.SecondaryAttributes,
+                            errorMask: errorMask,
+                            transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
+                            {
+                                return Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
+                                    frame: r.Spawn(new ContentLength(4)),
+                                    doMasks: listDoMasks,
+                                    errorMask: out listSubMask);
+                            }
+                            );
+                        item._SecondaryAttributes.SetIfSucceeded(SecondaryAttributestryGet);
+                        var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<ClassFlag>.Instance.Parse(
+                            frame: dataFrame.Spawn(new ContentLength(4)),
+                            fieldIndex: (int)Class_FieldIndex.Flags,
+                            errorMask: errorMask);
+                        item._Flags.SetIfSucceeded(FlagstryGet);
+                        var ClassServicestryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<ClassService>.Instance.Parse(
+                            frame: dataFrame.Spawn(new ContentLength(4)),
+                            fieldIndex: (int)Class_FieldIndex.ClassServices,
+                            errorMask: errorMask);
+                        item._ClassServices.SetIfSucceeded(ClassServicestryGet);
+                        if (dataFrame.Complete) return TryGet<Class_FieldIndex?>.Succeed(Class_FieldIndex.ClassServices);
+                        item._Training.SetIfSucceeded(LoquiBinaryTranslation<ClassTraining, ClassTraining_ErrorMask>.Instance.Parse(
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
+                            fieldIndex: (int)Class_FieldIndex.Training,
+                            errorMask: errorMask));
+                    }
                     return TryGet<Class_FieldIndex?>.Succeed(Class_FieldIndex.Training);
                 default:
                     return NamedMajorRecord.Fill_Binary_RecordTypes(

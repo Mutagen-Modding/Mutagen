@@ -821,24 +821,28 @@ namespace Mutagen.Bethesda.Oblivion
                 case "SCIT":
                     if (lastParsed.HasValue && lastParsed.Value >= ScriptEffect_FieldIndex.Flags) return TryGet<ScriptEffect_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
-                        frame: frame,
-                        fieldIndex: (int)ScriptEffect_FieldIndex.Script,
-                        errorMask: errorMask));
-                    var MagicSchooltryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicSchool>.Instance.Parse(
-                        frame: frame.Spawn(new ContentLength(4)),
-                        fieldIndex: (int)ScriptEffect_FieldIndex.MagicSchool,
-                        errorMask: errorMask);
-                    item._MagicSchool.SetIfSucceeded(MagicSchooltryGet);
-                    item.VisualEffect_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Parse(
-                        frame: frame,
-                        fieldIndex: (int)ScriptEffect_FieldIndex.VisualEffect,
-                        errorMask: errorMask));
-                    var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<ScriptEffect.Flag>.Instance.Parse(
-                        frame: frame.Spawn(new ContentLength(4)),
-                        fieldIndex: (int)ScriptEffect_FieldIndex.Flags,
-                        errorMask: errorMask);
-                    item._Flags.SetIfSucceeded(FlagstryGet);
+                    using (var dataFrame = frame.Spawn(contentLength))
+                    {
+                        item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            fieldIndex: (int)ScriptEffect_FieldIndex.Script,
+                            errorMask: errorMask));
+                        var MagicSchooltryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicSchool>.Instance.Parse(
+                            frame: dataFrame.Spawn(new ContentLength(4)),
+                            fieldIndex: (int)ScriptEffect_FieldIndex.MagicSchool,
+                            errorMask: errorMask);
+                        item._MagicSchool.SetIfSucceeded(MagicSchooltryGet);
+                        item.VisualEffect_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            fieldIndex: (int)ScriptEffect_FieldIndex.VisualEffect,
+                            errorMask: errorMask));
+                        if (dataFrame.Complete) return TryGet<ScriptEffect_FieldIndex?>.Succeed(ScriptEffect_FieldIndex.VisualEffect);
+                        var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<ScriptEffect.Flag>.Instance.Parse(
+                            frame: dataFrame.Spawn(new ContentLength(4)),
+                            fieldIndex: (int)ScriptEffect_FieldIndex.Flags,
+                            errorMask: errorMask);
+                        item._Flags.SetIfSucceeded(FlagstryGet);
+                    }
                     return TryGet<ScriptEffect_FieldIndex?>.Succeed(ScriptEffect_FieldIndex.Flags);
                 case "FULL":
                     frame.Position += Constants.SUBRECORD_LENGTH;

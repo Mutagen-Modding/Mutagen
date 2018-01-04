@@ -1072,29 +1072,32 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<SkillRecord_FieldIndex?>.Succeed(SkillRecord_FieldIndex.Icon);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var ActiontryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
-                        frame: frame.Spawn(new ContentLength(4)),
-                        fieldIndex: (int)SkillRecord_FieldIndex.Action,
-                        errorMask: errorMask);
-                    item._Action.SetIfSucceeded(ActiontryGet);
-                    var AttributetryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
-                        frame: frame.Spawn(new ContentLength(4)),
-                        fieldIndex: (int)SkillRecord_FieldIndex.Attribute,
-                        errorMask: errorMask);
-                    item._Attribute.SetIfSucceeded(AttributetryGet);
-                    var SpecializationtryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Specialization>.Instance.Parse(
-                        frame: frame.Spawn(new ContentLength(4)),
-                        fieldIndex: (int)SkillRecord_FieldIndex.Specialization,
-                        errorMask: errorMask);
-                    item._Specialization.SetIfSucceeded(SpecializationtryGet);
-                    item._UseValueFirst.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: frame,
-                        fieldIndex: (int)SkillRecord_FieldIndex.UseValueFirst,
-                        errorMask: errorMask));
-                    item._UseValueSecond.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: frame,
-                        fieldIndex: (int)SkillRecord_FieldIndex.UseValueSecond,
-                        errorMask: errorMask));
+                    using (var dataFrame = frame.Spawn(contentLength))
+                    {
+                        var ActiontryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
+                            frame: dataFrame.Spawn(new ContentLength(4)),
+                            fieldIndex: (int)SkillRecord_FieldIndex.Action,
+                            errorMask: errorMask);
+                        item._Action.SetIfSucceeded(ActiontryGet);
+                        var AttributetryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
+                            frame: dataFrame.Spawn(new ContentLength(4)),
+                            fieldIndex: (int)SkillRecord_FieldIndex.Attribute,
+                            errorMask: errorMask);
+                        item._Attribute.SetIfSucceeded(AttributetryGet);
+                        var SpecializationtryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Specialization>.Instance.Parse(
+                            frame: dataFrame.Spawn(new ContentLength(4)),
+                            fieldIndex: (int)SkillRecord_FieldIndex.Specialization,
+                            errorMask: errorMask);
+                        item._Specialization.SetIfSucceeded(SpecializationtryGet);
+                        item._UseValueFirst.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            fieldIndex: (int)SkillRecord_FieldIndex.UseValueFirst,
+                            errorMask: errorMask));
+                        item._UseValueSecond.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            fieldIndex: (int)SkillRecord_FieldIndex.UseValueSecond,
+                            errorMask: errorMask));
+                    }
                     return TryGet<SkillRecord_FieldIndex?>.Succeed(SkillRecord_FieldIndex.UseValueSecond);
                 case "ANAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;

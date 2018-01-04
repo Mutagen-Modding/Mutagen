@@ -1137,51 +1137,54 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<MagicEffect_FieldIndex?>.Succeed(MagicEffect_FieldIndex.Model);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicEffect.MagicFlag>.Instance.Parse(
-                        frame: frame.Spawn(new ContentLength(4)),
-                        fieldIndex: (int)MagicEffect_FieldIndex.Flags,
-                        errorMask: errorMask);
-                    item._Flags.SetIfSucceeded(FlagstryGet);
-                    item._BaseCost.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: frame,
-                        fieldIndex: (int)MagicEffect_FieldIndex.BaseCost,
-                        errorMask: errorMask));
-                    var UnusedtryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(new ContentLength(4)),
-                        fieldIndex: (int)MagicEffect_FieldIndex.Unused,
-                        errorMask: errorMask);
-                    item._Unused.SetIfSucceeded(UnusedtryGet);
-                    var MagicSchooltryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicSchool>.Instance.Parse(
-                        frame: frame.Spawn(new ContentLength(4)),
-                        fieldIndex: (int)MagicEffect_FieldIndex.MagicSchool,
-                        errorMask: errorMask);
-                    item._MagicSchool.SetIfSucceeded(MagicSchooltryGet);
-                    var ResistancetryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Resistance>.Instance.Parse(
-                        frame: frame.Spawn(new ContentLength(4)),
-                        fieldIndex: (int)MagicEffect_FieldIndex.Resistance,
-                        errorMask: errorMask);
-                    item._Resistance.SetIfSucceeded(ResistancetryGet);
-                    item._CounterEffectCount.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                        frame: frame,
-                        fieldIndex: (int)MagicEffect_FieldIndex.CounterEffectCount,
-                        errorMask: errorMask));
-                    item.Light_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
-                        frame: frame,
-                        fieldIndex: (int)MagicEffect_FieldIndex.Light,
-                        errorMask: errorMask));
-                    item._ProjectileSpeed.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: frame,
-                        fieldIndex: (int)MagicEffect_FieldIndex.ProjectileSpeed,
-                        errorMask: errorMask));
-                    item.EffectShader_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
-                        frame: frame,
-                        fieldIndex: (int)MagicEffect_FieldIndex.EffectShader,
-                        errorMask: errorMask));
-                    if (frame.Complete) return TryGet<MagicEffect_FieldIndex?>.Succeed(MagicEffect_FieldIndex.EffectShader);
-                    item._SubData.SetIfSucceeded(LoquiBinaryTranslation<MagicEffectSubData, MagicEffectSubData_ErrorMask>.Instance.Parse(
-                        frame: frame.Spawn(snapToFinalPosition: false),
-                        fieldIndex: (int)MagicEffect_FieldIndex.SubData,
-                        errorMask: errorMask));
+                    using (var dataFrame = frame.Spawn(contentLength))
+                    {
+                        var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicEffect.MagicFlag>.Instance.Parse(
+                            frame: dataFrame.Spawn(new ContentLength(4)),
+                            fieldIndex: (int)MagicEffect_FieldIndex.Flags,
+                            errorMask: errorMask);
+                        item._Flags.SetIfSucceeded(FlagstryGet);
+                        item._BaseCost.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            fieldIndex: (int)MagicEffect_FieldIndex.BaseCost,
+                            errorMask: errorMask));
+                        var UnusedtryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                            frame: dataFrame.Spawn(new ContentLength(4)),
+                            fieldIndex: (int)MagicEffect_FieldIndex.Unused,
+                            errorMask: errorMask);
+                        item._Unused.SetIfSucceeded(UnusedtryGet);
+                        var MagicSchooltryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicSchool>.Instance.Parse(
+                            frame: dataFrame.Spawn(new ContentLength(4)),
+                            fieldIndex: (int)MagicEffect_FieldIndex.MagicSchool,
+                            errorMask: errorMask);
+                        item._MagicSchool.SetIfSucceeded(MagicSchooltryGet);
+                        var ResistancetryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Resistance>.Instance.Parse(
+                            frame: dataFrame.Spawn(new ContentLength(4)),
+                            fieldIndex: (int)MagicEffect_FieldIndex.Resistance,
+                            errorMask: errorMask);
+                        item._Resistance.SetIfSucceeded(ResistancetryGet);
+                        item._CounterEffectCount.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            fieldIndex: (int)MagicEffect_FieldIndex.CounterEffectCount,
+                            errorMask: errorMask));
+                        item.Light_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            fieldIndex: (int)MagicEffect_FieldIndex.Light,
+                            errorMask: errorMask));
+                        item._ProjectileSpeed.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            fieldIndex: (int)MagicEffect_FieldIndex.ProjectileSpeed,
+                            errorMask: errorMask));
+                        item.EffectShader_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            fieldIndex: (int)MagicEffect_FieldIndex.EffectShader,
+                            errorMask: errorMask));
+                        if (dataFrame.Complete) return TryGet<MagicEffect_FieldIndex?>.Succeed(MagicEffect_FieldIndex.EffectShader);
+                        item._SubData.SetIfSucceeded(LoquiBinaryTranslation<MagicEffectSubData, MagicEffectSubData_ErrorMask>.Instance.Parse(
+                            frame: dataFrame.Spawn(snapToFinalPosition: false),
+                            fieldIndex: (int)MagicEffect_FieldIndex.SubData,
+                            errorMask: errorMask));
+                    }
                     return TryGet<MagicEffect_FieldIndex?>.Succeed(MagicEffect_FieldIndex.SubData);
                 case "ESCE":
                     frame.Position += Constants.SUBRECORD_LENGTH;

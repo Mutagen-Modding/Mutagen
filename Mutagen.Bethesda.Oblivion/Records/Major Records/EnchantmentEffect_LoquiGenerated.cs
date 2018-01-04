@@ -12,6 +12,7 @@ using Loqui;
 using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Oblivion;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -95,6 +96,14 @@ namespace Mutagen.Bethesda.Oblivion
         }
         INotifyingSetItem<ActorValue> IEnchantmentEffect.ActorValue_Property => this.ActorValue_Property;
         INotifyingSetItemGetter<ActorValue> IEnchantmentEffectGetter.ActorValue_Property => this.ActorValue_Property;
+        #endregion
+        #region ScriptEffect
+        private readonly INotifyingSetItem<ScriptEffect> _ScriptEffect = new NotifyingSetItem<ScriptEffect>();
+        public INotifyingSetItem<ScriptEffect> ScriptEffect_Property => this._ScriptEffect;
+        ScriptEffect IEnchantmentEffectGetter.ScriptEffect => this.ScriptEffect;
+        public ScriptEffect ScriptEffect { get => _ScriptEffect.Item; set => _ScriptEffect.Item = value; }
+        INotifyingSetItem<ScriptEffect> IEnchantmentEffect.ScriptEffect_Property => this.ScriptEffect_Property;
+        INotifyingSetItemGetter<ScriptEffect> IEnchantmentEffectGetter.ScriptEffect_Property => this.ScriptEffect_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -185,6 +194,11 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (ActorValue != rhs.ActorValue) return false;
             }
+            if (ScriptEffect_Property.HasBeenSet != rhs.ScriptEffect_Property.HasBeenSet) return false;
+            if (ScriptEffect_Property.HasBeenSet)
+            {
+                if (!object.Equals(ScriptEffect, rhs.ScriptEffect)) return false;
+            }
             return true;
         }
 
@@ -214,6 +228,10 @@ namespace Mutagen.Bethesda.Oblivion
             if (ActorValue_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(ActorValue).CombineHashCode(ret);
+            }
+            if (ScriptEffect_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(ScriptEffect).CombineHashCode(ret);
             }
             return ret;
         }
@@ -541,6 +559,12 @@ namespace Mutagen.Bethesda.Oblivion
                         nullable: false,
                         fieldIndex: (int)EnchantmentEffect_FieldIndex.ActorValue,
                         errorMask: errorMask).Bubble((o) => o.Value));
+                    break;
+                case "ScriptEffect":
+                    item._ScriptEffect.SetIfSucceeded(LoquiXmlTranslation<ScriptEffect, ScriptEffect_ErrorMask>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)EnchantmentEffect_FieldIndex.ScriptEffect,
+                        errorMask: errorMask));
                     break;
                 default:
                     break;
@@ -880,33 +904,42 @@ namespace Mutagen.Bethesda.Oblivion
                 case "EFIT":
                     if (lastParsed.HasValue && lastParsed.Value >= EnchantmentEffect_FieldIndex.ActorValue) return TryGet<EnchantmentEffect_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.MagicEffect_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Parse(
-                        frame: frame,
-                        fieldIndex: (int)EnchantmentEffect_FieldIndex.MagicEffect,
-                        errorMask: errorMask));
-                    item._Magnitude.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                        frame: frame,
-                        fieldIndex: (int)EnchantmentEffect_FieldIndex.Magnitude,
-                        errorMask: errorMask));
-                    item._Area.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                        frame: frame,
-                        fieldIndex: (int)EnchantmentEffect_FieldIndex.Area,
-                        errorMask: errorMask));
-                    item._Duration.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
-                        frame: frame,
-                        fieldIndex: (int)EnchantmentEffect_FieldIndex.Duration,
-                        errorMask: errorMask));
-                    var TypetryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<EnchantmentEffect.EffectType>.Instance.Parse(
-                        frame: frame.Spawn(new ContentLength(4)),
-                        fieldIndex: (int)EnchantmentEffect_FieldIndex.Type,
-                        errorMask: errorMask);
-                    item._Type.SetIfSucceeded(TypetryGet);
-                    var ActorValuetryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
-                        frame: frame.Spawn(new ContentLength(4)),
-                        fieldIndex: (int)EnchantmentEffect_FieldIndex.ActorValue,
-                        errorMask: errorMask);
-                    item._ActorValue.SetIfSucceeded(ActorValuetryGet);
+                    using (var dataFrame = frame.Spawn(contentLength))
+                    {
+                        item.MagicEffect_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            fieldIndex: (int)EnchantmentEffect_FieldIndex.MagicEffect,
+                            errorMask: errorMask));
+                        item._Magnitude.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            fieldIndex: (int)EnchantmentEffect_FieldIndex.Magnitude,
+                            errorMask: errorMask));
+                        item._Area.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            fieldIndex: (int)EnchantmentEffect_FieldIndex.Area,
+                            errorMask: errorMask));
+                        item._Duration.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            fieldIndex: (int)EnchantmentEffect_FieldIndex.Duration,
+                            errorMask: errorMask));
+                        var TypetryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<EnchantmentEffect.EffectType>.Instance.Parse(
+                            frame: dataFrame.Spawn(new ContentLength(4)),
+                            fieldIndex: (int)EnchantmentEffect_FieldIndex.Type,
+                            errorMask: errorMask);
+                        item._Type.SetIfSucceeded(TypetryGet);
+                        var ActorValuetryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
+                            frame: dataFrame.Spawn(new ContentLength(4)),
+                            fieldIndex: (int)EnchantmentEffect_FieldIndex.ActorValue,
+                            errorMask: errorMask);
+                        item._ActorValue.SetIfSucceeded(ActorValuetryGet);
+                    }
                     return TryGet<EnchantmentEffect_FieldIndex?>.Succeed(EnchantmentEffect_FieldIndex.ActorValue);
+                case "SCIT":
+                    item._ScriptEffect.SetIfSucceeded(LoquiBinaryTranslation<ScriptEffect, ScriptEffect_ErrorMask>.Instance.Parse(
+                        frame: frame.Spawn(snapToFinalPosition: false),
+                        fieldIndex: (int)EnchantmentEffect_FieldIndex.ScriptEffect,
+                        errorMask: errorMask));
+                    return TryGet<EnchantmentEffect_FieldIndex?>.Succeed(EnchantmentEffect_FieldIndex.ScriptEffect);
                 default:
                     return TryGet<EnchantmentEffect_FieldIndex?>.Failure;
             }
@@ -1027,6 +1060,11 @@ namespace Mutagen.Bethesda.Oblivion
                         (ActorValue)obj,
                         cmds);
                     break;
+                case EnchantmentEffect_FieldIndex.ScriptEffect:
+                    this._ScriptEffect.Set(
+                        (ScriptEffect)obj,
+                        cmds);
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1094,6 +1132,11 @@ namespace Mutagen.Bethesda.Oblivion
                         (ActorValue)pair.Value,
                         null);
                     break;
+                case EnchantmentEffect_FieldIndex.ScriptEffect:
+                    obj._ScriptEffect.Set(
+                        (ScriptEffect)pair.Value,
+                        null);
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -1124,6 +1167,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         new ActorValue ActorValue { get; set; }
         new INotifyingSetItem<ActorValue> ActorValue_Property { get; }
+
+        new ScriptEffect ScriptEffect { get; set; }
+        new INotifyingSetItem<ScriptEffect> ScriptEffect_Property { get; }
 
     }
 
@@ -1159,6 +1205,11 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<ActorValue> ActorValue_Property { get; }
 
         #endregion
+        #region ScriptEffect
+        ScriptEffect ScriptEffect { get; }
+        INotifyingSetItemGetter<ScriptEffect> ScriptEffect_Property { get; }
+
+        #endregion
 
     }
 
@@ -1177,6 +1228,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Duration = 3,
         Type = 4,
         ActorValue = 5,
+        ScriptEffect = 6,
     }
     #endregion
 
@@ -1194,7 +1246,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "85ccb56e-7055-4f2a-894d-f998f0ac9ab8";
 
-        public const ushort FieldCount = 6;
+        public const ushort FieldCount = 7;
 
         public static readonly Type MaskType = typeof(EnchantmentEffect_Mask<>);
 
@@ -1234,6 +1286,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)EnchantmentEffect_FieldIndex.Type;
                 case "ACTORVALUE":
                     return (ushort)EnchantmentEffect_FieldIndex.ActorValue;
+                case "SCRIPTEFFECT":
+                    return (ushort)EnchantmentEffect_FieldIndex.ScriptEffect;
                 default:
                     return null;
             }
@@ -1250,6 +1304,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case EnchantmentEffect_FieldIndex.Duration:
                 case EnchantmentEffect_FieldIndex.Type:
                 case EnchantmentEffect_FieldIndex.ActorValue:
+                case EnchantmentEffect_FieldIndex.ScriptEffect:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1261,6 +1316,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EnchantmentEffect_FieldIndex enu = (EnchantmentEffect_FieldIndex)index;
             switch (enu)
             {
+                case EnchantmentEffect_FieldIndex.ScriptEffect:
+                    return true;
                 case EnchantmentEffect_FieldIndex.MagicEffect:
                 case EnchantmentEffect_FieldIndex.Magnitude:
                 case EnchantmentEffect_FieldIndex.Area:
@@ -1284,6 +1341,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case EnchantmentEffect_FieldIndex.Duration:
                 case EnchantmentEffect_FieldIndex.Type:
                 case EnchantmentEffect_FieldIndex.ActorValue:
+                case EnchantmentEffect_FieldIndex.ScriptEffect:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1307,6 +1365,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Type";
                 case EnchantmentEffect_FieldIndex.ActorValue:
                     return "ActorValue";
+                case EnchantmentEffect_FieldIndex.ScriptEffect:
+                    return "ScriptEffect";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1323,6 +1383,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case EnchantmentEffect_FieldIndex.Duration:
                 case EnchantmentEffect_FieldIndex.Type:
                 case EnchantmentEffect_FieldIndex.ActorValue:
+                case EnchantmentEffect_FieldIndex.ScriptEffect:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1340,6 +1401,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case EnchantmentEffect_FieldIndex.Duration:
                 case EnchantmentEffect_FieldIndex.Type:
                 case EnchantmentEffect_FieldIndex.ActorValue:
+                case EnchantmentEffect_FieldIndex.ScriptEffect:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1363,6 +1425,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(EnchantmentEffect.EffectType);
                 case EnchantmentEffect_FieldIndex.ActorValue:
                     return typeof(ActorValue);
+                case EnchantmentEffect_FieldIndex.ScriptEffect:
+                    return typeof(ScriptEffect);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1370,9 +1434,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly RecordType EFIT_HEADER = new RecordType("EFIT");
         public static readonly RecordType EFID_HEADER = new RecordType("EFID");
+        public static readonly RecordType SCIT_HEADER = new RecordType("SCIT");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = EFIT_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 0;
+        public const int NumTypedFields = 1;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1569,6 +1634,57 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask().SetNthException((int)EnchantmentEffect_FieldIndex.ActorValue, ex);
                 }
             }
+            if (copyMask?.ScriptEffect.Overall != CopyOption.Skip)
+            {
+                try
+                {
+                    item.ScriptEffect_Property.SetToWithDefault(
+                        rhs.ScriptEffect_Property,
+                        def?.ScriptEffect_Property,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.ScriptEffect.Overall ?? CopyOption.Reference)
+                            {
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    ScriptEffectCommon.CopyFieldsFrom(
+                                        item: item.ScriptEffect,
+                                        rhs: rhs.ScriptEffect,
+                                        def: def?.ScriptEffect,
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<ScriptEffect_ErrorMask>(() =>
+                                        {
+                                            var baseMask = errorMask();
+                                            if (baseMask.ScriptEffect.Specific == null)
+                                            {
+                                                baseMask.ScriptEffect = new MaskItem<Exception, ScriptEffect_ErrorMask>(null, new ScriptEffect_ErrorMask());
+                                            }
+                                            return baseMask.ScriptEffect.Specific;
+                                        }
+                                        ) : null),
+                                        copyMask: copyMask?.ScriptEffect.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(ScriptEffect);
+                                    return ScriptEffect.Copy(
+                                        r,
+                                        copyMask?.ScriptEffect?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.ScriptEffect?.Overall}. Cannot execute copy.");
+                            }
+                        }
+                        );
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)EnchantmentEffect_FieldIndex.ScriptEffect, ex);
+                }
+            }
         }
 
         #endregion
@@ -1599,6 +1715,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case EnchantmentEffect_FieldIndex.ActorValue:
                     obj.ActorValue_Property.HasBeenSet = on;
+                    break;
+                case EnchantmentEffect_FieldIndex.ScriptEffect:
+                    obj.ScriptEffect_Property.HasBeenSet = on;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1631,6 +1750,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case EnchantmentEffect_FieldIndex.ActorValue:
                     obj.ActorValue_Property.Unset(cmds);
                     break;
+                case EnchantmentEffect_FieldIndex.ScriptEffect:
+                    obj.ScriptEffect_Property.Unset(cmds);
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1655,6 +1777,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.Type_Property.HasBeenSet;
                 case EnchantmentEffect_FieldIndex.ActorValue:
                     return obj.ActorValue_Property.HasBeenSet;
+                case EnchantmentEffect_FieldIndex.ScriptEffect:
+                    return obj.ScriptEffect_Property.HasBeenSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1679,6 +1803,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.Type;
                 case EnchantmentEffect_FieldIndex.ActorValue:
                     return obj.ActorValue;
+                case EnchantmentEffect_FieldIndex.ScriptEffect:
+                    return obj.ScriptEffect;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1694,6 +1820,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Duration_Property.Unset(cmds.ToUnsetParams());
             item.Type_Property.Unset(cmds.ToUnsetParams());
             item.ActorValue_Property.Unset(cmds.ToUnsetParams());
+            item.ScriptEffect_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static EnchantmentEffect_Mask<bool> GetEqualsMask(
@@ -1717,6 +1844,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Duration = item.Duration_Property.Equals(rhs.Duration_Property, (l, r) => l == r);
             ret.Type = item.Type_Property.Equals(rhs.Type_Property, (l, r) => l == r);
             ret.ActorValue = item.ActorValue_Property.Equals(rhs.ActorValue_Property, (l, r) => l == r);
+            ret.ScriptEffect = item.ScriptEffect_Property.LoquiEqualsHelper(rhs.ScriptEffect_Property, (loqLhs, loqRhs) => ScriptEffectCommon.GetEqualsMask(loqLhs, loqRhs));
         }
 
         public static string ToString(
@@ -1770,6 +1898,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"ActorValue => {item.ActorValue}");
                 }
+                if (printMask?.ScriptEffect?.Overall ?? true)
+                {
+                    item.ScriptEffect?.ToString(fg, "ScriptEffect");
+                }
             }
             fg.AppendLine("]");
         }
@@ -1784,6 +1916,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Duration.HasValue && checkMask.Duration.Value != item.Duration_Property.HasBeenSet) return false;
             if (checkMask.Type.HasValue && checkMask.Type.Value != item.Type_Property.HasBeenSet) return false;
             if (checkMask.ActorValue.HasValue && checkMask.ActorValue.Value != item.ActorValue_Property.HasBeenSet) return false;
+            if (checkMask.ScriptEffect.Overall.HasValue && checkMask.ScriptEffect.Overall.Value != item.ScriptEffect_Property.HasBeenSet) return false;
+            if (checkMask.ScriptEffect.Specific != null && (item.ScriptEffect_Property.Item == null || !item.ScriptEffect_Property.Item.HasBeenSet(checkMask.ScriptEffect.Specific))) return false;
             return true;
         }
 
@@ -1796,6 +1930,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Duration = item.Duration_Property.HasBeenSet;
             ret.Type = item.Type_Property.HasBeenSet;
             ret.ActorValue = item.ActorValue_Property.HasBeenSet;
+            ret.ScriptEffect = new MaskItem<bool, ScriptEffect_Mask<bool>>(item.ScriptEffect_Property.HasBeenSet, ScriptEffectCommon.GetHasBeenSetMask(item.ScriptEffect_Property.Item));
             return ret;
         }
 
@@ -1883,6 +2018,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             name: nameof(item.ActorValue),
                             item: item.ActorValue_Property,
                             fieldIndex: (int)EnchantmentEffect_FieldIndex.ActorValue,
+                            errorMask: errorMask);
+                    }
+                    if (item.ScriptEffect_Property.HasBeenSet)
+                    {
+                        LoquiXmlTranslation<ScriptEffect, ScriptEffect_ErrorMask>.Instance.Write(
+                            writer: writer,
+                            item: item.ScriptEffect_Property,
+                            name: nameof(item.ScriptEffect),
+                            fieldIndex: (int)EnchantmentEffect_FieldIndex.ScriptEffect,
                             errorMask: errorMask);
                     }
                 }
@@ -1977,6 +2121,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)EnchantmentEffect_FieldIndex.ActorValue,
                     errorMask: errorMask);
             }
+            LoquiBinaryTranslation<ScriptEffect, ScriptEffect_ErrorMask>.Instance.Write(
+                writer: writer,
+                item: item.ScriptEffect_Property,
+                fieldIndex: (int)EnchantmentEffect_FieldIndex.ScriptEffect,
+                errorMask: errorMask);
         }
 
         #endregion
@@ -2002,6 +2151,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Duration = initialValue;
             this.Type = initialValue;
             this.ActorValue = initialValue;
+            this.ScriptEffect = new MaskItem<T, ScriptEffect_Mask<T>>(initialValue, new ScriptEffect_Mask<T>(initialValue));
         }
         #endregion
 
@@ -2012,6 +2162,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public T Duration;
         public T Type;
         public T ActorValue;
+        public MaskItem<T, ScriptEffect_Mask<T>> ScriptEffect { get; set; }
         #endregion
 
         #region Equals
@@ -2030,6 +2181,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.Duration, rhs.Duration)) return false;
             if (!object.Equals(this.Type, rhs.Type)) return false;
             if (!object.Equals(this.ActorValue, rhs.ActorValue)) return false;
+            if (!object.Equals(this.ScriptEffect, rhs.ScriptEffect)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -2041,6 +2193,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.Duration?.GetHashCode());
             ret = ret.CombineHashCode(this.Type?.GetHashCode());
             ret = ret.CombineHashCode(this.ActorValue?.GetHashCode());
+            ret = ret.CombineHashCode(this.ScriptEffect?.GetHashCode());
             return ret;
         }
 
@@ -2055,6 +2208,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!eval(this.Duration)) return false;
             if (!eval(this.Type)) return false;
             if (!eval(this.ActorValue)) return false;
+            if (ScriptEffect != null)
+            {
+                if (!eval(this.ScriptEffect.Overall)) return false;
+                if (this.ScriptEffect.Specific != null && !this.ScriptEffect.Specific.AllEqual(eval)) return false;
+            }
             return true;
         }
         #endregion
@@ -2075,6 +2233,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Duration = eval(this.Duration);
             obj.Type = eval(this.Type);
             obj.ActorValue = eval(this.ActorValue);
+            if (this.ScriptEffect != null)
+            {
+                obj.ScriptEffect = new MaskItem<R, ScriptEffect_Mask<R>>();
+                obj.ScriptEffect.Overall = eval(this.ScriptEffect.Overall);
+                if (this.ScriptEffect.Specific != null)
+                {
+                    obj.ScriptEffect.Specific = this.ScriptEffect.Specific.Translate(eval);
+                }
+            }
         }
         #endregion
 
@@ -2127,6 +2294,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"ActorValue => {ActorValue}");
                 }
+                if (printMask?.ScriptEffect?.Overall ?? true)
+                {
+                    ScriptEffect?.ToString(fg);
+                }
             }
             fg.AppendLine("]");
         }
@@ -2156,6 +2327,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Exception Duration;
         public Exception Type;
         public Exception ActorValue;
+        public MaskItem<Exception, ScriptEffect_ErrorMask> ScriptEffect;
         #endregion
 
         #region IErrorMask
@@ -2181,6 +2353,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case EnchantmentEffect_FieldIndex.ActorValue:
                     this.ActorValue = ex;
+                    break;
+                case EnchantmentEffect_FieldIndex.ScriptEffect:
+                    this.ScriptEffect = new MaskItem<Exception, ScriptEffect_ErrorMask>(ex, null);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2210,6 +2385,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case EnchantmentEffect_FieldIndex.ActorValue:
                     this.ActorValue = (Exception)obj;
                     break;
+                case EnchantmentEffect_FieldIndex.ScriptEffect:
+                    this.ScriptEffect = (MaskItem<Exception, ScriptEffect_ErrorMask>)obj;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2224,6 +2402,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Duration != null) return true;
             if (Type != null) return true;
             if (ActorValue != null) return true;
+            if (ScriptEffect != null) return true;
             return false;
         }
         #endregion
@@ -2264,6 +2443,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine($"Duration => {Duration}");
             fg.AppendLine($"Type => {Type}");
             fg.AppendLine($"ActorValue => {ActorValue}");
+            ScriptEffect?.ToString(fg);
         }
         #endregion
 
@@ -2277,6 +2457,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Duration = this.Duration.Combine(rhs.Duration);
             ret.Type = this.Type.Combine(rhs.Type);
             ret.ActorValue = this.ActorValue.Combine(rhs.ActorValue);
+            ret.ScriptEffect = new MaskItem<Exception, ScriptEffect_ErrorMask>(this.ScriptEffect.Overall.Combine(rhs.ScriptEffect.Overall), ((IErrorMask<ScriptEffect_ErrorMask>)this.ScriptEffect.Specific).Combine(rhs.ScriptEffect.Specific));
             return ret;
         }
         public static EnchantmentEffect_ErrorMask Combine(EnchantmentEffect_ErrorMask lhs, EnchantmentEffect_ErrorMask rhs)
@@ -2296,6 +2477,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool Duration;
         public bool Type;
         public bool ActorValue;
+        public MaskItem<CopyOption, ScriptEffect_CopyMask> ScriptEffect;
         #endregion
 
     }

@@ -1401,46 +1401,49 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<Race_FieldIndex?>.Succeed(Race_FieldIndex.Relations);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var SkillBooststryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<SkillBoost, MaskItem<Exception, SkillBoost_ErrorMask>>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        amount: 7,
-                        fieldIndex: (int)Race_FieldIndex.SkillBoosts,
-                        errorMask: errorMask,
-                        transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, SkillBoost_ErrorMask> listSubMask) =>
-                        {
-                            return LoquiBinaryTranslation<SkillBoost, SkillBoost_ErrorMask>.Instance.Parse(
-                                frame: r.Spawn(snapToFinalPosition: false),
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                    item._SkillBoosts.SetIfSucceeded(SkillBooststryGet);
-                    var FlufftryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(new ContentLength(4)),
-                        fieldIndex: (int)Race_FieldIndex.Fluff,
-                        errorMask: errorMask);
-                    item._Fluff.SetIfSucceeded(FlufftryGet);
-                    item._MaleHeight.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: frame,
-                        fieldIndex: (int)Race_FieldIndex.MaleHeight,
-                        errorMask: errorMask));
-                    item._FemaleHeight.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: frame,
-                        fieldIndex: (int)Race_FieldIndex.FemaleHeight,
-                        errorMask: errorMask));
-                    item._MaleWeight.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: frame,
-                        fieldIndex: (int)Race_FieldIndex.MaleWeight,
-                        errorMask: errorMask));
-                    item._FemaleWeight.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: frame,
-                        fieldIndex: (int)Race_FieldIndex.FemaleWeight,
-                        errorMask: errorMask));
-                    var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Race.Flag>.Instance.Parse(
-                        frame: frame.Spawn(new ContentLength(2)),
-                        fieldIndex: (int)Race_FieldIndex.Flags,
-                        errorMask: errorMask);
-                    item._Flags.SetIfSucceeded(FlagstryGet);
+                    using (var dataFrame = frame.Spawn(contentLength))
+                    {
+                        var SkillBooststryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<SkillBoost, MaskItem<Exception, SkillBoost_ErrorMask>>.Instance.ParseRepeatedItem(
+                            frame: frame,
+                            amount: 7,
+                            fieldIndex: (int)Race_FieldIndex.SkillBoosts,
+                            errorMask: errorMask,
+                            transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, SkillBoost_ErrorMask> listSubMask) =>
+                            {
+                                return LoquiBinaryTranslation<SkillBoost, SkillBoost_ErrorMask>.Instance.Parse(
+                                    frame: r.Spawn(snapToFinalPosition: false),
+                                    doMasks: listDoMasks,
+                                    errorMask: out listSubMask);
+                            }
+                            );
+                        item._SkillBoosts.SetIfSucceeded(SkillBooststryGet);
+                        var FlufftryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                            frame: dataFrame.Spawn(new ContentLength(4)),
+                            fieldIndex: (int)Race_FieldIndex.Fluff,
+                            errorMask: errorMask);
+                        item._Fluff.SetIfSucceeded(FlufftryGet);
+                        item._MaleHeight.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            fieldIndex: (int)Race_FieldIndex.MaleHeight,
+                            errorMask: errorMask));
+                        item._FemaleHeight.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            fieldIndex: (int)Race_FieldIndex.FemaleHeight,
+                            errorMask: errorMask));
+                        item._MaleWeight.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            fieldIndex: (int)Race_FieldIndex.MaleWeight,
+                            errorMask: errorMask));
+                        item._FemaleWeight.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            fieldIndex: (int)Race_FieldIndex.FemaleWeight,
+                            errorMask: errorMask));
+                        var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Race.Flag>.Instance.Parse(
+                            frame: dataFrame.Spawn(new ContentLength(2)),
+                            fieldIndex: (int)Race_FieldIndex.Flags,
+                            errorMask: errorMask);
+                        item._Flags.SetIfSucceeded(FlagstryGet);
+                    }
                     return TryGet<Race_FieldIndex?>.Succeed(Race_FieldIndex.Flags);
                 case "VNAM":
                     item._Voices.SetIfSucceeded(LoquiBinaryTranslation<RaceVoices, RaceVoices_ErrorMask>.Instance.Parse(

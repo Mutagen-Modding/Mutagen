@@ -384,7 +384,7 @@ namespace Mutagen.Bethesda.Generation
                             throw new ArgumentException("Unsupported type generator: " + field);
                         }
                         fg.AppendLine($"if (frame.Complete) return;");
-                        GenerateFillSnippet(obj, fg, field, generator);
+                        GenerateFillSnippet(obj, fg, field, generator, "frame");
                     }
                 }
                 fg.AppendLine();
@@ -471,7 +471,7 @@ namespace Mutagen.Bethesda.Generation
                                         }
                                     }
 
-                                    GenerateFillSnippet(obj, fg, gen.Value, generator);
+                                    GenerateFillSnippet(obj, fg, gen.Value, generator, "frame");
                                     if (dataSet != null)
                                     {
                                         fg.AppendLine($"return TryGet<{obj.FieldIndexName}?>.Succeed({dataSet.SubFields.Last().IndexEnumName});");
@@ -515,7 +515,7 @@ namespace Mutagen.Bethesda.Generation
                                     first = false;
                                     using (new BraceWrapper(fg))
                                     {
-                                        GenerateFillSnippet(obj, fg, field.Field, generator);
+                                        GenerateFillSnippet(obj, fg, field.Field, generator, "frame");
                                         fg.AppendLine($"return TryGet<{obj.FieldIndexName}?>.Failure;");
                                     }
                                 }
@@ -574,25 +574,29 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        private void GenerateFillSnippet(ObjectGeneration obj, FileGeneration fg, TypeGeneration field, BinaryTranslationGeneration generator)
+        private void GenerateFillSnippet(ObjectGeneration obj, FileGeneration fg, TypeGeneration field, BinaryTranslationGeneration generator, string frameAccessor)
         {
             if (field is DataType set)
             {
-                fg.AppendLine("frame.Position += Constants.SUBRECORD_LENGTH;");
-                for (int i = 0; i < set.SubFields.Count; i++)
+                fg.AppendLine($"{frameAccessor}.Position += Constants.SUBRECORD_LENGTH;");
+                fg.AppendLine($"using (var dataFrame = {frameAccessor}.Spawn(contentLength))");
+                using (new BraceWrapper(fg))
                 {
-                    var subfield = set.SubFields[i];
-                    if (!this.TryGetTypeGeneration(subfield.GetType(), out var subGenerator))
+                    for (int i = 0; i < set.SubFields.Count; i++)
                     {
-                        throw new ArgumentException("Unsupported type generator: " + subfield);
-                    }
+                        var subfield = set.SubFields[i];
+                        if (!this.TryGetTypeGeneration(subfield.GetType(), out var subGenerator))
+                        {
+                            throw new ArgumentException("Unsupported type generator: " + subfield);
+                        }
 
-                    if (!subGenerator.ShouldGenerateCopyIn(subfield)) continue;
-                    if (set.BreakIndices.Contains(i))
-                    {
-                        fg.AppendLine($"if (frame.Complete) return TryGet<{obj.FieldIndexName}?>.Succeed({set.SubFields.TryGet(i - 1)?.IndexEnumName ?? "null"});");
+                        if (!subGenerator.ShouldGenerateCopyIn(subfield)) continue;
+                        if (set.BreakIndices.Contains(i))
+                        {
+                            fg.AppendLine($"if (dataFrame.Complete) return TryGet<{obj.FieldIndexName}?>.Succeed({set.SubFields.TryGet(i - 1)?.IndexEnumName ?? "null"});");
+                        }
+                        GenerateFillSnippet(obj, fg, subfield, subGenerator, "dataFrame");
                     }
-                    GenerateFillSnippet(obj, fg, subfield, subGenerator);
                 }
                 return;
             }
@@ -602,14 +606,14 @@ namespace Mutagen.Bethesda.Generation
             {
                 if (data.HasTrigger)
                 {
-                    fg.AppendLine($"using (var subFrame = frame.Spawn(Constants.SUBRECORD_LENGTH + contentLength))");
+                    fg.AppendLine($"using (var subFrame = {frameAccessor}.Spawn(Constants.SUBRECORD_LENGTH + contentLength))");
                 }
                 using (new BraceWrapper(fg, doIt: data.HasTrigger))
                 {
                     using (var args = new ArgsWrapper(fg,
                         $"FillBinary_{field.Name}_Custom"))
                     {
-                        args.Add($"frame: {(data.HasTrigger ? "subFrame" : "frame")}");
+                        args.Add($"frame: {(data.HasTrigger ? "subFrame" : frameAccessor)}");
                         args.Add("item: item");
                         if (field.HasIndex)
                         {
@@ -632,7 +636,7 @@ namespace Mutagen.Bethesda.Generation
                 fg: fg,
                 objGen: obj,
                 typeGen: field,
-                readerAccessor: "frame",
+                readerAccessor: frameAccessor,
                 itemAccessor: new Accessor()
                 {
                     DirectAccess = $"item.{field.ProtectedName}",
