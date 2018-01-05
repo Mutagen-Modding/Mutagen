@@ -272,9 +272,12 @@ namespace Mutagen.Bethesda.Generation
             {
                 HashSet<RecordType> recTypes = new HashSet<RecordType>();
                 foreach (var field in obj.IterateFields(
-                    nonIntegrated: false,
+                    nonIntegrated: true,
                     expandSets: SetMarkerType.ExpandSets.FalseAndInclude))
                 {
+                    if (!field.IntegrateField
+                        && !(field is DataType)
+                        && !(field is SpecialParseType)) continue;
                     if (!field.TryGetFieldData(out var fieldData)) break;
                     if (!fieldData.HasTrigger) break;
                     recTypes.Add(fieldData.TriggeringRecordTypes);
@@ -282,7 +285,6 @@ namespace Mutagen.Bethesda.Generation
                     if (field is SetMarkerType) break;
                     if (field.IsEnumerable && !(field is ByteArrayType)) continue;
                     if (!field.HasBeenSet) break;
-
                 }
                 data.TriggeringRecordTypes.Add(recTypes);
             }
@@ -296,8 +298,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 data.TriggeringRecordTypes.Add(markerType);
             }
-
-
+            
             if (data.TriggeringRecordTypes.Count > 0)
             {
                 if (data.TriggeringRecordTypes.CountGreaterThan(1))

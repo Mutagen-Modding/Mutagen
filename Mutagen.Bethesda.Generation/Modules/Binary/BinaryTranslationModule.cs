@@ -465,6 +465,20 @@ namespace Mutagen.Bethesda.Generation
                                         {
                                             fg.AppendLine($"if (lastParsed.HasValue && lastParsed.Value >= {dataSet.SubFields.Last().IndexEnumName}) return TryGet<{obj.FieldIndexName}?>.Failure;");
                                         }
+                                        else if (field.Field is SpecialParseType)
+                                        {
+                                            var objFields = obj.IterateFieldIndices(nonIntegrated: false).ToList();
+                                            var nextField = objFields.FirstOrDefault((i) => i.InternalIndex > field.InternalIndex);
+                                            var prevField = objFields.LastOrDefault((i) => i.InternalIndex < field.InternalIndex);
+                                            if (nextField.Field != null)
+                                            {
+                                                fg.AppendLine($"if (lastParsed.HasValue && lastParsed.Value >= {nextField.Field.IndexEnumName}) return TryGet<{obj.FieldIndexName}?>.Failure;");
+                                            }
+                                            else if (prevField.Field != null)
+                                            {
+                                                fg.AppendLine($"if (lastParsed.HasValue && lastParsed.Value >= {prevField.Field.IndexEnumName}) return TryGet<{obj.FieldIndexName}?>.Failure;");
+                                            }
+                                        }
                                         else
                                         {
                                             fg.AppendLine($"if (lastParsed.HasValue && lastParsed.Value >= {field.Field.IndexEnumName}) return TryGet<{obj.FieldIndexName}?>.Failure;");

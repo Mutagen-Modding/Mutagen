@@ -51,6 +51,26 @@ namespace Mutagen.Bethesda.Binary
 
         public void Write<M, T>(
             MutagenWriter writer,
+            EDIDSetLink<T> item,
+            int fieldIndex,
+            Func<M> errorMask)
+            where M : IErrorMask
+            where T : MajorRecord
+        {
+            if (!item.HasBeenSet) return;
+            this.Write(
+                writer,
+                item,
+                errorMask != null,
+                out var subMask);
+            ErrorMask.HandleException(
+                errorMask,
+                fieldIndex,
+                subMask);
+        }
+
+        public void Write<M, T>(
+            MutagenWriter writer,
             IEDIDLink<T> item,
             RecordType header,
             int fieldIndex,

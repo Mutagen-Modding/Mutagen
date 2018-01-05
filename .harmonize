@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>653b07f21e18c2c3f95129498c10a10d8594d824</Sha>
+         <Sha>3f9f8c464f62192e14c3b9849d46a62229787b52</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>01-02-2018 16:26:11</CommitDate>
-         <Description>Removed vestigial logic snippet</Description>
+         <CommitDate>01-04-2018 18:27:41</CommitDate>
+         <Description>ObjectGeneration IterateFields now exposes PublicIndex and InternalIndex</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

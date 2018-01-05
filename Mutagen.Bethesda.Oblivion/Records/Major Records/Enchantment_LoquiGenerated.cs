@@ -917,10 +917,10 @@ namespace Mutagen.Bethesda.Oblivion
                         item._Flags.SetIfSucceeded(FlagstryGet);
                     }
                     return TryGet<Enchantment_FieldIndex?>.Succeed(Enchantment_FieldIndex.Flags);
-                case "EFIT":
+                case "EFID":
                     var EffectstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<EnchantmentEffect, MaskItem<Exception, EnchantmentEffect_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
-                        triggeringRecord: Enchantment_Registration.EFIT_HEADER,
+                        triggeringRecord: Enchantment_Registration.EFID_HEADER,
                         fieldIndex: (int)Enchantment_FieldIndex.Effects,
                         objType: ObjectType.Subrecord,
                         errorMask: errorMask,
@@ -1365,7 +1365,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly RecordType ENCH_HEADER = new RecordType("ENCH");
         public static readonly RecordType ENIT_HEADER = new RecordType("ENIT");
-        public static readonly RecordType EFIT_HEADER = new RecordType("EFIT");
+        public static readonly RecordType EFID_HEADER = new RecordType("EFID");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = ENCH_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 1;

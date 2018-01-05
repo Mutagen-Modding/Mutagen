@@ -48,12 +48,14 @@ namespace Mutagen.Bethesda
         {
             if (item.Failed) return;
             this.EDID = item.Value;
+            this.HasBeenSet = true;
         }
 
         public void SetIfSuccessful(TryGet<string> item)
         {
             if (!item.Succeeded) return;
             this.EDID = new RecordType(item.Value);
+            this.HasBeenSet = true;
         }
     }
 }

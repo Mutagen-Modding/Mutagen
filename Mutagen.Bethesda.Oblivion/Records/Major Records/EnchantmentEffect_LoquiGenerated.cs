@@ -896,13 +896,13 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "EFID":
+                    if (lastParsed.HasValue && lastParsed.Value >= EnchantmentEffect_FieldIndex.MagicEffect) return TryGet<EnchantmentEffect_FieldIndex?>.Failure;
                     SpecialParse_MagicEffectInitial(
                         item: item,
                         frame: frame,
                         errorMask: errorMask);
                     return TryGet<EnchantmentEffect_FieldIndex?>.Succeed(lastParsed);
                 case "EFIT":
-                    if (lastParsed.HasValue && lastParsed.Value >= EnchantmentEffect_FieldIndex.ActorValue) return TryGet<EnchantmentEffect_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.Spawn(contentLength))
                     {
@@ -1432,10 +1432,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        public static readonly RecordType EFIT_HEADER = new RecordType("EFIT");
         public static readonly RecordType EFID_HEADER = new RecordType("EFID");
+        public static readonly RecordType EFIT_HEADER = new RecordType("EFIT");
         public static readonly RecordType SCIT_HEADER = new RecordType("SCIT");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = EFIT_HEADER;
+        public static readonly RecordType TRIGGERING_RECORD_TYPE = EFID_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 1;
         #region Interface
