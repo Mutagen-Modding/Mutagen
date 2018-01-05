@@ -2,8 +2,8 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Class" recordType="CLAS" baseClass="Bethesda.NamedMajorRecord" objType="Record" GUID="3f2e301a-e8f4-42db-875c-3e760e4eff31" ID="16">
     <Fields>
-      <String name="Description" recordType="DESC" hasBeenSet="True" />
-      <FilePath name="Icon" recordType="ICON" hasBeenSet="True" />
+      <String name="Description" recordType="DESC" />
+      <FilePath name="Icon" recordType="ICON" />
       <Data>
         <Fields>
           <List name="PrimaryAttributes" maxSize="2">
@@ -16,7 +16,7 @@
           <Enum name="Flags" enumName="ClassFlag" />
           <Enum name="ClassServices" enumName="ClassService" />
           <Break />
-          <RefDirect name="Training" refName="ClassTraining" hasBeenSet="True" />
+          <RefDirect name="Training" refName="ClassTraining" />
         </Fields>
       </Data>
     </Fields>
