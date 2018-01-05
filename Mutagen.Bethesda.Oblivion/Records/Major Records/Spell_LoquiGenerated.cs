@@ -459,7 +459,7 @@ namespace Mutagen.Bethesda.Oblivion
             Spell_CopyMask copyMask = null,
             ISpellGetter def = null)
         {
-            Spell ret = (Spell)Activator.CreateInstance(item.GetType());
+            Spell ret = (Spell)System.Activator.CreateInstance(item.GetType());
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
@@ -473,7 +473,7 @@ namespace Mutagen.Bethesda.Oblivion
             ISpellGetter def = null)
             where CopyType : class, ISpell
         {
-            CopyType ret = (CopyType)Activator.CreateInstance(item.GetType());
+            CopyType ret = (CopyType)System.Activator.CreateInstance(item.GetType());
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
@@ -489,7 +489,7 @@ namespace Mutagen.Bethesda.Oblivion
             Spell_CopyMask copyMask = null,
             ISpellGetter def = null)
         {
-            Spell ret = (Spell)Activator.CreateInstance(item.GetType());
+            Spell ret = (Spell)System.Activator.CreateInstance(item.GetType());
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,

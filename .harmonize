@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>3f9f8c464f62192e14c3b9849d46a62229787b52</Sha>
+         <Sha>3775b8cf90c17f20f1704fe6fde85ad29a94930d</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>01-04-2018 18:27:41</CommitDate>
-         <Description>ObjectGeneration IterateFields now exposes PublicIndex and InternalIndex</Description>
+         <CommitDate>01-04-2018 19:18:00</CommitDate>
+         <Description>Added System. namespace to Activator calls</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

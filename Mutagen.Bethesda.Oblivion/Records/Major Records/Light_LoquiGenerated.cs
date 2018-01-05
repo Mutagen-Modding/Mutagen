@@ -736,7 +736,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             else
             {
-                ret = (Light)Activator.CreateInstance(item.GetType());
+                ret = (Light)System.Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom(
                 item,
@@ -758,7 +758,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             else
             {
-                ret = (CopyType)Activator.CreateInstance(item.GetType());
+                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom(
                 item,
@@ -782,7 +782,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             else
             {
-                ret = (Light)Activator.CreateInstance(item.GetType());
+                ret = (Light)System.Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom(
                 item,

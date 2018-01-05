@@ -601,7 +601,7 @@ namespace Mutagen.Bethesda
             MajorRecord_CopyMask copyMask = null,
             IMajorRecordGetter def = null)
         {
-            MajorRecord ret = (MajorRecord)Activator.CreateInstance(item.GetType());
+            MajorRecord ret = (MajorRecord)System.Activator.CreateInstance(item.GetType());
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
@@ -615,7 +615,7 @@ namespace Mutagen.Bethesda
             IMajorRecordGetter def = null)
             where CopyType : class, IMajorRecord
         {
-            CopyType ret = (CopyType)Activator.CreateInstance(item.GetType());
+            CopyType ret = (CopyType)System.Activator.CreateInstance(item.GetType());
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
@@ -631,7 +631,7 @@ namespace Mutagen.Bethesda
             MajorRecord_CopyMask copyMask = null,
             IMajorRecordGetter def = null)
         {
-            MajorRecord ret = (MajorRecord)Activator.CreateInstance(item.GetType());
+            MajorRecord ret = (MajorRecord)System.Activator.CreateInstance(item.GetType());
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
@@ -976,6 +976,7 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType SCPT_HEADER = new RecordType("SCPT");
         public static readonly RecordType SKIL_HEADER = new RecordType("SKIL");
         public static readonly RecordType SOUN_HEADER = new RecordType("SOUN");
+        public static readonly RecordType ACTI_HEADER = new RecordType("ACTI");
         public static readonly RecordType BSGN_HEADER = new RecordType("BSGN");
         public static readonly RecordType CLAS_HEADER = new RecordType("CLAS");
         public static readonly RecordType ENCH_HEADER = new RecordType("ENCH");
@@ -1004,6 +1005,7 @@ namespace Mutagen.Bethesda.Internals
                         SCPT_HEADER,
                         SKIL_HEADER,
                         SOUN_HEADER,
+                        ACTI_HEADER,
                         BSGN_HEADER,
                         CLAS_HEADER,
                         ENCH_HEADER,

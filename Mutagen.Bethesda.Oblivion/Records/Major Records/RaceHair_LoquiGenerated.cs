@@ -753,7 +753,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             else
             {
-                ret = (RaceHair)Activator.CreateInstance(item.GetType());
+                ret = (RaceHair)System.Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom(
                 item,
@@ -775,7 +775,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             else
             {
-                ret = (CopyType)Activator.CreateInstance(item.GetType());
+                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom(
                 item,
@@ -799,7 +799,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             else
             {
-                ret = (RaceHair)Activator.CreateInstance(item.GetType());
+                ret = (RaceHair)System.Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom(
                 item,

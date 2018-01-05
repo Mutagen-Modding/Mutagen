@@ -798,7 +798,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             else
             {
-                ret = (HavokData)Activator.CreateInstance(item.GetType());
+                ret = (HavokData)System.Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom(
                 item,
@@ -820,7 +820,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             else
             {
-                ret = (CopyType)Activator.CreateInstance(item.GetType());
+                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom(
                 item,
@@ -844,7 +844,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
             else
             {
-                ret = (HavokData)Activator.CreateInstance(item.GetType());
+                ret = (HavokData)System.Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom(
                 item,

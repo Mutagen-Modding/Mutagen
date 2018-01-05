@@ -796,7 +796,7 @@ namespace Mutagen.Bethesda
             }
             else
             {
-                ret = (MasterReference)Activator.CreateInstance(item.GetType());
+                ret = (MasterReference)System.Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom(
                 item,
@@ -818,7 +818,7 @@ namespace Mutagen.Bethesda
             }
             else
             {
-                ret = (CopyType)Activator.CreateInstance(item.GetType());
+                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom(
                 item,
@@ -842,7 +842,7 @@ namespace Mutagen.Bethesda
             }
             else
             {
-                ret = (MasterReference)Activator.CreateInstance(item.GetType());
+                ret = (MasterReference)System.Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom(
                 item,

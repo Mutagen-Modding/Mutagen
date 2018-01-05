@@ -486,7 +486,7 @@ namespace Mutagen.Bethesda
             NamedMajorRecord_CopyMask copyMask = null,
             INamedMajorRecordGetter def = null)
         {
-            NamedMajorRecord ret = (NamedMajorRecord)Activator.CreateInstance(item.GetType());
+            NamedMajorRecord ret = (NamedMajorRecord)System.Activator.CreateInstance(item.GetType());
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
@@ -500,7 +500,7 @@ namespace Mutagen.Bethesda
             INamedMajorRecordGetter def = null)
             where CopyType : class, INamedMajorRecord
         {
-            CopyType ret = (CopyType)Activator.CreateInstance(item.GetType());
+            CopyType ret = (CopyType)System.Activator.CreateInstance(item.GetType());
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
@@ -516,7 +516,7 @@ namespace Mutagen.Bethesda
             NamedMajorRecord_CopyMask copyMask = null,
             INamedMajorRecordGetter def = null)
         {
-            NamedMajorRecord ret = (NamedMajorRecord)Activator.CreateInstance(item.GetType());
+            NamedMajorRecord ret = (NamedMajorRecord)System.Activator.CreateInstance(item.GetType());
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
@@ -742,6 +742,7 @@ namespace Mutagen.Bethesda.Internals
         }
 
         public static readonly RecordType FULL_HEADER = new RecordType("FULL");
+        public static readonly RecordType ACTI_HEADER = new RecordType("ACTI");
         public static readonly RecordType BSGN_HEADER = new RecordType("BSGN");
         public static readonly RecordType CLAS_HEADER = new RecordType("CLAS");
         public static readonly RecordType ENCH_HEADER = new RecordType("ENCH");
@@ -760,6 +761,7 @@ namespace Mutagen.Bethesda.Internals
                     new RecordType[]
                     {
                         FULL_HEADER,
+                        ACTI_HEADER,
                         BSGN_HEADER,
                         CLAS_HEADER,
                         ENCH_HEADER,

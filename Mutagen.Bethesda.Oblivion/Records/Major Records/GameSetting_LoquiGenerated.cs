@@ -435,7 +435,7 @@ namespace Mutagen.Bethesda.Oblivion
             GameSetting_CopyMask copyMask = null,
             IGameSettingGetter def = null)
         {
-            GameSetting ret = (GameSetting)Activator.CreateInstance(item.GetType());
+            GameSetting ret = (GameSetting)System.Activator.CreateInstance(item.GetType());
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
@@ -449,7 +449,7 @@ namespace Mutagen.Bethesda.Oblivion
             IGameSettingGetter def = null)
             where CopyType : class, IGameSetting
         {
-            CopyType ret = (CopyType)Activator.CreateInstance(item.GetType());
+            CopyType ret = (CopyType)System.Activator.CreateInstance(item.GetType());
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
@@ -465,7 +465,7 @@ namespace Mutagen.Bethesda.Oblivion
             GameSetting_CopyMask copyMask = null,
             IGameSettingGetter def = null)
         {
-            GameSetting ret = (GameSetting)Activator.CreateInstance(item.GetType());
+            GameSetting ret = (GameSetting)System.Activator.CreateInstance(item.GetType());
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,

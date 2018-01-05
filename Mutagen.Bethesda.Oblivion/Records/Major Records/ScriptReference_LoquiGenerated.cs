@@ -420,7 +420,7 @@ namespace Mutagen.Bethesda.Oblivion
             ScriptReference_CopyMask copyMask = null,
             IScriptReferenceGetter def = null)
         {
-            ScriptReference ret = (ScriptReference)Activator.CreateInstance(item.GetType());
+            ScriptReference ret = (ScriptReference)System.Activator.CreateInstance(item.GetType());
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
@@ -434,7 +434,7 @@ namespace Mutagen.Bethesda.Oblivion
             IScriptReferenceGetter def = null)
             where CopyType : class, IScriptReference
         {
-            CopyType ret = (CopyType)Activator.CreateInstance(item.GetType());
+            CopyType ret = (CopyType)System.Activator.CreateInstance(item.GetType());
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
@@ -450,7 +450,7 @@ namespace Mutagen.Bethesda.Oblivion
             ScriptReference_CopyMask copyMask = null,
             IScriptReferenceGetter def = null)
         {
-            ScriptReference ret = (ScriptReference)Activator.CreateInstance(item.GetType());
+            ScriptReference ret = (ScriptReference)System.Activator.CreateInstance(item.GetType());
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,

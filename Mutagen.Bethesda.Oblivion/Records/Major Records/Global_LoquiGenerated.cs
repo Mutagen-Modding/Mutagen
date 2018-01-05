@@ -546,7 +546,7 @@ namespace Mutagen.Bethesda.Oblivion
             Global_CopyMask copyMask = null,
             IGlobalGetter def = null)
         {
-            Global ret = (Global)Activator.CreateInstance(item.GetType());
+            Global ret = (Global)System.Activator.CreateInstance(item.GetType());
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
@@ -560,7 +560,7 @@ namespace Mutagen.Bethesda.Oblivion
             IGlobalGetter def = null)
             where CopyType : class, IGlobal
         {
-            CopyType ret = (CopyType)Activator.CreateInstance(item.GetType());
+            CopyType ret = (CopyType)System.Activator.CreateInstance(item.GetType());
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
@@ -576,7 +576,7 @@ namespace Mutagen.Bethesda.Oblivion
             Global_CopyMask copyMask = null,
             IGlobalGetter def = null)
         {
-            Global ret = (Global)Activator.CreateInstance(item.GetType());
+            Global ret = (Global)System.Activator.CreateInstance(item.GetType());
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
