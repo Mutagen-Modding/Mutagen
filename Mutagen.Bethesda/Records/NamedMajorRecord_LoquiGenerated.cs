@@ -743,6 +743,7 @@ namespace Mutagen.Bethesda.Internals
 
         public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType ACTI_HEADER = new RecordType("ACTI");
+        public static readonly RecordType APPA_HEADER = new RecordType("APPA");
         public static readonly RecordType BSGN_HEADER = new RecordType("BSGN");
         public static readonly RecordType CLAS_HEADER = new RecordType("CLAS");
         public static readonly RecordType ENCH_HEADER = new RecordType("ENCH");
@@ -762,6 +763,7 @@ namespace Mutagen.Bethesda.Internals
                     {
                         FULL_HEADER,
                         ACTI_HEADER,
+                        APPA_HEADER,
                         BSGN_HEADER,
                         CLAS_HEADER,
                         ENCH_HEADER,

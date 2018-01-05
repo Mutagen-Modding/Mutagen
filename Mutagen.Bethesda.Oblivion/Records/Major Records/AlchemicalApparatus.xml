@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="AlchemicalApparatus" baseClass="Bethesda.NamedMajorRecord" objType="Record" recordType="APPA" GUID="731a9b97-8051-4d72-8008-3e53a96659cd" ID="66">
+    <Fields>
+      <RefDirect name="Model" refName="Model" />
+      <FilePath name="Icon" recordType="ICON" />
+      <FormID name="Script" refName="Script" recordType="SCRI" />
+      <Data>
+        <Fields>
+          <Enum name="Type" enumName="AlchemicalApparatus.ApparatusType" byteLength="1" />
+          <UInt32 name="Value" />
+          <Float name="Weight" />
+          <Float name="Quality" min="0" max="255" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+</Loqui>

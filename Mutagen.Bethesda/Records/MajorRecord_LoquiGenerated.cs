@@ -977,6 +977,7 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType SKIL_HEADER = new RecordType("SKIL");
         public static readonly RecordType SOUN_HEADER = new RecordType("SOUN");
         public static readonly RecordType ACTI_HEADER = new RecordType("ACTI");
+        public static readonly RecordType APPA_HEADER = new RecordType("APPA");
         public static readonly RecordType BSGN_HEADER = new RecordType("BSGN");
         public static readonly RecordType CLAS_HEADER = new RecordType("CLAS");
         public static readonly RecordType ENCH_HEADER = new RecordType("ENCH");
@@ -1006,6 +1007,7 @@ namespace Mutagen.Bethesda.Internals
                         SKIL_HEADER,
                         SOUN_HEADER,
                         ACTI_HEADER,
+                        APPA_HEADER,
                         BSGN_HEADER,
                         CLAS_HEADER,
                         ENCH_HEADER,

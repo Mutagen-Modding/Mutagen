@@ -4,6 +4,7 @@
     <Fields>
       <FilePath name="File" recordType="MODL" hasBeenSet="False" />
       <Float name="BoundRadius" recordType="MODB" hasBeenSet="False" />
+      <ByteArray name="Hashes" recordType="MODT" hasBeenSet="True" />
     </Fields>
   </Object>
 </Loqui>

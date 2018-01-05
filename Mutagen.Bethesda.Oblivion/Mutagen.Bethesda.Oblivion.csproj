@@ -70,6 +70,9 @@
     <Compile Include="Records\Header\TES4_LoquiGenerated.cs">
       <DependentUpon>TES4.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\AlchemicalApparatus.cs">
+      <DependentUpon>AlchemicalApparatus.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\BodyData_LoquiGenerated.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
@@ -301,6 +304,9 @@
     <Compile Include="Records\Major Records\Activator_LoquiGenerated.cs">
       <DependentUpon>Activator.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\AlchemicalApparatus_LoquiGenerated.cs">
+      <DependentUpon>AlchemicalApparatus.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Records\Common Subrecords\Effect.xml">
@@ -322,6 +328,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Activator.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\AlchemicalApparatus.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Birthsign.xml">

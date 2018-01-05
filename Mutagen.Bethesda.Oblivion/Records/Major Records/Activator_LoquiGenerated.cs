@@ -47,17 +47,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItem<Model> IActivator.Model_Property => this.Model_Property;
         INotifyingSetItemGetter<Model> IActivatorGetter.Model_Property => this.Model_Property;
         #endregion
-        #region ModelHashes
-        protected readonly INotifyingSetItem<Byte[]> _ModelHashes = NotifyingSetItem.Factory<Byte[]>(markAsSet: false);
-        public INotifyingSetItem<Byte[]> ModelHashes_Property => _ModelHashes;
-        public Byte[] ModelHashes
-        {
-            get => this._ModelHashes.Item;
-            set => this._ModelHashes.Set(value);
-        }
-        INotifyingSetItem<Byte[]> IActivator.ModelHashes_Property => this.ModelHashes_Property;
-        INotifyingSetItemGetter<Byte[]> IActivatorGetter.ModelHashes_Property => this.ModelHashes_Property;
-        #endregion
         #region Script
         public FormIDSetLink<Script> Script_Property { get; } = new FormIDSetLink<Script>();
         public Script Script { get => Script_Property.Item; set => Script_Property.Item = value; }
@@ -129,11 +118,6 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!object.Equals(Model, rhs.Model)) return false;
             }
-            if (ModelHashes_Property.HasBeenSet != rhs.ModelHashes_Property.HasBeenSet) return false;
-            if (ModelHashes_Property.HasBeenSet)
-            {
-                if (!ModelHashes.EqualsFast(rhs.ModelHashes)) return false;
-            }
             if (Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
             if (Script_Property.HasBeenSet)
             {
@@ -153,10 +137,6 @@ namespace Mutagen.Bethesda.Oblivion
             if (Model_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(Model).CombineHashCode(ret);
-            }
-            if (ModelHashes_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(ModelHashes).CombineHashCode(ret);
             }
             if (Script_Property.HasBeenSet)
             {
@@ -484,12 +464,6 @@ namespace Mutagen.Bethesda.Oblivion
                     item._Model.SetIfSucceeded(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Activator_FieldIndex.Model,
-                        errorMask: errorMask));
-                    break;
-                case "ModelHashes":
-                    item._ModelHashes.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
-                        root,
-                        fieldIndex: (int)Activator_FieldIndex.ModelHashes,
                         errorMask: errorMask));
                     break;
                 case "Script":
@@ -850,14 +824,6 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)Activator_FieldIndex.Model,
                         errorMask: errorMask));
                     return TryGet<Activator_FieldIndex?>.Succeed(Activator_FieldIndex.Model);
-                case "MODT":
-                    frame.Position += Constants.SUBRECORD_LENGTH;
-                    var ModelHashestryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
-                        frame.Spawn(contentLength),
-                        fieldIndex: (int)Activator_FieldIndex.ModelHashes,
-                        errorMask: errorMask);
-                    item._ModelHashes.SetIfSucceeded(ModelHashestryGet);
-                    return TryGet<Activator_FieldIndex?>.Succeed(Activator_FieldIndex.ModelHashes);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
@@ -969,11 +935,6 @@ namespace Mutagen.Bethesda.Oblivion
                         (Model)obj,
                         cmds);
                     break;
-                case Activator_FieldIndex.ModelHashes:
-                    this._ModelHashes.Set(
-                        (Byte[])obj,
-                        cmds);
-                    break;
                 case Activator_FieldIndex.Script:
                     this.Script_Property.Set(
                         (FormIDSetLink<Script>)obj,
@@ -1020,11 +981,6 @@ namespace Mutagen.Bethesda.Oblivion
                         (Model)pair.Value,
                         null);
                     break;
-                case Activator_FieldIndex.ModelHashes:
-                    obj._ModelHashes.Set(
-                        (Byte[])pair.Value,
-                        null);
-                    break;
                 case Activator_FieldIndex.Script:
                     obj.Script_Property.Set(
                         (FormIDSetLink<Script>)pair.Value,
@@ -1053,9 +1009,6 @@ namespace Mutagen.Bethesda.Oblivion
         new Model Model { get; set; }
         new INotifyingSetItem<Model> Model_Property { get; }
 
-        new Byte[] ModelHashes { get; set; }
-        new INotifyingSetItem<Byte[]> ModelHashes_Property { get; }
-
         new Script Script { get; set; }
         new Sound Sound { get; set; }
     }
@@ -1065,11 +1018,6 @@ namespace Mutagen.Bethesda.Oblivion
         #region Model
         Model Model { get; }
         INotifyingSetItemGetter<Model> Model_Property { get; }
-
-        #endregion
-        #region ModelHashes
-        Byte[] ModelHashes { get; }
-        INotifyingSetItemGetter<Byte[]> ModelHashes_Property { get; }
 
         #endregion
         #region Script
@@ -1101,9 +1049,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         RecordType = 4,
         Name = 5,
         Model = 6,
-        ModelHashes = 7,
-        Script = 8,
-        Sound = 9,
+        Script = 7,
+        Sound = 8,
     }
     #endregion
 
@@ -1121,7 +1068,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "4c83cb95-a21f-4772-be1a-c0a60582e80f";
 
-        public const ushort FieldCount = 4;
+        public const ushort FieldCount = 3;
 
         public static readonly Type MaskType = typeof(Activator_Mask<>);
 
@@ -1151,8 +1098,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case "MODEL":
                     return (ushort)Activator_FieldIndex.Model;
-                case "MODELHASHES":
-                    return (ushort)Activator_FieldIndex.ModelHashes;
                 case "SCRIPT":
                     return (ushort)Activator_FieldIndex.Script;
                 case "SOUND":
@@ -1168,7 +1113,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Activator_FieldIndex.Model:
-                case Activator_FieldIndex.ModelHashes:
                 case Activator_FieldIndex.Script:
                 case Activator_FieldIndex.Sound:
                     return false;
@@ -1184,7 +1128,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case Activator_FieldIndex.Model:
                     return true;
-                case Activator_FieldIndex.ModelHashes:
                 case Activator_FieldIndex.Script:
                 case Activator_FieldIndex.Sound:
                     return false;
@@ -1199,7 +1142,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Activator_FieldIndex.Model:
-                case Activator_FieldIndex.ModelHashes:
                 case Activator_FieldIndex.Script:
                 case Activator_FieldIndex.Sound:
                     return false;
@@ -1215,8 +1157,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case Activator_FieldIndex.Model:
                     return "Model";
-                case Activator_FieldIndex.ModelHashes:
-                    return "ModelHashes";
                 case Activator_FieldIndex.Script:
                     return "Script";
                 case Activator_FieldIndex.Sound:
@@ -1232,7 +1172,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Activator_FieldIndex.Model:
-                case Activator_FieldIndex.ModelHashes:
                 case Activator_FieldIndex.Script:
                 case Activator_FieldIndex.Sound:
                     return false;
@@ -1247,7 +1186,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Activator_FieldIndex.Model:
-                case Activator_FieldIndex.ModelHashes:
                 case Activator_FieldIndex.Script:
                 case Activator_FieldIndex.Sound:
                     return false;
@@ -1263,8 +1201,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case Activator_FieldIndex.Model:
                     return typeof(Model);
-                case Activator_FieldIndex.ModelHashes:
-                    return typeof(Byte[]);
                 case Activator_FieldIndex.Script:
                     return typeof(FormIDSetLink<Script>);
                 case Activator_FieldIndex.Sound:
@@ -1276,12 +1212,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly RecordType ACTI_HEADER = new RecordType("ACTI");
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
-        public static readonly RecordType MODT_HEADER = new RecordType("MODT");
         public static readonly RecordType SCRI_HEADER = new RecordType("SCRI");
         public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = ACTI_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 4;
+        public const int NumTypedFields = 3;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1447,21 +1382,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask().SetNthException((int)Activator_FieldIndex.Model, ex);
                 }
             }
-            if (copyMask?.ModelHashes ?? true)
-            {
-                try
-                {
-                    item.ModelHashes_Property.SetToWithDefault(
-                        rhs: rhs.ModelHashes_Property,
-                        def: def?.ModelHashes_Property,
-                        cmds: cmds);
-                }
-                catch (Exception ex)
-                when (doMasks)
-                {
-                    errorMask().SetNthException((int)Activator_FieldIndex.ModelHashes, ex);
-                }
-            }
             if (copyMask?.Script ?? true)
             {
                 try
@@ -1508,9 +1428,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Activator_FieldIndex.Model:
                     obj.Model_Property.HasBeenSet = on;
                     break;
-                case Activator_FieldIndex.ModelHashes:
-                    obj.ModelHashes_Property.HasBeenSet = on;
-                    break;
                 case Activator_FieldIndex.Script:
                     obj.Script_Property.HasBeenSet = on;
                     break;
@@ -1534,9 +1451,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Activator_FieldIndex.Model:
                     obj.Model_Property.Unset(cmds);
                     break;
-                case Activator_FieldIndex.ModelHashes:
-                    obj.ModelHashes_Property.Unset(cmds);
-                    break;
                 case Activator_FieldIndex.Script:
                     obj.Script_Property.Unset(cmds);
                     break;
@@ -1558,8 +1472,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case Activator_FieldIndex.Model:
                     return obj.Model_Property.HasBeenSet;
-                case Activator_FieldIndex.ModelHashes:
-                    return obj.ModelHashes_Property.HasBeenSet;
                 case Activator_FieldIndex.Script:
                     return obj.Script_Property.HasBeenSet;
                 case Activator_FieldIndex.Sound:
@@ -1578,8 +1490,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case Activator_FieldIndex.Model:
                     return obj.Model;
-                case Activator_FieldIndex.ModelHashes:
-                    return obj.ModelHashes;
                 case Activator_FieldIndex.Script:
                     return obj.Script;
                 case Activator_FieldIndex.Sound:
@@ -1594,7 +1504,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NotifyingUnsetParameters? cmds = null)
         {
             item.Model_Property.Unset(cmds.ToUnsetParams());
-            item.ModelHashes_Property.Unset(cmds.ToUnsetParams());
             item.Script_Property.Unset(cmds.ToUnsetParams());
             item.Sound_Property.Unset(cmds.ToUnsetParams());
         }
@@ -1615,7 +1524,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs));
-            ret.ModelHashes = item.ModelHashes_Property.Equals(rhs.ModelHashes_Property, (l, r) => l.EqualsFast(r));
             ret.Script = item.Script_Property.Equals(rhs.Script_Property, (l, r) => l == r);
             ret.Sound = item.Sound_Property.Equals(rhs.Sound_Property, (l, r) => l == r);
             NamedMajorRecordCommon.FillEqualsMask(item, rhs, ret);
@@ -1652,10 +1560,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Model?.ToString(fg, "Model");
                 }
-                if (printMask?.ModelHashes ?? true)
-                {
-                    fg.AppendLine($"ModelHashes => {item.ModelHashes}");
-                }
                 if (printMask?.Script ?? true)
                 {
                     fg.AppendLine($"Script => {item.Script}");
@@ -1674,7 +1578,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_Property.HasBeenSet) return false;
             if (checkMask.Model.Specific != null && (item.Model_Property.Item == null || !item.Model_Property.Item.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.ModelHashes.HasValue && checkMask.ModelHashes.Value != item.ModelHashes_Property.HasBeenSet) return false;
             if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script_Property.HasBeenSet) return false;
             if (checkMask.Sound.HasValue && checkMask.Sound.Value != item.Sound_Property.HasBeenSet) return false;
             return true;
@@ -1684,7 +1587,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var ret = new Activator_Mask<bool>();
             ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_Property.HasBeenSet, ModelCommon.GetHasBeenSetMask(item.Model_Property.Item));
-            ret.ModelHashes = item.ModelHashes_Property.HasBeenSet;
             ret.Script = item.Script_Property.HasBeenSet;
             ret.Sound = item.Sound_Property.HasBeenSet;
             return ret;
@@ -1783,15 +1685,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             fieldIndex: (int)Activator_FieldIndex.Model,
                             errorMask: errorMask);
                     }
-                    if (item.ModelHashes_Property.HasBeenSet)
-                    {
-                        ByteArrayXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.ModelHashes),
-                            item: item.ModelHashes_Property,
-                            fieldIndex: (int)Activator_FieldIndex.ModelHashes,
-                            errorMask: errorMask);
-                    }
                     if (item.Script_Property.HasBeenSet)
                     {
                         RawFormIDXmlTranslation.Instance.Write(
@@ -1882,13 +1775,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Model_Property,
                 fieldIndex: (int)Activator_FieldIndex.Model,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.ModelHashes_Property,
-                fieldIndex: (int)Activator_FieldIndex.ModelHashes,
-                errorMask: errorMask,
-                header: Activator_Registration.MODT_HEADER,
-                nullable: false);
             Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Script_Property,
@@ -1923,7 +1809,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Activator_Mask(T initialValue)
         {
             this.Model = new MaskItem<T, Model_Mask<T>>(initialValue, new Model_Mask<T>(initialValue));
-            this.ModelHashes = initialValue;
             this.Script = initialValue;
             this.Sound = initialValue;
         }
@@ -1931,7 +1816,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Members
         public MaskItem<T, Model_Mask<T>> Model { get; set; }
-        public T ModelHashes;
         public T Script;
         public T Sound;
         #endregion
@@ -1948,7 +1832,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
             if (!object.Equals(this.Model, rhs.Model)) return false;
-            if (!object.Equals(this.ModelHashes, rhs.ModelHashes)) return false;
             if (!object.Equals(this.Script, rhs.Script)) return false;
             if (!object.Equals(this.Sound, rhs.Sound)) return false;
             return true;
@@ -1957,7 +1840,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             int ret = 0;
             ret = ret.CombineHashCode(this.Model?.GetHashCode());
-            ret = ret.CombineHashCode(this.ModelHashes?.GetHashCode());
             ret = ret.CombineHashCode(this.Script?.GetHashCode());
             ret = ret.CombineHashCode(this.Sound?.GetHashCode());
             ret = ret.CombineHashCode(base.GetHashCode());
@@ -1975,7 +1857,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 if (!eval(this.Model.Overall)) return false;
                 if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
             }
-            if (!eval(this.ModelHashes)) return false;
             if (!eval(this.Script)) return false;
             if (!eval(this.Sound)) return false;
             return true;
@@ -2002,7 +1883,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Model.Specific = this.Model.Specific.Translate(eval);
                 }
             }
-            obj.ModelHashes = eval(this.ModelHashes);
             obj.Script = eval(this.Script);
             obj.Sound = eval(this.Sound);
         }
@@ -2038,10 +1918,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     Model?.ToString(fg);
                 }
-                if (printMask?.ModelHashes ?? true)
-                {
-                    fg.AppendLine($"ModelHashes => {ModelHashes}");
-                }
                 if (printMask?.Script ?? true)
                 {
                     fg.AppendLine($"Script => {Script}");
@@ -2061,7 +1937,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Members
         public MaskItem<Exception, Model_ErrorMask> Model;
-        public Exception ModelHashes;
         public Exception Script;
         public Exception Sound;
         #endregion
@@ -2074,9 +1949,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case Activator_FieldIndex.Model:
                     this.Model = new MaskItem<Exception, Model_ErrorMask>(ex, null);
-                    break;
-                case Activator_FieldIndex.ModelHashes:
-                    this.ModelHashes = ex;
                     break;
                 case Activator_FieldIndex.Script:
                     this.Script = ex;
@@ -2098,9 +1970,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Activator_FieldIndex.Model:
                     this.Model = (MaskItem<Exception, Model_ErrorMask>)obj;
                     break;
-                case Activator_FieldIndex.ModelHashes:
-                    this.ModelHashes = (Exception)obj;
-                    break;
                 case Activator_FieldIndex.Script:
                     this.Script = (Exception)obj;
                     break;
@@ -2117,7 +1986,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (Overall != null) return true;
             if (Model != null) return true;
-            if (ModelHashes != null) return true;
             if (Script != null) return true;
             if (Sound != null) return true;
             return false;
@@ -2156,7 +2024,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             base.ToString_FillInternal(fg);
             Model?.ToString(fg);
-            fg.AppendLine($"ModelHashes => {ModelHashes}");
             fg.AppendLine($"Script => {Script}");
             fg.AppendLine($"Sound => {Sound}");
         }
@@ -2167,7 +2034,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var ret = new Activator_ErrorMask();
             ret.Model = new MaskItem<Exception, Model_ErrorMask>(this.Model.Overall.Combine(rhs.Model.Overall), ((IErrorMask<Model_ErrorMask>)this.Model.Specific).Combine(rhs.Model.Specific));
-            ret.ModelHashes = this.ModelHashes.Combine(rhs.ModelHashes);
             ret.Script = this.Script.Combine(rhs.Script);
             ret.Sound = this.Sound.Combine(rhs.Sound);
             return ret;
@@ -2184,7 +2050,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         #region Members
         public MaskItem<CopyOption, Model_CopyMask> Model;
-        public bool ModelHashes;
         public bool Script;
         public bool Sound;
         #endregion

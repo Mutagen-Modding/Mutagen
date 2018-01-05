@@ -58,6 +58,17 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItem<Single> IModel.BoundRadius_Property => this.BoundRadius_Property;
         INotifyingItemGetter<Single> IModelGetter.BoundRadius_Property => this.BoundRadius_Property;
         #endregion
+        #region Hashes
+        protected readonly INotifyingSetItem<Byte[]> _Hashes = NotifyingSetItem.Factory<Byte[]>(markAsSet: false);
+        public INotifyingSetItem<Byte[]> Hashes_Property => _Hashes;
+        public Byte[] Hashes
+        {
+            get => this._Hashes.Item;
+            set => this._Hashes.Set(value);
+        }
+        INotifyingSetItem<Byte[]> IModel.Hashes_Property => this.Hashes_Property;
+        INotifyingSetItemGetter<Byte[]> IModelGetter.Hashes_Property => this.Hashes_Property;
+        #endregion
 
         #region Loqui Getter Interface
 
@@ -119,6 +130,11 @@ namespace Mutagen.Bethesda.Oblivion
             if (rhs == null) return false;
             if (!object.Equals(File, rhs.File)) return false;
             if (BoundRadius != rhs.BoundRadius) return false;
+            if (Hashes_Property.HasBeenSet != rhs.Hashes_Property.HasBeenSet) return false;
+            if (Hashes_Property.HasBeenSet)
+            {
+                if (!Hashes.EqualsFast(rhs.Hashes)) return false;
+            }
             return true;
         }
 
@@ -127,6 +143,10 @@ namespace Mutagen.Bethesda.Oblivion
             int ret = 0;
             ret = HashHelper.GetHashCode(File).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(BoundRadius).CombineHashCode(ret);
+            if (Hashes_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Hashes).CombineHashCode(ret);
+            }
             return ret;
         }
 
@@ -426,6 +446,12 @@ namespace Mutagen.Bethesda.Oblivion
                     item._BoundRadius.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Model_FieldIndex.BoundRadius,
+                        errorMask: errorMask));
+                    break;
+                case "Hashes":
+                    item._Hashes.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                        root,
+                        fieldIndex: (int)Model_FieldIndex.Hashes,
                         errorMask: errorMask));
                     break;
                 default:
@@ -752,6 +778,14 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)Model_FieldIndex.BoundRadius,
                         errorMask: errorMask));
                     return TryGet<Model_FieldIndex?>.Succeed(Model_FieldIndex.BoundRadius);
+                case "MODT":
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    var HashestryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                        frame.Spawn(contentLength),
+                        fieldIndex: (int)Model_FieldIndex.Hashes,
+                        errorMask: errorMask);
+                    item._Hashes.SetIfSucceeded(HashestryGet);
+                    return TryGet<Model_FieldIndex?>.Succeed(Model_FieldIndex.Hashes);
                 default:
                     return TryGet<Model_FieldIndex?>.Failure;
             }
@@ -852,6 +886,11 @@ namespace Mutagen.Bethesda.Oblivion
                         (Single)obj,
                         cmds);
                     break;
+                case Model_FieldIndex.Hashes:
+                    this._Hashes.Set(
+                        (Byte[])obj,
+                        cmds);
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -899,6 +938,11 @@ namespace Mutagen.Bethesda.Oblivion
                         (Single)pair.Value,
                         null);
                     break;
+                case Model_FieldIndex.Hashes:
+                    obj._Hashes.Set(
+                        (Byte[])pair.Value,
+                        null);
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -920,6 +964,9 @@ namespace Mutagen.Bethesda.Oblivion
         new Single BoundRadius { get; set; }
         new INotifyingItem<Single> BoundRadius_Property { get; }
 
+        new Byte[] Hashes { get; set; }
+        new INotifyingSetItem<Byte[]> Hashes_Property { get; }
+
     }
 
     public interface IModelGetter : ILoquiObject
@@ -932,6 +979,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region BoundRadius
         Single BoundRadius { get; }
         INotifyingItemGetter<Single> BoundRadius_Property { get; }
+
+        #endregion
+        #region Hashes
+        Byte[] Hashes { get; }
+        INotifyingSetItemGetter<Byte[]> Hashes_Property { get; }
 
         #endregion
 
@@ -948,6 +1000,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         File = 0,
         BoundRadius = 1,
+        Hashes = 2,
     }
     #endregion
 
@@ -965,7 +1018,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "b989dfe1-feb4-4492-9a94-897f6be0c20a";
 
-        public const ushort FieldCount = 2;
+        public const ushort FieldCount = 3;
 
         public static readonly Type MaskType = typeof(Model_Mask<>);
 
@@ -997,6 +1050,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)Model_FieldIndex.File;
                 case "BOUNDRADIUS":
                     return (ushort)Model_FieldIndex.BoundRadius;
+                case "HASHES":
+                    return (ushort)Model_FieldIndex.Hashes;
                 default:
                     return null;
             }
@@ -1009,6 +1064,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case Model_FieldIndex.File:
                 case Model_FieldIndex.BoundRadius:
+                case Model_FieldIndex.Hashes:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1022,6 +1078,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case Model_FieldIndex.File:
                 case Model_FieldIndex.BoundRadius:
+                case Model_FieldIndex.Hashes:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1035,6 +1092,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case Model_FieldIndex.File:
                 case Model_FieldIndex.BoundRadius:
+                case Model_FieldIndex.Hashes:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1050,6 +1108,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "File";
                 case Model_FieldIndex.BoundRadius:
                     return "BoundRadius";
+                case Model_FieldIndex.Hashes:
+                    return "Hashes";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1062,6 +1122,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case Model_FieldIndex.File:
                 case Model_FieldIndex.BoundRadius:
+                case Model_FieldIndex.Hashes:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1075,6 +1136,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 case Model_FieldIndex.File:
                 case Model_FieldIndex.BoundRadius:
+                case Model_FieldIndex.Hashes:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1090,6 +1152,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(FilePath);
                 case Model_FieldIndex.BoundRadius:
                     return typeof(Single);
+                case Model_FieldIndex.Hashes:
+                    return typeof(Byte[]);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1097,9 +1161,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
         public static readonly RecordType MODB_HEADER = new RecordType("MODB");
+        public static readonly RecordType MODT_HEADER = new RecordType("MODT");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = MODL_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 2;
+        public const int NumTypedFields = 3;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1234,6 +1299,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask().SetNthException((int)Model_FieldIndex.BoundRadius, ex);
                 }
             }
+            if (copyMask?.Hashes ?? true)
+            {
+                try
+                {
+                    item.Hashes_Property.SetToWithDefault(
+                        rhs: rhs.Hashes_Property,
+                        def: def?.Hashes_Property,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Model_FieldIndex.Hashes, ex);
+                }
+            }
         }
 
         #endregion
@@ -1251,6 +1331,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Model_FieldIndex.BoundRadius:
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
+                case Model_FieldIndex.Hashes:
+                    obj.Hashes_Property.HasBeenSet = on;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1270,6 +1353,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Model_FieldIndex.BoundRadius:
                     obj.BoundRadius = default(Single);
                     break;
+                case Model_FieldIndex.Hashes:
+                    obj.Hashes_Property.Unset(cmds);
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1285,6 +1371,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Model_FieldIndex.File:
                 case Model_FieldIndex.BoundRadius:
                     return true;
+                case Model_FieldIndex.Hashes:
+                    return obj.Hashes_Property.HasBeenSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1301,6 +1389,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.File;
                 case Model_FieldIndex.BoundRadius:
                     return obj.BoundRadius;
+                case Model_FieldIndex.Hashes:
+                    return obj.Hashes;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1312,6 +1402,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.File = default(FilePath);
             item.BoundRadius = default(Single);
+            item.Hashes_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static Model_Mask<bool> GetEqualsMask(
@@ -1331,6 +1422,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return;
             ret.File = object.Equals(item.File, rhs.File);
             ret.BoundRadius = item.BoundRadius == rhs.BoundRadius;
+            ret.Hashes = item.Hashes_Property.Equals(rhs.Hashes_Property, (l, r) => l.EqualsFast(r));
         }
 
         public static string ToString(
@@ -1368,6 +1460,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"BoundRadius => {item.BoundRadius}");
                 }
+                if (printMask?.Hashes ?? true)
+                {
+                    fg.AppendLine($"Hashes => {item.Hashes}");
+                }
             }
             fg.AppendLine("]");
         }
@@ -1376,6 +1472,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IModelGetter item,
             Model_Mask<bool?> checkMask)
         {
+            if (checkMask.Hashes.HasValue && checkMask.Hashes.Value != item.Hashes_Property.HasBeenSet) return false;
             return true;
         }
 
@@ -1384,6 +1481,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new Model_Mask<bool>();
             ret.File = true;
             ret.BoundRadius = true;
+            ret.Hashes = item.Hashes_Property.HasBeenSet;
             return ret;
         }
 
@@ -1431,6 +1529,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item: item.BoundRadius_Property,
                         fieldIndex: (int)Model_FieldIndex.BoundRadius,
                         errorMask: errorMask);
+                    if (item.Hashes_Property.HasBeenSet)
+                    {
+                        ByteArrayXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Hashes),
+                            item: item.Hashes_Property,
+                            fieldIndex: (int)Model_FieldIndex.Hashes,
+                            errorMask: errorMask);
+                    }
                 }
             }
             catch (Exception ex)
@@ -1498,6 +1605,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: Model_Registration.MODB_HEADER,
                 nullable: false);
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Hashes_Property,
+                fieldIndex: (int)Model_FieldIndex.Hashes,
+                errorMask: errorMask,
+                header: Model_Registration.MODT_HEADER,
+                nullable: false);
         }
 
         #endregion
@@ -1519,12 +1633,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             this.File = initialValue;
             this.BoundRadius = initialValue;
+            this.Hashes = initialValue;
         }
         #endregion
 
         #region Members
         public T File;
         public T BoundRadius;
+        public T Hashes;
         #endregion
 
         #region Equals
@@ -1539,6 +1655,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (rhs == null) return false;
             if (!object.Equals(this.File, rhs.File)) return false;
             if (!object.Equals(this.BoundRadius, rhs.BoundRadius)) return false;
+            if (!object.Equals(this.Hashes, rhs.Hashes)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -1546,6 +1663,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             int ret = 0;
             ret = ret.CombineHashCode(this.File?.GetHashCode());
             ret = ret.CombineHashCode(this.BoundRadius?.GetHashCode());
+            ret = ret.CombineHashCode(this.Hashes?.GetHashCode());
             return ret;
         }
 
@@ -1556,6 +1674,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (!eval(this.File)) return false;
             if (!eval(this.BoundRadius)) return false;
+            if (!eval(this.Hashes)) return false;
             return true;
         }
         #endregion
@@ -1572,6 +1691,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             obj.File = eval(this.File);
             obj.BoundRadius = eval(this.BoundRadius);
+            obj.Hashes = eval(this.Hashes);
         }
         #endregion
 
@@ -1608,6 +1728,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"BoundRadius => {BoundRadius}");
                 }
+                if (printMask?.Hashes ?? true)
+                {
+                    fg.AppendLine($"Hashes => {Hashes}");
+                }
             }
             fg.AppendLine("]");
         }
@@ -1633,6 +1757,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         public Exception File;
         public Exception BoundRadius;
+        public Exception Hashes;
         #endregion
 
         #region IErrorMask
@@ -1646,6 +1771,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case Model_FieldIndex.BoundRadius:
                     this.BoundRadius = ex;
+                    break;
+                case Model_FieldIndex.Hashes:
+                    this.Hashes = ex;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1663,6 +1791,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Model_FieldIndex.BoundRadius:
                     this.BoundRadius = (Exception)obj;
                     break;
+                case Model_FieldIndex.Hashes:
+                    this.Hashes = (Exception)obj;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1673,6 +1804,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Overall != null) return true;
             if (File != null) return true;
             if (BoundRadius != null) return true;
+            if (Hashes != null) return true;
             return false;
         }
         #endregion
@@ -1709,6 +1841,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             fg.AppendLine($"File => {File}");
             fg.AppendLine($"BoundRadius => {BoundRadius}");
+            fg.AppendLine($"Hashes => {Hashes}");
         }
         #endregion
 
@@ -1718,6 +1851,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new Model_ErrorMask();
             ret.File = this.File.Combine(rhs.File);
             ret.BoundRadius = this.BoundRadius.Combine(rhs.BoundRadius);
+            ret.Hashes = this.Hashes.Combine(rhs.Hashes);
             return ret;
         }
         public static Model_ErrorMask Combine(Model_ErrorMask lhs, Model_ErrorMask rhs)
@@ -1733,6 +1867,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Members
         public bool File;
         public bool BoundRadius;
+        public bool Hashes;
         #endregion
 
     }

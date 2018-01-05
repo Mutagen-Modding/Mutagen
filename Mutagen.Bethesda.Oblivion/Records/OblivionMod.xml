@@ -85,6 +85,11 @@
           <GenericSpecification Definition="Activator" TypeToSpecify="T" />
         </Direct>
       </Ref>
+      <Ref name="AlchemicalApparatus">
+        <Direct refName="Group" >
+          <GenericSpecification Definition="AlchemicalApparatus" TypeToSpecify="T" />
+        </Direct>
+      </Ref>
     </Fields>
   </Object>
 </Loqui>

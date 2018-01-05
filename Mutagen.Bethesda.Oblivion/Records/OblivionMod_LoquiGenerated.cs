@@ -176,6 +176,14 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItem<Group<Activator>> IOblivionMod.Activators_Property => this.Activators_Property;
         INotifyingSetItemGetter<Group<Activator>> IOblivionModGetter.Activators_Property => this.Activators_Property;
         #endregion
+        #region AlchemicalApparatus
+        private readonly INotifyingSetItem<Group<AlchemicalApparatus>> _AlchemicalApparatus = new NotifyingSetItem<Group<AlchemicalApparatus>>();
+        public INotifyingSetItem<Group<AlchemicalApparatus>> AlchemicalApparatus_Property => this._AlchemicalApparatus;
+        Group<AlchemicalApparatus> IOblivionModGetter.AlchemicalApparatus => this.AlchemicalApparatus;
+        public Group<AlchemicalApparatus> AlchemicalApparatus { get => _AlchemicalApparatus.Item; set => _AlchemicalApparatus.Item = value; }
+        INotifyingSetItem<Group<AlchemicalApparatus>> IOblivionMod.AlchemicalApparatus_Property => this.AlchemicalApparatus_Property;
+        INotifyingSetItemGetter<Group<AlchemicalApparatus>> IOblivionModGetter.AlchemicalApparatus_Property => this.AlchemicalApparatus_Property;
+        #endregion
 
         #region Loqui Getter Interface
 
@@ -320,6 +328,11 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!object.Equals(Activators, rhs.Activators)) return false;
             }
+            if (AlchemicalApparatus_Property.HasBeenSet != rhs.AlchemicalApparatus_Property.HasBeenSet) return false;
+            if (AlchemicalApparatus_Property.HasBeenSet)
+            {
+                if (!object.Equals(AlchemicalApparatus, rhs.AlchemicalApparatus)) return false;
+            }
             return true;
         }
 
@@ -393,6 +406,10 @@ namespace Mutagen.Bethesda.Oblivion
             if (Activators_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(Activators).CombineHashCode(ret);
+            }
+            if (AlchemicalApparatus_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(AlchemicalApparatus).CombineHashCode(ret);
             }
             return ret;
         }
@@ -795,6 +812,12 @@ namespace Mutagen.Bethesda.Oblivion
                     item._Activators.SetIfSucceeded(LoquiXmlTranslation<Group<Activator>, Group_ErrorMask<Activator_ErrorMask>>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)OblivionMod_FieldIndex.Activators,
+                        errorMask: errorMask));
+                    break;
+                case "AlchemicalApparatus":
+                    item._AlchemicalApparatus.SetIfSucceeded(LoquiXmlTranslation<Group<AlchemicalApparatus>, Group_ErrorMask<AlchemicalApparatus_ErrorMask>>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)OblivionMod_FieldIndex.AlchemicalApparatus,
                         errorMask: errorMask));
                     break;
                 default:
@@ -1216,6 +1239,12 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)OblivionMod_FieldIndex.Activators,
                         errorMask: errorMask));
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Activators);
+                case "APPA":
+                    item._AlchemicalApparatus.SetIfSucceeded(LoquiBinaryTranslation<Group<AlchemicalApparatus>, Group_ErrorMask<AlchemicalApparatus_ErrorMask>>.Instance.Parse(
+                        frame: frame,
+                        fieldIndex: (int)OblivionMod_FieldIndex.AlchemicalApparatus,
+                        errorMask: errorMask));
+                    return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.AlchemicalApparatus);
                 default:
                     errorMask().Warnings.Add($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength;
@@ -1391,6 +1420,11 @@ namespace Mutagen.Bethesda.Oblivion
                         (Group<Activator>)obj,
                         cmds);
                     break;
+                case OblivionMod_FieldIndex.AlchemicalApparatus:
+                    this._AlchemicalApparatus.Set(
+                        (Group<AlchemicalApparatus>)obj,
+                        cmds);
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1511,6 +1545,11 @@ namespace Mutagen.Bethesda.Oblivion
                         (Group<Activator>)pair.Value,
                         null);
                     break;
+                case OblivionMod_FieldIndex.AlchemicalApparatus:
+                    obj._AlchemicalApparatus.Set(
+                        (Group<AlchemicalApparatus>)pair.Value,
+                        null);
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -1573,6 +1612,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Group<Activator> Activators { get; set; }
         new INotifyingSetItem<Group<Activator>> Activators_Property { get; }
+
+        new Group<AlchemicalApparatus> AlchemicalApparatus { get; set; }
+        new INotifyingSetItem<Group<AlchemicalApparatus>> AlchemicalApparatus_Property { get; }
 
     }
 
@@ -1663,6 +1705,11 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Group<Activator>> Activators_Property { get; }
 
         #endregion
+        #region AlchemicalApparatus
+        Group<AlchemicalApparatus> AlchemicalApparatus { get; }
+        INotifyingSetItemGetter<Group<AlchemicalApparatus>> AlchemicalApparatus_Property { get; }
+
+        #endregion
 
     }
 
@@ -1692,6 +1739,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Spells = 14,
         Birthsigns = 15,
         Activators = 16,
+        AlchemicalApparatus = 17,
     }
     #endregion
 
@@ -1709,7 +1757,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "b6f626df-b164-466b-960a-1639d88f66bc";
 
-        public const ushort FieldCount = 17;
+        public const ushort FieldCount = 18;
 
         public static readonly Type MaskType = typeof(OblivionMod_Mask<>);
 
@@ -1771,6 +1819,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)OblivionMod_FieldIndex.Birthsigns;
                 case "ACTIVATORS":
                     return (ushort)OblivionMod_FieldIndex.Activators;
+                case "ALCHEMICALAPPARATUS":
+                    return (ushort)OblivionMod_FieldIndex.AlchemicalApparatus;
                 default:
                     return null;
             }
@@ -1798,6 +1848,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Spells:
                 case OblivionMod_FieldIndex.Birthsigns:
                 case OblivionMod_FieldIndex.Activators:
+                case OblivionMod_FieldIndex.AlchemicalApparatus:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1826,6 +1877,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Spells:
                 case OblivionMod_FieldIndex.Birthsigns:
                 case OblivionMod_FieldIndex.Activators:
+                case OblivionMod_FieldIndex.AlchemicalApparatus:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1855,6 +1907,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Spells:
                 case OblivionMod_FieldIndex.Birthsigns:
                 case OblivionMod_FieldIndex.Activators:
+                case OblivionMod_FieldIndex.AlchemicalApparatus:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1900,6 +1953,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Birthsigns";
                 case OblivionMod_FieldIndex.Activators:
                     return "Activators";
+                case OblivionMod_FieldIndex.AlchemicalApparatus:
+                    return "AlchemicalApparatus";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1927,6 +1982,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Spells:
                 case OblivionMod_FieldIndex.Birthsigns:
                 case OblivionMod_FieldIndex.Activators:
+                case OblivionMod_FieldIndex.AlchemicalApparatus:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1956,6 +2012,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Spells:
                 case OblivionMod_FieldIndex.Birthsigns:
                 case OblivionMod_FieldIndex.Activators:
+                case OblivionMod_FieldIndex.AlchemicalApparatus:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2001,6 +2058,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(Group<Birthsign>);
                 case OblivionMod_FieldIndex.Activators:
                     return typeof(Group<Activator>);
+                case OblivionMod_FieldIndex.AlchemicalApparatus:
+                    return typeof(Group<AlchemicalApparatus>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2023,6 +2082,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType SPEL_HEADER = new RecordType("SPEL");
         public static readonly RecordType BSGN_HEADER = new RecordType("BSGN");
         public static readonly RecordType ACTI_HEADER = new RecordType("ACTI");
+        public static readonly RecordType APPA_HEADER = new RecordType("APPA");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -2046,12 +2106,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         ENCH_HEADER,
                         SPEL_HEADER,
                         BSGN_HEADER,
-                        ACTI_HEADER
+                        ACTI_HEADER,
+                        APPA_HEADER
                     })
             );
         });
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 17;
+        public const int NumTypedFields = 18;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -3002,6 +3063,57 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask().SetNthException((int)OblivionMod_FieldIndex.Activators, ex);
                 }
             }
+            if (copyMask?.AlchemicalApparatus.Overall != CopyOption.Skip)
+            {
+                try
+                {
+                    item.AlchemicalApparatus_Property.SetToWithDefault(
+                        rhs.AlchemicalApparatus_Property,
+                        def?.AlchemicalApparatus_Property,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.AlchemicalApparatus.Overall ?? CopyOption.Reference)
+                            {
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    GroupCommon.CopyFieldsFrom(
+                                        item: item.AlchemicalApparatus,
+                                        rhs: rhs.AlchemicalApparatus,
+                                        def: def?.AlchemicalApparatus,
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<Group_ErrorMask<AlchemicalApparatus_ErrorMask>>(() =>
+                                        {
+                                            var baseMask = errorMask();
+                                            if (baseMask.AlchemicalApparatus.Specific == null)
+                                            {
+                                                baseMask.AlchemicalApparatus = new MaskItem<Exception, Group_ErrorMask<AlchemicalApparatus_ErrorMask>>(null, new Group_ErrorMask<AlchemicalApparatus_ErrorMask>());
+                                            }
+                                            return baseMask.AlchemicalApparatus.Specific;
+                                        }
+                                        ) : null),
+                                        copyMask: copyMask?.AlchemicalApparatus.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(Group<AlchemicalApparatus>);
+                                    return Group<AlchemicalApparatus>.Copy(
+                                        r,
+                                        copyMask?.AlchemicalApparatus?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.AlchemicalApparatus?.Overall}. Cannot execute copy.");
+                            }
+                        }
+                        );
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)OblivionMod_FieldIndex.AlchemicalApparatus, ex);
+                }
+            }
         }
 
         #endregion
@@ -3064,6 +3176,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case OblivionMod_FieldIndex.Activators:
                     obj.Activators_Property.HasBeenSet = on;
+                    break;
+                case OblivionMod_FieldIndex.AlchemicalApparatus:
+                    obj.AlchemicalApparatus_Property.HasBeenSet = on;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3128,6 +3243,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Activators:
                     obj.Activators_Property.Unset(cmds);
                     break;
+                case OblivionMod_FieldIndex.AlchemicalApparatus:
+                    obj.AlchemicalApparatus_Property.Unset(cmds);
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -3174,6 +3292,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.Birthsigns_Property.HasBeenSet;
                 case OblivionMod_FieldIndex.Activators:
                     return obj.Activators_Property.HasBeenSet;
+                case OblivionMod_FieldIndex.AlchemicalApparatus:
+                    return obj.AlchemicalApparatus_Property.HasBeenSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -3220,6 +3340,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.Birthsigns;
                 case OblivionMod_FieldIndex.Activators:
                     return obj.Activators;
+                case OblivionMod_FieldIndex.AlchemicalApparatus:
+                    return obj.AlchemicalApparatus;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -3245,6 +3367,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Spells_Property.Unset(cmds.ToUnsetParams());
             item.Birthsigns_Property.Unset(cmds.ToUnsetParams());
             item.Activators_Property.Unset(cmds.ToUnsetParams());
+            item.AlchemicalApparatus_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static OblivionMod_Mask<bool> GetEqualsMask(
@@ -3279,6 +3402,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Spells = item.Spells_Property.LoquiEqualsHelper(rhs.Spells_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
             ret.Birthsigns = item.Birthsigns_Property.LoquiEqualsHelper(rhs.Birthsigns_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
             ret.Activators = item.Activators_Property.LoquiEqualsHelper(rhs.Activators_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.AlchemicalApparatus = item.AlchemicalApparatus_Property.LoquiEqualsHelper(rhs.AlchemicalApparatus_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
         }
 
         public static string ToString(
@@ -3376,6 +3500,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Activators?.ToString(fg, "Activators");
                 }
+                if (printMask?.AlchemicalApparatus?.Overall ?? true)
+                {
+                    item.AlchemicalApparatus?.ToString(fg, "AlchemicalApparatus");
+                }
             }
             fg.AppendLine("]");
         }
@@ -3418,6 +3546,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Birthsigns.Specific != null && (item.Birthsigns_Property.Item == null || !item.Birthsigns_Property.Item.HasBeenSet(checkMask.Birthsigns.Specific))) return false;
             if (checkMask.Activators.Overall.HasValue && checkMask.Activators.Overall.Value != item.Activators_Property.HasBeenSet) return false;
             if (checkMask.Activators.Specific != null && (item.Activators_Property.Item == null || !item.Activators_Property.Item.HasBeenSet(checkMask.Activators.Specific))) return false;
+            if (checkMask.AlchemicalApparatus.Overall.HasValue && checkMask.AlchemicalApparatus.Overall.Value != item.AlchemicalApparatus_Property.HasBeenSet) return false;
+            if (checkMask.AlchemicalApparatus.Specific != null && (item.AlchemicalApparatus_Property.Item == null || !item.AlchemicalApparatus_Property.Item.HasBeenSet(checkMask.AlchemicalApparatus.Specific))) return false;
             return true;
         }
 
@@ -3441,6 +3571,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Spells = new MaskItem<bool, Group_Mask<bool>>(item.Spells_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.Spells_Property.Item));
             ret.Birthsigns = new MaskItem<bool, Group_Mask<bool>>(item.Birthsigns_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.Birthsigns_Property.Item));
             ret.Activators = new MaskItem<bool, Group_Mask<bool>>(item.Activators_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.Activators_Property.Item));
+            ret.AlchemicalApparatus = new MaskItem<bool, Group_Mask<bool>>(item.AlchemicalApparatus_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.AlchemicalApparatus_Property.Item));
             return ret;
         }
 
@@ -3629,6 +3760,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             fieldIndex: (int)OblivionMod_FieldIndex.Activators,
                             errorMask: errorMask);
                     }
+                    if (item.AlchemicalApparatus_Property.HasBeenSet)
+                    {
+                        LoquiXmlTranslation<Group<AlchemicalApparatus>, Group_ErrorMask<AlchemicalApparatus_ErrorMask>>.Instance.Write(
+                            writer: writer,
+                            item: item.AlchemicalApparatus_Property,
+                            name: nameof(item.AlchemicalApparatus),
+                            fieldIndex: (int)OblivionMod_FieldIndex.AlchemicalApparatus,
+                            errorMask: errorMask);
+                    }
                 }
             }
             catch (Exception ex)
@@ -3767,6 +3907,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Activators_Property,
                 fieldIndex: (int)OblivionMod_FieldIndex.Activators,
                 errorMask: errorMask);
+            LoquiBinaryTranslation<Group<AlchemicalApparatus>, Group_ErrorMask<AlchemicalApparatus_ErrorMask>>.Instance.Write(
+                writer: writer,
+                item: item.AlchemicalApparatus_Property,
+                fieldIndex: (int)OblivionMod_FieldIndex.AlchemicalApparatus,
+                errorMask: errorMask);
         }
 
         #endregion
@@ -3803,6 +3948,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Spells = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.Birthsigns = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.Activators = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
+            this.AlchemicalApparatus = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
         }
         #endregion
 
@@ -3824,6 +3970,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<T, Group_Mask<T>> Spells { get; set; }
         public MaskItem<T, Group_Mask<T>> Birthsigns { get; set; }
         public MaskItem<T, Group_Mask<T>> Activators { get; set; }
+        public MaskItem<T, Group_Mask<T>> AlchemicalApparatus { get; set; }
         #endregion
 
         #region Equals
@@ -3853,6 +4000,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.Spells, rhs.Spells)) return false;
             if (!object.Equals(this.Birthsigns, rhs.Birthsigns)) return false;
             if (!object.Equals(this.Activators, rhs.Activators)) return false;
+            if (!object.Equals(this.AlchemicalApparatus, rhs.AlchemicalApparatus)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -3875,6 +4023,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.Spells?.GetHashCode());
             ret = ret.CombineHashCode(this.Birthsigns?.GetHashCode());
             ret = ret.CombineHashCode(this.Activators?.GetHashCode());
+            ret = ret.CombineHashCode(this.AlchemicalApparatus?.GetHashCode());
             return ret;
         }
 
@@ -3967,6 +4116,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (!eval(this.Activators.Overall)) return false;
                 if (this.Activators.Specific != null && !this.Activators.Specific.AllEqual(eval)) return false;
+            }
+            if (AlchemicalApparatus != null)
+            {
+                if (!eval(this.AlchemicalApparatus.Overall)) return false;
+                if (this.AlchemicalApparatus.Specific != null && !this.AlchemicalApparatus.Specific.AllEqual(eval)) return false;
             }
             return true;
         }
@@ -4135,6 +4289,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Activators.Specific = this.Activators.Specific.Translate(eval);
                 }
             }
+            if (this.AlchemicalApparatus != null)
+            {
+                obj.AlchemicalApparatus = new MaskItem<R, Group_Mask<R>>();
+                obj.AlchemicalApparatus.Overall = eval(this.AlchemicalApparatus.Overall);
+                if (this.AlchemicalApparatus.Specific != null)
+                {
+                    obj.AlchemicalApparatus.Specific = this.AlchemicalApparatus.Specific.Translate(eval);
+                }
+            }
         }
         #endregion
 
@@ -4231,6 +4394,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     Activators?.ToString(fg);
                 }
+                if (printMask?.AlchemicalApparatus?.Overall ?? true)
+                {
+                    AlchemicalApparatus?.ToString(fg);
+                }
             }
             fg.AppendLine("]");
         }
@@ -4271,6 +4438,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<Exception, Group_ErrorMask<SpellUnleveled_ErrorMask>> Spells;
         public MaskItem<Exception, Group_ErrorMask<Birthsign_ErrorMask>> Birthsigns;
         public MaskItem<Exception, Group_ErrorMask<Activator_ErrorMask>> Activators;
+        public MaskItem<Exception, Group_ErrorMask<AlchemicalApparatus_ErrorMask>> AlchemicalApparatus;
         #endregion
 
         #region IErrorMask
@@ -4329,6 +4497,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case OblivionMod_FieldIndex.Activators:
                     this.Activators = new MaskItem<Exception, Group_ErrorMask<Activator_ErrorMask>>(ex, null);
+                    break;
+                case OblivionMod_FieldIndex.AlchemicalApparatus:
+                    this.AlchemicalApparatus = new MaskItem<Exception, Group_ErrorMask<AlchemicalApparatus_ErrorMask>>(ex, null);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -4391,6 +4562,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Activators:
                     this.Activators = (MaskItem<Exception, Group_ErrorMask<Activator_ErrorMask>>)obj;
                     break;
+                case OblivionMod_FieldIndex.AlchemicalApparatus:
+                    this.AlchemicalApparatus = (MaskItem<Exception, Group_ErrorMask<AlchemicalApparatus_ErrorMask>>)obj;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -4416,6 +4590,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Spells != null) return true;
             if (Birthsigns != null) return true;
             if (Activators != null) return true;
+            if (AlchemicalApparatus != null) return true;
             return false;
         }
         #endregion
@@ -4467,6 +4642,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Spells?.ToString(fg);
             Birthsigns?.ToString(fg);
             Activators?.ToString(fg);
+            AlchemicalApparatus?.ToString(fg);
         }
         #endregion
 
@@ -4491,6 +4667,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Spells = new MaskItem<Exception, Group_ErrorMask<SpellUnleveled_ErrorMask>>(this.Spells.Overall.Combine(rhs.Spells.Overall), ((IErrorMask<Group_ErrorMask<SpellUnleveled_ErrorMask>>)this.Spells.Specific).Combine(rhs.Spells.Specific));
             ret.Birthsigns = new MaskItem<Exception, Group_ErrorMask<Birthsign_ErrorMask>>(this.Birthsigns.Overall.Combine(rhs.Birthsigns.Overall), ((IErrorMask<Group_ErrorMask<Birthsign_ErrorMask>>)this.Birthsigns.Specific).Combine(rhs.Birthsigns.Specific));
             ret.Activators = new MaskItem<Exception, Group_ErrorMask<Activator_ErrorMask>>(this.Activators.Overall.Combine(rhs.Activators.Overall), ((IErrorMask<Group_ErrorMask<Activator_ErrorMask>>)this.Activators.Specific).Combine(rhs.Activators.Specific));
+            ret.AlchemicalApparatus = new MaskItem<Exception, Group_ErrorMask<AlchemicalApparatus_ErrorMask>>(this.AlchemicalApparatus.Overall.Combine(rhs.AlchemicalApparatus.Overall), ((IErrorMask<Group_ErrorMask<AlchemicalApparatus_ErrorMask>>)this.AlchemicalApparatus.Specific).Combine(rhs.AlchemicalApparatus.Specific));
             return ret;
         }
         public static OblivionMod_ErrorMask Combine(OblivionMod_ErrorMask lhs, OblivionMod_ErrorMask rhs)
@@ -4521,6 +4698,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<CopyOption, Group_CopyMask<SpellUnleveled_CopyMask>> Spells;
         public MaskItem<CopyOption, Group_CopyMask<Birthsign_CopyMask>> Birthsigns;
         public MaskItem<CopyOption, Group_CopyMask<Activator_CopyMask>> Activators;
+        public MaskItem<CopyOption, Group_CopyMask<AlchemicalApparatus_CopyMask>> AlchemicalApparatus;
         #endregion
 
     }
