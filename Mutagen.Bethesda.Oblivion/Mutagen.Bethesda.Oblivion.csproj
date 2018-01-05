@@ -238,6 +238,9 @@
     <Compile Include="Records\Major Records\Sound_LoquiGenerated.cs">
       <DependentUpon>Sound.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Spell.cs">
+      <DependentUpon>Spell.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Spell_LoquiGenerated.cs">
       <DependentUpon>Spell.xml</DependentUpon>
     </Compile>

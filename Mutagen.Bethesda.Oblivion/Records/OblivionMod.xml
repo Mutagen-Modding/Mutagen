@@ -70,6 +70,11 @@
           <GenericSpecification Definition="Enchantment" TypeToSpecify="T" />
         </Direct>
       </Ref>
+      <Ref name="Spells">
+        <Direct refName="Group" >
+          <GenericSpecification Definition="Spell" TypeToSpecify="T" />
+        </Direct>
+      </Ref>
     </Fields>
   </Object>
 </Loqui>
