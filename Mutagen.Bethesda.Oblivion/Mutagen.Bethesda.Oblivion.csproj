@@ -298,6 +298,9 @@
     <Compile Include="Records\Major Records\SpellLeveled_LoquiGenerated.cs">
       <DependentUpon>SpellLeveled.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Activator_LoquiGenerated.cs">
+      <DependentUpon>Activator.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Records\Common Subrecords\Effect.xml">
@@ -316,6 +319,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Header\TES4.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\Activator.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Birthsign.xml">

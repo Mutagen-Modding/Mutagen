@@ -80,6 +80,11 @@
           <GenericSpecification Definition="Birthsign" TypeToSpecify="T" />
         </Direct>
       </Ref>
+      <Ref name="Activators">
+        <Direct refName="Group" >
+          <GenericSpecification Definition="Activator" TypeToSpecify="T" />
+        </Direct>
+      </Ref>
     </Fields>
   </Object>
 </Loqui>
