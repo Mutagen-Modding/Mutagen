@@ -75,6 +75,11 @@
           <GenericSpecification Definition="SpellUnleveled" TypeToSpecify="T" />
         </Direct>
       </Ref>
+      <Ref name="Birthsigns">
+        <Direct refName="Group" >
+          <GenericSpecification Definition="Birthsign" TypeToSpecify="T" />
+        </Direct>
+      </Ref>
     </Fields>
   </Object>
 </Loqui>

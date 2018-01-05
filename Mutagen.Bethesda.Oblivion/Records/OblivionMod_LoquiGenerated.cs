@@ -160,6 +160,14 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItem<Group<SpellUnleveled>> IOblivionMod.Spells_Property => this.Spells_Property;
         INotifyingSetItemGetter<Group<SpellUnleveled>> IOblivionModGetter.Spells_Property => this.Spells_Property;
         #endregion
+        #region Birthsigns
+        private readonly INotifyingSetItem<Group<Birthsign>> _Birthsigns = new NotifyingSetItem<Group<Birthsign>>();
+        public INotifyingSetItem<Group<Birthsign>> Birthsigns_Property => this._Birthsigns;
+        Group<Birthsign> IOblivionModGetter.Birthsigns => this.Birthsigns;
+        public Group<Birthsign> Birthsigns { get => _Birthsigns.Item; set => _Birthsigns.Item = value; }
+        INotifyingSetItem<Group<Birthsign>> IOblivionMod.Birthsigns_Property => this.Birthsigns_Property;
+        INotifyingSetItemGetter<Group<Birthsign>> IOblivionModGetter.Birthsigns_Property => this.Birthsigns_Property;
+        #endregion
 
         #region Loqui Getter Interface
 
@@ -294,6 +302,11 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!object.Equals(Spells, rhs.Spells)) return false;
             }
+            if (Birthsigns_Property.HasBeenSet != rhs.Birthsigns_Property.HasBeenSet) return false;
+            if (Birthsigns_Property.HasBeenSet)
+            {
+                if (!object.Equals(Birthsigns, rhs.Birthsigns)) return false;
+            }
             return true;
         }
 
@@ -359,6 +372,10 @@ namespace Mutagen.Bethesda.Oblivion
             if (Spells_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(Spells).CombineHashCode(ret);
+            }
+            if (Birthsigns_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Birthsigns).CombineHashCode(ret);
             }
             return ret;
         }
@@ -749,6 +766,12 @@ namespace Mutagen.Bethesda.Oblivion
                     item._Spells.SetIfSucceeded(LoquiXmlTranslation<Group<SpellUnleveled>, Group_ErrorMask<SpellUnleveled_ErrorMask>>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)OblivionMod_FieldIndex.Spells,
+                        errorMask: errorMask));
+                    break;
+                case "Birthsigns":
+                    item._Birthsigns.SetIfSucceeded(LoquiXmlTranslation<Group<Birthsign>, Group_ErrorMask<Birthsign_ErrorMask>>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Birthsigns,
                         errorMask: errorMask));
                     break;
                 default:
@@ -1158,6 +1181,12 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)OblivionMod_FieldIndex.Spells,
                         errorMask: errorMask));
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Spells);
+                case "BSGN":
+                    item._Birthsigns.SetIfSucceeded(LoquiBinaryTranslation<Group<Birthsign>, Group_ErrorMask<Birthsign_ErrorMask>>.Instance.Parse(
+                        frame: frame,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Birthsigns,
+                        errorMask: errorMask));
+                    return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Birthsigns);
                 default:
                     errorMask().Warnings.Add($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength;
@@ -1323,6 +1352,11 @@ namespace Mutagen.Bethesda.Oblivion
                         (Group<SpellUnleveled>)obj,
                         cmds);
                     break;
+                case OblivionMod_FieldIndex.Birthsigns:
+                    this._Birthsigns.Set(
+                        (Group<Birthsign>)obj,
+                        cmds);
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1433,6 +1467,11 @@ namespace Mutagen.Bethesda.Oblivion
                         (Group<SpellUnleveled>)pair.Value,
                         null);
                     break;
+                case OblivionMod_FieldIndex.Birthsigns:
+                    obj._Birthsigns.Set(
+                        (Group<Birthsign>)pair.Value,
+                        null);
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -1489,6 +1528,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Group<SpellUnleveled> Spells { get; set; }
         new INotifyingSetItem<Group<SpellUnleveled>> Spells_Property { get; }
+
+        new Group<Birthsign> Birthsigns { get; set; }
+        new INotifyingSetItem<Group<Birthsign>> Birthsigns_Property { get; }
 
     }
 
@@ -1569,6 +1611,11 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Group<SpellUnleveled>> Spells_Property { get; }
 
         #endregion
+        #region Birthsigns
+        Group<Birthsign> Birthsigns { get; }
+        INotifyingSetItemGetter<Group<Birthsign>> Birthsigns_Property { get; }
+
+        #endregion
 
     }
 
@@ -1596,6 +1643,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         LandTextures = 12,
         Enchantments = 13,
         Spells = 14,
+        Birthsigns = 15,
     }
     #endregion
 
@@ -1613,7 +1661,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "b6f626df-b164-466b-960a-1639d88f66bc";
 
-        public const ushort FieldCount = 15;
+        public const ushort FieldCount = 16;
 
         public static readonly Type MaskType = typeof(OblivionMod_Mask<>);
 
@@ -1671,6 +1719,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)OblivionMod_FieldIndex.Enchantments;
                 case "SPELLS":
                     return (ushort)OblivionMod_FieldIndex.Spells;
+                case "BIRTHSIGNS":
+                    return (ushort)OblivionMod_FieldIndex.Birthsigns;
                 default:
                     return null;
             }
@@ -1696,6 +1746,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.LandTextures:
                 case OblivionMod_FieldIndex.Enchantments:
                 case OblivionMod_FieldIndex.Spells:
+                case OblivionMod_FieldIndex.Birthsigns:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1722,6 +1773,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.LandTextures:
                 case OblivionMod_FieldIndex.Enchantments:
                 case OblivionMod_FieldIndex.Spells:
+                case OblivionMod_FieldIndex.Birthsigns:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1749,6 +1801,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.LandTextures:
                 case OblivionMod_FieldIndex.Enchantments:
                 case OblivionMod_FieldIndex.Spells:
+                case OblivionMod_FieldIndex.Birthsigns:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1790,6 +1843,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Enchantments";
                 case OblivionMod_FieldIndex.Spells:
                     return "Spells";
+                case OblivionMod_FieldIndex.Birthsigns:
+                    return "Birthsigns";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1815,6 +1870,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.LandTextures:
                 case OblivionMod_FieldIndex.Enchantments:
                 case OblivionMod_FieldIndex.Spells:
+                case OblivionMod_FieldIndex.Birthsigns:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1842,6 +1898,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.LandTextures:
                 case OblivionMod_FieldIndex.Enchantments:
                 case OblivionMod_FieldIndex.Spells:
+                case OblivionMod_FieldIndex.Birthsigns:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1883,6 +1940,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(Group<Enchantment>);
                 case OblivionMod_FieldIndex.Spells:
                     return typeof(Group<SpellUnleveled>);
+                case OblivionMod_FieldIndex.Birthsigns:
+                    return typeof(Group<Birthsign>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1903,6 +1962,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType LTEX_HEADER = new RecordType("LTEX");
         public static readonly RecordType ENCH_HEADER = new RecordType("ENCH");
         public static readonly RecordType SPEL_HEADER = new RecordType("SPEL");
+        public static readonly RecordType BSGN_HEADER = new RecordType("BSGN");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -1924,12 +1984,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         SCPT_HEADER,
                         LTEX_HEADER,
                         ENCH_HEADER,
-                        SPEL_HEADER
+                        SPEL_HEADER,
+                        BSGN_HEADER
                     })
             );
         });
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 15;
+        public const int NumTypedFields = 16;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -2778,6 +2839,57 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask().SetNthException((int)OblivionMod_FieldIndex.Spells, ex);
                 }
             }
+            if (copyMask?.Birthsigns.Overall != CopyOption.Skip)
+            {
+                try
+                {
+                    item.Birthsigns_Property.SetToWithDefault(
+                        rhs.Birthsigns_Property,
+                        def?.Birthsigns_Property,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.Birthsigns.Overall ?? CopyOption.Reference)
+                            {
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    GroupCommon.CopyFieldsFrom(
+                                        item: item.Birthsigns,
+                                        rhs: rhs.Birthsigns,
+                                        def: def?.Birthsigns,
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<Group_ErrorMask<Birthsign_ErrorMask>>(() =>
+                                        {
+                                            var baseMask = errorMask();
+                                            if (baseMask.Birthsigns.Specific == null)
+                                            {
+                                                baseMask.Birthsigns = new MaskItem<Exception, Group_ErrorMask<Birthsign_ErrorMask>>(null, new Group_ErrorMask<Birthsign_ErrorMask>());
+                                            }
+                                            return baseMask.Birthsigns.Specific;
+                                        }
+                                        ) : null),
+                                        copyMask: copyMask?.Birthsigns.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(Group<Birthsign>);
+                                    return Group<Birthsign>.Copy(
+                                        r,
+                                        copyMask?.Birthsigns?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Birthsigns?.Overall}. Cannot execute copy.");
+                            }
+                        }
+                        );
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)OblivionMod_FieldIndex.Birthsigns, ex);
+                }
+            }
         }
 
         #endregion
@@ -2834,6 +2946,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case OblivionMod_FieldIndex.Spells:
                     obj.Spells_Property.HasBeenSet = on;
+                    break;
+                case OblivionMod_FieldIndex.Birthsigns:
+                    obj.Birthsigns_Property.HasBeenSet = on;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2892,6 +3007,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Spells:
                     obj.Spells_Property.Unset(cmds);
                     break;
+                case OblivionMod_FieldIndex.Birthsigns:
+                    obj.Birthsigns_Property.Unset(cmds);
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2934,6 +3052,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.Enchantments_Property.HasBeenSet;
                 case OblivionMod_FieldIndex.Spells:
                     return obj.Spells_Property.HasBeenSet;
+                case OblivionMod_FieldIndex.Birthsigns:
+                    return obj.Birthsigns_Property.HasBeenSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2976,6 +3096,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.Enchantments;
                 case OblivionMod_FieldIndex.Spells:
                     return obj.Spells;
+                case OblivionMod_FieldIndex.Birthsigns:
+                    return obj.Birthsigns;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2999,6 +3121,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.LandTextures_Property.Unset(cmds.ToUnsetParams());
             item.Enchantments_Property.Unset(cmds.ToUnsetParams());
             item.Spells_Property.Unset(cmds.ToUnsetParams());
+            item.Birthsigns_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static OblivionMod_Mask<bool> GetEqualsMask(
@@ -3031,6 +3154,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.LandTextures = item.LandTextures_Property.LoquiEqualsHelper(rhs.LandTextures_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
             ret.Enchantments = item.Enchantments_Property.LoquiEqualsHelper(rhs.Enchantments_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
             ret.Spells = item.Spells_Property.LoquiEqualsHelper(rhs.Spells_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Birthsigns = item.Birthsigns_Property.LoquiEqualsHelper(rhs.Birthsigns_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
         }
 
         public static string ToString(
@@ -3120,6 +3244,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Spells?.ToString(fg, "Spells");
                 }
+                if (printMask?.Birthsigns?.Overall ?? true)
+                {
+                    item.Birthsigns?.ToString(fg, "Birthsigns");
+                }
             }
             fg.AppendLine("]");
         }
@@ -3158,6 +3286,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Enchantments.Specific != null && (item.Enchantments_Property.Item == null || !item.Enchantments_Property.Item.HasBeenSet(checkMask.Enchantments.Specific))) return false;
             if (checkMask.Spells.Overall.HasValue && checkMask.Spells.Overall.Value != item.Spells_Property.HasBeenSet) return false;
             if (checkMask.Spells.Specific != null && (item.Spells_Property.Item == null || !item.Spells_Property.Item.HasBeenSet(checkMask.Spells.Specific))) return false;
+            if (checkMask.Birthsigns.Overall.HasValue && checkMask.Birthsigns.Overall.Value != item.Birthsigns_Property.HasBeenSet) return false;
+            if (checkMask.Birthsigns.Specific != null && (item.Birthsigns_Property.Item == null || !item.Birthsigns_Property.Item.HasBeenSet(checkMask.Birthsigns.Specific))) return false;
             return true;
         }
 
@@ -3179,6 +3309,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.LandTextures = new MaskItem<bool, Group_Mask<bool>>(item.LandTextures_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.LandTextures_Property.Item));
             ret.Enchantments = new MaskItem<bool, Group_Mask<bool>>(item.Enchantments_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.Enchantments_Property.Item));
             ret.Spells = new MaskItem<bool, Group_Mask<bool>>(item.Spells_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.Spells_Property.Item));
+            ret.Birthsigns = new MaskItem<bool, Group_Mask<bool>>(item.Birthsigns_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.Birthsigns_Property.Item));
             return ret;
         }
 
@@ -3349,6 +3480,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             fieldIndex: (int)OblivionMod_FieldIndex.Spells,
                             errorMask: errorMask);
                     }
+                    if (item.Birthsigns_Property.HasBeenSet)
+                    {
+                        LoquiXmlTranslation<Group<Birthsign>, Group_ErrorMask<Birthsign_ErrorMask>>.Instance.Write(
+                            writer: writer,
+                            item: item.Birthsigns_Property,
+                            name: nameof(item.Birthsigns),
+                            fieldIndex: (int)OblivionMod_FieldIndex.Birthsigns,
+                            errorMask: errorMask);
+                    }
                 }
             }
             catch (Exception ex)
@@ -3477,6 +3617,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Spells_Property,
                 fieldIndex: (int)OblivionMod_FieldIndex.Spells,
                 errorMask: errorMask);
+            LoquiBinaryTranslation<Group<Birthsign>, Group_ErrorMask<Birthsign_ErrorMask>>.Instance.Write(
+                writer: writer,
+                item: item.Birthsigns_Property,
+                fieldIndex: (int)OblivionMod_FieldIndex.Birthsigns,
+                errorMask: errorMask);
         }
 
         #endregion
@@ -3511,6 +3656,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.LandTextures = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.Enchantments = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.Spells = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
+            this.Birthsigns = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
         }
         #endregion
 
@@ -3530,6 +3676,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<T, Group_Mask<T>> LandTextures { get; set; }
         public MaskItem<T, Group_Mask<T>> Enchantments { get; set; }
         public MaskItem<T, Group_Mask<T>> Spells { get; set; }
+        public MaskItem<T, Group_Mask<T>> Birthsigns { get; set; }
         #endregion
 
         #region Equals
@@ -3557,6 +3704,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.LandTextures, rhs.LandTextures)) return false;
             if (!object.Equals(this.Enchantments, rhs.Enchantments)) return false;
             if (!object.Equals(this.Spells, rhs.Spells)) return false;
+            if (!object.Equals(this.Birthsigns, rhs.Birthsigns)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -3577,6 +3725,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.LandTextures?.GetHashCode());
             ret = ret.CombineHashCode(this.Enchantments?.GetHashCode());
             ret = ret.CombineHashCode(this.Spells?.GetHashCode());
+            ret = ret.CombineHashCode(this.Birthsigns?.GetHashCode());
             return ret;
         }
 
@@ -3659,6 +3808,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (!eval(this.Spells.Overall)) return false;
                 if (this.Spells.Specific != null && !this.Spells.Specific.AllEqual(eval)) return false;
+            }
+            if (Birthsigns != null)
+            {
+                if (!eval(this.Birthsigns.Overall)) return false;
+                if (this.Birthsigns.Specific != null && !this.Birthsigns.Specific.AllEqual(eval)) return false;
             }
             return true;
         }
@@ -3809,6 +3963,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Spells.Specific = this.Spells.Specific.Translate(eval);
                 }
             }
+            if (this.Birthsigns != null)
+            {
+                obj.Birthsigns = new MaskItem<R, Group_Mask<R>>();
+                obj.Birthsigns.Overall = eval(this.Birthsigns.Overall);
+                if (this.Birthsigns.Specific != null)
+                {
+                    obj.Birthsigns.Specific = this.Birthsigns.Specific.Translate(eval);
+                }
+            }
         }
         #endregion
 
@@ -3897,6 +4060,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     Spells?.ToString(fg);
                 }
+                if (printMask?.Birthsigns?.Overall ?? true)
+                {
+                    Birthsigns?.ToString(fg);
+                }
             }
             fg.AppendLine("]");
         }
@@ -3935,6 +4102,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<Exception, Group_ErrorMask<LandTexture_ErrorMask>> LandTextures;
         public MaskItem<Exception, Group_ErrorMask<Enchantment_ErrorMask>> Enchantments;
         public MaskItem<Exception, Group_ErrorMask<SpellUnleveled_ErrorMask>> Spells;
+        public MaskItem<Exception, Group_ErrorMask<Birthsign_ErrorMask>> Birthsigns;
         #endregion
 
         #region IErrorMask
@@ -3987,6 +4155,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case OblivionMod_FieldIndex.Spells:
                     this.Spells = new MaskItem<Exception, Group_ErrorMask<SpellUnleveled_ErrorMask>>(ex, null);
+                    break;
+                case OblivionMod_FieldIndex.Birthsigns:
+                    this.Birthsigns = new MaskItem<Exception, Group_ErrorMask<Birthsign_ErrorMask>>(ex, null);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -4043,6 +4214,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Spells:
                     this.Spells = (MaskItem<Exception, Group_ErrorMask<SpellUnleveled_ErrorMask>>)obj;
                     break;
+                case OblivionMod_FieldIndex.Birthsigns:
+                    this.Birthsigns = (MaskItem<Exception, Group_ErrorMask<Birthsign_ErrorMask>>)obj;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -4066,6 +4240,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (LandTextures != null) return true;
             if (Enchantments != null) return true;
             if (Spells != null) return true;
+            if (Birthsigns != null) return true;
             return false;
         }
         #endregion
@@ -4115,6 +4290,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             LandTextures?.ToString(fg);
             Enchantments?.ToString(fg);
             Spells?.ToString(fg);
+            Birthsigns?.ToString(fg);
         }
         #endregion
 
@@ -4137,6 +4313,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.LandTextures = new MaskItem<Exception, Group_ErrorMask<LandTexture_ErrorMask>>(this.LandTextures.Overall.Combine(rhs.LandTextures.Overall), ((IErrorMask<Group_ErrorMask<LandTexture_ErrorMask>>)this.LandTextures.Specific).Combine(rhs.LandTextures.Specific));
             ret.Enchantments = new MaskItem<Exception, Group_ErrorMask<Enchantment_ErrorMask>>(this.Enchantments.Overall.Combine(rhs.Enchantments.Overall), ((IErrorMask<Group_ErrorMask<Enchantment_ErrorMask>>)this.Enchantments.Specific).Combine(rhs.Enchantments.Specific));
             ret.Spells = new MaskItem<Exception, Group_ErrorMask<SpellUnleveled_ErrorMask>>(this.Spells.Overall.Combine(rhs.Spells.Overall), ((IErrorMask<Group_ErrorMask<SpellUnleveled_ErrorMask>>)this.Spells.Specific).Combine(rhs.Spells.Specific));
+            ret.Birthsigns = new MaskItem<Exception, Group_ErrorMask<Birthsign_ErrorMask>>(this.Birthsigns.Overall.Combine(rhs.Birthsigns.Overall), ((IErrorMask<Group_ErrorMask<Birthsign_ErrorMask>>)this.Birthsigns.Specific).Combine(rhs.Birthsigns.Specific));
             return ret;
         }
         public static OblivionMod_ErrorMask Combine(OblivionMod_ErrorMask lhs, OblivionMod_ErrorMask rhs)
@@ -4165,6 +4342,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<CopyOption, Group_CopyMask<LandTexture_CopyMask>> LandTextures;
         public MaskItem<CopyOption, Group_CopyMask<Enchantment_CopyMask>> Enchantments;
         public MaskItem<CopyOption, Group_CopyMask<SpellUnleveled_CopyMask>> Spells;
+        public MaskItem<CopyOption, Group_CopyMask<Birthsign_CopyMask>> Birthsigns;
         #endregion
 
     }

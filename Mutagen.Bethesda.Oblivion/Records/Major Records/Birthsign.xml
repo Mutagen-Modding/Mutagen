@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Birthsign" baseClass="Bethesda.NamedMajorRecord" objType="Record" recordType="BSGN" GUID="5c709517-acb6-4254-9ad8-59b502466e63" ID="62">
+    <Fields>
+      <FilePath name="Icon" recordType="ICON" />
+      <String name="Description" recordType="DESC" />
+      <List name="Spells">
+        <FormID recordType="SPLO" refName="Spell" />
+      </List>
+    </Fields>
+  </Object>
+</Loqui>
