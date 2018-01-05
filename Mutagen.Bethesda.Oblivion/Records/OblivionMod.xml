@@ -72,7 +72,7 @@
       </Ref>
       <Ref name="Spells">
         <Direct refName="Group" >
-          <GenericSpecification Definition="Spell" TypeToSpecify="T" />
+          <GenericSpecification Definition="SpellUnleveled" TypeToSpecify="T" />
         </Direct>
       </Ref>
     </Fields>

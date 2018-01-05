@@ -153,12 +153,12 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Group<Enchantment>> IOblivionModGetter.Enchantments_Property => this.Enchantments_Property;
         #endregion
         #region Spells
-        private readonly INotifyingSetItem<Group<Spell>> _Spells = new NotifyingSetItem<Group<Spell>>();
-        public INotifyingSetItem<Group<Spell>> Spells_Property => this._Spells;
-        Group<Spell> IOblivionModGetter.Spells => this.Spells;
-        public Group<Spell> Spells { get => _Spells.Item; set => _Spells.Item = value; }
-        INotifyingSetItem<Group<Spell>> IOblivionMod.Spells_Property => this.Spells_Property;
-        INotifyingSetItemGetter<Group<Spell>> IOblivionModGetter.Spells_Property => this.Spells_Property;
+        private readonly INotifyingSetItem<Group<SpellUnleveled>> _Spells = new NotifyingSetItem<Group<SpellUnleveled>>();
+        public INotifyingSetItem<Group<SpellUnleveled>> Spells_Property => this._Spells;
+        Group<SpellUnleveled> IOblivionModGetter.Spells => this.Spells;
+        public Group<SpellUnleveled> Spells { get => _Spells.Item; set => _Spells.Item = value; }
+        INotifyingSetItem<Group<SpellUnleveled>> IOblivionMod.Spells_Property => this.Spells_Property;
+        INotifyingSetItemGetter<Group<SpellUnleveled>> IOblivionModGetter.Spells_Property => this.Spells_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -746,7 +746,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 case "Spells":
-                    item._Spells.SetIfSucceeded(LoquiXmlTranslation<Group<Spell>, Group_ErrorMask<Spell_ErrorMask>>.Instance.Parse(
+                    item._Spells.SetIfSucceeded(LoquiXmlTranslation<Group<SpellUnleveled>, Group_ErrorMask<SpellUnleveled_ErrorMask>>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)OblivionMod_FieldIndex.Spells,
                         errorMask: errorMask));
@@ -1153,7 +1153,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Enchantments);
                 case "SPEL":
-                    item._Spells.SetIfSucceeded(LoquiBinaryTranslation<Group<Spell>, Group_ErrorMask<Spell_ErrorMask>>.Instance.Parse(
+                    item._Spells.SetIfSucceeded(LoquiBinaryTranslation<Group<SpellUnleveled>, Group_ErrorMask<SpellUnleveled_ErrorMask>>.Instance.Parse(
                         frame: frame,
                         fieldIndex: (int)OblivionMod_FieldIndex.Spells,
                         errorMask: errorMask));
@@ -1320,7 +1320,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case OblivionMod_FieldIndex.Spells:
                     this._Spells.Set(
-                        (Group<Spell>)obj,
+                        (Group<SpellUnleveled>)obj,
                         cmds);
                     break;
                 default:
@@ -1430,7 +1430,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case OblivionMod_FieldIndex.Spells:
                     obj._Spells.Set(
-                        (Group<Spell>)pair.Value,
+                        (Group<SpellUnleveled>)pair.Value,
                         null);
                     break;
                 default:
@@ -1487,8 +1487,8 @@ namespace Mutagen.Bethesda.Oblivion
         new Group<Enchantment> Enchantments { get; set; }
         new INotifyingSetItem<Group<Enchantment>> Enchantments_Property { get; }
 
-        new Group<Spell> Spells { get; set; }
-        new INotifyingSetItem<Group<Spell>> Spells_Property { get; }
+        new Group<SpellUnleveled> Spells { get; set; }
+        new INotifyingSetItem<Group<SpellUnleveled>> Spells_Property { get; }
 
     }
 
@@ -1565,8 +1565,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Spells
-        Group<Spell> Spells { get; }
-        INotifyingSetItemGetter<Group<Spell>> Spells_Property { get; }
+        Group<SpellUnleveled> Spells { get; }
+        INotifyingSetItemGetter<Group<SpellUnleveled>> Spells_Property { get; }
 
         #endregion
 
@@ -1882,7 +1882,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Enchantments:
                     return typeof(Group<Enchantment>);
                 case OblivionMod_FieldIndex.Spells:
-                    return typeof(Group<Spell>);
+                    return typeof(Group<SpellUnleveled>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2747,12 +2747,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         rhs: rhs.Spells,
                                         def: def?.Spells,
                                         doMasks: doMasks,
-                                        errorMask: (doMasks ? new Func<Group_ErrorMask<Spell_ErrorMask>>(() =>
+                                        errorMask: (doMasks ? new Func<Group_ErrorMask<SpellUnleveled_ErrorMask>>(() =>
                                         {
                                             var baseMask = errorMask();
                                             if (baseMask.Spells.Specific == null)
                                             {
-                                                baseMask.Spells = new MaskItem<Exception, Group_ErrorMask<Spell_ErrorMask>>(null, new Group_ErrorMask<Spell_ErrorMask>());
+                                                baseMask.Spells = new MaskItem<Exception, Group_ErrorMask<SpellUnleveled_ErrorMask>>(null, new Group_ErrorMask<SpellUnleveled_ErrorMask>());
                                             }
                                             return baseMask.Spells.Specific;
                                         }
@@ -2761,8 +2761,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                         cmds: cmds);
                                     return r;
                                 case CopyOption.MakeCopy:
-                                    if (r == null) return default(Group<Spell>);
-                                    return Group<Spell>.Copy(
+                                    if (r == null) return default(Group<SpellUnleveled>);
+                                    return Group<SpellUnleveled>.Copy(
                                         r,
                                         copyMask?.Spells?.Specific,
                                         def: d);
@@ -3342,7 +3342,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.Spells_Property.HasBeenSet)
                     {
-                        LoquiXmlTranslation<Group<Spell>, Group_ErrorMask<Spell_ErrorMask>>.Instance.Write(
+                        LoquiXmlTranslation<Group<SpellUnleveled>, Group_ErrorMask<SpellUnleveled_ErrorMask>>.Instance.Write(
                             writer: writer,
                             item: item.Spells_Property,
                             name: nameof(item.Spells),
@@ -3472,7 +3472,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Enchantments_Property,
                 fieldIndex: (int)OblivionMod_FieldIndex.Enchantments,
                 errorMask: errorMask);
-            LoquiBinaryTranslation<Group<Spell>, Group_ErrorMask<Spell_ErrorMask>>.Instance.Write(
+            LoquiBinaryTranslation<Group<SpellUnleveled>, Group_ErrorMask<SpellUnleveled_ErrorMask>>.Instance.Write(
                 writer: writer,
                 item: item.Spells_Property,
                 fieldIndex: (int)OblivionMod_FieldIndex.Spells,
@@ -3934,7 +3934,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<Exception, Group_ErrorMask<Script_ErrorMask>> Scripts;
         public MaskItem<Exception, Group_ErrorMask<LandTexture_ErrorMask>> LandTextures;
         public MaskItem<Exception, Group_ErrorMask<Enchantment_ErrorMask>> Enchantments;
-        public MaskItem<Exception, Group_ErrorMask<Spell_ErrorMask>> Spells;
+        public MaskItem<Exception, Group_ErrorMask<SpellUnleveled_ErrorMask>> Spells;
         #endregion
 
         #region IErrorMask
@@ -3986,7 +3986,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Enchantments = new MaskItem<Exception, Group_ErrorMask<Enchantment_ErrorMask>>(ex, null);
                     break;
                 case OblivionMod_FieldIndex.Spells:
-                    this.Spells = new MaskItem<Exception, Group_ErrorMask<Spell_ErrorMask>>(ex, null);
+                    this.Spells = new MaskItem<Exception, Group_ErrorMask<SpellUnleveled_ErrorMask>>(ex, null);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -4041,7 +4041,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Enchantments = (MaskItem<Exception, Group_ErrorMask<Enchantment_ErrorMask>>)obj;
                     break;
                 case OblivionMod_FieldIndex.Spells:
-                    this.Spells = (MaskItem<Exception, Group_ErrorMask<Spell_ErrorMask>>)obj;
+                    this.Spells = (MaskItem<Exception, Group_ErrorMask<SpellUnleveled_ErrorMask>>)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -4136,7 +4136,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Scripts = new MaskItem<Exception, Group_ErrorMask<Script_ErrorMask>>(this.Scripts.Overall.Combine(rhs.Scripts.Overall), ((IErrorMask<Group_ErrorMask<Script_ErrorMask>>)this.Scripts.Specific).Combine(rhs.Scripts.Specific));
             ret.LandTextures = new MaskItem<Exception, Group_ErrorMask<LandTexture_ErrorMask>>(this.LandTextures.Overall.Combine(rhs.LandTextures.Overall), ((IErrorMask<Group_ErrorMask<LandTexture_ErrorMask>>)this.LandTextures.Specific).Combine(rhs.LandTextures.Specific));
             ret.Enchantments = new MaskItem<Exception, Group_ErrorMask<Enchantment_ErrorMask>>(this.Enchantments.Overall.Combine(rhs.Enchantments.Overall), ((IErrorMask<Group_ErrorMask<Enchantment_ErrorMask>>)this.Enchantments.Specific).Combine(rhs.Enchantments.Specific));
-            ret.Spells = new MaskItem<Exception, Group_ErrorMask<Spell_ErrorMask>>(this.Spells.Overall.Combine(rhs.Spells.Overall), ((IErrorMask<Group_ErrorMask<Spell_ErrorMask>>)this.Spells.Specific).Combine(rhs.Spells.Specific));
+            ret.Spells = new MaskItem<Exception, Group_ErrorMask<SpellUnleveled_ErrorMask>>(this.Spells.Overall.Combine(rhs.Spells.Overall), ((IErrorMask<Group_ErrorMask<SpellUnleveled_ErrorMask>>)this.Spells.Specific).Combine(rhs.Spells.Specific));
             return ret;
         }
         public static OblivionMod_ErrorMask Combine(OblivionMod_ErrorMask lhs, OblivionMod_ErrorMask rhs)
@@ -4164,7 +4164,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<CopyOption, Group_CopyMask<Script_CopyMask>> Scripts;
         public MaskItem<CopyOption, Group_CopyMask<LandTexture_CopyMask>> LandTextures;
         public MaskItem<CopyOption, Group_CopyMask<Enchantment_CopyMask>> Enchantments;
-        public MaskItem<CopyOption, Group_CopyMask<Spell_CopyMask>> Spells;
+        public MaskItem<CopyOption, Group_CopyMask<SpellUnleveled_CopyMask>> Spells;
         #endregion
 
     }

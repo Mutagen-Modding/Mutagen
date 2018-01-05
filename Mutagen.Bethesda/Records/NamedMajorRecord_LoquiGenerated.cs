@@ -749,6 +749,7 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType HAIR_HEADER = new RecordType("HAIR");
         public static readonly RecordType MGEF_HEADER = new RecordType("MGEF");
         public static readonly RecordType RACE_HEADER = new RecordType("RACE");
+        public static readonly RecordType LVSP_HEADER = new RecordType("LVSP");
         public static readonly RecordType SPEL_HEADER = new RecordType("SPEL");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
@@ -765,6 +766,7 @@ namespace Mutagen.Bethesda.Internals
                         HAIR_HEADER,
                         MGEF_HEADER,
                         RACE_HEADER,
+                        LVSP_HEADER,
                         SPEL_HEADER
                     })
             );

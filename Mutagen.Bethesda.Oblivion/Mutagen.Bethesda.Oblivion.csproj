@@ -238,13 +238,10 @@
     <Compile Include="Records\Major Records\Sound_LoquiGenerated.cs">
       <DependentUpon>Sound.xml</DependentUpon>
     </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Records\Major Records\Spell.cs">
       <DependentUpon>Spell.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\Spell_LoquiGenerated.cs">
-      <DependentUpon>Spell.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Records\OblivionMod.cs">
       <DependentUpon>OblivionMod.xml</DependentUpon>
     </Compile>
@@ -288,6 +285,15 @@
     </Compile>
     <Compile Include="Records\Common Subrecords\ScriptEffect_LoquiGenerated.cs">
       <DependentUpon>Effect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Spell_LoquiGenerated.cs">
+      <DependentUpon>Spell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SpellUnleveled_LoquiGenerated.cs">
+      <DependentUpon>SpellUnleveled.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\SpellLeveled_LoquiGenerated.cs">
+      <DependentUpon>SpellLeveled.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -355,6 +361,12 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Sound.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\SpellLeveled.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\SpellUnleveled.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Spell.xml">

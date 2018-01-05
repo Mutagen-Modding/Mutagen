@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="SpellLeveled" baseClass="Spell" objType="Record" recordType="LVSP" GUID="01fc86cc-d74a-4748-9fb6-6e0b610edb6d" ID="64">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>
