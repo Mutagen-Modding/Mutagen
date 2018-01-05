@@ -24,13 +24,13 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class EnchantmentEffect : IEnchantmentEffect, ILoquiObjectSetter, IEquatable<EnchantmentEffect>
+    public partial class Effect : IEffect, ILoquiObjectSetter, IEquatable<Effect>
     {
-        ILoquiRegistration ILoquiObject.Registration => EnchantmentEffect_Registration.Instance;
-        public static EnchantmentEffect_Registration Registration => EnchantmentEffect_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Effect_Registration.Instance;
+        public static Effect_Registration Registration => Effect_Registration.Instance;
 
         #region Ctor
-        public EnchantmentEffect()
+        public Effect()
         {
             CustomCtor();
         }
@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region MagicEffect
         public EDIDSetLink<MagicEffect> MagicEffect_Property { get; } = new EDIDSetLink<MagicEffect>();
         public MagicEffect MagicEffect { get => MagicEffect_Property.Item; set => MagicEffect_Property.Item = value; }
-        EDIDSetLink<MagicEffect> IEnchantmentEffectGetter.MagicEffect_Property => this.MagicEffect_Property;
+        EDIDSetLink<MagicEffect> IEffectGetter.MagicEffect_Property => this.MagicEffect_Property;
         #endregion
         #region Magnitude
         protected readonly INotifyingSetItem<UInt32> _Magnitude = NotifyingSetItem.Factory<UInt32>(markAsSet: false);
@@ -50,8 +50,8 @@ namespace Mutagen.Bethesda.Oblivion
             get => this._Magnitude.Item;
             set => this._Magnitude.Set(value);
         }
-        INotifyingSetItem<UInt32> IEnchantmentEffect.Magnitude_Property => this.Magnitude_Property;
-        INotifyingSetItemGetter<UInt32> IEnchantmentEffectGetter.Magnitude_Property => this.Magnitude_Property;
+        INotifyingSetItem<UInt32> IEffect.Magnitude_Property => this.Magnitude_Property;
+        INotifyingSetItemGetter<UInt32> IEffectGetter.Magnitude_Property => this.Magnitude_Property;
         #endregion
         #region Area
         protected readonly INotifyingSetItem<UInt32> _Area = NotifyingSetItem.Factory<UInt32>(markAsSet: false);
@@ -61,8 +61,8 @@ namespace Mutagen.Bethesda.Oblivion
             get => this._Area.Item;
             set => this._Area.Set(value);
         }
-        INotifyingSetItem<UInt32> IEnchantmentEffect.Area_Property => this.Area_Property;
-        INotifyingSetItemGetter<UInt32> IEnchantmentEffectGetter.Area_Property => this.Area_Property;
+        INotifyingSetItem<UInt32> IEffect.Area_Property => this.Area_Property;
+        INotifyingSetItemGetter<UInt32> IEffectGetter.Area_Property => this.Area_Property;
         #endregion
         #region Duration
         protected readonly INotifyingSetItem<UInt32> _Duration = NotifyingSetItem.Factory<UInt32>(markAsSet: false);
@@ -72,19 +72,19 @@ namespace Mutagen.Bethesda.Oblivion
             get => this._Duration.Item;
             set => this._Duration.Set(value);
         }
-        INotifyingSetItem<UInt32> IEnchantmentEffect.Duration_Property => this.Duration_Property;
-        INotifyingSetItemGetter<UInt32> IEnchantmentEffectGetter.Duration_Property => this.Duration_Property;
+        INotifyingSetItem<UInt32> IEffect.Duration_Property => this.Duration_Property;
+        INotifyingSetItemGetter<UInt32> IEffectGetter.Duration_Property => this.Duration_Property;
         #endregion
         #region Type
-        protected readonly INotifyingSetItem<EnchantmentEffect.EffectType> _Type = NotifyingSetItem.Factory<EnchantmentEffect.EffectType>(markAsSet: false);
-        public INotifyingSetItem<EnchantmentEffect.EffectType> Type_Property => _Type;
-        public EnchantmentEffect.EffectType Type
+        protected readonly INotifyingSetItem<Effect.EffectType> _Type = NotifyingSetItem.Factory<Effect.EffectType>(markAsSet: false);
+        public INotifyingSetItem<Effect.EffectType> Type_Property => _Type;
+        public Effect.EffectType Type
         {
             get => this._Type.Item;
             set => this._Type.Set(value);
         }
-        INotifyingSetItem<EnchantmentEffect.EffectType> IEnchantmentEffect.Type_Property => this.Type_Property;
-        INotifyingSetItemGetter<EnchantmentEffect.EffectType> IEnchantmentEffectGetter.Type_Property => this.Type_Property;
+        INotifyingSetItem<Effect.EffectType> IEffect.Type_Property => this.Type_Property;
+        INotifyingSetItemGetter<Effect.EffectType> IEffectGetter.Type_Property => this.Type_Property;
         #endregion
         #region ActorValue
         protected readonly INotifyingSetItem<ActorValue> _ActorValue = NotifyingSetItem.Factory<ActorValue>(markAsSet: false);
@@ -94,27 +94,27 @@ namespace Mutagen.Bethesda.Oblivion
             get => this._ActorValue.Item;
             set => this._ActorValue.Set(value);
         }
-        INotifyingSetItem<ActorValue> IEnchantmentEffect.ActorValue_Property => this.ActorValue_Property;
-        INotifyingSetItemGetter<ActorValue> IEnchantmentEffectGetter.ActorValue_Property => this.ActorValue_Property;
+        INotifyingSetItem<ActorValue> IEffect.ActorValue_Property => this.ActorValue_Property;
+        INotifyingSetItemGetter<ActorValue> IEffectGetter.ActorValue_Property => this.ActorValue_Property;
         #endregion
         #region ScriptEffect
         private readonly INotifyingSetItem<ScriptEffect> _ScriptEffect = new NotifyingSetItem<ScriptEffect>();
         public INotifyingSetItem<ScriptEffect> ScriptEffect_Property => this._ScriptEffect;
-        ScriptEffect IEnchantmentEffectGetter.ScriptEffect => this.ScriptEffect;
+        ScriptEffect IEffectGetter.ScriptEffect => this.ScriptEffect;
         public ScriptEffect ScriptEffect { get => _ScriptEffect.Item; set => _ScriptEffect.Item = value; }
-        INotifyingSetItem<ScriptEffect> IEnchantmentEffect.ScriptEffect_Property => this.ScriptEffect_Property;
-        INotifyingSetItemGetter<ScriptEffect> IEnchantmentEffectGetter.ScriptEffect_Property => this.ScriptEffect_Property;
+        INotifyingSetItem<ScriptEffect> IEffect.ScriptEffect_Property => this.ScriptEffect_Property;
+        INotifyingSetItemGetter<ScriptEffect> IEffectGetter.ScriptEffect_Property => this.ScriptEffect_Property;
         #endregion
 
         #region Loqui Getter Interface
 
-        protected object GetNthObject(ushort index) => EnchantmentEffectCommon.GetNthObject(index, this);
+        protected object GetNthObject(ushort index) => EffectCommon.GetNthObject(index, this);
         object ILoquiObjectGetter.GetNthObject(ushort index) => this.GetNthObject(index);
 
-        protected bool GetNthObjectHasBeenSet(ushort index) => EnchantmentEffectCommon.GetNthObjectHasBeenSet(index, this);
+        protected bool GetNthObjectHasBeenSet(ushort index) => EffectCommon.GetNthObjectHasBeenSet(index, this);
         bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
 
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => EnchantmentEffectCommon.UnsetNthObject(index, this, cmds);
+        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => EffectCommon.UnsetNthObject(index, this, cmds);
         void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => this.UnsetNthObject(index, cmds);
 
         #endregion
@@ -122,7 +122,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Loqui Interface
         protected void SetNthObjectHasBeenSet(ushort index, bool on)
         {
-            EnchantmentEffectCommon.SetNthObjectHasBeenSet(index, on, this);
+            EffectCommon.SetNthObjectHasBeenSet(index, on, this);
         }
         void ILoquiObjectSetter.SetNthObjectHasBeenSet(ushort index, bool on) => this.SetNthObjectHasBeenSet(index, on);
 
@@ -131,37 +131,37 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
         public override string ToString()
         {
-            return EnchantmentEffectCommon.ToString(this, printMask: null);
+            return EffectCommon.ToString(this, printMask: null);
         }
 
         public string ToString(
             string name = null,
-            EnchantmentEffect_Mask<bool> printMask = null)
+            Effect_Mask<bool> printMask = null)
         {
-            return EnchantmentEffectCommon.ToString(this, name: name, printMask: printMask);
+            return EffectCommon.ToString(this, name: name, printMask: printMask);
         }
 
         public void ToString(
             FileGeneration fg,
             string name = null)
         {
-            EnchantmentEffectCommon.ToString(this, fg, name: name, printMask: null);
+            EffectCommon.ToString(this, fg, name: name, printMask: null);
         }
 
         #endregion
 
-        public EnchantmentEffect_Mask<bool> GetHasBeenSetMask()
+        public Effect_Mask<bool> GetHasBeenSetMask()
         {
-            return EnchantmentEffectCommon.GetHasBeenSetMask(this);
+            return EffectCommon.GetHasBeenSetMask(this);
         }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is EnchantmentEffect rhs)) return false;
+            if (!(obj is Effect rhs)) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(EnchantmentEffect rhs)
+        public bool Equals(Effect rhs)
         {
             if (rhs == null) return false;
             if (MagicEffect_Property.HasBeenSet != rhs.MagicEffect_Property.HasBeenSet) return false;
@@ -242,7 +242,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region XML Translation
         #region XML Create
         [DebuggerStepThrough]
-        public static EnchantmentEffect Create_XML(XElement root)
+        public static Effect Create_XML(XElement root)
         {
             return Create_XML(
                 root: root,
@@ -251,9 +251,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static EnchantmentEffect Create_XML(
+        public static Effect Create_XML(
             XElement root,
-            out EnchantmentEffect_ErrorMask errorMask)
+            out Effect_ErrorMask errorMask)
         {
             return Create_XML(
                 root: root,
@@ -262,10 +262,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static EnchantmentEffect Create_XML(
+        public static Effect Create_XML(
             XElement root,
             bool doMasks,
-            out EnchantmentEffect_ErrorMask errorMask)
+            out Effect_ErrorMask errorMask)
         {
             var ret = Create_XML(
                 root: root,
@@ -275,26 +275,26 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static (EnchantmentEffect Object, EnchantmentEffect_ErrorMask ErrorMask) Create_XML(
+        public static (Effect Object, Effect_ErrorMask ErrorMask) Create_XML(
             XElement root,
             bool doMasks)
         {
-            EnchantmentEffect_ErrorMask errMaskRet = null;
+            Effect_ErrorMask errMaskRet = null;
             var ret = Create_XML_Internal(
                 root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new EnchantmentEffect_ErrorMask()) : default(Func<EnchantmentEffect_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Effect_ErrorMask()) : default(Func<Effect_ErrorMask>));
             return (ret, errMaskRet);
         }
 
-        public static EnchantmentEffect Create_XML(string path)
+        public static Effect Create_XML(string path)
         {
             var root = XDocument.Load(path).Root;
             return Create_XML(root: root);
         }
 
-        public static EnchantmentEffect Create_XML(
+        public static Effect Create_XML(
             string path,
-            out EnchantmentEffect_ErrorMask errorMask)
+            out Effect_ErrorMask errorMask)
         {
             var root = XDocument.Load(path).Root;
             return Create_XML(
@@ -302,15 +302,15 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: out errorMask);
         }
 
-        public static EnchantmentEffect Create_XML(Stream stream)
+        public static Effect Create_XML(Stream stream)
         {
             var root = XDocument.Load(stream).Root;
             return Create_XML(root: root);
         }
 
-        public static EnchantmentEffect Create_XML(
+        public static Effect Create_XML(
             Stream stream,
-            out EnchantmentEffect_ErrorMask errorMask)
+            out Effect_ErrorMask errorMask)
         {
             var root = XDocument.Load(stream).Root;
             return Create_XML(
@@ -325,7 +325,7 @@ namespace Mutagen.Bethesda.Oblivion
             XElement root,
             NotifyingFireParameters? cmds = null)
         {
-            LoquiXmlTranslation<EnchantmentEffect, EnchantmentEffect_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<Effect, Effect_ErrorMask>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
@@ -336,10 +336,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void CopyIn_XML(
             XElement root,
-            out EnchantmentEffect_ErrorMask errorMask,
+            out Effect_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
-            LoquiXmlTranslation<EnchantmentEffect, EnchantmentEffect_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<Effect, Effect_ErrorMask>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
@@ -360,7 +360,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_XML(
             string path,
-            out EnchantmentEffect_ErrorMask errorMask,
+            out Effect_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             var root = XDocument.Load(path).Root;
@@ -382,7 +382,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_XML(
             Stream stream,
-            out EnchantmentEffect_ErrorMask errorMask,
+            out Effect_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             var root = XDocument.Load(stream).Root;
@@ -397,10 +397,10 @@ namespace Mutagen.Bethesda.Oblivion
         #region XML Write
         public virtual void Write_XML(
             XmlWriter writer,
-            out EnchantmentEffect_ErrorMask errorMask,
+            out Effect_ErrorMask errorMask,
             string name = null)
         {
-            errorMask = (EnchantmentEffect_ErrorMask)this.Write_XML_Internal(
+            errorMask = (Effect_ErrorMask)this.Write_XML_Internal(
                 writer: writer,
                 name: name,
                 doMasks: true);
@@ -408,7 +408,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_XML(
             string path,
-            out EnchantmentEffect_ErrorMask errorMask,
+            out Effect_ErrorMask errorMask,
             string name = null)
         {
             using (var writer = new XmlTextWriter(path, Encoding.ASCII))
@@ -424,7 +424,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_XML(
             Stream stream,
-            out EnchantmentEffect_ErrorMask errorMask,
+            out Effect_ErrorMask errorMask,
             string name = null)
         {
             using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
@@ -481,7 +481,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks,
             string name = null)
         {
-            EnchantmentEffectCommon.Write_XML(
+            EffectCommon.Write_XML(
                 writer: writer,
                 item: this,
                 doMasks: doMasks,
@@ -490,11 +490,11 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static EnchantmentEffect Create_XML_Internal(
+        private static Effect Create_XML_Internal(
             XElement root,
-            Func<EnchantmentEffect_ErrorMask> errorMask)
+            Func<Effect_ErrorMask> errorMask)
         {
-            var ret = new EnchantmentEffect();
+            var ret = new Effect();
             try
             {
                 foreach (var elem in root.Elements())
@@ -515,55 +515,55 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static void Fill_XML_Internal(
-            EnchantmentEffect item,
+            Effect item,
             XElement root,
             string name,
-            Func<EnchantmentEffect_ErrorMask> errorMask)
+            Func<Effect_ErrorMask> errorMask)
         {
             switch (name)
             {
                 case "MagicEffect":
                     item.MagicEffect_Property.SetIfSucceeded(RawFormIDXmlTranslation.Instance.ParseNonNull(
                         root,
-                        fieldIndex: (int)EnchantmentEffect_FieldIndex.MagicEffect,
+                        fieldIndex: (int)Effect_FieldIndex.MagicEffect,
                         errorMask: errorMask));
                     break;
                 case "Magnitude":
                     item._Magnitude.SetIfSucceeded(UInt32XmlTranslation.Instance.ParseNonNull(
                         root,
-                        fieldIndex: (int)EnchantmentEffect_FieldIndex.Magnitude,
+                        fieldIndex: (int)Effect_FieldIndex.Magnitude,
                         errorMask: errorMask));
                     break;
                 case "Area":
                     item._Area.SetIfSucceeded(UInt32XmlTranslation.Instance.ParseNonNull(
                         root,
-                        fieldIndex: (int)EnchantmentEffect_FieldIndex.Area,
+                        fieldIndex: (int)Effect_FieldIndex.Area,
                         errorMask: errorMask));
                     break;
                 case "Duration":
                     item._Duration.SetIfSucceeded(UInt32XmlTranslation.Instance.ParseNonNull(
                         root,
-                        fieldIndex: (int)EnchantmentEffect_FieldIndex.Duration,
+                        fieldIndex: (int)Effect_FieldIndex.Duration,
                         errorMask: errorMask));
                     break;
                 case "Type":
-                    item._Type.SetIfSucceeded(EnumXmlTranslation<EnchantmentEffect.EffectType>.Instance.Parse(
+                    item._Type.SetIfSucceeded(EnumXmlTranslation<Effect.EffectType>.Instance.Parse(
                         root,
                         nullable: false,
-                        fieldIndex: (int)EnchantmentEffect_FieldIndex.Type,
+                        fieldIndex: (int)Effect_FieldIndex.Type,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "ActorValue":
                     item._ActorValue.SetIfSucceeded(EnumXmlTranslation<ActorValue>.Instance.Parse(
                         root,
                         nullable: false,
-                        fieldIndex: (int)EnchantmentEffect_FieldIndex.ActorValue,
+                        fieldIndex: (int)Effect_FieldIndex.ActorValue,
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "ScriptEffect":
                     item._ScriptEffect.SetIfSucceeded(LoquiXmlTranslation<ScriptEffect, ScriptEffect_ErrorMask>.Instance.Parse(
                         root: root,
-                        fieldIndex: (int)EnchantmentEffect_FieldIndex.ScriptEffect,
+                        fieldIndex: (int)Effect_FieldIndex.ScriptEffect,
                         errorMask: errorMask));
                     break;
                 default:
@@ -574,20 +574,20 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        static partial void SpecialParse_MagicEffectInitial(
-            EnchantmentEffect item,
+        static partial void SpecialParse_EffectInitial(
+            Effect item,
             MutagenFrame frame,
-            Func<EnchantmentEffect_ErrorMask> errorMask);
-        static partial void SpecialWrite_MagicEffectInitial(
-            IEnchantmentEffectGetter item,
+            Func<Effect_ErrorMask> errorMask);
+        static partial void SpecialWrite_EffectInitial(
+            IEffectGetter item,
             MutagenWriter writer,
-            Func<EnchantmentEffect_ErrorMask> errorMask);
-        internal static void SpecialWrite_MagicEffectInitial_Internal(
-            IEnchantmentEffectGetter item,
+            Func<Effect_ErrorMask> errorMask);
+        internal static void SpecialWrite_EffectInitial_Internal(
+            IEffectGetter item,
             MutagenWriter writer,
-            Func<EnchantmentEffect_ErrorMask> errorMask)
+            Func<Effect_ErrorMask> errorMask)
         {
-            SpecialWrite_MagicEffectInitial(
+            SpecialWrite_EffectInitial(
                 item: item,
                 writer: writer,
                 errorMask: errorMask);
@@ -597,7 +597,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public static EnchantmentEffect Create_Binary(MutagenFrame frame)
+        public static Effect Create_Binary(MutagenFrame frame)
         {
             return Create_Binary(
                 frame: frame,
@@ -606,9 +606,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static EnchantmentEffect Create_Binary(
+        public static Effect Create_Binary(
             MutagenFrame frame,
-            out EnchantmentEffect_ErrorMask errorMask)
+            out Effect_ErrorMask errorMask)
         {
             return Create_Binary(
                 frame: frame,
@@ -617,10 +617,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static EnchantmentEffect Create_Binary(
+        public static Effect Create_Binary(
             MutagenFrame frame,
             bool doMasks,
-            out EnchantmentEffect_ErrorMask errorMask)
+            out Effect_ErrorMask errorMask)
         {
             var ret = Create_Binary(
                 frame: frame,
@@ -630,18 +630,18 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static (EnchantmentEffect Object, EnchantmentEffect_ErrorMask ErrorMask) Create_Binary(
+        public static (Effect Object, Effect_ErrorMask ErrorMask) Create_Binary(
             MutagenFrame frame,
             bool doMasks)
         {
-            EnchantmentEffect_ErrorMask errMaskRet = null;
+            Effect_ErrorMask errMaskRet = null;
             var ret = Create_Binary_Internal(
                 frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new EnchantmentEffect_ErrorMask()) : default(Func<EnchantmentEffect_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Effect_ErrorMask()) : default(Func<Effect_ErrorMask>));
             return (ret, errMaskRet);
         }
 
-        public static EnchantmentEffect Create_Binary(string path)
+        public static Effect Create_Binary(string path)
         {
             using (var reader = new MutagenReader(path))
             {
@@ -650,9 +650,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public static EnchantmentEffect Create_Binary(
+        public static Effect Create_Binary(
             string path,
-            out EnchantmentEffect_ErrorMask errorMask)
+            out Effect_ErrorMask errorMask)
         {
             using (var reader = new MutagenReader(path))
             {
@@ -663,7 +663,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public static EnchantmentEffect Create_Binary(Stream stream)
+        public static Effect Create_Binary(Stream stream)
         {
             using (var reader = new MutagenReader(stream))
             {
@@ -672,9 +672,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public static EnchantmentEffect Create_Binary(
+        public static Effect Create_Binary(
             Stream stream,
-            out EnchantmentEffect_ErrorMask errorMask)
+            out Effect_ErrorMask errorMask)
         {
             using (var reader = new MutagenReader(stream))
             {
@@ -692,7 +692,7 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             NotifyingFireParameters? cmds = null)
         {
-            LoquiBinaryTranslation<EnchantmentEffect, EnchantmentEffect_ErrorMask>.Instance.CopyIn(
+            LoquiBinaryTranslation<Effect, Effect_ErrorMask>.Instance.CopyIn(
                 frame: frame,
                 item: this,
                 skipProtected: true,
@@ -703,10 +703,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void CopyIn_Binary(
             MutagenFrame frame,
-            out EnchantmentEffect_ErrorMask errorMask,
+            out Effect_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
-            LoquiBinaryTranslation<EnchantmentEffect, EnchantmentEffect_ErrorMask>.Instance.CopyIn(
+            LoquiBinaryTranslation<Effect, Effect_ErrorMask>.Instance.CopyIn(
                 frame: frame,
                 item: this,
                 skipProtected: true,
@@ -730,7 +730,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_Binary(
             string path,
-            out EnchantmentEffect_ErrorMask errorMask,
+            out Effect_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             using (var reader = new MutagenReader(path))
@@ -758,7 +758,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_Binary(
             Stream stream,
-            out EnchantmentEffect_ErrorMask errorMask,
+            out Effect_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             using (var reader = new MutagenReader(stream))
@@ -776,16 +776,16 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
-            out EnchantmentEffect_ErrorMask errorMask)
+            out Effect_ErrorMask errorMask)
         {
-            errorMask = (EnchantmentEffect_ErrorMask)this.Write_Binary_Internal(
+            errorMask = (Effect_ErrorMask)this.Write_Binary_Internal(
                 writer: writer,
                 doMasks: true);
         }
 
         public virtual void Write_Binary(
             string path,
-            out EnchantmentEffect_ErrorMask errorMask)
+            out Effect_ErrorMask errorMask)
         {
             using (var writer = new MutagenWriter(path))
             {
@@ -797,7 +797,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             Stream stream,
-            out EnchantmentEffect_ErrorMask errorMask)
+            out Effect_ErrorMask errorMask)
         {
             using (var writer = new MutagenWriter(stream))
             {
@@ -834,7 +834,7 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenWriter writer,
             bool doMasks)
         {
-            EnchantmentEffectCommon.Write_Binary(
+            EffectCommon.Write_Binary(
                 writer: writer,
                 item: this,
                 doMasks: doMasks,
@@ -843,11 +843,11 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static EnchantmentEffect Create_Binary_Internal(
+        private static Effect Create_Binary_Internal(
             MutagenFrame frame,
-            Func<EnchantmentEffect_ErrorMask> errorMask)
+            Func<Effect_ErrorMask> errorMask)
         {
-            var ret = new EnchantmentEffect();
+            var ret = new Effect();
             try
             {
                 using (frame)
@@ -856,7 +856,7 @@ namespace Mutagen.Bethesda.Oblivion
                         item: ret,
                         frame: frame,
                         errorMask: errorMask);
-                    EnchantmentEffect_FieldIndex? lastParsed = null;
+                    Effect_FieldIndex? lastParsed = null;
                     while (!frame.Complete)
                     {
                         var parsed = Fill_Binary_RecordTypes(
@@ -878,17 +878,17 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static void Fill_Binary_Structs(
-            EnchantmentEffect item,
+            Effect item,
             MutagenFrame frame,
-            Func<EnchantmentEffect_ErrorMask> errorMask)
+            Func<Effect_ErrorMask> errorMask)
         {
         }
 
-        protected static TryGet<EnchantmentEffect_FieldIndex?> Fill_Binary_RecordTypes(
-            EnchantmentEffect item,
+        protected static TryGet<Effect_FieldIndex?> Fill_Binary_RecordTypes(
+            Effect item,
             MutagenFrame frame,
-            EnchantmentEffect_FieldIndex? lastParsed,
-            Func<EnchantmentEffect_ErrorMask> errorMask)
+            Effect_FieldIndex? lastParsed,
+            Func<Effect_ErrorMask> errorMask)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
                 frame: frame,
@@ -896,80 +896,80 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "EFID":
-                    if (lastParsed.HasValue && lastParsed.Value >= EnchantmentEffect_FieldIndex.MagicEffect) return TryGet<EnchantmentEffect_FieldIndex?>.Failure;
-                    SpecialParse_MagicEffectInitial(
+                    if (lastParsed.HasValue && lastParsed.Value >= Effect_FieldIndex.MagicEffect) return TryGet<Effect_FieldIndex?>.Failure;
+                    SpecialParse_EffectInitial(
                         item: item,
                         frame: frame,
                         errorMask: errorMask);
-                    return TryGet<EnchantmentEffect_FieldIndex?>.Succeed(lastParsed);
+                    return TryGet<Effect_FieldIndex?>.Succeed(lastParsed);
                 case "EFIT":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.Spawn(contentLength))
                     {
                         item.MagicEffect_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
-                            fieldIndex: (int)EnchantmentEffect_FieldIndex.MagicEffect,
+                            fieldIndex: (int)Effect_FieldIndex.MagicEffect,
                             errorMask: errorMask));
                         item._Magnitude.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
-                            fieldIndex: (int)EnchantmentEffect_FieldIndex.Magnitude,
+                            fieldIndex: (int)Effect_FieldIndex.Magnitude,
                             errorMask: errorMask));
                         item._Area.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
-                            fieldIndex: (int)EnchantmentEffect_FieldIndex.Area,
+                            fieldIndex: (int)Effect_FieldIndex.Area,
                             errorMask: errorMask));
                         item._Duration.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
-                            fieldIndex: (int)EnchantmentEffect_FieldIndex.Duration,
+                            fieldIndex: (int)Effect_FieldIndex.Duration,
                             errorMask: errorMask));
-                        var TypetryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<EnchantmentEffect.EffectType>.Instance.Parse(
+                        var TypetryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Effect.EffectType>.Instance.Parse(
                             frame: dataFrame.Spawn(new ContentLength(4)),
-                            fieldIndex: (int)EnchantmentEffect_FieldIndex.Type,
+                            fieldIndex: (int)Effect_FieldIndex.Type,
                             errorMask: errorMask);
                         item._Type.SetIfSucceeded(TypetryGet);
                         var ActorValuetryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
                             frame: dataFrame.Spawn(new ContentLength(4)),
-                            fieldIndex: (int)EnchantmentEffect_FieldIndex.ActorValue,
+                            fieldIndex: (int)Effect_FieldIndex.ActorValue,
                             errorMask: errorMask);
                         item._ActorValue.SetIfSucceeded(ActorValuetryGet);
                     }
-                    return TryGet<EnchantmentEffect_FieldIndex?>.Succeed(EnchantmentEffect_FieldIndex.ActorValue);
+                    return TryGet<Effect_FieldIndex?>.Succeed(Effect_FieldIndex.ActorValue);
                 case "SCIT":
                     item._ScriptEffect.SetIfSucceeded(LoquiBinaryTranslation<ScriptEffect, ScriptEffect_ErrorMask>.Instance.Parse(
                         frame: frame.Spawn(snapToFinalPosition: false),
-                        fieldIndex: (int)EnchantmentEffect_FieldIndex.ScriptEffect,
+                        fieldIndex: (int)Effect_FieldIndex.ScriptEffect,
                         errorMask: errorMask));
-                    return TryGet<EnchantmentEffect_FieldIndex?>.Succeed(EnchantmentEffect_FieldIndex.ScriptEffect);
+                    return TryGet<Effect_FieldIndex?>.Succeed(Effect_FieldIndex.ScriptEffect);
                 default:
-                    return TryGet<EnchantmentEffect_FieldIndex?>.Failure;
+                    return TryGet<Effect_FieldIndex?>.Failure;
             }
         }
 
         #endregion
 
-        public EnchantmentEffect Copy(
-            EnchantmentEffect_CopyMask copyMask = null,
-            IEnchantmentEffectGetter def = null)
+        public Effect Copy(
+            Effect_CopyMask copyMask = null,
+            IEffectGetter def = null)
         {
-            return EnchantmentEffect.Copy(
+            return Effect.Copy(
                 this,
                 copyMask: copyMask,
                 def: def);
         }
 
-        public static EnchantmentEffect Copy(
-            IEnchantmentEffect item,
-            EnchantmentEffect_CopyMask copyMask = null,
-            IEnchantmentEffectGetter def = null)
+        public static Effect Copy(
+            IEffect item,
+            Effect_CopyMask copyMask = null,
+            IEffectGetter def = null)
         {
-            EnchantmentEffect ret;
-            if (item.GetType().Equals(typeof(EnchantmentEffect)))
+            Effect ret;
+            if (item.GetType().Equals(typeof(Effect)))
             {
-                ret = new EnchantmentEffect();
+                ret = new Effect();
             }
             else
             {
-                ret = (EnchantmentEffect)Activator.CreateInstance(item.GetType());
+                ret = (Effect)Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom(
                 item,
@@ -980,14 +980,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static CopyType CopyGeneric<CopyType>(
             CopyType item,
-            EnchantmentEffect_CopyMask copyMask = null,
-            IEnchantmentEffectGetter def = null)
-            where CopyType : class, IEnchantmentEffect
+            Effect_CopyMask copyMask = null,
+            IEffectGetter def = null)
+            where CopyType : class, IEffect
         {
             CopyType ret;
-            if (item.GetType().Equals(typeof(EnchantmentEffect)))
+            if (item.GetType().Equals(typeof(Effect)))
             {
-                ret = new EnchantmentEffect() as CopyType;
+                ret = new Effect() as CopyType;
             }
             else
             {
@@ -1003,19 +1003,19 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static EnchantmentEffect Copy_ToLoqui(
-            IEnchantmentEffectGetter item,
-            EnchantmentEffect_CopyMask copyMask = null,
-            IEnchantmentEffectGetter def = null)
+        public static Effect Copy_ToLoqui(
+            IEffectGetter item,
+            Effect_CopyMask copyMask = null,
+            IEffectGetter def = null)
         {
-            EnchantmentEffect ret;
-            if (item.GetType().Equals(typeof(EnchantmentEffect)))
+            Effect ret;
+            if (item.GetType().Equals(typeof(Effect)))
             {
-                ret = new EnchantmentEffect() as EnchantmentEffect;
+                ret = new Effect() as Effect;
             }
             else
             {
-                ret = (EnchantmentEffect)Activator.CreateInstance(item.GetType());
+                ret = (Effect)Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom(
                 item,
@@ -1027,40 +1027,40 @@ namespace Mutagen.Bethesda.Oblivion
         void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds) => this.SetNthObject(index, obj, cmds);
         protected void SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds = null)
         {
-            EnchantmentEffect_FieldIndex enu = (EnchantmentEffect_FieldIndex)index;
+            Effect_FieldIndex enu = (Effect_FieldIndex)index;
             switch (enu)
             {
-                case EnchantmentEffect_FieldIndex.MagicEffect:
+                case Effect_FieldIndex.MagicEffect:
                     this.MagicEffect_Property.Set(
                         (EDIDSetLink<MagicEffect>)obj,
                         cmds);
                     break;
-                case EnchantmentEffect_FieldIndex.Magnitude:
+                case Effect_FieldIndex.Magnitude:
                     this._Magnitude.Set(
                         (UInt32)obj,
                         cmds);
                     break;
-                case EnchantmentEffect_FieldIndex.Area:
+                case Effect_FieldIndex.Area:
                     this._Area.Set(
                         (UInt32)obj,
                         cmds);
                     break;
-                case EnchantmentEffect_FieldIndex.Duration:
+                case Effect_FieldIndex.Duration:
                     this._Duration.Set(
                         (UInt32)obj,
                         cmds);
                     break;
-                case EnchantmentEffect_FieldIndex.Type:
+                case Effect_FieldIndex.Type:
                     this._Type.Set(
-                        (EnchantmentEffect.EffectType)obj,
+                        (Effect.EffectType)obj,
                         cmds);
                     break;
-                case EnchantmentEffect_FieldIndex.ActorValue:
+                case Effect_FieldIndex.ActorValue:
                     this._ActorValue.Set(
                         (ActorValue)obj,
                         cmds);
                     break;
-                case EnchantmentEffect_FieldIndex.ScriptEffect:
+                case Effect_FieldIndex.ScriptEffect:
                     this._ScriptEffect.Set(
                         (ScriptEffect)obj,
                         cmds);
@@ -1080,59 +1080,59 @@ namespace Mutagen.Bethesda.Oblivion
         public void Clear(NotifyingUnsetParameters? cmds = null)
         {
             CallClearPartial_Internal(cmds);
-            EnchantmentEffectCommon.Clear(this, cmds);
+            EffectCommon.Clear(this, cmds);
         }
 
 
-        public static EnchantmentEffect Create(IEnumerable<KeyValuePair<ushort, object>> fields)
+        public static Effect Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
-            var ret = new EnchantmentEffect();
+            var ret = new Effect();
             foreach (var pair in fields)
             {
-                CopyInInternal_EnchantmentEffect(ret, pair);
+                CopyInInternal_Effect(ret, pair);
             }
             return ret;
         }
 
-        protected static void CopyInInternal_EnchantmentEffect(EnchantmentEffect obj, KeyValuePair<ushort, object> pair)
+        protected static void CopyInInternal_Effect(Effect obj, KeyValuePair<ushort, object> pair)
         {
-            if (!EnumExt.TryParse(pair.Key, out EnchantmentEffect_FieldIndex enu))
+            if (!EnumExt.TryParse(pair.Key, out Effect_FieldIndex enu))
             {
                 throw new ArgumentException($"Unknown index: {pair.Key}");
             }
             switch (enu)
             {
-                case EnchantmentEffect_FieldIndex.MagicEffect:
+                case Effect_FieldIndex.MagicEffect:
                     obj.MagicEffect_Property.Set(
                         (EDIDSetLink<MagicEffect>)pair.Value,
                         null);
                     break;
-                case EnchantmentEffect_FieldIndex.Magnitude:
+                case Effect_FieldIndex.Magnitude:
                     obj._Magnitude.Set(
                         (UInt32)pair.Value,
                         null);
                     break;
-                case EnchantmentEffect_FieldIndex.Area:
+                case Effect_FieldIndex.Area:
                     obj._Area.Set(
                         (UInt32)pair.Value,
                         null);
                     break;
-                case EnchantmentEffect_FieldIndex.Duration:
+                case Effect_FieldIndex.Duration:
                     obj._Duration.Set(
                         (UInt32)pair.Value,
                         null);
                     break;
-                case EnchantmentEffect_FieldIndex.Type:
+                case Effect_FieldIndex.Type:
                     obj._Type.Set(
-                        (EnchantmentEffect.EffectType)pair.Value,
+                        (Effect.EffectType)pair.Value,
                         null);
                     break;
-                case EnchantmentEffect_FieldIndex.ActorValue:
+                case Effect_FieldIndex.ActorValue:
                     obj._ActorValue.Set(
                         (ActorValue)pair.Value,
                         null);
                     break;
-                case EnchantmentEffect_FieldIndex.ScriptEffect:
+                case Effect_FieldIndex.ScriptEffect:
                     obj._ScriptEffect.Set(
                         (ScriptEffect)pair.Value,
                         null);
@@ -1141,7 +1141,7 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, EnchantmentEffect obj)
+        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Effect obj)
         {
             ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
         }
@@ -1150,7 +1150,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IEnchantmentEffect : IEnchantmentEffectGetter, ILoquiClass<IEnchantmentEffect, IEnchantmentEffectGetter>, ILoquiClass<EnchantmentEffect, IEnchantmentEffectGetter>
+    public interface IEffect : IEffectGetter, ILoquiClass<IEffect, IEffectGetter>, ILoquiClass<Effect, IEffectGetter>
     {
         new MagicEffect MagicEffect { get; set; }
         new UInt32 Magnitude { get; set; }
@@ -1162,8 +1162,8 @@ namespace Mutagen.Bethesda.Oblivion
         new UInt32 Duration { get; set; }
         new INotifyingSetItem<UInt32> Duration_Property { get; }
 
-        new EnchantmentEffect.EffectType Type { get; set; }
-        new INotifyingSetItem<EnchantmentEffect.EffectType> Type_Property { get; }
+        new Effect.EffectType Type { get; set; }
+        new INotifyingSetItem<Effect.EffectType> Type_Property { get; }
 
         new ActorValue ActorValue { get; set; }
         new INotifyingSetItem<ActorValue> ActorValue_Property { get; }
@@ -1173,7 +1173,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     }
 
-    public interface IEnchantmentEffectGetter : ILoquiObject
+    public interface IEffectGetter : ILoquiObject
     {
         #region MagicEffect
         MagicEffect MagicEffect { get; }
@@ -1196,8 +1196,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Type
-        EnchantmentEffect.EffectType Type { get; }
-        INotifyingSetItemGetter<EnchantmentEffect.EffectType> Type_Property { get; }
+        Effect.EffectType Type { get; }
+        INotifyingSetItemGetter<Effect.EffectType> Type_Property { get; }
 
         #endregion
         #region ActorValue
@@ -1220,7 +1220,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     #region Field Index
-    public enum EnchantmentEffect_FieldIndex
+    public enum Effect_FieldIndex
     {
         MagicEffect = 0,
         Magnitude = 1,
@@ -1233,9 +1233,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Registration
-    public class EnchantmentEffect_Registration : ILoquiRegistration
+    public class Effect_Registration : ILoquiRegistration
     {
-        public static readonly EnchantmentEffect_Registration Instance = new EnchantmentEffect_Registration();
+        public static readonly Effect_Registration Instance = new Effect_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
@@ -1248,21 +1248,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const ushort FieldCount = 7;
 
-        public static readonly Type MaskType = typeof(EnchantmentEffect_Mask<>);
+        public static readonly Type MaskType = typeof(Effect_Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(EnchantmentEffect_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Effect_ErrorMask);
 
-        public static readonly Type ClassType = typeof(EnchantmentEffect);
+        public static readonly Type ClassType = typeof(Effect);
 
-        public static readonly Type GetterType = typeof(IEnchantmentEffectGetter);
+        public static readonly Type GetterType = typeof(IEffectGetter);
 
-        public static readonly Type SetterType = typeof(IEnchantmentEffect);
+        public static readonly Type SetterType = typeof(IEffect);
 
-        public static readonly Type CommonType = typeof(EnchantmentEffectCommon);
+        public static readonly Type CommonType = typeof(EffectCommon);
 
-        public const string FullName = "Mutagen.Bethesda.Oblivion.EnchantmentEffect";
+        public const string FullName = "Mutagen.Bethesda.Oblivion.Effect";
 
-        public const string Name = "EnchantmentEffect";
+        public const string Name = "Effect";
 
         public const string Namespace = "Mutagen.Bethesda.Oblivion";
 
@@ -1275,19 +1275,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (str.Upper)
             {
                 case "MAGICEFFECT":
-                    return (ushort)EnchantmentEffect_FieldIndex.MagicEffect;
+                    return (ushort)Effect_FieldIndex.MagicEffect;
                 case "MAGNITUDE":
-                    return (ushort)EnchantmentEffect_FieldIndex.Magnitude;
+                    return (ushort)Effect_FieldIndex.Magnitude;
                 case "AREA":
-                    return (ushort)EnchantmentEffect_FieldIndex.Area;
+                    return (ushort)Effect_FieldIndex.Area;
                 case "DURATION":
-                    return (ushort)EnchantmentEffect_FieldIndex.Duration;
+                    return (ushort)Effect_FieldIndex.Duration;
                 case "TYPE":
-                    return (ushort)EnchantmentEffect_FieldIndex.Type;
+                    return (ushort)Effect_FieldIndex.Type;
                 case "ACTORVALUE":
-                    return (ushort)EnchantmentEffect_FieldIndex.ActorValue;
+                    return (ushort)Effect_FieldIndex.ActorValue;
                 case "SCRIPTEFFECT":
-                    return (ushort)EnchantmentEffect_FieldIndex.ScriptEffect;
+                    return (ushort)Effect_FieldIndex.ScriptEffect;
                 default:
                     return null;
             }
@@ -1295,16 +1295,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            EnchantmentEffect_FieldIndex enu = (EnchantmentEffect_FieldIndex)index;
+            Effect_FieldIndex enu = (Effect_FieldIndex)index;
             switch (enu)
             {
-                case EnchantmentEffect_FieldIndex.MagicEffect:
-                case EnchantmentEffect_FieldIndex.Magnitude:
-                case EnchantmentEffect_FieldIndex.Area:
-                case EnchantmentEffect_FieldIndex.Duration:
-                case EnchantmentEffect_FieldIndex.Type:
-                case EnchantmentEffect_FieldIndex.ActorValue:
-                case EnchantmentEffect_FieldIndex.ScriptEffect:
+                case Effect_FieldIndex.MagicEffect:
+                case Effect_FieldIndex.Magnitude:
+                case Effect_FieldIndex.Area:
+                case Effect_FieldIndex.Duration:
+                case Effect_FieldIndex.Type:
+                case Effect_FieldIndex.ActorValue:
+                case Effect_FieldIndex.ScriptEffect:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1313,17 +1313,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            EnchantmentEffect_FieldIndex enu = (EnchantmentEffect_FieldIndex)index;
+            Effect_FieldIndex enu = (Effect_FieldIndex)index;
             switch (enu)
             {
-                case EnchantmentEffect_FieldIndex.ScriptEffect:
+                case Effect_FieldIndex.ScriptEffect:
                     return true;
-                case EnchantmentEffect_FieldIndex.MagicEffect:
-                case EnchantmentEffect_FieldIndex.Magnitude:
-                case EnchantmentEffect_FieldIndex.Area:
-                case EnchantmentEffect_FieldIndex.Duration:
-                case EnchantmentEffect_FieldIndex.Type:
-                case EnchantmentEffect_FieldIndex.ActorValue:
+                case Effect_FieldIndex.MagicEffect:
+                case Effect_FieldIndex.Magnitude:
+                case Effect_FieldIndex.Area:
+                case Effect_FieldIndex.Duration:
+                case Effect_FieldIndex.Type:
+                case Effect_FieldIndex.ActorValue:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1332,16 +1332,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            EnchantmentEffect_FieldIndex enu = (EnchantmentEffect_FieldIndex)index;
+            Effect_FieldIndex enu = (Effect_FieldIndex)index;
             switch (enu)
             {
-                case EnchantmentEffect_FieldIndex.MagicEffect:
-                case EnchantmentEffect_FieldIndex.Magnitude:
-                case EnchantmentEffect_FieldIndex.Area:
-                case EnchantmentEffect_FieldIndex.Duration:
-                case EnchantmentEffect_FieldIndex.Type:
-                case EnchantmentEffect_FieldIndex.ActorValue:
-                case EnchantmentEffect_FieldIndex.ScriptEffect:
+                case Effect_FieldIndex.MagicEffect:
+                case Effect_FieldIndex.Magnitude:
+                case Effect_FieldIndex.Area:
+                case Effect_FieldIndex.Duration:
+                case Effect_FieldIndex.Type:
+                case Effect_FieldIndex.ActorValue:
+                case Effect_FieldIndex.ScriptEffect:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1350,22 +1350,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static string GetNthName(ushort index)
         {
-            EnchantmentEffect_FieldIndex enu = (EnchantmentEffect_FieldIndex)index;
+            Effect_FieldIndex enu = (Effect_FieldIndex)index;
             switch (enu)
             {
-                case EnchantmentEffect_FieldIndex.MagicEffect:
+                case Effect_FieldIndex.MagicEffect:
                     return "MagicEffect";
-                case EnchantmentEffect_FieldIndex.Magnitude:
+                case Effect_FieldIndex.Magnitude:
                     return "Magnitude";
-                case EnchantmentEffect_FieldIndex.Area:
+                case Effect_FieldIndex.Area:
                     return "Area";
-                case EnchantmentEffect_FieldIndex.Duration:
+                case Effect_FieldIndex.Duration:
                     return "Duration";
-                case EnchantmentEffect_FieldIndex.Type:
+                case Effect_FieldIndex.Type:
                     return "Type";
-                case EnchantmentEffect_FieldIndex.ActorValue:
+                case Effect_FieldIndex.ActorValue:
                     return "ActorValue";
-                case EnchantmentEffect_FieldIndex.ScriptEffect:
+                case Effect_FieldIndex.ScriptEffect:
                     return "ScriptEffect";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1374,16 +1374,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            EnchantmentEffect_FieldIndex enu = (EnchantmentEffect_FieldIndex)index;
+            Effect_FieldIndex enu = (Effect_FieldIndex)index;
             switch (enu)
             {
-                case EnchantmentEffect_FieldIndex.MagicEffect:
-                case EnchantmentEffect_FieldIndex.Magnitude:
-                case EnchantmentEffect_FieldIndex.Area:
-                case EnchantmentEffect_FieldIndex.Duration:
-                case EnchantmentEffect_FieldIndex.Type:
-                case EnchantmentEffect_FieldIndex.ActorValue:
-                case EnchantmentEffect_FieldIndex.ScriptEffect:
+                case Effect_FieldIndex.MagicEffect:
+                case Effect_FieldIndex.Magnitude:
+                case Effect_FieldIndex.Area:
+                case Effect_FieldIndex.Duration:
+                case Effect_FieldIndex.Type:
+                case Effect_FieldIndex.ActorValue:
+                case Effect_FieldIndex.ScriptEffect:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1392,16 +1392,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool IsProtected(ushort index)
         {
-            EnchantmentEffect_FieldIndex enu = (EnchantmentEffect_FieldIndex)index;
+            Effect_FieldIndex enu = (Effect_FieldIndex)index;
             switch (enu)
             {
-                case EnchantmentEffect_FieldIndex.MagicEffect:
-                case EnchantmentEffect_FieldIndex.Magnitude:
-                case EnchantmentEffect_FieldIndex.Area:
-                case EnchantmentEffect_FieldIndex.Duration:
-                case EnchantmentEffect_FieldIndex.Type:
-                case EnchantmentEffect_FieldIndex.ActorValue:
-                case EnchantmentEffect_FieldIndex.ScriptEffect:
+                case Effect_FieldIndex.MagicEffect:
+                case Effect_FieldIndex.Magnitude:
+                case Effect_FieldIndex.Area:
+                case Effect_FieldIndex.Duration:
+                case Effect_FieldIndex.Type:
+                case Effect_FieldIndex.ActorValue:
+                case Effect_FieldIndex.ScriptEffect:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1410,22 +1410,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static Type GetNthType(ushort index)
         {
-            EnchantmentEffect_FieldIndex enu = (EnchantmentEffect_FieldIndex)index;
+            Effect_FieldIndex enu = (Effect_FieldIndex)index;
             switch (enu)
             {
-                case EnchantmentEffect_FieldIndex.MagicEffect:
+                case Effect_FieldIndex.MagicEffect:
                     return typeof(EDIDSetLink<MagicEffect>);
-                case EnchantmentEffect_FieldIndex.Magnitude:
+                case Effect_FieldIndex.Magnitude:
                     return typeof(UInt32);
-                case EnchantmentEffect_FieldIndex.Area:
+                case Effect_FieldIndex.Area:
                     return typeof(UInt32);
-                case EnchantmentEffect_FieldIndex.Duration:
+                case Effect_FieldIndex.Duration:
                     return typeof(UInt32);
-                case EnchantmentEffect_FieldIndex.Type:
-                    return typeof(EnchantmentEffect.EffectType);
-                case EnchantmentEffect_FieldIndex.ActorValue:
+                case Effect_FieldIndex.Type:
+                    return typeof(Effect.EffectType);
+                case Effect_FieldIndex.ActorValue:
                     return typeof(ActorValue);
-                case EnchantmentEffect_FieldIndex.ScriptEffect:
+                case Effect_FieldIndex.ScriptEffect:
                     return typeof(ScriptEffect);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1468,17 +1468,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Extensions
-    public static partial class EnchantmentEffectCommon
+    public static partial class EffectCommon
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IEnchantmentEffect item,
-            IEnchantmentEffectGetter rhs,
-            EnchantmentEffect_CopyMask copyMask = null,
-            IEnchantmentEffectGetter def = null,
+            this IEffect item,
+            IEffectGetter rhs,
+            Effect_CopyMask copyMask = null,
+            IEffectGetter def = null,
             NotifyingFireParameters? cmds = null)
         {
-            EnchantmentEffectCommon.CopyFieldsFrom(
+            EffectCommon.CopyFieldsFrom(
                 item: item,
                 rhs: rhs,
                 def: def,
@@ -1489,14 +1489,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void CopyFieldsFrom(
-            this IEnchantmentEffect item,
-            IEnchantmentEffectGetter rhs,
-            out EnchantmentEffect_ErrorMask errorMask,
-            EnchantmentEffect_CopyMask copyMask = null,
-            IEnchantmentEffectGetter def = null,
+            this IEffect item,
+            IEffectGetter rhs,
+            out Effect_ErrorMask errorMask,
+            Effect_CopyMask copyMask = null,
+            IEffectGetter def = null,
             NotifyingFireParameters? cmds = null)
         {
-            EnchantmentEffectCommon.CopyFieldsFrom(
+            EffectCommon.CopyFieldsFrom(
                 item: item,
                 rhs: rhs,
                 def: def,
@@ -1507,20 +1507,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void CopyFieldsFrom(
-            this IEnchantmentEffect item,
-            IEnchantmentEffectGetter rhs,
-            IEnchantmentEffectGetter def,
+            this IEffect item,
+            IEffectGetter rhs,
+            IEffectGetter def,
             bool doMasks,
-            out EnchantmentEffect_ErrorMask errorMask,
-            EnchantmentEffect_CopyMask copyMask,
+            out Effect_ErrorMask errorMask,
+            Effect_CopyMask copyMask,
             NotifyingFireParameters? cmds)
         {
-            EnchantmentEffect_ErrorMask retErrorMask = null;
-            Func<EnchantmentEffect_ErrorMask> maskGetter = () =>
+            Effect_ErrorMask retErrorMask = null;
+            Func<Effect_ErrorMask> maskGetter = () =>
             {
                 if (retErrorMask == null)
                 {
-                    retErrorMask = new EnchantmentEffect_ErrorMask();
+                    retErrorMask = new Effect_ErrorMask();
                 }
                 return retErrorMask;
             };
@@ -1536,12 +1536,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void CopyFieldsFrom(
-            this IEnchantmentEffect item,
-            IEnchantmentEffectGetter rhs,
-            IEnchantmentEffectGetter def,
+            this IEffect item,
+            IEffectGetter rhs,
+            IEffectGetter def,
             bool doMasks,
-            Func<EnchantmentEffect_ErrorMask> errorMask,
-            EnchantmentEffect_CopyMask copyMask,
+            Func<Effect_ErrorMask> errorMask,
+            Effect_CopyMask copyMask,
             NotifyingFireParameters? cmds)
         {
             if (copyMask?.MagicEffect ?? true)
@@ -1556,7 +1556,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 catch (Exception ex)
                 when (doMasks)
                 {
-                    errorMask().SetNthException((int)EnchantmentEffect_FieldIndex.MagicEffect, ex);
+                    errorMask().SetNthException((int)Effect_FieldIndex.MagicEffect, ex);
                 }
             }
             if (copyMask?.Magnitude ?? true)
@@ -1571,7 +1571,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 catch (Exception ex)
                 when (doMasks)
                 {
-                    errorMask().SetNthException((int)EnchantmentEffect_FieldIndex.Magnitude, ex);
+                    errorMask().SetNthException((int)Effect_FieldIndex.Magnitude, ex);
                 }
             }
             if (copyMask?.Area ?? true)
@@ -1586,7 +1586,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 catch (Exception ex)
                 when (doMasks)
                 {
-                    errorMask().SetNthException((int)EnchantmentEffect_FieldIndex.Area, ex);
+                    errorMask().SetNthException((int)Effect_FieldIndex.Area, ex);
                 }
             }
             if (copyMask?.Duration ?? true)
@@ -1601,7 +1601,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 catch (Exception ex)
                 when (doMasks)
                 {
-                    errorMask().SetNthException((int)EnchantmentEffect_FieldIndex.Duration, ex);
+                    errorMask().SetNthException((int)Effect_FieldIndex.Duration, ex);
                 }
             }
             if (copyMask?.Type ?? true)
@@ -1616,7 +1616,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 catch (Exception ex)
                 when (doMasks)
                 {
-                    errorMask().SetNthException((int)EnchantmentEffect_FieldIndex.Type, ex);
+                    errorMask().SetNthException((int)Effect_FieldIndex.Type, ex);
                 }
             }
             if (copyMask?.ActorValue ?? true)
@@ -1631,7 +1631,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 catch (Exception ex)
                 when (doMasks)
                 {
-                    errorMask().SetNthException((int)EnchantmentEffect_FieldIndex.ActorValue, ex);
+                    errorMask().SetNthException((int)Effect_FieldIndex.ActorValue, ex);
                 }
             }
             if (copyMask?.ScriptEffect.Overall != CopyOption.Skip)
@@ -1682,7 +1682,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 catch (Exception ex)
                 when (doMasks)
                 {
-                    errorMask().SetNthException((int)EnchantmentEffect_FieldIndex.ScriptEffect, ex);
+                    errorMask().SetNthException((int)Effect_FieldIndex.ScriptEffect, ex);
                 }
             }
         }
@@ -1692,31 +1692,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void SetNthObjectHasBeenSet(
             ushort index,
             bool on,
-            IEnchantmentEffect obj,
+            IEffect obj,
             NotifyingFireParameters? cmds = null)
         {
-            EnchantmentEffect_FieldIndex enu = (EnchantmentEffect_FieldIndex)index;
+            Effect_FieldIndex enu = (Effect_FieldIndex)index;
             switch (enu)
             {
-                case EnchantmentEffect_FieldIndex.MagicEffect:
+                case Effect_FieldIndex.MagicEffect:
                     obj.MagicEffect_Property.HasBeenSet = on;
                     break;
-                case EnchantmentEffect_FieldIndex.Magnitude:
+                case Effect_FieldIndex.Magnitude:
                     obj.Magnitude_Property.HasBeenSet = on;
                     break;
-                case EnchantmentEffect_FieldIndex.Area:
+                case Effect_FieldIndex.Area:
                     obj.Area_Property.HasBeenSet = on;
                     break;
-                case EnchantmentEffect_FieldIndex.Duration:
+                case Effect_FieldIndex.Duration:
                     obj.Duration_Property.HasBeenSet = on;
                     break;
-                case EnchantmentEffect_FieldIndex.Type:
+                case Effect_FieldIndex.Type:
                     obj.Type_Property.HasBeenSet = on;
                     break;
-                case EnchantmentEffect_FieldIndex.ActorValue:
+                case Effect_FieldIndex.ActorValue:
                     obj.ActorValue_Property.HasBeenSet = on;
                     break;
-                case EnchantmentEffect_FieldIndex.ScriptEffect:
+                case Effect_FieldIndex.ScriptEffect:
                     obj.ScriptEffect_Property.HasBeenSet = on;
                     break;
                 default:
@@ -1726,31 +1726,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void UnsetNthObject(
             ushort index,
-            IEnchantmentEffect obj,
+            IEffect obj,
             NotifyingUnsetParameters? cmds = null)
         {
-            EnchantmentEffect_FieldIndex enu = (EnchantmentEffect_FieldIndex)index;
+            Effect_FieldIndex enu = (Effect_FieldIndex)index;
             switch (enu)
             {
-                case EnchantmentEffect_FieldIndex.MagicEffect:
+                case Effect_FieldIndex.MagicEffect:
                     obj.MagicEffect_Property.Unset(cmds);
                     break;
-                case EnchantmentEffect_FieldIndex.Magnitude:
+                case Effect_FieldIndex.Magnitude:
                     obj.Magnitude_Property.Unset(cmds);
                     break;
-                case EnchantmentEffect_FieldIndex.Area:
+                case Effect_FieldIndex.Area:
                     obj.Area_Property.Unset(cmds);
                     break;
-                case EnchantmentEffect_FieldIndex.Duration:
+                case Effect_FieldIndex.Duration:
                     obj.Duration_Property.Unset(cmds);
                     break;
-                case EnchantmentEffect_FieldIndex.Type:
+                case Effect_FieldIndex.Type:
                     obj.Type_Property.Unset(cmds);
                     break;
-                case EnchantmentEffect_FieldIndex.ActorValue:
+                case Effect_FieldIndex.ActorValue:
                     obj.ActorValue_Property.Unset(cmds);
                     break;
-                case EnchantmentEffect_FieldIndex.ScriptEffect:
+                case Effect_FieldIndex.ScriptEffect:
                     obj.ScriptEffect_Property.Unset(cmds);
                     break;
                 default:
@@ -1760,24 +1760,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthObjectHasBeenSet(
             ushort index,
-            IEnchantmentEffect obj)
+            IEffect obj)
         {
-            EnchantmentEffect_FieldIndex enu = (EnchantmentEffect_FieldIndex)index;
+            Effect_FieldIndex enu = (Effect_FieldIndex)index;
             switch (enu)
             {
-                case EnchantmentEffect_FieldIndex.MagicEffect:
+                case Effect_FieldIndex.MagicEffect:
                     return obj.MagicEffect_Property.HasBeenSet;
-                case EnchantmentEffect_FieldIndex.Magnitude:
+                case Effect_FieldIndex.Magnitude:
                     return obj.Magnitude_Property.HasBeenSet;
-                case EnchantmentEffect_FieldIndex.Area:
+                case Effect_FieldIndex.Area:
                     return obj.Area_Property.HasBeenSet;
-                case EnchantmentEffect_FieldIndex.Duration:
+                case Effect_FieldIndex.Duration:
                     return obj.Duration_Property.HasBeenSet;
-                case EnchantmentEffect_FieldIndex.Type:
+                case Effect_FieldIndex.Type:
                     return obj.Type_Property.HasBeenSet;
-                case EnchantmentEffect_FieldIndex.ActorValue:
+                case Effect_FieldIndex.ActorValue:
                     return obj.ActorValue_Property.HasBeenSet;
-                case EnchantmentEffect_FieldIndex.ScriptEffect:
+                case Effect_FieldIndex.ScriptEffect:
                     return obj.ScriptEffect_Property.HasBeenSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1786,24 +1786,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static object GetNthObject(
             ushort index,
-            IEnchantmentEffectGetter obj)
+            IEffectGetter obj)
         {
-            EnchantmentEffect_FieldIndex enu = (EnchantmentEffect_FieldIndex)index;
+            Effect_FieldIndex enu = (Effect_FieldIndex)index;
             switch (enu)
             {
-                case EnchantmentEffect_FieldIndex.MagicEffect:
+                case Effect_FieldIndex.MagicEffect:
                     return obj.MagicEffect;
-                case EnchantmentEffect_FieldIndex.Magnitude:
+                case Effect_FieldIndex.Magnitude:
                     return obj.Magnitude;
-                case EnchantmentEffect_FieldIndex.Area:
+                case Effect_FieldIndex.Area:
                     return obj.Area;
-                case EnchantmentEffect_FieldIndex.Duration:
+                case Effect_FieldIndex.Duration:
                     return obj.Duration;
-                case EnchantmentEffect_FieldIndex.Type:
+                case Effect_FieldIndex.Type:
                     return obj.Type;
-                case EnchantmentEffect_FieldIndex.ActorValue:
+                case Effect_FieldIndex.ActorValue:
                     return obj.ActorValue;
-                case EnchantmentEffect_FieldIndex.ScriptEffect:
+                case Effect_FieldIndex.ScriptEffect:
                     return obj.ScriptEffect;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1811,7 +1811,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void Clear(
-            IEnchantmentEffect item,
+            IEffect item,
             NotifyingUnsetParameters? cmds = null)
         {
             item.MagicEffect_Property.Unset(cmds.ToUnsetParams());
@@ -1823,19 +1823,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ScriptEffect_Property.Unset(cmds.ToUnsetParams());
         }
 
-        public static EnchantmentEffect_Mask<bool> GetEqualsMask(
-            this IEnchantmentEffectGetter item,
-            IEnchantmentEffectGetter rhs)
+        public static Effect_Mask<bool> GetEqualsMask(
+            this IEffectGetter item,
+            IEffectGetter rhs)
         {
-            var ret = new EnchantmentEffect_Mask<bool>();
+            var ret = new Effect_Mask<bool>();
             FillEqualsMask(item, rhs, ret);
             return ret;
         }
 
         public static void FillEqualsMask(
-            IEnchantmentEffectGetter item,
-            IEnchantmentEffectGetter rhs,
-            EnchantmentEffect_Mask<bool> ret)
+            IEffectGetter item,
+            IEffectGetter rhs,
+            Effect_Mask<bool> ret)
         {
             if (rhs == null) return;
             ret.MagicEffect = item.MagicEffect_Property.Equals(rhs.MagicEffect_Property, (l, r) => l == r);
@@ -1848,9 +1848,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static string ToString(
-            this IEnchantmentEffectGetter item,
+            this IEffectGetter item,
             string name = null,
-            EnchantmentEffect_Mask<bool> printMask = null)
+            Effect_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             item.ToString(fg, name, printMask);
@@ -1858,18 +1858,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void ToString(
-            this IEnchantmentEffectGetter item,
+            this IEffectGetter item,
             FileGeneration fg,
             string name = null,
-            EnchantmentEffect_Mask<bool> printMask = null)
+            Effect_Mask<bool> printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(EnchantmentEffect)} =>");
+                fg.AppendLine($"{nameof(Effect)} =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(EnchantmentEffect)}) =>");
+                fg.AppendLine($"{name} ({nameof(Effect)}) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1907,8 +1907,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static bool HasBeenSet(
-            this IEnchantmentEffectGetter item,
-            EnchantmentEffect_Mask<bool?> checkMask)
+            this IEffectGetter item,
+            Effect_Mask<bool?> checkMask)
         {
             if (checkMask.MagicEffect.HasValue && checkMask.MagicEffect.Value != item.MagicEffect_Property.HasBeenSet) return false;
             if (checkMask.Magnitude.HasValue && checkMask.Magnitude.Value != item.Magnitude_Property.HasBeenSet) return false;
@@ -1921,9 +1921,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return true;
         }
 
-        public static EnchantmentEffect_Mask<bool> GetHasBeenSetMask(IEnchantmentEffectGetter item)
+        public static Effect_Mask<bool> GetHasBeenSetMask(IEffectGetter item)
         {
-            var ret = new EnchantmentEffect_Mask<bool>();
+            var ret = new Effect_Mask<bool>();
             ret.MagicEffect = item.MagicEffect_Property.HasBeenSet;
             ret.Magnitude = item.Magnitude_Property.HasBeenSet;
             ret.Area = item.Area_Property.HasBeenSet;
@@ -1938,33 +1938,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region XML Write
         public static void Write_XML(
             XmlWriter writer,
-            IEnchantmentEffectGetter item,
+            IEffectGetter item,
             bool doMasks,
-            out EnchantmentEffect_ErrorMask errorMask,
+            out Effect_ErrorMask errorMask,
             string name = null)
         {
-            EnchantmentEffect_ErrorMask errMaskRet = null;
+            Effect_ErrorMask errMaskRet = null;
             Write_XML_Internal(
                 writer: writer,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new EnchantmentEffect_ErrorMask()) : default(Func<EnchantmentEffect_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Effect_ErrorMask()) : default(Func<Effect_ErrorMask>));
             errorMask = errMaskRet;
         }
 
         private static void Write_XML_Internal(
             XmlWriter writer,
-            IEnchantmentEffectGetter item,
-            Func<EnchantmentEffect_ErrorMask> errorMask,
+            IEffectGetter item,
+            Func<Effect_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.EnchantmentEffect"))
+                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.Effect"))
                 {
                     if (name != null)
                     {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.EnchantmentEffect");
+                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.Effect");
                     }
                     if (item.MagicEffect_Property.HasBeenSet)
                     {
@@ -1972,7 +1972,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             writer: writer,
                             name: nameof(item.MagicEffect),
                             item: item.MagicEffect?.FormID,
-                            fieldIndex: (int)EnchantmentEffect_FieldIndex.MagicEffect,
+                            fieldIndex: (int)Effect_FieldIndex.MagicEffect,
                             errorMask: errorMask);
                     }
                     if (item.Magnitude_Property.HasBeenSet)
@@ -1981,7 +1981,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             writer: writer,
                             name: nameof(item.Magnitude),
                             item: item.Magnitude_Property,
-                            fieldIndex: (int)EnchantmentEffect_FieldIndex.Magnitude,
+                            fieldIndex: (int)Effect_FieldIndex.Magnitude,
                             errorMask: errorMask);
                     }
                     if (item.Area_Property.HasBeenSet)
@@ -1990,7 +1990,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             writer: writer,
                             name: nameof(item.Area),
                             item: item.Area_Property,
-                            fieldIndex: (int)EnchantmentEffect_FieldIndex.Area,
+                            fieldIndex: (int)Effect_FieldIndex.Area,
                             errorMask: errorMask);
                     }
                     if (item.Duration_Property.HasBeenSet)
@@ -1999,16 +1999,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             writer: writer,
                             name: nameof(item.Duration),
                             item: item.Duration_Property,
-                            fieldIndex: (int)EnchantmentEffect_FieldIndex.Duration,
+                            fieldIndex: (int)Effect_FieldIndex.Duration,
                             errorMask: errorMask);
                     }
                     if (item.Type_Property.HasBeenSet)
                     {
-                        EnumXmlTranslation<EnchantmentEffect.EffectType>.Instance.Write(
+                        EnumXmlTranslation<Effect.EffectType>.Instance.Write(
                             writer: writer,
                             name: nameof(item.Type),
                             item: item.Type_Property,
-                            fieldIndex: (int)EnchantmentEffect_FieldIndex.Type,
+                            fieldIndex: (int)Effect_FieldIndex.Type,
                             errorMask: errorMask);
                     }
                     if (item.ActorValue_Property.HasBeenSet)
@@ -2017,7 +2017,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             writer: writer,
                             name: nameof(item.ActorValue),
                             item: item.ActorValue_Property,
-                            fieldIndex: (int)EnchantmentEffect_FieldIndex.ActorValue,
+                            fieldIndex: (int)Effect_FieldIndex.ActorValue,
                             errorMask: errorMask);
                     }
                     if (item.ScriptEffect_Property.HasBeenSet)
@@ -2026,7 +2026,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             writer: writer,
                             item: item.ScriptEffect_Property,
                             name: nameof(item.ScriptEffect),
-                            fieldIndex: (int)EnchantmentEffect_FieldIndex.ScriptEffect,
+                            fieldIndex: (int)Effect_FieldIndex.ScriptEffect,
                             errorMask: errorMask);
                     }
                 }
@@ -2045,22 +2045,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Binary Write
         public static void Write_Binary(
             MutagenWriter writer,
-            IEnchantmentEffectGetter item,
+            IEffectGetter item,
             bool doMasks,
-            out EnchantmentEffect_ErrorMask errorMask)
+            out Effect_ErrorMask errorMask)
         {
-            EnchantmentEffect_ErrorMask errMaskRet = null;
+            Effect_ErrorMask errMaskRet = null;
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new EnchantmentEffect_ErrorMask()) : default(Func<EnchantmentEffect_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Effect_ErrorMask()) : default(Func<Effect_ErrorMask>));
             errorMask = errMaskRet;
         }
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
-            IEnchantmentEffectGetter item,
-            Func<EnchantmentEffect_ErrorMask> errorMask)
+            IEffectGetter item,
+            Func<Effect_ErrorMask> errorMask)
         {
             try
             {
@@ -2078,53 +2078,53 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void Write_Binary_RecordTypes(
-            IEnchantmentEffectGetter item,
+            IEffectGetter item,
             MutagenWriter writer,
-            Func<EnchantmentEffect_ErrorMask> errorMask)
+            Func<Effect_ErrorMask> errorMask)
         {
-            EnchantmentEffect.SpecialWrite_MagicEffectInitial_Internal(
+            Effect.SpecialWrite_EffectInitial_Internal(
                 item: item,
                 writer: writer,
                 errorMask: errorMask);
-            using (HeaderExport.ExportSubRecordHeader(writer, EnchantmentEffect_Registration.EFIT_HEADER))
+            using (HeaderExport.ExportSubRecordHeader(writer, Effect_Registration.EFIT_HEADER))
             {
                 Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.MagicEffect_Property,
-                    fieldIndex: (int)EnchantmentEffect_FieldIndex.MagicEffect,
+                    fieldIndex: (int)Effect_FieldIndex.MagicEffect,
                     errorMask: errorMask);
                 Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Magnitude_Property,
-                    fieldIndex: (int)EnchantmentEffect_FieldIndex.Magnitude,
+                    fieldIndex: (int)Effect_FieldIndex.Magnitude,
                     errorMask: errorMask);
                 Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Area_Property,
-                    fieldIndex: (int)EnchantmentEffect_FieldIndex.Area,
+                    fieldIndex: (int)Effect_FieldIndex.Area,
                     errorMask: errorMask);
                 Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Duration_Property,
-                    fieldIndex: (int)EnchantmentEffect_FieldIndex.Duration,
+                    fieldIndex: (int)Effect_FieldIndex.Duration,
                     errorMask: errorMask);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<EnchantmentEffect.EffectType>.Instance.Write(
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Effect.EffectType>.Instance.Write(
                     writer,
                     item.Type_Property,
                     length: new ContentLength(4),
-                    fieldIndex: (int)EnchantmentEffect_FieldIndex.Type,
+                    fieldIndex: (int)Effect_FieldIndex.Type,
                     errorMask: errorMask);
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
                     writer,
                     item.ActorValue_Property,
                     length: new ContentLength(4),
-                    fieldIndex: (int)EnchantmentEffect_FieldIndex.ActorValue,
+                    fieldIndex: (int)Effect_FieldIndex.ActorValue,
                     errorMask: errorMask);
             }
             LoquiBinaryTranslation<ScriptEffect, ScriptEffect_ErrorMask>.Instance.Write(
                 writer: writer,
                 item: item.ScriptEffect_Property,
-                fieldIndex: (int)EnchantmentEffect_FieldIndex.ScriptEffect,
+                fieldIndex: (int)Effect_FieldIndex.ScriptEffect,
                 errorMask: errorMask);
         }
 
@@ -2136,14 +2136,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Modules
 
     #region Mask
-    public class EnchantmentEffect_Mask<T> : IMask<T>, IEquatable<EnchantmentEffect_Mask<T>>
+    public class Effect_Mask<T> : IMask<T>, IEquatable<Effect_Mask<T>>
     {
         #region Ctors
-        public EnchantmentEffect_Mask()
+        public Effect_Mask()
         {
         }
 
-        public EnchantmentEffect_Mask(T initialValue)
+        public Effect_Mask(T initialValue)
         {
             this.MagicEffect = initialValue;
             this.Magnitude = initialValue;
@@ -2168,11 +2168,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals
         public override bool Equals(object obj)
         {
-            if (!(obj is EnchantmentEffect_Mask<T> rhs)) return false;
+            if (!(obj is Effect_Mask<T> rhs)) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(EnchantmentEffect_Mask<T> rhs)
+        public bool Equals(Effect_Mask<T> rhs)
         {
             if (rhs == null) return false;
             if (!object.Equals(this.MagicEffect, rhs.MagicEffect)) return false;
@@ -2218,14 +2218,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Translate
-        public EnchantmentEffect_Mask<R> Translate<R>(Func<T, R> eval)
+        public Effect_Mask<R> Translate<R>(Func<T, R> eval)
         {
-            var ret = new EnchantmentEffect_Mask<R>();
+            var ret = new Effect_Mask<R>();
             this.Translate_InternalFill(ret, eval);
             return ret;
         }
 
-        protected void Translate_InternalFill<R>(EnchantmentEffect_Mask<R> obj, Func<T, R> eval)
+        protected void Translate_InternalFill<R>(Effect_Mask<R> obj, Func<T, R> eval)
         {
             obj.MagicEffect = eval(this.MagicEffect);
             obj.Magnitude = eval(this.Magnitude);
@@ -2257,16 +2257,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(EnchantmentEffect_Mask<bool> printMask = null)
+        public string ToString(Effect_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, EnchantmentEffect_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, Effect_Mask<bool> printMask = null)
         {
-            fg.AppendLine($"{nameof(EnchantmentEffect_Mask<T>)} =>");
+            fg.AppendLine($"{nameof(Effect_Mask<T>)} =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
@@ -2305,7 +2305,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class EnchantmentEffect_ErrorMask : IErrorMask, IErrorMask<EnchantmentEffect_ErrorMask>
+    public class Effect_ErrorMask : IErrorMask, IErrorMask<Effect_ErrorMask>
     {
         #region Members
         public Exception Overall { get; set; }
@@ -2333,28 +2333,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region IErrorMask
         public void SetNthException(int index, Exception ex)
         {
-            EnchantmentEffect_FieldIndex enu = (EnchantmentEffect_FieldIndex)index;
+            Effect_FieldIndex enu = (Effect_FieldIndex)index;
             switch (enu)
             {
-                case EnchantmentEffect_FieldIndex.MagicEffect:
+                case Effect_FieldIndex.MagicEffect:
                     this.MagicEffect = ex;
                     break;
-                case EnchantmentEffect_FieldIndex.Magnitude:
+                case Effect_FieldIndex.Magnitude:
                     this.Magnitude = ex;
                     break;
-                case EnchantmentEffect_FieldIndex.Area:
+                case Effect_FieldIndex.Area:
                     this.Area = ex;
                     break;
-                case EnchantmentEffect_FieldIndex.Duration:
+                case Effect_FieldIndex.Duration:
                     this.Duration = ex;
                     break;
-                case EnchantmentEffect_FieldIndex.Type:
+                case Effect_FieldIndex.Type:
                     this.Type = ex;
                     break;
-                case EnchantmentEffect_FieldIndex.ActorValue:
+                case Effect_FieldIndex.ActorValue:
                     this.ActorValue = ex;
                     break;
-                case EnchantmentEffect_FieldIndex.ScriptEffect:
+                case Effect_FieldIndex.ScriptEffect:
                     this.ScriptEffect = new MaskItem<Exception, ScriptEffect_ErrorMask>(ex, null);
                     break;
                 default:
@@ -2364,28 +2364,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void SetNthMask(int index, object obj)
         {
-            EnchantmentEffect_FieldIndex enu = (EnchantmentEffect_FieldIndex)index;
+            Effect_FieldIndex enu = (Effect_FieldIndex)index;
             switch (enu)
             {
-                case EnchantmentEffect_FieldIndex.MagicEffect:
+                case Effect_FieldIndex.MagicEffect:
                     this.MagicEffect = (Exception)obj;
                     break;
-                case EnchantmentEffect_FieldIndex.Magnitude:
+                case Effect_FieldIndex.Magnitude:
                     this.Magnitude = (Exception)obj;
                     break;
-                case EnchantmentEffect_FieldIndex.Area:
+                case Effect_FieldIndex.Area:
                     this.Area = (Exception)obj;
                     break;
-                case EnchantmentEffect_FieldIndex.Duration:
+                case Effect_FieldIndex.Duration:
                     this.Duration = (Exception)obj;
                     break;
-                case EnchantmentEffect_FieldIndex.Type:
+                case Effect_FieldIndex.Type:
                     this.Type = (Exception)obj;
                     break;
-                case EnchantmentEffect_FieldIndex.ActorValue:
+                case Effect_FieldIndex.ActorValue:
                     this.ActorValue = (Exception)obj;
                     break;
-                case EnchantmentEffect_FieldIndex.ScriptEffect:
+                case Effect_FieldIndex.ScriptEffect:
                     this.ScriptEffect = (MaskItem<Exception, ScriptEffect_ErrorMask>)obj;
                     break;
                 default:
@@ -2417,7 +2417,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public void ToString(FileGeneration fg)
         {
-            fg.AppendLine("EnchantmentEffect_ErrorMask =>");
+            fg.AppendLine("Effect_ErrorMask =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
@@ -2448,9 +2448,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         #region Combine
-        public EnchantmentEffect_ErrorMask Combine(EnchantmentEffect_ErrorMask rhs)
+        public Effect_ErrorMask Combine(Effect_ErrorMask rhs)
         {
-            var ret = new EnchantmentEffect_ErrorMask();
+            var ret = new Effect_ErrorMask();
             ret.MagicEffect = this.MagicEffect.Combine(rhs.MagicEffect);
             ret.Magnitude = this.Magnitude.Combine(rhs.Magnitude);
             ret.Area = this.Area.Combine(rhs.Area);
@@ -2460,7 +2460,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.ScriptEffect = new MaskItem<Exception, ScriptEffect_ErrorMask>(this.ScriptEffect.Overall.Combine(rhs.ScriptEffect.Overall), ((IErrorMask<ScriptEffect_ErrorMask>)this.ScriptEffect.Specific).Combine(rhs.ScriptEffect.Specific));
             return ret;
         }
-        public static EnchantmentEffect_ErrorMask Combine(EnchantmentEffect_ErrorMask lhs, EnchantmentEffect_ErrorMask rhs)
+        public static Effect_ErrorMask Combine(Effect_ErrorMask lhs, Effect_ErrorMask rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -2468,7 +2468,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class EnchantmentEffect_CopyMask
+    public class Effect_CopyMask
     {
         #region Members
         public bool MagicEffect;

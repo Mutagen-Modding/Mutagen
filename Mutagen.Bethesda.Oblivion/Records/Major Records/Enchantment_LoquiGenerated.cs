@@ -84,11 +84,11 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Enchantment.Flag> IEnchantmentGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region Effects
-        private readonly INotifyingList<EnchantmentEffect> _Effects = new NotifyingList<EnchantmentEffect>();
-        public INotifyingList<EnchantmentEffect> Effects => _Effects;
+        private readonly INotifyingList<Effect> _Effects = new NotifyingList<Effect>();
+        public INotifyingList<Effect> Effects => _Effects;
         #region Interface Members
-        INotifyingList<EnchantmentEffect> IEnchantment.Effects => _Effects;
-        INotifyingListGetter<EnchantmentEffect> IEnchantmentGetter.Effects => _Effects;
+        INotifyingList<Effect> IEnchantment.Effects => _Effects;
+        INotifyingListGetter<Effect> IEnchantmentGetter.Effects => _Effects;
         #endregion
 
         #endregion
@@ -540,13 +540,13 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "Effects":
-                    item._Effects.SetIfSucceeded(ListXmlTranslation<EnchantmentEffect, MaskItem<Exception, EnchantmentEffect_ErrorMask>>.Instance.Parse(
+                    item._Effects.SetIfSucceeded(ListXmlTranslation<Effect, MaskItem<Exception, Effect_ErrorMask>>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Enchantment_FieldIndex.Effects,
                         errorMask: errorMask,
-                        transl: (XElement r, bool listDoMasks, out MaskItem<Exception, EnchantmentEffect_ErrorMask> listSubMask) =>
+                        transl: (XElement r, bool listDoMasks, out MaskItem<Exception, Effect_ErrorMask> listSubMask) =>
                         {
-                            return LoquiXmlTranslation<EnchantmentEffect, EnchantmentEffect_ErrorMask>.Instance.Parse(
+                            return LoquiXmlTranslation<Effect, Effect_ErrorMask>.Instance.Parse(
                                 root: r,
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask);
@@ -918,15 +918,15 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     return TryGet<Enchantment_FieldIndex?>.Succeed(Enchantment_FieldIndex.Flags);
                 case "EFID":
-                    var EffectstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<EnchantmentEffect, MaskItem<Exception, EnchantmentEffect_ErrorMask>>.Instance.ParseRepeatedItem(
+                    var EffectstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect, MaskItem<Exception, Effect_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: Enchantment_Registration.EFID_HEADER,
                         fieldIndex: (int)Enchantment_FieldIndex.Effects,
                         objType: ObjectType.Subrecord,
                         errorMask: errorMask,
-                        transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, EnchantmentEffect_ErrorMask> listSubMask) =>
+                        transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, Effect_ErrorMask> listSubMask) =>
                         {
-                            return LoquiBinaryTranslation<EnchantmentEffect, EnchantmentEffect_ErrorMask>.Instance.Parse(
+                            return LoquiBinaryTranslation<Effect, Effect_ErrorMask>.Instance.Parse(
                                 frame: r.Spawn(snapToFinalPosition: false),
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask);
@@ -1047,7 +1047,7 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case Enchantment_FieldIndex.Effects:
-                    this._Effects.SetTo((IEnumerable<EnchantmentEffect>)obj, cmds);
+                    this._Effects.SetTo((IEnumerable<Effect>)obj, cmds);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -1101,7 +1101,7 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case Enchantment_FieldIndex.Effects:
-                    obj._Effects.SetTo((IEnumerable<EnchantmentEffect>)pair.Value, null);
+                    obj._Effects.SetTo((IEnumerable<Effect>)pair.Value, null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1130,7 +1130,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Enchantment.Flag Flags { get; set; }
         new INotifyingSetItem<Enchantment.Flag> Flags_Property { get; }
 
-        new INotifyingList<EnchantmentEffect> Effects { get; }
+        new INotifyingList<Effect> Effects { get; }
     }
 
     public interface IEnchantmentGetter : INamedMajorRecordGetter
@@ -1156,7 +1156,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Effects
-        INotifyingListGetter<EnchantmentEffect> Effects { get; }
+        INotifyingListGetter<Effect> Effects { get; }
         #endregion
 
     }
@@ -1357,7 +1357,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Enchantment_FieldIndex.Flags:
                     return typeof(Enchantment.Flag);
                 case Enchantment_FieldIndex.Effects:
-                    return typeof(NotifyingList<EnchantmentEffect>);
+                    return typeof(NotifyingList<Effect>);
                 default:
                     return NamedMajorRecord_Registration.GetNthType(index);
             }
@@ -1558,8 +1558,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return r;
                                 case CopyOption.MakeCopy:
-                                    if (r == null) return default(EnchantmentEffect);
-                                    return EnchantmentEffect.Copy(
+                                    if (r == null) return default(Effect);
+                                    return Effect.Copy(
                                         r,
                                         copyMask?.Effects?.Specific,
                                         def: d);
@@ -1716,11 +1716,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Effects.HasBeenSet)
                 {
-                    ret.Effects = new MaskItem<bool, IEnumerable<MaskItem<bool, EnchantmentEffect_Mask<bool>>>>();
-                    ret.Effects.Specific = item.Effects.SelectAgainst<EnchantmentEffect, MaskItem<bool, EnchantmentEffect_Mask<bool>>>(rhs.Effects, ((l, r) =>
+                    ret.Effects = new MaskItem<bool, IEnumerable<MaskItem<bool, Effect_Mask<bool>>>>();
+                    ret.Effects.Specific = item.Effects.SelectAgainst<Effect, MaskItem<bool, Effect_Mask<bool>>>(rhs.Effects, ((l, r) =>
                     {
-                        MaskItem<bool, EnchantmentEffect_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => EnchantmentEffectCommon.GetEqualsMask(loqLhs, loqRhs));
+                        MaskItem<bool, Effect_Mask<bool>> itemRet;
+                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => EffectCommon.GetEqualsMask(loqLhs, loqRhs));
                         return itemRet;
                     }
                     ), out ret.Effects.Overall);
@@ -1728,13 +1728,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 else
                 {
-                    ret.Effects = new MaskItem<bool, IEnumerable<MaskItem<bool, EnchantmentEffect_Mask<bool>>>>();
+                    ret.Effects = new MaskItem<bool, IEnumerable<MaskItem<bool, Effect_Mask<bool>>>>();
                     ret.Effects.Overall = true;
                 }
             }
             else
             {
-                ret.Effects = new MaskItem<bool, IEnumerable<MaskItem<bool, EnchantmentEffect_Mask<bool>>>>();
+                ret.Effects = new MaskItem<bool, IEnumerable<MaskItem<bool, Effect_Mask<bool>>>>();
                 ret.Effects.Overall = false;
             }
             NamedMajorRecordCommon.FillEqualsMask(item, rhs, ret);
@@ -1824,7 +1824,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.ChargeAmount = item.ChargeAmount_Property.HasBeenSet;
             ret.EnchantCost = item.EnchantCost_Property.HasBeenSet;
             ret.Flags = item.Flags_Property.HasBeenSet;
-            ret.Effects = new MaskItem<bool, IEnumerable<MaskItem<bool, EnchantmentEffect_Mask<bool>>>>(item.Effects.HasBeenSet, item.Effects.Select((i) => new MaskItem<bool, EnchantmentEffect_Mask<bool>>(true, i.GetHasBeenSetMask())));
+            ret.Effects = new MaskItem<bool, IEnumerable<MaskItem<bool, Effect_Mask<bool>>>>(item.Effects.HasBeenSet, item.Effects.Select((i) => new MaskItem<bool, Effect_Mask<bool>>(true, i.GetHasBeenSetMask())));
             return ret;
         }
 
@@ -1950,15 +1950,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.Effects.HasBeenSet)
                     {
-                        ListXmlTranslation<EnchantmentEffect, MaskItem<Exception, EnchantmentEffect_ErrorMask>>.Instance.Write(
+                        ListXmlTranslation<Effect, MaskItem<Exception, Effect_ErrorMask>>.Instance.Write(
                             writer: writer,
                             name: nameof(item.Effects),
                             item: item.Effects,
                             fieldIndex: (int)Enchantment_FieldIndex.Effects,
                             errorMask: errorMask,
-                            transl: (EnchantmentEffect subItem, bool listDoMasks, out MaskItem<Exception, EnchantmentEffect_ErrorMask> listSubMask) =>
+                            transl: (Effect subItem, bool listDoMasks, out MaskItem<Exception, Effect_ErrorMask> listSubMask) =>
                             {
-                                LoquiXmlTranslation<EnchantmentEffect, EnchantmentEffect_ErrorMask>.Instance.Write(
+                                LoquiXmlTranslation<Effect, Effect_ErrorMask>.Instance.Write(
                                     writer: writer,
                                     item: subItem,
                                     name: "Item",
@@ -2059,14 +2059,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Enchantment_FieldIndex.Flags,
                     errorMask: errorMask);
             }
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<EnchantmentEffect, MaskItem<Exception, EnchantmentEffect_ErrorMask>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect, MaskItem<Exception, Effect_ErrorMask>>.Instance.Write(
                 writer: writer,
                 item: item.Effects,
                 fieldIndex: (int)Enchantment_FieldIndex.Effects,
                 errorMask: errorMask,
-                transl: (EnchantmentEffect subItem, bool listDoMasks, out MaskItem<Exception, EnchantmentEffect_ErrorMask> listSubMask) =>
+                transl: (Effect subItem, bool listDoMasks, out MaskItem<Exception, Effect_ErrorMask> listSubMask) =>
                 {
-                    LoquiBinaryTranslation<EnchantmentEffect, EnchantmentEffect_ErrorMask>.Instance.Write(
+                    LoquiBinaryTranslation<Effect, Effect_ErrorMask>.Instance.Write(
                         writer: writer,
                         item: subItem,
                         doMasks: listDoMasks,
@@ -2096,7 +2096,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.ChargeAmount = initialValue;
             this.EnchantCost = initialValue;
             this.Flags = initialValue;
-            this.Effects = new MaskItem<T, IEnumerable<MaskItem<T, EnchantmentEffect_Mask<T>>>>(initialValue, null);
+            this.Effects = new MaskItem<T, IEnumerable<MaskItem<T, Effect_Mask<T>>>>(initialValue, null);
         }
         #endregion
 
@@ -2105,7 +2105,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public T ChargeAmount;
         public T EnchantCost;
         public T Flags;
-        public MaskItem<T, IEnumerable<MaskItem<T, EnchantmentEffect_Mask<T>>>> Effects;
+        public MaskItem<T, IEnumerable<MaskItem<T, Effect_Mask<T>>>> Effects;
         #endregion
 
         #region Equals
@@ -2181,18 +2181,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Flags = eval(this.Flags);
             if (Effects != null)
             {
-                obj.Effects = new MaskItem<R, IEnumerable<MaskItem<R, EnchantmentEffect_Mask<R>>>>();
+                obj.Effects = new MaskItem<R, IEnumerable<MaskItem<R, Effect_Mask<R>>>>();
                 obj.Effects.Overall = eval(this.Effects.Overall);
                 if (Effects.Specific != null)
                 {
-                    List<MaskItem<R, EnchantmentEffect_Mask<R>>> l = new List<MaskItem<R, EnchantmentEffect_Mask<R>>>();
+                    List<MaskItem<R, Effect_Mask<R>>> l = new List<MaskItem<R, Effect_Mask<R>>>();
                     obj.Effects.Specific = l;
                     foreach (var item in Effects.Specific)
                     {
-                        MaskItem<R, EnchantmentEffect_Mask<R>> mask = default(MaskItem<R, EnchantmentEffect_Mask<R>>);
+                        MaskItem<R, Effect_Mask<R>> mask = default(MaskItem<R, Effect_Mask<R>>);
                         if (item != null)
                         {
-                            mask = new MaskItem<R, EnchantmentEffect_Mask<R>>();
+                            mask = new MaskItem<R, Effect_Mask<R>>();
                             mask.Overall = eval(item.Overall);
                             if (item.Specific != null)
                             {
@@ -2288,7 +2288,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Exception ChargeAmount;
         public Exception EnchantCost;
         public Exception Flags;
-        public MaskItem<Exception, IEnumerable<MaskItem<Exception, EnchantmentEffect_ErrorMask>>> Effects;
+        public MaskItem<Exception, IEnumerable<MaskItem<Exception, Effect_ErrorMask>>> Effects;
         #endregion
 
         #region IErrorMask
@@ -2310,7 +2310,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Flags = ex;
                     break;
                 case Enchantment_FieldIndex.Effects:
-                    this.Effects = new MaskItem<Exception, IEnumerable<MaskItem<Exception, EnchantmentEffect_ErrorMask>>>(ex, null);
+                    this.Effects = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Effect_ErrorMask>>>(ex, null);
                     break;
                 default:
                     base.SetNthException(index, ex);
@@ -2336,7 +2336,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Flags = (Exception)obj;
                     break;
                 case Enchantment_FieldIndex.Effects:
-                    this.Effects = (MaskItem<Exception, IEnumerable<MaskItem<Exception, EnchantmentEffect_ErrorMask>>>)obj;
+                    this.Effects = (MaskItem<Exception, IEnumerable<MaskItem<Exception, Effect_ErrorMask>>>)obj;
                     break;
                 default:
                     base.SetNthMask(index, obj);
@@ -2424,7 +2424,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.ChargeAmount = this.ChargeAmount.Combine(rhs.ChargeAmount);
             ret.EnchantCost = this.EnchantCost.Combine(rhs.EnchantCost);
             ret.Flags = this.Flags.Combine(rhs.Flags);
-            ret.Effects = new MaskItem<Exception, IEnumerable<MaskItem<Exception, EnchantmentEffect_ErrorMask>>>(this.Effects.Overall.Combine(rhs.Effects.Overall), new List<MaskItem<Exception, EnchantmentEffect_ErrorMask>>(this.Effects.Specific.And(rhs.Effects.Specific)));
+            ret.Effects = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Effect_ErrorMask>>>(this.Effects.Overall.Combine(rhs.Effects.Overall), new List<MaskItem<Exception, Effect_ErrorMask>>(this.Effects.Specific.And(rhs.Effects.Specific)));
             return ret;
         }
         public static Enchantment_ErrorMask Combine(Enchantment_ErrorMask lhs, Enchantment_ErrorMask rhs)
@@ -2442,7 +2442,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool ChargeAmount;
         public bool EnchantCost;
         public bool Flags;
-        public MaskItem<CopyOption, EnchantmentEffect_CopyMask> Effects;
+        public MaskItem<CopyOption, Effect_CopyMask> Effects;
         #endregion
 
     }

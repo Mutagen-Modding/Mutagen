@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Effect" objType="Subrecord" GUID="85ccb56e-7055-4f2a-894d-f998f0ac9ab8" ID="53">
+    <Fields>
+      <SpecialParse name="EffectInitial" recordType="EFID" />
+      <Data recordType="EFIT">
+        <Fields>
+          <FormID name="MagicEffect" type="EDIDChars" refName="MagicEffect" />
+          <UInt32 name="Magnitude" />
+          <UInt32 name="Area" />
+          <UInt32 name="Duration" />
+          <Enum name="Type" enumName="Effect.EffectType" byteLength="4" />
+          <Enum name="ActorValue" enumName="ActorValue" byteLength="4" />
+        </Fields>
+      </Data>
+      <RefDirect name="ScriptEffect" refName="ScriptEffect" />
+    </Fields>
+  </Object>
+  <Object name="ScriptEffect" objType="Subrecord" GUID="52a9e0c6-6771-4b3d-a4e7-a082ff8384a9" ID="54">
+    <Fields>
+      <Data recordType="SCIT">
+        <Fields>
+          <FormID name="Script" refName="Script" />
+          <Break />
+          <Enum name="MagicSchool" enumName="MagicSchool" byteLength="4" />
+          <FormID name="VisualEffect" type="EDIDChars" refName="MagicEffect" />
+          <Break />
+          <Enum name="Flags" enumName="ScriptEffect.Flag" byteLength="4" />
+        </Fields>
+      </Data>
+      <String name="Name" recordType="FULL" />
+    </Fields>
+  </Object>
+</Loqui>

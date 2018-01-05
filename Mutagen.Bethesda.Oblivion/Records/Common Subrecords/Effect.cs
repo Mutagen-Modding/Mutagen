@@ -8,7 +8,7 @@ using Mutagen.Bethesda.Oblivion.Internals;
 
 namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class EnchantmentEffect
+    public partial class Effect
     {
         public enum EffectType
         {
@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Oblivion
             Target = 2
         }
 
-        static partial void SpecialParse_MagicEffectInitial(EnchantmentEffect item, MutagenFrame frame, Func<EnchantmentEffect_ErrorMask> errorMask)
+        static partial void SpecialParse_EffectInitial(Effect item, MutagenFrame frame, Func<Effect_ErrorMask> errorMask)
         {
             var recType = HeaderTranslation.ReadNextSubRecordType(frame, out var contentLen);
             if (contentLen.Value != 4)
@@ -39,12 +39,12 @@ namespace Mutagen.Bethesda.Oblivion
             frame.Position = pos;
         }
 
-        static partial void SpecialWrite_MagicEffectInitial(
-            IEnchantmentEffectGetter item, 
-            MutagenWriter writer, 
-            Func<EnchantmentEffect_ErrorMask> errorMask)
+        static partial void SpecialWrite_EffectInitial(
+            IEffectGetter item,
+            MutagenWriter writer,
+            Func<Effect_ErrorMask> errorMask)
         {
-            using (HeaderExport.ExportSubRecordHeader(writer, EnchantmentEffect_Registration.EFID_HEADER))
+            using (HeaderExport.ExportSubRecordHeader(writer, Effect_Registration.EFID_HEADER))
             {
                 writer.Write(item.MagicEffect_Property.EDID.Type);
             }

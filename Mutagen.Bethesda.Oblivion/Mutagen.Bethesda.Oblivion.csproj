@@ -46,11 +46,17 @@
     <Compile Include="Records\Common Enums\Resistance.cs" />
     <Compile Include="Records\Common Enums\Skill.cs" />
     <Compile Include="Records\Common Enums\Specialization.cs" />
+    <Compile Include="Records\Common Subrecords\Effect.cs">
+      <DependentUpon>Effect.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Common Subrecords\Model_LoquiGenerated.cs">
       <DependentUpon>Model.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\Relation_LoquiGenerated.cs">
       <DependentUpon>Relation.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ScriptEffect.cs">
+      <DependentUpon>Effect.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Group.cs">
       <DependentUpon>Group.xml</DependentUpon>
@@ -86,9 +92,6 @@
       <DependentUpon>Class.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Enchantment.cs">
-      <DependentUpon>Enchantment.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\EnchantmentEffect.cs">
       <DependentUpon>Enchantment.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Eye.cs">
@@ -205,9 +208,6 @@
     <Compile Include="Records\Major Records\Script.cs">
       <DependentUpon>Script.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\ScriptEffect.cs">
-      <DependentUpon>Enchantment.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\ScriptMetaSummary.cs">
       <DependentUpon>Script.xml</DependentUpon>
     </Compile>
@@ -261,12 +261,6 @@
     <Compile Include="Records\Major Records\Enchantment_LoquiGenerated.cs">
       <DependentUpon>Enchantment.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\EnchantmentEffect_LoquiGenerated.cs">
-      <DependentUpon>Enchantment.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\ScriptEffect_LoquiGenerated.cs">
-      <DependentUpon>Enchantment.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\MagicEffectSubData_LoquiGenerated.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
@@ -286,8 +280,17 @@
     <Compile Include="Records\Major Records\ScriptObjectReference_LoquiGenerated.cs">
       <DependentUpon>Script.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\Effect_LoquiGenerated.cs">
+      <DependentUpon>Effect.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ScriptEffect_LoquiGenerated.cs">
+      <DependentUpon>Effect.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Records\Common Subrecords\Effect.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Records\Common Subrecords\Model.xml">
       <SubType>Designer</SubType>
     </Content>
