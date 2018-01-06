@@ -359,6 +359,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             errorMask = (ScriptReference_ErrorMask)this.Write_Binary_Internal(
                 writer: writer,
+                recordTypeConverter: null,
                 doMasks: true);
         }
 
@@ -392,12 +393,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected virtual object Write_Binary_Internal(
             MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
             bool doMasks)
         {
             ScriptReferenceCommon.Write_Binary(
                 writer: writer,
                 item: this,
                 doMasks: doMasks,
+                recordTypeConverter: recordTypeConverter,
                 errorMask: out var errorMask);
             return errorMask;
         }
@@ -935,6 +938,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             IScriptReferenceGetter item,
+            RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out ScriptReference_ErrorMask errorMask)
         {
@@ -942,6 +946,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
+                recordTypeConverter: recordTypeConverter,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new ScriptReference_ErrorMask()) : default(Func<ScriptReference_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -949,6 +954,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             IScriptReferenceGetter item,
+            RecordTypeConverter recordTypeConverter,
             Func<ScriptReference_ErrorMask> errorMask)
         {
             try

@@ -597,6 +597,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             var ret = Create_Binary<T_ErrMask>(
                 frame: frame,
+                recordTypeConverter: null,
                 doMasks: doMasks);
             errorMask = ret.ErrorMask;
             return ret.Object;
@@ -605,13 +606,15 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static (Group<T> Object, Group_ErrorMask<T_ErrMask> ErrorMask) Create_Binary<T_ErrMask>(
             MutagenFrame frame,
+            RecordTypeConverter recordTypeConverter,
             bool doMasks)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             Group_ErrorMask<T_ErrMask> errMaskRet = null;
             var ret = Create_Binary_Internal(
                 frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Group_ErrorMask<T_ErrMask>()) : default(Func<Group_ErrorMask<T_ErrMask>>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Group_ErrorMask<T_ErrMask>()) : default(Func<Group_ErrorMask<T_ErrMask>>),
+                recordTypeConverter: recordTypeConverter);
             return (ret, errMaskRet);
         }
 
@@ -760,6 +763,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             errorMask = (Group_ErrorMask<T_ErrMask>)this.Write_Binary_Internal<T_ErrMask>(
                 writer: writer,
+                recordTypeConverter: null,
                 doMasks: true);
         }
 
@@ -799,6 +803,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.Write_Binary_Internal<T_ErrMask>(
                 writer: writer,
+                recordTypeConverter: null,
                 doMasks: false);
         }
 
@@ -832,6 +837,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected object Write_Binary_Internal<T_ErrMask>(
             MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
             bool doMasks)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
@@ -839,6 +845,7 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 item: this,
                 doMasks: doMasks,
+                recordTypeConverter: recordTypeConverter,
                 errorMask: out var errorMask);
             return errorMask;
         }
@@ -874,7 +881,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         private static Group<T> Create_Binary_Internal<T_ErrMask>(
             MutagenFrame frame,
-            Func<Group_ErrorMask<T_ErrMask>> errorMask)
+            Func<Group_ErrorMask<T_ErrMask>> errorMask,
+            RecordTypeConverter recordTypeConverter)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             var ret = new Group<T>();
@@ -892,7 +900,8 @@ namespace Mutagen.Bethesda.Oblivion
                         var parsed = Fill_Binary_RecordTypes(
                             item: ret,
                             frame: frame,
-                            errorMask: errorMask);
+                            errorMask: errorMask,
+                            recordTypeConverter: recordTypeConverter);
                         if (parsed.Failed) break;
                     }
                 }
@@ -933,12 +942,14 @@ namespace Mutagen.Bethesda.Oblivion
         protected static TryGet<Group_FieldIndex?> Fill_Binary_RecordTypes<T_ErrMask>(
             Group<T> item,
             MutagenFrame frame,
-            Func<Group_ErrorMask<T_ErrMask>> errorMask)
+            Func<Group_ErrorMask<T_ErrMask>> errorMask,
+            RecordTypeConverter recordTypeConverter = null)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             var nextRecordType = HeaderTranslation.GetNextRecordType(
                 frame: frame,
-                contentLength: out var contentLength);
+                contentLength: out var contentLength,
+                recordTypeConverter: recordTypeConverter);
             switch (nextRecordType.Type)
             {
                 default:
@@ -1855,6 +1866,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary<T, T_ErrMask>(
             MutagenWriter writer,
             IGroupGetter<T> item,
+            RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out Group_ErrorMask<T_ErrMask> errorMask)
             where T : Bethesda.MajorRecord, ILoquiObjectGetter
@@ -1864,6 +1876,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Write_Binary_Internal<T, T_ErrMask>(
                 writer: writer,
                 item: item,
+                recordTypeConverter: recordTypeConverter,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Group_ErrorMask<T_ErrMask>()) : default(Func<Group_ErrorMask<T_ErrMask>>));
             errorMask = errMaskRet;
         }
@@ -1871,6 +1884,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private static void Write_Binary_Internal<T, T_ErrMask>(
             MutagenWriter writer,
             IGroupGetter<T> item,
+            RecordTypeConverter recordTypeConverter,
             Func<Group_ErrorMask<T_ErrMask>> errorMask)
             where T : Bethesda.MajorRecord, ILoquiObjectGetter
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
@@ -1889,6 +1903,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     Write_Binary_RecordTypes(
                         item: item,
                         writer: writer,
+                        recordTypeConverter: recordTypeConverter,
                         errorMask: errorMask);
                 }
             }
@@ -1927,6 +1942,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary_RecordTypes<T, T_ErrMask>(
             IGroupGetter<T> item,
             MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
             Func<Group_ErrorMask<T_ErrMask>> errorMask)
             where T : Bethesda.MajorRecord, ILoquiObjectGetter
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()

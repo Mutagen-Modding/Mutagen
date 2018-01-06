@@ -477,6 +477,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             var ret = Create_Binary(
                 frame: frame,
+                recordTypeConverter: null,
                 doMasks: doMasks);
             errorMask = ret.ErrorMask;
             return ret.Object;
@@ -485,12 +486,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static (LocalVariable Object, LocalVariable_ErrorMask ErrorMask) Create_Binary(
             MutagenFrame frame,
+            RecordTypeConverter recordTypeConverter,
             bool doMasks)
         {
             LocalVariable_ErrorMask errMaskRet = null;
             var ret = Create_Binary_Internal(
                 frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new LocalVariable_ErrorMask()) : default(Func<LocalVariable_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new LocalVariable_ErrorMask()) : default(Func<LocalVariable_ErrorMask>),
+                recordTypeConverter: recordTypeConverter);
             return (ret, errMaskRet);
         }
 
@@ -633,6 +636,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             errorMask = (LocalVariable_ErrorMask)this.Write_Binary_Internal(
                 writer: writer,
+                recordTypeConverter: null,
                 doMasks: true);
         }
 
@@ -664,6 +668,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.Write_Binary_Internal(
                 writer: writer,
+                recordTypeConverter: null,
                 doMasks: false);
         }
 
@@ -685,12 +690,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected object Write_Binary_Internal(
             MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
             bool doMasks)
         {
             LocalVariableCommon.Write_Binary(
                 writer: writer,
                 item: this,
                 doMasks: doMasks,
+                recordTypeConverter: recordTypeConverter,
                 errorMask: out var errorMask);
             return errorMask;
         }
@@ -698,7 +705,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         private static LocalVariable Create_Binary_Internal(
             MutagenFrame frame,
-            Func<LocalVariable_ErrorMask> errorMask)
+            Func<LocalVariable_ErrorMask> errorMask,
+            RecordTypeConverter recordTypeConverter)
         {
             var ret = new LocalVariable();
             try
@@ -716,7 +724,8 @@ namespace Mutagen.Bethesda.Oblivion
                             item: ret,
                             frame: frame,
                             lastParsed: lastParsed,
-                            errorMask: errorMask);
+                            errorMask: errorMask,
+                            recordTypeConverter: recordTypeConverter);
                         if (parsed.Failed) break;
                         lastParsed = parsed.Value;
                     }
@@ -741,11 +750,13 @@ namespace Mutagen.Bethesda.Oblivion
             LocalVariable item,
             MutagenFrame frame,
             LocalVariable_FieldIndex? lastParsed,
-            Func<LocalVariable_ErrorMask> errorMask)
+            Func<LocalVariable_ErrorMask> errorMask,
+            RecordTypeConverter recordTypeConverter = null)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
                 frame: frame,
-                contentLength: out var contentLength);
+                contentLength: out var contentLength,
+                recordTypeConverter: recordTypeConverter);
             switch (nextRecordType.Type)
             {
                 case "SLSD":
@@ -1522,6 +1533,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             ILocalVariableGetter item,
+            RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out LocalVariable_ErrorMask errorMask)
         {
@@ -1529,6 +1541,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
+                recordTypeConverter: recordTypeConverter,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new LocalVariable_ErrorMask()) : default(Func<LocalVariable_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -1536,6 +1549,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             ILocalVariableGetter item,
+            RecordTypeConverter recordTypeConverter,
             Func<LocalVariable_ErrorMask> errorMask)
         {
             try
@@ -1543,6 +1557,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Write_Binary_RecordTypes(
                     item: item,
                     writer: writer,
+                    recordTypeConverter: recordTypeConverter,
                     errorMask: errorMask);
             }
             catch (Exception ex)
@@ -1556,6 +1571,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary_RecordTypes(
             ILocalVariableGetter item,
             MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
             Func<LocalVariable_ErrorMask> errorMask)
         {
             LoquiBinaryTranslation<LocalVariableData, LocalVariableData_ErrorMask>.Instance.Write(
@@ -1568,7 +1584,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Name_Property,
                 fieldIndex: (int)LocalVariable_FieldIndex.Name,
                 errorMask: errorMask,
-                header: LocalVariable_Registration.SCVR_HEADER,
+                header: recordTypeConverter.Convert(LocalVariable_Registration.SCVR_HEADER),
                 nullable: false);
         }
 

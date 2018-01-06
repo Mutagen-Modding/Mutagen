@@ -58,8 +58,14 @@ namespace Mutagen.Bethesda.Generation
             this._typeGenerations[typeof(DataType)] = new DataBinaryTranslationModule();
             this._typeGenerations[typeof(SpecialParseType)] = new SpecialParseTranslationGeneration();
             this.MainAPI = new TranslationModuleAPI(
-                writerAPI: new MethodAPI("MutagenWriter writer"),
-                readerAPI: new MethodAPI("MutagenFrame frame"));
+                writerAPI: new MethodAPI(
+                    majorAPI: new string[] { "MutagenWriter writer" },
+                    optionalAPI: null,
+                    customAPI: new CustomMethodAPI[] { CustomMethodAPI.Private($"{nameof(RecordTypeConverter)} recordTypeConverter", "null") }),
+                readerAPI: new MethodAPI(
+                    majorAPI: new string[] { "MutagenFrame frame" },
+                    optionalAPI: null,
+                    customAPI: new CustomMethodAPI[] { CustomMethodAPI.Private($"{nameof(RecordTypeConverter)} recordTypeConverter", "null") }));
             this.MinorAPIs.Add(
                 new TranslationModuleAPI(new MethodAPI("string path"))
                 {
@@ -251,6 +257,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add("MutagenFrame frame");
                     args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
+                    args.Add($"{nameof(RecordTypeConverter)} recordTypeConverter");
                 }
                 using (new BraceWrapper(fg))
                 {
@@ -328,6 +335,7 @@ namespace Mutagen.Bethesda.Generation
                                             args.Add("lastParsed: lastParsed");
                                         }
                                         args.Add("errorMask: errorMask");
+                                        args.Add($"recordTypeConverter: recordTypeConverter");
                                     }
                                     fg.AppendLine("if (parsed.Failed) break;");
                                     if (typelessStruct)
@@ -403,6 +411,7 @@ namespace Mutagen.Bethesda.Generation
                         args.Add($"{obj.FieldIndexName}? lastParsed");
                     }
                     args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
+                    args.Add($"{nameof(RecordTypeConverter)} recordTypeConverter = null");
                 }
                 using (new BraceWrapper(fg))
                 {
@@ -428,6 +437,7 @@ namespace Mutagen.Bethesda.Generation
                     {
                         args.Add("frame: frame");
                         args.Add("contentLength: out var contentLength");
+                        args.Add("recordTypeConverter: recordTypeConverter");
                     }
                     fg.AppendLine("switch (nextRecordType.Type)");
                     using (new BraceWrapper(fg))
@@ -713,6 +723,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 args.Add("frame: frame");
                 args.Add($"errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new {obj.Mask(MaskType.Error)}()) : default(Func<{obj.Mask(MaskType.Error)}>)");
+                args.Add($"recordTypeConverter: recordTypeConverter");
             }
             fg.AppendLine($"return (ret, errMaskRet);");
         }
@@ -765,6 +776,7 @@ namespace Mutagen.Bethesda.Generation
                     {
                         args.Add($"item: item");
                         args.Add($"writer: writer");
+                        args.Add($"recordTypeConverter: recordTypeConverter");
                         args.Add($"errorMask: errorMask");
                     }
                 }
@@ -778,6 +790,7 @@ namespace Mutagen.Bethesda.Generation
                         {
                             args.Add($"item: item");
                             args.Add($"writer: writer");
+                            args.Add($"recordTypeConverter: recordTypeConverter");
                             args.Add($"errorMask: errorMask");
                         }
                     }
@@ -870,6 +883,7 @@ namespace Mutagen.Bethesda.Generation
                         args.Add($"{obj.ObjectName} item");
                     }
                     args.Add("MutagenWriter writer");
+                    args.Add("RecordTypeConverter recordTypeConverter");
                     args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
                 }
                 using (new BraceWrapper(fg))
@@ -884,6 +898,7 @@ namespace Mutagen.Bethesda.Generation
                             {
                                 args.Add($"item: item");
                                 args.Add("writer: writer");
+                                args.Add("recordTypeConverter: recordTypeConverter");
                                 args.Add($"errorMask: errorMask");
                             }
                         }

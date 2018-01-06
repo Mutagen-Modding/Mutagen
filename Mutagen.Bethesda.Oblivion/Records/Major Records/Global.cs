@@ -17,6 +17,7 @@ namespace Mutagen.Bethesda.Oblivion
         
         public static (Global Object, Global_ErrorMask ErrorMask) Create_Binary(
             MutagenFrame frame,
+            RecordTypeConverter recordTypeConverter,
             bool doMasks)
         {
             // Skip to FNAM

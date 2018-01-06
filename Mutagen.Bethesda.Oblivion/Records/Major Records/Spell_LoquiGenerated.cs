@@ -402,6 +402,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             errorMask = (Spell_ErrorMask)this.Write_Binary_Internal(
                 writer: writer,
+                recordTypeConverter: null,
                 doMasks: true);
         }
 
@@ -431,12 +432,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected override object Write_Binary_Internal(
             MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
             bool doMasks)
         {
             SpellCommon.Write_Binary(
                 writer: writer,
                 item: this,
                 doMasks: doMasks,
+                recordTypeConverter: recordTypeConverter,
                 errorMask: out var errorMask);
             return errorMask;
         }
@@ -1036,6 +1039,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             ISpellGetter item,
+            RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out Spell_ErrorMask errorMask)
         {
@@ -1043,6 +1047,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
+                recordTypeConverter: recordTypeConverter,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Spell_ErrorMask()) : default(Func<Spell_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -1050,6 +1055,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             ISpellGetter item,
+            RecordTypeConverter recordTypeConverter,
             Func<Spell_ErrorMask> errorMask)
         {
             try
@@ -1061,6 +1067,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 NamedMajorRecordCommon.Write_Binary_RecordTypes(
                     item: item,
                     writer: writer,
+                    recordTypeConverter: recordTypeConverter,
                     errorMask: errorMask);
             }
             catch (Exception ex)

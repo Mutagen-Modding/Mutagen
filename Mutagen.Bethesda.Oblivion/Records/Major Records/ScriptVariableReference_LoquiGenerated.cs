@@ -462,6 +462,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             var ret = Create_Binary(
                 frame: frame,
+                recordTypeConverter: null,
                 doMasks: doMasks);
             errorMask = ret.ErrorMask;
             return ret.Object;
@@ -470,12 +471,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static (ScriptVariableReference Object, ScriptVariableReference_ErrorMask ErrorMask) Create_Binary(
             MutagenFrame frame,
+            RecordTypeConverter recordTypeConverter,
             bool doMasks)
         {
             ScriptVariableReference_ErrorMask errMaskRet = null;
             var ret = Create_Binary_Internal(
                 frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new ScriptVariableReference_ErrorMask()) : default(Func<ScriptVariableReference_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new ScriptVariableReference_ErrorMask()) : default(Func<ScriptVariableReference_ErrorMask>),
+                recordTypeConverter: recordTypeConverter);
             return (ret, errMaskRet);
         }
 
@@ -630,6 +633,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             errorMask = (ScriptVariableReference_ErrorMask)this.Write_Binary_Internal(
                 writer: writer,
+                recordTypeConverter: null,
                 doMasks: true);
         }
 
@@ -661,6 +665,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.Write_Binary_Internal(
                 writer: writer,
+                recordTypeConverter: null,
                 doMasks: false);
         }
 
@@ -682,12 +687,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected override object Write_Binary_Internal(
             MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
             bool doMasks)
         {
             ScriptVariableReferenceCommon.Write_Binary(
                 writer: writer,
                 item: this,
                 doMasks: doMasks,
+                recordTypeConverter: recordTypeConverter,
                 errorMask: out var errorMask);
             return errorMask;
         }
@@ -695,7 +702,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         private static ScriptVariableReference Create_Binary_Internal(
             MutagenFrame frame,
-            Func<ScriptVariableReference_ErrorMask> errorMask)
+            Func<ScriptVariableReference_ErrorMask> errorMask,
+            RecordTypeConverter recordTypeConverter)
         {
             var ret = new ScriptVariableReference();
             try
@@ -713,7 +721,8 @@ namespace Mutagen.Bethesda.Oblivion
                             item: ret,
                             frame: frame,
                             lastParsed: lastParsed,
-                            errorMask: errorMask);
+                            errorMask: errorMask,
+                            recordTypeConverter: recordTypeConverter);
                         if (parsed.Failed) break;
                         lastParsed = parsed.Value;
                     }
@@ -738,11 +747,13 @@ namespace Mutagen.Bethesda.Oblivion
             ScriptVariableReference item,
             MutagenFrame frame,
             ScriptVariableReference_FieldIndex? lastParsed,
-            Func<ScriptVariableReference_ErrorMask> errorMask)
+            Func<ScriptVariableReference_ErrorMask> errorMask,
+            RecordTypeConverter recordTypeConverter = null)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
                 frame: frame,
-                contentLength: out var contentLength);
+                contentLength: out var contentLength,
+                recordTypeConverter: recordTypeConverter);
             switch (nextRecordType.Type)
             {
                 case "SCRV":
@@ -1403,6 +1414,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             IScriptVariableReferenceGetter item,
+            RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out ScriptVariableReference_ErrorMask errorMask)
         {
@@ -1410,6 +1422,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
+                recordTypeConverter: recordTypeConverter,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new ScriptVariableReference_ErrorMask()) : default(Func<ScriptVariableReference_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -1417,6 +1430,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             IScriptVariableReferenceGetter item,
+            RecordTypeConverter recordTypeConverter,
             Func<ScriptVariableReference_ErrorMask> errorMask)
         {
             try
@@ -1424,6 +1438,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Write_Binary_RecordTypes(
                     item: item,
                     writer: writer,
+                    recordTypeConverter: recordTypeConverter,
                     errorMask: errorMask);
             }
             catch (Exception ex)
@@ -1437,6 +1452,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary_RecordTypes(
             IScriptVariableReferenceGetter item,
             MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
             Func<ScriptVariableReference_ErrorMask> errorMask)
         {
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
@@ -1444,7 +1460,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.VariableIndex_Property,
                 fieldIndex: (int)ScriptVariableReference_FieldIndex.VariableIndex,
                 errorMask: errorMask,
-                header: ScriptVariableReference_Registration.SCRV_HEADER,
+                header: recordTypeConverter.Convert(ScriptVariableReference_Registration.SCRV_HEADER),
                 nullable: false);
         }
 

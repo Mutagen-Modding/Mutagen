@@ -19,9 +19,9 @@ namespace Mutagen.Bethesda.Binary
     {
         public static readonly LoquiBinaryTranslation<T, M> Instance = new LoquiBinaryTranslation<T, M>();
         private static readonly ILoquiRegistration Registration = LoquiRegistration.GetRegister(typeof(T));
-        public delegate T CREATE_FUNC(MutagenFrame reader, bool doMasks, out M errorMask);
+        public delegate T CREATE_FUNC(MutagenFrame reader, RecordTypeConverter recordTypeConverter, bool doMasks, out M errorMask);
         private static readonly Lazy<CREATE_FUNC> CREATE = new Lazy<CREATE_FUNC>(GetCreateFunc);
-        public delegate void WRITE_FUNC(MutagenWriter writer, T item, bool doMasks, out M errorMask);
+        public delegate void WRITE_FUNC(MutagenWriter writer, T item, RecordTypeConverter recordTypeConverter, bool doMasks, out M errorMask);
         private static readonly Lazy<WRITE_FUNC> WRITE = new Lazy<WRITE_FUNC>(GetWriteFunc);
 
         private IEnumerable<KeyValuePair<ushort, object>> EnumerateObjects(
@@ -105,20 +105,20 @@ namespace Mutagen.Bethesda.Binary
                 .FirstOrDefault();
             if (method != null)
             {
-                var func = DelegateBuilder.BuildDelegate<Func<MutagenFrame, bool, (T item, M mask)>>(method);
-                return (MutagenFrame reader, bool doMasks, out M errorMask) =>
+                var func = DelegateBuilder.BuildDelegate<Func<MutagenFrame, RecordTypeConverter, bool, (T item, M mask)>>(method);
+                return (MutagenFrame reader, RecordTypeConverter converterDictionary, bool doMasks, out M errorMask) =>
                 {
-                    var ret = func(reader, doMasks);
+                    var ret = func(reader, converterDictionary, doMasks);
                     errorMask = ret.mask;
                     return ret.item;
                 };
             }
             method = options
                 .Where((methodInfo) => typeof(M).InheritsFrom(methodInfo.ReturnType.GenericTypeArguments[1], couldInherit: true)).First();
-            var f = DelegateBuilder.BuildGenericDelegate<Func<MutagenFrame, bool, (T item, M mask)>>(tType, new Type[] { mType.GenericTypeArguments[0] }, method);
-            return (MutagenFrame reader, bool doMasks, out M errorMask) =>
+            var f = DelegateBuilder.BuildGenericDelegate<Func<MutagenFrame, RecordTypeConverter, bool, (T item, M mask)>>(tType, new Type[] { mType.GenericTypeArguments[0] }, method);
+            return (MutagenFrame reader, RecordTypeConverter converterDictionary, bool doMasks, out M errorMask) =>
             {
-                var ret = f(reader, doMasks);
+                var ret = f(reader, converterDictionary, doMasks);
                 errorMask = ret.mask;
                 return ret.item;
             };
@@ -128,13 +128,15 @@ namespace Mutagen.Bethesda.Binary
         public TryGet<T> Parse(
             MutagenFrame frame,
             bool doMasks,
-            out MaskItem<Exception, M> errorMask)
+            out MaskItem<Exception, M> errorMask,
+            RecordTypeConverter recordTypeConverter = null)
         {
             try
             {
                 var ret = TryGet<T>.Succeed(CREATE.Value(
                     reader: frame,
                     doMasks: doMasks,
+                    recordTypeConverter: recordTypeConverter,
                     errorMask: out var subMask));
                 errorMask = subMask == null ? null : new MaskItem<Exception, M>(null, subMask);
                 return ret;
@@ -196,18 +198,18 @@ namespace Mutagen.Bethesda.Binary
                 .First();
             if (!method.IsGenericMethod)
             {
-                var f = DelegateBuilder.BuildDelegate<Func<T, MutagenWriter, bool, object>>(method);
-                return (MutagenWriter writer, T item, bool doMasks, out M errorMask) =>
+                var f = DelegateBuilder.BuildDelegate<Func<T, MutagenWriter, RecordTypeConverter, bool, object>>(method);
+                return (MutagenWriter writer, T item, RecordTypeConverter recordTypeConverter, bool doMasks, out M errorMask) =>
                 {
-                    errorMask = (M)f(item, writer, doMasks);
+                    errorMask = (M)f(item, writer, recordTypeConverter, doMasks);
                 };
             }
             else
             {
-                var f = DelegateBuilder.BuildGenericDelegate<Func<T, MutagenWriter, bool, object>>(typeof(T), new Type[] { typeof(M).GenericTypeArguments[0] }, method);
-                return (MutagenWriter writer, T item, bool doMasks, out M errorMask) =>
+                var f = DelegateBuilder.BuildGenericDelegate<Func<T, MutagenWriter, RecordTypeConverter, bool, object>>(typeof(T), new Type[] { typeof(M).GenericTypeArguments[0] }, method);
+                return (MutagenWriter writer, T item, RecordTypeConverter recordTypeConverter, bool doMasks, out M errorMask) =>
                 {
-                    errorMask = (M)f(item, writer, doMasks);
+                    errorMask = (M)f(item, writer, recordTypeConverter, doMasks);
                 };
             }
         }
@@ -228,6 +230,7 @@ namespace Mutagen.Bethesda.Binary
                 WRITE.Value(
                     writer: writer,
                     item: item,
+                    recordTypeConverter: null,
                     doMasks: doMasks,
                     errorMask: out var subMask);
                 errorMask = subMask == null ? null : new MaskItem<Exception, M>(null, subMask);
@@ -250,6 +253,7 @@ namespace Mutagen.Bethesda.Binary
                 WRITE.Value(
                     writer: writer,
                     item: item,
+                    recordTypeConverter: null,
                     doMasks: errorMask != null,
                     errorMask: out var subMask);
                 ErrorMask.HandleErrorMask(

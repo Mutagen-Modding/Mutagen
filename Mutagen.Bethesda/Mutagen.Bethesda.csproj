@@ -65,6 +65,7 @@
       <DependentUpon>MasterReference.xml</DependentUpon>
     </Compile>
     <Compile Include="RecordType.cs" />
+    <Compile Include="RecordTypeConverter.cs" />
     <Compile Include="Translators\Binary\BinaryTranslationCaster.cs" />
     <Compile Include="Translators\Binary\BinaryTranslator.cs" />
     <Compile Include="Translators\Binary\BooleanBinaryTranslation.cs" />

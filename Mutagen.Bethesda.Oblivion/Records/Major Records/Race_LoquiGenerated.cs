@@ -1058,6 +1058,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             var ret = Create_Binary(
                 frame: frame,
+                recordTypeConverter: null,
                 doMasks: doMasks);
             errorMask = ret.ErrorMask;
             return ret.Object;
@@ -1066,12 +1067,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static (Race Object, Race_ErrorMask ErrorMask) Create_Binary(
             MutagenFrame frame,
+            RecordTypeConverter recordTypeConverter,
             bool doMasks)
         {
             Race_ErrorMask errMaskRet = null;
             var ret = Create_Binary_Internal(
                 frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Race_ErrorMask()) : default(Func<Race_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Race_ErrorMask()) : default(Func<Race_ErrorMask>),
+                recordTypeConverter: recordTypeConverter);
             return (ret, errMaskRet);
         }
 
@@ -1238,6 +1241,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             errorMask = (Race_ErrorMask)this.Write_Binary_Internal(
                 writer: writer,
+                recordTypeConverter: null,
                 doMasks: true);
         }
 
@@ -1269,6 +1273,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.Write_Binary_Internal(
                 writer: writer,
+                recordTypeConverter: null,
                 doMasks: false);
         }
 
@@ -1290,12 +1295,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected override object Write_Binary_Internal(
             MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
             bool doMasks)
         {
             RaceCommon.Write_Binary(
                 writer: writer,
                 item: this,
                 doMasks: doMasks,
+                recordTypeConverter: recordTypeConverter,
                 errorMask: out var errorMask);
             return errorMask;
         }
@@ -1303,7 +1310,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         private static Race Create_Binary_Internal(
             MutagenFrame frame,
-            Func<Race_ErrorMask> errorMask)
+            Func<Race_ErrorMask> errorMask,
+            RecordTypeConverter recordTypeConverter)
         {
             var ret = new Race();
             try
@@ -1322,7 +1330,8 @@ namespace Mutagen.Bethesda.Oblivion
                         var parsed = Fill_Binary_RecordTypes(
                             item: ret,
                             frame: frame,
-                            errorMask: errorMask);
+                            errorMask: errorMask,
+                            recordTypeConverter: recordTypeConverter);
                         if (parsed.Failed) break;
                     }
                 }
@@ -1349,11 +1358,13 @@ namespace Mutagen.Bethesda.Oblivion
         protected static TryGet<Race_FieldIndex?> Fill_Binary_RecordTypes(
             Race item,
             MutagenFrame frame,
-            Func<Race_ErrorMask> errorMask)
+            Func<Race_ErrorMask> errorMask,
+            RecordTypeConverter recordTypeConverter = null)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
                 frame: frame,
-                contentLength: out var contentLength);
+                contentLength: out var contentLength,
+                recordTypeConverter: recordTypeConverter);
             switch (nextRecordType.Type)
             {
                 case "DESC":
@@ -4255,6 +4266,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             IRaceGetter item,
+            RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out Race_ErrorMask errorMask)
         {
@@ -4262,6 +4274,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
+                recordTypeConverter: recordTypeConverter,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Race_ErrorMask()) : default(Func<Race_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -4269,6 +4282,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             IRaceGetter item,
+            RecordTypeConverter recordTypeConverter,
             Func<Race_ErrorMask> errorMask)
         {
             try
@@ -4285,6 +4299,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     Write_Binary_RecordTypes(
                         item: item,
                         writer: writer,
+                        recordTypeConverter: recordTypeConverter,
                         errorMask: errorMask);
                 }
             }
@@ -4299,18 +4314,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary_RecordTypes(
             IRaceGetter item,
             MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
             Func<Race_ErrorMask> errorMask)
         {
             NamedMajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
                 writer: writer,
+                recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Description_Property,
                 fieldIndex: (int)Race_FieldIndex.Description,
                 errorMask: errorMask,
-                header: Race_Registration.DESC_HEADER,
+                header: recordTypeConverter.Convert(Race_Registration.DESC_HEADER),
                 nullable: false);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Spell>, Exception>.Instance.Write(
                 writer: writer,
@@ -4324,7 +4341,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item: subItem,
                         doMasks: listDoMasks,
                         errorMask: out listSubMask,
-                        header: Race_Registration.SPLO_HEADER,
+                        header: recordTypeConverter.Convert(Race_Registration.SPLO_HEADER),
                         nullable: false);
                 }
                 );
@@ -4405,21 +4422,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.DefaultHairColor_Property,
                 fieldIndex: (int)Race_FieldIndex.DefaultHairColor,
                 errorMask: errorMask,
-                header: Race_Registration.CNAM_HEADER,
+                header: recordTypeConverter.Convert(Race_Registration.CNAM_HEADER),
                 nullable: false);
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FaceGenMainClamp_Property,
                 fieldIndex: (int)Race_FieldIndex.FaceGenMainClamp,
                 errorMask: errorMask,
-                header: Race_Registration.PNAM_HEADER,
+                header: recordTypeConverter.Convert(Race_Registration.PNAM_HEADER),
                 nullable: false);
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FaceGenFaceClamp_Property,
                 fieldIndex: (int)Race_FieldIndex.FaceGenFaceClamp,
                 errorMask: errorMask,
-                header: Race_Registration.UNAM_HEADER,
+                header: recordTypeConverter.Convert(Race_Registration.UNAM_HEADER),
                 nullable: false);
             LoquiBinaryTranslation<RaceStatsGendered, RaceStatsGendered_ErrorMask>.Instance.Write(
                 writer: writer,
@@ -4487,7 +4504,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Unknown_Property,
                 fieldIndex: (int)Race_FieldIndex.Unknown,
                 errorMask: errorMask,
-                header: Race_Registration.SNAM_HEADER,
+                header: recordTypeConverter.Convert(Race_Registration.SNAM_HEADER),
                 nullable: false);
         }
 

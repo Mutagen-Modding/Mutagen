@@ -429,6 +429,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             errorMask = (Global_ErrorMask)this.Write_Binary_Internal(
                 writer: writer,
+                recordTypeConverter: null,
                 doMasks: true);
         }
 
@@ -458,12 +459,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected override object Write_Binary_Internal(
             MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
             bool doMasks)
         {
             GlobalCommon.Write_Binary(
                 writer: writer,
                 item: this,
                 doMasks: doMasks,
+                recordTypeConverter: recordTypeConverter,
                 errorMask: out var errorMask);
             return errorMask;
         }
@@ -497,11 +500,13 @@ namespace Mutagen.Bethesda.Oblivion
         protected static TryGet<Global_FieldIndex?> Fill_Binary_RecordTypes(
             Global item,
             MutagenFrame frame,
-            Func<Global_ErrorMask> errorMask)
+            Func<Global_ErrorMask> errorMask,
+            RecordTypeConverter recordTypeConverter = null)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
                 frame: frame,
-                contentLength: out var contentLength);
+                contentLength: out var contentLength,
+                recordTypeConverter: recordTypeConverter);
             switch (nextRecordType.Type)
             {
                 case "FNAM":
@@ -1198,6 +1203,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             IGlobalGetter item,
+            RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out Global_ErrorMask errorMask)
         {
@@ -1205,6 +1211,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
+                recordTypeConverter: recordTypeConverter,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Global_ErrorMask()) : default(Func<Global_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -1212,6 +1219,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             IGlobalGetter item,
+            RecordTypeConverter recordTypeConverter,
             Func<Global_ErrorMask> errorMask)
         {
             try
@@ -1228,6 +1236,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     Write_Binary_RecordTypes(
                         item: item,
                         writer: writer,
+                        recordTypeConverter: recordTypeConverter,
                         errorMask: errorMask);
                 }
             }
@@ -1242,11 +1251,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary_RecordTypes(
             IGlobalGetter item,
             MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
             Func<Global_ErrorMask> errorMask)
         {
             MajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
                 writer: writer,
+                recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
             Global.WriteBinary_TypeChar(
                 writer: writer,
@@ -1258,7 +1269,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.RawFloat_Property,
                 fieldIndex: (int)Global_FieldIndex.RawFloat,
                 errorMask: errorMask,
-                header: Global_Registration.FLTV_HEADER,
+                header: recordTypeConverter.Convert(Global_Registration.FLTV_HEADER),
                 nullable: false);
         }
 

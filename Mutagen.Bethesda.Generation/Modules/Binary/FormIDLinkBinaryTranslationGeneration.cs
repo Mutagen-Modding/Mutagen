@@ -106,7 +106,7 @@ namespace Mutagen.Bethesda.Generation
                         }
                         if (data.RecordType.HasValue)
                         {
-                            args.Add($"header: {objGen.RecordTypeHeaderName(data.RecordType.Value)}");
+                            args.Add($"header: recordTypeConverter.Convert({objGen.RecordTypeHeaderName(data.RecordType.Value)})");
                             args.Add($"nullable: {(data.Optional ? "true" : "false")}");
                         }
                     }

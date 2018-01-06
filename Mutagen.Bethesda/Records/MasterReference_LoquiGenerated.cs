@@ -479,6 +479,7 @@ namespace Mutagen.Bethesda
         {
             var ret = Create_Binary(
                 frame: frame,
+                recordTypeConverter: null,
                 doMasks: doMasks);
             errorMask = ret.ErrorMask;
             return ret.Object;
@@ -487,12 +488,14 @@ namespace Mutagen.Bethesda
         [DebuggerStepThrough]
         public static (MasterReference Object, MasterReference_ErrorMask ErrorMask) Create_Binary(
             MutagenFrame frame,
+            RecordTypeConverter recordTypeConverter,
             bool doMasks)
         {
             MasterReference_ErrorMask errMaskRet = null;
             var ret = Create_Binary_Internal(
                 frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new MasterReference_ErrorMask()) : default(Func<MasterReference_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new MasterReference_ErrorMask()) : default(Func<MasterReference_ErrorMask>),
+                recordTypeConverter: recordTypeConverter);
             return (ret, errMaskRet);
         }
 
@@ -635,6 +638,7 @@ namespace Mutagen.Bethesda
         {
             errorMask = (MasterReference_ErrorMask)this.Write_Binary_Internal(
                 writer: writer,
+                recordTypeConverter: null,
                 doMasks: true);
         }
 
@@ -666,6 +670,7 @@ namespace Mutagen.Bethesda
         {
             this.Write_Binary_Internal(
                 writer: writer,
+                recordTypeConverter: null,
                 doMasks: false);
         }
 
@@ -687,12 +692,14 @@ namespace Mutagen.Bethesda
 
         protected object Write_Binary_Internal(
             MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
             bool doMasks)
         {
             MasterReferenceCommon.Write_Binary(
                 writer: writer,
                 item: this,
                 doMasks: doMasks,
+                recordTypeConverter: recordTypeConverter,
                 errorMask: out var errorMask);
             return errorMask;
         }
@@ -700,7 +707,8 @@ namespace Mutagen.Bethesda
 
         private static MasterReference Create_Binary_Internal(
             MutagenFrame frame,
-            Func<MasterReference_ErrorMask> errorMask)
+            Func<MasterReference_ErrorMask> errorMask,
+            RecordTypeConverter recordTypeConverter)
         {
             var ret = new MasterReference();
             try
@@ -718,7 +726,8 @@ namespace Mutagen.Bethesda
                             item: ret,
                             frame: frame,
                             lastParsed: lastParsed,
-                            errorMask: errorMask);
+                            errorMask: errorMask,
+                            recordTypeConverter: recordTypeConverter);
                         if (parsed.Failed) break;
                         lastParsed = parsed.Value;
                     }
@@ -743,11 +752,13 @@ namespace Mutagen.Bethesda
             MasterReference item,
             MutagenFrame frame,
             MasterReference_FieldIndex? lastParsed,
-            Func<MasterReference_ErrorMask> errorMask)
+            Func<MasterReference_ErrorMask> errorMask,
+            RecordTypeConverter recordTypeConverter = null)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
                 frame: frame,
-                contentLength: out var contentLength);
+                contentLength: out var contentLength,
+                recordTypeConverter: recordTypeConverter);
             switch (nextRecordType.Type)
             {
                 case "MAST":
@@ -1487,6 +1498,7 @@ namespace Mutagen.Bethesda.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             IMasterReferenceGetter item,
+            RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out MasterReference_ErrorMask errorMask)
         {
@@ -1494,6 +1506,7 @@ namespace Mutagen.Bethesda.Internals
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
+                recordTypeConverter: recordTypeConverter,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new MasterReference_ErrorMask()) : default(Func<MasterReference_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -1501,6 +1514,7 @@ namespace Mutagen.Bethesda.Internals
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             IMasterReferenceGetter item,
+            RecordTypeConverter recordTypeConverter,
             Func<MasterReference_ErrorMask> errorMask)
         {
             try
@@ -1508,6 +1522,7 @@ namespace Mutagen.Bethesda.Internals
                 Write_Binary_RecordTypes(
                     item: item,
                     writer: writer,
+                    recordTypeConverter: recordTypeConverter,
                     errorMask: errorMask);
             }
             catch (Exception ex)
@@ -1521,6 +1536,7 @@ namespace Mutagen.Bethesda.Internals
         public static void Write_Binary_RecordTypes(
             IMasterReferenceGetter item,
             MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
             Func<MasterReference_ErrorMask> errorMask)
         {
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
@@ -1528,14 +1544,14 @@ namespace Mutagen.Bethesda.Internals
                 item: item.Master_Property,
                 fieldIndex: (int)MasterReference_FieldIndex.Master,
                 errorMask: errorMask,
-                header: MasterReference_Registration.MAST_HEADER,
+                header: recordTypeConverter.Convert(MasterReference_Registration.MAST_HEADER),
                 nullable: false);
             Mutagen.Bethesda.Binary.UInt64BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FileSize_Property,
                 fieldIndex: (int)MasterReference_FieldIndex.FileSize,
                 errorMask: errorMask,
-                header: MasterReference_Registration.DATA_HEADER,
+                header: recordTypeConverter.Convert(MasterReference_Registration.DATA_HEADER),
                 nullable: false);
         }
 

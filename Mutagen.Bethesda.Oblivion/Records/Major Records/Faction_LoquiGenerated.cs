@@ -574,6 +574,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             var ret = Create_Binary(
                 frame: frame,
+                recordTypeConverter: null,
                 doMasks: doMasks);
             errorMask = ret.ErrorMask;
             return ret.Object;
@@ -582,12 +583,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static (Faction Object, Faction_ErrorMask ErrorMask) Create_Binary(
             MutagenFrame frame,
+            RecordTypeConverter recordTypeConverter,
             bool doMasks)
         {
             Faction_ErrorMask errMaskRet = null;
             var ret = Create_Binary_Internal(
                 frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Faction_ErrorMask()) : default(Func<Faction_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Faction_ErrorMask()) : default(Func<Faction_ErrorMask>),
+                recordTypeConverter: recordTypeConverter);
             return (ret, errMaskRet);
         }
 
@@ -754,6 +757,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             errorMask = (Faction_ErrorMask)this.Write_Binary_Internal(
                 writer: writer,
+                recordTypeConverter: null,
                 doMasks: true);
         }
 
@@ -785,6 +789,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.Write_Binary_Internal(
                 writer: writer,
+                recordTypeConverter: null,
                 doMasks: false);
         }
 
@@ -806,12 +811,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected override object Write_Binary_Internal(
             MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
             bool doMasks)
         {
             FactionCommon.Write_Binary(
                 writer: writer,
                 item: this,
                 doMasks: doMasks,
+                recordTypeConverter: recordTypeConverter,
                 errorMask: out var errorMask);
             return errorMask;
         }
@@ -819,7 +826,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         private static Faction Create_Binary_Internal(
             MutagenFrame frame,
-            Func<Faction_ErrorMask> errorMask)
+            Func<Faction_ErrorMask> errorMask,
+            RecordTypeConverter recordTypeConverter)
         {
             var ret = new Faction();
             try
@@ -838,7 +846,8 @@ namespace Mutagen.Bethesda.Oblivion
                         var parsed = Fill_Binary_RecordTypes(
                             item: ret,
                             frame: frame,
-                            errorMask: errorMask);
+                            errorMask: errorMask,
+                            recordTypeConverter: recordTypeConverter);
                         if (parsed.Failed) break;
                     }
                 }
@@ -865,11 +874,13 @@ namespace Mutagen.Bethesda.Oblivion
         protected static TryGet<Faction_FieldIndex?> Fill_Binary_RecordTypes(
             Faction item,
             MutagenFrame frame,
-            Func<Faction_ErrorMask> errorMask)
+            Func<Faction_ErrorMask> errorMask,
+            RecordTypeConverter recordTypeConverter = null)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
                 frame: frame,
-                contentLength: out var contentLength);
+                contentLength: out var contentLength,
+                recordTypeConverter: recordTypeConverter);
             switch (nextRecordType.Type)
             {
                 case "XNAM":
@@ -1964,6 +1975,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             IFactionGetter item,
+            RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out Faction_ErrorMask errorMask)
         {
@@ -1971,6 +1983,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
+                recordTypeConverter: recordTypeConverter,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Faction_ErrorMask()) : default(Func<Faction_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -1978,6 +1991,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             IFactionGetter item,
+            RecordTypeConverter recordTypeConverter,
             Func<Faction_ErrorMask> errorMask)
         {
             try
@@ -1994,6 +2008,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     Write_Binary_RecordTypes(
                         item: item,
                         writer: writer,
+                        recordTypeConverter: recordTypeConverter,
                         errorMask: errorMask);
                 }
             }
@@ -2008,11 +2023,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary_RecordTypes(
             IFactionGetter item,
             MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
             Func<Faction_ErrorMask> errorMask)
         {
             NamedMajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
                 writer: writer,
+                recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<Relation, MaskItem<Exception, Relation_ErrorMask>>.Instance.Write(
                 writer: writer,
@@ -2034,14 +2051,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 length: new ContentLength(1),
                 fieldIndex: (int)Faction_FieldIndex.Flags,
                 errorMask: errorMask,
-                header: Faction_Registration.DATA_HEADER,
+                header: recordTypeConverter.Convert(Faction_Registration.DATA_HEADER),
                 nullable: false);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.CrimeGoldMultiplier_Property,
                 fieldIndex: (int)Faction_FieldIndex.CrimeGoldMultiplier,
                 errorMask: errorMask,
-                header: Faction_Registration.CNAM_HEADER,
+                header: recordTypeConverter.Convert(Faction_Registration.CNAM_HEADER),
                 nullable: false);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<Rank, MaskItem<Exception, Rank_ErrorMask>>.Instance.Write(
                 writer: writer,

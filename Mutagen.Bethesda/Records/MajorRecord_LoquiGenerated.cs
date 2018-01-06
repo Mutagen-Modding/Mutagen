@@ -491,6 +491,7 @@ namespace Mutagen.Bethesda
         {
             errorMask = (MajorRecord_ErrorMask)this.Write_Binary_Internal(
                 writer: writer,
+                recordTypeConverter: null,
                 doMasks: true);
         }
 
@@ -524,12 +525,14 @@ namespace Mutagen.Bethesda
 
         protected virtual object Write_Binary_Internal(
             MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
             bool doMasks)
         {
             MajorRecordCommon.Write_Binary(
                 writer: writer,
                 item: this,
                 doMasks: doMasks,
+                recordTypeConverter: recordTypeConverter,
                 errorMask: out var errorMask);
             return errorMask;
         }
@@ -562,11 +565,13 @@ namespace Mutagen.Bethesda
         protected static TryGet<MajorRecord_FieldIndex?> Fill_Binary_RecordTypes(
             MajorRecord item,
             MutagenFrame frame,
-            Func<MajorRecord_ErrorMask> errorMask)
+            Func<MajorRecord_ErrorMask> errorMask,
+            RecordTypeConverter recordTypeConverter = null)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
                 frame: frame,
-                contentLength: out var contentLength);
+                contentLength: out var contentLength,
+                recordTypeConverter: recordTypeConverter);
             switch (nextRecordType.Type)
             {
                 case "EDID":
@@ -1465,6 +1470,7 @@ namespace Mutagen.Bethesda.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             IMajorRecordGetter item,
+            RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out MajorRecord_ErrorMask errorMask)
         {
@@ -1472,6 +1478,7 @@ namespace Mutagen.Bethesda.Internals
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
+                recordTypeConverter: recordTypeConverter,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new MajorRecord_ErrorMask()) : default(Func<MajorRecord_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -1479,6 +1486,7 @@ namespace Mutagen.Bethesda.Internals
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             IMajorRecordGetter item,
+            RecordTypeConverter recordTypeConverter,
             Func<MajorRecord_ErrorMask> errorMask)
         {
             try
@@ -1490,6 +1498,7 @@ namespace Mutagen.Bethesda.Internals
                 Write_Binary_RecordTypes(
                     item: item,
                     writer: writer,
+                    recordTypeConverter: recordTypeConverter,
                     errorMask: errorMask);
             }
             catch (Exception ex)
@@ -1525,6 +1534,7 @@ namespace Mutagen.Bethesda.Internals
         public static void Write_Binary_RecordTypes(
             IMajorRecordGetter item,
             MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
             Func<MajorRecord_ErrorMask> errorMask)
         {
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
@@ -1532,7 +1542,7 @@ namespace Mutagen.Bethesda.Internals
                 item: item.EditorID_Property,
                 fieldIndex: (int)MajorRecord_FieldIndex.EditorID,
                 errorMask: errorMask,
-                header: MajorRecord_Registration.EDID_HEADER,
+                header: recordTypeConverter.Convert(MajorRecord_Registration.EDID_HEADER),
                 nullable: false);
         }
 

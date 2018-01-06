@@ -204,18 +204,23 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public static RecordType GetNextRecordType(
-            MutagenFrame frame)
+            MutagenFrame frame,
+            RecordTypeConverter recordTypeConverter = null)
         {
             var header = Encoding.ASCII.GetString(frame.Reader.ReadBytes(Constants.HEADER_LENGTH));
+            var ret = new RecordType(header, validate: false);
+            ret = recordTypeConverter.Convert(ret);
             frame.Position -= Constants.HEADER_LENGTH;
-            return new RecordType(header, validate: false);
+            return ret;
         }
 
         public static RecordType GetNextRecordType(
             MutagenFrame frame,
-            out ContentLength contentLength)
+            out ContentLength contentLength,
+            RecordTypeConverter recordTypeConverter = null)
         {
             var ret = ReadNextRecordType(frame, out contentLength);
+            ret = recordTypeConverter.Convert(ret);
             frame.Position -= Constants.HEADER_LENGTH + Constants.RECORD_LENGTHLENGTH;
             return ret;
         }
@@ -284,10 +289,12 @@ namespace Mutagen.Bethesda.Binary
 
         public static RecordType GetNextType(
             MutagenFrame frame,
-            out ContentLength contentLength)
+            out ContentLength contentLength,
+            RecordTypeConverter recordTypeConverter = null)
         {
             frame.CheckUpcomingRead(Constants.HEADER_LENGTH + Constants.RECORD_LENGTHLENGTH);
             var ret = ReadNextRecordType(frame);
+            ret = recordTypeConverter.Convert(ret);
             contentLength = ReadContentLength(frame.Reader, Constants.RECORD_LENGTHLENGTH);
             if (ret.Equals(GRUP_HEADER))
             {
@@ -299,12 +306,14 @@ namespace Mutagen.Bethesda.Binary
 
         public static RecordType GetNextSubRecordType(
             MutagenFrame frame,
-            out ContentLength contentLength)
+            out ContentLength contentLength,
+            RecordTypeConverter recordTypeConverter = null)
         {
             var ret = ReadNextRecordType(
                 frame,
                 Constants.SUBRECORD_LENGTHLENGTH,
                 out contentLength);
+            ret = recordTypeConverter.Convert(ret);
             frame.Reader.Position -= Constants.SUBRECORD_LENGTH;
             return ret;
         }

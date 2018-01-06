@@ -627,6 +627,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             var ret = Create_Binary(
                 frame: frame,
+                recordTypeConverter: null,
                 doMasks: doMasks);
             errorMask = ret.ErrorMask;
             return ret.Object;
@@ -635,12 +636,14 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static (TES4 Object, TES4_ErrorMask ErrorMask) Create_Binary(
             MutagenFrame frame,
+            RecordTypeConverter recordTypeConverter,
             bool doMasks)
         {
             TES4_ErrorMask errMaskRet = null;
             var ret = Create_Binary_Internal(
                 frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new TES4_ErrorMask()) : default(Func<TES4_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new TES4_ErrorMask()) : default(Func<TES4_ErrorMask>),
+                recordTypeConverter: recordTypeConverter);
             return (ret, errMaskRet);
         }
 
@@ -783,6 +786,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             errorMask = (TES4_ErrorMask)this.Write_Binary_Internal(
                 writer: writer,
+                recordTypeConverter: null,
                 doMasks: true);
         }
 
@@ -814,6 +818,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.Write_Binary_Internal(
                 writer: writer,
+                recordTypeConverter: null,
                 doMasks: false);
         }
 
@@ -835,12 +840,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected object Write_Binary_Internal(
             MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
             bool doMasks)
         {
             TES4Common.Write_Binary(
                 writer: writer,
                 item: this,
                 doMasks: doMasks,
+                recordTypeConverter: recordTypeConverter,
                 errorMask: out var errorMask);
             return errorMask;
         }
@@ -848,7 +855,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         private static TES4 Create_Binary_Internal(
             MutagenFrame frame,
-            Func<TES4_ErrorMask> errorMask)
+            Func<TES4_ErrorMask> errorMask,
+            RecordTypeConverter recordTypeConverter)
         {
             var ret = new TES4();
             try
@@ -867,7 +875,8 @@ namespace Mutagen.Bethesda.Oblivion
                         var parsed = Fill_Binary_RecordTypes(
                             item: ret,
                             frame: frame,
-                            errorMask: errorMask);
+                            errorMask: errorMask,
+                            recordTypeConverter: recordTypeConverter);
                         if (parsed.Failed) break;
                     }
                 }
@@ -896,11 +905,13 @@ namespace Mutagen.Bethesda.Oblivion
         protected static TryGet<TES4_FieldIndex?> Fill_Binary_RecordTypes(
             TES4 item,
             MutagenFrame frame,
-            Func<TES4_ErrorMask> errorMask)
+            Func<TES4_ErrorMask> errorMask,
+            RecordTypeConverter recordTypeConverter = null)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
                 frame: frame,
-                contentLength: out var contentLength);
+                contentLength: out var contentLength,
+                recordTypeConverter: recordTypeConverter);
             switch (nextRecordType.Type)
             {
                 case "HEDR":
@@ -2132,6 +2143,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             ITES4Getter item,
+            RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out TES4_ErrorMask errorMask)
         {
@@ -2139,6 +2151,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
+                recordTypeConverter: recordTypeConverter,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new TES4_ErrorMask()) : default(Func<TES4_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -2146,6 +2159,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             ITES4Getter item,
+            RecordTypeConverter recordTypeConverter,
             Func<TES4_ErrorMask> errorMask)
         {
             try
@@ -2162,6 +2176,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     Write_Binary_RecordTypes(
                         item: item,
                         writer: writer,
+                        recordTypeConverter: recordTypeConverter,
                         errorMask: errorMask);
                 }
             }
@@ -2188,6 +2203,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary_RecordTypes(
             ITES4Getter item,
             MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
             Func<TES4_ErrorMask> errorMask)
         {
             LoquiBinaryTranslation<Header, Header_ErrorMask>.Instance.Write(
@@ -2200,28 +2216,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.TypeOffsets_Property,
                 fieldIndex: (int)TES4_FieldIndex.TypeOffsets,
                 errorMask: errorMask,
-                header: TES4_Registration.OFST_HEADER,
+                header: recordTypeConverter.Convert(TES4_Registration.OFST_HEADER),
                 nullable: false);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Deleted_Property,
                 fieldIndex: (int)TES4_FieldIndex.Deleted,
                 errorMask: errorMask,
-                header: TES4_Registration.DELE_HEADER,
+                header: recordTypeConverter.Convert(TES4_Registration.DELE_HEADER),
                 nullable: false);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Author_Property,
                 fieldIndex: (int)TES4_FieldIndex.Author,
                 errorMask: errorMask,
-                header: TES4_Registration.CNAM_HEADER,
+                header: recordTypeConverter.Convert(TES4_Registration.CNAM_HEADER),
                 nullable: false);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Description_Property,
                 fieldIndex: (int)TES4_FieldIndex.Description,
                 errorMask: errorMask,
-                header: TES4_Registration.SNAM_HEADER,
+                header: recordTypeConverter.Convert(TES4_Registration.SNAM_HEADER),
                 nullable: false);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<MasterReference, MaskItem<Exception, MasterReference_ErrorMask>>.Instance.Write(
                 writer: writer,

@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>3775b8cf90c17f20f1704fe6fde85ad29a94930d</Sha>
+         <Sha>e224d0ce11fcb75726f8288f4b5a3a81c62e36af</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>01-04-2018 19:18:00</CommitDate>
-         <Description>Added System. namespace to Activator calls</Description>
+         <CommitDate>01-05-2018 23:41:27</CommitDate>
+         <Description>CustomMethodAPI to provide api that only applies to the internal API.  Roslyn added and .NET upgraded</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

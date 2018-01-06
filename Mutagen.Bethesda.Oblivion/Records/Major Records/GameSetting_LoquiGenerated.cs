@@ -378,6 +378,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             errorMask = (GameSetting_ErrorMask)this.Write_Binary_Internal(
                 writer: writer,
+                recordTypeConverter: null,
                 doMasks: true);
         }
 
@@ -407,12 +408,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected override object Write_Binary_Internal(
             MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
             bool doMasks)
         {
             GameSettingCommon.Write_Binary(
                 writer: writer,
                 item: this,
                 doMasks: doMasks,
+                recordTypeConverter: recordTypeConverter,
                 errorMask: out var errorMask);
             return errorMask;
         }
@@ -972,6 +975,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Write_Binary(
             MutagenWriter writer,
             IGameSettingGetter item,
+            RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out GameSetting_ErrorMask errorMask)
         {
@@ -979,6 +983,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
+                recordTypeConverter: recordTypeConverter,
                 errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new GameSetting_ErrorMask()) : default(Func<GameSetting_ErrorMask>));
             errorMask = errMaskRet;
         }
@@ -986,6 +991,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private static void Write_Binary_Internal(
             MutagenWriter writer,
             IGameSettingGetter item,
+            RecordTypeConverter recordTypeConverter,
             Func<GameSetting_ErrorMask> errorMask)
         {
             try
@@ -1002,6 +1008,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     MajorRecordCommon.Write_Binary_RecordTypes(
                         item: item,
                         writer: writer,
+                        recordTypeConverter: recordTypeConverter,
                         errorMask: errorMask);
                 }
             }
