@@ -2677,21 +2677,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 length: new ContentLength(4),
                 fieldIndex: (int)SkillRecord_FieldIndex.Skill,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(SkillRecord_Registration.INDX_HEADER),
+                header: recordTypeConverter.ConvertToCustom(SkillRecord_Registration.INDX_HEADER),
                 nullable: false);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Description_Property,
                 fieldIndex: (int)SkillRecord_FieldIndex.Description,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(SkillRecord_Registration.DESC_HEADER),
+                header: recordTypeConverter.ConvertToCustom(SkillRecord_Registration.DESC_HEADER),
                 nullable: false);
             Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Icon_Property,
                 fieldIndex: (int)SkillRecord_FieldIndex.Icon,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(SkillRecord_Registration.ICON_HEADER),
+                header: recordTypeConverter.ConvertToCustom(SkillRecord_Registration.ICON_HEADER),
                 nullable: false);
             using (HeaderExport.ExportSubRecordHeader(writer, SkillRecord_Registration.DATA_HEADER))
             {
@@ -2729,28 +2729,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.ApprenticeText_Property,
                 fieldIndex: (int)SkillRecord_FieldIndex.ApprenticeText,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(SkillRecord_Registration.ANAM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(SkillRecord_Registration.ANAM_HEADER),
                 nullable: false);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.JourneymanText_Property,
                 fieldIndex: (int)SkillRecord_FieldIndex.JourneymanText,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(SkillRecord_Registration.JNAM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(SkillRecord_Registration.JNAM_HEADER),
                 nullable: false);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.ExpertText_Property,
                 fieldIndex: (int)SkillRecord_FieldIndex.ExpertText,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(SkillRecord_Registration.ENAM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(SkillRecord_Registration.ENAM_HEADER),
                 nullable: false);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.MasterText_Property,
                 fieldIndex: (int)SkillRecord_FieldIndex.MasterText,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(SkillRecord_Registration.MNAM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(SkillRecord_Registration.MNAM_HEADER),
                 nullable: false);
         }
 

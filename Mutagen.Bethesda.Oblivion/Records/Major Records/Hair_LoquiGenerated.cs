@@ -1816,7 +1816,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Icon_Property,
                 fieldIndex: (int)Hair_FieldIndex.Icon,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(Hair_Registration.ICON_HEADER),
+                header: recordTypeConverter.ConvertToCustom(Hair_Registration.ICON_HEADER),
                 nullable: false);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<Hair.HairFlag>.Instance.Write(
                 writer,
@@ -1824,7 +1824,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 length: new ContentLength(1),
                 fieldIndex: (int)Hair_FieldIndex.Flags,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(Hair_Registration.DATA_HEADER),
+                header: recordTypeConverter.ConvertToCustom(Hair_Registration.DATA_HEADER),
                 nullable: false);
         }
 

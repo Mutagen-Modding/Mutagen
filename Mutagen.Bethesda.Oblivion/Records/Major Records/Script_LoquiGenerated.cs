@@ -2140,14 +2140,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.CompiledScript_Property,
                 fieldIndex: (int)Script_FieldIndex.CompiledScript,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(Script_Registration.SCDA_HEADER),
+                header: recordTypeConverter.ConvertToCustom(Script_Registration.SCDA_HEADER),
                 nullable: false);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.SourceCode_Property,
                 fieldIndex: (int)Script_FieldIndex.SourceCode,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(Script_Registration.SCTX_HEADER),
+                header: recordTypeConverter.ConvertToCustom(Script_Registration.SCTX_HEADER),
                 nullable: false,
                 nullTerminate: false);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<LocalVariable, MaskItem<Exception, LocalVariable_ErrorMask>>.Instance.Write(

@@ -153,13 +153,15 @@ namespace Mutagen.Bethesda.Binary
         public TryGet<T> Parse<Mask>(
             MutagenFrame frame,
             int fieldIndex,
-            Func<Mask> errorMask)
+            Func<Mask> errorMask,
+            RecordTypeConverter recordTypeConverter = null)
             where Mask : IErrorMask
         {
             var ret = this.Parse(
                 frame,
                 errorMask != null,
-                out MaskItem<Exception, M> ex);
+                out MaskItem<Exception, M> ex,
+                recordTypeConverter: recordTypeConverter);
             ErrorMask.HandleErrorMask(
                 errorMask,
                 fieldIndex,
@@ -223,14 +225,15 @@ namespace Mutagen.Bethesda.Binary
             MutagenWriter writer,
             T item,
             bool doMasks,
-            out MaskItem<Exception, M> errorMask)
+            out MaskItem<Exception, M> errorMask,
+            RecordTypeConverter recordTypeConverter = null)
         {
             try
             {
                 WRITE.Value(
                     writer: writer,
                     item: item,
-                    recordTypeConverter: null,
+                    recordTypeConverter: recordTypeConverter,
                     doMasks: doMasks,
                     errorMask: out var subMask);
                 errorMask = subMask == null ? null : new MaskItem<Exception, M>(null, subMask);
@@ -246,14 +249,15 @@ namespace Mutagen.Bethesda.Binary
             MutagenWriter writer,
             T item,
             int fieldIndex,
-            Func<M> errorMask)
+            Func<M> errorMask,
+            RecordTypeConverter recordTypeConverter = null)
         {
             try
             {
                 WRITE.Value(
                     writer: writer,
                     item: item,
-                    recordTypeConverter: null,
+                    recordTypeConverter: recordTypeConverter,
                     doMasks: errorMask != null,
                     errorMask: out var subMask);
                 ErrorMask.HandleErrorMask(
@@ -275,14 +279,16 @@ namespace Mutagen.Bethesda.Binary
             MutagenWriter writer,
             T item,
             int fieldIndex,
-            Func<Mask> errorMask)
+            Func<Mask> errorMask,
+            RecordTypeConverter recordTypeConverter = null)
             where Mask : IErrorMask
         {
             this.Write(
                 writer,
                 item,
                 errorMask != null,
-                out var subMask);
+                out var subMask,
+                recordTypeConverter: recordTypeConverter);
             ErrorMask.HandleErrorMask(
                 errorMask,
                 fieldIndex,
@@ -293,7 +299,8 @@ namespace Mutagen.Bethesda.Binary
             MutagenWriter writer,
             IHasBeenSetItemGetter<T> item,
             int fieldIndex,
-            Func<Mask> errorMask)
+            Func<Mask> errorMask,
+            RecordTypeConverter recordTypeConverter = null)
             where Mask : IErrorMask
         {
             if (!item.HasBeenSet) return;
@@ -301,21 +308,24 @@ namespace Mutagen.Bethesda.Binary
                 writer,
                 item.Item,
                 fieldIndex,
-                errorMask);
+                errorMask,
+                recordTypeConverter: recordTypeConverter);
         }
 
         public void Write<Mask>(
             MutagenWriter writer,
             IHasItemGetter<T> item,
             int fieldIndex,
-            Func<Mask> errorMask)
+            Func<Mask> errorMask,
+            RecordTypeConverter recordTypeConverter = null)
             where Mask : IErrorMask
         {
             this.Write(
                 writer,
                 item.Item,
                 fieldIndex,
-                errorMask);
+                errorMask,
+                recordTypeConverter: recordTypeConverter);
         }
         #endregion
     }

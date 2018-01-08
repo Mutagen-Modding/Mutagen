@@ -1828,14 +1828,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Icon_Property,
                 fieldIndex: (int)Birthsign_FieldIndex.Icon,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(Birthsign_Registration.ICON_HEADER),
+                header: recordTypeConverter.ConvertToCustom(Birthsign_Registration.ICON_HEADER),
                 nullable: false);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Description_Property,
                 fieldIndex: (int)Birthsign_FieldIndex.Description,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(Birthsign_Registration.DESC_HEADER),
+                header: recordTypeConverter.ConvertToCustom(Birthsign_Registration.DESC_HEADER),
                 nullable: false);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Spell>, Exception>.Instance.Write(
                 writer: writer,
@@ -1849,7 +1849,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item: subItem,
                         doMasks: listDoMasks,
                         errorMask: out listSubMask,
-                        header: recordTypeConverter.Convert(Birthsign_Registration.SPLO_HEADER),
+                        header: recordTypeConverter.ConvertToCustom(Birthsign_Registration.SPLO_HEADER),
                         nullable: false);
                 }
                 );

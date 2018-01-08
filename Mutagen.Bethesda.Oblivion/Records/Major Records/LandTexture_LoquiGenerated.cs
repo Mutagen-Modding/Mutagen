@@ -1916,7 +1916,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Icon_Property,
                 fieldIndex: (int)LandTexture_FieldIndex.Icon,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(LandTexture_Registration.ICON_HEADER),
+                header: recordTypeConverter.ConvertToCustom(LandTexture_Registration.ICON_HEADER),
                 nullable: false);
             LoquiBinaryTranslation<HavokData, HavokData_ErrorMask>.Instance.Write(
                 writer: writer,
@@ -1928,7 +1928,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.TextureSpecularExponent_Property,
                 fieldIndex: (int)LandTexture_FieldIndex.TextureSpecularExponent,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(LandTexture_Registration.SNAM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(LandTexture_Registration.SNAM_HEADER),
                 nullable: false);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Grass>, Exception>.Instance.Write(
                 writer: writer,
@@ -1942,7 +1942,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item: subItem,
                         doMasks: listDoMasks,
                         errorMask: out listSubMask,
-                        header: recordTypeConverter.Convert(LandTexture_Registration.GNAM_HEADER),
+                        header: recordTypeConverter.ConvertToCustom(LandTexture_Registration.GNAM_HEADER),
                         nullable: false);
                 }
                 );

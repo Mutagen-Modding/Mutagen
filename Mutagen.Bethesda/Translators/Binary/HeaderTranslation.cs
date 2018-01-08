@@ -209,7 +209,7 @@ namespace Mutagen.Bethesda.Binary
         {
             var header = Encoding.ASCII.GetString(frame.Reader.ReadBytes(Constants.HEADER_LENGTH));
             var ret = new RecordType(header, validate: false);
-            ret = recordTypeConverter.Convert(ret);
+            ret = recordTypeConverter.ConvertToStandard(ret);
             frame.Position -= Constants.HEADER_LENGTH;
             return ret;
         }
@@ -220,7 +220,7 @@ namespace Mutagen.Bethesda.Binary
             RecordTypeConverter recordTypeConverter = null)
         {
             var ret = ReadNextRecordType(frame, out contentLength);
-            ret = recordTypeConverter.Convert(ret);
+            ret = recordTypeConverter.ConvertToStandard(ret);
             frame.Position -= Constants.HEADER_LENGTH + Constants.RECORD_LENGTHLENGTH;
             return ret;
         }
@@ -294,7 +294,7 @@ namespace Mutagen.Bethesda.Binary
         {
             frame.CheckUpcomingRead(Constants.HEADER_LENGTH + Constants.RECORD_LENGTHLENGTH);
             var ret = ReadNextRecordType(frame);
-            ret = recordTypeConverter.Convert(ret);
+            ret = recordTypeConverter.ConvertToStandard(ret);
             contentLength = ReadContentLength(frame.Reader, Constants.RECORD_LENGTHLENGTH);
             if (ret.Equals(GRUP_HEADER))
             {
@@ -313,7 +313,7 @@ namespace Mutagen.Bethesda.Binary
                 frame,
                 Constants.SUBRECORD_LENGTHLENGTH,
                 out contentLength);
-            ret = recordTypeConverter.Convert(ret);
+            ret = recordTypeConverter.ConvertToStandard(ret);
             frame.Reader.Position -= Constants.SUBRECORD_LENGTH;
             return ret;
         }

@@ -2224,14 +2224,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Icon_Property,
                 fieldIndex: (int)AlchemicalApparatus_FieldIndex.Icon,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(AlchemicalApparatus_Registration.ICON_HEADER),
+                header: recordTypeConverter.ConvertToCustom(AlchemicalApparatus_Registration.ICON_HEADER),
                 nullable: false);
             Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Script_Property,
                 fieldIndex: (int)AlchemicalApparatus_FieldIndex.Script,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(AlchemicalApparatus_Registration.SCRI_HEADER),
+                header: recordTypeConverter.ConvertToCustom(AlchemicalApparatus_Registration.SCRI_HEADER),
                 nullable: false);
             using (HeaderExport.ExportSubRecordHeader(writer, AlchemicalApparatus_Registration.DATA_HEADER))
             {

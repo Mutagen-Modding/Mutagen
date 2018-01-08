@@ -2216,28 +2216,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.TypeOffsets_Property,
                 fieldIndex: (int)TES4_FieldIndex.TypeOffsets,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(TES4_Registration.OFST_HEADER),
+                header: recordTypeConverter.ConvertToCustom(TES4_Registration.OFST_HEADER),
                 nullable: false);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Deleted_Property,
                 fieldIndex: (int)TES4_FieldIndex.Deleted,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(TES4_Registration.DELE_HEADER),
+                header: recordTypeConverter.ConvertToCustom(TES4_Registration.DELE_HEADER),
                 nullable: false);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Author_Property,
                 fieldIndex: (int)TES4_FieldIndex.Author,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(TES4_Registration.CNAM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(TES4_Registration.CNAM_HEADER),
                 nullable: false);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Description_Property,
                 fieldIndex: (int)TES4_FieldIndex.Description,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(TES4_Registration.SNAM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(TES4_Registration.SNAM_HEADER),
                 nullable: false);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<MasterReference, MaskItem<Exception, MasterReference_ErrorMask>>.Instance.Write(
                 writer: writer,

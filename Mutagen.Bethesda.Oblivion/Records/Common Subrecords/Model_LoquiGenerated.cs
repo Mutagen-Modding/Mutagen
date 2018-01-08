@@ -1612,21 +1612,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.File_Property,
                 fieldIndex: (int)Model_FieldIndex.File,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(Model_Registration.MODL_HEADER),
+                header: recordTypeConverter.ConvertToCustom(Model_Registration.MODL_HEADER),
                 nullable: false);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.BoundRadius_Property,
                 fieldIndex: (int)Model_FieldIndex.BoundRadius,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(Model_Registration.MODB_HEADER),
+                header: recordTypeConverter.ConvertToCustom(Model_Registration.MODB_HEADER),
                 nullable: false);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Hashes_Property,
                 fieldIndex: (int)Model_FieldIndex.Hashes,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(Model_Registration.MODT_HEADER),
+                header: recordTypeConverter.ConvertToCustom(Model_Registration.MODT_HEADER),
                 nullable: false);
         }
 

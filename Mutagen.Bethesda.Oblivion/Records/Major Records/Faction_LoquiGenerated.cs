@@ -2051,14 +2051,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 length: new ContentLength(1),
                 fieldIndex: (int)Faction_FieldIndex.Flags,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(Faction_Registration.DATA_HEADER),
+                header: recordTypeConverter.ConvertToCustom(Faction_Registration.DATA_HEADER),
                 nullable: false);
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.CrimeGoldMultiplier_Property,
                 fieldIndex: (int)Faction_FieldIndex.CrimeGoldMultiplier,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(Faction_Registration.CNAM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(Faction_Registration.CNAM_HEADER),
                 nullable: false);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<Rank, MaskItem<Exception, Rank_ErrorMask>>.Instance.Write(
                 writer: writer,

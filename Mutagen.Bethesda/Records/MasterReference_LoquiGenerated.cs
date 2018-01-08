@@ -1544,14 +1544,14 @@ namespace Mutagen.Bethesda.Internals
                 item: item.Master_Property,
                 fieldIndex: (int)MasterReference_FieldIndex.Master,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(MasterReference_Registration.MAST_HEADER),
+                header: recordTypeConverter.ConvertToCustom(MasterReference_Registration.MAST_HEADER),
                 nullable: false);
             Mutagen.Bethesda.Binary.UInt64BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FileSize_Property,
                 fieldIndex: (int)MasterReference_FieldIndex.FileSize,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(MasterReference_Registration.DATA_HEADER),
+                header: recordTypeConverter.ConvertToCustom(MasterReference_Registration.DATA_HEADER),
                 nullable: false);
         }
 

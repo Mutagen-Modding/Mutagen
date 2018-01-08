@@ -24,6 +24,7 @@ namespace Mutagen.Bethesda.Generation
         public Dictionary<RecordType, ObjectGeneration> SubLoquiTypes = new Dictionary<RecordType, ObjectGeneration>();
         public IEnumerable<KeyValuePair<IEnumerable<RecordType>, TypeGeneration>> GenerationTypes => GetGenerationTypes();
         public bool IsTriggerForObject;
+        public RecordTypeConverter RecordTypeConverter;
 
         public MutagenFieldData(TypeGeneration source)
         {

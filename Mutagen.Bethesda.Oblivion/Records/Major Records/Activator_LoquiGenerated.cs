@@ -1797,14 +1797,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Script_Property,
                 fieldIndex: (int)Activator_FieldIndex.Script,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(Activator_Registration.SCRI_HEADER),
+                header: recordTypeConverter.ConvertToCustom(Activator_Registration.SCRI_HEADER),
                 nullable: false);
             Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Sound_Property,
                 fieldIndex: (int)Activator_FieldIndex.Sound,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(Activator_Registration.SNAM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(Activator_Registration.SNAM_HEADER),
                 nullable: false);
         }
 

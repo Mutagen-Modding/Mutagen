@@ -1269,7 +1269,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.RawFloat_Property,
                 fieldIndex: (int)Global_FieldIndex.RawFloat,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(Global_Registration.FLTV_HEADER),
+                header: recordTypeConverter.ConvertToCustom(Global_Registration.FLTV_HEADER),
                 nullable: false);
         }
 

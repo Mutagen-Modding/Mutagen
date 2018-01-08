@@ -1690,7 +1690,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 length: new ContentLength(4),
                 fieldIndex: (int)FacePart_FieldIndex.Index,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(FacePart_Registration.INDX_HEADER),
+                header: recordTypeConverter.ConvertToCustom(FacePart_Registration.INDX_HEADER),
                 nullable: false);
             LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Write(
                 writer: writer,
@@ -1702,7 +1702,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Icon_Property,
                 fieldIndex: (int)FacePart_FieldIndex.Icon,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(FacePart_Registration.ICON_HEADER),
+                header: recordTypeConverter.ConvertToCustom(FacePart_Registration.ICON_HEADER),
                 nullable: false);
         }
 

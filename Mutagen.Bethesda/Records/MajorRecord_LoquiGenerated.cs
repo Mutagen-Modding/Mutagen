@@ -983,6 +983,7 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType SOUN_HEADER = new RecordType("SOUN");
         public static readonly RecordType ACTI_HEADER = new RecordType("ACTI");
         public static readonly RecordType APPA_HEADER = new RecordType("APPA");
+        public static readonly RecordType ARMO_HEADER = new RecordType("ARMO");
         public static readonly RecordType BSGN_HEADER = new RecordType("BSGN");
         public static readonly RecordType CLAS_HEADER = new RecordType("CLAS");
         public static readonly RecordType ENCH_HEADER = new RecordType("ENCH");
@@ -1013,6 +1014,7 @@ namespace Mutagen.Bethesda.Internals
                         SOUN_HEADER,
                         ACTI_HEADER,
                         APPA_HEADER,
+                        ARMO_HEADER,
                         BSGN_HEADER,
                         CLAS_HEADER,
                         ENCH_HEADER,
@@ -1542,7 +1544,7 @@ namespace Mutagen.Bethesda.Internals
                 item: item.EditorID_Property,
                 fieldIndex: (int)MajorRecord_FieldIndex.EditorID,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(MajorRecord_Registration.EDID_HEADER),
+                header: recordTypeConverter.ConvertToCustom(MajorRecord_Registration.EDID_HEADER),
                 nullable: false);
         }
 

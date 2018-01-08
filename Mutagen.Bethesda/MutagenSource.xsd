@@ -74,6 +74,9 @@
     <xs:complexType name="RefDirect">
       <xs:complexContent>
         <xs:extension base="RefDirect">
+          <xs:choice>
+            <xs:element name="RecordTypeOverrides" type="RecordTypeMappingsType" minOccurs="0" />
+          </xs:choice>
           <xs:attribute name="recordType" type="xs:string" >
             <xs:annotation>
               <xs:documentation>
@@ -238,6 +241,17 @@
       <xs:element name="Fields" type="DataTypeFields" minOccurs="0" maxOccurs="1" />
     </xs:choice>
     <xs:attribute name="recordType" />
+  </xs:complexType>
+
+  <xs:complexType name="RecordTypeMappingsType" >
+    <xs:choice>
+      <xs:element name="Mapping" type="RecordTypeMappingType" minOccurs="0" maxOccurs="unbounded" />
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="RecordTypeMappingType" >
+    <xs:attribute name="From" type="xs:string" use="required" />
+    <xs:attribute name="To" type="xs:string" use="required" />
   </xs:complexType>
   
 </xs:schema>

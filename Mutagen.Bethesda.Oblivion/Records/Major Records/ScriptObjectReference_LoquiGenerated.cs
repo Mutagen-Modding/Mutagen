@@ -1452,7 +1452,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Reference_Property,
                 fieldIndex: (int)ScriptObjectReference_FieldIndex.Reference,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(ScriptObjectReference_Registration.SCRO_HEADER),
+                header: recordTypeConverter.ConvertToCustom(ScriptObjectReference_Registration.SCRO_HEADER),
                 nullable: false);
         }
 

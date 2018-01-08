@@ -1584,7 +1584,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Name_Property,
                 fieldIndex: (int)LocalVariable_FieldIndex.Name,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(LocalVariable_Registration.SCVR_HEADER),
+                header: recordTypeConverter.ConvertToCustom(LocalVariable_Registration.SCVR_HEADER),
                 nullable: false);
         }
 

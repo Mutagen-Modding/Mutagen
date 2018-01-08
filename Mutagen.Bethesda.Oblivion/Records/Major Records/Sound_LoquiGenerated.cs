@@ -1658,7 +1658,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.File_Property,
                 fieldIndex: (int)Sound_FieldIndex.File,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(Sound_Registration.FNAM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(Sound_Registration.FNAM_HEADER),
                 nullable: false);
             LoquiBinaryTranslation<SoundData, SoundData_ErrorMask>.Instance.Write(
                 writer: writer,

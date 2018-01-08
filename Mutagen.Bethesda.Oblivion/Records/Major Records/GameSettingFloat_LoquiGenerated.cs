@@ -1559,7 +1559,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Data_Property,
                 fieldIndex: (int)GameSettingFloat_FieldIndex.Data,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(GameSettingFloat_Registration.DATA_HEADER),
+                header: recordTypeConverter.ConvertToCustom(GameSettingFloat_Registration.DATA_HEADER),
                 nullable: false);
         }
 

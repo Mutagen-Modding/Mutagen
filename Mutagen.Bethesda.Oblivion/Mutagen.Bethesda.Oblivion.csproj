@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Records\Common Enums\ActorValue.cs" />
     <Compile Include="Records\Common Enums\Attribute.cs" />
+    <Compile Include="Records\Common Enums\BipedFlag.cs" />
     <Compile Include="Records\Common Enums\MagicSchool.cs" />
     <Compile Include="Records\Common Enums\Resistance.cs" />
     <Compile Include="Records\Common Enums\Skill.cs" />
@@ -72,6 +73,9 @@
     </Compile>
     <Compile Include="Records\Major Records\AlchemicalApparatus.cs">
       <DependentUpon>AlchemicalApparatus.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Armor.cs">
+      <DependentUpon>Armor.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\BodyData_LoquiGenerated.cs">
       <DependentUpon>Race.xml</DependentUpon>
@@ -307,6 +311,9 @@
     <Compile Include="Records\Major Records\AlchemicalApparatus_LoquiGenerated.cs">
       <DependentUpon>AlchemicalApparatus.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Armor_LoquiGenerated.cs">
+      <DependentUpon>Armor.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Records\Common Subrecords\Effect.xml">
@@ -331,6 +338,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\AlchemicalApparatus.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\Armor.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Birthsign.xml">

@@ -1670,7 +1670,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Icon_Property,
                 fieldIndex: (int)Eye_FieldIndex.Icon,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(Eye_Registration.ICON_HEADER),
+                header: recordTypeConverter.ConvertToCustom(Eye_Registration.ICON_HEADER),
                 nullable: false);
             Mutagen.Bethesda.Binary.EnumBinaryTranslation<Eye.Flag>.Instance.Write(
                 writer,
@@ -1678,7 +1678,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 length: new ContentLength(1),
                 fieldIndex: (int)Eye_FieldIndex.Flags,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(Eye_Registration.DATA_HEADER),
+                header: recordTypeConverter.ConvertToCustom(Eye_Registration.DATA_HEADER),
                 nullable: false);
         }
 

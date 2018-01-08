@@ -937,7 +937,20 @@ namespace Mutagen.Bethesda.Generation
                                         throw new ArgumentException("Unsupported type generator: " + subfield);
                                     }
 
+                                    var subData = subfield.GetFieldData();
                                     if (!subGenerator.ShouldGenerateCopyIn(subfield)) continue;
+                                    if (subData.CustomBinary)
+                                    {
+                                        using (var args = new ArgsWrapper(fg,
+                                            $"{obj.ObjectName}.WriteBinary_{subfield.Name}"))
+                                        {
+                                            args.Add("writer: writer");
+                                            args.Add("item: item");
+                                            args.Add($"fieldIndex: (int){subfield.IndexEnumName}");
+                                            args.Add("errorMask: errorMask");
+                                        }
+                                        continue;
+                                    }
                                     subGenerator.GenerateWrite(
                                         fg: fg,
                                         objGen: obj,

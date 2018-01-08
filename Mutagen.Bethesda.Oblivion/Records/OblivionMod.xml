@@ -90,6 +90,11 @@
           <GenericSpecification Definition="AlchemicalApparatus" TypeToSpecify="T" />
         </Direct>
       </Ref>
+      <Ref name="Armors">
+        <Direct refName="Group" >
+          <GenericSpecification Definition="Armor" TypeToSpecify="T" />
+        </Direct>
+      </Ref>
     </Fields>
   </Object>
 </Loqui>

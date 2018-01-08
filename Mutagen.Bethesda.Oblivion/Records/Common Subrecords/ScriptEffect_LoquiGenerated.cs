@@ -1856,7 +1856,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Name_Property,
                 fieldIndex: (int)ScriptEffect_FieldIndex.Name,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(ScriptEffect_Registration.FULL_HEADER),
+                header: recordTypeConverter.ConvertToCustom(ScriptEffect_Registration.FULL_HEADER),
                 nullable: false);
         }
 

@@ -4327,7 +4327,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Description_Property,
                 fieldIndex: (int)Race_FieldIndex.Description,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(Race_Registration.DESC_HEADER),
+                header: recordTypeConverter.ConvertToCustom(Race_Registration.DESC_HEADER),
                 nullable: false);
             Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Spell>, Exception>.Instance.Write(
                 writer: writer,
@@ -4341,7 +4341,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item: subItem,
                         doMasks: listDoMasks,
                         errorMask: out listSubMask,
-                        header: recordTypeConverter.Convert(Race_Registration.SPLO_HEADER),
+                        header: recordTypeConverter.ConvertToCustom(Race_Registration.SPLO_HEADER),
                         nullable: false);
                 }
                 );
@@ -4422,21 +4422,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.DefaultHairColor_Property,
                 fieldIndex: (int)Race_FieldIndex.DefaultHairColor,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(Race_Registration.CNAM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(Race_Registration.CNAM_HEADER),
                 nullable: false);
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FaceGenMainClamp_Property,
                 fieldIndex: (int)Race_FieldIndex.FaceGenMainClamp,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(Race_Registration.PNAM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(Race_Registration.PNAM_HEADER),
                 nullable: false);
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FaceGenFaceClamp_Property,
                 fieldIndex: (int)Race_FieldIndex.FaceGenFaceClamp,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(Race_Registration.UNAM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(Race_Registration.UNAM_HEADER),
                 nullable: false);
             LoquiBinaryTranslation<RaceStatsGendered, RaceStatsGendered_ErrorMask>.Instance.Write(
                 writer: writer,
@@ -4504,7 +4504,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Unknown_Property,
                 fieldIndex: (int)Race_FieldIndex.Unknown,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(Race_Registration.SNAM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(Race_Registration.SNAM_HEADER),
                 nullable: false);
         }
 

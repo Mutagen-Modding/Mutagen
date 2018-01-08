@@ -35,7 +35,7 @@ namespace Mutagen.Bethesda.Generation
                 args.Add($"errorMask: {maskAccessor}");
                 if (data.RecordType.HasValue)
                 {
-                    args.Add($"header: recordTypeConverter.Convert({objGen.RecordTypeHeaderName(data.RecordType.Value)})");
+                    args.Add($"header: recordTypeConverter.ConvertToCustom({objGen.RecordTypeHeaderName(data.RecordType.Value)})");
                     args.Add($"nullable: {(data.Optional ? "true" : "false")}");
                 }
                 else

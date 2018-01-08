@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda.Generation
 
         public override async Task GenerateInRegistration(ObjectGeneration obj, FileGeneration fg)
         {
-            await GenerateKnownRecordTypes(obj, fg);
+            await GenerateRegistrationRecordTypeCaches(obj, fg);
             fg.AppendLine($"public const int NumStructFields = {obj.IterateFields(expandSets: SetMarkerType.ExpandSets.False).Where((f) => !f.GetFieldData().HasTrigger).Count()};");
             var typedFields = obj.IterateFields().Where((f) => f.GetFieldData().HasTrigger).Sum((f) =>
             {
@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Generation
             return genericNames;
         }
 
-        private async Task GenerateKnownRecordTypes(ObjectGeneration obj, FileGeneration fg)
+        private async Task GenerateRegistrationRecordTypeCaches(ObjectGeneration obj, FileGeneration fg)
         {
             HashSet<RecordType> trigRecordTypes = new HashSet<RecordType>();
             HashSet<RecordType> recordTypes = new HashSet<RecordType>();
@@ -103,7 +103,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 fg.AppendLine($"public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;");
                 fg.AppendLine($"private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>");
-                using (new BraceWrapper(fg) { AppendSemicolon = true,  AppendParenthesis = true })
+                using (new BraceWrapper(fg) { AppendSemicolon = true, AppendParenthesis = true })
                 {
                     fg.AppendLine($"return new CollectionGetterWrapper<RecordType>(");
                     using (new DepthWrapper(fg))
@@ -125,6 +125,28 @@ namespace Mutagen.Bethesda.Generation
                         }
                     }
                     fg.AppendLine(");");
+                }
+            }
+            foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.FalseAndInclude, nonIntegrated: true))
+            {
+                if (!(field is LoquiType loquiType)) continue;
+                var fieldData = loquiType.GetFieldData();
+                if (fieldData.RecordTypeConverter == null || fieldData.RecordTypeConverter.FromConversions.Count == 0) continue;
+                using (var args = new ArgsWrapper(fg,
+                    $"public static RecordTypeConverter {field.Name}Converter = new RecordTypeConverter"))
+                {
+                    foreach (var conv in fieldData.RecordTypeConverter.FromConversions)
+                    {
+                        args.Add((gen) =>
+                        {
+                            using (var args2 = new FunctionWrapper(gen,
+                                "new KeyValuePair<RecordType, RecordType>"))
+                            {
+                                args2.Add($"{loquiType.TargetObjectGeneration.RecordTypeHeaderName(conv.Key)}");
+                                args2.Add($"new RecordType(\"{conv.Value.Type}\")");
+                            }
+                        });
+                    }
                 }
             }
         }
@@ -258,6 +280,24 @@ namespace Mutagen.Bethesda.Generation
             data.IncludeInLength = node.GetAttribute<bool>("includeInLength", true);
             data.Vestigial = node.GetAttribute<bool>("vestigial", false);
             data.CustomBinary = node.GetAttribute<bool>("customBinary", false);
+            HandleLoquiRecordConverter(obj, field, node);
+        }
+
+        private void HandleLoquiRecordConverter(ObjectGeneration obj, TypeGeneration field, XElement node)
+        {
+            if (!(field is LoquiType loquiType)) return;
+            var recTypeOverrides = node.Element(XName.Get("RecordTypeOverrides", LoquiGenerator.Namespace));
+            if (recTypeOverrides == null) return;
+            var recConversions = recTypeOverrides.Elements(XName.Get("Mapping", LoquiGenerator.Namespace));
+            if (recConversions == null || !recConversions.Any()) return;
+            var data = loquiType.GetFieldData();
+            data.RecordTypeConverter = new RecordTypeConverter(
+                recConversions.Select((n) =>
+                {
+                    return new KeyValuePair<RecordType, RecordType>(
+                        new RecordType(n.GetAttribute("From")),
+                        new RecordType(n.GetAttribute("To")));
+                }).ToArray());
         }
 
         private async Task SetObjectTrigger(ObjectGeneration obj)
@@ -298,7 +338,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 data.TriggeringRecordTypes.Add(markerType);
             }
-            
+
             if (data.TriggeringRecordTypes.Count > 0)
             {
                 if (data.TriggeringRecordTypes.CountGreaterThan(1))
@@ -399,7 +439,10 @@ namespace Mutagen.Bethesda.Generation
                         }
                         if (trigRecTypes != null)
                         {
-                            data.TriggeringRecordTypes.Add(trigRecTypes);
+                            foreach (var t in trigRecTypes)
+                            {
+                                data.TriggeringRecordTypes.Add(data.RecordTypeConverter.ConvertToCustom(t));
+                            }
                         }
                     }
                 }
@@ -507,4 +550,3 @@ namespace Mutagen.Bethesda.Generation
         }
     }
 }
-

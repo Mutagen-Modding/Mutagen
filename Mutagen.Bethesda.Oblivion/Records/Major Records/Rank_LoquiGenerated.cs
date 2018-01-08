@@ -1762,28 +1762,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.RankNumber_Property,
                 fieldIndex: (int)Rank_FieldIndex.RankNumber,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(Rank_Registration.RNAM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(Rank_Registration.RNAM_HEADER),
                 nullable: false);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.MaleName_Property,
                 fieldIndex: (int)Rank_FieldIndex.MaleName,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(Rank_Registration.MNAM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(Rank_Registration.MNAM_HEADER),
                 nullable: false);
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FemaleName_Property,
                 fieldIndex: (int)Rank_FieldIndex.FemaleName,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(Rank_Registration.FNAM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(Rank_Registration.FNAM_HEADER),
                 nullable: false);
             Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Insignia_Property,
                 fieldIndex: (int)Rank_FieldIndex.Insignia,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(Rank_Registration.INAM_HEADER),
+                header: recordTypeConverter.ConvertToCustom(Rank_Registration.INAM_HEADER),
                 nullable: false);
         }
 

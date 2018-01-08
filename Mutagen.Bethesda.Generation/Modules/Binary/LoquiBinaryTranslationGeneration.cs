@@ -49,6 +49,11 @@ namespace Mutagen.Bethesda.Generation
                         args.Add($"doMasks: {doMaskAccessor}");
                         args.Add($"errorMask: out {maskAccessor}");
                     }
+                    if (data?.RecordTypeConverter != null
+                        && data.RecordTypeConverter.FromConversions.Count > 0)
+                    {
+                        args.Add($"recordTypeConverter: {objGen.RegistrationName}.{typeGen.Name}Converter");
+                    }
                 }
             }
             else
@@ -136,6 +141,11 @@ namespace Mutagen.Bethesda.Generation
                             args.Add($"doMasks: {doMaskAccessor}");
                             args.Add($"errorMask: out {maskAccessor}");
                         }
+                        if (data?.RecordTypeConverter != null
+                            && data.RecordTypeConverter.FromConversions.Count > 0)
+                        {
+                            args.Add($"recordTypeConverter: {objGen.RegistrationName}.{typeGen.Name}Converter");
+                        }
                     }
                     if (itemAccessor.PropertyAccess == null)
                     {
@@ -178,6 +188,7 @@ namespace Mutagen.Bethesda.Generation
             var loquiGen = typeGen as LoquiType;
             if (loquiGen.TargetObjectGeneration != null)
             {
+                var data = loquiGen.GetFieldData();
                 using (var args = new ArgsWrapper(fg,
                     $"{retAccessor.DirectAccess}LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}, {loquiGen.MaskItemString(MaskType.Error)}>.Instance.Parse",
                     suffixLine: (targetGen == typeGen ? string.Empty : $".Bubble<{typeGen.TypeName}, {targetGen.TypeName}>()")))
@@ -192,6 +203,11 @@ namespace Mutagen.Bethesda.Generation
                     {
                         args.Add($"doMasks: {doMaskAccessor}");
                         args.Add($"errorMask: out {maskAccessor}");
+                    }
+                    if (data?.RecordTypeConverter != null
+                        && data.RecordTypeConverter.FromConversions.Count > 0)
+                    {
+                        args.Add($"recordTypeConverter: {objGen.RegistrationName}.{typeGen.Name}Converter");
                     }
                 }
             }

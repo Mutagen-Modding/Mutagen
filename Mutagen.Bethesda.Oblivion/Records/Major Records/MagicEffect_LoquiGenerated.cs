@@ -3021,14 +3021,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Description_Property,
                 fieldIndex: (int)MagicEffect_FieldIndex.Description,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(MagicEffect_Registration.DESC_HEADER),
+                header: recordTypeConverter.ConvertToCustom(MagicEffect_Registration.DESC_HEADER),
                 nullable: false);
             Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Icon_Property,
                 fieldIndex: (int)MagicEffect_FieldIndex.Icon,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(MagicEffect_Registration.ICON_HEADER),
+                header: recordTypeConverter.ConvertToCustom(MagicEffect_Registration.ICON_HEADER),
                 nullable: false);
             LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Write(
                 writer: writer,

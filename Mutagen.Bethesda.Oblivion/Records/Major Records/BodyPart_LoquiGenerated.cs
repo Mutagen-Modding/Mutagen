@@ -1547,14 +1547,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 length: new ContentLength(4),
                 fieldIndex: (int)BodyPart_FieldIndex.Index,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(BodyPart_Registration.INDX_HEADER),
+                header: recordTypeConverter.ConvertToCustom(BodyPart_Registration.INDX_HEADER),
                 nullable: false);
             Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Icon_Property,
                 fieldIndex: (int)BodyPart_FieldIndex.Icon,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(BodyPart_Registration.ICON_HEADER),
+                header: recordTypeConverter.ConvertToCustom(BodyPart_Registration.ICON_HEADER),
                 nullable: false);
         }
 

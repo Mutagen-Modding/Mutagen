@@ -1654,21 +1654,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.SymmetricGeometry_Property,
                 fieldIndex: (int)FaceGenData_FieldIndex.SymmetricGeometry,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(FaceGenData_Registration.FGGS_HEADER),
+                header: recordTypeConverter.ConvertToCustom(FaceGenData_Registration.FGGS_HEADER),
                 nullable: false);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.AsymmetricGeometry_Property,
                 fieldIndex: (int)FaceGenData_FieldIndex.AsymmetricGeometry,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(FaceGenData_Registration.FGGA_HEADER),
+                header: recordTypeConverter.ConvertToCustom(FaceGenData_Registration.FGGA_HEADER),
                 nullable: false);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.SymmetricTexture_Property,
                 fieldIndex: (int)FaceGenData_FieldIndex.SymmetricTexture,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(FaceGenData_Registration.FGTS_HEADER),
+                header: recordTypeConverter.ConvertToCustom(FaceGenData_Registration.FGTS_HEADER),
                 nullable: false);
         }
 

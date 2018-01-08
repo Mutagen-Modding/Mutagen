@@ -2432,14 +2432,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Description_Property,
                 fieldIndex: (int)Class_FieldIndex.Description,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(Class_Registration.DESC_HEADER),
+                header: recordTypeConverter.ConvertToCustom(Class_Registration.DESC_HEADER),
                 nullable: false);
             Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Icon_Property,
                 fieldIndex: (int)Class_FieldIndex.Icon,
                 errorMask: errorMask,
-                header: recordTypeConverter.Convert(Class_Registration.ICON_HEADER),
+                header: recordTypeConverter.ConvertToCustom(Class_Registration.ICON_HEADER),
                 nullable: false);
             using (HeaderExport.ExportSubRecordHeader(writer, Class_Registration.DATA_HEADER))
             {
