@@ -751,6 +751,7 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType APPA_HEADER = new RecordType("APPA");
         public static readonly RecordType ARMO_HEADER = new RecordType("ARMO");
         public static readonly RecordType BSGN_HEADER = new RecordType("BSGN");
+        public static readonly RecordType BOOK_HEADER = new RecordType("BOOK");
         public static readonly RecordType CLAS_HEADER = new RecordType("CLAS");
         public static readonly RecordType ENCH_HEADER = new RecordType("ENCH");
         public static readonly RecordType EYES_HEADER = new RecordType("EYES");
@@ -772,6 +773,7 @@ namespace Mutagen.Bethesda.Internals
                         APPA_HEADER,
                         ARMO_HEADER,
                         BSGN_HEADER,
+                        BOOK_HEADER,
                         CLAS_HEADER,
                         ENCH_HEADER,
                         EYES_HEADER,

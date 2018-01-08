@@ -85,6 +85,11 @@ namespace Mutagen.Bethesda.Binary
             return true;
         }
 
+        public bool ContainsPosition(FileLocation loc)
+        {
+            return this.Position <= loc && this.FinalPosition >= loc;
+        }
+
         public void Dispose()
         {
             if (this.SnapToFinalPosition 

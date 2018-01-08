@@ -95,6 +95,11 @@
           <GenericSpecification Definition="Armor" TypeToSpecify="T" />
         </Direct>
       </Ref>
+      <Ref name="Books">
+        <Direct refName="Group" >
+          <GenericSpecification Definition="Book" TypeToSpecify="T" />
+        </Direct>
+      </Ref>
     </Fields>
   </Object>
 </Loqui>

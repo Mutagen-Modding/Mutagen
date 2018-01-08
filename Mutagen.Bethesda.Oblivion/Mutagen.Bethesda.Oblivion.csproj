@@ -83,6 +83,9 @@
     <Compile Include="Records\Major Records\BodyPart_LoquiGenerated.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Book.cs">
+      <DependentUpon>Book.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Class.cs">
       <DependentUpon>Class.xml</DependentUpon>
     </Compile>
@@ -314,6 +317,9 @@
     <Compile Include="Records\Major Records\Armor_LoquiGenerated.cs">
       <DependentUpon>Armor.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Book_LoquiGenerated.cs">
+      <DependentUpon>Book.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Records\Common Subrecords\Effect.xml">
@@ -344,6 +350,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Birthsign.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\Book.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Class.xml">
