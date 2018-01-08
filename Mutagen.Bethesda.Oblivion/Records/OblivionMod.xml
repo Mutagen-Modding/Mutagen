@@ -100,6 +100,11 @@
           <GenericSpecification Definition="Book" TypeToSpecify="T" />
         </Direct>
       </Ref>
+      <Ref name="Clothes">
+        <Direct refName="Group" >
+          <GenericSpecification Definition="Clothing" TypeToSpecify="T" />
+        </Direct>
+      </Ref>
     </Fields>
   </Object>
 </Loqui>

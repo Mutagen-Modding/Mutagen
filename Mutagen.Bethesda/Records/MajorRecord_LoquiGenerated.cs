@@ -987,6 +987,7 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType BSGN_HEADER = new RecordType("BSGN");
         public static readonly RecordType BOOK_HEADER = new RecordType("BOOK");
         public static readonly RecordType CLAS_HEADER = new RecordType("CLAS");
+        public static readonly RecordType CLOT_HEADER = new RecordType("CLOT");
         public static readonly RecordType ENCH_HEADER = new RecordType("ENCH");
         public static readonly RecordType EYES_HEADER = new RecordType("EYES");
         public static readonly RecordType FACT_HEADER = new RecordType("FACT");
@@ -1019,6 +1020,7 @@ namespace Mutagen.Bethesda.Internals
                         BSGN_HEADER,
                         BOOK_HEADER,
                         CLAS_HEADER,
+                        CLOT_HEADER,
                         ENCH_HEADER,
                         EYES_HEADER,
                         FACT_HEADER,

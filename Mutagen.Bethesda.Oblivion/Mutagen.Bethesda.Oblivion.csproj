@@ -43,6 +43,7 @@
     <Compile Include="Records\Common Enums\ActorValue.cs" />
     <Compile Include="Records\Common Enums\Attribute.cs" />
     <Compile Include="Records\Common Enums\BipedFlag.cs" />
+    <Compile Include="Records\Common Enums\EquipmentFlag.cs" />
     <Compile Include="Records\Common Enums\MagicSchool.cs" />
     <Compile Include="Records\Common Enums\Resistance.cs" />
     <Compile Include="Records\Common Enums\Skill.cs" />
@@ -320,6 +321,9 @@
     <Compile Include="Records\Major Records\Book_LoquiGenerated.cs">
       <DependentUpon>Book.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Clothing_LoquiGenerated.cs">
+      <DependentUpon>Clothing.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Records\Common Subrecords\Effect.xml">
@@ -356,6 +360,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Class.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\Clothing.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\EffectShader.xml">

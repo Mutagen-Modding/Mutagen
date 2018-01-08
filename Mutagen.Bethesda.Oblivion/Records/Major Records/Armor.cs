@@ -11,15 +11,6 @@ namespace Mutagen.Bethesda.Oblivion
 {
     public partial class Armor
     {
-        [Flags]
-        public enum ArmorFlag
-        {
-            HideRings = 0x00010000,
-            HideAmulets = 0x00020000,
-            NonPlayable = 0x00400000,
-            HeavyArmor = 0x00800000
-        }
-
         static partial void FillBinary_ArmorValue_Custom(MutagenFrame frame, IArmor item, int fieldIndex, Func<Armor_ErrorMask> errorMask)
         {
             var tryGet = UInt16BinaryTranslation.Instance.Parse(

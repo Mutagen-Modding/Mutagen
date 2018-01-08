@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Armor" baseClass="Bethesda.NamedMajorRecord" objType="Record" recordType="ARMO" GUID="484e38f3-afde-4661-9c39-a8bc1e92eb99" ID="67">
+  <Object name="Clothing" baseClass="Bethesda.NamedMajorRecord" objType="Record" recordType="CLOT" GUID="45098216-a539-4788-84f5-ece76ab7abf2" ID="69">
     <Fields>
       <FormID name="Script" refName="Script" recordType="SCRI" />
       <FormID name="Enchantment" refName="Enchantment" recordType="ENAM" />
@@ -20,14 +20,14 @@
         </RecordTypeOverrides>
       </RefDirect>
       <String name="MaleIcon" recordType="ICON" />
-      <RefDirect name="FemaleBipedModel" refName="Model" >
+      <RefDirect name="FemaleBipedModel" refName="Model">
         <RecordTypeOverrides>
           <Mapping From="MODL" To="MOD3" />
           <Mapping From="MODB" To="MO3B" />
           <Mapping From="MODT" To="MO3T" />
         </RecordTypeOverrides>
       </RefDirect>
-      <RefDirect name="FemaleWorldModel" refName="Model" >
+      <RefDirect name="FemaleWorldModel" refName="Model">
         <RecordTypeOverrides>
           <Mapping From="MODL" To="MOD4" />
           <Mapping From="MODB" To="MO4B" />
@@ -37,9 +37,7 @@
       <String name="FemaleIcon" recordType="ICO2" />
       <Data recordType="DATA">
         <Fields>
-          <Float name="ArmorValue" customBinary="true" />
           <UInt32 name="Value" />
-          <UInt32 name="Health" />
           <Float name="Weight" />
         </Fields>
       </Data>
