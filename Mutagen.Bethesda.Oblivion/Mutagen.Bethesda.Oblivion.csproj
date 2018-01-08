@@ -324,6 +324,9 @@
     <Compile Include="Records\Major Records\Clothing_LoquiGenerated.cs">
       <DependentUpon>Clothing.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\ClothingAbstract_LoquiGenerated.cs">
+      <DependentUpon>ClothingAbstract.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Records\Common Subrecords\Effect.xml">
@@ -363,6 +366,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Clothing.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\ClothingAbstract.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\EffectShader.xml">

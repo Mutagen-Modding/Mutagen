@@ -749,17 +749,21 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType ACTI_HEADER = new RecordType("ACTI");
         public static readonly RecordType APPA_HEADER = new RecordType("APPA");
-        public static readonly RecordType ARMO_HEADER = new RecordType("ARMO");
         public static readonly RecordType BSGN_HEADER = new RecordType("BSGN");
         public static readonly RecordType BOOK_HEADER = new RecordType("BOOK");
         public static readonly RecordType CLAS_HEADER = new RecordType("CLAS");
-        public static readonly RecordType CLOT_HEADER = new RecordType("CLOT");
+        public static readonly RecordType SCRI_HEADER = new RecordType("SCRI");
+        public static readonly RecordType ENAM_HEADER = new RecordType("ENAM");
+        public static readonly RecordType ANAM_HEADER = new RecordType("ANAM");
+        public static readonly RecordType BMDT_HEADER = new RecordType("BMDT");
         public static readonly RecordType ENCH_HEADER = new RecordType("ENCH");
         public static readonly RecordType EYES_HEADER = new RecordType("EYES");
         public static readonly RecordType FACT_HEADER = new RecordType("FACT");
         public static readonly RecordType HAIR_HEADER = new RecordType("HAIR");
         public static readonly RecordType MGEF_HEADER = new RecordType("MGEF");
         public static readonly RecordType RACE_HEADER = new RecordType("RACE");
+        public static readonly RecordType ARMO_HEADER = new RecordType("ARMO");
+        public static readonly RecordType CLOT_HEADER = new RecordType("CLOT");
         public static readonly RecordType LVSP_HEADER = new RecordType("LVSP");
         public static readonly RecordType SPEL_HEADER = new RecordType("SPEL");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
@@ -772,17 +776,21 @@ namespace Mutagen.Bethesda.Internals
                         FULL_HEADER,
                         ACTI_HEADER,
                         APPA_HEADER,
-                        ARMO_HEADER,
                         BSGN_HEADER,
                         BOOK_HEADER,
                         CLAS_HEADER,
-                        CLOT_HEADER,
+                        SCRI_HEADER,
+                        ENAM_HEADER,
+                        ANAM_HEADER,
+                        BMDT_HEADER,
                         ENCH_HEADER,
                         EYES_HEADER,
                         FACT_HEADER,
                         HAIR_HEADER,
                         MGEF_HEADER,
                         RACE_HEADER,
+                        ARMO_HEADER,
+                        CLOT_HEADER,
                         LVSP_HEADER,
                         SPEL_HEADER
                     })

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="ClothingAbstract" baseClass="Bethesda.NamedMajorRecord" abstract="true" objType="Record" GUID="45098216-a539-4788-84f5-ece76ab7abf2" ID="69">
+    <Fields>
+      <FormID name="Script" refName="Script" recordType="SCRI" />
+      <FormID name="Enchantment" refName="Enchantment" recordType="ENAM" />
+      <UInt16 name="EnchantmentPoints" recordType="ANAM" />
+      <Data recordType="BMDT">
+        <Fields>
+          <Enum name="BipedFlags" enumName="BipedFlag" byteLength="2" />
+          <Enum name="Flags" enumName="EquipmentFlag" byteLength="2" />
+        </Fields>
+      </Data>
+      <RefDirect name="MaleBipedModel" refName="Model" />
+      <RefDirect name="MaleWorldModel" refName="Model">
+        <RecordTypeOverrides>
+          <Mapping From="MODL" To="MOD2" />
+          <Mapping From="MODB" To="MO2B" />
+          <Mapping From="MODT" To="MO2T" />
+        </RecordTypeOverrides>
+      </RefDirect>
+      <String name="MaleIcon" recordType="ICON" />
+      <RefDirect name="FemaleBipedModel" refName="Model">
+        <RecordTypeOverrides>
+          <Mapping From="MODL" To="MOD3" />
+          <Mapping From="MODB" To="MO3B" />
+          <Mapping From="MODT" To="MO3T" />
+        </RecordTypeOverrides>
+      </RefDirect>
+      <RefDirect name="FemaleWorldModel" refName="Model">
+        <RecordTypeOverrides>
+          <Mapping From="MODL" To="MOD4" />
+          <Mapping From="MODB" To="MO4B" />
+          <Mapping From="MODT" To="MO4T" />
+        </RecordTypeOverrides>
+      </RefDirect>
+      <String name="FemaleIcon" recordType="ICO2" />
+    </Fields>
+  </Object>
+</Loqui>
