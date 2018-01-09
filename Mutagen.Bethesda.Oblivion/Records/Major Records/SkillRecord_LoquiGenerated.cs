@@ -1075,11 +1075,10 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<SkillRecord_FieldIndex?>.Succeed(SkillRecord_FieldIndex.Description);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var tryGet = Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
+                    item._Icon.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)SkillRecord_FieldIndex.Icon,
-                        errorMask: errorMask);
-                    item._Icon.SetIfSucceeded(tryGet);
+                        errorMask: errorMask));
                     return TryGet<SkillRecord_FieldIndex?>.Succeed(SkillRecord_FieldIndex.Icon);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;

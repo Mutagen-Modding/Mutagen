@@ -852,11 +852,10 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var tryGet = Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
+                    item._Icon.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)Birthsign_FieldIndex.Icon,
-                        errorMask: errorMask);
-                    item._Icon.SetIfSucceeded(tryGet);
+                        errorMask: errorMask));
                     return TryGet<Birthsign_FieldIndex?>.Succeed(Birthsign_FieldIndex.Icon);
                 case "DESC":
                     frame.Position += Constants.SUBRECORD_LENGTH;

@@ -1021,11 +1021,10 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<Book_FieldIndex?>.Succeed(Book_FieldIndex.Model);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var tryGet = Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
+                    item._Icon.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)Book_FieldIndex.Icon,
-                        errorMask: errorMask);
-                    item._Icon.SetIfSucceeded(tryGet);
+                        errorMask: errorMask));
                     return TryGet<Book_FieldIndex?>.Succeed(Book_FieldIndex.Icon);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;

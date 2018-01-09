@@ -776,11 +776,10 @@ namespace Mutagen.Bethesda.Oblivion
                 case "MODL":
                     if (lastParsed.HasValue && lastParsed.Value >= Model_FieldIndex.File) return TryGet<Model_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var tryGet = Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
+                    item._File.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)Model_FieldIndex.File,
-                        errorMask: errorMask);
-                    item._File.SetIfSucceeded(tryGet);
+                        errorMask: errorMask));
                     return TryGet<Model_FieldIndex?>.Succeed(Model_FieldIndex.File);
                 case "MODB":
                     frame.Position += Constants.SUBRECORD_LENGTH;

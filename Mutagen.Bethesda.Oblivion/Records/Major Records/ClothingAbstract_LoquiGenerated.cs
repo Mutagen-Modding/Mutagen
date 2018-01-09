@@ -99,15 +99,15 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Model> IClothingAbstractGetter.MaleWorldModel_Property => this.MaleWorldModel_Property;
         #endregion
         #region MaleIcon
-        protected readonly INotifyingSetItem<String> _MaleIcon = NotifyingSetItem.Factory<String>(markAsSet: false);
-        public INotifyingSetItem<String> MaleIcon_Property => _MaleIcon;
-        public String MaleIcon
+        protected readonly INotifyingSetItem<FilePath> _MaleIcon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
+        public INotifyingSetItem<FilePath> MaleIcon_Property => _MaleIcon;
+        public FilePath MaleIcon
         {
             get => this._MaleIcon.Item;
             set => this._MaleIcon.Set(value);
         }
-        INotifyingSetItem<String> IClothingAbstract.MaleIcon_Property => this.MaleIcon_Property;
-        INotifyingSetItemGetter<String> IClothingAbstractGetter.MaleIcon_Property => this.MaleIcon_Property;
+        INotifyingSetItem<FilePath> IClothingAbstract.MaleIcon_Property => this.MaleIcon_Property;
+        INotifyingSetItemGetter<FilePath> IClothingAbstractGetter.MaleIcon_Property => this.MaleIcon_Property;
         #endregion
         #region FemaleBipedModel
         private readonly INotifyingSetItem<Model> _FemaleBipedModel = new NotifyingSetItem<Model>();
@@ -126,15 +126,15 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Model> IClothingAbstractGetter.FemaleWorldModel_Property => this.FemaleWorldModel_Property;
         #endregion
         #region FemaleIcon
-        protected readonly INotifyingSetItem<String> _FemaleIcon = NotifyingSetItem.Factory<String>(markAsSet: false);
-        public INotifyingSetItem<String> FemaleIcon_Property => _FemaleIcon;
-        public String FemaleIcon
+        protected readonly INotifyingSetItem<FilePath> _FemaleIcon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
+        public INotifyingSetItem<FilePath> FemaleIcon_Property => _FemaleIcon;
+        public FilePath FemaleIcon
         {
             get => this._FemaleIcon.Item;
             set => this._FemaleIcon.Set(value);
         }
-        INotifyingSetItem<String> IClothingAbstract.FemaleIcon_Property => this.FemaleIcon_Property;
-        INotifyingSetItemGetter<String> IClothingAbstractGetter.FemaleIcon_Property => this.FemaleIcon_Property;
+        INotifyingSetItem<FilePath> IClothingAbstract.FemaleIcon_Property => this.FemaleIcon_Property;
+        INotifyingSetItemGetter<FilePath> IClothingAbstractGetter.FemaleIcon_Property => this.FemaleIcon_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -514,7 +514,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 case "MaleIcon":
-                    item._MaleIcon.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    item._MaleIcon.SetIfSucceeded(FilePathXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)ClothingAbstract_FieldIndex.MaleIcon,
                         errorMask: errorMask));
@@ -532,7 +532,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 case "FemaleIcon":
-                    item._FemaleIcon.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                    item._FemaleIcon.SetIfSucceeded(FilePathXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleIcon,
                         errorMask: errorMask));
@@ -774,11 +774,10 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<ClothingAbstract_FieldIndex?>.Succeed(ClothingAbstract_FieldIndex.MaleWorldModel);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var MaleIcontryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item._MaleIcon.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)ClothingAbstract_FieldIndex.MaleIcon,
-                        errorMask: errorMask);
-                    item._MaleIcon.SetIfSucceeded(MaleIcontryGet);
+                        errorMask: errorMask));
                     return TryGet<ClothingAbstract_FieldIndex?>.Succeed(ClothingAbstract_FieldIndex.MaleIcon);
                 case "MOD3":
                     item._FemaleBipedModel.SetIfSucceeded(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
@@ -796,11 +795,10 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<ClothingAbstract_FieldIndex?>.Succeed(ClothingAbstract_FieldIndex.FemaleWorldModel);
                 case "ICO2":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var FemaleIcontryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item._FemaleIcon.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleIcon,
-                        errorMask: errorMask);
-                    item._FemaleIcon.SetIfSucceeded(FemaleIcontryGet);
+                        errorMask: errorMask));
                     return TryGet<ClothingAbstract_FieldIndex?>.Succeed(ClothingAbstract_FieldIndex.FemaleIcon);
                 default:
                     return NamedMajorRecord.Fill_Binary_RecordTypes(
@@ -907,7 +905,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case ClothingAbstract_FieldIndex.MaleIcon:
                     this._MaleIcon.Set(
-                        (String)obj,
+                        (FilePath)obj,
                         cmds);
                     break;
                 case ClothingAbstract_FieldIndex.FemaleBipedModel:
@@ -922,7 +920,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case ClothingAbstract_FieldIndex.FemaleIcon:
                     this._FemaleIcon.Set(
-                        (String)obj,
+                        (FilePath)obj,
                         cmds);
                     break;
                 default:
@@ -983,7 +981,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case ClothingAbstract_FieldIndex.MaleIcon:
                     obj._MaleIcon.Set(
-                        (String)pair.Value,
+                        (FilePath)pair.Value,
                         null);
                     break;
                 case ClothingAbstract_FieldIndex.FemaleBipedModel:
@@ -998,7 +996,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case ClothingAbstract_FieldIndex.FemaleIcon:
                     obj._FemaleIcon.Set(
-                        (String)pair.Value,
+                        (FilePath)pair.Value,
                         null);
                     break;
                 default:
@@ -1033,8 +1031,8 @@ namespace Mutagen.Bethesda.Oblivion
         new Model MaleWorldModel { get; set; }
         new INotifyingSetItem<Model> MaleWorldModel_Property { get; }
 
-        new String MaleIcon { get; set; }
-        new INotifyingSetItem<String> MaleIcon_Property { get; }
+        new FilePath MaleIcon { get; set; }
+        new INotifyingSetItem<FilePath> MaleIcon_Property { get; }
 
         new Model FemaleBipedModel { get; set; }
         new INotifyingSetItem<Model> FemaleBipedModel_Property { get; }
@@ -1042,8 +1040,8 @@ namespace Mutagen.Bethesda.Oblivion
         new Model FemaleWorldModel { get; set; }
         new INotifyingSetItem<Model> FemaleWorldModel_Property { get; }
 
-        new String FemaleIcon { get; set; }
-        new INotifyingSetItem<String> FemaleIcon_Property { get; }
+        new FilePath FemaleIcon { get; set; }
+        new INotifyingSetItem<FilePath> FemaleIcon_Property { get; }
 
     }
 
@@ -1085,8 +1083,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region MaleIcon
-        String MaleIcon { get; }
-        INotifyingSetItemGetter<String> MaleIcon_Property { get; }
+        FilePath MaleIcon { get; }
+        INotifyingSetItemGetter<FilePath> MaleIcon_Property { get; }
 
         #endregion
         #region FemaleBipedModel
@@ -1100,8 +1098,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region FemaleIcon
-        String FemaleIcon { get; }
-        INotifyingSetItemGetter<String> FemaleIcon_Property { get; }
+        FilePath FemaleIcon { get; }
+        INotifyingSetItemGetter<FilePath> FemaleIcon_Property { get; }
 
         #endregion
 
@@ -1368,13 +1366,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case ClothingAbstract_FieldIndex.MaleWorldModel:
                     return typeof(Model);
                 case ClothingAbstract_FieldIndex.MaleIcon:
-                    return typeof(String);
+                    return typeof(FilePath);
                 case ClothingAbstract_FieldIndex.FemaleBipedModel:
                     return typeof(Model);
                 case ClothingAbstract_FieldIndex.FemaleWorldModel:
                     return typeof(Model);
                 case ClothingAbstract_FieldIndex.FemaleIcon:
-                    return typeof(String);
+                    return typeof(FilePath);
                 default:
                     return NamedMajorRecord_Registration.GetNthType(index);
             }
@@ -2348,7 +2346,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.MaleIcon_Property.HasBeenSet)
                     {
-                        StringXmlTranslation.Instance.Write(
+                        FilePathXmlTranslation.Instance.Write(
                             writer: writer,
                             name: nameof(item.MaleIcon),
                             item: item.MaleIcon_Property,
@@ -2375,7 +2373,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.FemaleIcon_Property.HasBeenSet)
                     {
-                        StringXmlTranslation.Instance.Write(
+                        FilePathXmlTranslation.Instance.Write(
                             writer: writer,
                             name: nameof(item.FemaleIcon),
                             item: item.FemaleIcon_Property,
@@ -2496,7 +2494,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fieldIndex: (int)ClothingAbstract_FieldIndex.MaleWorldModel,
                 errorMask: errorMask,
                 recordTypeConverter: ClothingAbstract_Registration.MaleWorldModelConverter);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.MaleIcon_Property,
                 fieldIndex: (int)ClothingAbstract_FieldIndex.MaleIcon,
@@ -2515,7 +2513,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleWorldModel,
                 errorMask: errorMask,
                 recordTypeConverter: ClothingAbstract_Registration.FemaleWorldModelConverter);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FemaleIcon_Property,
                 fieldIndex: (int)ClothingAbstract_FieldIndex.FemaleIcon,

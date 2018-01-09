@@ -19,7 +19,7 @@
           <Mapping From="MODT" To="MO2T" />
         </RecordTypeOverrides>
       </RefDirect>
-      <String name="MaleIcon" recordType="ICON" />
+      <FilePath name="MaleIcon" recordType="ICON" />
       <RefDirect name="FemaleBipedModel" refName="Model">
         <RecordTypeOverrides>
           <Mapping From="MODL" To="MOD3" />
@@ -34,7 +34,7 @@
           <Mapping From="MODT" To="MO4T" />
         </RecordTypeOverrides>
       </RefDirect>
-      <String name="FemaleIcon" recordType="ICO2" />
+      <FilePath name="FemaleIcon" recordType="ICO2" />
     </Fields>
   </Object>
 </Loqui>

@@ -805,11 +805,10 @@ namespace Mutagen.Bethesda.Oblivion
                 case "ICON":
                     if (lastParsed.HasValue && lastParsed.Value >= FacePart_FieldIndex.Icon) return TryGet<FacePart_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var tryGet = Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
+                    item._Icon.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)FacePart_FieldIndex.Icon,
-                        errorMask: errorMask);
-                    item._Icon.SetIfSucceeded(tryGet);
+                        errorMask: errorMask));
                     return TryGet<FacePart_FieldIndex?>.Succeed(FacePart_FieldIndex.Icon);
                 default:
                     return TryGet<FacePart_FieldIndex?>.Failure;

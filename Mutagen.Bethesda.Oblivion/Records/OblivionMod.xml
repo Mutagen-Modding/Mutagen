@@ -115,6 +115,11 @@
           <GenericSpecification Definition="Door" TypeToSpecify="T" />
         </Direct>
       </Ref>
+      <Ref name="Ingredients">
+        <Direct refName="Group" >
+          <GenericSpecification Definition="Ingredient" TypeToSpecify="T" />
+        </Direct>
+      </Ref>
     </Fields>
   </Object>
 </Loqui>

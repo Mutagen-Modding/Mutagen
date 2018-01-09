@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Ingredient" baseClass="Bethesda.NamedMajorRecord" recordType="INGR" objType="Record" GUID="b617ece0-1ff6-475d-af9d-265d2f55af37" ID="76">
+    <Fields>
+      <RefDirect name="Model" refName="Model" />
+      <FilePath name="Icon" recordType="ICON" />
+      <FormID name="Script" refName="Script" recordType="SCRI" />
+      <Float name="Weight" recordType="DATA" />
+      <Data recordType="ENIT">
+        <Fields>
+          <UInt32 name="Value" />
+          <Enum name="Flags" enumName="Ingredient.IngredientFlag" byteLength="4" />
+        </Fields>
+      </Data>
+      <RefList name="Effects" refName="Effect" />
+    </Fields>
+  </Object>
+</Loqui>

@@ -850,11 +850,10 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<Hair_FieldIndex?>.Succeed(Hair_FieldIndex.Model);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var tryGet = Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
+                    item._Icon.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)Hair_FieldIndex.Icon,
-                        errorMask: errorMask);
-                    item._Icon.SetIfSucceeded(tryGet);
+                        errorMask: errorMask));
                     return TryGet<Hair_FieldIndex?>.Succeed(Hair_FieldIndex.Icon);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;

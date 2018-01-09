@@ -189,6 +189,9 @@
     <Compile Include="Records\Major Records\HavokData.cs">
       <DependentUpon>LandTexture.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Ingredient.cs">
+      <DependentUpon>Ingredient.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\LocalVariableData_LoquiGenerated.cs">
       <DependentUpon>Script.xml</DependentUpon>
     </Compile>
@@ -348,6 +351,9 @@
     <Compile Include="Records\Major Records\Worldspace_LoquiGenerated.cs">
       <DependentUpon>Worldspace.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Ingredient_LoquiGenerated.cs">
+      <DependentUpon>Ingredient.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Records\Common Subrecords\Effect.xml">
@@ -420,6 +426,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Hair.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\Ingredient.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\ItemAbstract.xml">

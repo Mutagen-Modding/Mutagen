@@ -26,13 +26,13 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class AlchemicalApparatus : NamedMajorRecord, IAlchemicalApparatus, ILoquiObjectSetter, IEquatable<AlchemicalApparatus>
+    public partial class Ingredient : NamedMajorRecord, IIngredient, ILoquiObjectSetter, IEquatable<Ingredient>
     {
-        ILoquiRegistration ILoquiObject.Registration => AlchemicalApparatus_Registration.Instance;
-        public new static AlchemicalApparatus_Registration Registration => AlchemicalApparatus_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Ingredient_Registration.Instance;
+        public new static Ingredient_Registration Registration => Ingredient_Registration.Instance;
 
         #region Ctor
-        public AlchemicalApparatus()
+        public Ingredient()
         {
             CustomCtor();
         }
@@ -42,10 +42,10 @@ namespace Mutagen.Bethesda.Oblivion
         #region Model
         private readonly INotifyingSetItem<Model> _Model = new NotifyingSetItem<Model>();
         public INotifyingSetItem<Model> Model_Property => this._Model;
-        Model IAlchemicalApparatusGetter.Model => this.Model;
+        Model IIngredientGetter.Model => this.Model;
         public Model Model { get => _Model.Item; set => _Model.Item = value; }
-        INotifyingSetItem<Model> IAlchemicalApparatus.Model_Property => this.Model_Property;
-        INotifyingSetItemGetter<Model> IAlchemicalApparatusGetter.Model_Property => this.Model_Property;
+        INotifyingSetItem<Model> IIngredient.Model_Property => this.Model_Property;
+        INotifyingSetItemGetter<Model> IIngredientGetter.Model_Property => this.Model_Property;
         #endregion
         #region Icon
         protected readonly INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
@@ -55,35 +55,13 @@ namespace Mutagen.Bethesda.Oblivion
             get => this._Icon.Item;
             set => this._Icon.Set(value);
         }
-        INotifyingSetItem<FilePath> IAlchemicalApparatus.Icon_Property => this.Icon_Property;
-        INotifyingSetItemGetter<FilePath> IAlchemicalApparatusGetter.Icon_Property => this.Icon_Property;
+        INotifyingSetItem<FilePath> IIngredient.Icon_Property => this.Icon_Property;
+        INotifyingSetItemGetter<FilePath> IIngredientGetter.Icon_Property => this.Icon_Property;
         #endregion
         #region Script
         public FormIDSetLink<Script> Script_Property { get; } = new FormIDSetLink<Script>();
         public Script Script { get => Script_Property.Item; set => Script_Property.Item = value; }
-        FormIDSetLink<Script> IAlchemicalApparatusGetter.Script_Property => this.Script_Property;
-        #endregion
-        #region Type
-        protected readonly INotifyingSetItem<AlchemicalApparatus.ApparatusType> _Type = NotifyingSetItem.Factory<AlchemicalApparatus.ApparatusType>(markAsSet: false);
-        public INotifyingSetItem<AlchemicalApparatus.ApparatusType> Type_Property => _Type;
-        public AlchemicalApparatus.ApparatusType Type
-        {
-            get => this._Type.Item;
-            set => this._Type.Set(value);
-        }
-        INotifyingSetItem<AlchemicalApparatus.ApparatusType> IAlchemicalApparatus.Type_Property => this.Type_Property;
-        INotifyingSetItemGetter<AlchemicalApparatus.ApparatusType> IAlchemicalApparatusGetter.Type_Property => this.Type_Property;
-        #endregion
-        #region Value
-        protected readonly INotifyingSetItem<UInt32> _Value = NotifyingSetItem.Factory<UInt32>(markAsSet: false);
-        public INotifyingSetItem<UInt32> Value_Property => _Value;
-        public UInt32 Value
-        {
-            get => this._Value.Item;
-            set => this._Value.Set(value);
-        }
-        INotifyingSetItem<UInt32> IAlchemicalApparatus.Value_Property => this.Value_Property;
-        INotifyingSetItemGetter<UInt32> IAlchemicalApparatusGetter.Value_Property => this.Value_Property;
+        FormIDSetLink<Script> IIngredientGetter.Script_Property => this.Script_Property;
         #endregion
         #region Weight
         protected readonly INotifyingSetItem<Single> _Weight = NotifyingSetItem.Factory<Single>(markAsSet: false);
@@ -93,36 +71,55 @@ namespace Mutagen.Bethesda.Oblivion
             get => this._Weight.Item;
             set => this._Weight.Set(value);
         }
-        INotifyingSetItem<Single> IAlchemicalApparatus.Weight_Property => this.Weight_Property;
-        INotifyingSetItemGetter<Single> IAlchemicalApparatusGetter.Weight_Property => this.Weight_Property;
+        INotifyingSetItem<Single> IIngredient.Weight_Property => this.Weight_Property;
+        INotifyingSetItemGetter<Single> IIngredientGetter.Weight_Property => this.Weight_Property;
         #endregion
-        #region Quality
-        protected readonly INotifyingSetItem<Single> _Quality = NotifyingSetItem.Factory<Single>(markAsSet: false);
-        public INotifyingSetItem<Single> Quality_Property => _Quality;
-        public Single Quality
+        #region Value
+        protected readonly INotifyingSetItem<UInt32> _Value = NotifyingSetItem.Factory<UInt32>(markAsSet: false);
+        public INotifyingSetItem<UInt32> Value_Property => _Value;
+        public UInt32 Value
         {
-            get => this._Quality.Item;
-            set => this._Quality.Set(value.PutInRange(Quality_Range.Min, Quality_Range.Max));
+            get => this._Value.Item;
+            set => this._Value.Set(value);
         }
-        INotifyingSetItem<Single> IAlchemicalApparatus.Quality_Property => this.Quality_Property;
-        INotifyingSetItemGetter<Single> IAlchemicalApparatusGetter.Quality_Property => this.Quality_Property;
-        public static RangeFloat Quality_Range = new RangeFloat(0f, 255f);
+        INotifyingSetItem<UInt32> IIngredient.Value_Property => this.Value_Property;
+        INotifyingSetItemGetter<UInt32> IIngredientGetter.Value_Property => this.Value_Property;
+        #endregion
+        #region Flags
+        protected readonly INotifyingSetItem<Ingredient.IngredientFlag> _Flags = NotifyingSetItem.Factory<Ingredient.IngredientFlag>(markAsSet: false);
+        public INotifyingSetItem<Ingredient.IngredientFlag> Flags_Property => _Flags;
+        public Ingredient.IngredientFlag Flags
+        {
+            get => this._Flags.Item;
+            set => this._Flags.Set(value);
+        }
+        INotifyingSetItem<Ingredient.IngredientFlag> IIngredient.Flags_Property => this.Flags_Property;
+        INotifyingSetItemGetter<Ingredient.IngredientFlag> IIngredientGetter.Flags_Property => this.Flags_Property;
+        #endregion
+        #region Effects
+        private readonly INotifyingList<Effect> _Effects = new NotifyingList<Effect>();
+        public INotifyingList<Effect> Effects => _Effects;
+        #region Interface Members
+        INotifyingList<Effect> IIngredient.Effects => _Effects;
+        INotifyingListGetter<Effect> IIngredientGetter.Effects => _Effects;
+        #endregion
+
         #endregion
 
         #region Loqui Getter Interface
 
-        protected override object GetNthObject(ushort index) => AlchemicalApparatusCommon.GetNthObject(index, this);
+        protected override object GetNthObject(ushort index) => IngredientCommon.GetNthObject(index, this);
 
-        protected override bool GetNthObjectHasBeenSet(ushort index) => AlchemicalApparatusCommon.GetNthObjectHasBeenSet(index, this);
+        protected override bool GetNthObjectHasBeenSet(ushort index) => IngredientCommon.GetNthObjectHasBeenSet(index, this);
 
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => AlchemicalApparatusCommon.UnsetNthObject(index, this, cmds);
+        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => IngredientCommon.UnsetNthObject(index, this, cmds);
 
         #endregion
 
         #region Loqui Interface
         protected override void SetNthObjectHasBeenSet(ushort index, bool on)
         {
-            AlchemicalApparatusCommon.SetNthObjectHasBeenSet(index, on, this);
+            IngredientCommon.SetNthObjectHasBeenSet(index, on, this);
         }
 
         #endregion
@@ -130,37 +127,37 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
         public override string ToString()
         {
-            return AlchemicalApparatusCommon.ToString(this, printMask: null);
+            return IngredientCommon.ToString(this, printMask: null);
         }
 
         public string ToString(
             string name = null,
-            AlchemicalApparatus_Mask<bool> printMask = null)
+            Ingredient_Mask<bool> printMask = null)
         {
-            return AlchemicalApparatusCommon.ToString(this, name: name, printMask: printMask);
+            return IngredientCommon.ToString(this, name: name, printMask: printMask);
         }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            AlchemicalApparatusCommon.ToString(this, fg, name: name, printMask: null);
+            IngredientCommon.ToString(this, fg, name: name, printMask: null);
         }
 
         #endregion
 
-        public new AlchemicalApparatus_Mask<bool> GetHasBeenSetMask()
+        public new Ingredient_Mask<bool> GetHasBeenSetMask()
         {
-            return AlchemicalApparatusCommon.GetHasBeenSetMask(this);
+            return IngredientCommon.GetHasBeenSetMask(this);
         }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is AlchemicalApparatus rhs)) return false;
+            if (!(obj is Ingredient rhs)) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(AlchemicalApparatus rhs)
+        public bool Equals(Ingredient rhs)
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
@@ -179,25 +176,25 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (Script != rhs.Script) return false;
             }
-            if (Type_Property.HasBeenSet != rhs.Type_Property.HasBeenSet) return false;
-            if (Type_Property.HasBeenSet)
+            if (Weight_Property.HasBeenSet != rhs.Weight_Property.HasBeenSet) return false;
+            if (Weight_Property.HasBeenSet)
             {
-                if (Type != rhs.Type) return false;
+                if (Weight != rhs.Weight) return false;
             }
             if (Value_Property.HasBeenSet != rhs.Value_Property.HasBeenSet) return false;
             if (Value_Property.HasBeenSet)
             {
                 if (Value != rhs.Value) return false;
             }
-            if (Weight_Property.HasBeenSet != rhs.Weight_Property.HasBeenSet) return false;
-            if (Weight_Property.HasBeenSet)
+            if (Flags_Property.HasBeenSet != rhs.Flags_Property.HasBeenSet) return false;
+            if (Flags_Property.HasBeenSet)
             {
-                if (Weight != rhs.Weight) return false;
+                if (Flags != rhs.Flags) return false;
             }
-            if (Quality_Property.HasBeenSet != rhs.Quality_Property.HasBeenSet) return false;
-            if (Quality_Property.HasBeenSet)
+            if (Effects.HasBeenSet != rhs.Effects.HasBeenSet) return false;
+            if (Effects.HasBeenSet)
             {
-                if (Quality != rhs.Quality) return false;
+                if (!Effects.SequenceEqual(rhs.Effects)) return false;
             }
             return true;
         }
@@ -217,21 +214,21 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(Script).CombineHashCode(ret);
             }
-            if (Type_Property.HasBeenSet)
+            if (Weight_Property.HasBeenSet)
             {
-                ret = HashHelper.GetHashCode(Type).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(Weight).CombineHashCode(ret);
             }
             if (Value_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(Value).CombineHashCode(ret);
             }
-            if (Weight_Property.HasBeenSet)
+            if (Flags_Property.HasBeenSet)
             {
-                ret = HashHelper.GetHashCode(Weight).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
             }
-            if (Quality_Property.HasBeenSet)
+            if (Effects.HasBeenSet)
             {
-                ret = HashHelper.GetHashCode(Quality).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(Effects).CombineHashCode(ret);
             }
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
@@ -243,7 +240,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region XML Translation
         #region XML Create
         [DebuggerStepThrough]
-        public new static AlchemicalApparatus Create_XML(XElement root)
+        public new static Ingredient Create_XML(XElement root)
         {
             return Create_XML(
                 root: root,
@@ -252,9 +249,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static AlchemicalApparatus Create_XML(
+        public static Ingredient Create_XML(
             XElement root,
-            out AlchemicalApparatus_ErrorMask errorMask)
+            out Ingredient_ErrorMask errorMask)
         {
             return Create_XML(
                 root: root,
@@ -263,10 +260,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static AlchemicalApparatus Create_XML(
+        public static Ingredient Create_XML(
             XElement root,
             bool doMasks,
-            out AlchemicalApparatus_ErrorMask errorMask)
+            out Ingredient_ErrorMask errorMask)
         {
             var ret = Create_XML(
                 root: root,
@@ -276,26 +273,26 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static (AlchemicalApparatus Object, AlchemicalApparatus_ErrorMask ErrorMask) Create_XML(
+        public static (Ingredient Object, Ingredient_ErrorMask ErrorMask) Create_XML(
             XElement root,
             bool doMasks)
         {
-            AlchemicalApparatus_ErrorMask errMaskRet = null;
+            Ingredient_ErrorMask errMaskRet = null;
             var ret = Create_XML_Internal(
                 root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new AlchemicalApparatus_ErrorMask()) : default(Func<AlchemicalApparatus_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Ingredient_ErrorMask()) : default(Func<Ingredient_ErrorMask>));
             return (ret, errMaskRet);
         }
 
-        public static AlchemicalApparatus Create_XML(string path)
+        public static Ingredient Create_XML(string path)
         {
             var root = XDocument.Load(path).Root;
             return Create_XML(root: root);
         }
 
-        public static AlchemicalApparatus Create_XML(
+        public static Ingredient Create_XML(
             string path,
-            out AlchemicalApparatus_ErrorMask errorMask)
+            out Ingredient_ErrorMask errorMask)
         {
             var root = XDocument.Load(path).Root;
             return Create_XML(
@@ -303,15 +300,15 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: out errorMask);
         }
 
-        public static AlchemicalApparatus Create_XML(Stream stream)
+        public static Ingredient Create_XML(Stream stream)
         {
             var root = XDocument.Load(stream).Root;
             return Create_XML(root: root);
         }
 
-        public static AlchemicalApparatus Create_XML(
+        public static Ingredient Create_XML(
             Stream stream,
-            out AlchemicalApparatus_ErrorMask errorMask)
+            out Ingredient_ErrorMask errorMask)
         {
             var root = XDocument.Load(stream).Root;
             return Create_XML(
@@ -326,7 +323,7 @@ namespace Mutagen.Bethesda.Oblivion
             XElement root,
             NotifyingFireParameters? cmds = null)
         {
-            LoquiXmlTranslation<AlchemicalApparatus, AlchemicalApparatus_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<Ingredient, Ingredient_ErrorMask>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
@@ -337,10 +334,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void CopyIn_XML(
             XElement root,
-            out AlchemicalApparatus_ErrorMask errorMask,
+            out Ingredient_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
-            LoquiXmlTranslation<AlchemicalApparatus, AlchemicalApparatus_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<Ingredient, Ingredient_ErrorMask>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
@@ -361,7 +358,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_XML(
             string path,
-            out AlchemicalApparatus_ErrorMask errorMask,
+            out Ingredient_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             var root = XDocument.Load(path).Root;
@@ -383,7 +380,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_XML(
             Stream stream,
-            out AlchemicalApparatus_ErrorMask errorMask,
+            out Ingredient_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             var root = XDocument.Load(stream).Root;
@@ -400,7 +397,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.CopyIn_XML(
                 root: root,
-                errorMask: out AlchemicalApparatus_ErrorMask errMask,
+                errorMask: out Ingredient_ErrorMask errMask,
                 cmds: cmds);
             errorMask = errMask;
         }
@@ -412,7 +409,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.CopyIn_XML(
                 root: root,
-                errorMask: out AlchemicalApparatus_ErrorMask errMask,
+                errorMask: out Ingredient_ErrorMask errMask,
                 cmds: cmds);
             errorMask = errMask;
         }
@@ -422,10 +419,10 @@ namespace Mutagen.Bethesda.Oblivion
         #region XML Write
         public virtual void Write_XML(
             XmlWriter writer,
-            out AlchemicalApparatus_ErrorMask errorMask,
+            out Ingredient_ErrorMask errorMask,
             string name = null)
         {
-            errorMask = (AlchemicalApparatus_ErrorMask)this.Write_XML_Internal(
+            errorMask = (Ingredient_ErrorMask)this.Write_XML_Internal(
                 writer: writer,
                 name: name,
                 doMasks: true);
@@ -433,7 +430,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_XML(
             string path,
-            out AlchemicalApparatus_ErrorMask errorMask,
+            out Ingredient_ErrorMask errorMask,
             string name = null)
         {
             using (var writer = new XmlTextWriter(path, Encoding.ASCII))
@@ -449,7 +446,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_XML(
             Stream stream,
-            out AlchemicalApparatus_ErrorMask errorMask,
+            out Ingredient_ErrorMask errorMask,
             string name = null)
         {
             using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
@@ -506,7 +503,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks,
             string name = null)
         {
-            AlchemicalApparatusCommon.Write_XML(
+            IngredientCommon.Write_XML(
                 writer: writer,
                 item: this,
                 doMasks: doMasks,
@@ -515,11 +512,11 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static AlchemicalApparatus Create_XML_Internal(
+        private static Ingredient Create_XML_Internal(
             XElement root,
-            Func<AlchemicalApparatus_ErrorMask> errorMask)
+            Func<Ingredient_ErrorMask> errorMask)
         {
-            var ret = new AlchemicalApparatus();
+            var ret = new Ingredient();
             try
             {
                 foreach (var elem in root.Elements())
@@ -540,55 +537,63 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static void Fill_XML_Internal(
-            AlchemicalApparatus item,
+            Ingredient item,
             XElement root,
             string name,
-            Func<AlchemicalApparatus_ErrorMask> errorMask)
+            Func<Ingredient_ErrorMask> errorMask)
         {
             switch (name)
             {
                 case "Model":
                     item._Model.SetIfSucceeded(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         root: root,
-                        fieldIndex: (int)AlchemicalApparatus_FieldIndex.Model,
+                        fieldIndex: (int)Ingredient_FieldIndex.Model,
                         errorMask: errorMask));
                     break;
                 case "Icon":
                     item._Icon.SetIfSucceeded(FilePathXmlTranslation.Instance.ParseNonNull(
                         root,
-                        fieldIndex: (int)AlchemicalApparatus_FieldIndex.Icon,
+                        fieldIndex: (int)Ingredient_FieldIndex.Icon,
                         errorMask: errorMask));
                     break;
                 case "Script":
                     item.Script_Property.SetIfSucceeded(RawFormIDXmlTranslation.Instance.ParseNonNull(
                         root,
-                        fieldIndex: (int)AlchemicalApparatus_FieldIndex.Script,
-                        errorMask: errorMask));
-                    break;
-                case "Type":
-                    item._Type.SetIfSucceeded(EnumXmlTranslation<AlchemicalApparatus.ApparatusType>.Instance.Parse(
-                        root,
-                        nullable: false,
-                        fieldIndex: (int)AlchemicalApparatus_FieldIndex.Type,
-                        errorMask: errorMask).Bubble((o) => o.Value));
-                    break;
-                case "Value":
-                    item._Value.SetIfSucceeded(UInt32XmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)AlchemicalApparatus_FieldIndex.Value,
+                        fieldIndex: (int)Ingredient_FieldIndex.Script,
                         errorMask: errorMask));
                     break;
                 case "Weight":
                     item._Weight.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
-                        fieldIndex: (int)AlchemicalApparatus_FieldIndex.Weight,
+                        fieldIndex: (int)Ingredient_FieldIndex.Weight,
                         errorMask: errorMask));
                     break;
-                case "Quality":
-                    item._Quality.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                case "Value":
+                    item._Value.SetIfSucceeded(UInt32XmlTranslation.Instance.ParseNonNull(
                         root,
-                        fieldIndex: (int)AlchemicalApparatus_FieldIndex.Quality,
+                        fieldIndex: (int)Ingredient_FieldIndex.Value,
                         errorMask: errorMask));
+                    break;
+                case "Flags":
+                    item._Flags.SetIfSucceeded(EnumXmlTranslation<Ingredient.IngredientFlag>.Instance.Parse(
+                        root,
+                        nullable: false,
+                        fieldIndex: (int)Ingredient_FieldIndex.Flags,
+                        errorMask: errorMask).Bubble((o) => o.Value));
+                    break;
+                case "Effects":
+                    item._Effects.SetIfSucceeded(ListXmlTranslation<Effect, MaskItem<Exception, Effect_ErrorMask>>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)Ingredient_FieldIndex.Effects,
+                        errorMask: errorMask,
+                        transl: (XElement r, bool listDoMasks, out MaskItem<Exception, Effect_ErrorMask> listSubMask) =>
+                        {
+                            return LoquiXmlTranslation<Effect, Effect_ErrorMask>.Instance.Parse(
+                                root: r,
+                                doMasks: listDoMasks,
+                                errorMask: out listSubMask);
+                        }
+                        ));
                     break;
                 default:
                     NamedMajorRecord.Fill_XML_Internal(
@@ -605,7 +610,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public new static AlchemicalApparatus Create_Binary(MutagenFrame frame)
+        public new static Ingredient Create_Binary(MutagenFrame frame)
         {
             return Create_Binary(
                 frame: frame,
@@ -614,9 +619,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static AlchemicalApparatus Create_Binary(
+        public static Ingredient Create_Binary(
             MutagenFrame frame,
-            out AlchemicalApparatus_ErrorMask errorMask)
+            out Ingredient_ErrorMask errorMask)
         {
             return Create_Binary(
                 frame: frame,
@@ -625,10 +630,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static AlchemicalApparatus Create_Binary(
+        public static Ingredient Create_Binary(
             MutagenFrame frame,
             bool doMasks,
-            out AlchemicalApparatus_ErrorMask errorMask)
+            out Ingredient_ErrorMask errorMask)
         {
             var ret = Create_Binary(
                 frame: frame,
@@ -639,20 +644,20 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static (AlchemicalApparatus Object, AlchemicalApparatus_ErrorMask ErrorMask) Create_Binary(
+        public static (Ingredient Object, Ingredient_ErrorMask ErrorMask) Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
             bool doMasks)
         {
-            AlchemicalApparatus_ErrorMask errMaskRet = null;
+            Ingredient_ErrorMask errMaskRet = null;
             var ret = Create_Binary_Internal(
                 frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new AlchemicalApparatus_ErrorMask()) : default(Func<AlchemicalApparatus_ErrorMask>),
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Ingredient_ErrorMask()) : default(Func<Ingredient_ErrorMask>),
                 recordTypeConverter: recordTypeConverter);
             return (ret, errMaskRet);
         }
 
-        public static AlchemicalApparatus Create_Binary(string path)
+        public static Ingredient Create_Binary(string path)
         {
             using (var reader = new MutagenReader(path))
             {
@@ -661,9 +666,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public static AlchemicalApparatus Create_Binary(
+        public static Ingredient Create_Binary(
             string path,
-            out AlchemicalApparatus_ErrorMask errorMask)
+            out Ingredient_ErrorMask errorMask)
         {
             using (var reader = new MutagenReader(path))
             {
@@ -674,7 +679,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public static AlchemicalApparatus Create_Binary(Stream stream)
+        public static Ingredient Create_Binary(Stream stream)
         {
             using (var reader = new MutagenReader(stream))
             {
@@ -683,9 +688,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public static AlchemicalApparatus Create_Binary(
+        public static Ingredient Create_Binary(
             Stream stream,
-            out AlchemicalApparatus_ErrorMask errorMask)
+            out Ingredient_ErrorMask errorMask)
         {
             using (var reader = new MutagenReader(stream))
             {
@@ -703,7 +708,7 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             NotifyingFireParameters? cmds = null)
         {
-            LoquiBinaryTranslation<AlchemicalApparatus, AlchemicalApparatus_ErrorMask>.Instance.CopyIn(
+            LoquiBinaryTranslation<Ingredient, Ingredient_ErrorMask>.Instance.CopyIn(
                 frame: frame,
                 item: this,
                 skipProtected: true,
@@ -714,10 +719,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void CopyIn_Binary(
             MutagenFrame frame,
-            out AlchemicalApparatus_ErrorMask errorMask,
+            out Ingredient_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
-            LoquiBinaryTranslation<AlchemicalApparatus, AlchemicalApparatus_ErrorMask>.Instance.CopyIn(
+            LoquiBinaryTranslation<Ingredient, Ingredient_ErrorMask>.Instance.CopyIn(
                 frame: frame,
                 item: this,
                 skipProtected: true,
@@ -741,7 +746,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_Binary(
             string path,
-            out AlchemicalApparatus_ErrorMask errorMask,
+            out Ingredient_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             using (var reader = new MutagenReader(path))
@@ -769,7 +774,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_Binary(
             Stream stream,
-            out AlchemicalApparatus_ErrorMask errorMask,
+            out Ingredient_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             using (var reader = new MutagenReader(stream))
@@ -789,7 +794,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.CopyIn_Binary(
                 frame: frame,
-                errorMask: out AlchemicalApparatus_ErrorMask errMask,
+                errorMask: out Ingredient_ErrorMask errMask,
                 cmds: cmds);
             errorMask = errMask;
         }
@@ -801,7 +806,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.CopyIn_Binary(
                 frame: frame,
-                errorMask: out AlchemicalApparatus_ErrorMask errMask,
+                errorMask: out Ingredient_ErrorMask errMask,
                 cmds: cmds);
             errorMask = errMask;
         }
@@ -811,9 +816,9 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
-            out AlchemicalApparatus_ErrorMask errorMask)
+            out Ingredient_ErrorMask errorMask)
         {
-            errorMask = (AlchemicalApparatus_ErrorMask)this.Write_Binary_Internal(
+            errorMask = (Ingredient_ErrorMask)this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
                 doMasks: true);
@@ -821,7 +826,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             string path,
-            out AlchemicalApparatus_ErrorMask errorMask)
+            out Ingredient_ErrorMask errorMask)
         {
             using (var writer = new MutagenWriter(path))
             {
@@ -833,7 +838,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             Stream stream,
-            out AlchemicalApparatus_ErrorMask errorMask)
+            out Ingredient_ErrorMask errorMask)
         {
             using (var writer = new MutagenWriter(stream))
             {
@@ -872,7 +877,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             bool doMasks)
         {
-            AlchemicalApparatusCommon.Write_Binary(
+            IngredientCommon.Write_Binary(
                 writer: writer,
                 item: this,
                 doMasks: doMasks,
@@ -882,17 +887,17 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static AlchemicalApparatus Create_Binary_Internal(
+        private static Ingredient Create_Binary_Internal(
             MutagenFrame frame,
-            Func<AlchemicalApparatus_ErrorMask> errorMask,
+            Func<Ingredient_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            var ret = new AlchemicalApparatus();
+            var ret = new Ingredient();
             try
             {
                 frame = frame.Spawn(HeaderTranslation.ParseRecord(
                     frame,
-                    AlchemicalApparatus_Registration.APPA_HEADER));
+                    Ingredient_Registration.INGR_HEADER));
                 using (frame)
                 {
                     Fill_Binary_Structs(
@@ -919,9 +924,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static void Fill_Binary_Structs(
-            AlchemicalApparatus item,
+            Ingredient item,
             MutagenFrame frame,
-            Func<AlchemicalApparatus_ErrorMask> errorMask)
+            Func<Ingredient_ErrorMask> errorMask)
         {
             NamedMajorRecord.Fill_Binary_Structs(
                 item: item,
@@ -929,10 +934,10 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static TryGet<AlchemicalApparatus_FieldIndex?> Fill_Binary_RecordTypes(
-            AlchemicalApparatus item,
+        protected static TryGet<Ingredient_FieldIndex?> Fill_Binary_RecordTypes(
+            Ingredient item,
             MutagenFrame frame,
-            Func<AlchemicalApparatus_ErrorMask> errorMask,
+            Func<Ingredient_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -944,79 +949,95 @@ namespace Mutagen.Bethesda.Oblivion
                 case "MODL":
                     item._Model.SetIfSucceeded(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         frame: frame.Spawn(snapToFinalPosition: false),
-                        fieldIndex: (int)AlchemicalApparatus_FieldIndex.Model,
+                        fieldIndex: (int)Ingredient_FieldIndex.Model,
                         errorMask: errorMask));
-                    return TryGet<AlchemicalApparatus_FieldIndex?>.Succeed(AlchemicalApparatus_FieldIndex.Model);
+                    return TryGet<Ingredient_FieldIndex?>.Succeed(Ingredient_FieldIndex.Model);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._Icon.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
-                        fieldIndex: (int)AlchemicalApparatus_FieldIndex.Icon,
+                        fieldIndex: (int)Ingredient_FieldIndex.Icon,
                         errorMask: errorMask));
-                    return TryGet<AlchemicalApparatus_FieldIndex?>.Succeed(AlchemicalApparatus_FieldIndex.Icon);
+                    return TryGet<Ingredient_FieldIndex?>.Succeed(Ingredient_FieldIndex.Icon);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
-                        fieldIndex: (int)AlchemicalApparatus_FieldIndex.Script,
+                        fieldIndex: (int)Ingredient_FieldIndex.Script,
                         errorMask: errorMask));
-                    return TryGet<AlchemicalApparatus_FieldIndex?>.Succeed(AlchemicalApparatus_FieldIndex.Script);
+                    return TryGet<Ingredient_FieldIndex?>.Succeed(Ingredient_FieldIndex.Script);
                 case "DATA":
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    item._Weight.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: frame.Spawn(contentLength),
+                        fieldIndex: (int)Ingredient_FieldIndex.Weight,
+                        errorMask: errorMask));
+                    return TryGet<Ingredient_FieldIndex?>.Succeed(Ingredient_FieldIndex.Weight);
+                case "ENIT":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.Spawn(contentLength))
                     {
-                        var TypetryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<AlchemicalApparatus.ApparatusType>.Instance.Parse(
-                            frame: dataFrame.Spawn(new ContentLength(1)),
-                            fieldIndex: (int)AlchemicalApparatus_FieldIndex.Type,
-                            errorMask: errorMask);
-                        item._Type.SetIfSucceeded(TypetryGet);
                         item._Value.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
-                            fieldIndex: (int)AlchemicalApparatus_FieldIndex.Value,
+                            fieldIndex: (int)Ingredient_FieldIndex.Value,
                             errorMask: errorMask));
-                        item._Weight.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            fieldIndex: (int)AlchemicalApparatus_FieldIndex.Weight,
-                            errorMask: errorMask));
-                        item._Quality.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                            frame: dataFrame,
-                            fieldIndex: (int)AlchemicalApparatus_FieldIndex.Quality,
-                            errorMask: errorMask));
+                        var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Ingredient.IngredientFlag>.Instance.Parse(
+                            frame: dataFrame.Spawn(new ContentLength(4)),
+                            fieldIndex: (int)Ingredient_FieldIndex.Flags,
+                            errorMask: errorMask);
+                        item._Flags.SetIfSucceeded(FlagstryGet);
                     }
-                    return TryGet<AlchemicalApparatus_FieldIndex?>.Succeed(AlchemicalApparatus_FieldIndex.Quality);
+                    return TryGet<Ingredient_FieldIndex?>.Succeed(Ingredient_FieldIndex.Flags);
+                case "EFID":
+                    var EffectstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect, MaskItem<Exception, Effect_ErrorMask>>.Instance.ParseRepeatedItem(
+                        frame: frame,
+                        triggeringRecord: Ingredient_Registration.EFID_HEADER,
+                        fieldIndex: (int)Ingredient_FieldIndex.Effects,
+                        objType: ObjectType.Subrecord,
+                        errorMask: errorMask,
+                        transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, Effect_ErrorMask> listSubMask) =>
+                        {
+                            return LoquiBinaryTranslation<Effect, Effect_ErrorMask>.Instance.Parse(
+                                frame: r.Spawn(snapToFinalPosition: false),
+                                doMasks: listDoMasks,
+                                errorMask: out listSubMask);
+                        }
+                        );
+                    item._Effects.SetIfSucceeded(EffectstryGet);
+                    return TryGet<Ingredient_FieldIndex?>.Succeed(Ingredient_FieldIndex.Effects);
                 default:
                     return NamedMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
-                        errorMask: errorMask).Bubble((i) => AlchemicalApparatusCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask).Bubble((i) => IngredientCommon.ConvertFieldIndex(i));
             }
         }
 
         #endregion
 
-        public AlchemicalApparatus Copy(
-            AlchemicalApparatus_CopyMask copyMask = null,
-            IAlchemicalApparatusGetter def = null)
+        public Ingredient Copy(
+            Ingredient_CopyMask copyMask = null,
+            IIngredientGetter def = null)
         {
-            return AlchemicalApparatus.Copy(
+            return Ingredient.Copy(
                 this,
                 copyMask: copyMask,
                 def: def);
         }
 
-        public static AlchemicalApparatus Copy(
-            IAlchemicalApparatus item,
-            AlchemicalApparatus_CopyMask copyMask = null,
-            IAlchemicalApparatusGetter def = null)
+        public static Ingredient Copy(
+            IIngredient item,
+            Ingredient_CopyMask copyMask = null,
+            IIngredientGetter def = null)
         {
-            AlchemicalApparatus ret;
-            if (item.GetType().Equals(typeof(AlchemicalApparatus)))
+            Ingredient ret;
+            if (item.GetType().Equals(typeof(Ingredient)))
             {
-                ret = new AlchemicalApparatus();
+                ret = new Ingredient();
             }
             else
             {
-                ret = (AlchemicalApparatus)System.Activator.CreateInstance(item.GetType());
+                ret = (Ingredient)System.Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom(
                 item,
@@ -1027,14 +1048,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static CopyType CopyGeneric<CopyType>(
             CopyType item,
-            AlchemicalApparatus_CopyMask copyMask = null,
-            IAlchemicalApparatusGetter def = null)
-            where CopyType : class, IAlchemicalApparatus
+            Ingredient_CopyMask copyMask = null,
+            IIngredientGetter def = null)
+            where CopyType : class, IIngredient
         {
             CopyType ret;
-            if (item.GetType().Equals(typeof(AlchemicalApparatus)))
+            if (item.GetType().Equals(typeof(Ingredient)))
             {
-                ret = new AlchemicalApparatus() as CopyType;
+                ret = new Ingredient() as CopyType;
             }
             else
             {
@@ -1050,19 +1071,19 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static AlchemicalApparatus Copy_ToLoqui(
-            IAlchemicalApparatusGetter item,
-            AlchemicalApparatus_CopyMask copyMask = null,
-            IAlchemicalApparatusGetter def = null)
+        public static Ingredient Copy_ToLoqui(
+            IIngredientGetter item,
+            Ingredient_CopyMask copyMask = null,
+            IIngredientGetter def = null)
         {
-            AlchemicalApparatus ret;
-            if (item.GetType().Equals(typeof(AlchemicalApparatus)))
+            Ingredient ret;
+            if (item.GetType().Equals(typeof(Ingredient)))
             {
-                ret = new AlchemicalApparatus() as AlchemicalApparatus;
+                ret = new Ingredient() as Ingredient;
             }
             else
             {
-                ret = (AlchemicalApparatus)System.Activator.CreateInstance(item.GetType());
+                ret = (Ingredient)System.Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom(
                 item,
@@ -1073,43 +1094,41 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds = null)
         {
-            AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
+            Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
             switch (enu)
             {
-                case AlchemicalApparatus_FieldIndex.Model:
+                case Ingredient_FieldIndex.Model:
                     this._Model.Set(
                         (Model)obj,
                         cmds);
                     break;
-                case AlchemicalApparatus_FieldIndex.Icon:
+                case Ingredient_FieldIndex.Icon:
                     this._Icon.Set(
                         (FilePath)obj,
                         cmds);
                     break;
-                case AlchemicalApparatus_FieldIndex.Script:
+                case Ingredient_FieldIndex.Script:
                     this.Script_Property.Set(
                         (FormIDSetLink<Script>)obj,
                         cmds);
                     break;
-                case AlchemicalApparatus_FieldIndex.Type:
-                    this._Type.Set(
-                        (AlchemicalApparatus.ApparatusType)obj,
-                        cmds);
-                    break;
-                case AlchemicalApparatus_FieldIndex.Value:
-                    this._Value.Set(
-                        (UInt32)obj,
-                        cmds);
-                    break;
-                case AlchemicalApparatus_FieldIndex.Weight:
+                case Ingredient_FieldIndex.Weight:
                     this._Weight.Set(
                         (Single)obj,
                         cmds);
                     break;
-                case AlchemicalApparatus_FieldIndex.Quality:
-                    this._Quality.Set(
-                        (Single)obj,
+                case Ingredient_FieldIndex.Value:
+                    this._Value.Set(
+                        (UInt32)obj,
                         cmds);
+                    break;
+                case Ingredient_FieldIndex.Flags:
+                    this._Flags.Set(
+                        (Ingredient.IngredientFlag)obj,
+                        cmds);
+                    break;
+                case Ingredient_FieldIndex.Effects:
+                    this._Effects.SetTo((IEnumerable<Effect>)obj, cmds);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -1120,68 +1139,66 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Clear(NotifyingUnsetParameters? cmds = null)
         {
             CallClearPartial_Internal(cmds);
-            AlchemicalApparatusCommon.Clear(this, cmds);
+            IngredientCommon.Clear(this, cmds);
         }
 
 
-        public new static AlchemicalApparatus Create(IEnumerable<KeyValuePair<ushort, object>> fields)
+        public new static Ingredient Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
-            var ret = new AlchemicalApparatus();
+            var ret = new Ingredient();
             foreach (var pair in fields)
             {
-                CopyInInternal_AlchemicalApparatus(ret, pair);
+                CopyInInternal_Ingredient(ret, pair);
             }
             return ret;
         }
 
-        protected new static void CopyInInternal_AlchemicalApparatus(AlchemicalApparatus obj, KeyValuePair<ushort, object> pair)
+        protected new static void CopyInInternal_Ingredient(Ingredient obj, KeyValuePair<ushort, object> pair)
         {
-            if (!EnumExt.TryParse(pair.Key, out AlchemicalApparatus_FieldIndex enu))
+            if (!EnumExt.TryParse(pair.Key, out Ingredient_FieldIndex enu))
             {
                 CopyInInternal_NamedMajorRecord(obj, pair);
             }
             switch (enu)
             {
-                case AlchemicalApparatus_FieldIndex.Model:
+                case Ingredient_FieldIndex.Model:
                     obj._Model.Set(
                         (Model)pair.Value,
                         null);
                     break;
-                case AlchemicalApparatus_FieldIndex.Icon:
+                case Ingredient_FieldIndex.Icon:
                     obj._Icon.Set(
                         (FilePath)pair.Value,
                         null);
                     break;
-                case AlchemicalApparatus_FieldIndex.Script:
+                case Ingredient_FieldIndex.Script:
                     obj.Script_Property.Set(
                         (FormIDSetLink<Script>)pair.Value,
                         null);
                     break;
-                case AlchemicalApparatus_FieldIndex.Type:
-                    obj._Type.Set(
-                        (AlchemicalApparatus.ApparatusType)pair.Value,
-                        null);
-                    break;
-                case AlchemicalApparatus_FieldIndex.Value:
-                    obj._Value.Set(
-                        (UInt32)pair.Value,
-                        null);
-                    break;
-                case AlchemicalApparatus_FieldIndex.Weight:
+                case Ingredient_FieldIndex.Weight:
                     obj._Weight.Set(
                         (Single)pair.Value,
                         null);
                     break;
-                case AlchemicalApparatus_FieldIndex.Quality:
-                    obj._Quality.Set(
-                        (Single)pair.Value,
+                case Ingredient_FieldIndex.Value:
+                    obj._Value.Set(
+                        (UInt32)pair.Value,
                         null);
+                    break;
+                case Ingredient_FieldIndex.Flags:
+                    obj._Flags.Set(
+                        (Ingredient.IngredientFlag)pair.Value,
+                        null);
+                    break;
+                case Ingredient_FieldIndex.Effects:
+                    obj._Effects.SetTo((IEnumerable<Effect>)pair.Value, null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, AlchemicalApparatus obj)
+        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Ingredient obj)
         {
             ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
         }
@@ -1190,7 +1207,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IAlchemicalApparatus : IAlchemicalApparatusGetter, INamedMajorRecord, ILoquiClass<IAlchemicalApparatus, IAlchemicalApparatusGetter>, ILoquiClass<AlchemicalApparatus, IAlchemicalApparatusGetter>
+    public interface IIngredient : IIngredientGetter, INamedMajorRecord, ILoquiClass<IIngredient, IIngredientGetter>, ILoquiClass<Ingredient, IIngredientGetter>
     {
         new Model Model { get; set; }
         new INotifyingSetItem<Model> Model_Property { get; }
@@ -1199,21 +1216,19 @@ namespace Mutagen.Bethesda.Oblivion
         new INotifyingSetItem<FilePath> Icon_Property { get; }
 
         new Script Script { get; set; }
-        new AlchemicalApparatus.ApparatusType Type { get; set; }
-        new INotifyingSetItem<AlchemicalApparatus.ApparatusType> Type_Property { get; }
+        new Single Weight { get; set; }
+        new INotifyingSetItem<Single> Weight_Property { get; }
 
         new UInt32 Value { get; set; }
         new INotifyingSetItem<UInt32> Value_Property { get; }
 
-        new Single Weight { get; set; }
-        new INotifyingSetItem<Single> Weight_Property { get; }
+        new Ingredient.IngredientFlag Flags { get; set; }
+        new INotifyingSetItem<Ingredient.IngredientFlag> Flags_Property { get; }
 
-        new Single Quality { get; set; }
-        new INotifyingSetItem<Single> Quality_Property { get; }
-
+        new INotifyingList<Effect> Effects { get; }
     }
 
-    public interface IAlchemicalApparatusGetter : INamedMajorRecordGetter
+    public interface IIngredientGetter : INamedMajorRecordGetter
     {
         #region Model
         Model Model { get; }
@@ -1230,9 +1245,9 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDSetLink<Script> Script_Property { get; }
 
         #endregion
-        #region Type
-        AlchemicalApparatus.ApparatusType Type { get; }
-        INotifyingSetItemGetter<AlchemicalApparatus.ApparatusType> Type_Property { get; }
+        #region Weight
+        Single Weight { get; }
+        INotifyingSetItemGetter<Single> Weight_Property { get; }
 
         #endregion
         #region Value
@@ -1240,15 +1255,13 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<UInt32> Value_Property { get; }
 
         #endregion
-        #region Weight
-        Single Weight { get; }
-        INotifyingSetItemGetter<Single> Weight_Property { get; }
+        #region Flags
+        Ingredient.IngredientFlag Flags { get; }
+        INotifyingSetItemGetter<Ingredient.IngredientFlag> Flags_Property { get; }
 
         #endregion
-        #region Quality
-        Single Quality { get; }
-        INotifyingSetItemGetter<Single> Quality_Property { get; }
-
+        #region Effects
+        INotifyingListGetter<Effect> Effects { get; }
         #endregion
 
     }
@@ -1260,7 +1273,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     #region Field Index
-    public enum AlchemicalApparatus_FieldIndex
+    public enum Ingredient_FieldIndex
     {
         MajorRecordFlags = 0,
         FormID = 1,
@@ -1271,44 +1284,44 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Model = 6,
         Icon = 7,
         Script = 8,
-        Type = 9,
+        Weight = 9,
         Value = 10,
-        Weight = 11,
-        Quality = 12,
+        Flags = 11,
+        Effects = 12,
     }
     #endregion
 
     #region Registration
-    public class AlchemicalApparatus_Registration : ILoquiRegistration
+    public class Ingredient_Registration : ILoquiRegistration
     {
-        public static readonly AlchemicalApparatus_Registration Instance = new AlchemicalApparatus_Registration();
+        public static readonly Ingredient_Registration Instance = new Ingredient_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 66,
+            msgID: 76,
             version: 0);
 
-        public const string GUID = "731a9b97-8051-4d72-8008-3e53a96659cd";
+        public const string GUID = "b617ece0-1ff6-475d-af9d-265d2f55af37";
 
         public const ushort FieldCount = 7;
 
-        public static readonly Type MaskType = typeof(AlchemicalApparatus_Mask<>);
+        public static readonly Type MaskType = typeof(Ingredient_Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(AlchemicalApparatus_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Ingredient_ErrorMask);
 
-        public static readonly Type ClassType = typeof(AlchemicalApparatus);
+        public static readonly Type ClassType = typeof(Ingredient);
 
-        public static readonly Type GetterType = typeof(IAlchemicalApparatusGetter);
+        public static readonly Type GetterType = typeof(IIngredientGetter);
 
-        public static readonly Type SetterType = typeof(IAlchemicalApparatus);
+        public static readonly Type SetterType = typeof(IIngredient);
 
-        public static readonly Type CommonType = typeof(AlchemicalApparatusCommon);
+        public static readonly Type CommonType = typeof(IngredientCommon);
 
-        public const string FullName = "Mutagen.Bethesda.Oblivion.AlchemicalApparatus";
+        public const string FullName = "Mutagen.Bethesda.Oblivion.Ingredient";
 
-        public const string Name = "AlchemicalApparatus";
+        public const string Name = "Ingredient";
 
         public const string Namespace = "Mutagen.Bethesda.Oblivion";
 
@@ -1321,19 +1334,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (str.Upper)
             {
                 case "MODEL":
-                    return (ushort)AlchemicalApparatus_FieldIndex.Model;
+                    return (ushort)Ingredient_FieldIndex.Model;
                 case "ICON":
-                    return (ushort)AlchemicalApparatus_FieldIndex.Icon;
+                    return (ushort)Ingredient_FieldIndex.Icon;
                 case "SCRIPT":
-                    return (ushort)AlchemicalApparatus_FieldIndex.Script;
-                case "TYPE":
-                    return (ushort)AlchemicalApparatus_FieldIndex.Type;
-                case "VALUE":
-                    return (ushort)AlchemicalApparatus_FieldIndex.Value;
+                    return (ushort)Ingredient_FieldIndex.Script;
                 case "WEIGHT":
-                    return (ushort)AlchemicalApparatus_FieldIndex.Weight;
-                case "QUALITY":
-                    return (ushort)AlchemicalApparatus_FieldIndex.Quality;
+                    return (ushort)Ingredient_FieldIndex.Weight;
+                case "VALUE":
+                    return (ushort)Ingredient_FieldIndex.Value;
+                case "FLAGS":
+                    return (ushort)Ingredient_FieldIndex.Flags;
+                case "EFFECTS":
+                    return (ushort)Ingredient_FieldIndex.Effects;
                 default:
                     return null;
             }
@@ -1341,16 +1354,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
+            Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
             switch (enu)
             {
-                case AlchemicalApparatus_FieldIndex.Model:
-                case AlchemicalApparatus_FieldIndex.Icon:
-                case AlchemicalApparatus_FieldIndex.Script:
-                case AlchemicalApparatus_FieldIndex.Type:
-                case AlchemicalApparatus_FieldIndex.Value:
-                case AlchemicalApparatus_FieldIndex.Weight:
-                case AlchemicalApparatus_FieldIndex.Quality:
+                case Ingredient_FieldIndex.Effects:
+                    return true;
+                case Ingredient_FieldIndex.Model:
+                case Ingredient_FieldIndex.Icon:
+                case Ingredient_FieldIndex.Script:
+                case Ingredient_FieldIndex.Weight:
+                case Ingredient_FieldIndex.Value:
+                case Ingredient_FieldIndex.Flags:
                     return false;
                 default:
                     return NamedMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -1359,17 +1373,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
+            Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
             switch (enu)
             {
-                case AlchemicalApparatus_FieldIndex.Model:
+                case Ingredient_FieldIndex.Model:
+                case Ingredient_FieldIndex.Effects:
                     return true;
-                case AlchemicalApparatus_FieldIndex.Icon:
-                case AlchemicalApparatus_FieldIndex.Script:
-                case AlchemicalApparatus_FieldIndex.Type:
-                case AlchemicalApparatus_FieldIndex.Value:
-                case AlchemicalApparatus_FieldIndex.Weight:
-                case AlchemicalApparatus_FieldIndex.Quality:
+                case Ingredient_FieldIndex.Icon:
+                case Ingredient_FieldIndex.Script:
+                case Ingredient_FieldIndex.Weight:
+                case Ingredient_FieldIndex.Value:
+                case Ingredient_FieldIndex.Flags:
                     return false;
                 default:
                     return NamedMajorRecord_Registration.GetNthIsLoqui(index);
@@ -1378,16 +1392,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
+            Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
             switch (enu)
             {
-                case AlchemicalApparatus_FieldIndex.Model:
-                case AlchemicalApparatus_FieldIndex.Icon:
-                case AlchemicalApparatus_FieldIndex.Script:
-                case AlchemicalApparatus_FieldIndex.Type:
-                case AlchemicalApparatus_FieldIndex.Value:
-                case AlchemicalApparatus_FieldIndex.Weight:
-                case AlchemicalApparatus_FieldIndex.Quality:
+                case Ingredient_FieldIndex.Model:
+                case Ingredient_FieldIndex.Icon:
+                case Ingredient_FieldIndex.Script:
+                case Ingredient_FieldIndex.Weight:
+                case Ingredient_FieldIndex.Value:
+                case Ingredient_FieldIndex.Flags:
+                case Ingredient_FieldIndex.Effects:
                     return false;
                 default:
                     return NamedMajorRecord_Registration.GetNthIsSingleton(index);
@@ -1396,23 +1410,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static string GetNthName(ushort index)
         {
-            AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
+            Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
             switch (enu)
             {
-                case AlchemicalApparatus_FieldIndex.Model:
+                case Ingredient_FieldIndex.Model:
                     return "Model";
-                case AlchemicalApparatus_FieldIndex.Icon:
+                case Ingredient_FieldIndex.Icon:
                     return "Icon";
-                case AlchemicalApparatus_FieldIndex.Script:
+                case Ingredient_FieldIndex.Script:
                     return "Script";
-                case AlchemicalApparatus_FieldIndex.Type:
-                    return "Type";
-                case AlchemicalApparatus_FieldIndex.Value:
-                    return "Value";
-                case AlchemicalApparatus_FieldIndex.Weight:
+                case Ingredient_FieldIndex.Weight:
                     return "Weight";
-                case AlchemicalApparatus_FieldIndex.Quality:
-                    return "Quality";
+                case Ingredient_FieldIndex.Value:
+                    return "Value";
+                case Ingredient_FieldIndex.Flags:
+                    return "Flags";
+                case Ingredient_FieldIndex.Effects:
+                    return "Effects";
                 default:
                     return NamedMajorRecord_Registration.GetNthName(index);
             }
@@ -1420,16 +1434,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
+            Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
             switch (enu)
             {
-                case AlchemicalApparatus_FieldIndex.Model:
-                case AlchemicalApparatus_FieldIndex.Icon:
-                case AlchemicalApparatus_FieldIndex.Script:
-                case AlchemicalApparatus_FieldIndex.Type:
-                case AlchemicalApparatus_FieldIndex.Value:
-                case AlchemicalApparatus_FieldIndex.Weight:
-                case AlchemicalApparatus_FieldIndex.Quality:
+                case Ingredient_FieldIndex.Model:
+                case Ingredient_FieldIndex.Icon:
+                case Ingredient_FieldIndex.Script:
+                case Ingredient_FieldIndex.Weight:
+                case Ingredient_FieldIndex.Value:
+                case Ingredient_FieldIndex.Flags:
+                case Ingredient_FieldIndex.Effects:
                     return false;
                 default:
                     return NamedMajorRecord_Registration.IsNthDerivative(index);
@@ -1438,16 +1452,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool IsProtected(ushort index)
         {
-            AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
+            Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
             switch (enu)
             {
-                case AlchemicalApparatus_FieldIndex.Model:
-                case AlchemicalApparatus_FieldIndex.Icon:
-                case AlchemicalApparatus_FieldIndex.Script:
-                case AlchemicalApparatus_FieldIndex.Type:
-                case AlchemicalApparatus_FieldIndex.Value:
-                case AlchemicalApparatus_FieldIndex.Weight:
-                case AlchemicalApparatus_FieldIndex.Quality:
+                case Ingredient_FieldIndex.Model:
+                case Ingredient_FieldIndex.Icon:
+                case Ingredient_FieldIndex.Script:
+                case Ingredient_FieldIndex.Weight:
+                case Ingredient_FieldIndex.Value:
+                case Ingredient_FieldIndex.Flags:
+                case Ingredient_FieldIndex.Effects:
                     return false;
                 default:
                     return NamedMajorRecord_Registration.IsProtected(index);
@@ -1456,36 +1470,38 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static Type GetNthType(ushort index)
         {
-            AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
+            Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
             switch (enu)
             {
-                case AlchemicalApparatus_FieldIndex.Model:
+                case Ingredient_FieldIndex.Model:
                     return typeof(Model);
-                case AlchemicalApparatus_FieldIndex.Icon:
+                case Ingredient_FieldIndex.Icon:
                     return typeof(FilePath);
-                case AlchemicalApparatus_FieldIndex.Script:
+                case Ingredient_FieldIndex.Script:
                     return typeof(FormIDSetLink<Script>);
-                case AlchemicalApparatus_FieldIndex.Type:
-                    return typeof(AlchemicalApparatus.ApparatusType);
-                case AlchemicalApparatus_FieldIndex.Value:
+                case Ingredient_FieldIndex.Weight:
+                    return typeof(Single);
+                case Ingredient_FieldIndex.Value:
                     return typeof(UInt32);
-                case AlchemicalApparatus_FieldIndex.Weight:
-                    return typeof(Single);
-                case AlchemicalApparatus_FieldIndex.Quality:
-                    return typeof(Single);
+                case Ingredient_FieldIndex.Flags:
+                    return typeof(Ingredient.IngredientFlag);
+                case Ingredient_FieldIndex.Effects:
+                    return typeof(NotifyingList<Effect>);
                 default:
                     return NamedMajorRecord_Registration.GetNthType(index);
             }
         }
 
-        public static readonly RecordType APPA_HEADER = new RecordType("APPA");
+        public static readonly RecordType INGR_HEADER = new RecordType("INGR");
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
         public static readonly RecordType ICON_HEADER = new RecordType("ICON");
         public static readonly RecordType SCRI_HEADER = new RecordType("SCRI");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = APPA_HEADER;
+        public static readonly RecordType ENIT_HEADER = new RecordType("ENIT");
+        public static readonly RecordType EFID_HEADER = new RecordType("EFID");
+        public static readonly RecordType TRIGGERING_RECORD_TYPE = INGR_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 3;
+        public const int NumTypedFields = 5;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1516,17 +1532,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Extensions
-    public static partial class AlchemicalApparatusCommon
+    public static partial class IngredientCommon
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IAlchemicalApparatus item,
-            IAlchemicalApparatusGetter rhs,
-            AlchemicalApparatus_CopyMask copyMask = null,
-            IAlchemicalApparatusGetter def = null,
+            this IIngredient item,
+            IIngredientGetter rhs,
+            Ingredient_CopyMask copyMask = null,
+            IIngredientGetter def = null,
             NotifyingFireParameters? cmds = null)
         {
-            AlchemicalApparatusCommon.CopyFieldsFrom(
+            IngredientCommon.CopyFieldsFrom(
                 item: item,
                 rhs: rhs,
                 def: def,
@@ -1537,14 +1553,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void CopyFieldsFrom(
-            this IAlchemicalApparatus item,
-            IAlchemicalApparatusGetter rhs,
-            out AlchemicalApparatus_ErrorMask errorMask,
-            AlchemicalApparatus_CopyMask copyMask = null,
-            IAlchemicalApparatusGetter def = null,
+            this IIngredient item,
+            IIngredientGetter rhs,
+            out Ingredient_ErrorMask errorMask,
+            Ingredient_CopyMask copyMask = null,
+            IIngredientGetter def = null,
             NotifyingFireParameters? cmds = null)
         {
-            AlchemicalApparatusCommon.CopyFieldsFrom(
+            IngredientCommon.CopyFieldsFrom(
                 item: item,
                 rhs: rhs,
                 def: def,
@@ -1555,20 +1571,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void CopyFieldsFrom(
-            this IAlchemicalApparatus item,
-            IAlchemicalApparatusGetter rhs,
-            IAlchemicalApparatusGetter def,
+            this IIngredient item,
+            IIngredientGetter rhs,
+            IIngredientGetter def,
             bool doMasks,
-            out AlchemicalApparatus_ErrorMask errorMask,
-            AlchemicalApparatus_CopyMask copyMask,
+            out Ingredient_ErrorMask errorMask,
+            Ingredient_CopyMask copyMask,
             NotifyingFireParameters? cmds)
         {
-            AlchemicalApparatus_ErrorMask retErrorMask = null;
-            Func<AlchemicalApparatus_ErrorMask> maskGetter = () =>
+            Ingredient_ErrorMask retErrorMask = null;
+            Func<Ingredient_ErrorMask> maskGetter = () =>
             {
                 if (retErrorMask == null)
                 {
-                    retErrorMask = new AlchemicalApparatus_ErrorMask();
+                    retErrorMask = new Ingredient_ErrorMask();
                 }
                 return retErrorMask;
             };
@@ -1584,12 +1600,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void CopyFieldsFrom(
-            this IAlchemicalApparatus item,
-            IAlchemicalApparatusGetter rhs,
-            IAlchemicalApparatusGetter def,
+            this IIngredient item,
+            IIngredientGetter rhs,
+            IIngredientGetter def,
             bool doMasks,
-            Func<AlchemicalApparatus_ErrorMask> errorMask,
-            AlchemicalApparatus_CopyMask copyMask,
+            Func<Ingredient_ErrorMask> errorMask,
+            Ingredient_CopyMask copyMask,
             NotifyingFireParameters? cmds)
         {
             NamedMajorRecordCommon.CopyFieldsFrom(
@@ -1648,7 +1664,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 catch (Exception ex)
                 when (doMasks)
                 {
-                    errorMask().SetNthException((int)AlchemicalApparatus_FieldIndex.Model, ex);
+                    errorMask().SetNthException((int)Ingredient_FieldIndex.Model, ex);
                 }
             }
             if (copyMask?.Icon ?? true)
@@ -1663,7 +1679,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 catch (Exception ex)
                 when (doMasks)
                 {
-                    errorMask().SetNthException((int)AlchemicalApparatus_FieldIndex.Icon, ex);
+                    errorMask().SetNthException((int)Ingredient_FieldIndex.Icon, ex);
                 }
             }
             if (copyMask?.Script ?? true)
@@ -1678,37 +1694,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 catch (Exception ex)
                 when (doMasks)
                 {
-                    errorMask().SetNthException((int)AlchemicalApparatus_FieldIndex.Script, ex);
-                }
-            }
-            if (copyMask?.Type ?? true)
-            {
-                try
-                {
-                    item.Type_Property.SetToWithDefault(
-                        rhs: rhs.Type_Property,
-                        def: def?.Type_Property,
-                        cmds: cmds);
-                }
-                catch (Exception ex)
-                when (doMasks)
-                {
-                    errorMask().SetNthException((int)AlchemicalApparatus_FieldIndex.Type, ex);
-                }
-            }
-            if (copyMask?.Value ?? true)
-            {
-                try
-                {
-                    item.Value_Property.SetToWithDefault(
-                        rhs: rhs.Value_Property,
-                        def: def?.Value_Property,
-                        cmds: cmds);
-                }
-                catch (Exception ex)
-                when (doMasks)
-                {
-                    errorMask().SetNthException((int)AlchemicalApparatus_FieldIndex.Value, ex);
+                    errorMask().SetNthException((int)Ingredient_FieldIndex.Script, ex);
                 }
             }
             if (copyMask?.Weight ?? true)
@@ -1723,22 +1709,69 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 catch (Exception ex)
                 when (doMasks)
                 {
-                    errorMask().SetNthException((int)AlchemicalApparatus_FieldIndex.Weight, ex);
+                    errorMask().SetNthException((int)Ingredient_FieldIndex.Weight, ex);
                 }
             }
-            if (copyMask?.Quality ?? true)
+            if (copyMask?.Value ?? true)
             {
                 try
                 {
-                    item.Quality_Property.SetToWithDefault(
-                        rhs: rhs.Quality_Property,
-                        def: def?.Quality_Property,
+                    item.Value_Property.SetToWithDefault(
+                        rhs: rhs.Value_Property,
+                        def: def?.Value_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
                 {
-                    errorMask().SetNthException((int)AlchemicalApparatus_FieldIndex.Quality, ex);
+                    errorMask().SetNthException((int)Ingredient_FieldIndex.Value, ex);
+                }
+            }
+            if (copyMask?.Flags ?? true)
+            {
+                try
+                {
+                    item.Flags_Property.SetToWithDefault(
+                        rhs: rhs.Flags_Property,
+                        def: def?.Flags_Property,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Ingredient_FieldIndex.Flags, ex);
+                }
+            }
+            if (copyMask?.Effects.Overall != CopyOption.Skip)
+            {
+                try
+                {
+                    item.Effects.SetToWithDefault(
+                        rhs.Effects,
+                        def?.Effects,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.Effects.Overall ?? CopyOption.Reference)
+                            {
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(Effect);
+                                    return Effect.Copy(
+                                        r,
+                                        copyMask?.Effects?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Effects.Overall}. Cannot execute copy.");
+                            }
+                        }
+                        );
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Ingredient_FieldIndex.Effects, ex);
                 }
             }
         }
@@ -1748,32 +1781,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void SetNthObjectHasBeenSet(
             ushort index,
             bool on,
-            IAlchemicalApparatus obj,
+            IIngredient obj,
             NotifyingFireParameters? cmds = null)
         {
-            AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
+            Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
             switch (enu)
             {
-                case AlchemicalApparatus_FieldIndex.Model:
+                case Ingredient_FieldIndex.Model:
                     obj.Model_Property.HasBeenSet = on;
                     break;
-                case AlchemicalApparatus_FieldIndex.Icon:
+                case Ingredient_FieldIndex.Icon:
                     obj.Icon_Property.HasBeenSet = on;
                     break;
-                case AlchemicalApparatus_FieldIndex.Script:
+                case Ingredient_FieldIndex.Script:
                     obj.Script_Property.HasBeenSet = on;
                     break;
-                case AlchemicalApparatus_FieldIndex.Type:
-                    obj.Type_Property.HasBeenSet = on;
-                    break;
-                case AlchemicalApparatus_FieldIndex.Value:
-                    obj.Value_Property.HasBeenSet = on;
-                    break;
-                case AlchemicalApparatus_FieldIndex.Weight:
+                case Ingredient_FieldIndex.Weight:
                     obj.Weight_Property.HasBeenSet = on;
                     break;
-                case AlchemicalApparatus_FieldIndex.Quality:
-                    obj.Quality_Property.HasBeenSet = on;
+                case Ingredient_FieldIndex.Value:
+                    obj.Value_Property.HasBeenSet = on;
+                    break;
+                case Ingredient_FieldIndex.Flags:
+                    obj.Flags_Property.HasBeenSet = on;
+                    break;
+                case Ingredient_FieldIndex.Effects:
+                    obj.Effects.HasBeenSet = on;
                     break;
                 default:
                     NamedMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
@@ -1783,32 +1816,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void UnsetNthObject(
             ushort index,
-            IAlchemicalApparatus obj,
+            IIngredient obj,
             NotifyingUnsetParameters? cmds = null)
         {
-            AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
+            Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
             switch (enu)
             {
-                case AlchemicalApparatus_FieldIndex.Model:
+                case Ingredient_FieldIndex.Model:
                     obj.Model_Property.Unset(cmds);
                     break;
-                case AlchemicalApparatus_FieldIndex.Icon:
+                case Ingredient_FieldIndex.Icon:
                     obj.Icon_Property.Unset(cmds);
                     break;
-                case AlchemicalApparatus_FieldIndex.Script:
+                case Ingredient_FieldIndex.Script:
                     obj.Script_Property.Unset(cmds);
                     break;
-                case AlchemicalApparatus_FieldIndex.Type:
-                    obj.Type_Property.Unset(cmds);
-                    break;
-                case AlchemicalApparatus_FieldIndex.Value:
-                    obj.Value_Property.Unset(cmds);
-                    break;
-                case AlchemicalApparatus_FieldIndex.Weight:
+                case Ingredient_FieldIndex.Weight:
                     obj.Weight_Property.Unset(cmds);
                     break;
-                case AlchemicalApparatus_FieldIndex.Quality:
-                    obj.Quality_Property.Unset(cmds);
+                case Ingredient_FieldIndex.Value:
+                    obj.Value_Property.Unset(cmds);
+                    break;
+                case Ingredient_FieldIndex.Flags:
+                    obj.Flags_Property.Unset(cmds);
+                    break;
+                case Ingredient_FieldIndex.Effects:
+                    obj.Effects.Unset(cmds);
                     break;
                 default:
                     NamedMajorRecordCommon.UnsetNthObject(index, obj);
@@ -1818,25 +1851,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthObjectHasBeenSet(
             ushort index,
-            IAlchemicalApparatus obj)
+            IIngredient obj)
         {
-            AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
+            Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
             switch (enu)
             {
-                case AlchemicalApparatus_FieldIndex.Model:
+                case Ingredient_FieldIndex.Model:
                     return obj.Model_Property.HasBeenSet;
-                case AlchemicalApparatus_FieldIndex.Icon:
+                case Ingredient_FieldIndex.Icon:
                     return obj.Icon_Property.HasBeenSet;
-                case AlchemicalApparatus_FieldIndex.Script:
+                case Ingredient_FieldIndex.Script:
                     return obj.Script_Property.HasBeenSet;
-                case AlchemicalApparatus_FieldIndex.Type:
-                    return obj.Type_Property.HasBeenSet;
-                case AlchemicalApparatus_FieldIndex.Value:
-                    return obj.Value_Property.HasBeenSet;
-                case AlchemicalApparatus_FieldIndex.Weight:
+                case Ingredient_FieldIndex.Weight:
                     return obj.Weight_Property.HasBeenSet;
-                case AlchemicalApparatus_FieldIndex.Quality:
-                    return obj.Quality_Property.HasBeenSet;
+                case Ingredient_FieldIndex.Value:
+                    return obj.Value_Property.HasBeenSet;
+                case Ingredient_FieldIndex.Flags:
+                    return obj.Flags_Property.HasBeenSet;
+                case Ingredient_FieldIndex.Effects:
+                    return obj.Effects.HasBeenSet;
                 default:
                     return NamedMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -1844,72 +1877,96 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static object GetNthObject(
             ushort index,
-            IAlchemicalApparatusGetter obj)
+            IIngredientGetter obj)
         {
-            AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
+            Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
             switch (enu)
             {
-                case AlchemicalApparatus_FieldIndex.Model:
+                case Ingredient_FieldIndex.Model:
                     return obj.Model;
-                case AlchemicalApparatus_FieldIndex.Icon:
+                case Ingredient_FieldIndex.Icon:
                     return obj.Icon;
-                case AlchemicalApparatus_FieldIndex.Script:
+                case Ingredient_FieldIndex.Script:
                     return obj.Script;
-                case AlchemicalApparatus_FieldIndex.Type:
-                    return obj.Type;
-                case AlchemicalApparatus_FieldIndex.Value:
-                    return obj.Value;
-                case AlchemicalApparatus_FieldIndex.Weight:
+                case Ingredient_FieldIndex.Weight:
                     return obj.Weight;
-                case AlchemicalApparatus_FieldIndex.Quality:
-                    return obj.Quality;
+                case Ingredient_FieldIndex.Value:
+                    return obj.Value;
+                case Ingredient_FieldIndex.Flags:
+                    return obj.Flags;
+                case Ingredient_FieldIndex.Effects:
+                    return obj.Effects;
                 default:
                     return NamedMajorRecordCommon.GetNthObject(index, obj);
             }
         }
 
         public static void Clear(
-            IAlchemicalApparatus item,
+            IIngredient item,
             NotifyingUnsetParameters? cmds = null)
         {
             item.Model_Property.Unset(cmds.ToUnsetParams());
             item.Icon_Property.Unset(cmds.ToUnsetParams());
             item.Script_Property.Unset(cmds.ToUnsetParams());
-            item.Type_Property.Unset(cmds.ToUnsetParams());
-            item.Value_Property.Unset(cmds.ToUnsetParams());
             item.Weight_Property.Unset(cmds.ToUnsetParams());
-            item.Quality_Property.Unset(cmds.ToUnsetParams());
+            item.Value_Property.Unset(cmds.ToUnsetParams());
+            item.Flags_Property.Unset(cmds.ToUnsetParams());
+            item.Effects.Unset(cmds.ToUnsetParams());
         }
 
-        public static AlchemicalApparatus_Mask<bool> GetEqualsMask(
-            this IAlchemicalApparatusGetter item,
-            IAlchemicalApparatusGetter rhs)
+        public static Ingredient_Mask<bool> GetEqualsMask(
+            this IIngredientGetter item,
+            IIngredientGetter rhs)
         {
-            var ret = new AlchemicalApparatus_Mask<bool>();
+            var ret = new Ingredient_Mask<bool>();
             FillEqualsMask(item, rhs, ret);
             return ret;
         }
 
         public static void FillEqualsMask(
-            IAlchemicalApparatusGetter item,
-            IAlchemicalApparatusGetter rhs,
-            AlchemicalApparatus_Mask<bool> ret)
+            IIngredientGetter item,
+            IIngredientGetter rhs,
+            Ingredient_Mask<bool> ret)
         {
             if (rhs == null) return;
             ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs));
             ret.Icon = item.Icon_Property.Equals(rhs.Icon_Property, (l, r) => object.Equals(l, r));
             ret.Script = item.Script_Property.Equals(rhs.Script_Property, (l, r) => l == r);
-            ret.Type = item.Type_Property.Equals(rhs.Type_Property, (l, r) => l == r);
-            ret.Value = item.Value_Property.Equals(rhs.Value_Property, (l, r) => l == r);
             ret.Weight = item.Weight_Property.Equals(rhs.Weight_Property, (l, r) => l == r);
-            ret.Quality = item.Quality_Property.Equals(rhs.Quality_Property, (l, r) => l == r);
+            ret.Value = item.Value_Property.Equals(rhs.Value_Property, (l, r) => l == r);
+            ret.Flags = item.Flags_Property.Equals(rhs.Flags_Property, (l, r) => l == r);
+            if (item.Effects.HasBeenSet == rhs.Effects.HasBeenSet)
+            {
+                if (item.Effects.HasBeenSet)
+                {
+                    ret.Effects = new MaskItem<bool, IEnumerable<MaskItem<bool, Effect_Mask<bool>>>>();
+                    ret.Effects.Specific = item.Effects.SelectAgainst<Effect, MaskItem<bool, Effect_Mask<bool>>>(rhs.Effects, ((l, r) =>
+                    {
+                        MaskItem<bool, Effect_Mask<bool>> itemRet;
+                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => EffectCommon.GetEqualsMask(loqLhs, loqRhs));
+                        return itemRet;
+                    }
+                    ), out ret.Effects.Overall);
+                    ret.Effects.Overall = ret.Effects.Overall && ret.Effects.Specific.All((b) => b.Overall);
+                }
+                else
+                {
+                    ret.Effects = new MaskItem<bool, IEnumerable<MaskItem<bool, Effect_Mask<bool>>>>();
+                    ret.Effects.Overall = true;
+                }
+            }
+            else
+            {
+                ret.Effects = new MaskItem<bool, IEnumerable<MaskItem<bool, Effect_Mask<bool>>>>();
+                ret.Effects.Overall = false;
+            }
             NamedMajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
-            this IAlchemicalApparatusGetter item,
+            this IIngredientGetter item,
             string name = null,
-            AlchemicalApparatus_Mask<bool> printMask = null)
+            Ingredient_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             item.ToString(fg, name, printMask);
@@ -1917,18 +1974,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void ToString(
-            this IAlchemicalApparatusGetter item,
+            this IIngredientGetter item,
             FileGeneration fg,
             string name = null,
-            AlchemicalApparatus_Mask<bool> printMask = null)
+            Ingredient_Mask<bool> printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(AlchemicalApparatus)} =>");
+                fg.AppendLine($"{nameof(Ingredient)} =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(AlchemicalApparatus)}) =>");
+                fg.AppendLine($"{name} ({nameof(Ingredient)}) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1945,101 +2002,115 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"Script => {item.Script}");
                 }
-                if (printMask?.Type ?? true)
+                if (printMask?.Weight ?? true)
                 {
-                    fg.AppendLine($"Type => {item.Type}");
+                    fg.AppendLine($"Weight => {item.Weight}");
                 }
                 if (printMask?.Value ?? true)
                 {
                     fg.AppendLine($"Value => {item.Value}");
                 }
-                if (printMask?.Weight ?? true)
+                if (printMask?.Flags ?? true)
                 {
-                    fg.AppendLine($"Weight => {item.Weight}");
+                    fg.AppendLine($"Flags => {item.Flags}");
                 }
-                if (printMask?.Quality ?? true)
+                if (printMask?.Effects?.Overall ?? true)
                 {
-                    fg.AppendLine($"Quality => {item.Quality}");
+                    fg.AppendLine("Effects =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        foreach (var subItem in item.Effects)
+                        {
+                            fg.AppendLine("[");
+                            using (new DepthWrapper(fg))
+                            {
+                                subItem?.ToString(fg, "Item");
+                            }
+                            fg.AppendLine("]");
+                        }
+                    }
+                    fg.AppendLine("]");
                 }
             }
             fg.AppendLine("]");
         }
 
         public static bool HasBeenSet(
-            this IAlchemicalApparatusGetter item,
-            AlchemicalApparatus_Mask<bool?> checkMask)
+            this IIngredientGetter item,
+            Ingredient_Mask<bool?> checkMask)
         {
             if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_Property.HasBeenSet) return false;
             if (checkMask.Model.Specific != null && (item.Model_Property.Item == null || !item.Model_Property.Item.HasBeenSet(checkMask.Model.Specific))) return false;
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_Property.HasBeenSet) return false;
             if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script_Property.HasBeenSet) return false;
-            if (checkMask.Type.HasValue && checkMask.Type.Value != item.Type_Property.HasBeenSet) return false;
-            if (checkMask.Value.HasValue && checkMask.Value.Value != item.Value_Property.HasBeenSet) return false;
             if (checkMask.Weight.HasValue && checkMask.Weight.Value != item.Weight_Property.HasBeenSet) return false;
-            if (checkMask.Quality.HasValue && checkMask.Quality.Value != item.Quality_Property.HasBeenSet) return false;
+            if (checkMask.Value.HasValue && checkMask.Value.Value != item.Value_Property.HasBeenSet) return false;
+            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_Property.HasBeenSet) return false;
+            if (checkMask.Effects.Overall.HasValue && checkMask.Effects.Overall.Value != item.Effects.HasBeenSet) return false;
             return true;
         }
 
-        public static AlchemicalApparatus_Mask<bool> GetHasBeenSetMask(IAlchemicalApparatusGetter item)
+        public static Ingredient_Mask<bool> GetHasBeenSetMask(IIngredientGetter item)
         {
-            var ret = new AlchemicalApparatus_Mask<bool>();
+            var ret = new Ingredient_Mask<bool>();
             ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_Property.HasBeenSet, ModelCommon.GetHasBeenSetMask(item.Model_Property.Item));
             ret.Icon = item.Icon_Property.HasBeenSet;
             ret.Script = item.Script_Property.HasBeenSet;
-            ret.Type = item.Type_Property.HasBeenSet;
-            ret.Value = item.Value_Property.HasBeenSet;
             ret.Weight = item.Weight_Property.HasBeenSet;
-            ret.Quality = item.Quality_Property.HasBeenSet;
+            ret.Value = item.Value_Property.HasBeenSet;
+            ret.Flags = item.Flags_Property.HasBeenSet;
+            ret.Effects = new MaskItem<bool, IEnumerable<MaskItem<bool, Effect_Mask<bool>>>>(item.Effects.HasBeenSet, item.Effects.Select((i) => new MaskItem<bool, Effect_Mask<bool>>(true, i.GetHasBeenSetMask())));
             return ret;
         }
 
-        public static AlchemicalApparatus_FieldIndex? ConvertFieldIndex(NamedMajorRecord_FieldIndex? index)
+        public static Ingredient_FieldIndex? ConvertFieldIndex(NamedMajorRecord_FieldIndex? index)
         {
             if (!index.HasValue) return null;
             return ConvertFieldIndex(index: index.Value);
         }
 
-        public static AlchemicalApparatus_FieldIndex ConvertFieldIndex(NamedMajorRecord_FieldIndex index)
+        public static Ingredient_FieldIndex ConvertFieldIndex(NamedMajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case NamedMajorRecord_FieldIndex.MajorRecordFlags:
-                    return (AlchemicalApparatus_FieldIndex)((int)index);
+                    return (Ingredient_FieldIndex)((int)index);
                 case NamedMajorRecord_FieldIndex.FormID:
-                    return (AlchemicalApparatus_FieldIndex)((int)index);
+                    return (Ingredient_FieldIndex)((int)index);
                 case NamedMajorRecord_FieldIndex.Version:
-                    return (AlchemicalApparatus_FieldIndex)((int)index);
+                    return (Ingredient_FieldIndex)((int)index);
                 case NamedMajorRecord_FieldIndex.EditorID:
-                    return (AlchemicalApparatus_FieldIndex)((int)index);
+                    return (Ingredient_FieldIndex)((int)index);
                 case NamedMajorRecord_FieldIndex.RecordType:
-                    return (AlchemicalApparatus_FieldIndex)((int)index);
+                    return (Ingredient_FieldIndex)((int)index);
                 case NamedMajorRecord_FieldIndex.Name:
-                    return (AlchemicalApparatus_FieldIndex)((int)index);
+                    return (Ingredient_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
 
-        public static AlchemicalApparatus_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
+        public static Ingredient_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
         {
             if (!index.HasValue) return null;
             return ConvertFieldIndex(index: index.Value);
         }
 
-        public static AlchemicalApparatus_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static Ingredient_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlags:
-                    return (AlchemicalApparatus_FieldIndex)((int)index);
+                    return (Ingredient_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormID:
-                    return (AlchemicalApparatus_FieldIndex)((int)index);
+                    return (Ingredient_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
-                    return (AlchemicalApparatus_FieldIndex)((int)index);
+                    return (Ingredient_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (AlchemicalApparatus_FieldIndex)((int)index);
+                    return (Ingredient_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.RecordType:
-                    return (AlchemicalApparatus_FieldIndex)((int)index);
+                    return (Ingredient_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -2049,33 +2120,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region XML Write
         public static void Write_XML(
             XmlWriter writer,
-            IAlchemicalApparatusGetter item,
+            IIngredientGetter item,
             bool doMasks,
-            out AlchemicalApparatus_ErrorMask errorMask,
+            out Ingredient_ErrorMask errorMask,
             string name = null)
         {
-            AlchemicalApparatus_ErrorMask errMaskRet = null;
+            Ingredient_ErrorMask errMaskRet = null;
             Write_XML_Internal(
                 writer: writer,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new AlchemicalApparatus_ErrorMask()) : default(Func<AlchemicalApparatus_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Ingredient_ErrorMask()) : default(Func<Ingredient_ErrorMask>));
             errorMask = errMaskRet;
         }
 
         private static void Write_XML_Internal(
             XmlWriter writer,
-            IAlchemicalApparatusGetter item,
-            Func<AlchemicalApparatus_ErrorMask> errorMask,
+            IIngredientGetter item,
+            Func<Ingredient_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.AlchemicalApparatus"))
+                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.Ingredient"))
                 {
                     if (name != null)
                     {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.AlchemicalApparatus");
+                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.Ingredient");
                     }
                     if (item.Model_Property.HasBeenSet)
                     {
@@ -2083,7 +2154,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             writer: writer,
                             item: item.Model_Property,
                             name: nameof(item.Model),
-                            fieldIndex: (int)AlchemicalApparatus_FieldIndex.Model,
+                            fieldIndex: (int)Ingredient_FieldIndex.Model,
                             errorMask: errorMask);
                     }
                     if (item.Icon_Property.HasBeenSet)
@@ -2092,7 +2163,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             writer: writer,
                             name: nameof(item.Icon),
                             item: item.Icon_Property,
-                            fieldIndex: (int)AlchemicalApparatus_FieldIndex.Icon,
+                            fieldIndex: (int)Ingredient_FieldIndex.Icon,
                             errorMask: errorMask);
                     }
                     if (item.Script_Property.HasBeenSet)
@@ -2101,25 +2172,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             writer: writer,
                             name: nameof(item.Script),
                             item: item.Script?.FormID,
-                            fieldIndex: (int)AlchemicalApparatus_FieldIndex.Script,
-                            errorMask: errorMask);
-                    }
-                    if (item.Type_Property.HasBeenSet)
-                    {
-                        EnumXmlTranslation<AlchemicalApparatus.ApparatusType>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Type),
-                            item: item.Type_Property,
-                            fieldIndex: (int)AlchemicalApparatus_FieldIndex.Type,
-                            errorMask: errorMask);
-                    }
-                    if (item.Value_Property.HasBeenSet)
-                    {
-                        UInt32XmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Value),
-                            item: item.Value_Property,
-                            fieldIndex: (int)AlchemicalApparatus_FieldIndex.Value,
+                            fieldIndex: (int)Ingredient_FieldIndex.Script,
                             errorMask: errorMask);
                     }
                     if (item.Weight_Property.HasBeenSet)
@@ -2128,17 +2181,45 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             writer: writer,
                             name: nameof(item.Weight),
                             item: item.Weight_Property,
-                            fieldIndex: (int)AlchemicalApparatus_FieldIndex.Weight,
+                            fieldIndex: (int)Ingredient_FieldIndex.Weight,
                             errorMask: errorMask);
                     }
-                    if (item.Quality_Property.HasBeenSet)
+                    if (item.Value_Property.HasBeenSet)
                     {
-                        FloatXmlTranslation.Instance.Write(
+                        UInt32XmlTranslation.Instance.Write(
                             writer: writer,
-                            name: nameof(item.Quality),
-                            item: item.Quality_Property,
-                            fieldIndex: (int)AlchemicalApparatus_FieldIndex.Quality,
+                            name: nameof(item.Value),
+                            item: item.Value_Property,
+                            fieldIndex: (int)Ingredient_FieldIndex.Value,
                             errorMask: errorMask);
+                    }
+                    if (item.Flags_Property.HasBeenSet)
+                    {
+                        EnumXmlTranslation<Ingredient.IngredientFlag>.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Flags),
+                            item: item.Flags_Property,
+                            fieldIndex: (int)Ingredient_FieldIndex.Flags,
+                            errorMask: errorMask);
+                    }
+                    if (item.Effects.HasBeenSet)
+                    {
+                        ListXmlTranslation<Effect, MaskItem<Exception, Effect_ErrorMask>>.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Effects),
+                            item: item.Effects,
+                            fieldIndex: (int)Ingredient_FieldIndex.Effects,
+                            errorMask: errorMask,
+                            transl: (Effect subItem, bool listDoMasks, out MaskItem<Exception, Effect_ErrorMask> listSubMask) =>
+                            {
+                                LoquiXmlTranslation<Effect, Effect_ErrorMask>.Instance.Write(
+                                    writer: writer,
+                                    item: subItem,
+                                    name: "Item",
+                                    doMasks: errorMask != null,
+                                    errorMask: out listSubMask);
+                            }
+                            );
                     }
                 }
             }
@@ -2156,31 +2237,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Binary Write
         public static void Write_Binary(
             MutagenWriter writer,
-            IAlchemicalApparatusGetter item,
+            IIngredientGetter item,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
-            out AlchemicalApparatus_ErrorMask errorMask)
+            out Ingredient_ErrorMask errorMask)
         {
-            AlchemicalApparatus_ErrorMask errMaskRet = null;
+            Ingredient_ErrorMask errMaskRet = null;
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new AlchemicalApparatus_ErrorMask()) : default(Func<AlchemicalApparatus_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Ingredient_ErrorMask()) : default(Func<Ingredient_ErrorMask>));
             errorMask = errMaskRet;
         }
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
-            IAlchemicalApparatusGetter item,
+            IIngredientGetter item,
             RecordTypeConverter recordTypeConverter,
-            Func<AlchemicalApparatus_ErrorMask> errorMask)
+            Func<Ingredient_ErrorMask> errorMask)
         {
             try
             {
                 using (HeaderExport.ExportHeader(
                     writer: writer,
-                    record: AlchemicalApparatus_Registration.APPA_HEADER,
+                    record: Ingredient_Registration.INGR_HEADER,
                     type: ObjectType.Record))
                 {
                     MajorRecordCommon.Write_Binary_Embedded(
@@ -2203,10 +2284,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void Write_Binary_RecordTypes(
-            IAlchemicalApparatusGetter item,
+            IIngredientGetter item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            Func<AlchemicalApparatus_ErrorMask> errorMask)
+            Func<Ingredient_ErrorMask> errorMask)
         {
             NamedMajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
@@ -2216,46 +2297,57 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Write(
                 writer: writer,
                 item: item.Model_Property,
-                fieldIndex: (int)AlchemicalApparatus_FieldIndex.Model,
+                fieldIndex: (int)Ingredient_FieldIndex.Model,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Icon_Property,
-                fieldIndex: (int)AlchemicalApparatus_FieldIndex.Icon,
+                fieldIndex: (int)Ingredient_FieldIndex.Icon,
                 errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(AlchemicalApparatus_Registration.ICON_HEADER),
+                header: recordTypeConverter.ConvertToCustom(Ingredient_Registration.ICON_HEADER),
                 nullable: false);
             Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Script_Property,
-                fieldIndex: (int)AlchemicalApparatus_FieldIndex.Script,
+                fieldIndex: (int)Ingredient_FieldIndex.Script,
                 errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(AlchemicalApparatus_Registration.SCRI_HEADER),
+                header: recordTypeConverter.ConvertToCustom(Ingredient_Registration.SCRI_HEADER),
                 nullable: false);
-            using (HeaderExport.ExportSubRecordHeader(writer, AlchemicalApparatus_Registration.DATA_HEADER))
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Weight_Property,
+                fieldIndex: (int)Ingredient_FieldIndex.Weight,
+                errorMask: errorMask,
+                header: recordTypeConverter.ConvertToCustom(Ingredient_Registration.DATA_HEADER),
+                nullable: false);
+            using (HeaderExport.ExportSubRecordHeader(writer, Ingredient_Registration.ENIT_HEADER))
             {
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<AlchemicalApparatus.ApparatusType>.Instance.Write(
-                    writer,
-                    item.Type_Property,
-                    length: new ContentLength(1),
-                    fieldIndex: (int)AlchemicalApparatus_FieldIndex.Type,
-                    errorMask: errorMask);
                 Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Value_Property,
-                    fieldIndex: (int)AlchemicalApparatus_FieldIndex.Value,
+                    fieldIndex: (int)Ingredient_FieldIndex.Value,
                     errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Weight_Property,
-                    fieldIndex: (int)AlchemicalApparatus_FieldIndex.Weight,
-                    errorMask: errorMask);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                    writer: writer,
-                    item: item.Quality_Property,
-                    fieldIndex: (int)AlchemicalApparatus_FieldIndex.Quality,
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Ingredient.IngredientFlag>.Instance.Write(
+                    writer,
+                    item.Flags_Property,
+                    length: new ContentLength(4),
+                    fieldIndex: (int)Ingredient_FieldIndex.Flags,
                     errorMask: errorMask);
             }
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect, MaskItem<Exception, Effect_ErrorMask>>.Instance.Write(
+                writer: writer,
+                item: item.Effects,
+                fieldIndex: (int)Ingredient_FieldIndex.Effects,
+                errorMask: errorMask,
+                transl: (Effect subItem, bool listDoMasks, out MaskItem<Exception, Effect_ErrorMask> listSubMask) =>
+                {
+                    LoquiBinaryTranslation<Effect, Effect_ErrorMask>.Instance.Write(
+                        writer: writer,
+                        item: subItem,
+                        doMasks: listDoMasks,
+                        errorMask: out listSubMask);
+                }
+                );
         }
 
         #endregion
@@ -2266,22 +2358,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Modules
 
     #region Mask
-    public class AlchemicalApparatus_Mask<T> : NamedMajorRecord_Mask<T>, IMask<T>, IEquatable<AlchemicalApparatus_Mask<T>>
+    public class Ingredient_Mask<T> : NamedMajorRecord_Mask<T>, IMask<T>, IEquatable<Ingredient_Mask<T>>
     {
         #region Ctors
-        public AlchemicalApparatus_Mask()
+        public Ingredient_Mask()
         {
         }
 
-        public AlchemicalApparatus_Mask(T initialValue)
+        public Ingredient_Mask(T initialValue)
         {
             this.Model = new MaskItem<T, Model_Mask<T>>(initialValue, new Model_Mask<T>(initialValue));
             this.Icon = initialValue;
             this.Script = initialValue;
-            this.Type = initialValue;
-            this.Value = initialValue;
             this.Weight = initialValue;
-            this.Quality = initialValue;
+            this.Value = initialValue;
+            this.Flags = initialValue;
+            this.Effects = new MaskItem<T, IEnumerable<MaskItem<T, Effect_Mask<T>>>>(initialValue, null);
         }
         #endregion
 
@@ -2289,30 +2381,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<T, Model_Mask<T>> Model { get; set; }
         public T Icon;
         public T Script;
-        public T Type;
-        public T Value;
         public T Weight;
-        public T Quality;
+        public T Value;
+        public T Flags;
+        public MaskItem<T, IEnumerable<MaskItem<T, Effect_Mask<T>>>> Effects;
         #endregion
 
         #region Equals
         public override bool Equals(object obj)
         {
-            if (!(obj is AlchemicalApparatus_Mask<T> rhs)) return false;
+            if (!(obj is Ingredient_Mask<T> rhs)) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(AlchemicalApparatus_Mask<T> rhs)
+        public bool Equals(Ingredient_Mask<T> rhs)
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
             if (!object.Equals(this.Model, rhs.Model)) return false;
             if (!object.Equals(this.Icon, rhs.Icon)) return false;
             if (!object.Equals(this.Script, rhs.Script)) return false;
-            if (!object.Equals(this.Type, rhs.Type)) return false;
-            if (!object.Equals(this.Value, rhs.Value)) return false;
             if (!object.Equals(this.Weight, rhs.Weight)) return false;
-            if (!object.Equals(this.Quality, rhs.Quality)) return false;
+            if (!object.Equals(this.Value, rhs.Value)) return false;
+            if (!object.Equals(this.Flags, rhs.Flags)) return false;
+            if (!object.Equals(this.Effects, rhs.Effects)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -2321,10 +2413,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.Model?.GetHashCode());
             ret = ret.CombineHashCode(this.Icon?.GetHashCode());
             ret = ret.CombineHashCode(this.Script?.GetHashCode());
-            ret = ret.CombineHashCode(this.Type?.GetHashCode());
-            ret = ret.CombineHashCode(this.Value?.GetHashCode());
             ret = ret.CombineHashCode(this.Weight?.GetHashCode());
-            ret = ret.CombineHashCode(this.Quality?.GetHashCode());
+            ret = ret.CombineHashCode(this.Value?.GetHashCode());
+            ret = ret.CombineHashCode(this.Flags?.GetHashCode());
+            ret = ret.CombineHashCode(this.Effects?.GetHashCode());
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -2342,23 +2434,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (!eval(this.Icon)) return false;
             if (!eval(this.Script)) return false;
-            if (!eval(this.Type)) return false;
-            if (!eval(this.Value)) return false;
             if (!eval(this.Weight)) return false;
-            if (!eval(this.Quality)) return false;
+            if (!eval(this.Value)) return false;
+            if (!eval(this.Flags)) return false;
+            if (this.Effects != null)
+            {
+                if (!eval(this.Effects.Overall)) return false;
+                if (this.Effects.Specific != null)
+                {
+                    foreach (var item in this.Effects.Specific)
+                    {
+                        if (!eval(item.Overall)) return false;
+                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                    }
+                }
+            }
             return true;
         }
         #endregion
 
         #region Translate
-        public new AlchemicalApparatus_Mask<R> Translate<R>(Func<T, R> eval)
+        public new Ingredient_Mask<R> Translate<R>(Func<T, R> eval)
         {
-            var ret = new AlchemicalApparatus_Mask<R>();
+            var ret = new Ingredient_Mask<R>();
             this.Translate_InternalFill(ret, eval);
             return ret;
         }
 
-        protected void Translate_InternalFill<R>(AlchemicalApparatus_Mask<R> obj, Func<T, R> eval)
+        protected void Translate_InternalFill<R>(Ingredient_Mask<R> obj, Func<T, R> eval)
         {
             base.Translate_InternalFill(obj, eval);
             if (this.Model != null)
@@ -2372,10 +2475,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             obj.Icon = eval(this.Icon);
             obj.Script = eval(this.Script);
-            obj.Type = eval(this.Type);
-            obj.Value = eval(this.Value);
             obj.Weight = eval(this.Weight);
-            obj.Quality = eval(this.Quality);
+            obj.Value = eval(this.Value);
+            obj.Flags = eval(this.Flags);
+            if (Effects != null)
+            {
+                obj.Effects = new MaskItem<R, IEnumerable<MaskItem<R, Effect_Mask<R>>>>();
+                obj.Effects.Overall = eval(this.Effects.Overall);
+                if (Effects.Specific != null)
+                {
+                    List<MaskItem<R, Effect_Mask<R>>> l = new List<MaskItem<R, Effect_Mask<R>>>();
+                    obj.Effects.Specific = l;
+                    foreach (var item in Effects.Specific)
+                    {
+                        MaskItem<R, Effect_Mask<R>> mask = default(MaskItem<R, Effect_Mask<R>>);
+                        if (item != null)
+                        {
+                            mask = new MaskItem<R, Effect_Mask<R>>();
+                            mask.Overall = eval(item.Overall);
+                            if (item.Specific != null)
+                            {
+                                mask.Specific = item.Specific.Translate(eval);
+                            }
+                        }
+                        l.Add(mask);
+                    }
+                }
+            }
         }
         #endregion
 
@@ -2383,6 +2509,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void ClearEnumerables()
         {
             base.ClearEnumerables();
+            this.Effects.Specific = null;
         }
         #endregion
 
@@ -2392,16 +2519,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(AlchemicalApparatus_Mask<bool> printMask = null)
+        public string ToString(Ingredient_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, AlchemicalApparatus_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, Ingredient_Mask<bool> printMask = null)
         {
-            fg.AppendLine($"{nameof(AlchemicalApparatus_Mask<T>)} =>");
+            fg.AppendLine($"{nameof(Ingredient_Mask<T>)} =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
@@ -2417,21 +2544,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"Script => {Script}");
                 }
-                if (printMask?.Type ?? true)
+                if (printMask?.Weight ?? true)
                 {
-                    fg.AppendLine($"Type => {Type}");
+                    fg.AppendLine($"Weight => {Weight}");
                 }
                 if (printMask?.Value ?? true)
                 {
                     fg.AppendLine($"Value => {Value}");
                 }
-                if (printMask?.Weight ?? true)
+                if (printMask?.Flags ?? true)
                 {
-                    fg.AppendLine($"Weight => {Weight}");
+                    fg.AppendLine($"Flags => {Flags}");
                 }
-                if (printMask?.Quality ?? true)
+                if (printMask?.Effects?.Overall ?? true)
                 {
-                    fg.AppendLine($"Quality => {Quality}");
+                    fg.AppendLine("Effects =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        if (Effects.Overall != null)
+                        {
+                            fg.AppendLine(Effects.Overall.ToString());
+                        }
+                        if (Effects.Specific != null)
+                        {
+                            foreach (var subItem in Effects.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
                 }
             }
             fg.AppendLine("]");
@@ -2440,44 +2588,44 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class AlchemicalApparatus_ErrorMask : NamedMajorRecord_ErrorMask, IErrorMask<AlchemicalApparatus_ErrorMask>
+    public class Ingredient_ErrorMask : NamedMajorRecord_ErrorMask, IErrorMask<Ingredient_ErrorMask>
     {
         #region Members
         public MaskItem<Exception, Model_ErrorMask> Model;
         public Exception Icon;
         public Exception Script;
-        public Exception Type;
-        public Exception Value;
         public Exception Weight;
-        public Exception Quality;
+        public Exception Value;
+        public Exception Flags;
+        public MaskItem<Exception, IEnumerable<MaskItem<Exception, Effect_ErrorMask>>> Effects;
         #endregion
 
         #region IErrorMask
         public override void SetNthException(int index, Exception ex)
         {
-            AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
+            Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
             switch (enu)
             {
-                case AlchemicalApparatus_FieldIndex.Model:
+                case Ingredient_FieldIndex.Model:
                     this.Model = new MaskItem<Exception, Model_ErrorMask>(ex, null);
                     break;
-                case AlchemicalApparatus_FieldIndex.Icon:
+                case Ingredient_FieldIndex.Icon:
                     this.Icon = ex;
                     break;
-                case AlchemicalApparatus_FieldIndex.Script:
+                case Ingredient_FieldIndex.Script:
                     this.Script = ex;
                     break;
-                case AlchemicalApparatus_FieldIndex.Type:
-                    this.Type = ex;
-                    break;
-                case AlchemicalApparatus_FieldIndex.Value:
-                    this.Value = ex;
-                    break;
-                case AlchemicalApparatus_FieldIndex.Weight:
+                case Ingredient_FieldIndex.Weight:
                     this.Weight = ex;
                     break;
-                case AlchemicalApparatus_FieldIndex.Quality:
-                    this.Quality = ex;
+                case Ingredient_FieldIndex.Value:
+                    this.Value = ex;
+                    break;
+                case Ingredient_FieldIndex.Flags:
+                    this.Flags = ex;
+                    break;
+                case Ingredient_FieldIndex.Effects:
+                    this.Effects = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Effect_ErrorMask>>>(ex, null);
                     break;
                 default:
                     base.SetNthException(index, ex);
@@ -2487,29 +2635,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void SetNthMask(int index, object obj)
         {
-            AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
+            Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
             switch (enu)
             {
-                case AlchemicalApparatus_FieldIndex.Model:
+                case Ingredient_FieldIndex.Model:
                     this.Model = (MaskItem<Exception, Model_ErrorMask>)obj;
                     break;
-                case AlchemicalApparatus_FieldIndex.Icon:
+                case Ingredient_FieldIndex.Icon:
                     this.Icon = (Exception)obj;
                     break;
-                case AlchemicalApparatus_FieldIndex.Script:
+                case Ingredient_FieldIndex.Script:
                     this.Script = (Exception)obj;
                     break;
-                case AlchemicalApparatus_FieldIndex.Type:
-                    this.Type = (Exception)obj;
-                    break;
-                case AlchemicalApparatus_FieldIndex.Value:
-                    this.Value = (Exception)obj;
-                    break;
-                case AlchemicalApparatus_FieldIndex.Weight:
+                case Ingredient_FieldIndex.Weight:
                     this.Weight = (Exception)obj;
                     break;
-                case AlchemicalApparatus_FieldIndex.Quality:
-                    this.Quality = (Exception)obj;
+                case Ingredient_FieldIndex.Value:
+                    this.Value = (Exception)obj;
+                    break;
+                case Ingredient_FieldIndex.Flags:
+                    this.Flags = (Exception)obj;
+                    break;
+                case Ingredient_FieldIndex.Effects:
+                    this.Effects = (MaskItem<Exception, IEnumerable<MaskItem<Exception, Effect_ErrorMask>>>)obj;
                     break;
                 default:
                     base.SetNthMask(index, obj);
@@ -2523,10 +2671,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Model != null) return true;
             if (Icon != null) return true;
             if (Script != null) return true;
-            if (Type != null) return true;
-            if (Value != null) return true;
             if (Weight != null) return true;
-            if (Quality != null) return true;
+            if (Value != null) return true;
+            if (Flags != null) return true;
+            if (Effects != null) return true;
             return false;
         }
         #endregion
@@ -2541,7 +2689,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void ToString(FileGeneration fg)
         {
-            fg.AppendLine("AlchemicalApparatus_ErrorMask =>");
+            fg.AppendLine("Ingredient_ErrorMask =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
@@ -2565,27 +2713,48 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Model?.ToString(fg);
             fg.AppendLine($"Icon => {Icon}");
             fg.AppendLine($"Script => {Script}");
-            fg.AppendLine($"Type => {Type}");
-            fg.AppendLine($"Value => {Value}");
             fg.AppendLine($"Weight => {Weight}");
-            fg.AppendLine($"Quality => {Quality}");
+            fg.AppendLine($"Value => {Value}");
+            fg.AppendLine($"Flags => {Flags}");
+            fg.AppendLine("Effects =>");
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                if (Effects.Overall != null)
+                {
+                    fg.AppendLine(Effects.Overall.ToString());
+                }
+                if (Effects.Specific != null)
+                {
+                    foreach (var subItem in Effects.Specific)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+            }
+            fg.AppendLine("]");
         }
         #endregion
 
         #region Combine
-        public AlchemicalApparatus_ErrorMask Combine(AlchemicalApparatus_ErrorMask rhs)
+        public Ingredient_ErrorMask Combine(Ingredient_ErrorMask rhs)
         {
-            var ret = new AlchemicalApparatus_ErrorMask();
+            var ret = new Ingredient_ErrorMask();
             ret.Model = new MaskItem<Exception, Model_ErrorMask>(this.Model.Overall.Combine(rhs.Model.Overall), ((IErrorMask<Model_ErrorMask>)this.Model.Specific).Combine(rhs.Model.Specific));
             ret.Icon = this.Icon.Combine(rhs.Icon);
             ret.Script = this.Script.Combine(rhs.Script);
-            ret.Type = this.Type.Combine(rhs.Type);
-            ret.Value = this.Value.Combine(rhs.Value);
             ret.Weight = this.Weight.Combine(rhs.Weight);
-            ret.Quality = this.Quality.Combine(rhs.Quality);
+            ret.Value = this.Value.Combine(rhs.Value);
+            ret.Flags = this.Flags.Combine(rhs.Flags);
+            ret.Effects = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Effect_ErrorMask>>>(this.Effects.Overall.Combine(rhs.Effects.Overall), new List<MaskItem<Exception, Effect_ErrorMask>>(this.Effects.Specific.And(rhs.Effects.Specific)));
             return ret;
         }
-        public static AlchemicalApparatus_ErrorMask Combine(AlchemicalApparatus_ErrorMask lhs, AlchemicalApparatus_ErrorMask rhs)
+        public static Ingredient_ErrorMask Combine(Ingredient_ErrorMask lhs, Ingredient_ErrorMask rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -2593,16 +2762,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class AlchemicalApparatus_CopyMask : NamedMajorRecord_CopyMask
+    public class Ingredient_CopyMask : NamedMajorRecord_CopyMask
     {
         #region Members
         public MaskItem<CopyOption, Model_CopyMask> Model;
         public bool Icon;
         public bool Script;
-        public bool Type;
-        public bool Value;
         public bool Weight;
-        public bool Quality;
+        public bool Value;
+        public bool Flags;
+        public MaskItem<CopyOption, Effect_CopyMask> Effects;
         #endregion
 
     }

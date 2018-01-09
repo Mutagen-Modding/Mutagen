@@ -842,11 +842,10 @@ namespace Mutagen.Bethesda.Oblivion
                 case "INAM":
                     if (lastParsed.HasValue && lastParsed.Value >= Rank_FieldIndex.Insignia) return TryGet<Rank_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var tryGet = Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
+                    item._Insignia.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)Rank_FieldIndex.Insignia,
-                        errorMask: errorMask);
-                    item._Insignia.SetIfSucceeded(tryGet);
+                        errorMask: errorMask));
                     return TryGet<Rank_FieldIndex?>.Succeed(Rank_FieldIndex.Insignia);
                 default:
                     return TryGet<Rank_FieldIndex?>.Failure;

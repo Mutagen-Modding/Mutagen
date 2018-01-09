@@ -793,11 +793,10 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case "FNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var tryGet = Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
+                    item._File.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)Sound_FieldIndex.File,
-                        errorMask: errorMask);
-                    item._File.SetIfSucceeded(tryGet);
+                        errorMask: errorMask));
                     return TryGet<Sound_FieldIndex?>.Succeed(Sound_FieldIndex.File);
                 case "SNDD":
                     item._Data.SetIfSucceeded(LoquiBinaryTranslation<SoundData, SoundData_ErrorMask>.Instance.Parse(
