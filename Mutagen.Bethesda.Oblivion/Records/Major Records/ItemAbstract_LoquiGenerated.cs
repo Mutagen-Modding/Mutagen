@@ -11,8 +11,9 @@ using System.Text;
 using Loqui;
 using Noggog;
 using Noggog.Notifying;
-using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda;
+using Mutagen.Bethesda.Internals;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -21,48 +22,37 @@ using Loqui.Xml;
 using System.Diagnostics;
 using Mutagen.Bethesda.Binary;
 
-namespace Mutagen.Bethesda
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public abstract partial class NamedMajorRecord : MajorRecord, INamedMajorRecord, ILoquiObjectSetter, IEquatable<NamedMajorRecord>
+    public abstract partial class ItemAbstract : MajorRecord, IItemAbstract, ILoquiObjectSetter, IEquatable<ItemAbstract>
     {
-        ILoquiRegistration ILoquiObject.Registration => NamedMajorRecord_Registration.Instance;
-        public new static NamedMajorRecord_Registration Registration => NamedMajorRecord_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => ItemAbstract_Registration.Instance;
+        public new static ItemAbstract_Registration Registration => ItemAbstract_Registration.Instance;
 
         #region Ctor
-        public NamedMajorRecord()
+        public ItemAbstract()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Name
-        protected readonly INotifyingSetItem<String> _Name = NotifyingSetItem.Factory<String>(markAsSet: false);
-        public INotifyingSetItem<String> Name_Property => _Name;
-        public String Name
-        {
-            get => this._Name.Item;
-            set => this._Name.Set(value);
-        }
-        INotifyingSetItem<String> INamedMajorRecord.Name_Property => this.Name_Property;
-        INotifyingSetItemGetter<String> INamedMajorRecordGetter.Name_Property => this.Name_Property;
-        #endregion
 
         #region Loqui Getter Interface
 
-        protected override object GetNthObject(ushort index) => NamedMajorRecordCommon.GetNthObject(index, this);
+        protected override object GetNthObject(ushort index) => ItemAbstractCommon.GetNthObject(index, this);
 
-        protected override bool GetNthObjectHasBeenSet(ushort index) => NamedMajorRecordCommon.GetNthObjectHasBeenSet(index, this);
+        protected override bool GetNthObjectHasBeenSet(ushort index) => ItemAbstractCommon.GetNthObjectHasBeenSet(index, this);
 
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => NamedMajorRecordCommon.UnsetNthObject(index, this, cmds);
+        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => ItemAbstractCommon.UnsetNthObject(index, this, cmds);
 
         #endregion
 
         #region Loqui Interface
         protected override void SetNthObjectHasBeenSet(ushort index, bool on)
         {
-            NamedMajorRecordCommon.SetNthObjectHasBeenSet(index, on, this);
+            ItemAbstractCommon.SetNthObjectHasBeenSet(index, on, this);
         }
 
         #endregion
@@ -70,55 +60,46 @@ namespace Mutagen.Bethesda
         #region To String
         public override string ToString()
         {
-            return NamedMajorRecordCommon.ToString(this, printMask: null);
+            return ItemAbstractCommon.ToString(this, printMask: null);
         }
 
         public string ToString(
             string name = null,
-            NamedMajorRecord_Mask<bool> printMask = null)
+            ItemAbstract_Mask<bool> printMask = null)
         {
-            return NamedMajorRecordCommon.ToString(this, name: name, printMask: printMask);
+            return ItemAbstractCommon.ToString(this, name: name, printMask: printMask);
         }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            NamedMajorRecordCommon.ToString(this, fg, name: name, printMask: null);
+            ItemAbstractCommon.ToString(this, fg, name: name, printMask: null);
         }
 
         #endregion
 
-        public new NamedMajorRecord_Mask<bool> GetHasBeenSetMask()
+        public new ItemAbstract_Mask<bool> GetHasBeenSetMask()
         {
-            return NamedMajorRecordCommon.GetHasBeenSetMask(this);
+            return ItemAbstractCommon.GetHasBeenSetMask(this);
         }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is NamedMajorRecord rhs)) return false;
+            if (!(obj is ItemAbstract rhs)) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(NamedMajorRecord rhs)
+        public bool Equals(ItemAbstract rhs)
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (Name_Property.HasBeenSet != rhs.Name_Property.HasBeenSet) return false;
-            if (Name_Property.HasBeenSet)
-            {
-                if (!object.Equals(Name, rhs.Name)) return false;
-            }
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            if (Name_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
-            }
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -132,7 +113,7 @@ namespace Mutagen.Bethesda
             XElement root,
             NotifyingFireParameters? cmds = null)
         {
-            LoquiXmlTranslation<NamedMajorRecord, NamedMajorRecord_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<ItemAbstract, ItemAbstract_ErrorMask>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
@@ -143,10 +124,10 @@ namespace Mutagen.Bethesda
 
         public virtual void CopyIn_XML(
             XElement root,
-            out NamedMajorRecord_ErrorMask errorMask,
+            out ItemAbstract_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
-            LoquiXmlTranslation<NamedMajorRecord, NamedMajorRecord_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<ItemAbstract, ItemAbstract_ErrorMask>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
@@ -167,7 +148,7 @@ namespace Mutagen.Bethesda
 
         public void CopyIn_XML(
             string path,
-            out NamedMajorRecord_ErrorMask errorMask,
+            out ItemAbstract_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             var root = XDocument.Load(path).Root;
@@ -189,7 +170,7 @@ namespace Mutagen.Bethesda
 
         public void CopyIn_XML(
             Stream stream,
-            out NamedMajorRecord_ErrorMask errorMask,
+            out ItemAbstract_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             var root = XDocument.Load(stream).Root;
@@ -206,7 +187,7 @@ namespace Mutagen.Bethesda
         {
             this.CopyIn_XML(
                 root: root,
-                errorMask: out NamedMajorRecord_ErrorMask errMask,
+                errorMask: out ItemAbstract_ErrorMask errMask,
                 cmds: cmds);
             errorMask = errMask;
         }
@@ -216,10 +197,10 @@ namespace Mutagen.Bethesda
         #region XML Write
         public virtual void Write_XML(
             XmlWriter writer,
-            out NamedMajorRecord_ErrorMask errorMask,
+            out ItemAbstract_ErrorMask errorMask,
             string name = null)
         {
-            errorMask = (NamedMajorRecord_ErrorMask)this.Write_XML_Internal(
+            errorMask = (ItemAbstract_ErrorMask)this.Write_XML_Internal(
                 writer: writer,
                 name: name,
                 doMasks: true);
@@ -227,7 +208,7 @@ namespace Mutagen.Bethesda
 
         public virtual void Write_XML(
             string path,
-            out NamedMajorRecord_ErrorMask errorMask,
+            out ItemAbstract_ErrorMask errorMask,
             string name = null)
         {
             using (var writer = new XmlTextWriter(path, Encoding.ASCII))
@@ -243,7 +224,7 @@ namespace Mutagen.Bethesda
 
         public virtual void Write_XML(
             Stream stream,
-            out NamedMajorRecord_ErrorMask errorMask,
+            out ItemAbstract_ErrorMask errorMask,
             string name = null)
         {
             using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
@@ -262,7 +243,7 @@ namespace Mutagen.Bethesda
             bool doMasks,
             string name = null)
         {
-            NamedMajorRecordCommon.Write_XML(
+            ItemAbstractCommon.Write_XML(
                 writer: writer,
                 item: this,
                 doMasks: doMasks,
@@ -272,19 +253,13 @@ namespace Mutagen.Bethesda
         #endregion
 
         protected static void Fill_XML_Internal(
-            NamedMajorRecord item,
+            ItemAbstract item,
             XElement root,
             string name,
-            Func<NamedMajorRecord_ErrorMask> errorMask)
+            Func<ItemAbstract_ErrorMask> errorMask)
         {
             switch (name)
             {
-                case "Name":
-                    item._Name.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
-                        root,
-                        fieldIndex: (int)NamedMajorRecord_FieldIndex.Name,
-                        errorMask: errorMask));
-                    break;
                 default:
                     MajorRecord.Fill_XML_Internal(
                         item: item,
@@ -303,7 +278,7 @@ namespace Mutagen.Bethesda
             MutagenFrame frame,
             NotifyingFireParameters? cmds = null)
         {
-            LoquiBinaryTranslation<NamedMajorRecord, NamedMajorRecord_ErrorMask>.Instance.CopyIn(
+            LoquiBinaryTranslation<ItemAbstract, ItemAbstract_ErrorMask>.Instance.CopyIn(
                 frame: frame,
                 item: this,
                 skipProtected: true,
@@ -314,10 +289,10 @@ namespace Mutagen.Bethesda
 
         public virtual void CopyIn_Binary(
             MutagenFrame frame,
-            out NamedMajorRecord_ErrorMask errorMask,
+            out ItemAbstract_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
-            LoquiBinaryTranslation<NamedMajorRecord, NamedMajorRecord_ErrorMask>.Instance.CopyIn(
+            LoquiBinaryTranslation<ItemAbstract, ItemAbstract_ErrorMask>.Instance.CopyIn(
                 frame: frame,
                 item: this,
                 skipProtected: true,
@@ -341,7 +316,7 @@ namespace Mutagen.Bethesda
 
         public void CopyIn_Binary(
             string path,
-            out NamedMajorRecord_ErrorMask errorMask,
+            out ItemAbstract_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             using (var reader = new MutagenReader(path))
@@ -369,7 +344,7 @@ namespace Mutagen.Bethesda
 
         public void CopyIn_Binary(
             Stream stream,
-            out NamedMajorRecord_ErrorMask errorMask,
+            out ItemAbstract_ErrorMask errorMask,
             NotifyingFireParameters? cmds = null)
         {
             using (var reader = new MutagenReader(stream))
@@ -389,7 +364,7 @@ namespace Mutagen.Bethesda
         {
             this.CopyIn_Binary(
                 frame: frame,
-                errorMask: out NamedMajorRecord_ErrorMask errMask,
+                errorMask: out ItemAbstract_ErrorMask errMask,
                 cmds: cmds);
             errorMask = errMask;
         }
@@ -399,9 +374,9 @@ namespace Mutagen.Bethesda
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
-            out NamedMajorRecord_ErrorMask errorMask)
+            out ItemAbstract_ErrorMask errorMask)
         {
-            errorMask = (NamedMajorRecord_ErrorMask)this.Write_Binary_Internal(
+            errorMask = (ItemAbstract_ErrorMask)this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
                 doMasks: true);
@@ -409,7 +384,7 @@ namespace Mutagen.Bethesda
 
         public virtual void Write_Binary(
             string path,
-            out NamedMajorRecord_ErrorMask errorMask)
+            out ItemAbstract_ErrorMask errorMask)
         {
             using (var writer = new MutagenWriter(path))
             {
@@ -421,7 +396,7 @@ namespace Mutagen.Bethesda
 
         public virtual void Write_Binary(
             Stream stream,
-            out NamedMajorRecord_ErrorMask errorMask)
+            out ItemAbstract_ErrorMask errorMask)
         {
             using (var writer = new MutagenWriter(stream))
             {
@@ -436,7 +411,7 @@ namespace Mutagen.Bethesda
             RecordTypeConverter recordTypeConverter,
             bool doMasks)
         {
-            NamedMajorRecordCommon.Write_Binary(
+            ItemAbstractCommon.Write_Binary(
                 writer: writer,
                 item: this,
                 doMasks: doMasks,
@@ -446,52 +421,24 @@ namespace Mutagen.Bethesda
         }
         #endregion
 
-        protected static TryGet<NamedMajorRecord_FieldIndex?> Fill_Binary_RecordTypes(
-            NamedMajorRecord item,
-            MutagenFrame frame,
-            Func<NamedMajorRecord_ErrorMask> errorMask,
-            RecordTypeConverter recordTypeConverter = null)
-        {
-            var nextRecordType = HeaderTranslation.GetNextSubRecordType(
-                frame: frame,
-                contentLength: out var contentLength,
-                recordTypeConverter: recordTypeConverter);
-            switch (nextRecordType.Type)
-            {
-                case "FULL":
-                    frame.Position += Constants.SUBRECORD_LENGTH;
-                    var NametryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
-                        fieldIndex: (int)NamedMajorRecord_FieldIndex.Name,
-                        errorMask: errorMask);
-                    item._Name.SetIfSucceeded(NametryGet);
-                    return TryGet<NamedMajorRecord_FieldIndex?>.Succeed(NamedMajorRecord_FieldIndex.Name);
-                default:
-                    return MajorRecord.Fill_Binary_RecordTypes(
-                        item: item,
-                        frame: frame,
-                        errorMask: errorMask).Bubble((i) => NamedMajorRecordCommon.ConvertFieldIndex(i));
-            }
-        }
-
         #endregion
 
-        public NamedMajorRecord Copy(
-            NamedMajorRecord_CopyMask copyMask = null,
-            INamedMajorRecordGetter def = null)
+        public ItemAbstract Copy(
+            ItemAbstract_CopyMask copyMask = null,
+            IItemAbstractGetter def = null)
         {
-            return NamedMajorRecord.Copy(
+            return ItemAbstract.Copy(
                 this,
                 copyMask: copyMask,
                 def: def);
         }
 
-        public static NamedMajorRecord Copy(
-            INamedMajorRecord item,
-            NamedMajorRecord_CopyMask copyMask = null,
-            INamedMajorRecordGetter def = null)
+        public static ItemAbstract Copy(
+            IItemAbstract item,
+            ItemAbstract_CopyMask copyMask = null,
+            IItemAbstractGetter def = null)
         {
-            NamedMajorRecord ret = (NamedMajorRecord)System.Activator.CreateInstance(item.GetType());
+            ItemAbstract ret = (ItemAbstract)System.Activator.CreateInstance(item.GetType());
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
@@ -501,9 +448,9 @@ namespace Mutagen.Bethesda
 
         public static CopyType CopyGeneric<CopyType>(
             CopyType item,
-            NamedMajorRecord_CopyMask copyMask = null,
-            INamedMajorRecordGetter def = null)
-            where CopyType : class, INamedMajorRecord
+            ItemAbstract_CopyMask copyMask = null,
+            IItemAbstractGetter def = null)
+            where CopyType : class, IItemAbstract
         {
             CopyType ret = (CopyType)System.Activator.CreateInstance(item.GetType());
             ret.CopyFieldsFrom(
@@ -516,12 +463,12 @@ namespace Mutagen.Bethesda
             return ret;
         }
 
-        public static NamedMajorRecord Copy_ToLoqui(
-            INamedMajorRecordGetter item,
-            NamedMajorRecord_CopyMask copyMask = null,
-            INamedMajorRecordGetter def = null)
+        public static ItemAbstract Copy_ToLoqui(
+            IItemAbstractGetter item,
+            ItemAbstract_CopyMask copyMask = null,
+            IItemAbstractGetter def = null)
         {
-            NamedMajorRecord ret = (NamedMajorRecord)System.Activator.CreateInstance(item.GetType());
+            ItemAbstract ret = (ItemAbstract)System.Activator.CreateInstance(item.GetType());
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
@@ -531,14 +478,9 @@ namespace Mutagen.Bethesda
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds = null)
         {
-            NamedMajorRecord_FieldIndex enu = (NamedMajorRecord_FieldIndex)index;
+            ItemAbstract_FieldIndex enu = (ItemAbstract_FieldIndex)index;
             switch (enu)
             {
-                case NamedMajorRecord_FieldIndex.Name:
-                    this._Name.Set(
-                        (String)obj,
-                        cmds);
-                    break;
                 default:
                     base.SetNthObject(index, obj, cmds);
                     break;
@@ -548,28 +490,23 @@ namespace Mutagen.Bethesda
         public override void Clear(NotifyingUnsetParameters? cmds = null)
         {
             CallClearPartial_Internal(cmds);
-            NamedMajorRecordCommon.Clear(this, cmds);
+            ItemAbstractCommon.Clear(this, cmds);
         }
 
 
-        protected new static void CopyInInternal_NamedMajorRecord(NamedMajorRecord obj, KeyValuePair<ushort, object> pair)
+        protected new static void CopyInInternal_ItemAbstract(ItemAbstract obj, KeyValuePair<ushort, object> pair)
         {
-            if (!EnumExt.TryParse(pair.Key, out NamedMajorRecord_FieldIndex enu))
+            if (!EnumExt.TryParse(pair.Key, out ItemAbstract_FieldIndex enu))
             {
                 CopyInInternal_MajorRecord(obj, pair);
             }
             switch (enu)
             {
-                case NamedMajorRecord_FieldIndex.Name:
-                    obj._Name.Set(
-                        (String)pair.Value,
-                        null);
-                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, NamedMajorRecord obj)
+        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, ItemAbstract obj)
         {
             ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
         }
@@ -578,20 +515,12 @@ namespace Mutagen.Bethesda
     #endregion
 
     #region Interface
-    public interface INamedMajorRecord : INamedMajorRecordGetter, IMajorRecord, ILoquiClass<INamedMajorRecord, INamedMajorRecordGetter>, ILoquiClass<NamedMajorRecord, INamedMajorRecordGetter>
+    public interface IItemAbstract : IItemAbstractGetter, IMajorRecord, ILoquiClass<IItemAbstract, IItemAbstractGetter>, ILoquiClass<ItemAbstract, IItemAbstractGetter>
     {
-        new String Name { get; set; }
-        new INotifyingSetItem<String> Name_Property { get; }
-
     }
 
-    public interface INamedMajorRecordGetter : IMajorRecordGetter
+    public interface IItemAbstractGetter : IMajorRecordGetter
     {
-        #region Name
-        String Name { get; }
-        INotifyingSetItemGetter<String> Name_Property { get; }
-
-        #endregion
 
     }
 
@@ -599,53 +528,52 @@ namespace Mutagen.Bethesda
 
 }
 
-namespace Mutagen.Bethesda.Internals
+namespace Mutagen.Bethesda.Oblivion.Internals
 {
     #region Field Index
-    public enum NamedMajorRecord_FieldIndex
+    public enum ItemAbstract_FieldIndex
     {
         MajorRecordFlags = 0,
         FormID = 1,
         Version = 2,
         EditorID = 3,
         RecordType = 4,
-        Name = 5,
     }
     #endregion
 
     #region Registration
-    public class NamedMajorRecord_Registration : ILoquiRegistration
+    public class ItemAbstract_Registration : ILoquiRegistration
     {
-        public static readonly NamedMajorRecord_Registration Instance = new NamedMajorRecord_Registration();
+        public static readonly ItemAbstract_Registration Instance = new ItemAbstract_Registration();
 
-        public static ProtocolKey ProtocolKey => ProtocolDefinition_Bethesda.ProtocolKey;
+        public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Bethesda.ProtocolKey,
-            msgID: 2,
+            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
+            msgID: 73,
             version: 0);
 
-        public const string GUID = "492d4810-c631-49fc-8358-a68f4d1af93d";
+        public const string GUID = "028aca3c-7f36-4a5f-80cd-42aedbbc606b";
 
-        public const ushort FieldCount = 1;
+        public const ushort FieldCount = 0;
 
-        public static readonly Type MaskType = typeof(NamedMajorRecord_Mask<>);
+        public static readonly Type MaskType = typeof(ItemAbstract_Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(NamedMajorRecord_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(ItemAbstract_ErrorMask);
 
-        public static readonly Type ClassType = typeof(NamedMajorRecord);
+        public static readonly Type ClassType = typeof(ItemAbstract);
 
-        public static readonly Type GetterType = typeof(INamedMajorRecordGetter);
+        public static readonly Type GetterType = typeof(IItemAbstractGetter);
 
-        public static readonly Type SetterType = typeof(INamedMajorRecord);
+        public static readonly Type SetterType = typeof(IItemAbstract);
 
-        public static readonly Type CommonType = typeof(NamedMajorRecordCommon);
+        public static readonly Type CommonType = typeof(ItemAbstractCommon);
 
-        public const string FullName = "Mutagen.Bethesda.NamedMajorRecord";
+        public const string FullName = "Mutagen.Bethesda.Oblivion.ItemAbstract";
 
-        public const string Name = "NamedMajorRecord";
+        public const string Name = "ItemAbstract";
 
-        public const string Namespace = "Mutagen.Bethesda";
+        public const string Namespace = "Mutagen.Bethesda.Oblivion";
 
         public const byte GenericCount = 0;
 
@@ -655,8 +583,6 @@ namespace Mutagen.Bethesda.Internals
         {
             switch (str.Upper)
             {
-                case "NAME":
-                    return (ushort)NamedMajorRecord_FieldIndex.Name;
                 default:
                     return null;
             }
@@ -664,11 +590,9 @@ namespace Mutagen.Bethesda.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            NamedMajorRecord_FieldIndex enu = (NamedMajorRecord_FieldIndex)index;
+            ItemAbstract_FieldIndex enu = (ItemAbstract_FieldIndex)index;
             switch (enu)
             {
-                case NamedMajorRecord_FieldIndex.Name:
-                    return false;
                 default:
                     return MajorRecord_Registration.GetNthIsEnumerable(index);
             }
@@ -676,11 +600,9 @@ namespace Mutagen.Bethesda.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            NamedMajorRecord_FieldIndex enu = (NamedMajorRecord_FieldIndex)index;
+            ItemAbstract_FieldIndex enu = (ItemAbstract_FieldIndex)index;
             switch (enu)
             {
-                case NamedMajorRecord_FieldIndex.Name:
-                    return false;
                 default:
                     return MajorRecord_Registration.GetNthIsLoqui(index);
             }
@@ -688,11 +610,9 @@ namespace Mutagen.Bethesda.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            NamedMajorRecord_FieldIndex enu = (NamedMajorRecord_FieldIndex)index;
+            ItemAbstract_FieldIndex enu = (ItemAbstract_FieldIndex)index;
             switch (enu)
             {
-                case NamedMajorRecord_FieldIndex.Name:
-                    return false;
                 default:
                     return MajorRecord_Registration.GetNthIsSingleton(index);
             }
@@ -700,11 +620,9 @@ namespace Mutagen.Bethesda.Internals
 
         public static string GetNthName(ushort index)
         {
-            NamedMajorRecord_FieldIndex enu = (NamedMajorRecord_FieldIndex)index;
+            ItemAbstract_FieldIndex enu = (ItemAbstract_FieldIndex)index;
             switch (enu)
             {
-                case NamedMajorRecord_FieldIndex.Name:
-                    return "Name";
                 default:
                     return MajorRecord_Registration.GetNthName(index);
             }
@@ -712,11 +630,9 @@ namespace Mutagen.Bethesda.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            NamedMajorRecord_FieldIndex enu = (NamedMajorRecord_FieldIndex)index;
+            ItemAbstract_FieldIndex enu = (ItemAbstract_FieldIndex)index;
             switch (enu)
             {
-                case NamedMajorRecord_FieldIndex.Name:
-                    return false;
                 default:
                     return MajorRecord_Registration.IsNthDerivative(index);
             }
@@ -724,11 +640,9 @@ namespace Mutagen.Bethesda.Internals
 
         public static bool IsProtected(ushort index)
         {
-            NamedMajorRecord_FieldIndex enu = (NamedMajorRecord_FieldIndex)index;
+            ItemAbstract_FieldIndex enu = (ItemAbstract_FieldIndex)index;
             switch (enu)
             {
-                case NamedMajorRecord_FieldIndex.Name:
-                    return false;
                 default:
                     return MajorRecord_Registration.IsProtected(index);
             }
@@ -736,74 +650,16 @@ namespace Mutagen.Bethesda.Internals
 
         public static Type GetNthType(ushort index)
         {
-            NamedMajorRecord_FieldIndex enu = (NamedMajorRecord_FieldIndex)index;
+            ItemAbstract_FieldIndex enu = (ItemAbstract_FieldIndex)index;
             switch (enu)
             {
-                case NamedMajorRecord_FieldIndex.Name:
-                    return typeof(String);
                 default:
                     return MajorRecord_Registration.GetNthType(index);
             }
         }
 
-        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
-        public static readonly RecordType ACTI_HEADER = new RecordType("ACTI");
-        public static readonly RecordType APPA_HEADER = new RecordType("APPA");
-        public static readonly RecordType BSGN_HEADER = new RecordType("BSGN");
-        public static readonly RecordType BOOK_HEADER = new RecordType("BOOK");
-        public static readonly RecordType CLAS_HEADER = new RecordType("CLAS");
-        public static readonly RecordType SCRI_HEADER = new RecordType("SCRI");
-        public static readonly RecordType ENAM_HEADER = new RecordType("ENAM");
-        public static readonly RecordType ANAM_HEADER = new RecordType("ANAM");
-        public static readonly RecordType BMDT_HEADER = new RecordType("BMDT");
-        public static readonly RecordType CONT_HEADER = new RecordType("CONT");
-        public static readonly RecordType DOOR_HEADER = new RecordType("DOOR");
-        public static readonly RecordType ENCH_HEADER = new RecordType("ENCH");
-        public static readonly RecordType EYES_HEADER = new RecordType("EYES");
-        public static readonly RecordType FACT_HEADER = new RecordType("FACT");
-        public static readonly RecordType HAIR_HEADER = new RecordType("HAIR");
-        public static readonly RecordType MGEF_HEADER = new RecordType("MGEF");
-        public static readonly RecordType RACE_HEADER = new RecordType("RACE");
-        public static readonly RecordType WRLD_HEADER = new RecordType("WRLD");
-        public static readonly RecordType ARMO_HEADER = new RecordType("ARMO");
-        public static readonly RecordType CLOT_HEADER = new RecordType("CLOT");
-        public static readonly RecordType LVSP_HEADER = new RecordType("LVSP");
-        public static readonly RecordType SPEL_HEADER = new RecordType("SPEL");
-        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
-        {
-            return new CollectionGetterWrapper<RecordType>(
-                new HashSet<RecordType>(
-                    new RecordType[]
-                    {
-                        FULL_HEADER,
-                        ACTI_HEADER,
-                        APPA_HEADER,
-                        BSGN_HEADER,
-                        BOOK_HEADER,
-                        CLAS_HEADER,
-                        SCRI_HEADER,
-                        ENAM_HEADER,
-                        ANAM_HEADER,
-                        BMDT_HEADER,
-                        CONT_HEADER,
-                        DOOR_HEADER,
-                        ENCH_HEADER,
-                        EYES_HEADER,
-                        FACT_HEADER,
-                        HAIR_HEADER,
-                        MGEF_HEADER,
-                        RACE_HEADER,
-                        WRLD_HEADER,
-                        ARMO_HEADER,
-                        CLOT_HEADER,
-                        LVSP_HEADER,
-                        SPEL_HEADER
-                    })
-            );
-        });
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 1;
+        public const int NumTypedFields = 0;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -834,17 +690,17 @@ namespace Mutagen.Bethesda.Internals
     #endregion
 
     #region Extensions
-    public static partial class NamedMajorRecordCommon
+    public static partial class ItemAbstractCommon
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this INamedMajorRecord item,
-            INamedMajorRecordGetter rhs,
-            NamedMajorRecord_CopyMask copyMask = null,
-            INamedMajorRecordGetter def = null,
+            this IItemAbstract item,
+            IItemAbstractGetter rhs,
+            ItemAbstract_CopyMask copyMask = null,
+            IItemAbstractGetter def = null,
             NotifyingFireParameters? cmds = null)
         {
-            NamedMajorRecordCommon.CopyFieldsFrom(
+            ItemAbstractCommon.CopyFieldsFrom(
                 item: item,
                 rhs: rhs,
                 def: def,
@@ -855,14 +711,14 @@ namespace Mutagen.Bethesda.Internals
         }
 
         public static void CopyFieldsFrom(
-            this INamedMajorRecord item,
-            INamedMajorRecordGetter rhs,
-            out NamedMajorRecord_ErrorMask errorMask,
-            NamedMajorRecord_CopyMask copyMask = null,
-            INamedMajorRecordGetter def = null,
+            this IItemAbstract item,
+            IItemAbstractGetter rhs,
+            out ItemAbstract_ErrorMask errorMask,
+            ItemAbstract_CopyMask copyMask = null,
+            IItemAbstractGetter def = null,
             NotifyingFireParameters? cmds = null)
         {
-            NamedMajorRecordCommon.CopyFieldsFrom(
+            ItemAbstractCommon.CopyFieldsFrom(
                 item: item,
                 rhs: rhs,
                 def: def,
@@ -873,20 +729,20 @@ namespace Mutagen.Bethesda.Internals
         }
 
         public static void CopyFieldsFrom(
-            this INamedMajorRecord item,
-            INamedMajorRecordGetter rhs,
-            INamedMajorRecordGetter def,
+            this IItemAbstract item,
+            IItemAbstractGetter rhs,
+            IItemAbstractGetter def,
             bool doMasks,
-            out NamedMajorRecord_ErrorMask errorMask,
-            NamedMajorRecord_CopyMask copyMask,
+            out ItemAbstract_ErrorMask errorMask,
+            ItemAbstract_CopyMask copyMask,
             NotifyingFireParameters? cmds)
         {
-            NamedMajorRecord_ErrorMask retErrorMask = null;
-            Func<NamedMajorRecord_ErrorMask> maskGetter = () =>
+            ItemAbstract_ErrorMask retErrorMask = null;
+            Func<ItemAbstract_ErrorMask> maskGetter = () =>
             {
                 if (retErrorMask == null)
                 {
-                    retErrorMask = new NamedMajorRecord_ErrorMask();
+                    retErrorMask = new ItemAbstract_ErrorMask();
                 }
                 return retErrorMask;
             };
@@ -902,12 +758,12 @@ namespace Mutagen.Bethesda.Internals
         }
 
         public static void CopyFieldsFrom(
-            this INamedMajorRecord item,
-            INamedMajorRecordGetter rhs,
-            INamedMajorRecordGetter def,
+            this IItemAbstract item,
+            IItemAbstractGetter rhs,
+            IItemAbstractGetter def,
             bool doMasks,
-            Func<NamedMajorRecord_ErrorMask> errorMask,
-            NamedMajorRecord_CopyMask copyMask,
+            Func<ItemAbstract_ErrorMask> errorMask,
+            ItemAbstract_CopyMask copyMask,
             NotifyingFireParameters? cmds)
         {
             MajorRecordCommon.CopyFieldsFrom(
@@ -918,21 +774,6 @@ namespace Mutagen.Bethesda.Internals
                 errorMask,
                 copyMask,
                 cmds);
-            if (copyMask?.Name ?? true)
-            {
-                try
-                {
-                    item.Name_Property.SetToWithDefault(
-                        rhs: rhs.Name_Property,
-                        def: def?.Name_Property,
-                        cmds: cmds);
-                }
-                catch (Exception ex)
-                when (doMasks)
-                {
-                    errorMask().SetNthException((int)NamedMajorRecord_FieldIndex.Name, ex);
-                }
-            }
         }
 
         #endregion
@@ -940,15 +781,12 @@ namespace Mutagen.Bethesda.Internals
         public static void SetNthObjectHasBeenSet(
             ushort index,
             bool on,
-            INamedMajorRecord obj,
+            IItemAbstract obj,
             NotifyingFireParameters? cmds = null)
         {
-            NamedMajorRecord_FieldIndex enu = (NamedMajorRecord_FieldIndex)index;
+            ItemAbstract_FieldIndex enu = (ItemAbstract_FieldIndex)index;
             switch (enu)
             {
-                case NamedMajorRecord_FieldIndex.Name:
-                    obj.Name_Property.HasBeenSet = on;
-                    break;
                 default:
                     MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
@@ -957,15 +795,12 @@ namespace Mutagen.Bethesda.Internals
 
         public static void UnsetNthObject(
             ushort index,
-            INamedMajorRecord obj,
+            IItemAbstract obj,
             NotifyingUnsetParameters? cmds = null)
         {
-            NamedMajorRecord_FieldIndex enu = (NamedMajorRecord_FieldIndex)index;
+            ItemAbstract_FieldIndex enu = (ItemAbstract_FieldIndex)index;
             switch (enu)
             {
-                case NamedMajorRecord_FieldIndex.Name:
-                    obj.Name_Property.Unset(cmds);
-                    break;
                 default:
                     MajorRecordCommon.UnsetNthObject(index, obj);
                     break;
@@ -974,13 +809,11 @@ namespace Mutagen.Bethesda.Internals
 
         public static bool GetNthObjectHasBeenSet(
             ushort index,
-            INamedMajorRecord obj)
+            IItemAbstract obj)
         {
-            NamedMajorRecord_FieldIndex enu = (NamedMajorRecord_FieldIndex)index;
+            ItemAbstract_FieldIndex enu = (ItemAbstract_FieldIndex)index;
             switch (enu)
             {
-                case NamedMajorRecord_FieldIndex.Name:
-                    return obj.Name_Property.HasBeenSet;
                 default:
                     return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -988,48 +821,44 @@ namespace Mutagen.Bethesda.Internals
 
         public static object GetNthObject(
             ushort index,
-            INamedMajorRecordGetter obj)
+            IItemAbstractGetter obj)
         {
-            NamedMajorRecord_FieldIndex enu = (NamedMajorRecord_FieldIndex)index;
+            ItemAbstract_FieldIndex enu = (ItemAbstract_FieldIndex)index;
             switch (enu)
             {
-                case NamedMajorRecord_FieldIndex.Name:
-                    return obj.Name;
                 default:
                     return MajorRecordCommon.GetNthObject(index, obj);
             }
         }
 
         public static void Clear(
-            INamedMajorRecord item,
+            IItemAbstract item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.Name_Property.Unset(cmds.ToUnsetParams());
         }
 
-        public static NamedMajorRecord_Mask<bool> GetEqualsMask(
-            this INamedMajorRecordGetter item,
-            INamedMajorRecordGetter rhs)
+        public static ItemAbstract_Mask<bool> GetEqualsMask(
+            this IItemAbstractGetter item,
+            IItemAbstractGetter rhs)
         {
-            var ret = new NamedMajorRecord_Mask<bool>();
+            var ret = new ItemAbstract_Mask<bool>();
             FillEqualsMask(item, rhs, ret);
             return ret;
         }
 
         public static void FillEqualsMask(
-            INamedMajorRecordGetter item,
-            INamedMajorRecordGetter rhs,
-            NamedMajorRecord_Mask<bool> ret)
+            IItemAbstractGetter item,
+            IItemAbstractGetter rhs,
+            ItemAbstract_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Name = item.Name_Property.Equals(rhs.Name_Property, (l, r) => object.Equals(l, r));
             MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
-            this INamedMajorRecordGetter item,
+            this IItemAbstractGetter item,
             string name = null,
-            NamedMajorRecord_Mask<bool> printMask = null)
+            ItemAbstract_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             item.ToString(fg, name, printMask);
@@ -1037,65 +866,59 @@ namespace Mutagen.Bethesda.Internals
         }
 
         public static void ToString(
-            this INamedMajorRecordGetter item,
+            this IItemAbstractGetter item,
             FileGeneration fg,
             string name = null,
-            NamedMajorRecord_Mask<bool> printMask = null)
+            ItemAbstract_Mask<bool> printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(NamedMajorRecord)} =>");
+                fg.AppendLine($"{nameof(ItemAbstract)} =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(NamedMajorRecord)}) =>");
+                fg.AppendLine($"{name} ({nameof(ItemAbstract)}) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Name ?? true)
-                {
-                    fg.AppendLine($"Name => {item.Name}");
-                }
             }
             fg.AppendLine("]");
         }
 
         public static bool HasBeenSet(
-            this INamedMajorRecordGetter item,
-            NamedMajorRecord_Mask<bool?> checkMask)
+            this IItemAbstractGetter item,
+            ItemAbstract_Mask<bool?> checkMask)
         {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_Property.HasBeenSet) return false;
             return true;
         }
 
-        public static NamedMajorRecord_Mask<bool> GetHasBeenSetMask(INamedMajorRecordGetter item)
+        public static ItemAbstract_Mask<bool> GetHasBeenSetMask(IItemAbstractGetter item)
         {
-            var ret = new NamedMajorRecord_Mask<bool>();
-            ret.Name = item.Name_Property.HasBeenSet;
+            var ret = new ItemAbstract_Mask<bool>();
             return ret;
         }
 
-        public static NamedMajorRecord_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
+        public static ItemAbstract_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
         {
             if (!index.HasValue) return null;
             return ConvertFieldIndex(index: index.Value);
         }
 
-        public static NamedMajorRecord_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static ItemAbstract_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlags:
-                    return (NamedMajorRecord_FieldIndex)((int)index);
+                    return (ItemAbstract_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormID:
-                    return (NamedMajorRecord_FieldIndex)((int)index);
+                    return (ItemAbstract_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
-                    return (NamedMajorRecord_FieldIndex)((int)index);
+                    return (ItemAbstract_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (NamedMajorRecord_FieldIndex)((int)index);
+                    return (ItemAbstract_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.RecordType:
-                    return (NamedMajorRecord_FieldIndex)((int)index);
+                    return (ItemAbstract_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -1105,42 +928,33 @@ namespace Mutagen.Bethesda.Internals
         #region XML Write
         public static void Write_XML(
             XmlWriter writer,
-            INamedMajorRecordGetter item,
+            IItemAbstractGetter item,
             bool doMasks,
-            out NamedMajorRecord_ErrorMask errorMask,
+            out ItemAbstract_ErrorMask errorMask,
             string name = null)
         {
-            NamedMajorRecord_ErrorMask errMaskRet = null;
+            ItemAbstract_ErrorMask errMaskRet = null;
             Write_XML_Internal(
                 writer: writer,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new NamedMajorRecord_ErrorMask()) : default(Func<NamedMajorRecord_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new ItemAbstract_ErrorMask()) : default(Func<ItemAbstract_ErrorMask>));
             errorMask = errMaskRet;
         }
 
         private static void Write_XML_Internal(
             XmlWriter writer,
-            INamedMajorRecordGetter item,
-            Func<NamedMajorRecord_ErrorMask> errorMask,
+            IItemAbstractGetter item,
+            Func<ItemAbstract_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.NamedMajorRecord"))
+                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.ItemAbstract"))
                 {
                     if (name != null)
                     {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.NamedMajorRecord");
-                    }
-                    if (item.Name_Property.HasBeenSet)
-                    {
-                        StringXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Name),
-                            item: item.Name_Property,
-                            fieldIndex: (int)NamedMajorRecord_FieldIndex.Name,
-                            errorMask: errorMask);
+                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.ItemAbstract");
                     }
                 }
             }
@@ -1158,25 +972,25 @@ namespace Mutagen.Bethesda.Internals
         #region Binary Write
         public static void Write_Binary(
             MutagenWriter writer,
-            INamedMajorRecordGetter item,
+            IItemAbstractGetter item,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
-            out NamedMajorRecord_ErrorMask errorMask)
+            out ItemAbstract_ErrorMask errorMask)
         {
-            NamedMajorRecord_ErrorMask errMaskRet = null;
+            ItemAbstract_ErrorMask errMaskRet = null;
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new NamedMajorRecord_ErrorMask()) : default(Func<NamedMajorRecord_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new ItemAbstract_ErrorMask()) : default(Func<ItemAbstract_ErrorMask>));
             errorMask = errMaskRet;
         }
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
-            INamedMajorRecordGetter item,
+            IItemAbstractGetter item,
             RecordTypeConverter recordTypeConverter,
-            Func<NamedMajorRecord_ErrorMask> errorMask)
+            Func<ItemAbstract_ErrorMask> errorMask)
         {
             try
             {
@@ -1184,7 +998,7 @@ namespace Mutagen.Bethesda.Internals
                     item: item,
                     writer: writer,
                     errorMask: errorMask);
-                Write_Binary_RecordTypes(
+                MajorRecordCommon.Write_Binary_RecordTypes(
                     item: item,
                     writer: writer,
                     recordTypeConverter: recordTypeConverter,
@@ -1198,26 +1012,6 @@ namespace Mutagen.Bethesda.Internals
         }
         #endregion
 
-        public static void Write_Binary_RecordTypes(
-            INamedMajorRecordGetter item,
-            MutagenWriter writer,
-            RecordTypeConverter recordTypeConverter,
-            Func<NamedMajorRecord_ErrorMask> errorMask)
-        {
-            MajorRecordCommon.Write_Binary_RecordTypes(
-                item: item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Name_Property,
-                fieldIndex: (int)NamedMajorRecord_FieldIndex.Name,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(NamedMajorRecord_Registration.FULL_HEADER),
-                nullable: false);
-        }
-
         #endregion
 
     }
@@ -1226,41 +1020,34 @@ namespace Mutagen.Bethesda.Internals
     #region Modules
 
     #region Mask
-    public class NamedMajorRecord_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<NamedMajorRecord_Mask<T>>
+    public class ItemAbstract_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<ItemAbstract_Mask<T>>
     {
         #region Ctors
-        public NamedMajorRecord_Mask()
+        public ItemAbstract_Mask()
         {
         }
 
-        public NamedMajorRecord_Mask(T initialValue)
+        public ItemAbstract_Mask(T initialValue)
         {
-            this.Name = initialValue;
         }
-        #endregion
-
-        #region Members
-        public T Name;
         #endregion
 
         #region Equals
         public override bool Equals(object obj)
         {
-            if (!(obj is NamedMajorRecord_Mask<T> rhs)) return false;
+            if (!(obj is ItemAbstract_Mask<T> rhs)) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(NamedMajorRecord_Mask<T> rhs)
+        public bool Equals(ItemAbstract_Mask<T> rhs)
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Name, rhs.Name)) return false;
             return true;
         }
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = ret.CombineHashCode(this.Name?.GetHashCode());
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -1271,23 +1058,21 @@ namespace Mutagen.Bethesda.Internals
         public override bool AllEqual(Func<T, bool> eval)
         {
             if (!base.AllEqual(eval)) return false;
-            if (!eval(this.Name)) return false;
             return true;
         }
         #endregion
 
         #region Translate
-        public new NamedMajorRecord_Mask<R> Translate<R>(Func<T, R> eval)
+        public new ItemAbstract_Mask<R> Translate<R>(Func<T, R> eval)
         {
-            var ret = new NamedMajorRecord_Mask<R>();
+            var ret = new ItemAbstract_Mask<R>();
             this.Translate_InternalFill(ret, eval);
             return ret;
         }
 
-        protected void Translate_InternalFill<R>(NamedMajorRecord_Mask<R> obj, Func<T, R> eval)
+        protected void Translate_InternalFill<R>(ItemAbstract_Mask<R> obj, Func<T, R> eval)
         {
             base.Translate_InternalFill(obj, eval);
-            obj.Name = eval(this.Name);
         }
         #endregion
 
@@ -1304,23 +1089,19 @@ namespace Mutagen.Bethesda.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(NamedMajorRecord_Mask<bool> printMask = null)
+        public string ToString(ItemAbstract_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, NamedMajorRecord_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, ItemAbstract_Mask<bool> printMask = null)
         {
-            fg.AppendLine($"{nameof(NamedMajorRecord_Mask<T>)} =>");
+            fg.AppendLine($"{nameof(ItemAbstract_Mask<T>)} =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Name ?? true)
-                {
-                    fg.AppendLine($"Name => {Name}");
-                }
             }
             fg.AppendLine("]");
         }
@@ -1328,21 +1109,14 @@ namespace Mutagen.Bethesda.Internals
 
     }
 
-    public class NamedMajorRecord_ErrorMask : MajorRecord_ErrorMask, IErrorMask<NamedMajorRecord_ErrorMask>
+    public class ItemAbstract_ErrorMask : MajorRecord_ErrorMask, IErrorMask<ItemAbstract_ErrorMask>
     {
-        #region Members
-        public Exception Name;
-        #endregion
-
         #region IErrorMask
         public override void SetNthException(int index, Exception ex)
         {
-            NamedMajorRecord_FieldIndex enu = (NamedMajorRecord_FieldIndex)index;
+            ItemAbstract_FieldIndex enu = (ItemAbstract_FieldIndex)index;
             switch (enu)
             {
-                case NamedMajorRecord_FieldIndex.Name:
-                    this.Name = ex;
-                    break;
                 default:
                     base.SetNthException(index, ex);
                     break;
@@ -1351,12 +1125,9 @@ namespace Mutagen.Bethesda.Internals
 
         public override void SetNthMask(int index, object obj)
         {
-            NamedMajorRecord_FieldIndex enu = (NamedMajorRecord_FieldIndex)index;
+            ItemAbstract_FieldIndex enu = (ItemAbstract_FieldIndex)index;
             switch (enu)
             {
-                case NamedMajorRecord_FieldIndex.Name:
-                    this.Name = (Exception)obj;
-                    break;
                 default:
                     base.SetNthMask(index, obj);
                     break;
@@ -1366,7 +1137,6 @@ namespace Mutagen.Bethesda.Internals
         public override bool IsInError()
         {
             if (Overall != null) return true;
-            if (Name != null) return true;
             return false;
         }
         #endregion
@@ -1381,7 +1151,7 @@ namespace Mutagen.Bethesda.Internals
 
         public override void ToString(FileGeneration fg)
         {
-            fg.AppendLine("NamedMajorRecord_ErrorMask =>");
+            fg.AppendLine("ItemAbstract_ErrorMask =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
@@ -1402,18 +1172,16 @@ namespace Mutagen.Bethesda.Internals
         protected override void ToString_FillInternal(FileGeneration fg)
         {
             base.ToString_FillInternal(fg);
-            fg.AppendLine($"Name => {Name}");
         }
         #endregion
 
         #region Combine
-        public NamedMajorRecord_ErrorMask Combine(NamedMajorRecord_ErrorMask rhs)
+        public ItemAbstract_ErrorMask Combine(ItemAbstract_ErrorMask rhs)
         {
-            var ret = new NamedMajorRecord_ErrorMask();
-            ret.Name = this.Name.Combine(rhs.Name);
+            var ret = new ItemAbstract_ErrorMask();
             return ret;
         }
-        public static NamedMajorRecord_ErrorMask Combine(NamedMajorRecord_ErrorMask lhs, NamedMajorRecord_ErrorMask rhs)
+        public static ItemAbstract_ErrorMask Combine(ItemAbstract_ErrorMask lhs, ItemAbstract_ErrorMask rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -1421,12 +1189,8 @@ namespace Mutagen.Bethesda.Internals
         #endregion
 
     }
-    public class NamedMajorRecord_CopyMask : MajorRecord_CopyMask
+    public class ItemAbstract_CopyMask : MajorRecord_CopyMask
     {
-        #region Members
-        public bool Name;
-        #endregion
-
     }
     #endregion
 

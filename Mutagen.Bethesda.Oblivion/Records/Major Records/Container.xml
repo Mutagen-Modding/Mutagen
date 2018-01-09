@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Container" baseClass="Bethesda.NamedMajorRecord" objType="Record" recordType="CONT" GUID="066f0f2c-d0c7-4290-84f3-72ed6e07b160" ID="71">
+    <Fields>
+      <RefDirect name="Model" refName="Model" />
+      <FormID name="Script" refName="Script" recordType="SCRI" />
+      <RefList name="Items" refName="ContainerItem" />
+      <Data>
+        <Fields>
+          <Enum name="Flags" enumName="Container.ContainerFlag" byteLength="1" />
+          <Float name="Weight" />
+        </Fields>
+      </Data>
+      <FormID name="OpenSound" refName="Sound" recordType="SNAM" />
+      <FormID name="CloseSound" refName="Sound" recordType="QNAM" />
+    </Fields>
+  </Object>
+  <Object name="ContainerItem" objType="Subrecord" recordType="CNTO" GUID="2cffd274-8e8f-4c07-8b09-679098c41712" ID="72">
+    <Fields>
+      <FormID name="Item" refName="ItemAbstract" />
+      <UInt32 name="Count" />
+    </Fields>
+  </Object>
+</Loqui>

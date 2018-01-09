@@ -359,6 +359,10 @@ namespace Mutagen.Bethesda.Generation
                     .Select((field) => SetRecordTrigger(obj, field, field.GetFieldData())));
             await SetObjectTrigger(obj);
             await base.PostLoad(obj);
+        }
+
+        private void CheckCorrectness(ObjectGeneration obj)
+        {
             Dictionary<string, TypeGeneration> triggerMapping = new Dictionary<string, TypeGeneration>();
             Dictionary<RecordType, TypeGeneration> triggerRecMapping = new Dictionary<RecordType, TypeGeneration>();
             foreach (var field in obj.IterateFields())
@@ -380,6 +384,25 @@ namespace Mutagen.Bethesda.Generation
                         throw new ArgumentException($"{obj.Name} cannot have two fields that have the same trigger record {triggerRec}: {existingField.Name} AND {field.Name}");
                     }
                     triggerRecMapping[triggerRec] = field;
+                }
+            }
+
+            bool foundTrigger = false;
+            foreach (var field in obj.IterateFields(
+                nonIntegrated: true,
+                expandSets: SetMarkerType.ExpandSets.False))
+            {
+                if (field is SetMarkerType) continue;
+                if (field.Derivative) continue;
+                var hasTrigger = field.TryGetFieldData(out var data)
+                    && data.HasTrigger;
+                if (hasTrigger)
+                {
+                    foundTrigger = true;
+                }
+                else if (foundTrigger)
+                {
+                    throw new ArgumentException($"{obj.Name} cannot have an embedded field without a record type after ones with record types have been defined: {field.Name}");
                 }
             }
         }

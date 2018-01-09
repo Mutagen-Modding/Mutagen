@@ -208,6 +208,22 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItem<Group<Clothing>> IOblivionMod.Clothes_Property => this.Clothes_Property;
         INotifyingSetItemGetter<Group<Clothing>> IOblivionModGetter.Clothes_Property => this.Clothes_Property;
         #endregion
+        #region Containers
+        private readonly INotifyingSetItem<Group<Container>> _Containers = new NotifyingSetItem<Group<Container>>();
+        public INotifyingSetItem<Group<Container>> Containers_Property => this._Containers;
+        Group<Container> IOblivionModGetter.Containers => this.Containers;
+        public Group<Container> Containers { get => _Containers.Item; set => _Containers.Item = value; }
+        INotifyingSetItem<Group<Container>> IOblivionMod.Containers_Property => this.Containers_Property;
+        INotifyingSetItemGetter<Group<Container>> IOblivionModGetter.Containers_Property => this.Containers_Property;
+        #endregion
+        #region Doors
+        private readonly INotifyingSetItem<Group<Door>> _Doors = new NotifyingSetItem<Group<Door>>();
+        public INotifyingSetItem<Group<Door>> Doors_Property => this._Doors;
+        Group<Door> IOblivionModGetter.Doors => this.Doors;
+        public Group<Door> Doors { get => _Doors.Item; set => _Doors.Item = value; }
+        INotifyingSetItem<Group<Door>> IOblivionMod.Doors_Property => this.Doors_Property;
+        INotifyingSetItemGetter<Group<Door>> IOblivionModGetter.Doors_Property => this.Doors_Property;
+        #endregion
 
         #region Loqui Getter Interface
 
@@ -372,6 +388,16 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!object.Equals(Clothes, rhs.Clothes)) return false;
             }
+            if (Containers_Property.HasBeenSet != rhs.Containers_Property.HasBeenSet) return false;
+            if (Containers_Property.HasBeenSet)
+            {
+                if (!object.Equals(Containers, rhs.Containers)) return false;
+            }
+            if (Doors_Property.HasBeenSet != rhs.Doors_Property.HasBeenSet) return false;
+            if (Doors_Property.HasBeenSet)
+            {
+                if (!object.Equals(Doors, rhs.Doors)) return false;
+            }
             return true;
         }
 
@@ -461,6 +487,14 @@ namespace Mutagen.Bethesda.Oblivion
             if (Clothes_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(Clothes).CombineHashCode(ret);
+            }
+            if (Containers_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Containers).CombineHashCode(ret);
+            }
+            if (Doors_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Doors).CombineHashCode(ret);
             }
             return ret;
         }
@@ -887,6 +921,18 @@ namespace Mutagen.Bethesda.Oblivion
                     item._Clothes.SetIfSucceeded(LoquiXmlTranslation<Group<Clothing>, Group_ErrorMask<Clothing_ErrorMask>>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)OblivionMod_FieldIndex.Clothes,
+                        errorMask: errorMask));
+                    break;
+                case "Containers":
+                    item._Containers.SetIfSucceeded(LoquiXmlTranslation<Group<Container>, Group_ErrorMask<Container_ErrorMask>>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Containers,
+                        errorMask: errorMask));
+                    break;
+                case "Doors":
+                    item._Doors.SetIfSucceeded(LoquiXmlTranslation<Group<Door>, Group_ErrorMask<Door_ErrorMask>>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Doors,
                         errorMask: errorMask));
                     break;
                 default:
@@ -1343,6 +1389,18 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)OblivionMod_FieldIndex.Clothes,
                         errorMask: errorMask));
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Clothes);
+                case "CONT":
+                    item._Containers.SetIfSucceeded(LoquiBinaryTranslation<Group<Container>, Group_ErrorMask<Container_ErrorMask>>.Instance.Parse(
+                        frame: frame,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Containers,
+                        errorMask: errorMask));
+                    return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Containers);
+                case "DOOR":
+                    item._Doors.SetIfSucceeded(LoquiBinaryTranslation<Group<Door>, Group_ErrorMask<Door_ErrorMask>>.Instance.Parse(
+                        frame: frame,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Doors,
+                        errorMask: errorMask));
+                    return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Doors);
                 default:
                     errorMask().Warnings.Add($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength;
@@ -1538,6 +1596,16 @@ namespace Mutagen.Bethesda.Oblivion
                         (Group<Clothing>)obj,
                         cmds);
                     break;
+                case OblivionMod_FieldIndex.Containers:
+                    this._Containers.Set(
+                        (Group<Container>)obj,
+                        cmds);
+                    break;
+                case OblivionMod_FieldIndex.Doors:
+                    this._Doors.Set(
+                        (Group<Door>)obj,
+                        cmds);
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1678,6 +1746,16 @@ namespace Mutagen.Bethesda.Oblivion
                         (Group<Clothing>)pair.Value,
                         null);
                     break;
+                case OblivionMod_FieldIndex.Containers:
+                    obj._Containers.Set(
+                        (Group<Container>)pair.Value,
+                        null);
+                    break;
+                case OblivionMod_FieldIndex.Doors:
+                    obj._Doors.Set(
+                        (Group<Door>)pair.Value,
+                        null);
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -1752,6 +1830,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Group<Clothing> Clothes { get; set; }
         new INotifyingSetItem<Group<Clothing>> Clothes_Property { get; }
+
+        new Group<Container> Containers { get; set; }
+        new INotifyingSetItem<Group<Container>> Containers_Property { get; }
+
+        new Group<Door> Doors { get; set; }
+        new INotifyingSetItem<Group<Door>> Doors_Property { get; }
 
     }
 
@@ -1862,6 +1946,16 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Group<Clothing>> Clothes_Property { get; }
 
         #endregion
+        #region Containers
+        Group<Container> Containers { get; }
+        INotifyingSetItemGetter<Group<Container>> Containers_Property { get; }
+
+        #endregion
+        #region Doors
+        Group<Door> Doors { get; }
+        INotifyingSetItemGetter<Group<Door>> Doors_Property { get; }
+
+        #endregion
 
     }
 
@@ -1895,6 +1989,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Armors = 18,
         Books = 19,
         Clothes = 20,
+        Containers = 21,
+        Doors = 22,
     }
     #endregion
 
@@ -1912,7 +2008,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "b6f626df-b164-466b-960a-1639d88f66bc";
 
-        public const ushort FieldCount = 21;
+        public const ushort FieldCount = 23;
 
         public static readonly Type MaskType = typeof(OblivionMod_Mask<>);
 
@@ -1982,6 +2078,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)OblivionMod_FieldIndex.Books;
                 case "CLOTHES":
                     return (ushort)OblivionMod_FieldIndex.Clothes;
+                case "CONTAINERS":
+                    return (ushort)OblivionMod_FieldIndex.Containers;
+                case "DOORS":
+                    return (ushort)OblivionMod_FieldIndex.Doors;
                 default:
                     return null;
             }
@@ -2013,6 +2113,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Armors:
                 case OblivionMod_FieldIndex.Books:
                 case OblivionMod_FieldIndex.Clothes:
+                case OblivionMod_FieldIndex.Containers:
+                case OblivionMod_FieldIndex.Doors:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2045,6 +2147,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Armors:
                 case OblivionMod_FieldIndex.Books:
                 case OblivionMod_FieldIndex.Clothes:
+                case OblivionMod_FieldIndex.Containers:
+                case OblivionMod_FieldIndex.Doors:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2078,6 +2182,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Armors:
                 case OblivionMod_FieldIndex.Books:
                 case OblivionMod_FieldIndex.Clothes:
+                case OblivionMod_FieldIndex.Containers:
+                case OblivionMod_FieldIndex.Doors:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2131,6 +2237,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Books";
                 case OblivionMod_FieldIndex.Clothes:
                     return "Clothes";
+                case OblivionMod_FieldIndex.Containers:
+                    return "Containers";
+                case OblivionMod_FieldIndex.Doors:
+                    return "Doors";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2162,6 +2272,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Armors:
                 case OblivionMod_FieldIndex.Books:
                 case OblivionMod_FieldIndex.Clothes:
+                case OblivionMod_FieldIndex.Containers:
+                case OblivionMod_FieldIndex.Doors:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2195,6 +2307,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Armors:
                 case OblivionMod_FieldIndex.Books:
                 case OblivionMod_FieldIndex.Clothes:
+                case OblivionMod_FieldIndex.Containers:
+                case OblivionMod_FieldIndex.Doors:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2248,6 +2362,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(Group<Book>);
                 case OblivionMod_FieldIndex.Clothes:
                     return typeof(Group<Clothing>);
+                case OblivionMod_FieldIndex.Containers:
+                    return typeof(Group<Container>);
+                case OblivionMod_FieldIndex.Doors:
+                    return typeof(Group<Door>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2274,6 +2392,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType ARMO_HEADER = new RecordType("ARMO");
         public static readonly RecordType BOOK_HEADER = new RecordType("BOOK");
         public static readonly RecordType CLOT_HEADER = new RecordType("CLOT");
+        public static readonly RecordType CONT_HEADER = new RecordType("CONT");
+        public static readonly RecordType DOOR_HEADER = new RecordType("DOOR");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -2301,12 +2421,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         APPA_HEADER,
                         ARMO_HEADER,
                         BOOK_HEADER,
-                        CLOT_HEADER
+                        CLOT_HEADER,
+                        CONT_HEADER,
+                        DOOR_HEADER
                     })
             );
         });
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 21;
+        public const int NumTypedFields = 23;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -3461,6 +3583,108 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask().SetNthException((int)OblivionMod_FieldIndex.Clothes, ex);
                 }
             }
+            if (copyMask?.Containers.Overall != CopyOption.Skip)
+            {
+                try
+                {
+                    item.Containers_Property.SetToWithDefault(
+                        rhs.Containers_Property,
+                        def?.Containers_Property,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.Containers.Overall ?? CopyOption.Reference)
+                            {
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    GroupCommon.CopyFieldsFrom(
+                                        item: item.Containers,
+                                        rhs: rhs.Containers,
+                                        def: def?.Containers,
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<Group_ErrorMask<Container_ErrorMask>>(() =>
+                                        {
+                                            var baseMask = errorMask();
+                                            if (baseMask.Containers.Specific == null)
+                                            {
+                                                baseMask.Containers = new MaskItem<Exception, Group_ErrorMask<Container_ErrorMask>>(null, new Group_ErrorMask<Container_ErrorMask>());
+                                            }
+                                            return baseMask.Containers.Specific;
+                                        }
+                                        ) : null),
+                                        copyMask: copyMask?.Containers.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(Group<Container>);
+                                    return Group<Container>.Copy(
+                                        r,
+                                        copyMask?.Containers?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Containers?.Overall}. Cannot execute copy.");
+                            }
+                        }
+                        );
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)OblivionMod_FieldIndex.Containers, ex);
+                }
+            }
+            if (copyMask?.Doors.Overall != CopyOption.Skip)
+            {
+                try
+                {
+                    item.Doors_Property.SetToWithDefault(
+                        rhs.Doors_Property,
+                        def?.Doors_Property,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.Doors.Overall ?? CopyOption.Reference)
+                            {
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    GroupCommon.CopyFieldsFrom(
+                                        item: item.Doors,
+                                        rhs: rhs.Doors,
+                                        def: def?.Doors,
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<Group_ErrorMask<Door_ErrorMask>>(() =>
+                                        {
+                                            var baseMask = errorMask();
+                                            if (baseMask.Doors.Specific == null)
+                                            {
+                                                baseMask.Doors = new MaskItem<Exception, Group_ErrorMask<Door_ErrorMask>>(null, new Group_ErrorMask<Door_ErrorMask>());
+                                            }
+                                            return baseMask.Doors.Specific;
+                                        }
+                                        ) : null),
+                                        copyMask: copyMask?.Doors.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(Group<Door>);
+                                    return Group<Door>.Copy(
+                                        r,
+                                        copyMask?.Doors?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Doors?.Overall}. Cannot execute copy.");
+                            }
+                        }
+                        );
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)OblivionMod_FieldIndex.Doors, ex);
+                }
+            }
         }
 
         #endregion
@@ -3535,6 +3759,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case OblivionMod_FieldIndex.Clothes:
                     obj.Clothes_Property.HasBeenSet = on;
+                    break;
+                case OblivionMod_FieldIndex.Containers:
+                    obj.Containers_Property.HasBeenSet = on;
+                    break;
+                case OblivionMod_FieldIndex.Doors:
+                    obj.Doors_Property.HasBeenSet = on;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3611,6 +3841,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Clothes:
                     obj.Clothes_Property.Unset(cmds);
                     break;
+                case OblivionMod_FieldIndex.Containers:
+                    obj.Containers_Property.Unset(cmds);
+                    break;
+                case OblivionMod_FieldIndex.Doors:
+                    obj.Doors_Property.Unset(cmds);
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -3665,6 +3901,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.Books_Property.HasBeenSet;
                 case OblivionMod_FieldIndex.Clothes:
                     return obj.Clothes_Property.HasBeenSet;
+                case OblivionMod_FieldIndex.Containers:
+                    return obj.Containers_Property.HasBeenSet;
+                case OblivionMod_FieldIndex.Doors:
+                    return obj.Doors_Property.HasBeenSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -3719,6 +3959,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.Books;
                 case OblivionMod_FieldIndex.Clothes:
                     return obj.Clothes;
+                case OblivionMod_FieldIndex.Containers:
+                    return obj.Containers;
+                case OblivionMod_FieldIndex.Doors:
+                    return obj.Doors;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -3748,6 +3992,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Armors_Property.Unset(cmds.ToUnsetParams());
             item.Books_Property.Unset(cmds.ToUnsetParams());
             item.Clothes_Property.Unset(cmds.ToUnsetParams());
+            item.Containers_Property.Unset(cmds.ToUnsetParams());
+            item.Doors_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static OblivionMod_Mask<bool> GetEqualsMask(
@@ -3786,6 +4032,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Armors = item.Armors_Property.LoquiEqualsHelper(rhs.Armors_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
             ret.Books = item.Books_Property.LoquiEqualsHelper(rhs.Books_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
             ret.Clothes = item.Clothes_Property.LoquiEqualsHelper(rhs.Clothes_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Containers = item.Containers_Property.LoquiEqualsHelper(rhs.Containers_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Doors = item.Doors_Property.LoquiEqualsHelper(rhs.Doors_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
         }
 
         public static string ToString(
@@ -3899,6 +4147,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Clothes?.ToString(fg, "Clothes");
                 }
+                if (printMask?.Containers?.Overall ?? true)
+                {
+                    item.Containers?.ToString(fg, "Containers");
+                }
+                if (printMask?.Doors?.Overall ?? true)
+                {
+                    item.Doors?.ToString(fg, "Doors");
+                }
             }
             fg.AppendLine("]");
         }
@@ -3949,6 +4205,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Books.Specific != null && (item.Books_Property.Item == null || !item.Books_Property.Item.HasBeenSet(checkMask.Books.Specific))) return false;
             if (checkMask.Clothes.Overall.HasValue && checkMask.Clothes.Overall.Value != item.Clothes_Property.HasBeenSet) return false;
             if (checkMask.Clothes.Specific != null && (item.Clothes_Property.Item == null || !item.Clothes_Property.Item.HasBeenSet(checkMask.Clothes.Specific))) return false;
+            if (checkMask.Containers.Overall.HasValue && checkMask.Containers.Overall.Value != item.Containers_Property.HasBeenSet) return false;
+            if (checkMask.Containers.Specific != null && (item.Containers_Property.Item == null || !item.Containers_Property.Item.HasBeenSet(checkMask.Containers.Specific))) return false;
+            if (checkMask.Doors.Overall.HasValue && checkMask.Doors.Overall.Value != item.Doors_Property.HasBeenSet) return false;
+            if (checkMask.Doors.Specific != null && (item.Doors_Property.Item == null || !item.Doors_Property.Item.HasBeenSet(checkMask.Doors.Specific))) return false;
             return true;
         }
 
@@ -3976,6 +4236,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Armors = new MaskItem<bool, Group_Mask<bool>>(item.Armors_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.Armors_Property.Item));
             ret.Books = new MaskItem<bool, Group_Mask<bool>>(item.Books_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.Books_Property.Item));
             ret.Clothes = new MaskItem<bool, Group_Mask<bool>>(item.Clothes_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.Clothes_Property.Item));
+            ret.Containers = new MaskItem<bool, Group_Mask<bool>>(item.Containers_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.Containers_Property.Item));
+            ret.Doors = new MaskItem<bool, Group_Mask<bool>>(item.Doors_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.Doors_Property.Item));
             return ret;
         }
 
@@ -4200,6 +4462,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             fieldIndex: (int)OblivionMod_FieldIndex.Clothes,
                             errorMask: errorMask);
                     }
+                    if (item.Containers_Property.HasBeenSet)
+                    {
+                        LoquiXmlTranslation<Group<Container>, Group_ErrorMask<Container_ErrorMask>>.Instance.Write(
+                            writer: writer,
+                            item: item.Containers_Property,
+                            name: nameof(item.Containers),
+                            fieldIndex: (int)OblivionMod_FieldIndex.Containers,
+                            errorMask: errorMask);
+                    }
+                    if (item.Doors_Property.HasBeenSet)
+                    {
+                        LoquiXmlTranslation<Group<Door>, Group_ErrorMask<Door_ErrorMask>>.Instance.Write(
+                            writer: writer,
+                            item: item.Doors_Property,
+                            name: nameof(item.Doors),
+                            fieldIndex: (int)OblivionMod_FieldIndex.Doors,
+                            errorMask: errorMask);
+                    }
                 }
             }
             catch (Exception ex)
@@ -4363,6 +4643,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Clothes_Property,
                 fieldIndex: (int)OblivionMod_FieldIndex.Clothes,
                 errorMask: errorMask);
+            LoquiBinaryTranslation<Group<Container>, Group_ErrorMask<Container_ErrorMask>>.Instance.Write(
+                writer: writer,
+                item: item.Containers_Property,
+                fieldIndex: (int)OblivionMod_FieldIndex.Containers,
+                errorMask: errorMask);
+            LoquiBinaryTranslation<Group<Door>, Group_ErrorMask<Door_ErrorMask>>.Instance.Write(
+                writer: writer,
+                item: item.Doors_Property,
+                fieldIndex: (int)OblivionMod_FieldIndex.Doors,
+                errorMask: errorMask);
         }
 
         #endregion
@@ -4403,6 +4693,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Armors = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.Books = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.Clothes = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
+            this.Containers = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
+            this.Doors = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
         }
         #endregion
 
@@ -4428,6 +4720,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<T, Group_Mask<T>> Armors { get; set; }
         public MaskItem<T, Group_Mask<T>> Books { get; set; }
         public MaskItem<T, Group_Mask<T>> Clothes { get; set; }
+        public MaskItem<T, Group_Mask<T>> Containers { get; set; }
+        public MaskItem<T, Group_Mask<T>> Doors { get; set; }
         #endregion
 
         #region Equals
@@ -4461,6 +4755,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.Armors, rhs.Armors)) return false;
             if (!object.Equals(this.Books, rhs.Books)) return false;
             if (!object.Equals(this.Clothes, rhs.Clothes)) return false;
+            if (!object.Equals(this.Containers, rhs.Containers)) return false;
+            if (!object.Equals(this.Doors, rhs.Doors)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -4487,6 +4783,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.Armors?.GetHashCode());
             ret = ret.CombineHashCode(this.Books?.GetHashCode());
             ret = ret.CombineHashCode(this.Clothes?.GetHashCode());
+            ret = ret.CombineHashCode(this.Containers?.GetHashCode());
+            ret = ret.CombineHashCode(this.Doors?.GetHashCode());
             return ret;
         }
 
@@ -4599,6 +4897,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (!eval(this.Clothes.Overall)) return false;
                 if (this.Clothes.Specific != null && !this.Clothes.Specific.AllEqual(eval)) return false;
+            }
+            if (Containers != null)
+            {
+                if (!eval(this.Containers.Overall)) return false;
+                if (this.Containers.Specific != null && !this.Containers.Specific.AllEqual(eval)) return false;
+            }
+            if (Doors != null)
+            {
+                if (!eval(this.Doors.Overall)) return false;
+                if (this.Doors.Specific != null && !this.Doors.Specific.AllEqual(eval)) return false;
             }
             return true;
         }
@@ -4803,6 +5111,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Clothes.Specific = this.Clothes.Specific.Translate(eval);
                 }
             }
+            if (this.Containers != null)
+            {
+                obj.Containers = new MaskItem<R, Group_Mask<R>>();
+                obj.Containers.Overall = eval(this.Containers.Overall);
+                if (this.Containers.Specific != null)
+                {
+                    obj.Containers.Specific = this.Containers.Specific.Translate(eval);
+                }
+            }
+            if (this.Doors != null)
+            {
+                obj.Doors = new MaskItem<R, Group_Mask<R>>();
+                obj.Doors.Overall = eval(this.Doors.Overall);
+                if (this.Doors.Specific != null)
+                {
+                    obj.Doors.Specific = this.Doors.Specific.Translate(eval);
+                }
+            }
         }
         #endregion
 
@@ -4915,6 +5241,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     Clothes?.ToString(fg);
                 }
+                if (printMask?.Containers?.Overall ?? true)
+                {
+                    Containers?.ToString(fg);
+                }
+                if (printMask?.Doors?.Overall ?? true)
+                {
+                    Doors?.ToString(fg);
+                }
             }
             fg.AppendLine("]");
         }
@@ -4959,6 +5293,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<Exception, Group_ErrorMask<Armor_ErrorMask>> Armors;
         public MaskItem<Exception, Group_ErrorMask<Book_ErrorMask>> Books;
         public MaskItem<Exception, Group_ErrorMask<Clothing_ErrorMask>> Clothes;
+        public MaskItem<Exception, Group_ErrorMask<Container_ErrorMask>> Containers;
+        public MaskItem<Exception, Group_ErrorMask<Door_ErrorMask>> Doors;
         #endregion
 
         #region IErrorMask
@@ -5029,6 +5365,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case OblivionMod_FieldIndex.Clothes:
                     this.Clothes = new MaskItem<Exception, Group_ErrorMask<Clothing_ErrorMask>>(ex, null);
+                    break;
+                case OblivionMod_FieldIndex.Containers:
+                    this.Containers = new MaskItem<Exception, Group_ErrorMask<Container_ErrorMask>>(ex, null);
+                    break;
+                case OblivionMod_FieldIndex.Doors:
+                    this.Doors = new MaskItem<Exception, Group_ErrorMask<Door_ErrorMask>>(ex, null);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5103,6 +5445,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Clothes:
                     this.Clothes = (MaskItem<Exception, Group_ErrorMask<Clothing_ErrorMask>>)obj;
                     break;
+                case OblivionMod_FieldIndex.Containers:
+                    this.Containers = (MaskItem<Exception, Group_ErrorMask<Container_ErrorMask>>)obj;
+                    break;
+                case OblivionMod_FieldIndex.Doors:
+                    this.Doors = (MaskItem<Exception, Group_ErrorMask<Door_ErrorMask>>)obj;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -5132,6 +5480,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Armors != null) return true;
             if (Books != null) return true;
             if (Clothes != null) return true;
+            if (Containers != null) return true;
+            if (Doors != null) return true;
             return false;
         }
         #endregion
@@ -5187,6 +5537,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Armors?.ToString(fg);
             Books?.ToString(fg);
             Clothes?.ToString(fg);
+            Containers?.ToString(fg);
+            Doors?.ToString(fg);
         }
         #endregion
 
@@ -5215,6 +5567,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Armors = new MaskItem<Exception, Group_ErrorMask<Armor_ErrorMask>>(this.Armors.Overall.Combine(rhs.Armors.Overall), ((IErrorMask<Group_ErrorMask<Armor_ErrorMask>>)this.Armors.Specific).Combine(rhs.Armors.Specific));
             ret.Books = new MaskItem<Exception, Group_ErrorMask<Book_ErrorMask>>(this.Books.Overall.Combine(rhs.Books.Overall), ((IErrorMask<Group_ErrorMask<Book_ErrorMask>>)this.Books.Specific).Combine(rhs.Books.Specific));
             ret.Clothes = new MaskItem<Exception, Group_ErrorMask<Clothing_ErrorMask>>(this.Clothes.Overall.Combine(rhs.Clothes.Overall), ((IErrorMask<Group_ErrorMask<Clothing_ErrorMask>>)this.Clothes.Specific).Combine(rhs.Clothes.Specific));
+            ret.Containers = new MaskItem<Exception, Group_ErrorMask<Container_ErrorMask>>(this.Containers.Overall.Combine(rhs.Containers.Overall), ((IErrorMask<Group_ErrorMask<Container_ErrorMask>>)this.Containers.Specific).Combine(rhs.Containers.Specific));
+            ret.Doors = new MaskItem<Exception, Group_ErrorMask<Door_ErrorMask>>(this.Doors.Overall.Combine(rhs.Doors.Overall), ((IErrorMask<Group_ErrorMask<Door_ErrorMask>>)this.Doors.Specific).Combine(rhs.Doors.Specific));
             return ret;
         }
         public static OblivionMod_ErrorMask Combine(OblivionMod_ErrorMask lhs, OblivionMod_ErrorMask rhs)
@@ -5249,6 +5603,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<CopyOption, Group_CopyMask<Armor_CopyMask>> Armors;
         public MaskItem<CopyOption, Group_CopyMask<Book_CopyMask>> Books;
         public MaskItem<CopyOption, Group_CopyMask<Clothing_CopyMask>> Clothes;
+        public MaskItem<CopyOption, Group_CopyMask<Container_CopyMask>> Containers;
+        public MaskItem<CopyOption, Group_CopyMask<Door_CopyMask>> Doors;
         #endregion
 
     }

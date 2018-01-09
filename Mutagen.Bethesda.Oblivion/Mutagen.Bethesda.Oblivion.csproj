@@ -102,6 +102,12 @@
     <Compile Include="Records\Major Records\Class_LoquiGenerated.cs">
       <DependentUpon>Class.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Container.cs">
+      <DependentUpon>Container.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Door.cs">
+      <DependentUpon>Door.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Enchantment.cs">
       <DependentUpon>Enchantment.xml</DependentUpon>
     </Compile>
@@ -327,6 +333,21 @@
     <Compile Include="Records\Major Records\ClothingAbstract_LoquiGenerated.cs">
       <DependentUpon>ClothingAbstract.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Container_LoquiGenerated.cs">
+      <DependentUpon>Container.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ContainerItem_LoquiGenerated.cs">
+      <DependentUpon>Container.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ItemAbstract_LoquiGenerated.cs">
+      <DependentUpon>ItemAbstract.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Door_LoquiGenerated.cs">
+      <DependentUpon>Door.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Worldspace_LoquiGenerated.cs">
+      <DependentUpon>Worldspace.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Records\Common Subrecords\Effect.xml">
@@ -371,6 +392,12 @@
     <Content Include="Records\Major Records\ClothingAbstract.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Records\Major Records\Container.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\Door.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Records\Major Records\EffectShader.xml">
       <SubType>Designer</SubType>
     </Content>
@@ -393,6 +420,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Hair.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\ItemAbstract.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\LandTexture.xml">
@@ -423,6 +453,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Spell.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\Worldspace.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\OblivionMod.xml">

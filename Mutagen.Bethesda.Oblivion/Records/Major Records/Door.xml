@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Door" objType="Record" recordType="DOOR" baseClass="Bethesda.NamedMajorRecord" GUID="2430f9e3-8270-4b86-b1e2-03757c4a0f93" ID="74">
+    <Fields>
+      <RefDirect name="Model" refName="Model" />
+      <FormID name="Script" refName="Script" recordType="SCRI" />
+      <FormID name="OpenSound" refName="Sound" recordType="SNAM" />
+      <FormID name="CloseSound" refName="Sound" recordType="ANAM" />
+      <FormID name="LoopSound" refName="Sound" recordType="BNAM" />
+      <Enum name="Flags" enumName="Door.DoorFlag" byteLength="1" recordType="FNAM" />
+      <List name="RandomTeleportDestinations">
+        <FormID recordType="TNAM" refName="Worldspace" />
+      </List>
+    </Fields>
+  </Object>
+</Loqui>

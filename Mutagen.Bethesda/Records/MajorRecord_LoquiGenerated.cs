@@ -990,12 +990,15 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType ENAM_HEADER = new RecordType("ENAM");
         public static readonly RecordType ANAM_HEADER = new RecordType("ANAM");
         public static readonly RecordType BMDT_HEADER = new RecordType("BMDT");
+        public static readonly RecordType CONT_HEADER = new RecordType("CONT");
+        public static readonly RecordType DOOR_HEADER = new RecordType("DOOR");
         public static readonly RecordType ENCH_HEADER = new RecordType("ENCH");
         public static readonly RecordType EYES_HEADER = new RecordType("EYES");
         public static readonly RecordType FACT_HEADER = new RecordType("FACT");
         public static readonly RecordType HAIR_HEADER = new RecordType("HAIR");
         public static readonly RecordType MGEF_HEADER = new RecordType("MGEF");
         public static readonly RecordType RACE_HEADER = new RecordType("RACE");
+        public static readonly RecordType WRLD_HEADER = new RecordType("WRLD");
         public static readonly RecordType ARMO_HEADER = new RecordType("ARMO");
         public static readonly RecordType CLOT_HEADER = new RecordType("CLOT");
         public static readonly RecordType LVSP_HEADER = new RecordType("LVSP");
@@ -1027,12 +1030,15 @@ namespace Mutagen.Bethesda.Internals
                         ENAM_HEADER,
                         ANAM_HEADER,
                         BMDT_HEADER,
+                        CONT_HEADER,
+                        DOOR_HEADER,
                         ENCH_HEADER,
                         EYES_HEADER,
                         FACT_HEADER,
                         HAIR_HEADER,
                         MGEF_HEADER,
                         RACE_HEADER,
+                        WRLD_HEADER,
                         ARMO_HEADER,
                         CLOT_HEADER,
                         LVSP_HEADER,

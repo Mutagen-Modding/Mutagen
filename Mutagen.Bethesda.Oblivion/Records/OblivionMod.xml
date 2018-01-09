@@ -105,6 +105,16 @@
           <GenericSpecification Definition="Clothing" TypeToSpecify="T" />
         </Direct>
       </Ref>
+      <Ref name="Containers">
+        <Direct refName="Group" >
+          <GenericSpecification Definition="Container" TypeToSpecify="T" />
+        </Direct>
+      </Ref>
+      <Ref name="Doors">
+        <Direct refName="Group" >
+          <GenericSpecification Definition="Door" TypeToSpecify="T" />
+        </Direct>
+      </Ref>
     </Fields>
   </Object>
 </Loqui>
