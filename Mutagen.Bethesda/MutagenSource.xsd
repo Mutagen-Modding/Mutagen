@@ -229,10 +229,18 @@
     </xs:complexContent>
   </xs:complexType>
 
+  <xs:complexType name="DataTypeFieldRangeType">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="NamedFieldOptions" minOccurs="0" maxOccurs="unbounded" />
+    </xs:choice>
+    <xs:attribute name="Min" use="required" />
+  </xs:complexType>
+  
   <xs:complexType name="DataTypeFields" >
     <xs:choice minOccurs="0" maxOccurs="unbounded" >
       <xs:group ref="NamedFieldOptions" minOccurs="0" maxOccurs="unbounded" />
       <xs:element name="Break" />
+      <xs:element name="Range" type="DataTypeFieldRangeType" />
     </xs:choice>
   </xs:complexType>
   

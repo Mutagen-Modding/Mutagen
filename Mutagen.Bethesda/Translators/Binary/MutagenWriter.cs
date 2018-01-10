@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace Mutagen.Bethesda.Binary
 {
@@ -117,6 +118,14 @@ namespace Mutagen.Bethesda.Binary
                 bytes[i] = (byte)c;
             }
             this.writer.Write(bytes);
+        }
+
+        public void Write(Color color)
+        {
+            this.writer.Write(color.R);
+            this.writer.Write(color.G);
+            this.writer.Write(color.B);
+            this.writer.Write(byte.MinValue);
         }
 
         public void Dispose()

@@ -13,6 +13,7 @@ namespace Mutagen.Bethesda.Binary
         public static bool ErrorOnFinalPosition;
 
         public readonly MutagenReader Reader;
+        public readonly FileLocation InitialPosition;
         public readonly FileLocation FinalPosition;
         public readonly bool SnapToFinalPosition;
 
@@ -22,12 +23,14 @@ namespace Mutagen.Bethesda.Binary
             get => this.Reader.Position;
             set => this.Reader.Position = value;
         }
-        public ContentLength Length => this.FinalPosition - this.Position;
+        public ContentLength TotalLength => this.FinalPosition - this.InitialPosition;
+        public ContentLength RemainingLength => this.FinalPosition - this.Position;
 
         [DebuggerStepThrough]
         public MutagenFrame(MutagenReader reader)
         {
             this.Reader = reader;
+            this.InitialPosition = reader.Position;
             this.FinalPosition = reader.Length;
             this.SnapToFinalPosition = true;
         }
@@ -38,6 +41,7 @@ namespace Mutagen.Bethesda.Binary
             FileLocation finalPosition)
         {
             this.Reader = reader;
+            this.InitialPosition = reader.Position;
             this.FinalPosition = finalPosition;
             this.SnapToFinalPosition = true;
         }
@@ -49,6 +53,7 @@ namespace Mutagen.Bethesda.Binary
             bool snapToFinalPosition)
         {
             this.Reader = reader;
+            this.InitialPosition = reader.Position;
             this.FinalPosition = finalPosition;
             this.SnapToFinalPosition = snapToFinalPosition;
         }
@@ -72,12 +77,12 @@ namespace Mutagen.Bethesda.Binary
             {
                 if (Complete)
                 {
-                    ex = new ArgumentException($"Frame was complete, so did not have any remaining bytes to parse. At {this.Position}. Desired {length} more bytes. {this.Length} past the final position {this.FinalPosition}.");
+                    ex = new ArgumentException($"Frame was complete, so did not have any remaining bytes to parse. At {this.Position}. Desired {length} more bytes. {this.RemainingLength} past the final position {this.FinalPosition}.");
                     return false;
                 }
                 else
                 {
-                    ex = new ArgumentException($"Frame did not have enough remaining bytes to parse. At {this.Position}. Desired {length} more bytes.  Only {this.Length} left before final position {this.FinalPosition}.");
+                    ex = new ArgumentException($"Frame did not have enough remaining bytes to parse. At {this.Position}. Desired {length} more bytes.  Only {this.RemainingLength} left before final position {this.FinalPosition}.");
                     return false;
                 }
             }
@@ -110,7 +115,7 @@ namespace Mutagen.Bethesda.Binary
 
         public override string ToString()
         {
-            return $"{this.Position} - {this.FinalPosition - 1} ({this.Length})";
+            return $"{this.Position} - {this.FinalPosition - 1} ({this.RemainingLength})";
         }
 
         [DebuggerStepThrough]

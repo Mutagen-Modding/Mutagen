@@ -306,7 +306,7 @@ namespace Mutagen.Bethesda.Binary
         protected E ParseValue(MutagenFrame reader)
         {
             int i;
-            switch (reader.Length.Value)
+            switch (reader.RemainingLength.Value)
             {
                 case 1:
                     i = reader.Reader.ReadByte();

@@ -32,6 +32,7 @@ namespace Mutagen.Bethesda.Generation
             gen.AddTypeAssociation<SpecialParseType>("SpecialParse");
             gen.ReplaceTypeAssociation<Loqui.Generation.EnumType, Mutagen.Bethesda.Generation.EnumType>();
             gen.ReplaceTypeAssociation<Loqui.Generation.StringType, Mutagen.Bethesda.Generation.StringType>();
+            Loqui.Generation.Presentation.Utility.AddToLoquiGenerator(gen);
 
             var bethesdaProto = gen.AddProtocol(
                 new ProtocolGeneration(

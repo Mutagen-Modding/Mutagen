@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Loqui;
 using Mutagen.Bethesda.Binary;
 using System.IO;
+using System.Windows.Media;
 
 namespace Mutagen.Bethesda.Generation
 {
@@ -56,6 +57,7 @@ namespace Mutagen.Bethesda.Generation
             this._typeGenerations[typeof(ByteArrayType)] = new ByteArrayTranslationGeneration();
             this._typeGenerations[typeof(BufferType)] = new BufferBinaryTranslationGeneration();
             this._typeGenerations[typeof(DataType)] = new DataBinaryTranslationModule();
+            this._typeGenerations[typeof(ColorType)] = new PrimitiveBinaryTranslationGeneration<Color>();
             this._typeGenerations[typeof(SpecialParseType)] = new SpecialParseTranslationGeneration();
             this.MainAPI = new TranslationModuleAPI(
                 writerAPI: new MethodAPI(
@@ -606,6 +608,7 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine($"using (var dataFrame = {frameAccessor}.Spawn(contentLength))");
                 using (new BraceWrapper(fg))
                 {
+                    bool isInRange = false;
                     for (int i = 0; i < set.SubFields.Count; i++)
                     {
                         var subfield = set.SubFields[i];
@@ -619,7 +622,28 @@ namespace Mutagen.Bethesda.Generation
                         {
                             fg.AppendLine($"if (dataFrame.Complete) return TryGet<{obj.FieldIndexName}?>.Succeed({set.SubFields.TryGet(i - 1)?.IndexEnumName ?? "null"});");
                         }
+                        bool hasRange = set.RangeIndices.Any((r) => r.Item1.IsInRange(i));
+                        var range = set.RangeIndices.FirstOrDefault((r) => r.Item1.IsInRange(i));
+                        if (hasRange && !isInRange)
+                        {
+                            isInRange = true;
+                            fg.AppendLine($"if (dataFrame.TotalLength > {range.Item2})");
+                            fg.AppendLine("{");
+                            fg.Depth++;
+                        }
+                        if (!hasRange && isInRange)
+                        {
+                            isInRange = false;
+                            fg.Depth--;
+                            fg.AppendLine("}");
+                        }
                         GenerateFillSnippet(obj, fg, subfield, subGenerator, "dataFrame");
+                    }
+                    if (isInRange)
+                    {
+                        isInRange = false;
+                        fg.AppendLine("}");
+                        fg.Depth--;
                     }
                 }
                 return;

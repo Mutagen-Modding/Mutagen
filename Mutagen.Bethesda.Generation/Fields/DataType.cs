@@ -7,12 +7,14 @@ using System.Threading.Tasks;
 using Loqui;
 using System.Xml.Linq;
 using Mutagen.Bethesda.Generation;
+using Noggog;
 
 namespace Mutagen.Bethesda.Generation
 {
     public class DataType : SetMarkerType
     {
         public HashSet<int> BreakIndices = new HashSet<int>();
+        public List<(RangeInt32, int)> RangeIndices = new List<(RangeInt32, int)>();
 
         public override async Task Load(XElement node, bool requireName = true)
         {
@@ -28,6 +30,7 @@ namespace Mutagen.Bethesda.Generation
             var fieldsNode = node.Element(XName.Get(Loqui.Generation.Constants.FIELDS, LoquiGenerator.Namespace));
             if (fieldsNode != null)
             {
+                TryGet<TypeGeneration> typeGen;
                 foreach (var fieldNode in fieldsNode.Elements())
                 {
                     if (fieldNode.Name.LocalName.Equals("Break"))
@@ -35,7 +38,26 @@ namespace Mutagen.Bethesda.Generation
                         BreakIndices.Add(this.SubFields.Count);
                         continue;
                     }
-                    var typeGen = await this.ObjectGen.LoadField(fieldNode, true);
+                    if (fieldNode.Name.LocalName.Equals("Range"))
+                    {
+                        var curIndex = this.SubFields.Count;
+                        foreach (var subFieldNode in fieldNode.Elements())
+                        {
+                            typeGen = await this.ObjectGen.LoadField(subFieldNode, true);
+                            if (typeGen.Succeeded)
+                            {
+                                this.SubFields.Add(typeGen.Value);
+                            }
+                        }
+                        this.RangeIndices.Add(
+                            (new RangeInt32(
+                                curIndex,
+                                this.SubFields.Count - 1),
+                            fieldNode.GetAttribute<int>("Min", throwException: true)));
+                        continue;
+                    }
+
+                    typeGen = await this.ObjectGen.LoadField(fieldNode, true);
                     if (typeGen.Succeeded)
                     {
                         this.SubFields.Add(typeGen.Value);

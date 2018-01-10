@@ -12,6 +12,8 @@ using Loqui;
 using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Oblivion;
+using System.Windows.Media;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
 using System.Xml;
@@ -38,6 +40,151 @@ namespace Mutagen.Bethesda.Oblivion
         partial void CustomCtor();
         #endregion
 
+        #region Model
+        private readonly INotifyingSetItem<Model> _Model = new NotifyingSetItem<Model>();
+        public INotifyingSetItem<Model> Model_Property => this._Model;
+        Model ILightGetter.Model => this.Model;
+        public Model Model { get => _Model.Item; set => _Model.Item = value; }
+        INotifyingSetItem<Model> ILight.Model_Property => this.Model_Property;
+        INotifyingSetItemGetter<Model> ILightGetter.Model_Property => this.Model_Property;
+        #endregion
+        #region Script
+        public FormIDSetLink<Script> Script_Property { get; } = new FormIDSetLink<Script>();
+        public Script Script { get => Script_Property.Item; set => Script_Property.Item = value; }
+        FormIDSetLink<Script> ILightGetter.Script_Property => this.Script_Property;
+        #endregion
+        #region Name
+        protected readonly INotifyingSetItem<String> _Name = NotifyingSetItem.Factory<String>(markAsSet: false);
+        public INotifyingSetItem<String> Name_Property => _Name;
+        public String Name
+        {
+            get => this._Name.Item;
+            set => this._Name.Set(value);
+        }
+        INotifyingSetItem<String> ILight.Name_Property => this.Name_Property;
+        INotifyingSetItemGetter<String> ILightGetter.Name_Property => this.Name_Property;
+        #endregion
+        #region Icon
+        protected readonly INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
+        public INotifyingSetItem<FilePath> Icon_Property => _Icon;
+        public FilePath Icon
+        {
+            get => this._Icon.Item;
+            set => this._Icon.Set(value);
+        }
+        INotifyingSetItem<FilePath> ILight.Icon_Property => this.Icon_Property;
+        INotifyingSetItemGetter<FilePath> ILightGetter.Icon_Property => this.Icon_Property;
+        #endregion
+        #region Time
+        protected readonly INotifyingSetItem<Int32> _Time = NotifyingSetItem.Factory<Int32>(
+            defaultVal: -1,
+            markAsSet: false);
+        public INotifyingSetItem<Int32> Time_Property => _Time;
+        public Int32 Time
+        {
+            get => this._Time.Item;
+            set => this._Time.Set(value);
+        }
+        INotifyingSetItem<Int32> ILight.Time_Property => this.Time_Property;
+        INotifyingSetItemGetter<Int32> ILightGetter.Time_Property => this.Time_Property;
+        #endregion
+        #region Radius
+        protected readonly INotifyingSetItem<UInt32> _Radius = NotifyingSetItem.Factory<UInt32>(markAsSet: false);
+        public INotifyingSetItem<UInt32> Radius_Property => _Radius;
+        public UInt32 Radius
+        {
+            get => this._Radius.Item;
+            set => this._Radius.Set(value);
+        }
+        INotifyingSetItem<UInt32> ILight.Radius_Property => this.Radius_Property;
+        INotifyingSetItemGetter<UInt32> ILightGetter.Radius_Property => this.Radius_Property;
+        #endregion
+        #region Color
+        protected readonly INotifyingSetItem<Color> _Color = NotifyingSetItem.Factory<Color>(markAsSet: false);
+        public INotifyingSetItem<Color> Color_Property => _Color;
+        public Color Color
+        {
+            get => this._Color.Item;
+            set => this._Color.Set(value);
+        }
+        INotifyingSetItem<Color> ILight.Color_Property => this.Color_Property;
+        INotifyingSetItemGetter<Color> ILightGetter.Color_Property => this.Color_Property;
+        #endregion
+        #region Flags
+        protected readonly INotifyingSetItem<Light.LightFlag> _Flags = NotifyingSetItem.Factory<Light.LightFlag>(markAsSet: false);
+        public INotifyingSetItem<Light.LightFlag> Flags_Property => _Flags;
+        public Light.LightFlag Flags
+        {
+            get => this._Flags.Item;
+            set => this._Flags.Set(value);
+        }
+        INotifyingSetItem<Light.LightFlag> ILight.Flags_Property => this.Flags_Property;
+        INotifyingSetItemGetter<Light.LightFlag> ILightGetter.Flags_Property => this.Flags_Property;
+        #endregion
+        #region FalloffExponent
+        protected readonly INotifyingSetItem<Single> _FalloffExponent = NotifyingSetItem.Factory<Single>(
+            defaultVal: 1,
+            markAsSet: false);
+        public INotifyingSetItem<Single> FalloffExponent_Property => _FalloffExponent;
+        public Single FalloffExponent
+        {
+            get => this._FalloffExponent.Item;
+            set => this._FalloffExponent.Set(value);
+        }
+        INotifyingSetItem<Single> ILight.FalloffExponent_Property => this.FalloffExponent_Property;
+        INotifyingSetItemGetter<Single> ILightGetter.FalloffExponent_Property => this.FalloffExponent_Property;
+        #endregion
+        #region FOV
+        protected readonly INotifyingSetItem<Single> _FOV = NotifyingSetItem.Factory<Single>(
+            defaultVal: 90,
+            markAsSet: false);
+        public INotifyingSetItem<Single> FOV_Property => _FOV;
+        public Single FOV
+        {
+            get => this._FOV.Item;
+            set => this._FOV.Set(value);
+        }
+        INotifyingSetItem<Single> ILight.FOV_Property => this.FOV_Property;
+        INotifyingSetItemGetter<Single> ILightGetter.FOV_Property => this.FOV_Property;
+        #endregion
+        #region Value
+        protected readonly INotifyingSetItem<UInt32> _Value = NotifyingSetItem.Factory<UInt32>(markAsSet: false);
+        public INotifyingSetItem<UInt32> Value_Property => _Value;
+        public UInt32 Value
+        {
+            get => this._Value.Item;
+            set => this._Value.Set(value);
+        }
+        INotifyingSetItem<UInt32> ILight.Value_Property => this.Value_Property;
+        INotifyingSetItemGetter<UInt32> ILightGetter.Value_Property => this.Value_Property;
+        #endregion
+        #region Weight
+        protected readonly INotifyingSetItem<Single> _Weight = NotifyingSetItem.Factory<Single>(markAsSet: false);
+        public INotifyingSetItem<Single> Weight_Property => _Weight;
+        public Single Weight
+        {
+            get => this._Weight.Item;
+            set => this._Weight.Set(value);
+        }
+        INotifyingSetItem<Single> ILight.Weight_Property => this.Weight_Property;
+        INotifyingSetItemGetter<Single> ILightGetter.Weight_Property => this.Weight_Property;
+        #endregion
+        #region Fade
+        protected readonly INotifyingSetItem<Single> _Fade = NotifyingSetItem.Factory<Single>(markAsSet: false);
+        public INotifyingSetItem<Single> Fade_Property => _Fade;
+        public Single Fade
+        {
+            get => this._Fade.Item;
+            set => this._Fade.Set(value);
+        }
+        INotifyingSetItem<Single> ILight.Fade_Property => this.Fade_Property;
+        INotifyingSetItemGetter<Single> ILightGetter.Fade_Property => this.Fade_Property;
+        #endregion
+        #region Sound
+        public FormIDSetLink<Sound> Sound_Property { get; } = new FormIDSetLink<Sound>();
+        public Sound Sound { get => Sound_Property.Item; set => Sound_Property.Item = value; }
+        FormIDSetLink<Sound> ILightGetter.Sound_Property => this.Sound_Property;
+        #endregion
 
         #region Loqui Getter Interface
 
@@ -94,12 +241,138 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (Model_Property.HasBeenSet != rhs.Model_Property.HasBeenSet) return false;
+            if (Model_Property.HasBeenSet)
+            {
+                if (!object.Equals(Model, rhs.Model)) return false;
+            }
+            if (Script_Property.HasBeenSet != rhs.Script_Property.HasBeenSet) return false;
+            if (Script_Property.HasBeenSet)
+            {
+                if (Script != rhs.Script) return false;
+            }
+            if (Name_Property.HasBeenSet != rhs.Name_Property.HasBeenSet) return false;
+            if (Name_Property.HasBeenSet)
+            {
+                if (!object.Equals(Name, rhs.Name)) return false;
+            }
+            if (Icon_Property.HasBeenSet != rhs.Icon_Property.HasBeenSet) return false;
+            if (Icon_Property.HasBeenSet)
+            {
+                if (!object.Equals(Icon, rhs.Icon)) return false;
+            }
+            if (Time_Property.HasBeenSet != rhs.Time_Property.HasBeenSet) return false;
+            if (Time_Property.HasBeenSet)
+            {
+                if (Time != rhs.Time) return false;
+            }
+            if (Radius_Property.HasBeenSet != rhs.Radius_Property.HasBeenSet) return false;
+            if (Radius_Property.HasBeenSet)
+            {
+                if (Radius != rhs.Radius) return false;
+            }
+            if (Color_Property.HasBeenSet != rhs.Color_Property.HasBeenSet) return false;
+            if (Color_Property.HasBeenSet)
+            {
+                if (Color != rhs.Color) return false;
+            }
+            if (Flags_Property.HasBeenSet != rhs.Flags_Property.HasBeenSet) return false;
+            if (Flags_Property.HasBeenSet)
+            {
+                if (Flags != rhs.Flags) return false;
+            }
+            if (FalloffExponent_Property.HasBeenSet != rhs.FalloffExponent_Property.HasBeenSet) return false;
+            if (FalloffExponent_Property.HasBeenSet)
+            {
+                if (FalloffExponent != rhs.FalloffExponent) return false;
+            }
+            if (FOV_Property.HasBeenSet != rhs.FOV_Property.HasBeenSet) return false;
+            if (FOV_Property.HasBeenSet)
+            {
+                if (FOV != rhs.FOV) return false;
+            }
+            if (Value_Property.HasBeenSet != rhs.Value_Property.HasBeenSet) return false;
+            if (Value_Property.HasBeenSet)
+            {
+                if (Value != rhs.Value) return false;
+            }
+            if (Weight_Property.HasBeenSet != rhs.Weight_Property.HasBeenSet) return false;
+            if (Weight_Property.HasBeenSet)
+            {
+                if (Weight != rhs.Weight) return false;
+            }
+            if (Fade_Property.HasBeenSet != rhs.Fade_Property.HasBeenSet) return false;
+            if (Fade_Property.HasBeenSet)
+            {
+                if (Fade != rhs.Fade) return false;
+            }
+            if (Sound_Property.HasBeenSet != rhs.Sound_Property.HasBeenSet) return false;
+            if (Sound_Property.HasBeenSet)
+            {
+                if (Sound != rhs.Sound) return false;
+            }
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
+            if (Model_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Model).CombineHashCode(ret);
+            }
+            if (Script_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Script).CombineHashCode(ret);
+            }
+            if (Name_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
+            }
+            if (Icon_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Icon).CombineHashCode(ret);
+            }
+            if (Time_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Time).CombineHashCode(ret);
+            }
+            if (Radius_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Radius).CombineHashCode(ret);
+            }
+            if (Color_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Color).CombineHashCode(ret);
+            }
+            if (Flags_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
+            }
+            if (FalloffExponent_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(FalloffExponent).CombineHashCode(ret);
+            }
+            if (FOV_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(FOV).CombineHashCode(ret);
+            }
+            if (Value_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Value).CombineHashCode(ret);
+            }
+            if (Weight_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Weight).CombineHashCode(ret);
+            }
+            if (Fade_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Fade).CombineHashCode(ret);
+            }
+            if (Sound_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Sound).CombineHashCode(ret);
+            }
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -402,6 +675,91 @@ namespace Mutagen.Bethesda.Oblivion
         {
             switch (name)
             {
+                case "Model":
+                    item._Model.SetIfSucceeded(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)Light_FieldIndex.Model,
+                        errorMask: errorMask));
+                    break;
+                case "Script":
+                    item.Script_Property.SetIfSucceeded(RawFormIDXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)Light_FieldIndex.Script,
+                        errorMask: errorMask));
+                    break;
+                case "Name":
+                    item._Name.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
+                        root,
+                        fieldIndex: (int)Light_FieldIndex.Name,
+                        errorMask: errorMask));
+                    break;
+                case "Icon":
+                    item._Icon.SetIfSucceeded(FilePathXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)Light_FieldIndex.Icon,
+                        errorMask: errorMask));
+                    break;
+                case "Time":
+                    item._Time.SetIfSucceeded(Int32XmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)Light_FieldIndex.Time,
+                        errorMask: errorMask));
+                    break;
+                case "Radius":
+                    item._Radius.SetIfSucceeded(UInt32XmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)Light_FieldIndex.Radius,
+                        errorMask: errorMask));
+                    break;
+                case "Color":
+                    item._Color.SetIfSucceeded(ColorXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)Light_FieldIndex.Color,
+                        errorMask: errorMask));
+                    break;
+                case "Flags":
+                    item._Flags.SetIfSucceeded(EnumXmlTranslation<Light.LightFlag>.Instance.Parse(
+                        root,
+                        nullable: false,
+                        fieldIndex: (int)Light_FieldIndex.Flags,
+                        errorMask: errorMask).Bubble((o) => o.Value));
+                    break;
+                case "FalloffExponent":
+                    item._FalloffExponent.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)Light_FieldIndex.FalloffExponent,
+                        errorMask: errorMask));
+                    break;
+                case "FOV":
+                    item._FOV.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)Light_FieldIndex.FOV,
+                        errorMask: errorMask));
+                    break;
+                case "Value":
+                    item._Value.SetIfSucceeded(UInt32XmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)Light_FieldIndex.Value,
+                        errorMask: errorMask));
+                    break;
+                case "Weight":
+                    item._Weight.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)Light_FieldIndex.Weight,
+                        errorMask: errorMask));
+                    break;
+                case "Fade":
+                    item._Fade.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)Light_FieldIndex.Fade,
+                        errorMask: errorMask));
+                    break;
+                case "Sound":
+                    item.Sound_Property.SetIfSucceeded(RawFormIDXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)Light_FieldIndex.Sound,
+                        errorMask: errorMask));
+                    break;
                 default:
                     MajorRecord.Fill_XML_Internal(
                         item: item,
@@ -699,6 +1057,15 @@ namespace Mutagen.Bethesda.Oblivion
                         item: ret,
                         frame: frame,
                         errorMask: errorMask);
+                    while (!frame.Complete)
+                    {
+                        var parsed = Fill_Binary_RecordTypes(
+                            item: ret,
+                            frame: frame,
+                            errorMask: errorMask,
+                            recordTypeConverter: recordTypeConverter);
+                        if (parsed.Failed) break;
+                    }
                 }
             }
             catch (Exception ex)
@@ -718,6 +1085,110 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 frame: frame,
                 errorMask: errorMask);
+        }
+
+        protected static TryGet<Light_FieldIndex?> Fill_Binary_RecordTypes(
+            Light item,
+            MutagenFrame frame,
+            Func<Light_ErrorMask> errorMask,
+            RecordTypeConverter recordTypeConverter = null)
+        {
+            var nextRecordType = HeaderTranslation.GetNextSubRecordType(
+                frame: frame,
+                contentLength: out var contentLength,
+                recordTypeConverter: recordTypeConverter);
+            switch (nextRecordType.Type)
+            {
+                case "MODL":
+                    item._Model.SetIfSucceeded(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
+                        frame: frame.Spawn(snapToFinalPosition: false),
+                        fieldIndex: (int)Light_FieldIndex.Model,
+                        errorMask: errorMask));
+                    return TryGet<Light_FieldIndex?>.Succeed(Light_FieldIndex.Model);
+                case "SCRI":
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
+                        frame: frame.Spawn(contentLength),
+                        fieldIndex: (int)Light_FieldIndex.Script,
+                        errorMask: errorMask));
+                    return TryGet<Light_FieldIndex?>.Succeed(Light_FieldIndex.Script);
+                case "FULL":
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    var NametryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.Spawn(contentLength),
+                        fieldIndex: (int)Light_FieldIndex.Name,
+                        errorMask: errorMask);
+                    item._Name.SetIfSucceeded(NametryGet);
+                    return TryGet<Light_FieldIndex?>.Succeed(Light_FieldIndex.Name);
+                case "ICON":
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    item._Icon.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
+                        frame: frame.Spawn(contentLength),
+                        fieldIndex: (int)Light_FieldIndex.Icon,
+                        errorMask: errorMask));
+                    return TryGet<Light_FieldIndex?>.Succeed(Light_FieldIndex.Icon);
+                case "DATA":
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    using (var dataFrame = frame.Spawn(contentLength))
+                    {
+                        item._Time.SetIfSucceeded(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            fieldIndex: (int)Light_FieldIndex.Time,
+                            errorMask: errorMask));
+                        item._Radius.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            fieldIndex: (int)Light_FieldIndex.Radius,
+                            errorMask: errorMask));
+                        item._Color.SetIfSucceeded(Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            fieldIndex: (int)Light_FieldIndex.Color,
+                            errorMask: errorMask));
+                        var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Light.LightFlag>.Instance.Parse(
+                            frame: dataFrame.Spawn(new ContentLength(4)),
+                            fieldIndex: (int)Light_FieldIndex.Flags,
+                            errorMask: errorMask);
+                        item._Flags.SetIfSucceeded(FlagstryGet);
+                        if (dataFrame.TotalLength > 24)
+                        {
+                            item._FalloffExponent.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                                frame: dataFrame,
+                                fieldIndex: (int)Light_FieldIndex.FalloffExponent,
+                                errorMask: errorMask));
+                            item._FOV.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                                frame: dataFrame,
+                                fieldIndex: (int)Light_FieldIndex.FOV,
+                                errorMask: errorMask));
+                        }
+                        item._Value.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            fieldIndex: (int)Light_FieldIndex.Value,
+                            errorMask: errorMask));
+                        item._Weight.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            fieldIndex: (int)Light_FieldIndex.Weight,
+                            errorMask: errorMask));
+                    }
+                    return TryGet<Light_FieldIndex?>.Succeed(Light_FieldIndex.Weight);
+                case "FNAM":
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    item._Fade.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: frame.Spawn(contentLength),
+                        fieldIndex: (int)Light_FieldIndex.Fade,
+                        errorMask: errorMask));
+                    return TryGet<Light_FieldIndex?>.Succeed(Light_FieldIndex.Fade);
+                case "SNAM":
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    item.Sound_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
+                        frame: frame.Spawn(contentLength),
+                        fieldIndex: (int)Light_FieldIndex.Sound,
+                        errorMask: errorMask));
+                    return TryGet<Light_FieldIndex?>.Succeed(Light_FieldIndex.Sound);
+                default:
+                    return MajorRecord.Fill_Binary_RecordTypes(
+                        item: item,
+                        frame: frame,
+                        errorMask: errorMask).Bubble((i) => LightCommon.ConvertFieldIndex(i));
+            }
         }
 
         #endregion
@@ -804,6 +1275,76 @@ namespace Mutagen.Bethesda.Oblivion
             Light_FieldIndex enu = (Light_FieldIndex)index;
             switch (enu)
             {
+                case Light_FieldIndex.Model:
+                    this._Model.Set(
+                        (Model)obj,
+                        cmds);
+                    break;
+                case Light_FieldIndex.Script:
+                    this.Script_Property.Set(
+                        (FormIDSetLink<Script>)obj,
+                        cmds);
+                    break;
+                case Light_FieldIndex.Name:
+                    this._Name.Set(
+                        (String)obj,
+                        cmds);
+                    break;
+                case Light_FieldIndex.Icon:
+                    this._Icon.Set(
+                        (FilePath)obj,
+                        cmds);
+                    break;
+                case Light_FieldIndex.Time:
+                    this._Time.Set(
+                        (Int32)obj,
+                        cmds);
+                    break;
+                case Light_FieldIndex.Radius:
+                    this._Radius.Set(
+                        (UInt32)obj,
+                        cmds);
+                    break;
+                case Light_FieldIndex.Color:
+                    this._Color.Set(
+                        (Color)obj,
+                        cmds);
+                    break;
+                case Light_FieldIndex.Flags:
+                    this._Flags.Set(
+                        (Light.LightFlag)obj,
+                        cmds);
+                    break;
+                case Light_FieldIndex.FalloffExponent:
+                    this._FalloffExponent.Set(
+                        (Single)obj,
+                        cmds);
+                    break;
+                case Light_FieldIndex.FOV:
+                    this._FOV.Set(
+                        (Single)obj,
+                        cmds);
+                    break;
+                case Light_FieldIndex.Value:
+                    this._Value.Set(
+                        (UInt32)obj,
+                        cmds);
+                    break;
+                case Light_FieldIndex.Weight:
+                    this._Weight.Set(
+                        (Single)obj,
+                        cmds);
+                    break;
+                case Light_FieldIndex.Fade:
+                    this._Fade.Set(
+                        (Single)obj,
+                        cmds);
+                    break;
+                case Light_FieldIndex.Sound:
+                    this.Sound_Property.Set(
+                        (FormIDSetLink<Sound>)obj,
+                        cmds);
+                    break;
                 default:
                     base.SetNthObject(index, obj, cmds);
                     break;
@@ -835,6 +1376,76 @@ namespace Mutagen.Bethesda.Oblivion
             }
             switch (enu)
             {
+                case Light_FieldIndex.Model:
+                    obj._Model.Set(
+                        (Model)pair.Value,
+                        null);
+                    break;
+                case Light_FieldIndex.Script:
+                    obj.Script_Property.Set(
+                        (FormIDSetLink<Script>)pair.Value,
+                        null);
+                    break;
+                case Light_FieldIndex.Name:
+                    obj._Name.Set(
+                        (String)pair.Value,
+                        null);
+                    break;
+                case Light_FieldIndex.Icon:
+                    obj._Icon.Set(
+                        (FilePath)pair.Value,
+                        null);
+                    break;
+                case Light_FieldIndex.Time:
+                    obj._Time.Set(
+                        (Int32)pair.Value,
+                        null);
+                    break;
+                case Light_FieldIndex.Radius:
+                    obj._Radius.Set(
+                        (UInt32)pair.Value,
+                        null);
+                    break;
+                case Light_FieldIndex.Color:
+                    obj._Color.Set(
+                        (Color)pair.Value,
+                        null);
+                    break;
+                case Light_FieldIndex.Flags:
+                    obj._Flags.Set(
+                        (Light.LightFlag)pair.Value,
+                        null);
+                    break;
+                case Light_FieldIndex.FalloffExponent:
+                    obj._FalloffExponent.Set(
+                        (Single)pair.Value,
+                        null);
+                    break;
+                case Light_FieldIndex.FOV:
+                    obj._FOV.Set(
+                        (Single)pair.Value,
+                        null);
+                    break;
+                case Light_FieldIndex.Value:
+                    obj._Value.Set(
+                        (UInt32)pair.Value,
+                        null);
+                    break;
+                case Light_FieldIndex.Weight:
+                    obj._Weight.Set(
+                        (Single)pair.Value,
+                        null);
+                    break;
+                case Light_FieldIndex.Fade:
+                    obj._Fade.Set(
+                        (Single)pair.Value,
+                        null);
+                    break;
+                case Light_FieldIndex.Sound:
+                    obj.Sound_Property.Set(
+                        (FormIDSetLink<Sound>)pair.Value,
+                        null);
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -850,10 +1461,118 @@ namespace Mutagen.Bethesda.Oblivion
     #region Interface
     public interface ILight : ILightGetter, IMajorRecord, ILoquiClass<ILight, ILightGetter>, ILoquiClass<Light, ILightGetter>
     {
+        new Model Model { get; set; }
+        new INotifyingSetItem<Model> Model_Property { get; }
+
+        new Script Script { get; set; }
+        new String Name { get; set; }
+        new INotifyingSetItem<String> Name_Property { get; }
+
+        new FilePath Icon { get; set; }
+        new INotifyingSetItem<FilePath> Icon_Property { get; }
+
+        new Int32 Time { get; set; }
+        new INotifyingSetItem<Int32> Time_Property { get; }
+
+        new UInt32 Radius { get; set; }
+        new INotifyingSetItem<UInt32> Radius_Property { get; }
+
+        new Color Color { get; set; }
+        new INotifyingSetItem<Color> Color_Property { get; }
+
+        new Light.LightFlag Flags { get; set; }
+        new INotifyingSetItem<Light.LightFlag> Flags_Property { get; }
+
+        new Single FalloffExponent { get; set; }
+        new INotifyingSetItem<Single> FalloffExponent_Property { get; }
+
+        new Single FOV { get; set; }
+        new INotifyingSetItem<Single> FOV_Property { get; }
+
+        new UInt32 Value { get; set; }
+        new INotifyingSetItem<UInt32> Value_Property { get; }
+
+        new Single Weight { get; set; }
+        new INotifyingSetItem<Single> Weight_Property { get; }
+
+        new Single Fade { get; set; }
+        new INotifyingSetItem<Single> Fade_Property { get; }
+
+        new Sound Sound { get; set; }
     }
 
     public interface ILightGetter : IMajorRecordGetter
     {
+        #region Model
+        Model Model { get; }
+        INotifyingSetItemGetter<Model> Model_Property { get; }
+
+        #endregion
+        #region Script
+        Script Script { get; }
+        FormIDSetLink<Script> Script_Property { get; }
+
+        #endregion
+        #region Name
+        String Name { get; }
+        INotifyingSetItemGetter<String> Name_Property { get; }
+
+        #endregion
+        #region Icon
+        FilePath Icon { get; }
+        INotifyingSetItemGetter<FilePath> Icon_Property { get; }
+
+        #endregion
+        #region Time
+        Int32 Time { get; }
+        INotifyingSetItemGetter<Int32> Time_Property { get; }
+
+        #endregion
+        #region Radius
+        UInt32 Radius { get; }
+        INotifyingSetItemGetter<UInt32> Radius_Property { get; }
+
+        #endregion
+        #region Color
+        Color Color { get; }
+        INotifyingSetItemGetter<Color> Color_Property { get; }
+
+        #endregion
+        #region Flags
+        Light.LightFlag Flags { get; }
+        INotifyingSetItemGetter<Light.LightFlag> Flags_Property { get; }
+
+        #endregion
+        #region FalloffExponent
+        Single FalloffExponent { get; }
+        INotifyingSetItemGetter<Single> FalloffExponent_Property { get; }
+
+        #endregion
+        #region FOV
+        Single FOV { get; }
+        INotifyingSetItemGetter<Single> FOV_Property { get; }
+
+        #endregion
+        #region Value
+        UInt32 Value { get; }
+        INotifyingSetItemGetter<UInt32> Value_Property { get; }
+
+        #endregion
+        #region Weight
+        Single Weight { get; }
+        INotifyingSetItemGetter<Single> Weight_Property { get; }
+
+        #endregion
+        #region Fade
+        Single Fade { get; }
+        INotifyingSetItemGetter<Single> Fade_Property { get; }
+
+        #endregion
+        #region Sound
+        Sound Sound { get; }
+        FormIDSetLink<Sound> Sound_Property { get; }
+
+        #endregion
 
     }
 
@@ -871,6 +1590,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Version = 2,
         EditorID = 3,
         RecordType = 4,
+        Model = 5,
+        Script = 6,
+        Name = 7,
+        Icon = 8,
+        Time = 9,
+        Radius = 10,
+        Color = 11,
+        Flags = 12,
+        FalloffExponent = 13,
+        FOV = 14,
+        Value = 15,
+        Weight = 16,
+        Fade = 17,
+        Sound = 18,
     }
     #endregion
 
@@ -888,7 +1621,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "c427a7d6-4fbf-45c8-80c7-f3c8f8646bc1";
 
-        public const ushort FieldCount = 0;
+        public const ushort FieldCount = 14;
 
         public static readonly Type MaskType = typeof(Light_Mask<>);
 
@@ -916,6 +1649,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (str.Upper)
             {
+                case "MODEL":
+                    return (ushort)Light_FieldIndex.Model;
+                case "SCRIPT":
+                    return (ushort)Light_FieldIndex.Script;
+                case "NAME":
+                    return (ushort)Light_FieldIndex.Name;
+                case "ICON":
+                    return (ushort)Light_FieldIndex.Icon;
+                case "TIME":
+                    return (ushort)Light_FieldIndex.Time;
+                case "RADIUS":
+                    return (ushort)Light_FieldIndex.Radius;
+                case "COLOR":
+                    return (ushort)Light_FieldIndex.Color;
+                case "FLAGS":
+                    return (ushort)Light_FieldIndex.Flags;
+                case "FALLOFFEXPONENT":
+                    return (ushort)Light_FieldIndex.FalloffExponent;
+                case "FOV":
+                    return (ushort)Light_FieldIndex.FOV;
+                case "VALUE":
+                    return (ushort)Light_FieldIndex.Value;
+                case "WEIGHT":
+                    return (ushort)Light_FieldIndex.Weight;
+                case "FADE":
+                    return (ushort)Light_FieldIndex.Fade;
+                case "SOUND":
+                    return (ushort)Light_FieldIndex.Sound;
                 default:
                     return null;
             }
@@ -926,6 +1687,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Light_FieldIndex enu = (Light_FieldIndex)index;
             switch (enu)
             {
+                case Light_FieldIndex.Model:
+                case Light_FieldIndex.Script:
+                case Light_FieldIndex.Name:
+                case Light_FieldIndex.Icon:
+                case Light_FieldIndex.Time:
+                case Light_FieldIndex.Radius:
+                case Light_FieldIndex.Color:
+                case Light_FieldIndex.Flags:
+                case Light_FieldIndex.FalloffExponent:
+                case Light_FieldIndex.FOV:
+                case Light_FieldIndex.Value:
+                case Light_FieldIndex.Weight:
+                case Light_FieldIndex.Fade:
+                case Light_FieldIndex.Sound:
+                    return false;
                 default:
                     return MajorRecord_Registration.GetNthIsEnumerable(index);
             }
@@ -936,6 +1712,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Light_FieldIndex enu = (Light_FieldIndex)index;
             switch (enu)
             {
+                case Light_FieldIndex.Model:
+                    return true;
+                case Light_FieldIndex.Script:
+                case Light_FieldIndex.Name:
+                case Light_FieldIndex.Icon:
+                case Light_FieldIndex.Time:
+                case Light_FieldIndex.Radius:
+                case Light_FieldIndex.Color:
+                case Light_FieldIndex.Flags:
+                case Light_FieldIndex.FalloffExponent:
+                case Light_FieldIndex.FOV:
+                case Light_FieldIndex.Value:
+                case Light_FieldIndex.Weight:
+                case Light_FieldIndex.Fade:
+                case Light_FieldIndex.Sound:
+                    return false;
                 default:
                     return MajorRecord_Registration.GetNthIsLoqui(index);
             }
@@ -946,6 +1738,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Light_FieldIndex enu = (Light_FieldIndex)index;
             switch (enu)
             {
+                case Light_FieldIndex.Model:
+                case Light_FieldIndex.Script:
+                case Light_FieldIndex.Name:
+                case Light_FieldIndex.Icon:
+                case Light_FieldIndex.Time:
+                case Light_FieldIndex.Radius:
+                case Light_FieldIndex.Color:
+                case Light_FieldIndex.Flags:
+                case Light_FieldIndex.FalloffExponent:
+                case Light_FieldIndex.FOV:
+                case Light_FieldIndex.Value:
+                case Light_FieldIndex.Weight:
+                case Light_FieldIndex.Fade:
+                case Light_FieldIndex.Sound:
+                    return false;
                 default:
                     return MajorRecord_Registration.GetNthIsSingleton(index);
             }
@@ -956,6 +1763,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Light_FieldIndex enu = (Light_FieldIndex)index;
             switch (enu)
             {
+                case Light_FieldIndex.Model:
+                    return "Model";
+                case Light_FieldIndex.Script:
+                    return "Script";
+                case Light_FieldIndex.Name:
+                    return "Name";
+                case Light_FieldIndex.Icon:
+                    return "Icon";
+                case Light_FieldIndex.Time:
+                    return "Time";
+                case Light_FieldIndex.Radius:
+                    return "Radius";
+                case Light_FieldIndex.Color:
+                    return "Color";
+                case Light_FieldIndex.Flags:
+                    return "Flags";
+                case Light_FieldIndex.FalloffExponent:
+                    return "FalloffExponent";
+                case Light_FieldIndex.FOV:
+                    return "FOV";
+                case Light_FieldIndex.Value:
+                    return "Value";
+                case Light_FieldIndex.Weight:
+                    return "Weight";
+                case Light_FieldIndex.Fade:
+                    return "Fade";
+                case Light_FieldIndex.Sound:
+                    return "Sound";
                 default:
                     return MajorRecord_Registration.GetNthName(index);
             }
@@ -966,6 +1801,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Light_FieldIndex enu = (Light_FieldIndex)index;
             switch (enu)
             {
+                case Light_FieldIndex.Model:
+                case Light_FieldIndex.Script:
+                case Light_FieldIndex.Name:
+                case Light_FieldIndex.Icon:
+                case Light_FieldIndex.Time:
+                case Light_FieldIndex.Radius:
+                case Light_FieldIndex.Color:
+                case Light_FieldIndex.Flags:
+                case Light_FieldIndex.FalloffExponent:
+                case Light_FieldIndex.FOV:
+                case Light_FieldIndex.Value:
+                case Light_FieldIndex.Weight:
+                case Light_FieldIndex.Fade:
+                case Light_FieldIndex.Sound:
+                    return false;
                 default:
                     return MajorRecord_Registration.IsNthDerivative(index);
             }
@@ -976,6 +1826,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Light_FieldIndex enu = (Light_FieldIndex)index;
             switch (enu)
             {
+                case Light_FieldIndex.Model:
+                case Light_FieldIndex.Script:
+                case Light_FieldIndex.Name:
+                case Light_FieldIndex.Icon:
+                case Light_FieldIndex.Time:
+                case Light_FieldIndex.Radius:
+                case Light_FieldIndex.Color:
+                case Light_FieldIndex.Flags:
+                case Light_FieldIndex.FalloffExponent:
+                case Light_FieldIndex.FOV:
+                case Light_FieldIndex.Value:
+                case Light_FieldIndex.Weight:
+                case Light_FieldIndex.Fade:
+                case Light_FieldIndex.Sound:
+                    return false;
                 default:
                     return MajorRecord_Registration.IsProtected(index);
             }
@@ -986,15 +1851,50 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Light_FieldIndex enu = (Light_FieldIndex)index;
             switch (enu)
             {
+                case Light_FieldIndex.Model:
+                    return typeof(Model);
+                case Light_FieldIndex.Script:
+                    return typeof(FormIDSetLink<Script>);
+                case Light_FieldIndex.Name:
+                    return typeof(String);
+                case Light_FieldIndex.Icon:
+                    return typeof(FilePath);
+                case Light_FieldIndex.Time:
+                    return typeof(Int32);
+                case Light_FieldIndex.Radius:
+                    return typeof(UInt32);
+                case Light_FieldIndex.Color:
+                    return typeof(Color);
+                case Light_FieldIndex.Flags:
+                    return typeof(Light.LightFlag);
+                case Light_FieldIndex.FalloffExponent:
+                    return typeof(Single);
+                case Light_FieldIndex.FOV:
+                    return typeof(Single);
+                case Light_FieldIndex.Value:
+                    return typeof(UInt32);
+                case Light_FieldIndex.Weight:
+                    return typeof(Single);
+                case Light_FieldIndex.Fade:
+                    return typeof(Single);
+                case Light_FieldIndex.Sound:
+                    return typeof(FormIDSetLink<Sound>);
                 default:
                     return MajorRecord_Registration.GetNthType(index);
             }
         }
 
         public static readonly RecordType LIGH_HEADER = new RecordType("LIGH");
+        public static readonly RecordType MODL_HEADER = new RecordType("MODL");
+        public static readonly RecordType SCRI_HEADER = new RecordType("SCRI");
+        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
+        public static readonly RecordType ICON_HEADER = new RecordType("ICON");
+        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
+        public static readonly RecordType FNAM_HEADER = new RecordType("FNAM");
+        public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = LIGH_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 0;
+        public const int NumTypedFields = 6;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1109,6 +2009,252 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask,
                 copyMask,
                 cmds);
+            if (copyMask?.Model.Overall != CopyOption.Skip)
+            {
+                try
+                {
+                    item.Model_Property.SetToWithDefault(
+                        rhs.Model_Property,
+                        def?.Model_Property,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.Model.Overall ?? CopyOption.Reference)
+                            {
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    ModelCommon.CopyFieldsFrom(
+                                        item: item.Model,
+                                        rhs: rhs.Model,
+                                        def: def?.Model,
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<Model_ErrorMask>(() =>
+                                        {
+                                            var baseMask = errorMask();
+                                            if (baseMask.Model.Specific == null)
+                                            {
+                                                baseMask.Model = new MaskItem<Exception, Model_ErrorMask>(null, new Model_ErrorMask());
+                                            }
+                                            return baseMask.Model.Specific;
+                                        }
+                                        ) : null),
+                                        copyMask: copyMask?.Model.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(Model);
+                                    return Model.Copy(
+                                        r,
+                                        copyMask?.Model?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Model?.Overall}. Cannot execute copy.");
+                            }
+                        }
+                        );
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Light_FieldIndex.Model, ex);
+                }
+            }
+            if (copyMask?.Script ?? true)
+            {
+                try
+                {
+                    item.Script_Property.SetToWithDefault(
+                        rhs: rhs.Script_Property,
+                        def: def?.Script_Property,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Light_FieldIndex.Script, ex);
+                }
+            }
+            if (copyMask?.Name ?? true)
+            {
+                try
+                {
+                    item.Name_Property.SetToWithDefault(
+                        rhs: rhs.Name_Property,
+                        def: def?.Name_Property,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Light_FieldIndex.Name, ex);
+                }
+            }
+            if (copyMask?.Icon ?? true)
+            {
+                try
+                {
+                    item.Icon_Property.SetToWithDefault(
+                        rhs: rhs.Icon_Property,
+                        def: def?.Icon_Property,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Light_FieldIndex.Icon, ex);
+                }
+            }
+            if (copyMask?.Time ?? true)
+            {
+                try
+                {
+                    item.Time_Property.SetToWithDefault(
+                        rhs: rhs.Time_Property,
+                        def: def?.Time_Property,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Light_FieldIndex.Time, ex);
+                }
+            }
+            if (copyMask?.Radius ?? true)
+            {
+                try
+                {
+                    item.Radius_Property.SetToWithDefault(
+                        rhs: rhs.Radius_Property,
+                        def: def?.Radius_Property,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Light_FieldIndex.Radius, ex);
+                }
+            }
+            if (copyMask?.Color ?? true)
+            {
+                try
+                {
+                    item.Color_Property.SetToWithDefault(
+                        rhs: rhs.Color_Property,
+                        def: def?.Color_Property,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Light_FieldIndex.Color, ex);
+                }
+            }
+            if (copyMask?.Flags ?? true)
+            {
+                try
+                {
+                    item.Flags_Property.SetToWithDefault(
+                        rhs: rhs.Flags_Property,
+                        def: def?.Flags_Property,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Light_FieldIndex.Flags, ex);
+                }
+            }
+            if (copyMask?.FalloffExponent ?? true)
+            {
+                try
+                {
+                    item.FalloffExponent_Property.SetToWithDefault(
+                        rhs: rhs.FalloffExponent_Property,
+                        def: def?.FalloffExponent_Property,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Light_FieldIndex.FalloffExponent, ex);
+                }
+            }
+            if (copyMask?.FOV ?? true)
+            {
+                try
+                {
+                    item.FOV_Property.SetToWithDefault(
+                        rhs: rhs.FOV_Property,
+                        def: def?.FOV_Property,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Light_FieldIndex.FOV, ex);
+                }
+            }
+            if (copyMask?.Value ?? true)
+            {
+                try
+                {
+                    item.Value_Property.SetToWithDefault(
+                        rhs: rhs.Value_Property,
+                        def: def?.Value_Property,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Light_FieldIndex.Value, ex);
+                }
+            }
+            if (copyMask?.Weight ?? true)
+            {
+                try
+                {
+                    item.Weight_Property.SetToWithDefault(
+                        rhs: rhs.Weight_Property,
+                        def: def?.Weight_Property,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Light_FieldIndex.Weight, ex);
+                }
+            }
+            if (copyMask?.Fade ?? true)
+            {
+                try
+                {
+                    item.Fade_Property.SetToWithDefault(
+                        rhs: rhs.Fade_Property,
+                        def: def?.Fade_Property,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Light_FieldIndex.Fade, ex);
+                }
+            }
+            if (copyMask?.Sound ?? true)
+            {
+                try
+                {
+                    item.Sound_Property.SetToWithDefault(
+                        rhs: rhs.Sound_Property,
+                        def: def?.Sound_Property,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Light_FieldIndex.Sound, ex);
+                }
+            }
         }
 
         #endregion
@@ -1122,6 +2268,48 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Light_FieldIndex enu = (Light_FieldIndex)index;
             switch (enu)
             {
+                case Light_FieldIndex.Model:
+                    obj.Model_Property.HasBeenSet = on;
+                    break;
+                case Light_FieldIndex.Script:
+                    obj.Script_Property.HasBeenSet = on;
+                    break;
+                case Light_FieldIndex.Name:
+                    obj.Name_Property.HasBeenSet = on;
+                    break;
+                case Light_FieldIndex.Icon:
+                    obj.Icon_Property.HasBeenSet = on;
+                    break;
+                case Light_FieldIndex.Time:
+                    obj.Time_Property.HasBeenSet = on;
+                    break;
+                case Light_FieldIndex.Radius:
+                    obj.Radius_Property.HasBeenSet = on;
+                    break;
+                case Light_FieldIndex.Color:
+                    obj.Color_Property.HasBeenSet = on;
+                    break;
+                case Light_FieldIndex.Flags:
+                    obj.Flags_Property.HasBeenSet = on;
+                    break;
+                case Light_FieldIndex.FalloffExponent:
+                    obj.FalloffExponent_Property.HasBeenSet = on;
+                    break;
+                case Light_FieldIndex.FOV:
+                    obj.FOV_Property.HasBeenSet = on;
+                    break;
+                case Light_FieldIndex.Value:
+                    obj.Value_Property.HasBeenSet = on;
+                    break;
+                case Light_FieldIndex.Weight:
+                    obj.Weight_Property.HasBeenSet = on;
+                    break;
+                case Light_FieldIndex.Fade:
+                    obj.Fade_Property.HasBeenSet = on;
+                    break;
+                case Light_FieldIndex.Sound:
+                    obj.Sound_Property.HasBeenSet = on;
+                    break;
                 default:
                     MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
@@ -1136,6 +2324,48 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Light_FieldIndex enu = (Light_FieldIndex)index;
             switch (enu)
             {
+                case Light_FieldIndex.Model:
+                    obj.Model_Property.Unset(cmds);
+                    break;
+                case Light_FieldIndex.Script:
+                    obj.Script_Property.Unset(cmds);
+                    break;
+                case Light_FieldIndex.Name:
+                    obj.Name_Property.Unset(cmds);
+                    break;
+                case Light_FieldIndex.Icon:
+                    obj.Icon_Property.Unset(cmds);
+                    break;
+                case Light_FieldIndex.Time:
+                    obj.Time_Property.Unset(cmds);
+                    break;
+                case Light_FieldIndex.Radius:
+                    obj.Radius_Property.Unset(cmds);
+                    break;
+                case Light_FieldIndex.Color:
+                    obj.Color_Property.Unset(cmds);
+                    break;
+                case Light_FieldIndex.Flags:
+                    obj.Flags_Property.Unset(cmds);
+                    break;
+                case Light_FieldIndex.FalloffExponent:
+                    obj.FalloffExponent_Property.Unset(cmds);
+                    break;
+                case Light_FieldIndex.FOV:
+                    obj.FOV_Property.Unset(cmds);
+                    break;
+                case Light_FieldIndex.Value:
+                    obj.Value_Property.Unset(cmds);
+                    break;
+                case Light_FieldIndex.Weight:
+                    obj.Weight_Property.Unset(cmds);
+                    break;
+                case Light_FieldIndex.Fade:
+                    obj.Fade_Property.Unset(cmds);
+                    break;
+                case Light_FieldIndex.Sound:
+                    obj.Sound_Property.Unset(cmds);
+                    break;
                 default:
                     MajorRecordCommon.UnsetNthObject(index, obj);
                     break;
@@ -1149,6 +2379,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Light_FieldIndex enu = (Light_FieldIndex)index;
             switch (enu)
             {
+                case Light_FieldIndex.Model:
+                    return obj.Model_Property.HasBeenSet;
+                case Light_FieldIndex.Script:
+                    return obj.Script_Property.HasBeenSet;
+                case Light_FieldIndex.Name:
+                    return obj.Name_Property.HasBeenSet;
+                case Light_FieldIndex.Icon:
+                    return obj.Icon_Property.HasBeenSet;
+                case Light_FieldIndex.Time:
+                    return obj.Time_Property.HasBeenSet;
+                case Light_FieldIndex.Radius:
+                    return obj.Radius_Property.HasBeenSet;
+                case Light_FieldIndex.Color:
+                    return obj.Color_Property.HasBeenSet;
+                case Light_FieldIndex.Flags:
+                    return obj.Flags_Property.HasBeenSet;
+                case Light_FieldIndex.FalloffExponent:
+                    return obj.FalloffExponent_Property.HasBeenSet;
+                case Light_FieldIndex.FOV:
+                    return obj.FOV_Property.HasBeenSet;
+                case Light_FieldIndex.Value:
+                    return obj.Value_Property.HasBeenSet;
+                case Light_FieldIndex.Weight:
+                    return obj.Weight_Property.HasBeenSet;
+                case Light_FieldIndex.Fade:
+                    return obj.Fade_Property.HasBeenSet;
+                case Light_FieldIndex.Sound:
+                    return obj.Sound_Property.HasBeenSet;
                 default:
                     return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -1161,6 +2419,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Light_FieldIndex enu = (Light_FieldIndex)index;
             switch (enu)
             {
+                case Light_FieldIndex.Model:
+                    return obj.Model;
+                case Light_FieldIndex.Script:
+                    return obj.Script;
+                case Light_FieldIndex.Name:
+                    return obj.Name;
+                case Light_FieldIndex.Icon:
+                    return obj.Icon;
+                case Light_FieldIndex.Time:
+                    return obj.Time;
+                case Light_FieldIndex.Radius:
+                    return obj.Radius;
+                case Light_FieldIndex.Color:
+                    return obj.Color;
+                case Light_FieldIndex.Flags:
+                    return obj.Flags;
+                case Light_FieldIndex.FalloffExponent:
+                    return obj.FalloffExponent;
+                case Light_FieldIndex.FOV:
+                    return obj.FOV;
+                case Light_FieldIndex.Value:
+                    return obj.Value;
+                case Light_FieldIndex.Weight:
+                    return obj.Weight;
+                case Light_FieldIndex.Fade:
+                    return obj.Fade;
+                case Light_FieldIndex.Sound:
+                    return obj.Sound;
                 default:
                     return MajorRecordCommon.GetNthObject(index, obj);
             }
@@ -1170,6 +2456,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILight item,
             NotifyingUnsetParameters? cmds = null)
         {
+            item.Model_Property.Unset(cmds.ToUnsetParams());
+            item.Script_Property.Unset(cmds.ToUnsetParams());
+            item.Name_Property.Unset(cmds.ToUnsetParams());
+            item.Icon_Property.Unset(cmds.ToUnsetParams());
+            item.Time_Property.Unset(cmds.ToUnsetParams());
+            item.Radius_Property.Unset(cmds.ToUnsetParams());
+            item.Color_Property.Unset(cmds.ToUnsetParams());
+            item.Flags_Property.Unset(cmds.ToUnsetParams());
+            item.FalloffExponent_Property.Unset(cmds.ToUnsetParams());
+            item.FOV_Property.Unset(cmds.ToUnsetParams());
+            item.Value_Property.Unset(cmds.ToUnsetParams());
+            item.Weight_Property.Unset(cmds.ToUnsetParams());
+            item.Fade_Property.Unset(cmds.ToUnsetParams());
+            item.Sound_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static Light_Mask<bool> GetEqualsMask(
@@ -1187,6 +2487,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Light_Mask<bool> ret)
         {
             if (rhs == null) return;
+            ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Script = item.Script_Property.Equals(rhs.Script_Property, (l, r) => l == r);
+            ret.Name = item.Name_Property.Equals(rhs.Name_Property, (l, r) => object.Equals(l, r));
+            ret.Icon = item.Icon_Property.Equals(rhs.Icon_Property, (l, r) => object.Equals(l, r));
+            ret.Time = item.Time_Property.Equals(rhs.Time_Property, (l, r) => l == r);
+            ret.Radius = item.Radius_Property.Equals(rhs.Radius_Property, (l, r) => l == r);
+            ret.Color = item.Color_Property.Equals(rhs.Color_Property, (l, r) => l == r);
+            ret.Flags = item.Flags_Property.Equals(rhs.Flags_Property, (l, r) => l == r);
+            ret.FalloffExponent = item.FalloffExponent_Property.Equals(rhs.FalloffExponent_Property, (l, r) => l == r);
+            ret.FOV = item.FOV_Property.Equals(rhs.FOV_Property, (l, r) => l == r);
+            ret.Value = item.Value_Property.Equals(rhs.Value_Property, (l, r) => l == r);
+            ret.Weight = item.Weight_Property.Equals(rhs.Weight_Property, (l, r) => l == r);
+            ret.Fade = item.Fade_Property.Equals(rhs.Fade_Property, (l, r) => l == r);
+            ret.Sound = item.Sound_Property.Equals(rhs.Sound_Property, (l, r) => l == r);
             MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -1217,6 +2531,62 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
+                if (printMask?.Model?.Overall ?? true)
+                {
+                    item.Model?.ToString(fg, "Model");
+                }
+                if (printMask?.Script ?? true)
+                {
+                    fg.AppendLine($"Script => {item.Script}");
+                }
+                if (printMask?.Name ?? true)
+                {
+                    fg.AppendLine($"Name => {item.Name}");
+                }
+                if (printMask?.Icon ?? true)
+                {
+                    fg.AppendLine($"Icon => {item.Icon}");
+                }
+                if (printMask?.Time ?? true)
+                {
+                    fg.AppendLine($"Time => {item.Time}");
+                }
+                if (printMask?.Radius ?? true)
+                {
+                    fg.AppendLine($"Radius => {item.Radius}");
+                }
+                if (printMask?.Color ?? true)
+                {
+                    fg.AppendLine($"Color => {item.Color}");
+                }
+                if (printMask?.Flags ?? true)
+                {
+                    fg.AppendLine($"Flags => {item.Flags}");
+                }
+                if (printMask?.FalloffExponent ?? true)
+                {
+                    fg.AppendLine($"FalloffExponent => {item.FalloffExponent}");
+                }
+                if (printMask?.FOV ?? true)
+                {
+                    fg.AppendLine($"FOV => {item.FOV}");
+                }
+                if (printMask?.Value ?? true)
+                {
+                    fg.AppendLine($"Value => {item.Value}");
+                }
+                if (printMask?.Weight ?? true)
+                {
+                    fg.AppendLine($"Weight => {item.Weight}");
+                }
+                if (printMask?.Fade ?? true)
+                {
+                    fg.AppendLine($"Fade => {item.Fade}");
+                }
+                if (printMask?.Sound ?? true)
+                {
+                    fg.AppendLine($"Sound => {item.Sound}");
+                }
             }
             fg.AppendLine("]");
         }
@@ -1225,12 +2595,41 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this ILightGetter item,
             Light_Mask<bool?> checkMask)
         {
+            if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_Property.HasBeenSet) return false;
+            if (checkMask.Model.Specific != null && (item.Model_Property.Item == null || !item.Model_Property.Item.HasBeenSet(checkMask.Model.Specific))) return false;
+            if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script_Property.HasBeenSet) return false;
+            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_Property.HasBeenSet) return false;
+            if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_Property.HasBeenSet) return false;
+            if (checkMask.Time.HasValue && checkMask.Time.Value != item.Time_Property.HasBeenSet) return false;
+            if (checkMask.Radius.HasValue && checkMask.Radius.Value != item.Radius_Property.HasBeenSet) return false;
+            if (checkMask.Color.HasValue && checkMask.Color.Value != item.Color_Property.HasBeenSet) return false;
+            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_Property.HasBeenSet) return false;
+            if (checkMask.FalloffExponent.HasValue && checkMask.FalloffExponent.Value != item.FalloffExponent_Property.HasBeenSet) return false;
+            if (checkMask.FOV.HasValue && checkMask.FOV.Value != item.FOV_Property.HasBeenSet) return false;
+            if (checkMask.Value.HasValue && checkMask.Value.Value != item.Value_Property.HasBeenSet) return false;
+            if (checkMask.Weight.HasValue && checkMask.Weight.Value != item.Weight_Property.HasBeenSet) return false;
+            if (checkMask.Fade.HasValue && checkMask.Fade.Value != item.Fade_Property.HasBeenSet) return false;
+            if (checkMask.Sound.HasValue && checkMask.Sound.Value != item.Sound_Property.HasBeenSet) return false;
             return true;
         }
 
         public static Light_Mask<bool> GetHasBeenSetMask(ILightGetter item)
         {
             var ret = new Light_Mask<bool>();
+            ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_Property.HasBeenSet, ModelCommon.GetHasBeenSetMask(item.Model_Property.Item));
+            ret.Script = item.Script_Property.HasBeenSet;
+            ret.Name = item.Name_Property.HasBeenSet;
+            ret.Icon = item.Icon_Property.HasBeenSet;
+            ret.Time = item.Time_Property.HasBeenSet;
+            ret.Radius = item.Radius_Property.HasBeenSet;
+            ret.Color = item.Color_Property.HasBeenSet;
+            ret.Flags = item.Flags_Property.HasBeenSet;
+            ret.FalloffExponent = item.FalloffExponent_Property.HasBeenSet;
+            ret.FOV = item.FOV_Property.HasBeenSet;
+            ret.Value = item.Value_Property.HasBeenSet;
+            ret.Weight = item.Weight_Property.HasBeenSet;
+            ret.Fade = item.Fade_Property.HasBeenSet;
+            ret.Sound = item.Sound_Property.HasBeenSet;
             return ret;
         }
 
@@ -1291,6 +2690,132 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.Light");
                     }
+                    if (item.Model_Property.HasBeenSet)
+                    {
+                        LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Write(
+                            writer: writer,
+                            item: item.Model_Property,
+                            name: nameof(item.Model),
+                            fieldIndex: (int)Light_FieldIndex.Model,
+                            errorMask: errorMask);
+                    }
+                    if (item.Script_Property.HasBeenSet)
+                    {
+                        RawFormIDXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Script),
+                            item: item.Script?.FormID,
+                            fieldIndex: (int)Light_FieldIndex.Script,
+                            errorMask: errorMask);
+                    }
+                    if (item.Name_Property.HasBeenSet)
+                    {
+                        StringXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Name),
+                            item: item.Name_Property,
+                            fieldIndex: (int)Light_FieldIndex.Name,
+                            errorMask: errorMask);
+                    }
+                    if (item.Icon_Property.HasBeenSet)
+                    {
+                        FilePathXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Icon),
+                            item: item.Icon_Property,
+                            fieldIndex: (int)Light_FieldIndex.Icon,
+                            errorMask: errorMask);
+                    }
+                    if (item.Time_Property.HasBeenSet)
+                    {
+                        Int32XmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Time),
+                            item: item.Time_Property,
+                            fieldIndex: (int)Light_FieldIndex.Time,
+                            errorMask: errorMask);
+                    }
+                    if (item.Radius_Property.HasBeenSet)
+                    {
+                        UInt32XmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Radius),
+                            item: item.Radius_Property,
+                            fieldIndex: (int)Light_FieldIndex.Radius,
+                            errorMask: errorMask);
+                    }
+                    if (item.Color_Property.HasBeenSet)
+                    {
+                        ColorXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Color),
+                            item: item.Color_Property,
+                            fieldIndex: (int)Light_FieldIndex.Color,
+                            errorMask: errorMask);
+                    }
+                    if (item.Flags_Property.HasBeenSet)
+                    {
+                        EnumXmlTranslation<Light.LightFlag>.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Flags),
+                            item: item.Flags_Property,
+                            fieldIndex: (int)Light_FieldIndex.Flags,
+                            errorMask: errorMask);
+                    }
+                    if (item.FalloffExponent_Property.HasBeenSet)
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.FalloffExponent),
+                            item: item.FalloffExponent_Property,
+                            fieldIndex: (int)Light_FieldIndex.FalloffExponent,
+                            errorMask: errorMask);
+                    }
+                    if (item.FOV_Property.HasBeenSet)
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.FOV),
+                            item: item.FOV_Property,
+                            fieldIndex: (int)Light_FieldIndex.FOV,
+                            errorMask: errorMask);
+                    }
+                    if (item.Value_Property.HasBeenSet)
+                    {
+                        UInt32XmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Value),
+                            item: item.Value_Property,
+                            fieldIndex: (int)Light_FieldIndex.Value,
+                            errorMask: errorMask);
+                    }
+                    if (item.Weight_Property.HasBeenSet)
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Weight),
+                            item: item.Weight_Property,
+                            fieldIndex: (int)Light_FieldIndex.Weight,
+                            errorMask: errorMask);
+                    }
+                    if (item.Fade_Property.HasBeenSet)
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Fade),
+                            item: item.Fade_Property,
+                            fieldIndex: (int)Light_FieldIndex.Fade,
+                            errorMask: errorMask);
+                    }
+                    if (item.Sound_Property.HasBeenSet)
+                    {
+                        RawFormIDXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Sound),
+                            item: item.Sound?.FormID,
+                            fieldIndex: (int)Light_FieldIndex.Sound,
+                            errorMask: errorMask);
+                    }
                 }
             }
             catch (Exception ex)
@@ -1338,7 +2863,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item: item,
                         writer: writer,
                         errorMask: errorMask);
-                    MajorRecordCommon.Write_Binary_RecordTypes(
+                    Write_Binary_RecordTypes(
                         item: item,
                         writer: writer,
                         recordTypeConverter: recordTypeConverter,
@@ -1352,6 +2877,103 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         #endregion
+
+        public static void Write_Binary_RecordTypes(
+            ILightGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter recordTypeConverter,
+            Func<Light_ErrorMask> errorMask)
+        {
+            MajorRecordCommon.Write_Binary_RecordTypes(
+                item: item,
+                writer: writer,
+                recordTypeConverter: recordTypeConverter,
+                errorMask: errorMask);
+            LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Write(
+                writer: writer,
+                item: item.Model_Property,
+                fieldIndex: (int)Light_FieldIndex.Model,
+                errorMask: errorMask);
+            Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Script_Property,
+                fieldIndex: (int)Light_FieldIndex.Script,
+                errorMask: errorMask,
+                header: recordTypeConverter.ConvertToCustom(Light_Registration.SCRI_HEADER),
+                nullable: false);
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Name_Property,
+                fieldIndex: (int)Light_FieldIndex.Name,
+                errorMask: errorMask,
+                header: recordTypeConverter.ConvertToCustom(Light_Registration.FULL_HEADER),
+                nullable: false);
+            Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Icon_Property,
+                fieldIndex: (int)Light_FieldIndex.Icon,
+                errorMask: errorMask,
+                header: recordTypeConverter.ConvertToCustom(Light_Registration.ICON_HEADER),
+                nullable: false);
+            using (HeaderExport.ExportSubRecordHeader(writer, Light_Registration.DATA_HEADER))
+            {
+                Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Time_Property,
+                    fieldIndex: (int)Light_FieldIndex.Time,
+                    errorMask: errorMask);
+                Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Radius_Property,
+                    fieldIndex: (int)Light_FieldIndex.Radius,
+                    errorMask: errorMask);
+                Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Color_Property,
+                    fieldIndex: (int)Light_FieldIndex.Color,
+                    errorMask: errorMask);
+                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Light.LightFlag>.Instance.Write(
+                    writer,
+                    item.Flags_Property,
+                    length: new ContentLength(4),
+                    fieldIndex: (int)Light_FieldIndex.Flags,
+                    errorMask: errorMask);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.FalloffExponent_Property,
+                    fieldIndex: (int)Light_FieldIndex.FalloffExponent,
+                    errorMask: errorMask);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.FOV_Property,
+                    fieldIndex: (int)Light_FieldIndex.FOV,
+                    errorMask: errorMask);
+                Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Value_Property,
+                    fieldIndex: (int)Light_FieldIndex.Value,
+                    errorMask: errorMask);
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Weight_Property,
+                    fieldIndex: (int)Light_FieldIndex.Weight,
+                    errorMask: errorMask);
+            }
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Fade_Property,
+                fieldIndex: (int)Light_FieldIndex.Fade,
+                errorMask: errorMask,
+                header: recordTypeConverter.ConvertToCustom(Light_Registration.FNAM_HEADER),
+                nullable: false);
+            Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Sound_Property,
+                fieldIndex: (int)Light_FieldIndex.Sound,
+                errorMask: errorMask,
+                header: recordTypeConverter.ConvertToCustom(Light_Registration.SNAM_HEADER),
+                nullable: false);
+        }
 
         #endregion
 
@@ -1370,7 +2992,38 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public Light_Mask(T initialValue)
         {
+            this.Model = new MaskItem<T, Model_Mask<T>>(initialValue, new Model_Mask<T>(initialValue));
+            this.Script = initialValue;
+            this.Name = initialValue;
+            this.Icon = initialValue;
+            this.Time = initialValue;
+            this.Radius = initialValue;
+            this.Color = initialValue;
+            this.Flags = initialValue;
+            this.FalloffExponent = initialValue;
+            this.FOV = initialValue;
+            this.Value = initialValue;
+            this.Weight = initialValue;
+            this.Fade = initialValue;
+            this.Sound = initialValue;
         }
+        #endregion
+
+        #region Members
+        public MaskItem<T, Model_Mask<T>> Model { get; set; }
+        public T Script;
+        public T Name;
+        public T Icon;
+        public T Time;
+        public T Radius;
+        public T Color;
+        public T Flags;
+        public T FalloffExponent;
+        public T FOV;
+        public T Value;
+        public T Weight;
+        public T Fade;
+        public T Sound;
         #endregion
 
         #region Equals
@@ -1384,11 +3037,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
+            if (!object.Equals(this.Model, rhs.Model)) return false;
+            if (!object.Equals(this.Script, rhs.Script)) return false;
+            if (!object.Equals(this.Name, rhs.Name)) return false;
+            if (!object.Equals(this.Icon, rhs.Icon)) return false;
+            if (!object.Equals(this.Time, rhs.Time)) return false;
+            if (!object.Equals(this.Radius, rhs.Radius)) return false;
+            if (!object.Equals(this.Color, rhs.Color)) return false;
+            if (!object.Equals(this.Flags, rhs.Flags)) return false;
+            if (!object.Equals(this.FalloffExponent, rhs.FalloffExponent)) return false;
+            if (!object.Equals(this.FOV, rhs.FOV)) return false;
+            if (!object.Equals(this.Value, rhs.Value)) return false;
+            if (!object.Equals(this.Weight, rhs.Weight)) return false;
+            if (!object.Equals(this.Fade, rhs.Fade)) return false;
+            if (!object.Equals(this.Sound, rhs.Sound)) return false;
             return true;
         }
         public override int GetHashCode()
         {
             int ret = 0;
+            ret = ret.CombineHashCode(this.Model?.GetHashCode());
+            ret = ret.CombineHashCode(this.Script?.GetHashCode());
+            ret = ret.CombineHashCode(this.Name?.GetHashCode());
+            ret = ret.CombineHashCode(this.Icon?.GetHashCode());
+            ret = ret.CombineHashCode(this.Time?.GetHashCode());
+            ret = ret.CombineHashCode(this.Radius?.GetHashCode());
+            ret = ret.CombineHashCode(this.Color?.GetHashCode());
+            ret = ret.CombineHashCode(this.Flags?.GetHashCode());
+            ret = ret.CombineHashCode(this.FalloffExponent?.GetHashCode());
+            ret = ret.CombineHashCode(this.FOV?.GetHashCode());
+            ret = ret.CombineHashCode(this.Value?.GetHashCode());
+            ret = ret.CombineHashCode(this.Weight?.GetHashCode());
+            ret = ret.CombineHashCode(this.Fade?.GetHashCode());
+            ret = ret.CombineHashCode(this.Sound?.GetHashCode());
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -1399,6 +3080,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override bool AllEqual(Func<T, bool> eval)
         {
             if (!base.AllEqual(eval)) return false;
+            if (Model != null)
+            {
+                if (!eval(this.Model.Overall)) return false;
+                if (this.Model.Specific != null && !this.Model.Specific.AllEqual(eval)) return false;
+            }
+            if (!eval(this.Script)) return false;
+            if (!eval(this.Name)) return false;
+            if (!eval(this.Icon)) return false;
+            if (!eval(this.Time)) return false;
+            if (!eval(this.Radius)) return false;
+            if (!eval(this.Color)) return false;
+            if (!eval(this.Flags)) return false;
+            if (!eval(this.FalloffExponent)) return false;
+            if (!eval(this.FOV)) return false;
+            if (!eval(this.Value)) return false;
+            if (!eval(this.Weight)) return false;
+            if (!eval(this.Fade)) return false;
+            if (!eval(this.Sound)) return false;
             return true;
         }
         #endregion
@@ -1414,6 +3113,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected void Translate_InternalFill<R>(Light_Mask<R> obj, Func<T, R> eval)
         {
             base.Translate_InternalFill(obj, eval);
+            if (this.Model != null)
+            {
+                obj.Model = new MaskItem<R, Model_Mask<R>>();
+                obj.Model.Overall = eval(this.Model.Overall);
+                if (this.Model.Specific != null)
+                {
+                    obj.Model.Specific = this.Model.Specific.Translate(eval);
+                }
+            }
+            obj.Script = eval(this.Script);
+            obj.Name = eval(this.Name);
+            obj.Icon = eval(this.Icon);
+            obj.Time = eval(this.Time);
+            obj.Radius = eval(this.Radius);
+            obj.Color = eval(this.Color);
+            obj.Flags = eval(this.Flags);
+            obj.FalloffExponent = eval(this.FalloffExponent);
+            obj.FOV = eval(this.FOV);
+            obj.Value = eval(this.Value);
+            obj.Weight = eval(this.Weight);
+            obj.Fade = eval(this.Fade);
+            obj.Sound = eval(this.Sound);
         }
         #endregion
 
@@ -1443,6 +3164,62 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
+                if (printMask?.Model?.Overall ?? true)
+                {
+                    Model?.ToString(fg);
+                }
+                if (printMask?.Script ?? true)
+                {
+                    fg.AppendLine($"Script => {Script}");
+                }
+                if (printMask?.Name ?? true)
+                {
+                    fg.AppendLine($"Name => {Name}");
+                }
+                if (printMask?.Icon ?? true)
+                {
+                    fg.AppendLine($"Icon => {Icon}");
+                }
+                if (printMask?.Time ?? true)
+                {
+                    fg.AppendLine($"Time => {Time}");
+                }
+                if (printMask?.Radius ?? true)
+                {
+                    fg.AppendLine($"Radius => {Radius}");
+                }
+                if (printMask?.Color ?? true)
+                {
+                    fg.AppendLine($"Color => {Color}");
+                }
+                if (printMask?.Flags ?? true)
+                {
+                    fg.AppendLine($"Flags => {Flags}");
+                }
+                if (printMask?.FalloffExponent ?? true)
+                {
+                    fg.AppendLine($"FalloffExponent => {FalloffExponent}");
+                }
+                if (printMask?.FOV ?? true)
+                {
+                    fg.AppendLine($"FOV => {FOV}");
+                }
+                if (printMask?.Value ?? true)
+                {
+                    fg.AppendLine($"Value => {Value}");
+                }
+                if (printMask?.Weight ?? true)
+                {
+                    fg.AppendLine($"Weight => {Weight}");
+                }
+                if (printMask?.Fade ?? true)
+                {
+                    fg.AppendLine($"Fade => {Fade}");
+                }
+                if (printMask?.Sound ?? true)
+                {
+                    fg.AppendLine($"Sound => {Sound}");
+                }
             }
             fg.AppendLine("]");
         }
@@ -1452,12 +3229,71 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public class Light_ErrorMask : MajorRecord_ErrorMask, IErrorMask<Light_ErrorMask>
     {
+        #region Members
+        public MaskItem<Exception, Model_ErrorMask> Model;
+        public Exception Script;
+        public Exception Name;
+        public Exception Icon;
+        public Exception Time;
+        public Exception Radius;
+        public Exception Color;
+        public Exception Flags;
+        public Exception FalloffExponent;
+        public Exception FOV;
+        public Exception Value;
+        public Exception Weight;
+        public Exception Fade;
+        public Exception Sound;
+        #endregion
+
         #region IErrorMask
         public override void SetNthException(int index, Exception ex)
         {
             Light_FieldIndex enu = (Light_FieldIndex)index;
             switch (enu)
             {
+                case Light_FieldIndex.Model:
+                    this.Model = new MaskItem<Exception, Model_ErrorMask>(ex, null);
+                    break;
+                case Light_FieldIndex.Script:
+                    this.Script = ex;
+                    break;
+                case Light_FieldIndex.Name:
+                    this.Name = ex;
+                    break;
+                case Light_FieldIndex.Icon:
+                    this.Icon = ex;
+                    break;
+                case Light_FieldIndex.Time:
+                    this.Time = ex;
+                    break;
+                case Light_FieldIndex.Radius:
+                    this.Radius = ex;
+                    break;
+                case Light_FieldIndex.Color:
+                    this.Color = ex;
+                    break;
+                case Light_FieldIndex.Flags:
+                    this.Flags = ex;
+                    break;
+                case Light_FieldIndex.FalloffExponent:
+                    this.FalloffExponent = ex;
+                    break;
+                case Light_FieldIndex.FOV:
+                    this.FOV = ex;
+                    break;
+                case Light_FieldIndex.Value:
+                    this.Value = ex;
+                    break;
+                case Light_FieldIndex.Weight:
+                    this.Weight = ex;
+                    break;
+                case Light_FieldIndex.Fade:
+                    this.Fade = ex;
+                    break;
+                case Light_FieldIndex.Sound:
+                    this.Sound = ex;
+                    break;
                 default:
                     base.SetNthException(index, ex);
                     break;
@@ -1469,6 +3305,48 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Light_FieldIndex enu = (Light_FieldIndex)index;
             switch (enu)
             {
+                case Light_FieldIndex.Model:
+                    this.Model = (MaskItem<Exception, Model_ErrorMask>)obj;
+                    break;
+                case Light_FieldIndex.Script:
+                    this.Script = (Exception)obj;
+                    break;
+                case Light_FieldIndex.Name:
+                    this.Name = (Exception)obj;
+                    break;
+                case Light_FieldIndex.Icon:
+                    this.Icon = (Exception)obj;
+                    break;
+                case Light_FieldIndex.Time:
+                    this.Time = (Exception)obj;
+                    break;
+                case Light_FieldIndex.Radius:
+                    this.Radius = (Exception)obj;
+                    break;
+                case Light_FieldIndex.Color:
+                    this.Color = (Exception)obj;
+                    break;
+                case Light_FieldIndex.Flags:
+                    this.Flags = (Exception)obj;
+                    break;
+                case Light_FieldIndex.FalloffExponent:
+                    this.FalloffExponent = (Exception)obj;
+                    break;
+                case Light_FieldIndex.FOV:
+                    this.FOV = (Exception)obj;
+                    break;
+                case Light_FieldIndex.Value:
+                    this.Value = (Exception)obj;
+                    break;
+                case Light_FieldIndex.Weight:
+                    this.Weight = (Exception)obj;
+                    break;
+                case Light_FieldIndex.Fade:
+                    this.Fade = (Exception)obj;
+                    break;
+                case Light_FieldIndex.Sound:
+                    this.Sound = (Exception)obj;
+                    break;
                 default:
                     base.SetNthMask(index, obj);
                     break;
@@ -1478,6 +3356,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override bool IsInError()
         {
             if (Overall != null) return true;
+            if (Model != null) return true;
+            if (Script != null) return true;
+            if (Name != null) return true;
+            if (Icon != null) return true;
+            if (Time != null) return true;
+            if (Radius != null) return true;
+            if (Color != null) return true;
+            if (Flags != null) return true;
+            if (FalloffExponent != null) return true;
+            if (FOV != null) return true;
+            if (Value != null) return true;
+            if (Weight != null) return true;
+            if (Fade != null) return true;
+            if (Sound != null) return true;
             return false;
         }
         #endregion
@@ -1513,6 +3405,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override void ToString_FillInternal(FileGeneration fg)
         {
             base.ToString_FillInternal(fg);
+            Model?.ToString(fg);
+            fg.AppendLine($"Script => {Script}");
+            fg.AppendLine($"Name => {Name}");
+            fg.AppendLine($"Icon => {Icon}");
+            fg.AppendLine($"Time => {Time}");
+            fg.AppendLine($"Radius => {Radius}");
+            fg.AppendLine($"Color => {Color}");
+            fg.AppendLine($"Flags => {Flags}");
+            fg.AppendLine($"FalloffExponent => {FalloffExponent}");
+            fg.AppendLine($"FOV => {FOV}");
+            fg.AppendLine($"Value => {Value}");
+            fg.AppendLine($"Weight => {Weight}");
+            fg.AppendLine($"Fade => {Fade}");
+            fg.AppendLine($"Sound => {Sound}");
         }
         #endregion
 
@@ -1520,6 +3426,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Light_ErrorMask Combine(Light_ErrorMask rhs)
         {
             var ret = new Light_ErrorMask();
+            ret.Model = new MaskItem<Exception, Model_ErrorMask>(this.Model.Overall.Combine(rhs.Model.Overall), ((IErrorMask<Model_ErrorMask>)this.Model.Specific).Combine(rhs.Model.Specific));
+            ret.Script = this.Script.Combine(rhs.Script);
+            ret.Name = this.Name.Combine(rhs.Name);
+            ret.Icon = this.Icon.Combine(rhs.Icon);
+            ret.Time = this.Time.Combine(rhs.Time);
+            ret.Radius = this.Radius.Combine(rhs.Radius);
+            ret.Color = this.Color.Combine(rhs.Color);
+            ret.Flags = this.Flags.Combine(rhs.Flags);
+            ret.FalloffExponent = this.FalloffExponent.Combine(rhs.FalloffExponent);
+            ret.FOV = this.FOV.Combine(rhs.FOV);
+            ret.Value = this.Value.Combine(rhs.Value);
+            ret.Weight = this.Weight.Combine(rhs.Weight);
+            ret.Fade = this.Fade.Combine(rhs.Fade);
+            ret.Sound = this.Sound.Combine(rhs.Sound);
             return ret;
         }
         public static Light_ErrorMask Combine(Light_ErrorMask lhs, Light_ErrorMask rhs)
@@ -1532,6 +3452,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
     public class Light_CopyMask : MajorRecord_CopyMask
     {
+        #region Members
+        public MaskItem<CopyOption, Model_CopyMask> Model;
+        public bool Script;
+        public bool Name;
+        public bool Icon;
+        public bool Time;
+        public bool Radius;
+        public bool Color;
+        public bool Flags;
+        public bool FalloffExponent;
+        public bool FOV;
+        public bool Value;
+        public bool Weight;
+        public bool Fade;
+        public bool Sound;
+        #endregion
+
     }
     #endregion
 

@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace Mutagen.Bethesda.Binary
 {
@@ -110,6 +111,16 @@ namespace Mutagen.Bethesda.Binary
         public char ReadChar()
         {
             return this.reader.ReadChar();
+        }
+
+        public Color ReadColor()
+        {
+            var ret = Color.FromRgb(
+                this.reader.ReadByte(),
+                this.reader.ReadByte(),
+                this.reader.ReadByte());
+            this.reader.ReadByte();
+            return ret;
         }
 
         public void ReadInto(byte[] b)

@@ -30,6 +30,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -191,6 +192,9 @@
     </Compile>
     <Compile Include="Records\Major Records\Ingredient.cs">
       <DependentUpon>Ingredient.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Light.cs">
+      <DependentUpon>Light.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\LocalVariableData_LoquiGenerated.cs">
       <DependentUpon>Script.xml</DependentUpon>
@@ -475,6 +479,10 @@
     <ProjectReference Include="..\..\CSharpExt\CSharpExt\CSharpExt.csproj">
       <Project>{c56b9607-41cf-4f59-9eef-f79d57309eda}</Project>
       <Name>CSharpExt</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Loqui\Loqui.Presentation\Loqui.Presentation.csproj">
+      <Project>{b5f2e08d-4a16-4b38-82e6-ad3bb2bbfb29}</Project>
+      <Name>Loqui.Presentation</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Loqui\Loqui\Loqui.csproj">
       <Project>{91f19c1e-adf8-4b84-9452-04c2cd8f46d4}</Project>

@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Binary
             try
             {
                 errorMask = null;
-                var str = frame.Reader.ReadString(frame.Length);
+                var str = frame.Reader.ReadString(frame.RemainingLength);
                 str = str.TrimEnd('\0');
                 return TryGet<string>.Succeed(str);
             }

@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>e224d0ce11fcb75726f8288f4b5a3a81c62e36af</Sha>
+         <Sha>e705ce778c86faa24527c72a7b84fbc20f5fdb81</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>01-05-2018 23:41:27</CommitDate>
-         <Description>CustomMethodAPI to provide api that only applies to the internal API.  Roslyn added and .NET upgraded</Description>
+         <CommitDate>01-09-2018 21:46:38</CommitDate>
+         <Description>Loqui.Presentation and ColorType</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>
