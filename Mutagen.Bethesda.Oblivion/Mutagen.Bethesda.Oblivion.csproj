@@ -358,6 +358,9 @@
     <Compile Include="Records\Major Records\Ingredient_LoquiGenerated.cs">
       <DependentUpon>Ingredient.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Miscellaneous_LoquiGenerated.cs">
+      <DependentUpon>Miscellaneous.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Records\Common Subrecords\Effect.xml">
@@ -445,6 +448,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\MagicEffect.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\Miscellaneous.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Race.xml">

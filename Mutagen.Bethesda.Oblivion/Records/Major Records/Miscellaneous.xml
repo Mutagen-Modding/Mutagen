@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Miscellaneous" objType="Record" baseClass="Bethesda.NamedMajorRecord" recordType="MISC" GUID="b894fd9b-01a7-4f5c-803f-44167e7d5b71" ID="77">
+    <Fields>
+      <RefDirect name="Model" refName="Model" />
+      <FilePath name="Icon" recordType="ICON" />
+      <FormID name="Script" refName="Script" recordType="SCRI" />
+      <Data>
+        <Fields>
+          <Int32 name="Value" />
+          <Float name="Weight" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+</Loqui>

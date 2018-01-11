@@ -125,6 +125,11 @@
           <GenericSpecification Definition="Light" TypeToSpecify="T" />
         </Direct>
       </Ref>
+      <Ref name="Miscellaneous">
+        <Direct refName="Group" >
+          <GenericSpecification Definition="Miscellaneous" TypeToSpecify="T" />
+        </Direct>
+      </Ref>
     </Fields>
   </Object>
 </Loqui>
