@@ -248,6 +248,14 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItem<Group<Miscellaneous>> IOblivionMod.Miscellaneous_Property => this.Miscellaneous_Property;
         INotifyingSetItemGetter<Group<Miscellaneous>> IOblivionModGetter.Miscellaneous_Property => this.Miscellaneous_Property;
         #endregion
+        #region Statics
+        private readonly INotifyingSetItem<Group<Static>> _Statics = new NotifyingSetItem<Group<Static>>();
+        public INotifyingSetItem<Group<Static>> Statics_Property => this._Statics;
+        Group<Static> IOblivionModGetter.Statics => this.Statics;
+        public Group<Static> Statics { get => _Statics.Item; set => _Statics.Item = value; }
+        INotifyingSetItem<Group<Static>> IOblivionMod.Statics_Property => this.Statics_Property;
+        INotifyingSetItemGetter<Group<Static>> IOblivionModGetter.Statics_Property => this.Statics_Property;
+        #endregion
 
         #region Loqui Getter Interface
 
@@ -437,6 +445,11 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!object.Equals(Miscellaneous, rhs.Miscellaneous)) return false;
             }
+            if (Statics_Property.HasBeenSet != rhs.Statics_Property.HasBeenSet) return false;
+            if (Statics_Property.HasBeenSet)
+            {
+                if (!object.Equals(Statics, rhs.Statics)) return false;
+            }
             return true;
         }
 
@@ -546,6 +559,10 @@ namespace Mutagen.Bethesda.Oblivion
             if (Miscellaneous_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(Miscellaneous).CombineHashCode(ret);
+            }
+            if (Statics_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Statics).CombineHashCode(ret);
             }
             return ret;
         }
@@ -1002,6 +1019,12 @@ namespace Mutagen.Bethesda.Oblivion
                     item._Miscellaneous.SetIfSucceeded(LoquiXmlTranslation<Group<Miscellaneous>, Group_ErrorMask<Miscellaneous_ErrorMask>>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)OblivionMod_FieldIndex.Miscellaneous,
+                        errorMask: errorMask));
+                    break;
+                case "Statics":
+                    item._Statics.SetIfSucceeded(LoquiXmlTranslation<Group<Static>, Group_ErrorMask<Static_ErrorMask>>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Statics,
                         errorMask: errorMask));
                     break;
                 default:
@@ -1488,6 +1511,12 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)OblivionMod_FieldIndex.Miscellaneous,
                         errorMask: errorMask));
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Miscellaneous);
+                case "STAT":
+                    item._Statics.SetIfSucceeded(LoquiBinaryTranslation<Group<Static>, Group_ErrorMask<Static_ErrorMask>>.Instance.Parse(
+                        frame: frame,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Statics,
+                        errorMask: errorMask));
+                    return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Statics);
                 default:
                     errorMask().Warnings.Add($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength;
@@ -1708,6 +1737,11 @@ namespace Mutagen.Bethesda.Oblivion
                         (Group<Miscellaneous>)obj,
                         cmds);
                     break;
+                case OblivionMod_FieldIndex.Statics:
+                    this._Statics.Set(
+                        (Group<Static>)obj,
+                        cmds);
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1873,6 +1907,11 @@ namespace Mutagen.Bethesda.Oblivion
                         (Group<Miscellaneous>)pair.Value,
                         null);
                     break;
+                case OblivionMod_FieldIndex.Statics:
+                    obj._Statics.Set(
+                        (Group<Static>)pair.Value,
+                        null);
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -1962,6 +2001,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Group<Miscellaneous> Miscellaneous { get; set; }
         new INotifyingSetItem<Group<Miscellaneous>> Miscellaneous_Property { get; }
+
+        new Group<Static> Statics { get; set; }
+        new INotifyingSetItem<Group<Static>> Statics_Property { get; }
 
     }
 
@@ -2097,6 +2139,11 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Group<Miscellaneous>> Miscellaneous_Property { get; }
 
         #endregion
+        #region Statics
+        Group<Static> Statics { get; }
+        INotifyingSetItemGetter<Group<Static>> Statics_Property { get; }
+
+        #endregion
 
     }
 
@@ -2135,6 +2182,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Ingredients = 23,
         Lights = 24,
         Miscellaneous = 25,
+        Statics = 26,
     }
     #endregion
 
@@ -2152,7 +2200,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "b6f626df-b164-466b-960a-1639d88f66bc";
 
-        public const ushort FieldCount = 26;
+        public const ushort FieldCount = 27;
 
         public static readonly Type MaskType = typeof(OblivionMod_Mask<>);
 
@@ -2232,6 +2280,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)OblivionMod_FieldIndex.Lights;
                 case "MISCELLANEOUS":
                     return (ushort)OblivionMod_FieldIndex.Miscellaneous;
+                case "STATICS":
+                    return (ushort)OblivionMod_FieldIndex.Statics;
                 default:
                     return null;
             }
@@ -2268,6 +2318,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Ingredients:
                 case OblivionMod_FieldIndex.Lights:
                 case OblivionMod_FieldIndex.Miscellaneous:
+                case OblivionMod_FieldIndex.Statics:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2305,6 +2356,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Ingredients:
                 case OblivionMod_FieldIndex.Lights:
                 case OblivionMod_FieldIndex.Miscellaneous:
+                case OblivionMod_FieldIndex.Statics:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2343,6 +2395,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Ingredients:
                 case OblivionMod_FieldIndex.Lights:
                 case OblivionMod_FieldIndex.Miscellaneous:
+                case OblivionMod_FieldIndex.Statics:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2406,6 +2459,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Lights";
                 case OblivionMod_FieldIndex.Miscellaneous:
                     return "Miscellaneous";
+                case OblivionMod_FieldIndex.Statics:
+                    return "Statics";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2442,6 +2497,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Ingredients:
                 case OblivionMod_FieldIndex.Lights:
                 case OblivionMod_FieldIndex.Miscellaneous:
+                case OblivionMod_FieldIndex.Statics:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2480,6 +2536,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Ingredients:
                 case OblivionMod_FieldIndex.Lights:
                 case OblivionMod_FieldIndex.Miscellaneous:
+                case OblivionMod_FieldIndex.Statics:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2543,6 +2600,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(Group<Light>);
                 case OblivionMod_FieldIndex.Miscellaneous:
                     return typeof(Group<Miscellaneous>);
+                case OblivionMod_FieldIndex.Statics:
+                    return typeof(Group<Static>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2574,6 +2633,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType INGR_HEADER = new RecordType("INGR");
         public static readonly RecordType LIGH_HEADER = new RecordType("LIGH");
         public static readonly RecordType MISC_HEADER = new RecordType("MISC");
+        public static readonly RecordType STAT_HEADER = new RecordType("STAT");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -2606,12 +2666,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         DOOR_HEADER,
                         INGR_HEADER,
                         LIGH_HEADER,
-                        MISC_HEADER
+                        MISC_HEADER,
+                        STAT_HEADER
                     })
             );
         });
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 26;
+        public const int NumTypedFields = 27;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -4021,6 +4082,57 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask().SetNthException((int)OblivionMod_FieldIndex.Miscellaneous, ex);
                 }
             }
+            if (copyMask?.Statics.Overall != CopyOption.Skip)
+            {
+                try
+                {
+                    item.Statics_Property.SetToWithDefault(
+                        rhs.Statics_Property,
+                        def?.Statics_Property,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.Statics.Overall ?? CopyOption.Reference)
+                            {
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    GroupCommon.CopyFieldsFrom(
+                                        item: item.Statics,
+                                        rhs: rhs.Statics,
+                                        def: def?.Statics,
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<Group_ErrorMask<Static_ErrorMask>>(() =>
+                                        {
+                                            var baseMask = errorMask();
+                                            if (baseMask.Statics.Specific == null)
+                                            {
+                                                baseMask.Statics = new MaskItem<Exception, Group_ErrorMask<Static_ErrorMask>>(null, new Group_ErrorMask<Static_ErrorMask>());
+                                            }
+                                            return baseMask.Statics.Specific;
+                                        }
+                                        ) : null),
+                                        copyMask: copyMask?.Statics.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(Group<Static>);
+                                    return Group<Static>.Copy(
+                                        r,
+                                        copyMask?.Statics?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Statics?.Overall}. Cannot execute copy.");
+                            }
+                        }
+                        );
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)OblivionMod_FieldIndex.Statics, ex);
+                }
+            }
         }
 
         #endregion
@@ -4110,6 +4222,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case OblivionMod_FieldIndex.Miscellaneous:
                     obj.Miscellaneous_Property.HasBeenSet = on;
+                    break;
+                case OblivionMod_FieldIndex.Statics:
+                    obj.Statics_Property.HasBeenSet = on;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -4201,6 +4316,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Miscellaneous:
                     obj.Miscellaneous_Property.Unset(cmds);
                     break;
+                case OblivionMod_FieldIndex.Statics:
+                    obj.Statics_Property.Unset(cmds);
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -4265,6 +4383,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.Lights_Property.HasBeenSet;
                 case OblivionMod_FieldIndex.Miscellaneous:
                     return obj.Miscellaneous_Property.HasBeenSet;
+                case OblivionMod_FieldIndex.Statics:
+                    return obj.Statics_Property.HasBeenSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -4329,6 +4449,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.Lights;
                 case OblivionMod_FieldIndex.Miscellaneous:
                     return obj.Miscellaneous;
+                case OblivionMod_FieldIndex.Statics:
+                    return obj.Statics;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -4363,6 +4485,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Ingredients_Property.Unset(cmds.ToUnsetParams());
             item.Lights_Property.Unset(cmds.ToUnsetParams());
             item.Miscellaneous_Property.Unset(cmds.ToUnsetParams());
+            item.Statics_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static OblivionMod_Mask<bool> GetEqualsMask(
@@ -4406,6 +4529,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Ingredients = item.Ingredients_Property.LoquiEqualsHelper(rhs.Ingredients_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
             ret.Lights = item.Lights_Property.LoquiEqualsHelper(rhs.Lights_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
             ret.Miscellaneous = item.Miscellaneous_Property.LoquiEqualsHelper(rhs.Miscellaneous_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Statics = item.Statics_Property.LoquiEqualsHelper(rhs.Statics_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
         }
 
         public static string ToString(
@@ -4539,6 +4663,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Miscellaneous?.ToString(fg, "Miscellaneous");
                 }
+                if (printMask?.Statics?.Overall ?? true)
+                {
+                    item.Statics?.ToString(fg, "Statics");
+                }
             }
             fg.AppendLine("]");
         }
@@ -4599,6 +4727,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Lights.Specific != null && (item.Lights_Property.Item == null || !item.Lights_Property.Item.HasBeenSet(checkMask.Lights.Specific))) return false;
             if (checkMask.Miscellaneous.Overall.HasValue && checkMask.Miscellaneous.Overall.Value != item.Miscellaneous_Property.HasBeenSet) return false;
             if (checkMask.Miscellaneous.Specific != null && (item.Miscellaneous_Property.Item == null || !item.Miscellaneous_Property.Item.HasBeenSet(checkMask.Miscellaneous.Specific))) return false;
+            if (checkMask.Statics.Overall.HasValue && checkMask.Statics.Overall.Value != item.Statics_Property.HasBeenSet) return false;
+            if (checkMask.Statics.Specific != null && (item.Statics_Property.Item == null || !item.Statics_Property.Item.HasBeenSet(checkMask.Statics.Specific))) return false;
             return true;
         }
 
@@ -4631,6 +4761,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Ingredients = new MaskItem<bool, Group_Mask<bool>>(item.Ingredients_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.Ingredients_Property.Item));
             ret.Lights = new MaskItem<bool, Group_Mask<bool>>(item.Lights_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.Lights_Property.Item));
             ret.Miscellaneous = new MaskItem<bool, Group_Mask<bool>>(item.Miscellaneous_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.Miscellaneous_Property.Item));
+            ret.Statics = new MaskItem<bool, Group_Mask<bool>>(item.Statics_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.Statics_Property.Item));
             return ret;
         }
 
@@ -4900,6 +5031,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             fieldIndex: (int)OblivionMod_FieldIndex.Miscellaneous,
                             errorMask: errorMask);
                     }
+                    if (item.Statics_Property.HasBeenSet)
+                    {
+                        LoquiXmlTranslation<Group<Static>, Group_ErrorMask<Static_ErrorMask>>.Instance.Write(
+                            writer: writer,
+                            item: item.Statics_Property,
+                            name: nameof(item.Statics),
+                            fieldIndex: (int)OblivionMod_FieldIndex.Statics,
+                            errorMask: errorMask);
+                    }
                 }
             }
             catch (Exception ex)
@@ -5088,6 +5228,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Miscellaneous_Property,
                 fieldIndex: (int)OblivionMod_FieldIndex.Miscellaneous,
                 errorMask: errorMask);
+            LoquiBinaryTranslation<Group<Static>, Group_ErrorMask<Static_ErrorMask>>.Instance.Write(
+                writer: writer,
+                item: item.Statics_Property,
+                fieldIndex: (int)OblivionMod_FieldIndex.Statics,
+                errorMask: errorMask);
         }
 
         #endregion
@@ -5133,6 +5278,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Ingredients = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.Lights = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.Miscellaneous = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
+            this.Statics = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
         }
         #endregion
 
@@ -5163,6 +5309,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<T, Group_Mask<T>> Ingredients { get; set; }
         public MaskItem<T, Group_Mask<T>> Lights { get; set; }
         public MaskItem<T, Group_Mask<T>> Miscellaneous { get; set; }
+        public MaskItem<T, Group_Mask<T>> Statics { get; set; }
         #endregion
 
         #region Equals
@@ -5201,6 +5348,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.Ingredients, rhs.Ingredients)) return false;
             if (!object.Equals(this.Lights, rhs.Lights)) return false;
             if (!object.Equals(this.Miscellaneous, rhs.Miscellaneous)) return false;
+            if (!object.Equals(this.Statics, rhs.Statics)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -5232,6 +5380,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.Ingredients?.GetHashCode());
             ret = ret.CombineHashCode(this.Lights?.GetHashCode());
             ret = ret.CombineHashCode(this.Miscellaneous?.GetHashCode());
+            ret = ret.CombineHashCode(this.Statics?.GetHashCode());
             return ret;
         }
 
@@ -5369,6 +5518,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (!eval(this.Miscellaneous.Overall)) return false;
                 if (this.Miscellaneous.Specific != null && !this.Miscellaneous.Specific.AllEqual(eval)) return false;
+            }
+            if (Statics != null)
+            {
+                if (!eval(this.Statics.Overall)) return false;
+                if (this.Statics.Specific != null && !this.Statics.Specific.AllEqual(eval)) return false;
             }
             return true;
         }
@@ -5618,6 +5772,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Miscellaneous.Specific = this.Miscellaneous.Specific.Translate(eval);
                 }
             }
+            if (this.Statics != null)
+            {
+                obj.Statics = new MaskItem<R, Group_Mask<R>>();
+                obj.Statics.Overall = eval(this.Statics.Overall);
+                if (this.Statics.Specific != null)
+                {
+                    obj.Statics.Specific = this.Statics.Specific.Translate(eval);
+                }
+            }
         }
         #endregion
 
@@ -5750,6 +5913,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     Miscellaneous?.ToString(fg);
                 }
+                if (printMask?.Statics?.Overall ?? true)
+                {
+                    Statics?.ToString(fg);
+                }
             }
             fg.AppendLine("]");
         }
@@ -5799,6 +5966,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<Exception, Group_ErrorMask<Ingredient_ErrorMask>> Ingredients;
         public MaskItem<Exception, Group_ErrorMask<Light_ErrorMask>> Lights;
         public MaskItem<Exception, Group_ErrorMask<Miscellaneous_ErrorMask>> Miscellaneous;
+        public MaskItem<Exception, Group_ErrorMask<Static_ErrorMask>> Statics;
         #endregion
 
         #region IErrorMask
@@ -5884,6 +6052,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case OblivionMod_FieldIndex.Miscellaneous:
                     this.Miscellaneous = new MaskItem<Exception, Group_ErrorMask<Miscellaneous_ErrorMask>>(ex, null);
+                    break;
+                case OblivionMod_FieldIndex.Statics:
+                    this.Statics = new MaskItem<Exception, Group_ErrorMask<Static_ErrorMask>>(ex, null);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -5973,6 +6144,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Miscellaneous:
                     this.Miscellaneous = (MaskItem<Exception, Group_ErrorMask<Miscellaneous_ErrorMask>>)obj;
                     break;
+                case OblivionMod_FieldIndex.Statics:
+                    this.Statics = (MaskItem<Exception, Group_ErrorMask<Static_ErrorMask>>)obj;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -6007,6 +6181,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Ingredients != null) return true;
             if (Lights != null) return true;
             if (Miscellaneous != null) return true;
+            if (Statics != null) return true;
             return false;
         }
         #endregion
@@ -6067,6 +6242,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Ingredients?.ToString(fg);
             Lights?.ToString(fg);
             Miscellaneous?.ToString(fg);
+            Statics?.ToString(fg);
         }
         #endregion
 
@@ -6100,6 +6276,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Ingredients = new MaskItem<Exception, Group_ErrorMask<Ingredient_ErrorMask>>(this.Ingredients.Overall.Combine(rhs.Ingredients.Overall), ((IErrorMask<Group_ErrorMask<Ingredient_ErrorMask>>)this.Ingredients.Specific).Combine(rhs.Ingredients.Specific));
             ret.Lights = new MaskItem<Exception, Group_ErrorMask<Light_ErrorMask>>(this.Lights.Overall.Combine(rhs.Lights.Overall), ((IErrorMask<Group_ErrorMask<Light_ErrorMask>>)this.Lights.Specific).Combine(rhs.Lights.Specific));
             ret.Miscellaneous = new MaskItem<Exception, Group_ErrorMask<Miscellaneous_ErrorMask>>(this.Miscellaneous.Overall.Combine(rhs.Miscellaneous.Overall), ((IErrorMask<Group_ErrorMask<Miscellaneous_ErrorMask>>)this.Miscellaneous.Specific).Combine(rhs.Miscellaneous.Specific));
+            ret.Statics = new MaskItem<Exception, Group_ErrorMask<Static_ErrorMask>>(this.Statics.Overall.Combine(rhs.Statics.Overall), ((IErrorMask<Group_ErrorMask<Static_ErrorMask>>)this.Statics.Specific).Combine(rhs.Statics.Specific));
             return ret;
         }
         public static OblivionMod_ErrorMask Combine(OblivionMod_ErrorMask lhs, OblivionMod_ErrorMask rhs)
@@ -6139,6 +6316,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<CopyOption, Group_CopyMask<Ingredient_CopyMask>> Ingredients;
         public MaskItem<CopyOption, Group_CopyMask<Light_CopyMask>> Lights;
         public MaskItem<CopyOption, Group_CopyMask<Miscellaneous_CopyMask>> Miscellaneous;
+        public MaskItem<CopyOption, Group_CopyMask<Static_CopyMask>> Statics;
         #endregion
 
     }

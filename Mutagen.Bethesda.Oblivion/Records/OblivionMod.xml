@@ -130,6 +130,11 @@
           <GenericSpecification Definition="Miscellaneous" TypeToSpecify="T" />
         </Direct>
       </Ref>
+      <Ref name="Statics">
+        <Direct refName="Group" >
+          <GenericSpecification Definition="Static" TypeToSpecify="T" />
+        </Direct>
+      </Ref>
     </Fields>
   </Object>
 </Loqui>

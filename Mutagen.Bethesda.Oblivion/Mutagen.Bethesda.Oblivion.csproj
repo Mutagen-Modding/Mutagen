@@ -361,6 +361,9 @@
     <Compile Include="Records\Major Records\Miscellaneous_LoquiGenerated.cs">
       <DependentUpon>Miscellaneous.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Static_LoquiGenerated.cs">
+      <DependentUpon>Static.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Records\Common Subrecords\Effect.xml">
@@ -472,6 +475,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Spell.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\Static.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Worldspace.xml">
