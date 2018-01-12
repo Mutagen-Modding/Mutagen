@@ -1307,7 +1307,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Binary Write
         public static void Write_Binary(
             MutagenWriter writer,
-            IGrassGetter item,
+            Grass item,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out Grass_ErrorMask errorMask)
@@ -1323,7 +1323,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
-            IGrassGetter item,
+            Grass item,
             RecordTypeConverter recordTypeConverter,
             Func<Grass_ErrorMask> errorMask)
         {

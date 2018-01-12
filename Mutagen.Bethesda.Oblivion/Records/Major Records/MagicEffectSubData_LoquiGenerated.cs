@@ -1921,7 +1921,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Binary Write
         public static void Write_Binary(
             MutagenWriter writer,
-            IMagicEffectSubDataGetter item,
+            MagicEffectSubData item,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out MagicEffectSubData_ErrorMask errorMask)
@@ -1937,7 +1937,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
-            IMagicEffectSubDataGetter item,
+            MagicEffectSubData item,
             RecordTypeConverter recordTypeConverter,
             Func<MagicEffectSubData_ErrorMask> errorMask)
         {
@@ -1957,7 +1957,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void Write_Binary_Embedded(
-            IMagicEffectSubDataGetter item,
+            MagicEffectSubData item,
             MutagenWriter writer,
             Func<MagicEffectSubData_ErrorMask> errorMask)
         {

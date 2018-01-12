@@ -1994,7 +1994,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Binary Write
         public static void Write_Binary(
             MutagenWriter writer,
-            IEnchantmentGetter item,
+            Enchantment item,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out Enchantment_ErrorMask errorMask)
@@ -2010,7 +2010,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
-            IEnchantmentGetter item,
+            Enchantment item,
             RecordTypeConverter recordTypeConverter,
             Func<Enchantment_ErrorMask> errorMask)
         {
@@ -2041,7 +2041,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void Write_Binary_RecordTypes(
-            IEnchantmentGetter item,
+            Enchantment item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             Func<Enchantment_ErrorMask> errorMask)

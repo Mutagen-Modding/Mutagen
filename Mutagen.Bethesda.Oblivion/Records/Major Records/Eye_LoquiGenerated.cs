@@ -1607,7 +1607,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Binary Write
         public static void Write_Binary(
             MutagenWriter writer,
-            IEyeGetter item,
+            Eye item,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out Eye_ErrorMask errorMask)
@@ -1623,7 +1623,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
-            IEyeGetter item,
+            Eye item,
             RecordTypeConverter recordTypeConverter,
             Func<Eye_ErrorMask> errorMask)
         {
@@ -1654,7 +1654,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void Write_Binary_RecordTypes(
-            IEyeGetter item,
+            Eye item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             Func<Eye_ErrorMask> errorMask)

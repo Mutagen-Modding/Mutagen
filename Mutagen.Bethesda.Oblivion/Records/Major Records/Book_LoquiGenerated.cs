@@ -2468,7 +2468,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Binary Write
         public static void Write_Binary(
             MutagenWriter writer,
-            IBookGetter item,
+            Book item,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out Book_ErrorMask errorMask)
@@ -2484,7 +2484,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
-            IBookGetter item,
+            Book item,
             RecordTypeConverter recordTypeConverter,
             Func<Book_ErrorMask> errorMask)
         {
@@ -2515,7 +2515,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void Write_Binary_RecordTypes(
-            IBookGetter item,
+            Book item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             Func<Book_ErrorMask> errorMask)

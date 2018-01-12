@@ -8,6 +8,7 @@ using Loqui;
 using Mutagen.Bethesda.Binary;
 using System.IO;
 using System.Windows.Media;
+using Noggog;
 
 namespace Mutagen.Bethesda.Generation
 {
@@ -20,6 +21,7 @@ namespace Mutagen.Bethesda.Generation
         public BinaryTranslationModule(LoquiGenerator gen)
             : base(gen)
         {
+            this.ExportWithIGetter = false;
             this._typeGenerations[typeof(LoquiType)] = new LoquiBinaryTranslationGeneration(ModuleNickname);
             this._typeGenerations[typeof(BoolNullType)] = new PrimitiveBinaryTranslationGeneration<bool?>();
             this._typeGenerations[typeof(BoolType)] = new PrimitiveBinaryTranslationGeneration<bool>();
@@ -609,6 +611,8 @@ namespace Mutagen.Bethesda.Generation
                 using (new BraceWrapper(fg))
                 {
                     bool isInRange = false;
+                    (RangeInt32 FieldIndexRange, int DataSetSizeMin) range;
+                    int rangeIndex = -1;
                     for (int i = 0; i < set.SubFields.Count; i++)
                     {
                         var subfield = set.SubFields[i];
@@ -618,22 +622,30 @@ namespace Mutagen.Bethesda.Generation
                         }
 
                         if (!subGenerator.ShouldGenerateCopyIn(subfield)) continue;
-                        if (set.BreakIndices.Contains(i))
+                        var breakIndex = set.BreakIndices.IndexOf(i);
+                        if (breakIndex != -1)
                         {
-                            fg.AppendLine($"if (dataFrame.Complete) return TryGet<{obj.FieldIndexName}?>.Succeed({set.SubFields.TryGet(i - 1)?.IndexEnumName ?? "null"});");
+                            fg.AppendLine($"if (dataFrame.Complete)");
+                            using (new BraceWrapper(fg))
+                            {
+                                fg.AppendLine($"item.{set.StateName} |= {set.EnumName}.Break{breakIndex};");
+                                fg.AppendLine($"return TryGet<{obj.FieldIndexName}?>.Succeed({set.SubFields.TryGet(i - 1)?.IndexEnumName ?? "null"});");
+                            }
                         }
-                        bool hasRange = set.RangeIndices.Any((r) => r.Item1.IsInRange(i));
-                        var range = set.RangeIndices.FirstOrDefault((r) => r.Item1.IsInRange(i));
+                        bool hasRange = set.RangeIndices.Any((r) => r.FieldIndexRange.IsInRange(i));
                         if (hasRange && !isInRange)
                         {
+                            rangeIndex = set.RangeIndices.FindIndex((r) => r.FieldIndexRange.IsInRange(i));
+                            range = set.RangeIndices[rangeIndex];
                             isInRange = true;
-                            fg.AppendLine($"if (dataFrame.TotalLength > {range.Item2})");
+                            fg.AppendLine($"if (dataFrame.TotalLength > {range.DataSetSizeMin})");
                             fg.AppendLine("{");
                             fg.Depth++;
                         }
                         if (!hasRange && isInRange)
                         {
                             isInRange = false;
+                            fg.AppendLine($"item.{set.StateName} |= {set.EnumName}.Range{rangeIndex};");
                             fg.Depth--;
                             fg.AppendLine("}");
                         }
@@ -830,14 +842,7 @@ namespace Mutagen.Bethesda.Generation
                     $"public static void Write_{ModuleNickname}_Embedded{obj.GenericTypes_ErrMask}",
                     wheres: obj.GenerateWhereClauses().And(obj.GenericTypes_ErrorMaskWheres).ToArray()))
                 {
-                    if (obj.ExportWithIGetter)
-                    {
-                        args.Add($"{obj.Getter_InterfaceStr} item");
-                    }
-                    else
-                    {
-                        args.Add($"{obj.ObjectName} item");
-                    }
+                    args.Add($"{obj.ObjectName} item");
                     args.Add("MutagenWriter writer");
                     args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
                 }
@@ -898,14 +903,7 @@ namespace Mutagen.Bethesda.Generation
                     $"public static void Write_{ModuleNickname}_RecordTypes{obj.GenericTypes_ErrMask}",
                     wheres: obj.GenerateWhereClauses().And(obj.GenericTypes_ErrorMaskWheres).ToArray()))
                 {
-                    if (obj.ExportWithIGetter)
-                    {
-                        args.Add($"{obj.Getter_InterfaceStr} item");
-                    }
-                    else
-                    {
-                        args.Add($"{obj.ObjectName} item");
-                    }
+                    args.Add($"{obj.ObjectName} item");
                     args.Add("MutagenWriter writer");
                     args.Add("RecordTypeConverter recordTypeConverter");
                     args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
@@ -949,13 +947,17 @@ namespace Mutagen.Bethesda.Generation
                             throw new ArgumentException("Unsupported type generator: " + field);
                         }
 
-                        if (field is SetMarkerType set)
+                        if (field is DataType dataType)
                         {
                             fg.AppendLine($"using (HeaderExport.ExportSubRecordHeader(writer, {obj.RecordTypeHeaderName(data.RecordType.Value)}))");
                             using (new BraceWrapper(fg))
                             {
-                                foreach (var subfield in set.SubFields)
+                                bool isInRange = false;
+                                (RangeInt32 FieldIndexRange, int DataSetSizeMin) range;
+                                int rangeIndex = -1;
+                                for (int i = 0; i < dataType.SubFields.Count; i++)
                                 {
+                                    var subfield = dataType.SubFields[i];
                                     if (!this.TryGetTypeGeneration(subfield.GetType(), out var subGenerator))
                                     {
                                         throw new ArgumentException("Unsupported type generator: " + subfield);
@@ -975,6 +977,29 @@ namespace Mutagen.Bethesda.Generation
                                         }
                                         continue;
                                     }
+                                    var breakIndex = dataType.BreakIndices.IndexOf(i);
+                                    if (breakIndex != -1)
+                                    {
+                                        fg.AppendLine($"if (!item.{dataType.StateName}.HasFlag({obj.Name}.{dataType.EnumName}.Break{breakIndex}))");
+                                        fg.AppendLine("{");
+                                        fg.Depth++;
+                                    }
+                                    bool hasRange = dataType.RangeIndices.Any((r) => r.FieldIndexRange.IsInRange(i));
+                                    if (hasRange && !isInRange)
+                                    {
+                                        rangeIndex = dataType.RangeIndices.FindIndex((r) => r.FieldIndexRange.IsInRange(i));
+                                        range = dataType.RangeIndices[rangeIndex];
+                                        isInRange = true;
+                                        fg.AppendLine($"if (item.{dataType.StateName}.HasFlag({obj.Name}.{dataType.EnumName}.Range{rangeIndex}))");
+                                        fg.AppendLine("{");
+                                        fg.Depth++;
+                                    }
+                                    if (!hasRange && isInRange)
+                                    {
+                                        isInRange = false;
+                                        fg.Depth--;
+                                        fg.AppendLine("}");
+                                    }
                                     subGenerator.GenerateWrite(
                                         fg: fg,
                                         objGen: obj,
@@ -983,6 +1008,11 @@ namespace Mutagen.Bethesda.Generation
                                         itemAccessor: new Accessor(subfield, "item."),
                                         doMaskAccessor: "errorMask != null",
                                         maskAccessor: $"errorMask");
+                                }
+                                for (int i = 0; i < dataType.BreakIndices.Count; i++)
+                                {
+                                    fg.Depth--;
+                                    fg.AppendLine("}");
                                 }
                             }
                         }

@@ -1427,7 +1427,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Binary Write
         public static void Write_Binary(
             MutagenWriter writer,
-            IGlobalFloatGetter item,
+            GlobalFloat item,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out GlobalFloat_ErrorMask errorMask)
@@ -1443,7 +1443,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
-            IGlobalFloatGetter item,
+            GlobalFloat item,
             RecordTypeConverter recordTypeConverter,
             Func<GlobalFloat_ErrorMask> errorMask)
         {
@@ -1474,7 +1474,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void Write_Binary_Embedded(
-            IGlobalFloatGetter item,
+            GlobalFloat item,
             MutagenWriter writer,
             Func<GlobalFloat_ErrorMask> errorMask)
         {

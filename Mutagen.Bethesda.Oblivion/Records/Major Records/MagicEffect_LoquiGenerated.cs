@@ -785,6 +785,15 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #region Mutagen
+        public DATADataType DATADataTypeState;
+        [Flags]
+        public enum DATADataType
+        {
+            Break0 = 1
+        }
+        #endregion
+
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
@@ -1189,7 +1198,11 @@ namespace Mutagen.Bethesda.Oblivion
                             frame: dataFrame,
                             fieldIndex: (int)MagicEffect_FieldIndex.EffectShader,
                             errorMask: errorMask));
-                        if (dataFrame.Complete) return TryGet<MagicEffect_FieldIndex?>.Succeed(MagicEffect_FieldIndex.EffectShader);
+                        if (dataFrame.Complete)
+                        {
+                            item.DATADataTypeState |= DATADataType.Break0;
+                            return TryGet<MagicEffect_FieldIndex?>.Succeed(MagicEffect_FieldIndex.EffectShader);
+                        }
                         item._SubData.SetIfSucceeded(LoquiBinaryTranslation<MagicEffectSubData, MagicEffectSubData_ErrorMask>.Instance.Parse(
                             frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)MagicEffect_FieldIndex.SubData,
@@ -2958,7 +2971,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Binary Write
         public static void Write_Binary(
             MutagenWriter writer,
-            IMagicEffectGetter item,
+            MagicEffect item,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out MagicEffect_ErrorMask errorMask)
@@ -2974,7 +2987,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
-            IMagicEffectGetter item,
+            MagicEffect item,
             RecordTypeConverter recordTypeConverter,
             Func<MagicEffect_ErrorMask> errorMask)
         {
@@ -3005,7 +3018,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void Write_Binary_RecordTypes(
-            IMagicEffectGetter item,
+            MagicEffect item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             Func<MagicEffect_ErrorMask> errorMask)
@@ -3084,11 +3097,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.EffectShader_Property,
                     fieldIndex: (int)MagicEffect_FieldIndex.EffectShader,
                     errorMask: errorMask);
-                LoquiBinaryTranslation<MagicEffectSubData, MagicEffectSubData_ErrorMask>.Instance.Write(
-                    writer: writer,
-                    item: item.SubData_Property,
-                    fieldIndex: (int)MagicEffect_FieldIndex.SubData,
-                    errorMask: errorMask);
+                if (!item.DATADataTypeState.HasFlag(MagicEffect.DATADataType.Break0))
+                {
+                    LoquiBinaryTranslation<MagicEffectSubData, MagicEffectSubData_ErrorMask>.Instance.Write(
+                        writer: writer,
+                        item: item.SubData_Property,
+                        fieldIndex: (int)MagicEffect_FieldIndex.SubData,
+                        errorMask: errorMask);
+                }
             }
             Mutagen.Bethesda.Binary.ListBinaryTranslation<EDIDLink<MagicEffect>, Exception>.Instance.Write(
                 writer: writer,

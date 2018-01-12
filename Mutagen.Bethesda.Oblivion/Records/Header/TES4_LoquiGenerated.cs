@@ -2142,7 +2142,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Binary Write
         public static void Write_Binary(
             MutagenWriter writer,
-            ITES4Getter item,
+            TES4 item,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out TES4_ErrorMask errorMask)
@@ -2158,7 +2158,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
-            ITES4Getter item,
+            TES4 item,
             RecordTypeConverter recordTypeConverter,
             Func<TES4_ErrorMask> errorMask)
         {
@@ -2189,7 +2189,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void Write_Binary_Embedded(
-            ITES4Getter item,
+            TES4 item,
             MutagenWriter writer,
             Func<TES4_ErrorMask> errorMask)
         {
@@ -2201,7 +2201,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void Write_Binary_RecordTypes(
-            ITES4Getter item,
+            TES4 item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             Func<TES4_ErrorMask> errorMask)

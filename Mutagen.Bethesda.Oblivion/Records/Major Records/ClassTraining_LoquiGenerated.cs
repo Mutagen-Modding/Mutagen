@@ -1555,7 +1555,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Binary Write
         public static void Write_Binary(
             MutagenWriter writer,
-            IClassTrainingGetter item,
+            ClassTraining item,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out ClassTraining_ErrorMask errorMask)
@@ -1571,7 +1571,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
-            IClassTrainingGetter item,
+            ClassTraining item,
             RecordTypeConverter recordTypeConverter,
             Func<ClassTraining_ErrorMask> errorMask)
         {
@@ -1591,7 +1591,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void Write_Binary_Embedded(
-            IClassTrainingGetter item,
+            ClassTraining item,
             MutagenWriter writer,
             Func<ClassTraining_ErrorMask> errorMask)
         {

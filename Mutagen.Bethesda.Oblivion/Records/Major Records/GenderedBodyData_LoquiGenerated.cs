@@ -1565,7 +1565,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Binary Write
         public static void Write_Binary(
             MutagenWriter writer,
-            IGenderedBodyDataGetter item,
+            GenderedBodyData item,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out GenderedBodyData_ErrorMask errorMask)
@@ -1581,7 +1581,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
-            IGenderedBodyDataGetter item,
+            GenderedBodyData item,
             RecordTypeConverter recordTypeConverter,
             Func<GenderedBodyData_ErrorMask> errorMask)
         {
@@ -1602,7 +1602,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void Write_Binary_RecordTypes(
-            IGenderedBodyDataGetter item,
+            GenderedBodyData item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             Func<GenderedBodyData_ErrorMask> errorMask)

@@ -1865,7 +1865,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Binary Write
         public static void Write_Binary<T, T_ErrMask>(
             MutagenWriter writer,
-            IGroupGetter<T> item,
+            Group<T> item,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out Group_ErrorMask<T_ErrMask> errorMask)
@@ -1883,7 +1883,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         private static void Write_Binary_Internal<T, T_ErrMask>(
             MutagenWriter writer,
-            IGroupGetter<T> item,
+            Group<T> item,
             RecordTypeConverter recordTypeConverter,
             Func<Group_ErrorMask<T_ErrMask>> errorMask)
             where T : Bethesda.MajorRecord, ILoquiObjectGetter
@@ -1916,7 +1916,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void Write_Binary_Embedded<T, T_ErrMask>(
-            IGroupGetter<T> item,
+            Group<T> item,
             MutagenWriter writer,
             Func<Group_ErrorMask<T_ErrMask>> errorMask)
             where T : Bethesda.MajorRecord, ILoquiObjectGetter
@@ -1940,7 +1940,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void Write_Binary_RecordTypes<T, T_ErrMask>(
-            IGroupGetter<T> item,
+            Group<T> item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             Func<Group_ErrorMask<T_ErrMask>> errorMask)

@@ -1411,7 +1411,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Binary Write
         public static void Write_Binary(
             MutagenWriter writer,
-            ISpellLeveledGetter item,
+            SpellLeveled item,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out SpellLeveled_ErrorMask errorMask)
@@ -1427,7 +1427,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
-            ISpellLeveledGetter item,
+            SpellLeveled item,
             RecordTypeConverter recordTypeConverter,
             Func<SpellLeveled_ErrorMask> errorMask)
         {

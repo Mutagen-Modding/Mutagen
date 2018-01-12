@@ -13,11 +13,18 @@ namespace Mutagen.Bethesda.Generation
 {
     public class DataType : SetMarkerType
     {
-        public HashSet<int> BreakIndices = new HashSet<int>();
-        public List<(RangeInt32, int)> RangeIndices = new List<(RangeInt32, int)>();
+        public const string BREAK = "Break";
+        public const string RANGE = "Range";
+        public const string MIN = "Min";
+        public List<int> BreakIndices = new List<int>();
+        public List<(RangeInt32 FieldIndexRange, int DataSetSizeMin)> RangeIndices = new List<(RangeInt32 FieldIndexRange, int DataSetSizeMin)>();
+        public bool HasCustomLogic => this.BreakIndices.Count > 0 || this.RangeIndices.Count > 0;
+        public string EnumName => $"{this.GetFieldData().RecordType.Value.Type}DataType";
+        public string StateName => $"{this.EnumName}State";
 
         public override async Task Load(XElement node, bool requireName = true)
         {
+            this.Node = node;
             var data = this.CustomData.TryCreateValue(Mutagen.Bethesda.Generation.Constants.DATA_KEY, () => new MutagenFieldData(this)) as MutagenFieldData;
             if (node.TryGetAttribute("recordType", out var recType))
             {
@@ -33,12 +40,12 @@ namespace Mutagen.Bethesda.Generation
                 TryGet<TypeGeneration> typeGen;
                 foreach (var fieldNode in fieldsNode.Elements())
                 {
-                    if (fieldNode.Name.LocalName.Equals("Break"))
+                    if (fieldNode.Name.LocalName.Equals(BREAK))
                     {
                         BreakIndices.Add(this.SubFields.Count);
                         continue;
                     }
-                    if (fieldNode.Name.LocalName.Equals("Range"))
+                    if (fieldNode.Name.LocalName.Equals(RANGE))
                     {
                         var curIndex = this.SubFields.Count;
                         foreach (var subFieldNode in fieldNode.Elements())
@@ -53,7 +60,7 @@ namespace Mutagen.Bethesda.Generation
                             (new RangeInt32(
                                 curIndex,
                                 this.SubFields.Count - 1),
-                            fieldNode.GetAttribute<int>("Min", throwException: true)));
+                            fieldNode.GetAttribute<int>(MIN, throwException: true)));
                         continue;
                     }
 

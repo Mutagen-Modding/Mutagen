@@ -1497,7 +1497,7 @@ namespace Mutagen.Bethesda.Internals
         #region Binary Write
         public static void Write_Binary(
             MutagenWriter writer,
-            IMasterReferenceGetter item,
+            MasterReference item,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out MasterReference_ErrorMask errorMask)
@@ -1513,7 +1513,7 @@ namespace Mutagen.Bethesda.Internals
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
-            IMasterReferenceGetter item,
+            MasterReference item,
             RecordTypeConverter recordTypeConverter,
             Func<MasterReference_ErrorMask> errorMask)
         {
@@ -1534,7 +1534,7 @@ namespace Mutagen.Bethesda.Internals
         #endregion
 
         public static void Write_Binary_RecordTypes(
-            IMasterReferenceGetter item,
+            MasterReference item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             Func<MasterReference_ErrorMask> errorMask)

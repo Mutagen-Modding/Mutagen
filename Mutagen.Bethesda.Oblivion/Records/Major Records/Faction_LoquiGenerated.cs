@@ -1974,7 +1974,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Binary Write
         public static void Write_Binary(
             MutagenWriter writer,
-            IFactionGetter item,
+            Faction item,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out Faction_ErrorMask errorMask)
@@ -1990,7 +1990,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
-            IFactionGetter item,
+            Faction item,
             RecordTypeConverter recordTypeConverter,
             Func<Faction_ErrorMask> errorMask)
         {
@@ -2021,7 +2021,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void Write_Binary_RecordTypes(
-            IFactionGetter item,
+            Faction item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             Func<Faction_ErrorMask> errorMask)

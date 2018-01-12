@@ -1689,7 +1689,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Binary Write
         public static void Write_Binary(
             MutagenWriter writer,
-            IClothingGetter item,
+            Clothing item,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out Clothing_ErrorMask errorMask)
@@ -1705,7 +1705,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
-            IClothingGetter item,
+            Clothing item,
             RecordTypeConverter recordTypeConverter,
             Func<Clothing_ErrorMask> errorMask)
         {
@@ -1736,7 +1736,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void Write_Binary_RecordTypes(
-            IClothingGetter item,
+            Clothing item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             Func<Clothing_ErrorMask> errorMask)

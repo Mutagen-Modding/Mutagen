@@ -1495,7 +1495,7 @@ namespace Mutagen.Bethesda.Internals
         #region Binary Write
         public static void Write_Binary(
             MutagenWriter writer,
-            IMajorRecordGetter item,
+            MajorRecord item,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out MajorRecord_ErrorMask errorMask)
@@ -1511,7 +1511,7 @@ namespace Mutagen.Bethesda.Internals
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
-            IMajorRecordGetter item,
+            MajorRecord item,
             RecordTypeConverter recordTypeConverter,
             Func<MajorRecord_ErrorMask> errorMask)
         {
@@ -1536,7 +1536,7 @@ namespace Mutagen.Bethesda.Internals
         #endregion
 
         public static void Write_Binary_Embedded(
-            IMajorRecordGetter item,
+            MajorRecord item,
             MutagenWriter writer,
             Func<MajorRecord_ErrorMask> errorMask)
         {
@@ -1558,7 +1558,7 @@ namespace Mutagen.Bethesda.Internals
         }
 
         public static void Write_Binary_RecordTypes(
-            IMajorRecordGetter item,
+            MajorRecord item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             Func<MajorRecord_ErrorMask> errorMask)

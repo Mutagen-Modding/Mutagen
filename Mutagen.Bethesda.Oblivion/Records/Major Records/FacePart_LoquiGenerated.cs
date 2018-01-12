@@ -1641,7 +1641,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Binary Write
         public static void Write_Binary(
             MutagenWriter writer,
-            IFacePartGetter item,
+            FacePart item,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out FacePart_ErrorMask errorMask)
@@ -1657,7 +1657,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
-            IFacePartGetter item,
+            FacePart item,
             RecordTypeConverter recordTypeConverter,
             Func<FacePart_ErrorMask> errorMask)
         {
@@ -1678,7 +1678,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void Write_Binary_RecordTypes(
-            IFacePartGetter item,
+            FacePart item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             Func<FacePart_ErrorMask> errorMask)

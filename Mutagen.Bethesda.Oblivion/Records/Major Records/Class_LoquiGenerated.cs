@@ -647,6 +647,15 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #region Mutagen
+        public DATADataType DATADataTypeState;
+        [Flags]
+        public enum DATADataType
+        {
+            Break0 = 1
+        }
+        #endregion
+
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
@@ -1048,7 +1057,11 @@ namespace Mutagen.Bethesda.Oblivion
                             fieldIndex: (int)Class_FieldIndex.ClassServices,
                             errorMask: errorMask);
                         item._ClassServices.SetIfSucceeded(ClassServicestryGet);
-                        if (dataFrame.Complete) return TryGet<Class_FieldIndex?>.Succeed(Class_FieldIndex.ClassServices);
+                        if (dataFrame.Complete)
+                        {
+                            item.DATADataTypeState |= DATADataType.Break0;
+                            return TryGet<Class_FieldIndex?>.Succeed(Class_FieldIndex.ClassServices);
+                        }
                         item._Training.SetIfSucceeded(LoquiBinaryTranslation<ClassTraining, ClassTraining_ErrorMask>.Instance.Parse(
                             frame: dataFrame.Spawn(snapToFinalPosition: false),
                             fieldIndex: (int)Class_FieldIndex.Training,
@@ -2369,7 +2382,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Binary Write
         public static void Write_Binary(
             MutagenWriter writer,
-            IClassGetter item,
+            Class item,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out Class_ErrorMask errorMask)
@@ -2385,7 +2398,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
-            IClassGetter item,
+            Class item,
             RecordTypeConverter recordTypeConverter,
             Func<Class_ErrorMask> errorMask)
         {
@@ -2416,7 +2429,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void Write_Binary_RecordTypes(
-            IClassGetter item,
+            Class item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             Func<Class_ErrorMask> errorMask)
@@ -2490,11 +2503,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     length: new ContentLength(4),
                     fieldIndex: (int)Class_FieldIndex.ClassServices,
                     errorMask: errorMask);
-                LoquiBinaryTranslation<ClassTraining, ClassTraining_ErrorMask>.Instance.Write(
-                    writer: writer,
-                    item: item.Training_Property,
-                    fieldIndex: (int)Class_FieldIndex.Training,
-                    errorMask: errorMask);
+                if (!item.DATADataTypeState.HasFlag(Class.DATADataType.Break0))
+                {
+                    LoquiBinaryTranslation<ClassTraining, ClassTraining_ErrorMask>.Instance.Write(
+                        writer: writer,
+                        item: item.Training_Property,
+                        fieldIndex: (int)Class_FieldIndex.Training,
+                        errorMask: errorMask);
+                }
             }
         }
 

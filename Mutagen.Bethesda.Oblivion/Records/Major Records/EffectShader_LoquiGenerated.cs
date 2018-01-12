@@ -1307,7 +1307,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Binary Write
         public static void Write_Binary(
             MutagenWriter writer,
-            IEffectShaderGetter item,
+            EffectShader item,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out EffectShader_ErrorMask errorMask)
@@ -1323,7 +1323,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
-            IEffectShaderGetter item,
+            EffectShader item,
             RecordTypeConverter recordTypeConverter,
             Func<EffectShader_ErrorMask> errorMask)
         {

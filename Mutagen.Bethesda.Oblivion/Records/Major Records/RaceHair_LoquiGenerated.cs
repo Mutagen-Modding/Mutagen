@@ -1435,7 +1435,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Binary Write
         public static void Write_Binary(
             MutagenWriter writer,
-            IRaceHairGetter item,
+            RaceHair item,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out RaceHair_ErrorMask errorMask)
@@ -1451,7 +1451,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
-            IRaceHairGetter item,
+            RaceHair item,
             RecordTypeConverter recordTypeConverter,
             Func<RaceHair_ErrorMask> errorMask)
         {
@@ -1477,7 +1477,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void Write_Binary_Embedded(
-            IRaceHairGetter item,
+            RaceHair item,
             MutagenWriter writer,
             Func<RaceHair_ErrorMask> errorMask)
         {

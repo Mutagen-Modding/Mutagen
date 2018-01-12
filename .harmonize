@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>e705ce778c86faa24527c72a7b84fbc20f5fdb81</Sha>
+         <Sha>7b4cd0fc3581db5acd414b33c291d0b3af907a8f</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>01-09-2018 21:46:38</CommitDate>
-         <Description>Loqui.Presentation and ColorType</Description>
+         <CommitDate>01-12-2018 17:17:46</CommitDate>
+         <Description>XElement node added to TypeGeneration, for reference</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

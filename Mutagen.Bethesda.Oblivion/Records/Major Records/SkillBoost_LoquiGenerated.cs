@@ -1448,7 +1448,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Binary Write
         public static void Write_Binary(
             MutagenWriter writer,
-            ISkillBoostGetter item,
+            SkillBoost item,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out SkillBoost_ErrorMask errorMask)
@@ -1464,7 +1464,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
-            ISkillBoostGetter item,
+            SkillBoost item,
             RecordTypeConverter recordTypeConverter,
             Func<SkillBoost_ErrorMask> errorMask)
         {
@@ -1484,7 +1484,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void Write_Binary_Embedded(
-            ISkillBoostGetter item,
+            SkillBoost item,
             MutagenWriter writer,
             Func<SkillBoost_ErrorMask> errorMask)
         {
