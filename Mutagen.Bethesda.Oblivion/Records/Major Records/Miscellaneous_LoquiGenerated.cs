@@ -64,26 +64,26 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDSetLink<Script> IMiscellaneousGetter.Script_Property => this.Script_Property;
         #endregion
         #region Value
-        protected readonly INotifyingSetItem<Int32> _Value = NotifyingSetItem.Factory<Int32>(markAsSet: false);
-        public INotifyingSetItem<Int32> Value_Property => _Value;
+        protected readonly INotifyingItem<Int32> _Value = NotifyingItem.Factory<Int32>();
+        public INotifyingItem<Int32> Value_Property => _Value;
         public Int32 Value
         {
             get => this._Value.Item;
             set => this._Value.Set(value);
         }
-        INotifyingSetItem<Int32> IMiscellaneous.Value_Property => this.Value_Property;
-        INotifyingSetItemGetter<Int32> IMiscellaneousGetter.Value_Property => this.Value_Property;
+        INotifyingItem<Int32> IMiscellaneous.Value_Property => this.Value_Property;
+        INotifyingItemGetter<Int32> IMiscellaneousGetter.Value_Property => this.Value_Property;
         #endregion
         #region Weight
-        protected readonly INotifyingSetItem<Single> _Weight = NotifyingSetItem.Factory<Single>(markAsSet: false);
-        public INotifyingSetItem<Single> Weight_Property => _Weight;
+        protected readonly INotifyingItem<Single> _Weight = NotifyingItem.Factory<Single>();
+        public INotifyingItem<Single> Weight_Property => _Weight;
         public Single Weight
         {
             get => this._Weight.Item;
             set => this._Weight.Set(value);
         }
-        INotifyingSetItem<Single> IMiscellaneous.Weight_Property => this.Weight_Property;
-        INotifyingSetItemGetter<Single> IMiscellaneousGetter.Weight_Property => this.Weight_Property;
+        INotifyingItem<Single> IMiscellaneous.Weight_Property => this.Weight_Property;
+        INotifyingItemGetter<Single> IMiscellaneousGetter.Weight_Property => this.Weight_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -156,16 +156,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (Script != rhs.Script) return false;
             }
-            if (Value_Property.HasBeenSet != rhs.Value_Property.HasBeenSet) return false;
-            if (Value_Property.HasBeenSet)
-            {
-                if (Value != rhs.Value) return false;
-            }
-            if (Weight_Property.HasBeenSet != rhs.Weight_Property.HasBeenSet) return false;
-            if (Weight_Property.HasBeenSet)
-            {
-                if (Weight != rhs.Weight) return false;
-            }
+            if (Value != rhs.Value) return false;
+            if (Weight != rhs.Weight) return false;
             return true;
         }
 
@@ -184,14 +176,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(Script).CombineHashCode(ret);
             }
-            if (Value_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Value).CombineHashCode(ret);
-            }
-            if (Weight_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Weight).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(Value).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Weight).CombineHashCode(ret);
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -1117,10 +1103,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Script Script { get; set; }
         new Int32 Value { get; set; }
-        new INotifyingSetItem<Int32> Value_Property { get; }
+        new INotifyingItem<Int32> Value_Property { get; }
 
         new Single Weight { get; set; }
-        new INotifyingSetItem<Single> Weight_Property { get; }
+        new INotifyingItem<Single> Weight_Property { get; }
 
     }
 
@@ -1143,12 +1129,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Value
         Int32 Value { get; }
-        INotifyingSetItemGetter<Int32> Value_Property { get; }
+        INotifyingItemGetter<Int32> Value_Property { get; }
 
         #endregion
         #region Weight
         Single Weight { get; }
-        INotifyingSetItemGetter<Single> Weight_Property { get; }
+        INotifyingItemGetter<Single> Weight_Property { get; }
 
         #endregion
 
@@ -1562,9 +1548,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Value_Property.SetToWithDefault(
-                        rhs: rhs.Value_Property,
-                        def: def?.Value_Property,
+                    item.Value_Property.Set(
+                        value: rhs.Value,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1577,9 +1562,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Weight_Property.SetToWithDefault(
-                        rhs: rhs.Weight_Property,
-                        def: def?.Weight_Property,
+                    item.Weight_Property.Set(
+                        value: rhs.Weight,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1601,6 +1585,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Miscellaneous_FieldIndex enu = (Miscellaneous_FieldIndex)index;
             switch (enu)
             {
+                case Miscellaneous_FieldIndex.Value:
+                case Miscellaneous_FieldIndex.Weight:
+                    if (on) break;
+                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 case Miscellaneous_FieldIndex.Model:
                     obj.Model_Property.HasBeenSet = on;
                     break;
@@ -1609,12 +1597,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case Miscellaneous_FieldIndex.Script:
                     obj.Script_Property.HasBeenSet = on;
-                    break;
-                case Miscellaneous_FieldIndex.Value:
-                    obj.Value_Property.HasBeenSet = on;
-                    break;
-                case Miscellaneous_FieldIndex.Weight:
-                    obj.Weight_Property.HasBeenSet = on;
                     break;
                 default:
                     NamedMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
@@ -1640,10 +1622,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Script_Property.Unset(cmds);
                     break;
                 case Miscellaneous_FieldIndex.Value:
-                    obj.Value_Property.Unset(cmds);
+                    obj.Value = default(Int32);
                     break;
                 case Miscellaneous_FieldIndex.Weight:
-                    obj.Weight_Property.Unset(cmds);
+                    obj.Weight = default(Single);
                     break;
                 default:
                     NamedMajorRecordCommon.UnsetNthObject(index, obj);
@@ -1658,16 +1640,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Miscellaneous_FieldIndex enu = (Miscellaneous_FieldIndex)index;
             switch (enu)
             {
+                case Miscellaneous_FieldIndex.Value:
+                case Miscellaneous_FieldIndex.Weight:
+                    return true;
                 case Miscellaneous_FieldIndex.Model:
                     return obj.Model_Property.HasBeenSet;
                 case Miscellaneous_FieldIndex.Icon:
                     return obj.Icon_Property.HasBeenSet;
                 case Miscellaneous_FieldIndex.Script:
                     return obj.Script_Property.HasBeenSet;
-                case Miscellaneous_FieldIndex.Value:
-                    return obj.Value_Property.HasBeenSet;
-                case Miscellaneous_FieldIndex.Weight:
-                    return obj.Weight_Property.HasBeenSet;
                 default:
                     return NamedMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -1702,8 +1683,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Model_Property.Unset(cmds.ToUnsetParams());
             item.Icon_Property.Unset(cmds.ToUnsetParams());
             item.Script_Property.Unset(cmds.ToUnsetParams());
-            item.Value_Property.Unset(cmds.ToUnsetParams());
-            item.Weight_Property.Unset(cmds.ToUnsetParams());
+            item.Value = default(Int32);
+            item.Weight = default(Single);
         }
 
         public static Miscellaneous_Mask<bool> GetEqualsMask(
@@ -1724,8 +1705,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs));
             ret.Icon = item.Icon_Property.Equals(rhs.Icon_Property, (l, r) => object.Equals(l, r));
             ret.Script = item.Script_Property.Equals(rhs.Script_Property, (l, r) => l == r);
-            ret.Value = item.Value_Property.Equals(rhs.Value_Property, (l, r) => l == r);
-            ret.Weight = item.Weight_Property.Equals(rhs.Weight_Property, (l, r) => l == r);
+            ret.Value = item.Value == rhs.Value;
+            ret.Weight = item.Weight == rhs.Weight;
             NamedMajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -1788,8 +1769,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Model.Specific != null && (item.Model_Property.Item == null || !item.Model_Property.Item.HasBeenSet(checkMask.Model.Specific))) return false;
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_Property.HasBeenSet) return false;
             if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script_Property.HasBeenSet) return false;
-            if (checkMask.Value.HasValue && checkMask.Value.Value != item.Value_Property.HasBeenSet) return false;
-            if (checkMask.Weight.HasValue && checkMask.Weight.Value != item.Weight_Property.HasBeenSet) return false;
             return true;
         }
 
@@ -1799,8 +1778,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_Property.HasBeenSet, ModelCommon.GetHasBeenSetMask(item.Model_Property.Item));
             ret.Icon = item.Icon_Property.HasBeenSet;
             ret.Script = item.Script_Property.HasBeenSet;
-            ret.Value = item.Value_Property.HasBeenSet;
-            ret.Weight = item.Weight_Property.HasBeenSet;
+            ret.Value = true;
+            ret.Weight = true;
             return ret;
         }
 
@@ -1915,24 +1894,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             fieldIndex: (int)Miscellaneous_FieldIndex.Script,
                             errorMask: errorMask);
                     }
-                    if (item.Value_Property.HasBeenSet)
-                    {
-                        Int32XmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Value),
-                            item: item.Value_Property,
-                            fieldIndex: (int)Miscellaneous_FieldIndex.Value,
-                            errorMask: errorMask);
-                    }
-                    if (item.Weight_Property.HasBeenSet)
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Weight),
-                            item: item.Weight_Property,
-                            fieldIndex: (int)Miscellaneous_FieldIndex.Weight,
-                            errorMask: errorMask);
-                    }
+                    Int32XmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Value),
+                        item: item.Value_Property,
+                        fieldIndex: (int)Miscellaneous_FieldIndex.Value,
+                        errorMask: errorMask);
+                    FloatXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Weight),
+                        item: item.Weight_Property,
+                        fieldIndex: (int)Miscellaneous_FieldIndex.Weight,
+                        errorMask: errorMask);
                 }
             }
             catch (Exception ex)

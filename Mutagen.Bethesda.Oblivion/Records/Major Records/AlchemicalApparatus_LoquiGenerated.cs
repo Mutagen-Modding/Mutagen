@@ -64,48 +64,48 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDSetLink<Script> IAlchemicalApparatusGetter.Script_Property => this.Script_Property;
         #endregion
         #region Type
-        protected readonly INotifyingSetItem<AlchemicalApparatus.ApparatusType> _Type = NotifyingSetItem.Factory<AlchemicalApparatus.ApparatusType>(markAsSet: false);
-        public INotifyingSetItem<AlchemicalApparatus.ApparatusType> Type_Property => _Type;
+        protected readonly INotifyingItem<AlchemicalApparatus.ApparatusType> _Type = NotifyingItem.Factory<AlchemicalApparatus.ApparatusType>();
+        public INotifyingItem<AlchemicalApparatus.ApparatusType> Type_Property => _Type;
         public AlchemicalApparatus.ApparatusType Type
         {
             get => this._Type.Item;
             set => this._Type.Set(value);
         }
-        INotifyingSetItem<AlchemicalApparatus.ApparatusType> IAlchemicalApparatus.Type_Property => this.Type_Property;
-        INotifyingSetItemGetter<AlchemicalApparatus.ApparatusType> IAlchemicalApparatusGetter.Type_Property => this.Type_Property;
+        INotifyingItem<AlchemicalApparatus.ApparatusType> IAlchemicalApparatus.Type_Property => this.Type_Property;
+        INotifyingItemGetter<AlchemicalApparatus.ApparatusType> IAlchemicalApparatusGetter.Type_Property => this.Type_Property;
         #endregion
         #region Value
-        protected readonly INotifyingSetItem<UInt32> _Value = NotifyingSetItem.Factory<UInt32>(markAsSet: false);
-        public INotifyingSetItem<UInt32> Value_Property => _Value;
+        protected readonly INotifyingItem<UInt32> _Value = NotifyingItem.Factory<UInt32>();
+        public INotifyingItem<UInt32> Value_Property => _Value;
         public UInt32 Value
         {
             get => this._Value.Item;
             set => this._Value.Set(value);
         }
-        INotifyingSetItem<UInt32> IAlchemicalApparatus.Value_Property => this.Value_Property;
-        INotifyingSetItemGetter<UInt32> IAlchemicalApparatusGetter.Value_Property => this.Value_Property;
+        INotifyingItem<UInt32> IAlchemicalApparatus.Value_Property => this.Value_Property;
+        INotifyingItemGetter<UInt32> IAlchemicalApparatusGetter.Value_Property => this.Value_Property;
         #endregion
         #region Weight
-        protected readonly INotifyingSetItem<Single> _Weight = NotifyingSetItem.Factory<Single>(markAsSet: false);
-        public INotifyingSetItem<Single> Weight_Property => _Weight;
+        protected readonly INotifyingItem<Single> _Weight = NotifyingItem.Factory<Single>();
+        public INotifyingItem<Single> Weight_Property => _Weight;
         public Single Weight
         {
             get => this._Weight.Item;
             set => this._Weight.Set(value);
         }
-        INotifyingSetItem<Single> IAlchemicalApparatus.Weight_Property => this.Weight_Property;
-        INotifyingSetItemGetter<Single> IAlchemicalApparatusGetter.Weight_Property => this.Weight_Property;
+        INotifyingItem<Single> IAlchemicalApparatus.Weight_Property => this.Weight_Property;
+        INotifyingItemGetter<Single> IAlchemicalApparatusGetter.Weight_Property => this.Weight_Property;
         #endregion
         #region Quality
-        protected readonly INotifyingSetItem<Single> _Quality = NotifyingSetItem.Factory<Single>(markAsSet: false);
-        public INotifyingSetItem<Single> Quality_Property => _Quality;
+        protected readonly INotifyingItem<Single> _Quality = NotifyingItem.Factory<Single>();
+        public INotifyingItem<Single> Quality_Property => _Quality;
         public Single Quality
         {
             get => this._Quality.Item;
             set => this._Quality.Set(value.PutInRange(Quality_Range.Min, Quality_Range.Max));
         }
-        INotifyingSetItem<Single> IAlchemicalApparatus.Quality_Property => this.Quality_Property;
-        INotifyingSetItemGetter<Single> IAlchemicalApparatusGetter.Quality_Property => this.Quality_Property;
+        INotifyingItem<Single> IAlchemicalApparatus.Quality_Property => this.Quality_Property;
+        INotifyingItemGetter<Single> IAlchemicalApparatusGetter.Quality_Property => this.Quality_Property;
         public static RangeFloat Quality_Range = new RangeFloat(0f, 255f);
         #endregion
 
@@ -179,26 +179,10 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (Script != rhs.Script) return false;
             }
-            if (Type_Property.HasBeenSet != rhs.Type_Property.HasBeenSet) return false;
-            if (Type_Property.HasBeenSet)
-            {
-                if (Type != rhs.Type) return false;
-            }
-            if (Value_Property.HasBeenSet != rhs.Value_Property.HasBeenSet) return false;
-            if (Value_Property.HasBeenSet)
-            {
-                if (Value != rhs.Value) return false;
-            }
-            if (Weight_Property.HasBeenSet != rhs.Weight_Property.HasBeenSet) return false;
-            if (Weight_Property.HasBeenSet)
-            {
-                if (Weight != rhs.Weight) return false;
-            }
-            if (Quality_Property.HasBeenSet != rhs.Quality_Property.HasBeenSet) return false;
-            if (Quality_Property.HasBeenSet)
-            {
-                if (Quality != rhs.Quality) return false;
-            }
+            if (Type != rhs.Type) return false;
+            if (Value != rhs.Value) return false;
+            if (Weight != rhs.Weight) return false;
+            if (Quality != rhs.Quality) return false;
             return true;
         }
 
@@ -217,22 +201,10 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(Script).CombineHashCode(ret);
             }
-            if (Type_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Type).CombineHashCode(ret);
-            }
-            if (Value_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Value).CombineHashCode(ret);
-            }
-            if (Weight_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Weight).CombineHashCode(ret);
-            }
-            if (Quality_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Quality).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(Type).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Value).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Weight).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Quality).CombineHashCode(ret);
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -1200,16 +1172,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Script Script { get; set; }
         new AlchemicalApparatus.ApparatusType Type { get; set; }
-        new INotifyingSetItem<AlchemicalApparatus.ApparatusType> Type_Property { get; }
+        new INotifyingItem<AlchemicalApparatus.ApparatusType> Type_Property { get; }
 
         new UInt32 Value { get; set; }
-        new INotifyingSetItem<UInt32> Value_Property { get; }
+        new INotifyingItem<UInt32> Value_Property { get; }
 
         new Single Weight { get; set; }
-        new INotifyingSetItem<Single> Weight_Property { get; }
+        new INotifyingItem<Single> Weight_Property { get; }
 
         new Single Quality { get; set; }
-        new INotifyingSetItem<Single> Quality_Property { get; }
+        new INotifyingItem<Single> Quality_Property { get; }
 
     }
 
@@ -1232,22 +1204,22 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Type
         AlchemicalApparatus.ApparatusType Type { get; }
-        INotifyingSetItemGetter<AlchemicalApparatus.ApparatusType> Type_Property { get; }
+        INotifyingItemGetter<AlchemicalApparatus.ApparatusType> Type_Property { get; }
 
         #endregion
         #region Value
         UInt32 Value { get; }
-        INotifyingSetItemGetter<UInt32> Value_Property { get; }
+        INotifyingItemGetter<UInt32> Value_Property { get; }
 
         #endregion
         #region Weight
         Single Weight { get; }
-        INotifyingSetItemGetter<Single> Weight_Property { get; }
+        INotifyingItemGetter<Single> Weight_Property { get; }
 
         #endregion
         #region Quality
         Single Quality { get; }
-        INotifyingSetItemGetter<Single> Quality_Property { get; }
+        INotifyingItemGetter<Single> Quality_Property { get; }
 
         #endregion
 
@@ -1685,9 +1657,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Type_Property.SetToWithDefault(
-                        rhs: rhs.Type_Property,
-                        def: def?.Type_Property,
+                    item.Type_Property.Set(
+                        value: rhs.Type,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1700,9 +1671,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Value_Property.SetToWithDefault(
-                        rhs: rhs.Value_Property,
-                        def: def?.Value_Property,
+                    item.Value_Property.Set(
+                        value: rhs.Value,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1715,9 +1685,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Weight_Property.SetToWithDefault(
-                        rhs: rhs.Weight_Property,
-                        def: def?.Weight_Property,
+                    item.Weight_Property.Set(
+                        value: rhs.Weight,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1730,9 +1699,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Quality_Property.SetToWithDefault(
-                        rhs: rhs.Quality_Property,
-                        def: def?.Quality_Property,
+                    item.Quality_Property.Set(
+                        value: rhs.Quality,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1754,6 +1722,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
             switch (enu)
             {
+                case AlchemicalApparatus_FieldIndex.Type:
+                case AlchemicalApparatus_FieldIndex.Value:
+                case AlchemicalApparatus_FieldIndex.Weight:
+                case AlchemicalApparatus_FieldIndex.Quality:
+                    if (on) break;
+                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 case AlchemicalApparatus_FieldIndex.Model:
                     obj.Model_Property.HasBeenSet = on;
                     break;
@@ -1762,18 +1736,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case AlchemicalApparatus_FieldIndex.Script:
                     obj.Script_Property.HasBeenSet = on;
-                    break;
-                case AlchemicalApparatus_FieldIndex.Type:
-                    obj.Type_Property.HasBeenSet = on;
-                    break;
-                case AlchemicalApparatus_FieldIndex.Value:
-                    obj.Value_Property.HasBeenSet = on;
-                    break;
-                case AlchemicalApparatus_FieldIndex.Weight:
-                    obj.Weight_Property.HasBeenSet = on;
-                    break;
-                case AlchemicalApparatus_FieldIndex.Quality:
-                    obj.Quality_Property.HasBeenSet = on;
                     break;
                 default:
                     NamedMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
@@ -1799,16 +1761,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Script_Property.Unset(cmds);
                     break;
                 case AlchemicalApparatus_FieldIndex.Type:
-                    obj.Type_Property.Unset(cmds);
+                    obj.Type = default(AlchemicalApparatus.ApparatusType);
                     break;
                 case AlchemicalApparatus_FieldIndex.Value:
-                    obj.Value_Property.Unset(cmds);
+                    obj.Value = default(UInt32);
                     break;
                 case AlchemicalApparatus_FieldIndex.Weight:
-                    obj.Weight_Property.Unset(cmds);
+                    obj.Weight = default(Single);
                     break;
                 case AlchemicalApparatus_FieldIndex.Quality:
-                    obj.Quality_Property.Unset(cmds);
+                    obj.Quality = default(Single);
                     break;
                 default:
                     NamedMajorRecordCommon.UnsetNthObject(index, obj);
@@ -1823,20 +1785,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             AlchemicalApparatus_FieldIndex enu = (AlchemicalApparatus_FieldIndex)index;
             switch (enu)
             {
+                case AlchemicalApparatus_FieldIndex.Type:
+                case AlchemicalApparatus_FieldIndex.Value:
+                case AlchemicalApparatus_FieldIndex.Weight:
+                case AlchemicalApparatus_FieldIndex.Quality:
+                    return true;
                 case AlchemicalApparatus_FieldIndex.Model:
                     return obj.Model_Property.HasBeenSet;
                 case AlchemicalApparatus_FieldIndex.Icon:
                     return obj.Icon_Property.HasBeenSet;
                 case AlchemicalApparatus_FieldIndex.Script:
                     return obj.Script_Property.HasBeenSet;
-                case AlchemicalApparatus_FieldIndex.Type:
-                    return obj.Type_Property.HasBeenSet;
-                case AlchemicalApparatus_FieldIndex.Value:
-                    return obj.Value_Property.HasBeenSet;
-                case AlchemicalApparatus_FieldIndex.Weight:
-                    return obj.Weight_Property.HasBeenSet;
-                case AlchemicalApparatus_FieldIndex.Quality:
-                    return obj.Quality_Property.HasBeenSet;
                 default:
                     return NamedMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -1875,10 +1834,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Model_Property.Unset(cmds.ToUnsetParams());
             item.Icon_Property.Unset(cmds.ToUnsetParams());
             item.Script_Property.Unset(cmds.ToUnsetParams());
-            item.Type_Property.Unset(cmds.ToUnsetParams());
-            item.Value_Property.Unset(cmds.ToUnsetParams());
-            item.Weight_Property.Unset(cmds.ToUnsetParams());
-            item.Quality_Property.Unset(cmds.ToUnsetParams());
+            item.Type = default(AlchemicalApparatus.ApparatusType);
+            item.Value = default(UInt32);
+            item.Weight = default(Single);
+            item.Quality = default(Single);
         }
 
         public static AlchemicalApparatus_Mask<bool> GetEqualsMask(
@@ -1899,10 +1858,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs));
             ret.Icon = item.Icon_Property.Equals(rhs.Icon_Property, (l, r) => object.Equals(l, r));
             ret.Script = item.Script_Property.Equals(rhs.Script_Property, (l, r) => l == r);
-            ret.Type = item.Type_Property.Equals(rhs.Type_Property, (l, r) => l == r);
-            ret.Value = item.Value_Property.Equals(rhs.Value_Property, (l, r) => l == r);
-            ret.Weight = item.Weight_Property.Equals(rhs.Weight_Property, (l, r) => l == r);
-            ret.Quality = item.Quality_Property.Equals(rhs.Quality_Property, (l, r) => l == r);
+            ret.Type = item.Type == rhs.Type;
+            ret.Value = item.Value == rhs.Value;
+            ret.Weight = item.Weight == rhs.Weight;
+            ret.Quality = item.Quality == rhs.Quality;
             NamedMajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -1973,10 +1932,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Model.Specific != null && (item.Model_Property.Item == null || !item.Model_Property.Item.HasBeenSet(checkMask.Model.Specific))) return false;
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_Property.HasBeenSet) return false;
             if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script_Property.HasBeenSet) return false;
-            if (checkMask.Type.HasValue && checkMask.Type.Value != item.Type_Property.HasBeenSet) return false;
-            if (checkMask.Value.HasValue && checkMask.Value.Value != item.Value_Property.HasBeenSet) return false;
-            if (checkMask.Weight.HasValue && checkMask.Weight.Value != item.Weight_Property.HasBeenSet) return false;
-            if (checkMask.Quality.HasValue && checkMask.Quality.Value != item.Quality_Property.HasBeenSet) return false;
             return true;
         }
 
@@ -1986,10 +1941,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_Property.HasBeenSet, ModelCommon.GetHasBeenSetMask(item.Model_Property.Item));
             ret.Icon = item.Icon_Property.HasBeenSet;
             ret.Script = item.Script_Property.HasBeenSet;
-            ret.Type = item.Type_Property.HasBeenSet;
-            ret.Value = item.Value_Property.HasBeenSet;
-            ret.Weight = item.Weight_Property.HasBeenSet;
-            ret.Quality = item.Quality_Property.HasBeenSet;
+            ret.Type = true;
+            ret.Value = true;
+            ret.Weight = true;
+            ret.Quality = true;
             return ret;
         }
 
@@ -2104,42 +2059,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             fieldIndex: (int)AlchemicalApparatus_FieldIndex.Script,
                             errorMask: errorMask);
                     }
-                    if (item.Type_Property.HasBeenSet)
-                    {
-                        EnumXmlTranslation<AlchemicalApparatus.ApparatusType>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Type),
-                            item: item.Type_Property,
-                            fieldIndex: (int)AlchemicalApparatus_FieldIndex.Type,
-                            errorMask: errorMask);
-                    }
-                    if (item.Value_Property.HasBeenSet)
-                    {
-                        UInt32XmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Value),
-                            item: item.Value_Property,
-                            fieldIndex: (int)AlchemicalApparatus_FieldIndex.Value,
-                            errorMask: errorMask);
-                    }
-                    if (item.Weight_Property.HasBeenSet)
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Weight),
-                            item: item.Weight_Property,
-                            fieldIndex: (int)AlchemicalApparatus_FieldIndex.Weight,
-                            errorMask: errorMask);
-                    }
-                    if (item.Quality_Property.HasBeenSet)
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Quality),
-                            item: item.Quality_Property,
-                            fieldIndex: (int)AlchemicalApparatus_FieldIndex.Quality,
-                            errorMask: errorMask);
-                    }
+                    EnumXmlTranslation<AlchemicalApparatus.ApparatusType>.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Type),
+                        item: item.Type_Property,
+                        fieldIndex: (int)AlchemicalApparatus_FieldIndex.Type,
+                        errorMask: errorMask);
+                    UInt32XmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Value),
+                        item: item.Value_Property,
+                        fieldIndex: (int)AlchemicalApparatus_FieldIndex.Value,
+                        errorMask: errorMask);
+                    FloatXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Weight),
+                        item: item.Weight_Property,
+                        fieldIndex: (int)AlchemicalApparatus_FieldIndex.Weight,
+                        errorMask: errorMask);
+                    FloatXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Quality),
+                        item: item.Quality_Property,
+                        fieldIndex: (int)AlchemicalApparatus_FieldIndex.Quality,
+                        errorMask: errorMask);
                 }
             }
             catch (Exception ex)

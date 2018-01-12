@@ -75,26 +75,26 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Single> IIngredientGetter.Weight_Property => this.Weight_Property;
         #endregion
         #region Value
-        protected readonly INotifyingSetItem<UInt32> _Value = NotifyingSetItem.Factory<UInt32>(markAsSet: false);
-        public INotifyingSetItem<UInt32> Value_Property => _Value;
+        protected readonly INotifyingItem<UInt32> _Value = NotifyingItem.Factory<UInt32>();
+        public INotifyingItem<UInt32> Value_Property => _Value;
         public UInt32 Value
         {
             get => this._Value.Item;
             set => this._Value.Set(value);
         }
-        INotifyingSetItem<UInt32> IIngredient.Value_Property => this.Value_Property;
-        INotifyingSetItemGetter<UInt32> IIngredientGetter.Value_Property => this.Value_Property;
+        INotifyingItem<UInt32> IIngredient.Value_Property => this.Value_Property;
+        INotifyingItemGetter<UInt32> IIngredientGetter.Value_Property => this.Value_Property;
         #endregion
         #region Flags
-        protected readonly INotifyingSetItem<Ingredient.IngredientFlag> _Flags = NotifyingSetItem.Factory<Ingredient.IngredientFlag>(markAsSet: false);
-        public INotifyingSetItem<Ingredient.IngredientFlag> Flags_Property => _Flags;
+        protected readonly INotifyingItem<Ingredient.IngredientFlag> _Flags = NotifyingItem.Factory<Ingredient.IngredientFlag>();
+        public INotifyingItem<Ingredient.IngredientFlag> Flags_Property => _Flags;
         public Ingredient.IngredientFlag Flags
         {
             get => this._Flags.Item;
             set => this._Flags.Set(value);
         }
-        INotifyingSetItem<Ingredient.IngredientFlag> IIngredient.Flags_Property => this.Flags_Property;
-        INotifyingSetItemGetter<Ingredient.IngredientFlag> IIngredientGetter.Flags_Property => this.Flags_Property;
+        INotifyingItem<Ingredient.IngredientFlag> IIngredient.Flags_Property => this.Flags_Property;
+        INotifyingItemGetter<Ingredient.IngredientFlag> IIngredientGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region Effects
         private readonly INotifyingList<Effect> _Effects = new NotifyingList<Effect>();
@@ -181,16 +181,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (Weight != rhs.Weight) return false;
             }
-            if (Value_Property.HasBeenSet != rhs.Value_Property.HasBeenSet) return false;
-            if (Value_Property.HasBeenSet)
-            {
-                if (Value != rhs.Value) return false;
-            }
-            if (Flags_Property.HasBeenSet != rhs.Flags_Property.HasBeenSet) return false;
-            if (Flags_Property.HasBeenSet)
-            {
-                if (Flags != rhs.Flags) return false;
-            }
+            if (Value != rhs.Value) return false;
+            if (Flags != rhs.Flags) return false;
             if (Effects.HasBeenSet != rhs.Effects.HasBeenSet) return false;
             if (Effects.HasBeenSet)
             {
@@ -218,14 +210,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(Weight).CombineHashCode(ret);
             }
-            if (Value_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Value).CombineHashCode(ret);
-            }
-            if (Flags_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(Value).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
             if (Effects.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(Effects).CombineHashCode(ret);
@@ -1220,10 +1206,10 @@ namespace Mutagen.Bethesda.Oblivion
         new INotifyingSetItem<Single> Weight_Property { get; }
 
         new UInt32 Value { get; set; }
-        new INotifyingSetItem<UInt32> Value_Property { get; }
+        new INotifyingItem<UInt32> Value_Property { get; }
 
         new Ingredient.IngredientFlag Flags { get; set; }
-        new INotifyingSetItem<Ingredient.IngredientFlag> Flags_Property { get; }
+        new INotifyingItem<Ingredient.IngredientFlag> Flags_Property { get; }
 
         new INotifyingList<Effect> Effects { get; }
     }
@@ -1252,12 +1238,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Value
         UInt32 Value { get; }
-        INotifyingSetItemGetter<UInt32> Value_Property { get; }
+        INotifyingItemGetter<UInt32> Value_Property { get; }
 
         #endregion
         #region Flags
         Ingredient.IngredientFlag Flags { get; }
-        INotifyingSetItemGetter<Ingredient.IngredientFlag> Flags_Property { get; }
+        INotifyingItemGetter<Ingredient.IngredientFlag> Flags_Property { get; }
 
         #endregion
         #region Effects
@@ -1716,9 +1702,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Value_Property.SetToWithDefault(
-                        rhs: rhs.Value_Property,
-                        def: def?.Value_Property,
+                    item.Value_Property.Set(
+                        value: rhs.Value,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1731,9 +1716,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Flags_Property.SetToWithDefault(
-                        rhs: rhs.Flags_Property,
-                        def: def?.Flags_Property,
+                    item.Flags_Property.Set(
+                        value: rhs.Flags,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1787,6 +1771,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
             switch (enu)
             {
+                case Ingredient_FieldIndex.Value:
+                case Ingredient_FieldIndex.Flags:
+                    if (on) break;
+                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 case Ingredient_FieldIndex.Model:
                     obj.Model_Property.HasBeenSet = on;
                     break;
@@ -1798,12 +1786,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case Ingredient_FieldIndex.Weight:
                     obj.Weight_Property.HasBeenSet = on;
-                    break;
-                case Ingredient_FieldIndex.Value:
-                    obj.Value_Property.HasBeenSet = on;
-                    break;
-                case Ingredient_FieldIndex.Flags:
-                    obj.Flags_Property.HasBeenSet = on;
                     break;
                 case Ingredient_FieldIndex.Effects:
                     obj.Effects.HasBeenSet = on;
@@ -1835,10 +1817,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Weight_Property.Unset(cmds);
                     break;
                 case Ingredient_FieldIndex.Value:
-                    obj.Value_Property.Unset(cmds);
+                    obj.Value = default(UInt32);
                     break;
                 case Ingredient_FieldIndex.Flags:
-                    obj.Flags_Property.Unset(cmds);
+                    obj.Flags = default(Ingredient.IngredientFlag);
                     break;
                 case Ingredient_FieldIndex.Effects:
                     obj.Effects.Unset(cmds);
@@ -1856,6 +1838,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
             switch (enu)
             {
+                case Ingredient_FieldIndex.Value:
+                case Ingredient_FieldIndex.Flags:
+                    return true;
                 case Ingredient_FieldIndex.Model:
                     return obj.Model_Property.HasBeenSet;
                 case Ingredient_FieldIndex.Icon:
@@ -1864,10 +1849,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.Script_Property.HasBeenSet;
                 case Ingredient_FieldIndex.Weight:
                     return obj.Weight_Property.HasBeenSet;
-                case Ingredient_FieldIndex.Value:
-                    return obj.Value_Property.HasBeenSet;
-                case Ingredient_FieldIndex.Flags:
-                    return obj.Flags_Property.HasBeenSet;
                 case Ingredient_FieldIndex.Effects:
                     return obj.Effects.HasBeenSet;
                 default:
@@ -1909,8 +1890,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Icon_Property.Unset(cmds.ToUnsetParams());
             item.Script_Property.Unset(cmds.ToUnsetParams());
             item.Weight_Property.Unset(cmds.ToUnsetParams());
-            item.Value_Property.Unset(cmds.ToUnsetParams());
-            item.Flags_Property.Unset(cmds.ToUnsetParams());
+            item.Value = default(UInt32);
+            item.Flags = default(Ingredient.IngredientFlag);
             item.Effects.Unset(cmds.ToUnsetParams());
         }
 
@@ -1933,8 +1914,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Icon = item.Icon_Property.Equals(rhs.Icon_Property, (l, r) => object.Equals(l, r));
             ret.Script = item.Script_Property.Equals(rhs.Script_Property, (l, r) => l == r);
             ret.Weight = item.Weight_Property.Equals(rhs.Weight_Property, (l, r) => l == r);
-            ret.Value = item.Value_Property.Equals(rhs.Value_Property, (l, r) => l == r);
-            ret.Flags = item.Flags_Property.Equals(rhs.Flags_Property, (l, r) => l == r);
+            ret.Value = item.Value == rhs.Value;
+            ret.Flags = item.Flags == rhs.Flags;
             if (item.Effects.HasBeenSet == rhs.Effects.HasBeenSet)
             {
                 if (item.Effects.HasBeenSet)
@@ -2045,8 +2026,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_Property.HasBeenSet) return false;
             if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script_Property.HasBeenSet) return false;
             if (checkMask.Weight.HasValue && checkMask.Weight.Value != item.Weight_Property.HasBeenSet) return false;
-            if (checkMask.Value.HasValue && checkMask.Value.Value != item.Value_Property.HasBeenSet) return false;
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_Property.HasBeenSet) return false;
             if (checkMask.Effects.Overall.HasValue && checkMask.Effects.Overall.Value != item.Effects.HasBeenSet) return false;
             return true;
         }
@@ -2058,8 +2037,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Icon = item.Icon_Property.HasBeenSet;
             ret.Script = item.Script_Property.HasBeenSet;
             ret.Weight = item.Weight_Property.HasBeenSet;
-            ret.Value = item.Value_Property.HasBeenSet;
-            ret.Flags = item.Flags_Property.HasBeenSet;
+            ret.Value = true;
+            ret.Flags = true;
             ret.Effects = new MaskItem<bool, IEnumerable<MaskItem<bool, Effect_Mask<bool>>>>(item.Effects.HasBeenSet, item.Effects.Select((i) => new MaskItem<bool, Effect_Mask<bool>>(true, i.GetHasBeenSetMask())));
             return ret;
         }
@@ -2184,24 +2163,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             fieldIndex: (int)Ingredient_FieldIndex.Weight,
                             errorMask: errorMask);
                     }
-                    if (item.Value_Property.HasBeenSet)
-                    {
-                        UInt32XmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Value),
-                            item: item.Value_Property,
-                            fieldIndex: (int)Ingredient_FieldIndex.Value,
-                            errorMask: errorMask);
-                    }
-                    if (item.Flags_Property.HasBeenSet)
-                    {
-                        EnumXmlTranslation<Ingredient.IngredientFlag>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Flags),
-                            item: item.Flags_Property,
-                            fieldIndex: (int)Ingredient_FieldIndex.Flags,
-                            errorMask: errorMask);
-                    }
+                    UInt32XmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Value),
+                        item: item.Value_Property,
+                        fieldIndex: (int)Ingredient_FieldIndex.Value,
+                        errorMask: errorMask);
+                    EnumXmlTranslation<Ingredient.IngredientFlag>.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Flags),
+                        item: item.Flags_Property,
+                        fieldIndex: (int)Ingredient_FieldIndex.Flags,
+                        errorMask: errorMask);
                     if (item.Effects.HasBeenSet)
                     {
                         ListXmlTranslation<Effect, MaskItem<Exception, Effect_ErrorMask>>.Instance.Write(

@@ -78,72 +78,70 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Fluff
-        protected readonly INotifyingSetItem<Byte[]> _Fluff = NotifyingSetItem.Factory<Byte[]>(
-            markAsSet: false,
-            noNullFallback: () => new byte[4]);
-        public INotifyingSetItem<Byte[]> Fluff_Property => _Fluff;
+        protected readonly INotifyingItem<Byte[]> _Fluff = NotifyingItem.Factory<Byte[]>(noNullFallback: () => new byte[4]);
+        public INotifyingItem<Byte[]> Fluff_Property => _Fluff;
         public Byte[] Fluff
         {
             get => this._Fluff.Item;
             set => this._Fluff.Set(value);
         }
-        INotifyingSetItem<Byte[]> IRace.Fluff_Property => this.Fluff_Property;
-        INotifyingSetItemGetter<Byte[]> IRaceGetter.Fluff_Property => this.Fluff_Property;
+        INotifyingItem<Byte[]> IRace.Fluff_Property => this.Fluff_Property;
+        INotifyingItemGetter<Byte[]> IRaceGetter.Fluff_Property => this.Fluff_Property;
         #endregion
         #region MaleHeight
-        protected readonly INotifyingSetItem<Single> _MaleHeight = NotifyingSetItem.Factory<Single>(markAsSet: false);
-        public INotifyingSetItem<Single> MaleHeight_Property => _MaleHeight;
+        protected readonly INotifyingItem<Single> _MaleHeight = NotifyingItem.Factory<Single>();
+        public INotifyingItem<Single> MaleHeight_Property => _MaleHeight;
         public Single MaleHeight
         {
             get => this._MaleHeight.Item;
             set => this._MaleHeight.Set(value);
         }
-        INotifyingSetItem<Single> IRace.MaleHeight_Property => this.MaleHeight_Property;
-        INotifyingSetItemGetter<Single> IRaceGetter.MaleHeight_Property => this.MaleHeight_Property;
+        INotifyingItem<Single> IRace.MaleHeight_Property => this.MaleHeight_Property;
+        INotifyingItemGetter<Single> IRaceGetter.MaleHeight_Property => this.MaleHeight_Property;
         #endregion
         #region FemaleHeight
-        protected readonly INotifyingSetItem<Single> _FemaleHeight = NotifyingSetItem.Factory<Single>(markAsSet: false);
-        public INotifyingSetItem<Single> FemaleHeight_Property => _FemaleHeight;
+        protected readonly INotifyingItem<Single> _FemaleHeight = NotifyingItem.Factory<Single>();
+        public INotifyingItem<Single> FemaleHeight_Property => _FemaleHeight;
         public Single FemaleHeight
         {
             get => this._FemaleHeight.Item;
             set => this._FemaleHeight.Set(value);
         }
-        INotifyingSetItem<Single> IRace.FemaleHeight_Property => this.FemaleHeight_Property;
-        INotifyingSetItemGetter<Single> IRaceGetter.FemaleHeight_Property => this.FemaleHeight_Property;
+        INotifyingItem<Single> IRace.FemaleHeight_Property => this.FemaleHeight_Property;
+        INotifyingItemGetter<Single> IRaceGetter.FemaleHeight_Property => this.FemaleHeight_Property;
         #endregion
         #region MaleWeight
-        protected readonly INotifyingSetItem<Single> _MaleWeight = NotifyingSetItem.Factory<Single>(markAsSet: false);
-        public INotifyingSetItem<Single> MaleWeight_Property => _MaleWeight;
+        protected readonly INotifyingItem<Single> _MaleWeight = NotifyingItem.Factory<Single>();
+        public INotifyingItem<Single> MaleWeight_Property => _MaleWeight;
         public Single MaleWeight
         {
             get => this._MaleWeight.Item;
             set => this._MaleWeight.Set(value);
         }
-        INotifyingSetItem<Single> IRace.MaleWeight_Property => this.MaleWeight_Property;
-        INotifyingSetItemGetter<Single> IRaceGetter.MaleWeight_Property => this.MaleWeight_Property;
+        INotifyingItem<Single> IRace.MaleWeight_Property => this.MaleWeight_Property;
+        INotifyingItemGetter<Single> IRaceGetter.MaleWeight_Property => this.MaleWeight_Property;
         #endregion
         #region FemaleWeight
-        protected readonly INotifyingSetItem<Single> _FemaleWeight = NotifyingSetItem.Factory<Single>(markAsSet: false);
-        public INotifyingSetItem<Single> FemaleWeight_Property => _FemaleWeight;
+        protected readonly INotifyingItem<Single> _FemaleWeight = NotifyingItem.Factory<Single>();
+        public INotifyingItem<Single> FemaleWeight_Property => _FemaleWeight;
         public Single FemaleWeight
         {
             get => this._FemaleWeight.Item;
             set => this._FemaleWeight.Set(value);
         }
-        INotifyingSetItem<Single> IRace.FemaleWeight_Property => this.FemaleWeight_Property;
-        INotifyingSetItemGetter<Single> IRaceGetter.FemaleWeight_Property => this.FemaleWeight_Property;
+        INotifyingItem<Single> IRace.FemaleWeight_Property => this.FemaleWeight_Property;
+        INotifyingItemGetter<Single> IRaceGetter.FemaleWeight_Property => this.FemaleWeight_Property;
         #endregion
         #region Flags
-        protected readonly INotifyingSetItem<Race.Flag> _Flags = NotifyingSetItem.Factory<Race.Flag>(markAsSet: false);
-        public INotifyingSetItem<Race.Flag> Flags_Property => _Flags;
+        protected readonly INotifyingItem<Race.Flag> _Flags = NotifyingItem.Factory<Race.Flag>();
+        public INotifyingItem<Race.Flag> Flags_Property => _Flags;
         public Race.Flag Flags
         {
             get => this._Flags.Item;
             set => this._Flags.Set(value);
         }
-        INotifyingSetItem<Race.Flag> IRace.Flags_Property => this.Flags_Property;
-        INotifyingSetItemGetter<Race.Flag> IRaceGetter.Flags_Property => this.Flags_Property;
+        INotifyingItem<Race.Flag> IRace.Flags_Property => this.Flags_Property;
+        INotifyingItemGetter<Race.Flag> IRaceGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region Voices
         private readonly INotifyingSetItem<RaceVoices> _Voices = new NotifyingSetItem<RaceVoices>();
@@ -329,41 +327,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!Relations.SequenceEqual(rhs.Relations)) return false;
             }
-            if (SkillBoosts.HasBeenSet != rhs.SkillBoosts.HasBeenSet) return false;
-            if (SkillBoosts.HasBeenSet)
-            {
-                if (!SkillBoosts.SequenceEqual(rhs.SkillBoosts)) return false;
-            }
-            if (Fluff_Property.HasBeenSet != rhs.Fluff_Property.HasBeenSet) return false;
-            if (Fluff_Property.HasBeenSet)
-            {
-                if (!Fluff.EqualsFast(rhs.Fluff)) return false;
-            }
-            if (MaleHeight_Property.HasBeenSet != rhs.MaleHeight_Property.HasBeenSet) return false;
-            if (MaleHeight_Property.HasBeenSet)
-            {
-                if (MaleHeight != rhs.MaleHeight) return false;
-            }
-            if (FemaleHeight_Property.HasBeenSet != rhs.FemaleHeight_Property.HasBeenSet) return false;
-            if (FemaleHeight_Property.HasBeenSet)
-            {
-                if (FemaleHeight != rhs.FemaleHeight) return false;
-            }
-            if (MaleWeight_Property.HasBeenSet != rhs.MaleWeight_Property.HasBeenSet) return false;
-            if (MaleWeight_Property.HasBeenSet)
-            {
-                if (MaleWeight != rhs.MaleWeight) return false;
-            }
-            if (FemaleWeight_Property.HasBeenSet != rhs.FemaleWeight_Property.HasBeenSet) return false;
-            if (FemaleWeight_Property.HasBeenSet)
-            {
-                if (FemaleWeight != rhs.FemaleWeight) return false;
-            }
-            if (Flags_Property.HasBeenSet != rhs.Flags_Property.HasBeenSet) return false;
-            if (Flags_Property.HasBeenSet)
-            {
-                if (Flags != rhs.Flags) return false;
-            }
+            if (!SkillBoosts.SequenceEqual(rhs.SkillBoosts)) return false;
+            if (!Fluff.EqualsFast(rhs.Fluff)) return false;
+            if (MaleHeight != rhs.MaleHeight) return false;
+            if (FemaleHeight != rhs.FemaleHeight) return false;
+            if (MaleWeight != rhs.MaleWeight) return false;
+            if (FemaleWeight != rhs.FemaleWeight) return false;
+            if (Flags != rhs.Flags) return false;
             if (Voices_Property.HasBeenSet != rhs.Voices_Property.HasBeenSet) return false;
             if (Voices_Property.HasBeenSet)
             {
@@ -442,34 +412,13 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(Relations).CombineHashCode(ret);
             }
-            if (SkillBoosts.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(SkillBoosts).CombineHashCode(ret);
-            }
-            if (Fluff_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Fluff).CombineHashCode(ret);
-            }
-            if (MaleHeight_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(MaleHeight).CombineHashCode(ret);
-            }
-            if (FemaleHeight_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(FemaleHeight).CombineHashCode(ret);
-            }
-            if (MaleWeight_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(MaleWeight).CombineHashCode(ret);
-            }
-            if (FemaleWeight_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(FemaleWeight).CombineHashCode(ret);
-            }
-            if (Flags_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(SkillBoosts).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Fluff).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(MaleHeight).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(FemaleHeight).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(MaleWeight).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(FemaleWeight).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
             if (Voices_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(Voices).CombineHashCode(ret);
@@ -1911,22 +1860,22 @@ namespace Mutagen.Bethesda.Oblivion
         new INotifyingList<Relation> Relations { get; }
         new INotifyingList<SkillBoost> SkillBoosts { get; }
         new Byte[] Fluff { get; set; }
-        new INotifyingSetItem<Byte[]> Fluff_Property { get; }
+        new INotifyingItem<Byte[]> Fluff_Property { get; }
 
         new Single MaleHeight { get; set; }
-        new INotifyingSetItem<Single> MaleHeight_Property { get; }
+        new INotifyingItem<Single> MaleHeight_Property { get; }
 
         new Single FemaleHeight { get; set; }
-        new INotifyingSetItem<Single> FemaleHeight_Property { get; }
+        new INotifyingItem<Single> FemaleHeight_Property { get; }
 
         new Single MaleWeight { get; set; }
-        new INotifyingSetItem<Single> MaleWeight_Property { get; }
+        new INotifyingItem<Single> MaleWeight_Property { get; }
 
         new Single FemaleWeight { get; set; }
-        new INotifyingSetItem<Single> FemaleWeight_Property { get; }
+        new INotifyingItem<Single> FemaleWeight_Property { get; }
 
         new Race.Flag Flags { get; set; }
-        new INotifyingSetItem<Race.Flag> Flags_Property { get; }
+        new INotifyingItem<Race.Flag> Flags_Property { get; }
 
         new RaceVoices Voices { get; set; }
         new INotifyingSetItem<RaceVoices> Voices_Property { get; }
@@ -1978,32 +1927,32 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Fluff
         Byte[] Fluff { get; }
-        INotifyingSetItemGetter<Byte[]> Fluff_Property { get; }
+        INotifyingItemGetter<Byte[]> Fluff_Property { get; }
 
         #endregion
         #region MaleHeight
         Single MaleHeight { get; }
-        INotifyingSetItemGetter<Single> MaleHeight_Property { get; }
+        INotifyingItemGetter<Single> MaleHeight_Property { get; }
 
         #endregion
         #region FemaleHeight
         Single FemaleHeight { get; }
-        INotifyingSetItemGetter<Single> FemaleHeight_Property { get; }
+        INotifyingItemGetter<Single> FemaleHeight_Property { get; }
 
         #endregion
         #region MaleWeight
         Single MaleWeight { get; }
-        INotifyingSetItemGetter<Single> MaleWeight_Property { get; }
+        INotifyingItemGetter<Single> MaleWeight_Property { get; }
 
         #endregion
         #region FemaleWeight
         Single FemaleWeight { get; }
-        INotifyingSetItemGetter<Single> FemaleWeight_Property { get; }
+        INotifyingItemGetter<Single> FemaleWeight_Property { get; }
 
         #endregion
         #region Flags
         Race.Flag Flags { get; }
-        INotifyingSetItemGetter<Race.Flag> Flags_Property { get; }
+        INotifyingItemGetter<Race.Flag> Flags_Property { get; }
 
         #endregion
         #region Voices
@@ -2706,9 +2655,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Fluff_Property.SetToWithDefault(
-                        rhs: rhs.Fluff_Property,
-                        def: def?.Fluff_Property,
+                    item.Fluff_Property.Set(
+                        value: rhs.Fluff,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -2721,9 +2669,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.MaleHeight_Property.SetToWithDefault(
-                        rhs: rhs.MaleHeight_Property,
-                        def: def?.MaleHeight_Property,
+                    item.MaleHeight_Property.Set(
+                        value: rhs.MaleHeight,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -2736,9 +2683,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.FemaleHeight_Property.SetToWithDefault(
-                        rhs: rhs.FemaleHeight_Property,
-                        def: def?.FemaleHeight_Property,
+                    item.FemaleHeight_Property.Set(
+                        value: rhs.FemaleHeight,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -2751,9 +2697,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.MaleWeight_Property.SetToWithDefault(
-                        rhs: rhs.MaleWeight_Property,
-                        def: def?.MaleWeight_Property,
+                    item.MaleWeight_Property.Set(
+                        value: rhs.MaleWeight,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -2766,9 +2711,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.FemaleWeight_Property.SetToWithDefault(
-                        rhs: rhs.FemaleWeight_Property,
-                        def: def?.FemaleWeight_Property,
+                    item.FemaleWeight_Property.Set(
+                        value: rhs.FemaleWeight,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -2781,9 +2725,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Flags_Property.SetToWithDefault(
-                        rhs: rhs.Flags_Property,
-                        def: def?.Flags_Property,
+                    item.Flags_Property.Set(
+                        value: rhs.Flags,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -3182,6 +3125,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Race_FieldIndex enu = (Race_FieldIndex)index;
             switch (enu)
             {
+                case Race_FieldIndex.SkillBoosts:
+                case Race_FieldIndex.Fluff:
+                case Race_FieldIndex.MaleHeight:
+                case Race_FieldIndex.FemaleHeight:
+                case Race_FieldIndex.MaleWeight:
+                case Race_FieldIndex.FemaleWeight:
+                case Race_FieldIndex.Flags:
+                    if (on) break;
+                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 case Race_FieldIndex.Description:
                     obj.Description_Property.HasBeenSet = on;
                     break;
@@ -3190,27 +3142,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case Race_FieldIndex.Relations:
                     obj.Relations.HasBeenSet = on;
-                    break;
-                case Race_FieldIndex.SkillBoosts:
-                    obj.SkillBoosts.HasBeenSet = on;
-                    break;
-                case Race_FieldIndex.Fluff:
-                    obj.Fluff_Property.HasBeenSet = on;
-                    break;
-                case Race_FieldIndex.MaleHeight:
-                    obj.MaleHeight_Property.HasBeenSet = on;
-                    break;
-                case Race_FieldIndex.FemaleHeight:
-                    obj.FemaleHeight_Property.HasBeenSet = on;
-                    break;
-                case Race_FieldIndex.MaleWeight:
-                    obj.MaleWeight_Property.HasBeenSet = on;
-                    break;
-                case Race_FieldIndex.FemaleWeight:
-                    obj.FemaleWeight_Property.HasBeenSet = on;
-                    break;
-                case Race_FieldIndex.Flags:
-                    obj.Flags_Property.HasBeenSet = on;
                     break;
                 case Race_FieldIndex.Voices:
                     obj.Voices_Property.HasBeenSet = on;
@@ -3275,22 +3206,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.SkillBoosts.Unset(cmds);
                     break;
                 case Race_FieldIndex.Fluff:
-                    obj.Fluff_Property.Unset(cmds);
+                    obj.Fluff = default(Byte[]);
                     break;
                 case Race_FieldIndex.MaleHeight:
-                    obj.MaleHeight_Property.Unset(cmds);
+                    obj.MaleHeight = default(Single);
                     break;
                 case Race_FieldIndex.FemaleHeight:
-                    obj.FemaleHeight_Property.Unset(cmds);
+                    obj.FemaleHeight = default(Single);
                     break;
                 case Race_FieldIndex.MaleWeight:
-                    obj.MaleWeight_Property.Unset(cmds);
+                    obj.MaleWeight = default(Single);
                     break;
                 case Race_FieldIndex.FemaleWeight:
-                    obj.FemaleWeight_Property.Unset(cmds);
+                    obj.FemaleWeight = default(Single);
                     break;
                 case Race_FieldIndex.Flags:
-                    obj.Flags_Property.Unset(cmds);
+                    obj.Flags = default(Race.Flag);
                     break;
                 case Race_FieldIndex.Voices:
                     obj.Voices_Property.Unset(cmds);
@@ -3341,26 +3272,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Race_FieldIndex enu = (Race_FieldIndex)index;
             switch (enu)
             {
+                case Race_FieldIndex.SkillBoosts:
+                case Race_FieldIndex.Fluff:
+                case Race_FieldIndex.MaleHeight:
+                case Race_FieldIndex.FemaleHeight:
+                case Race_FieldIndex.MaleWeight:
+                case Race_FieldIndex.FemaleWeight:
+                case Race_FieldIndex.Flags:
+                    return true;
                 case Race_FieldIndex.Description:
                     return obj.Description_Property.HasBeenSet;
                 case Race_FieldIndex.Spells:
                     return obj.Spells.HasBeenSet;
                 case Race_FieldIndex.Relations:
                     return obj.Relations.HasBeenSet;
-                case Race_FieldIndex.SkillBoosts:
-                    return obj.SkillBoosts.HasBeenSet;
-                case Race_FieldIndex.Fluff:
-                    return obj.Fluff_Property.HasBeenSet;
-                case Race_FieldIndex.MaleHeight:
-                    return obj.MaleHeight_Property.HasBeenSet;
-                case Race_FieldIndex.FemaleHeight:
-                    return obj.FemaleHeight_Property.HasBeenSet;
-                case Race_FieldIndex.MaleWeight:
-                    return obj.MaleWeight_Property.HasBeenSet;
-                case Race_FieldIndex.FemaleWeight:
-                    return obj.FemaleWeight_Property.HasBeenSet;
-                case Race_FieldIndex.Flags:
-                    return obj.Flags_Property.HasBeenSet;
                 case Race_FieldIndex.Voices:
                     return obj.Voices_Property.HasBeenSet;
                 case Race_FieldIndex.DefaultHair:
@@ -3454,12 +3379,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Spells.Unset(cmds.ToUnsetParams());
             item.Relations.Unset(cmds.ToUnsetParams());
             item.SkillBoosts.Unset(cmds.ToUnsetParams());
-            item.Fluff_Property.Unset(cmds.ToUnsetParams());
-            item.MaleHeight_Property.Unset(cmds.ToUnsetParams());
-            item.FemaleHeight_Property.Unset(cmds.ToUnsetParams());
-            item.MaleWeight_Property.Unset(cmds.ToUnsetParams());
-            item.FemaleWeight_Property.Unset(cmds.ToUnsetParams());
-            item.Flags_Property.Unset(cmds.ToUnsetParams());
+            item.Fluff = default(Byte[]);
+            item.MaleHeight = default(Single);
+            item.FemaleHeight = default(Single);
+            item.MaleWeight = default(Single);
+            item.FemaleWeight = default(Single);
+            item.Flags = default(Race.Flag);
             item.Voices_Property.Unset(cmds.ToUnsetParams());
             item.DefaultHair_Property.Unset(cmds.ToUnsetParams());
             item.DefaultHairColor_Property.Unset(cmds.ToUnsetParams());
@@ -3561,12 +3486,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ret.SkillBoosts = new MaskItem<bool, IEnumerable<MaskItem<bool, SkillBoost_Mask<bool>>>>();
                 ret.SkillBoosts.Overall = false;
             }
-            ret.Fluff = item.Fluff_Property.Equals(rhs.Fluff_Property, (l, r) => l.EqualsFast(r));
-            ret.MaleHeight = item.MaleHeight_Property.Equals(rhs.MaleHeight_Property, (l, r) => l == r);
-            ret.FemaleHeight = item.FemaleHeight_Property.Equals(rhs.FemaleHeight_Property, (l, r) => l == r);
-            ret.MaleWeight = item.MaleWeight_Property.Equals(rhs.MaleWeight_Property, (l, r) => l == r);
-            ret.FemaleWeight = item.FemaleWeight_Property.Equals(rhs.FemaleWeight_Property, (l, r) => l == r);
-            ret.Flags = item.Flags_Property.Equals(rhs.Flags_Property, (l, r) => l == r);
+            ret.Fluff = item.Fluff.EqualsFast(rhs.Fluff);
+            ret.MaleHeight = item.MaleHeight == rhs.MaleHeight;
+            ret.FemaleHeight = item.FemaleHeight == rhs.FemaleHeight;
+            ret.MaleWeight = item.MaleWeight == rhs.MaleWeight;
+            ret.FemaleWeight = item.FemaleWeight == rhs.FemaleWeight;
+            ret.Flags = item.Flags == rhs.Flags;
             ret.Voices = item.Voices_Property.LoquiEqualsHelper(rhs.Voices_Property, (loqLhs, loqRhs) => RaceVoicesCommon.GetEqualsMask(loqLhs, loqRhs));
             ret.DefaultHair = item.DefaultHair_Property.LoquiEqualsHelper(rhs.DefaultHair_Property, (loqLhs, loqRhs) => RaceHairCommon.GetEqualsMask(loqLhs, loqRhs));
             ret.DefaultHairColor = item.DefaultHairColor_Property.Equals(rhs.DefaultHairColor_Property, (l, r) => l == r);
@@ -3853,12 +3778,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Spells.Overall.HasValue && checkMask.Spells.Overall.Value != item.Spells.HasBeenSet) return false;
             if (checkMask.Relations.Overall.HasValue && checkMask.Relations.Overall.Value != item.Relations.HasBeenSet) return false;
             if (checkMask.SkillBoosts.Overall.HasValue && checkMask.SkillBoosts.Overall.Value != item.SkillBoosts.HasBeenSet) return false;
-            if (checkMask.Fluff.HasValue && checkMask.Fluff.Value != item.Fluff_Property.HasBeenSet) return false;
-            if (checkMask.MaleHeight.HasValue && checkMask.MaleHeight.Value != item.MaleHeight_Property.HasBeenSet) return false;
-            if (checkMask.FemaleHeight.HasValue && checkMask.FemaleHeight.Value != item.FemaleHeight_Property.HasBeenSet) return false;
-            if (checkMask.MaleWeight.HasValue && checkMask.MaleWeight.Value != item.MaleWeight_Property.HasBeenSet) return false;
-            if (checkMask.FemaleWeight.HasValue && checkMask.FemaleWeight.Value != item.FemaleWeight_Property.HasBeenSet) return false;
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_Property.HasBeenSet) return false;
             if (checkMask.Voices.Overall.HasValue && checkMask.Voices.Overall.Value != item.Voices_Property.HasBeenSet) return false;
             if (checkMask.Voices.Specific != null && (item.Voices_Property.Item == null || !item.Voices_Property.Item.HasBeenSet(checkMask.Voices.Specific))) return false;
             if (checkMask.DefaultHair.Overall.HasValue && checkMask.DefaultHair.Overall.Value != item.DefaultHair_Property.HasBeenSet) return false;
@@ -3886,12 +3805,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Spells = new MaskItem<bool, IEnumerable<bool>>(item.Spells.HasBeenSet, null);
             ret.Relations = new MaskItem<bool, IEnumerable<MaskItem<bool, Relation_Mask<bool>>>>(item.Relations.HasBeenSet, item.Relations.Select((i) => new MaskItem<bool, Relation_Mask<bool>>(true, i.GetHasBeenSetMask())));
             ret.SkillBoosts = new MaskItem<bool, IEnumerable<MaskItem<bool, SkillBoost_Mask<bool>>>>(item.SkillBoosts.HasBeenSet, item.SkillBoosts.Select((i) => new MaskItem<bool, SkillBoost_Mask<bool>>(true, i.GetHasBeenSetMask())));
-            ret.Fluff = item.Fluff_Property.HasBeenSet;
-            ret.MaleHeight = item.MaleHeight_Property.HasBeenSet;
-            ret.FemaleHeight = item.FemaleHeight_Property.HasBeenSet;
-            ret.MaleWeight = item.MaleWeight_Property.HasBeenSet;
-            ret.FemaleWeight = item.FemaleWeight_Property.HasBeenSet;
-            ret.Flags = item.Flags_Property.HasBeenSet;
+            ret.Fluff = true;
+            ret.MaleHeight = true;
+            ret.FemaleHeight = true;
+            ret.MaleWeight = true;
+            ret.FemaleWeight = true;
+            ret.Flags = true;
             ret.Voices = new MaskItem<bool, RaceVoices_Mask<bool>>(item.Voices_Property.HasBeenSet, RaceVoicesCommon.GetHasBeenSetMask(item.Voices_Property.Item));
             ret.DefaultHair = new MaskItem<bool, RaceHair_Mask<bool>>(item.DefaultHair_Property.HasBeenSet, RaceHairCommon.GetHasBeenSetMask(item.DefaultHair_Property.Item));
             ret.DefaultHairColor = item.DefaultHairColor_Property.HasBeenSet;
@@ -4038,79 +3957,58 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             }
                             );
                     }
-                    if (item.SkillBoosts.HasBeenSet)
-                    {
-                        ListXmlTranslation<SkillBoost, MaskItem<Exception, SkillBoost_ErrorMask>>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.SkillBoosts),
-                            item: item.SkillBoosts,
-                            fieldIndex: (int)Race_FieldIndex.SkillBoosts,
-                            errorMask: errorMask,
-                            transl: (SkillBoost subItem, bool listDoMasks, out MaskItem<Exception, SkillBoost_ErrorMask> listSubMask) =>
-                            {
-                                LoquiXmlTranslation<SkillBoost, SkillBoost_ErrorMask>.Instance.Write(
-                                    writer: writer,
-                                    item: subItem,
-                                    name: "Item",
-                                    doMasks: errorMask != null,
-                                    errorMask: out listSubMask);
-                            }
-                            );
-                    }
-                    if (item.Fluff_Property.HasBeenSet)
-                    {
-                        ByteArrayXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Fluff),
-                            item: item.Fluff_Property,
-                            fieldIndex: (int)Race_FieldIndex.Fluff,
-                            errorMask: errorMask);
-                    }
-                    if (item.MaleHeight_Property.HasBeenSet)
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.MaleHeight),
-                            item: item.MaleHeight_Property,
-                            fieldIndex: (int)Race_FieldIndex.MaleHeight,
-                            errorMask: errorMask);
-                    }
-                    if (item.FemaleHeight_Property.HasBeenSet)
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.FemaleHeight),
-                            item: item.FemaleHeight_Property,
-                            fieldIndex: (int)Race_FieldIndex.FemaleHeight,
-                            errorMask: errorMask);
-                    }
-                    if (item.MaleWeight_Property.HasBeenSet)
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.MaleWeight),
-                            item: item.MaleWeight_Property,
-                            fieldIndex: (int)Race_FieldIndex.MaleWeight,
-                            errorMask: errorMask);
-                    }
-                    if (item.FemaleWeight_Property.HasBeenSet)
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.FemaleWeight),
-                            item: item.FemaleWeight_Property,
-                            fieldIndex: (int)Race_FieldIndex.FemaleWeight,
-                            errorMask: errorMask);
-                    }
-                    if (item.Flags_Property.HasBeenSet)
-                    {
-                        EnumXmlTranslation<Race.Flag>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Flags),
-                            item: item.Flags_Property,
-                            fieldIndex: (int)Race_FieldIndex.Flags,
-                            errorMask: errorMask);
-                    }
+                    ListXmlTranslation<SkillBoost, MaskItem<Exception, SkillBoost_ErrorMask>>.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.SkillBoosts),
+                        item: item.SkillBoosts,
+                        fieldIndex: (int)Race_FieldIndex.SkillBoosts,
+                        errorMask: errorMask,
+                        transl: (SkillBoost subItem, bool listDoMasks, out MaskItem<Exception, SkillBoost_ErrorMask> listSubMask) =>
+                        {
+                            LoquiXmlTranslation<SkillBoost, SkillBoost_ErrorMask>.Instance.Write(
+                                writer: writer,
+                                item: subItem,
+                                name: "Item",
+                                doMasks: errorMask != null,
+                                errorMask: out listSubMask);
+                        }
+                        );
+                    ByteArrayXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Fluff),
+                        item: item.Fluff_Property,
+                        fieldIndex: (int)Race_FieldIndex.Fluff,
+                        errorMask: errorMask);
+                    FloatXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.MaleHeight),
+                        item: item.MaleHeight_Property,
+                        fieldIndex: (int)Race_FieldIndex.MaleHeight,
+                        errorMask: errorMask);
+                    FloatXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.FemaleHeight),
+                        item: item.FemaleHeight_Property,
+                        fieldIndex: (int)Race_FieldIndex.FemaleHeight,
+                        errorMask: errorMask);
+                    FloatXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.MaleWeight),
+                        item: item.MaleWeight_Property,
+                        fieldIndex: (int)Race_FieldIndex.MaleWeight,
+                        errorMask: errorMask);
+                    FloatXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.FemaleWeight),
+                        item: item.FemaleWeight_Property,
+                        fieldIndex: (int)Race_FieldIndex.FemaleWeight,
+                        errorMask: errorMask);
+                    EnumXmlTranslation<Race.Flag>.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Flags),
+                        item: item.Flags_Property,
+                        fieldIndex: (int)Race_FieldIndex.Flags,
+                        errorMask: errorMask);
                     if (item.Voices_Property.HasBeenSet)
                     {
                         LoquiXmlTranslation<RaceVoices, RaceVoices_ErrorMask>.Instance.Write(

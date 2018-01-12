@@ -40,48 +40,48 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Type
-        protected readonly INotifyingSetItem<Spell.SpellType> _Type = NotifyingSetItem.Factory<Spell.SpellType>(markAsSet: false);
-        public INotifyingSetItem<Spell.SpellType> Type_Property => _Type;
+        protected readonly INotifyingItem<Spell.SpellType> _Type = NotifyingItem.Factory<Spell.SpellType>();
+        public INotifyingItem<Spell.SpellType> Type_Property => _Type;
         public Spell.SpellType Type
         {
             get => this._Type.Item;
             set => this._Type.Set(value);
         }
-        INotifyingSetItem<Spell.SpellType> ISpellUnleveled.Type_Property => this.Type_Property;
-        INotifyingSetItemGetter<Spell.SpellType> ISpellUnleveledGetter.Type_Property => this.Type_Property;
+        INotifyingItem<Spell.SpellType> ISpellUnleveled.Type_Property => this.Type_Property;
+        INotifyingItemGetter<Spell.SpellType> ISpellUnleveledGetter.Type_Property => this.Type_Property;
         #endregion
         #region Cost
-        protected readonly INotifyingSetItem<UInt32> _Cost = NotifyingSetItem.Factory<UInt32>(markAsSet: false);
-        public INotifyingSetItem<UInt32> Cost_Property => _Cost;
+        protected readonly INotifyingItem<UInt32> _Cost = NotifyingItem.Factory<UInt32>();
+        public INotifyingItem<UInt32> Cost_Property => _Cost;
         public UInt32 Cost
         {
             get => this._Cost.Item;
             set => this._Cost.Set(value);
         }
-        INotifyingSetItem<UInt32> ISpellUnleveled.Cost_Property => this.Cost_Property;
-        INotifyingSetItemGetter<UInt32> ISpellUnleveledGetter.Cost_Property => this.Cost_Property;
+        INotifyingItem<UInt32> ISpellUnleveled.Cost_Property => this.Cost_Property;
+        INotifyingItemGetter<UInt32> ISpellUnleveledGetter.Cost_Property => this.Cost_Property;
         #endregion
         #region Level
-        protected readonly INotifyingSetItem<Spell.SpellLevel> _Level = NotifyingSetItem.Factory<Spell.SpellLevel>(markAsSet: false);
-        public INotifyingSetItem<Spell.SpellLevel> Level_Property => _Level;
+        protected readonly INotifyingItem<Spell.SpellLevel> _Level = NotifyingItem.Factory<Spell.SpellLevel>();
+        public INotifyingItem<Spell.SpellLevel> Level_Property => _Level;
         public Spell.SpellLevel Level
         {
             get => this._Level.Item;
             set => this._Level.Set(value);
         }
-        INotifyingSetItem<Spell.SpellLevel> ISpellUnleveled.Level_Property => this.Level_Property;
-        INotifyingSetItemGetter<Spell.SpellLevel> ISpellUnleveledGetter.Level_Property => this.Level_Property;
+        INotifyingItem<Spell.SpellLevel> ISpellUnleveled.Level_Property => this.Level_Property;
+        INotifyingItemGetter<Spell.SpellLevel> ISpellUnleveledGetter.Level_Property => this.Level_Property;
         #endregion
         #region Flag
-        protected readonly INotifyingSetItem<Spell.SpellFlag> _Flag = NotifyingSetItem.Factory<Spell.SpellFlag>(markAsSet: false);
-        public INotifyingSetItem<Spell.SpellFlag> Flag_Property => _Flag;
+        protected readonly INotifyingItem<Spell.SpellFlag> _Flag = NotifyingItem.Factory<Spell.SpellFlag>();
+        public INotifyingItem<Spell.SpellFlag> Flag_Property => _Flag;
         public Spell.SpellFlag Flag
         {
             get => this._Flag.Item;
             set => this._Flag.Set(value);
         }
-        INotifyingSetItem<Spell.SpellFlag> ISpellUnleveled.Flag_Property => this.Flag_Property;
-        INotifyingSetItemGetter<Spell.SpellFlag> ISpellUnleveledGetter.Flag_Property => this.Flag_Property;
+        INotifyingItem<Spell.SpellFlag> ISpellUnleveled.Flag_Property => this.Flag_Property;
+        INotifyingItemGetter<Spell.SpellFlag> ISpellUnleveledGetter.Flag_Property => this.Flag_Property;
         #endregion
         #region Effects
         private readonly INotifyingList<Effect> _Effects = new NotifyingList<Effect>();
@@ -148,26 +148,10 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (Type_Property.HasBeenSet != rhs.Type_Property.HasBeenSet) return false;
-            if (Type_Property.HasBeenSet)
-            {
-                if (Type != rhs.Type) return false;
-            }
-            if (Cost_Property.HasBeenSet != rhs.Cost_Property.HasBeenSet) return false;
-            if (Cost_Property.HasBeenSet)
-            {
-                if (Cost != rhs.Cost) return false;
-            }
-            if (Level_Property.HasBeenSet != rhs.Level_Property.HasBeenSet) return false;
-            if (Level_Property.HasBeenSet)
-            {
-                if (Level != rhs.Level) return false;
-            }
-            if (Flag_Property.HasBeenSet != rhs.Flag_Property.HasBeenSet) return false;
-            if (Flag_Property.HasBeenSet)
-            {
-                if (Flag != rhs.Flag) return false;
-            }
+            if (Type != rhs.Type) return false;
+            if (Cost != rhs.Cost) return false;
+            if (Level != rhs.Level) return false;
+            if (Flag != rhs.Flag) return false;
             if (Effects.HasBeenSet != rhs.Effects.HasBeenSet) return false;
             if (Effects.HasBeenSet)
             {
@@ -179,22 +163,10 @@ namespace Mutagen.Bethesda.Oblivion
         public override int GetHashCode()
         {
             int ret = 0;
-            if (Type_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Type).CombineHashCode(ret);
-            }
-            if (Cost_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Cost).CombineHashCode(ret);
-            }
-            if (Level_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Level).CombineHashCode(ret);
-            }
-            if (Flag_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Flag).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(Type).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Cost).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Level).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Flag).CombineHashCode(ret);
             if (Effects.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(Effects).CombineHashCode(ret);
@@ -1156,16 +1128,16 @@ namespace Mutagen.Bethesda.Oblivion
     public interface ISpellUnleveled : ISpellUnleveledGetter, ISpell, ILoquiClass<ISpellUnleveled, ISpellUnleveledGetter>, ILoquiClass<SpellUnleveled, ISpellUnleveledGetter>
     {
         new Spell.SpellType Type { get; set; }
-        new INotifyingSetItem<Spell.SpellType> Type_Property { get; }
+        new INotifyingItem<Spell.SpellType> Type_Property { get; }
 
         new UInt32 Cost { get; set; }
-        new INotifyingSetItem<UInt32> Cost_Property { get; }
+        new INotifyingItem<UInt32> Cost_Property { get; }
 
         new Spell.SpellLevel Level { get; set; }
-        new INotifyingSetItem<Spell.SpellLevel> Level_Property { get; }
+        new INotifyingItem<Spell.SpellLevel> Level_Property { get; }
 
         new Spell.SpellFlag Flag { get; set; }
-        new INotifyingSetItem<Spell.SpellFlag> Flag_Property { get; }
+        new INotifyingItem<Spell.SpellFlag> Flag_Property { get; }
 
         new INotifyingList<Effect> Effects { get; }
     }
@@ -1174,22 +1146,22 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Type
         Spell.SpellType Type { get; }
-        INotifyingSetItemGetter<Spell.SpellType> Type_Property { get; }
+        INotifyingItemGetter<Spell.SpellType> Type_Property { get; }
 
         #endregion
         #region Cost
         UInt32 Cost { get; }
-        INotifyingSetItemGetter<UInt32> Cost_Property { get; }
+        INotifyingItemGetter<UInt32> Cost_Property { get; }
 
         #endregion
         #region Level
         Spell.SpellLevel Level { get; }
-        INotifyingSetItemGetter<Spell.SpellLevel> Level_Property { get; }
+        INotifyingItemGetter<Spell.SpellLevel> Level_Property { get; }
 
         #endregion
         #region Flag
         Spell.SpellFlag Flag { get; }
-        INotifyingSetItemGetter<Spell.SpellFlag> Flag_Property { get; }
+        INotifyingItemGetter<Spell.SpellFlag> Flag_Property { get; }
 
         #endregion
         #region Effects
@@ -1524,9 +1496,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Type_Property.SetToWithDefault(
-                        rhs: rhs.Type_Property,
-                        def: def?.Type_Property,
+                    item.Type_Property.Set(
+                        value: rhs.Type,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1539,9 +1510,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Cost_Property.SetToWithDefault(
-                        rhs: rhs.Cost_Property,
-                        def: def?.Cost_Property,
+                    item.Cost_Property.Set(
+                        value: rhs.Cost,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1554,9 +1524,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Level_Property.SetToWithDefault(
-                        rhs: rhs.Level_Property,
-                        def: def?.Level_Property,
+                    item.Level_Property.Set(
+                        value: rhs.Level,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1569,9 +1538,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Flag_Property.SetToWithDefault(
-                        rhs: rhs.Flag_Property,
-                        def: def?.Flag_Property,
+                    item.Flag_Property.Set(
+                        value: rhs.Flag,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1626,17 +1594,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case SpellUnleveled_FieldIndex.Type:
-                    obj.Type_Property.HasBeenSet = on;
-                    break;
                 case SpellUnleveled_FieldIndex.Cost:
-                    obj.Cost_Property.HasBeenSet = on;
-                    break;
                 case SpellUnleveled_FieldIndex.Level:
-                    obj.Level_Property.HasBeenSet = on;
-                    break;
                 case SpellUnleveled_FieldIndex.Flag:
-                    obj.Flag_Property.HasBeenSet = on;
-                    break;
+                    if (on) break;
+                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 case SpellUnleveled_FieldIndex.Effects:
                     obj.Effects.HasBeenSet = on;
                     break;
@@ -1655,16 +1617,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case SpellUnleveled_FieldIndex.Type:
-                    obj.Type_Property.Unset(cmds);
+                    obj.Type = default(Spell.SpellType);
                     break;
                 case SpellUnleveled_FieldIndex.Cost:
-                    obj.Cost_Property.Unset(cmds);
+                    obj.Cost = default(UInt32);
                     break;
                 case SpellUnleveled_FieldIndex.Level:
-                    obj.Level_Property.Unset(cmds);
+                    obj.Level = default(Spell.SpellLevel);
                     break;
                 case SpellUnleveled_FieldIndex.Flag:
-                    obj.Flag_Property.Unset(cmds);
+                    obj.Flag = default(Spell.SpellFlag);
                     break;
                 case SpellUnleveled_FieldIndex.Effects:
                     obj.Effects.Unset(cmds);
@@ -1683,13 +1645,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case SpellUnleveled_FieldIndex.Type:
-                    return obj.Type_Property.HasBeenSet;
                 case SpellUnleveled_FieldIndex.Cost:
-                    return obj.Cost_Property.HasBeenSet;
                 case SpellUnleveled_FieldIndex.Level:
-                    return obj.Level_Property.HasBeenSet;
                 case SpellUnleveled_FieldIndex.Flag:
-                    return obj.Flag_Property.HasBeenSet;
+                    return true;
                 case SpellUnleveled_FieldIndex.Effects:
                     return obj.Effects.HasBeenSet;
                 default:
@@ -1723,10 +1682,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISpellUnleveled item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.Type_Property.Unset(cmds.ToUnsetParams());
-            item.Cost_Property.Unset(cmds.ToUnsetParams());
-            item.Level_Property.Unset(cmds.ToUnsetParams());
-            item.Flag_Property.Unset(cmds.ToUnsetParams());
+            item.Type = default(Spell.SpellType);
+            item.Cost = default(UInt32);
+            item.Level = default(Spell.SpellLevel);
+            item.Flag = default(Spell.SpellFlag);
             item.Effects.Unset(cmds.ToUnsetParams());
         }
 
@@ -1745,10 +1704,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             SpellUnleveled_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Type = item.Type_Property.Equals(rhs.Type_Property, (l, r) => l == r);
-            ret.Cost = item.Cost_Property.Equals(rhs.Cost_Property, (l, r) => l == r);
-            ret.Level = item.Level_Property.Equals(rhs.Level_Property, (l, r) => l == r);
-            ret.Flag = item.Flag_Property.Equals(rhs.Flag_Property, (l, r) => l == r);
+            ret.Type = item.Type == rhs.Type;
+            ret.Cost = item.Cost == rhs.Cost;
+            ret.Level = item.Level == rhs.Level;
+            ret.Flag = item.Flag == rhs.Flag;
             if (item.Effects.HasBeenSet == rhs.Effects.HasBeenSet)
             {
                 if (item.Effects.HasBeenSet)
@@ -1846,10 +1805,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this ISpellUnleveledGetter item,
             SpellUnleveled_Mask<bool?> checkMask)
         {
-            if (checkMask.Type.HasValue && checkMask.Type.Value != item.Type_Property.HasBeenSet) return false;
-            if (checkMask.Cost.HasValue && checkMask.Cost.Value != item.Cost_Property.HasBeenSet) return false;
-            if (checkMask.Level.HasValue && checkMask.Level.Value != item.Level_Property.HasBeenSet) return false;
-            if (checkMask.Flag.HasValue && checkMask.Flag.Value != item.Flag_Property.HasBeenSet) return false;
             if (checkMask.Effects.Overall.HasValue && checkMask.Effects.Overall.Value != item.Effects.HasBeenSet) return false;
             return true;
         }
@@ -1857,10 +1812,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static SpellUnleveled_Mask<bool> GetHasBeenSetMask(ISpellUnleveledGetter item)
         {
             var ret = new SpellUnleveled_Mask<bool>();
-            ret.Type = item.Type_Property.HasBeenSet;
-            ret.Cost = item.Cost_Property.HasBeenSet;
-            ret.Level = item.Level_Property.HasBeenSet;
-            ret.Flag = item.Flag_Property.HasBeenSet;
+            ret.Type = true;
+            ret.Cost = true;
+            ret.Level = true;
+            ret.Flag = true;
             ret.Effects = new MaskItem<bool, IEnumerable<MaskItem<bool, Effect_Mask<bool>>>>(item.Effects.HasBeenSet, item.Effects.Select((i) => new MaskItem<bool, Effect_Mask<bool>>(true, i.GetHasBeenSetMask())));
             return ret;
         }
@@ -1976,42 +1931,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.SpellUnleveled");
                     }
-                    if (item.Type_Property.HasBeenSet)
-                    {
-                        EnumXmlTranslation<Spell.SpellType>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Type),
-                            item: item.Type_Property,
-                            fieldIndex: (int)SpellUnleveled_FieldIndex.Type,
-                            errorMask: errorMask);
-                    }
-                    if (item.Cost_Property.HasBeenSet)
-                    {
-                        UInt32XmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Cost),
-                            item: item.Cost_Property,
-                            fieldIndex: (int)SpellUnleveled_FieldIndex.Cost,
-                            errorMask: errorMask);
-                    }
-                    if (item.Level_Property.HasBeenSet)
-                    {
-                        EnumXmlTranslation<Spell.SpellLevel>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Level),
-                            item: item.Level_Property,
-                            fieldIndex: (int)SpellUnleveled_FieldIndex.Level,
-                            errorMask: errorMask);
-                    }
-                    if (item.Flag_Property.HasBeenSet)
-                    {
-                        EnumXmlTranslation<Spell.SpellFlag>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Flag),
-                            item: item.Flag_Property,
-                            fieldIndex: (int)SpellUnleveled_FieldIndex.Flag,
-                            errorMask: errorMask);
-                    }
+                    EnumXmlTranslation<Spell.SpellType>.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Type),
+                        item: item.Type_Property,
+                        fieldIndex: (int)SpellUnleveled_FieldIndex.Type,
+                        errorMask: errorMask);
+                    UInt32XmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Cost),
+                        item: item.Cost_Property,
+                        fieldIndex: (int)SpellUnleveled_FieldIndex.Cost,
+                        errorMask: errorMask);
+                    EnumXmlTranslation<Spell.SpellLevel>.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Level),
+                        item: item.Level_Property,
+                        fieldIndex: (int)SpellUnleveled_FieldIndex.Level,
+                        errorMask: errorMask);
+                    EnumXmlTranslation<Spell.SpellFlag>.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Flag),
+                        item: item.Flag_Property,
+                        fieldIndex: (int)SpellUnleveled_FieldIndex.Flag,
+                        errorMask: errorMask);
                     if (item.Effects.HasBeenSet)
                     {
                         ListXmlTranslation<Effect, MaskItem<Exception, Effect_ErrorMask>>.Instance.Write(

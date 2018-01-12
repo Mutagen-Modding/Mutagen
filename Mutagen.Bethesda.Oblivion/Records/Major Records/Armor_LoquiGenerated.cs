@@ -40,48 +40,48 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region ArmorValue
-        protected readonly INotifyingSetItem<Single> _ArmorValue = NotifyingSetItem.Factory<Single>(markAsSet: false);
-        public INotifyingSetItem<Single> ArmorValue_Property => _ArmorValue;
+        protected readonly INotifyingItem<Single> _ArmorValue = NotifyingItem.Factory<Single>();
+        public INotifyingItem<Single> ArmorValue_Property => _ArmorValue;
         public Single ArmorValue
         {
             get => this._ArmorValue.Item;
             set => this._ArmorValue.Set(value);
         }
-        INotifyingSetItem<Single> IArmor.ArmorValue_Property => this.ArmorValue_Property;
-        INotifyingSetItemGetter<Single> IArmorGetter.ArmorValue_Property => this.ArmorValue_Property;
+        INotifyingItem<Single> IArmor.ArmorValue_Property => this.ArmorValue_Property;
+        INotifyingItemGetter<Single> IArmorGetter.ArmorValue_Property => this.ArmorValue_Property;
         #endregion
         #region Value
-        protected readonly INotifyingSetItem<UInt32> _Value = NotifyingSetItem.Factory<UInt32>(markAsSet: false);
-        public INotifyingSetItem<UInt32> Value_Property => _Value;
+        protected readonly INotifyingItem<UInt32> _Value = NotifyingItem.Factory<UInt32>();
+        public INotifyingItem<UInt32> Value_Property => _Value;
         public UInt32 Value
         {
             get => this._Value.Item;
             set => this._Value.Set(value);
         }
-        INotifyingSetItem<UInt32> IArmor.Value_Property => this.Value_Property;
-        INotifyingSetItemGetter<UInt32> IArmorGetter.Value_Property => this.Value_Property;
+        INotifyingItem<UInt32> IArmor.Value_Property => this.Value_Property;
+        INotifyingItemGetter<UInt32> IArmorGetter.Value_Property => this.Value_Property;
         #endregion
         #region Health
-        protected readonly INotifyingSetItem<UInt32> _Health = NotifyingSetItem.Factory<UInt32>(markAsSet: false);
-        public INotifyingSetItem<UInt32> Health_Property => _Health;
+        protected readonly INotifyingItem<UInt32> _Health = NotifyingItem.Factory<UInt32>();
+        public INotifyingItem<UInt32> Health_Property => _Health;
         public UInt32 Health
         {
             get => this._Health.Item;
             set => this._Health.Set(value);
         }
-        INotifyingSetItem<UInt32> IArmor.Health_Property => this.Health_Property;
-        INotifyingSetItemGetter<UInt32> IArmorGetter.Health_Property => this.Health_Property;
+        INotifyingItem<UInt32> IArmor.Health_Property => this.Health_Property;
+        INotifyingItemGetter<UInt32> IArmorGetter.Health_Property => this.Health_Property;
         #endregion
         #region Weight
-        protected readonly INotifyingSetItem<Single> _Weight = NotifyingSetItem.Factory<Single>(markAsSet: false);
-        public INotifyingSetItem<Single> Weight_Property => _Weight;
+        protected readonly INotifyingItem<Single> _Weight = NotifyingItem.Factory<Single>();
+        public INotifyingItem<Single> Weight_Property => _Weight;
         public Single Weight
         {
             get => this._Weight.Item;
             set => this._Weight.Set(value);
         }
-        INotifyingSetItem<Single> IArmor.Weight_Property => this.Weight_Property;
-        INotifyingSetItemGetter<Single> IArmorGetter.Weight_Property => this.Weight_Property;
+        INotifyingItem<Single> IArmor.Weight_Property => this.Weight_Property;
+        INotifyingItemGetter<Single> IArmorGetter.Weight_Property => this.Weight_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -139,48 +139,20 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (ArmorValue_Property.HasBeenSet != rhs.ArmorValue_Property.HasBeenSet) return false;
-            if (ArmorValue_Property.HasBeenSet)
-            {
-                if (ArmorValue != rhs.ArmorValue) return false;
-            }
-            if (Value_Property.HasBeenSet != rhs.Value_Property.HasBeenSet) return false;
-            if (Value_Property.HasBeenSet)
-            {
-                if (Value != rhs.Value) return false;
-            }
-            if (Health_Property.HasBeenSet != rhs.Health_Property.HasBeenSet) return false;
-            if (Health_Property.HasBeenSet)
-            {
-                if (Health != rhs.Health) return false;
-            }
-            if (Weight_Property.HasBeenSet != rhs.Weight_Property.HasBeenSet) return false;
-            if (Weight_Property.HasBeenSet)
-            {
-                if (Weight != rhs.Weight) return false;
-            }
+            if (ArmorValue != rhs.ArmorValue) return false;
+            if (Value != rhs.Value) return false;
+            if (Health != rhs.Health) return false;
+            if (Weight != rhs.Weight) return false;
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            if (ArmorValue_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(ArmorValue).CombineHashCode(ret);
-            }
-            if (Value_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Value).CombineHashCode(ret);
-            }
-            if (Health_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Health).CombineHashCode(ret);
-            }
-            if (Weight_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Weight).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(ArmorValue).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Value).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Health).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Weight).CombineHashCode(ret);
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -1121,16 +1093,16 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IArmor : IArmorGetter, IClothingAbstract, ILoquiClass<IArmor, IArmorGetter>, ILoquiClass<Armor, IArmorGetter>
     {
         new Single ArmorValue { get; set; }
-        new INotifyingSetItem<Single> ArmorValue_Property { get; }
+        new INotifyingItem<Single> ArmorValue_Property { get; }
 
         new UInt32 Value { get; set; }
-        new INotifyingSetItem<UInt32> Value_Property { get; }
+        new INotifyingItem<UInt32> Value_Property { get; }
 
         new UInt32 Health { get; set; }
-        new INotifyingSetItem<UInt32> Health_Property { get; }
+        new INotifyingItem<UInt32> Health_Property { get; }
 
         new Single Weight { get; set; }
-        new INotifyingSetItem<Single> Weight_Property { get; }
+        new INotifyingItem<Single> Weight_Property { get; }
 
     }
 
@@ -1138,22 +1110,22 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region ArmorValue
         Single ArmorValue { get; }
-        INotifyingSetItemGetter<Single> ArmorValue_Property { get; }
+        INotifyingItemGetter<Single> ArmorValue_Property { get; }
 
         #endregion
         #region Value
         UInt32 Value { get; }
-        INotifyingSetItemGetter<UInt32> Value_Property { get; }
+        INotifyingItemGetter<UInt32> Value_Property { get; }
 
         #endregion
         #region Health
         UInt32 Health { get; }
-        INotifyingSetItemGetter<UInt32> Health_Property { get; }
+        INotifyingItemGetter<UInt32> Health_Property { get; }
 
         #endregion
         #region Weight
         Single Weight { get; }
-        INotifyingSetItemGetter<Single> Weight_Property { get; }
+        INotifyingItemGetter<Single> Weight_Property { get; }
 
         #endregion
 
@@ -1481,9 +1453,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.ArmorValue_Property.SetToWithDefault(
-                        rhs: rhs.ArmorValue_Property,
-                        def: def?.ArmorValue_Property,
+                    item.ArmorValue_Property.Set(
+                        value: rhs.ArmorValue,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1496,9 +1467,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Value_Property.SetToWithDefault(
-                        rhs: rhs.Value_Property,
-                        def: def?.Value_Property,
+                    item.Value_Property.Set(
+                        value: rhs.Value,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1511,9 +1481,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Health_Property.SetToWithDefault(
-                        rhs: rhs.Health_Property,
-                        def: def?.Health_Property,
+                    item.Health_Property.Set(
+                        value: rhs.Health,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1526,9 +1495,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Weight_Property.SetToWithDefault(
-                        rhs: rhs.Weight_Property,
-                        def: def?.Weight_Property,
+                    item.Weight_Property.Set(
+                        value: rhs.Weight,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1551,17 +1519,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Armor_FieldIndex.ArmorValue:
-                    obj.ArmorValue_Property.HasBeenSet = on;
-                    break;
                 case Armor_FieldIndex.Value:
-                    obj.Value_Property.HasBeenSet = on;
-                    break;
                 case Armor_FieldIndex.Health:
-                    obj.Health_Property.HasBeenSet = on;
-                    break;
                 case Armor_FieldIndex.Weight:
-                    obj.Weight_Property.HasBeenSet = on;
-                    break;
+                    if (on) break;
+                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 default:
                     ClothingAbstractCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
@@ -1577,16 +1539,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Armor_FieldIndex.ArmorValue:
-                    obj.ArmorValue_Property.Unset(cmds);
+                    obj.ArmorValue = default(Single);
                     break;
                 case Armor_FieldIndex.Value:
-                    obj.Value_Property.Unset(cmds);
+                    obj.Value = default(UInt32);
                     break;
                 case Armor_FieldIndex.Health:
-                    obj.Health_Property.Unset(cmds);
+                    obj.Health = default(UInt32);
                     break;
                 case Armor_FieldIndex.Weight:
-                    obj.Weight_Property.Unset(cmds);
+                    obj.Weight = default(Single);
                     break;
                 default:
                     ClothingAbstractCommon.UnsetNthObject(index, obj);
@@ -1602,13 +1564,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Armor_FieldIndex.ArmorValue:
-                    return obj.ArmorValue_Property.HasBeenSet;
                 case Armor_FieldIndex.Value:
-                    return obj.Value_Property.HasBeenSet;
                 case Armor_FieldIndex.Health:
-                    return obj.Health_Property.HasBeenSet;
                 case Armor_FieldIndex.Weight:
-                    return obj.Weight_Property.HasBeenSet;
+                    return true;
                 default:
                     return ClothingAbstractCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -1638,10 +1597,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IArmor item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.ArmorValue_Property.Unset(cmds.ToUnsetParams());
-            item.Value_Property.Unset(cmds.ToUnsetParams());
-            item.Health_Property.Unset(cmds.ToUnsetParams());
-            item.Weight_Property.Unset(cmds.ToUnsetParams());
+            item.ArmorValue = default(Single);
+            item.Value = default(UInt32);
+            item.Health = default(UInt32);
+            item.Weight = default(Single);
         }
 
         public static Armor_Mask<bool> GetEqualsMask(
@@ -1659,10 +1618,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Armor_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.ArmorValue = item.ArmorValue_Property.Equals(rhs.ArmorValue_Property, (l, r) => l == r);
-            ret.Value = item.Value_Property.Equals(rhs.Value_Property, (l, r) => l == r);
-            ret.Health = item.Health_Property.Equals(rhs.Health_Property, (l, r) => l == r);
-            ret.Weight = item.Weight_Property.Equals(rhs.Weight_Property, (l, r) => l == r);
+            ret.ArmorValue = item.ArmorValue == rhs.ArmorValue;
+            ret.Value = item.Value == rhs.Value;
+            ret.Health = item.Health == rhs.Health;
+            ret.Weight = item.Weight == rhs.Weight;
             ClothingAbstractCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -1717,20 +1676,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IArmorGetter item,
             Armor_Mask<bool?> checkMask)
         {
-            if (checkMask.ArmorValue.HasValue && checkMask.ArmorValue.Value != item.ArmorValue_Property.HasBeenSet) return false;
-            if (checkMask.Value.HasValue && checkMask.Value.Value != item.Value_Property.HasBeenSet) return false;
-            if (checkMask.Health.HasValue && checkMask.Health.Value != item.Health_Property.HasBeenSet) return false;
-            if (checkMask.Weight.HasValue && checkMask.Weight.Value != item.Weight_Property.HasBeenSet) return false;
             return true;
         }
 
         public static Armor_Mask<bool> GetHasBeenSetMask(IArmorGetter item)
         {
             var ret = new Armor_Mask<bool>();
-            ret.ArmorValue = item.ArmorValue_Property.HasBeenSet;
-            ret.Value = item.Value_Property.HasBeenSet;
-            ret.Health = item.Health_Property.HasBeenSet;
-            ret.Weight = item.Weight_Property.HasBeenSet;
+            ret.ArmorValue = true;
+            ret.Value = true;
+            ret.Health = true;
+            ret.Weight = true;
             return ret;
         }
 
@@ -1867,42 +1822,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.Armor");
                     }
-                    if (item.ArmorValue_Property.HasBeenSet)
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.ArmorValue),
-                            item: item.ArmorValue_Property,
-                            fieldIndex: (int)Armor_FieldIndex.ArmorValue,
-                            errorMask: errorMask);
-                    }
-                    if (item.Value_Property.HasBeenSet)
-                    {
-                        UInt32XmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Value),
-                            item: item.Value_Property,
-                            fieldIndex: (int)Armor_FieldIndex.Value,
-                            errorMask: errorMask);
-                    }
-                    if (item.Health_Property.HasBeenSet)
-                    {
-                        UInt32XmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Health),
-                            item: item.Health_Property,
-                            fieldIndex: (int)Armor_FieldIndex.Health,
-                            errorMask: errorMask);
-                    }
-                    if (item.Weight_Property.HasBeenSet)
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Weight),
-                            item: item.Weight_Property,
-                            fieldIndex: (int)Armor_FieldIndex.Weight,
-                            errorMask: errorMask);
-                    }
+                    FloatXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.ArmorValue),
+                        item: item.ArmorValue_Property,
+                        fieldIndex: (int)Armor_FieldIndex.ArmorValue,
+                        errorMask: errorMask);
+                    UInt32XmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Value),
+                        item: item.Value_Property,
+                        fieldIndex: (int)Armor_FieldIndex.Value,
+                        errorMask: errorMask);
+                    UInt32XmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Health),
+                        item: item.Health_Property,
+                        fieldIndex: (int)Armor_FieldIndex.Health,
+                        errorMask: errorMask);
+                    FloatXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Weight),
+                        item: item.Weight_Property,
+                        fieldIndex: (int)Armor_FieldIndex.Weight,
+                        errorMask: errorMask);
                 }
             }
             catch (Exception ex)

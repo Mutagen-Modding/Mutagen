@@ -91,48 +91,48 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<String> IBookGetter.Description_Property => this.Description_Property;
         #endregion
         #region Flags
-        protected readonly INotifyingSetItem<Book.BookFlag> _Flags = NotifyingSetItem.Factory<Book.BookFlag>(markAsSet: false);
-        public INotifyingSetItem<Book.BookFlag> Flags_Property => _Flags;
+        protected readonly INotifyingItem<Book.BookFlag> _Flags = NotifyingItem.Factory<Book.BookFlag>();
+        public INotifyingItem<Book.BookFlag> Flags_Property => _Flags;
         public Book.BookFlag Flags
         {
             get => this._Flags.Item;
             set => this._Flags.Set(value);
         }
-        INotifyingSetItem<Book.BookFlag> IBook.Flags_Property => this.Flags_Property;
-        INotifyingSetItemGetter<Book.BookFlag> IBookGetter.Flags_Property => this.Flags_Property;
+        INotifyingItem<Book.BookFlag> IBook.Flags_Property => this.Flags_Property;
+        INotifyingItemGetter<Book.BookFlag> IBookGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region Teaches
-        protected readonly INotifyingSetItem<Skill> _Teaches = NotifyingSetItem.Factory<Skill>(markAsSet: false);
-        public INotifyingSetItem<Skill> Teaches_Property => _Teaches;
+        protected readonly INotifyingItem<Skill> _Teaches = NotifyingItem.Factory<Skill>();
+        public INotifyingItem<Skill> Teaches_Property => _Teaches;
         public Skill Teaches
         {
             get => this._Teaches.Item;
             set => this._Teaches.Set(value);
         }
-        INotifyingSetItem<Skill> IBook.Teaches_Property => this.Teaches_Property;
-        INotifyingSetItemGetter<Skill> IBookGetter.Teaches_Property => this.Teaches_Property;
+        INotifyingItem<Skill> IBook.Teaches_Property => this.Teaches_Property;
+        INotifyingItemGetter<Skill> IBookGetter.Teaches_Property => this.Teaches_Property;
         #endregion
         #region Value
-        protected readonly INotifyingSetItem<Single> _Value = NotifyingSetItem.Factory<Single>(markAsSet: false);
-        public INotifyingSetItem<Single> Value_Property => _Value;
+        protected readonly INotifyingItem<Single> _Value = NotifyingItem.Factory<Single>();
+        public INotifyingItem<Single> Value_Property => _Value;
         public Single Value
         {
             get => this._Value.Item;
             set => this._Value.Set(value);
         }
-        INotifyingSetItem<Single> IBook.Value_Property => this.Value_Property;
-        INotifyingSetItemGetter<Single> IBookGetter.Value_Property => this.Value_Property;
+        INotifyingItem<Single> IBook.Value_Property => this.Value_Property;
+        INotifyingItemGetter<Single> IBookGetter.Value_Property => this.Value_Property;
         #endregion
         #region Weight
-        protected readonly INotifyingSetItem<Single> _Weight = NotifyingSetItem.Factory<Single>(markAsSet: false);
-        public INotifyingSetItem<Single> Weight_Property => _Weight;
+        protected readonly INotifyingItem<Single> _Weight = NotifyingItem.Factory<Single>();
+        public INotifyingItem<Single> Weight_Property => _Weight;
         public Single Weight
         {
             get => this._Weight.Item;
             set => this._Weight.Set(value);
         }
-        INotifyingSetItem<Single> IBook.Weight_Property => this.Weight_Property;
-        INotifyingSetItemGetter<Single> IBookGetter.Weight_Property => this.Weight_Property;
+        INotifyingItem<Single> IBook.Weight_Property => this.Weight_Property;
+        INotifyingItemGetter<Single> IBookGetter.Weight_Property => this.Weight_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -220,26 +220,10 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!object.Equals(Description, rhs.Description)) return false;
             }
-            if (Flags_Property.HasBeenSet != rhs.Flags_Property.HasBeenSet) return false;
-            if (Flags_Property.HasBeenSet)
-            {
-                if (Flags != rhs.Flags) return false;
-            }
-            if (Teaches_Property.HasBeenSet != rhs.Teaches_Property.HasBeenSet) return false;
-            if (Teaches_Property.HasBeenSet)
-            {
-                if (Teaches != rhs.Teaches) return false;
-            }
-            if (Value_Property.HasBeenSet != rhs.Value_Property.HasBeenSet) return false;
-            if (Value_Property.HasBeenSet)
-            {
-                if (Value != rhs.Value) return false;
-            }
-            if (Weight_Property.HasBeenSet != rhs.Weight_Property.HasBeenSet) return false;
-            if (Weight_Property.HasBeenSet)
-            {
-                if (Weight != rhs.Weight) return false;
-            }
+            if (Flags != rhs.Flags) return false;
+            if (Teaches != rhs.Teaches) return false;
+            if (Value != rhs.Value) return false;
+            if (Weight != rhs.Weight) return false;
             return true;
         }
 
@@ -270,22 +254,10 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(Description).CombineHashCode(ret);
             }
-            if (Flags_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            }
-            if (Teaches_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Teaches).CombineHashCode(ret);
-            }
-            if (Value_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Value).CombineHashCode(ret);
-            }
-            if (Weight_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Weight).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Teaches).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Value).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Weight).CombineHashCode(ret);
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -1332,16 +1304,16 @@ namespace Mutagen.Bethesda.Oblivion
         new INotifyingSetItem<String> Description_Property { get; }
 
         new Book.BookFlag Flags { get; set; }
-        new INotifyingSetItem<Book.BookFlag> Flags_Property { get; }
+        new INotifyingItem<Book.BookFlag> Flags_Property { get; }
 
         new Skill Teaches { get; set; }
-        new INotifyingSetItem<Skill> Teaches_Property { get; }
+        new INotifyingItem<Skill> Teaches_Property { get; }
 
         new Single Value { get; set; }
-        new INotifyingSetItem<Single> Value_Property { get; }
+        new INotifyingItem<Single> Value_Property { get; }
 
         new Single Weight { get; set; }
-        new INotifyingSetItem<Single> Weight_Property { get; }
+        new INotifyingItem<Single> Weight_Property { get; }
 
     }
 
@@ -1379,22 +1351,22 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Flags
         Book.BookFlag Flags { get; }
-        INotifyingSetItemGetter<Book.BookFlag> Flags_Property { get; }
+        INotifyingItemGetter<Book.BookFlag> Flags_Property { get; }
 
         #endregion
         #region Teaches
         Skill Teaches { get; }
-        INotifyingSetItemGetter<Skill> Teaches_Property { get; }
+        INotifyingItemGetter<Skill> Teaches_Property { get; }
 
         #endregion
         #region Value
         Single Value { get; }
-        INotifyingSetItemGetter<Single> Value_Property { get; }
+        INotifyingItemGetter<Single> Value_Property { get; }
 
         #endregion
         #region Weight
         Single Weight { get; }
-        INotifyingSetItemGetter<Single> Weight_Property { get; }
+        INotifyingItemGetter<Single> Weight_Property { get; }
 
         #endregion
 
@@ -1916,9 +1888,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Flags_Property.SetToWithDefault(
-                        rhs: rhs.Flags_Property,
-                        def: def?.Flags_Property,
+                    item.Flags_Property.Set(
+                        value: rhs.Flags,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1931,9 +1902,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Teaches_Property.SetToWithDefault(
-                        rhs: rhs.Teaches_Property,
-                        def: def?.Teaches_Property,
+                    item.Teaches_Property.Set(
+                        value: rhs.Teaches,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1946,9 +1916,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Value_Property.SetToWithDefault(
-                        rhs: rhs.Value_Property,
-                        def: def?.Value_Property,
+                    item.Value_Property.Set(
+                        value: rhs.Value,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1961,9 +1930,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Weight_Property.SetToWithDefault(
-                        rhs: rhs.Weight_Property,
-                        def: def?.Weight_Property,
+                    item.Weight_Property.Set(
+                        value: rhs.Weight,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1985,6 +1953,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Book_FieldIndex enu = (Book_FieldIndex)index;
             switch (enu)
             {
+                case Book_FieldIndex.Flags:
+                case Book_FieldIndex.Teaches:
+                case Book_FieldIndex.Value:
+                case Book_FieldIndex.Weight:
+                    if (on) break;
+                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 case Book_FieldIndex.Model:
                     obj.Model_Property.HasBeenSet = on;
                     break;
@@ -2002,18 +1976,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case Book_FieldIndex.Description:
                     obj.Description_Property.HasBeenSet = on;
-                    break;
-                case Book_FieldIndex.Flags:
-                    obj.Flags_Property.HasBeenSet = on;
-                    break;
-                case Book_FieldIndex.Teaches:
-                    obj.Teaches_Property.HasBeenSet = on;
-                    break;
-                case Book_FieldIndex.Value:
-                    obj.Value_Property.HasBeenSet = on;
-                    break;
-                case Book_FieldIndex.Weight:
-                    obj.Weight_Property.HasBeenSet = on;
                     break;
                 default:
                     NamedMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
@@ -2048,16 +2010,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Description_Property.Unset(cmds);
                     break;
                 case Book_FieldIndex.Flags:
-                    obj.Flags_Property.Unset(cmds);
+                    obj.Flags = default(Book.BookFlag);
                     break;
                 case Book_FieldIndex.Teaches:
-                    obj.Teaches_Property.Unset(cmds);
+                    obj.Teaches = default(Skill);
                     break;
                 case Book_FieldIndex.Value:
-                    obj.Value_Property.Unset(cmds);
+                    obj.Value = default(Single);
                     break;
                 case Book_FieldIndex.Weight:
-                    obj.Weight_Property.Unset(cmds);
+                    obj.Weight = default(Single);
                     break;
                 default:
                     NamedMajorRecordCommon.UnsetNthObject(index, obj);
@@ -2072,6 +2034,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Book_FieldIndex enu = (Book_FieldIndex)index;
             switch (enu)
             {
+                case Book_FieldIndex.Flags:
+                case Book_FieldIndex.Teaches:
+                case Book_FieldIndex.Value:
+                case Book_FieldIndex.Weight:
+                    return true;
                 case Book_FieldIndex.Model:
                     return obj.Model_Property.HasBeenSet;
                 case Book_FieldIndex.Icon:
@@ -2084,14 +2051,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.EnchantmentPoints_Property.HasBeenSet;
                 case Book_FieldIndex.Description:
                     return obj.Description_Property.HasBeenSet;
-                case Book_FieldIndex.Flags:
-                    return obj.Flags_Property.HasBeenSet;
-                case Book_FieldIndex.Teaches:
-                    return obj.Teaches_Property.HasBeenSet;
-                case Book_FieldIndex.Value:
-                    return obj.Value_Property.HasBeenSet;
-                case Book_FieldIndex.Weight:
-                    return obj.Weight_Property.HasBeenSet;
                 default:
                     return NamedMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -2139,10 +2098,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Enchantment_Property.Unset(cmds.ToUnsetParams());
             item.EnchantmentPoints_Property.Unset(cmds.ToUnsetParams());
             item.Description_Property.Unset(cmds.ToUnsetParams());
-            item.Flags_Property.Unset(cmds.ToUnsetParams());
-            item.Teaches_Property.Unset(cmds.ToUnsetParams());
-            item.Value_Property.Unset(cmds.ToUnsetParams());
-            item.Weight_Property.Unset(cmds.ToUnsetParams());
+            item.Flags = default(Book.BookFlag);
+            item.Teaches = default(Skill);
+            item.Value = default(Single);
+            item.Weight = default(Single);
         }
 
         public static Book_Mask<bool> GetEqualsMask(
@@ -2166,10 +2125,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Enchantment = item.Enchantment_Property.Equals(rhs.Enchantment_Property, (l, r) => l == r);
             ret.EnchantmentPoints = item.EnchantmentPoints_Property.Equals(rhs.EnchantmentPoints_Property, (l, r) => l == r);
             ret.Description = item.Description_Property.Equals(rhs.Description_Property, (l, r) => object.Equals(l, r));
-            ret.Flags = item.Flags_Property.Equals(rhs.Flags_Property, (l, r) => l == r);
-            ret.Teaches = item.Teaches_Property.Equals(rhs.Teaches_Property, (l, r) => l == r);
-            ret.Value = item.Value_Property.Equals(rhs.Value_Property, (l, r) => l == r);
-            ret.Weight = item.Weight_Property.Equals(rhs.Weight_Property, (l, r) => l == r);
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.Teaches = item.Teaches == rhs.Teaches;
+            ret.Value = item.Value == rhs.Value;
+            ret.Weight = item.Weight == rhs.Weight;
             NamedMajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -2255,10 +2214,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Enchantment.HasValue && checkMask.Enchantment.Value != item.Enchantment_Property.HasBeenSet) return false;
             if (checkMask.EnchantmentPoints.HasValue && checkMask.EnchantmentPoints.Value != item.EnchantmentPoints_Property.HasBeenSet) return false;
             if (checkMask.Description.HasValue && checkMask.Description.Value != item.Description_Property.HasBeenSet) return false;
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_Property.HasBeenSet) return false;
-            if (checkMask.Teaches.HasValue && checkMask.Teaches.Value != item.Teaches_Property.HasBeenSet) return false;
-            if (checkMask.Value.HasValue && checkMask.Value.Value != item.Value_Property.HasBeenSet) return false;
-            if (checkMask.Weight.HasValue && checkMask.Weight.Value != item.Weight_Property.HasBeenSet) return false;
             return true;
         }
 
@@ -2271,10 +2226,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Enchantment = item.Enchantment_Property.HasBeenSet;
             ret.EnchantmentPoints = item.EnchantmentPoints_Property.HasBeenSet;
             ret.Description = item.Description_Property.HasBeenSet;
-            ret.Flags = item.Flags_Property.HasBeenSet;
-            ret.Teaches = item.Teaches_Property.HasBeenSet;
-            ret.Value = item.Value_Property.HasBeenSet;
-            ret.Weight = item.Weight_Property.HasBeenSet;
+            ret.Flags = true;
+            ret.Teaches = true;
+            ret.Value = true;
+            ret.Weight = true;
             return ret;
         }
 
@@ -2416,42 +2371,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             fieldIndex: (int)Book_FieldIndex.Description,
                             errorMask: errorMask);
                     }
-                    if (item.Flags_Property.HasBeenSet)
-                    {
-                        EnumXmlTranslation<Book.BookFlag>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Flags),
-                            item: item.Flags_Property,
-                            fieldIndex: (int)Book_FieldIndex.Flags,
-                            errorMask: errorMask);
-                    }
-                    if (item.Teaches_Property.HasBeenSet)
-                    {
-                        EnumXmlTranslation<Skill>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Teaches),
-                            item: item.Teaches_Property,
-                            fieldIndex: (int)Book_FieldIndex.Teaches,
-                            errorMask: errorMask);
-                    }
-                    if (item.Value_Property.HasBeenSet)
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Value),
-                            item: item.Value_Property,
-                            fieldIndex: (int)Book_FieldIndex.Value,
-                            errorMask: errorMask);
-                    }
-                    if (item.Weight_Property.HasBeenSet)
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Weight),
-                            item: item.Weight_Property,
-                            fieldIndex: (int)Book_FieldIndex.Weight,
-                            errorMask: errorMask);
-                    }
+                    EnumXmlTranslation<Book.BookFlag>.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Flags),
+                        item: item.Flags_Property,
+                        fieldIndex: (int)Book_FieldIndex.Flags,
+                        errorMask: errorMask);
+                    EnumXmlTranslation<Skill>.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Teaches),
+                        item: item.Teaches_Property,
+                        fieldIndex: (int)Book_FieldIndex.Teaches,
+                        errorMask: errorMask);
+                    FloatXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Value),
+                        item: item.Value_Property,
+                        fieldIndex: (int)Book_FieldIndex.Value,
+                        errorMask: errorMask);
+                    FloatXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Weight),
+                        item: item.Weight_Property,
+                        fieldIndex: (int)Book_FieldIndex.Weight,
+                        errorMask: errorMask);
                 }
             }
             catch (Exception ex)

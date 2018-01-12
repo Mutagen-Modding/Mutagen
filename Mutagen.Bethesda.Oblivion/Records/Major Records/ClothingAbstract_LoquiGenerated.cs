@@ -61,26 +61,26 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<UInt16> IClothingAbstractGetter.EnchantmentPoints_Property => this.EnchantmentPoints_Property;
         #endregion
         #region BipedFlags
-        protected readonly INotifyingSetItem<BipedFlag> _BipedFlags = NotifyingSetItem.Factory<BipedFlag>(markAsSet: false);
-        public INotifyingSetItem<BipedFlag> BipedFlags_Property => _BipedFlags;
+        protected readonly INotifyingItem<BipedFlag> _BipedFlags = NotifyingItem.Factory<BipedFlag>();
+        public INotifyingItem<BipedFlag> BipedFlags_Property => _BipedFlags;
         public BipedFlag BipedFlags
         {
             get => this._BipedFlags.Item;
             set => this._BipedFlags.Set(value);
         }
-        INotifyingSetItem<BipedFlag> IClothingAbstract.BipedFlags_Property => this.BipedFlags_Property;
-        INotifyingSetItemGetter<BipedFlag> IClothingAbstractGetter.BipedFlags_Property => this.BipedFlags_Property;
+        INotifyingItem<BipedFlag> IClothingAbstract.BipedFlags_Property => this.BipedFlags_Property;
+        INotifyingItemGetter<BipedFlag> IClothingAbstractGetter.BipedFlags_Property => this.BipedFlags_Property;
         #endregion
         #region Flags
-        protected readonly INotifyingSetItem<EquipmentFlag> _Flags = NotifyingSetItem.Factory<EquipmentFlag>(markAsSet: false);
-        public INotifyingSetItem<EquipmentFlag> Flags_Property => _Flags;
+        protected readonly INotifyingItem<EquipmentFlag> _Flags = NotifyingItem.Factory<EquipmentFlag>();
+        public INotifyingItem<EquipmentFlag> Flags_Property => _Flags;
         public EquipmentFlag Flags
         {
             get => this._Flags.Item;
             set => this._Flags.Set(value);
         }
-        INotifyingSetItem<EquipmentFlag> IClothingAbstract.Flags_Property => this.Flags_Property;
-        INotifyingSetItemGetter<EquipmentFlag> IClothingAbstractGetter.Flags_Property => this.Flags_Property;
+        INotifyingItem<EquipmentFlag> IClothingAbstract.Flags_Property => this.Flags_Property;
+        INotifyingItemGetter<EquipmentFlag> IClothingAbstractGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region MaleBipedModel
         private readonly INotifyingSetItem<Model> _MaleBipedModel = new NotifyingSetItem<Model>();
@@ -207,16 +207,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (EnchantmentPoints != rhs.EnchantmentPoints) return false;
             }
-            if (BipedFlags_Property.HasBeenSet != rhs.BipedFlags_Property.HasBeenSet) return false;
-            if (BipedFlags_Property.HasBeenSet)
-            {
-                if (BipedFlags != rhs.BipedFlags) return false;
-            }
-            if (Flags_Property.HasBeenSet != rhs.Flags_Property.HasBeenSet) return false;
-            if (Flags_Property.HasBeenSet)
-            {
-                if (Flags != rhs.Flags) return false;
-            }
+            if (BipedFlags != rhs.BipedFlags) return false;
+            if (Flags != rhs.Flags) return false;
             if (MaleBipedModel_Property.HasBeenSet != rhs.MaleBipedModel_Property.HasBeenSet) return false;
             if (MaleBipedModel_Property.HasBeenSet)
             {
@@ -265,14 +257,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(EnchantmentPoints).CombineHashCode(ret);
             }
-            if (BipedFlags_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(BipedFlags).CombineHashCode(ret);
-            }
-            if (Flags_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(BipedFlags).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
             if (MaleBipedModel_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(MaleBipedModel).CombineHashCode(ret);
@@ -1020,10 +1006,10 @@ namespace Mutagen.Bethesda.Oblivion
         new INotifyingSetItem<UInt16> EnchantmentPoints_Property { get; }
 
         new BipedFlag BipedFlags { get; set; }
-        new INotifyingSetItem<BipedFlag> BipedFlags_Property { get; }
+        new INotifyingItem<BipedFlag> BipedFlags_Property { get; }
 
         new EquipmentFlag Flags { get; set; }
-        new INotifyingSetItem<EquipmentFlag> Flags_Property { get; }
+        new INotifyingItem<EquipmentFlag> Flags_Property { get; }
 
         new Model MaleBipedModel { get; set; }
         new INotifyingSetItem<Model> MaleBipedModel_Property { get; }
@@ -1064,12 +1050,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region BipedFlags
         BipedFlag BipedFlags { get; }
-        INotifyingSetItemGetter<BipedFlag> BipedFlags_Property { get; }
+        INotifyingItemGetter<BipedFlag> BipedFlags_Property { get; }
 
         #endregion
         #region Flags
         EquipmentFlag Flags { get; }
-        INotifyingSetItemGetter<EquipmentFlag> Flags_Property { get; }
+        INotifyingItemGetter<EquipmentFlag> Flags_Property { get; }
 
         #endregion
         #region MaleBipedModel
@@ -1610,9 +1596,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.BipedFlags_Property.SetToWithDefault(
-                        rhs: rhs.BipedFlags_Property,
-                        def: def?.BipedFlags_Property,
+                    item.BipedFlags_Property.Set(
+                        value: rhs.BipedFlags,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1625,9 +1610,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Flags_Property.SetToWithDefault(
-                        rhs: rhs.Flags_Property,
-                        def: def?.Flags_Property,
+                    item.Flags_Property.Set(
+                        value: rhs.Flags,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1883,6 +1867,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClothingAbstract_FieldIndex enu = (ClothingAbstract_FieldIndex)index;
             switch (enu)
             {
+                case ClothingAbstract_FieldIndex.BipedFlags:
+                case ClothingAbstract_FieldIndex.Flags:
+                    if (on) break;
+                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 case ClothingAbstract_FieldIndex.Script:
                     obj.Script_Property.HasBeenSet = on;
                     break;
@@ -1891,12 +1879,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case ClothingAbstract_FieldIndex.EnchantmentPoints:
                     obj.EnchantmentPoints_Property.HasBeenSet = on;
-                    break;
-                case ClothingAbstract_FieldIndex.BipedFlags:
-                    obj.BipedFlags_Property.HasBeenSet = on;
-                    break;
-                case ClothingAbstract_FieldIndex.Flags:
-                    obj.Flags_Property.HasBeenSet = on;
                     break;
                 case ClothingAbstract_FieldIndex.MaleBipedModel:
                     obj.MaleBipedModel_Property.HasBeenSet = on;
@@ -1940,10 +1922,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.EnchantmentPoints_Property.Unset(cmds);
                     break;
                 case ClothingAbstract_FieldIndex.BipedFlags:
-                    obj.BipedFlags_Property.Unset(cmds);
+                    obj.BipedFlags = default(BipedFlag);
                     break;
                 case ClothingAbstract_FieldIndex.Flags:
-                    obj.Flags_Property.Unset(cmds);
+                    obj.Flags = default(EquipmentFlag);
                     break;
                 case ClothingAbstract_FieldIndex.MaleBipedModel:
                     obj.MaleBipedModel_Property.Unset(cmds);
@@ -1976,16 +1958,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClothingAbstract_FieldIndex enu = (ClothingAbstract_FieldIndex)index;
             switch (enu)
             {
+                case ClothingAbstract_FieldIndex.BipedFlags:
+                case ClothingAbstract_FieldIndex.Flags:
+                    return true;
                 case ClothingAbstract_FieldIndex.Script:
                     return obj.Script_Property.HasBeenSet;
                 case ClothingAbstract_FieldIndex.Enchantment:
                     return obj.Enchantment_Property.HasBeenSet;
                 case ClothingAbstract_FieldIndex.EnchantmentPoints:
                     return obj.EnchantmentPoints_Property.HasBeenSet;
-                case ClothingAbstract_FieldIndex.BipedFlags:
-                    return obj.BipedFlags_Property.HasBeenSet;
-                case ClothingAbstract_FieldIndex.Flags:
-                    return obj.Flags_Property.HasBeenSet;
                 case ClothingAbstract_FieldIndex.MaleBipedModel:
                     return obj.MaleBipedModel_Property.HasBeenSet;
                 case ClothingAbstract_FieldIndex.MaleWorldModel:
@@ -2044,8 +2025,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Script_Property.Unset(cmds.ToUnsetParams());
             item.Enchantment_Property.Unset(cmds.ToUnsetParams());
             item.EnchantmentPoints_Property.Unset(cmds.ToUnsetParams());
-            item.BipedFlags_Property.Unset(cmds.ToUnsetParams());
-            item.Flags_Property.Unset(cmds.ToUnsetParams());
+            item.BipedFlags = default(BipedFlag);
+            item.Flags = default(EquipmentFlag);
             item.MaleBipedModel_Property.Unset(cmds.ToUnsetParams());
             item.MaleWorldModel_Property.Unset(cmds.ToUnsetParams());
             item.MaleIcon_Property.Unset(cmds.ToUnsetParams());
@@ -2072,8 +2053,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Script = item.Script_Property.Equals(rhs.Script_Property, (l, r) => l == r);
             ret.Enchantment = item.Enchantment_Property.Equals(rhs.Enchantment_Property, (l, r) => l == r);
             ret.EnchantmentPoints = item.EnchantmentPoints_Property.Equals(rhs.EnchantmentPoints_Property, (l, r) => l == r);
-            ret.BipedFlags = item.BipedFlags_Property.Equals(rhs.BipedFlags_Property, (l, r) => l == r);
-            ret.Flags = item.Flags_Property.Equals(rhs.Flags_Property, (l, r) => l == r);
+            ret.BipedFlags = item.BipedFlags == rhs.BipedFlags;
+            ret.Flags = item.Flags == rhs.Flags;
             ret.MaleBipedModel = item.MaleBipedModel_Property.LoquiEqualsHelper(rhs.MaleBipedModel_Property, (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs));
             ret.MaleWorldModel = item.MaleWorldModel_Property.LoquiEqualsHelper(rhs.MaleWorldModel_Property, (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs));
             ret.MaleIcon = item.MaleIcon_Property.Equals(rhs.MaleIcon_Property, (l, r) => object.Equals(l, r));
@@ -2165,8 +2146,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script_Property.HasBeenSet) return false;
             if (checkMask.Enchantment.HasValue && checkMask.Enchantment.Value != item.Enchantment_Property.HasBeenSet) return false;
             if (checkMask.EnchantmentPoints.HasValue && checkMask.EnchantmentPoints.Value != item.EnchantmentPoints_Property.HasBeenSet) return false;
-            if (checkMask.BipedFlags.HasValue && checkMask.BipedFlags.Value != item.BipedFlags_Property.HasBeenSet) return false;
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_Property.HasBeenSet) return false;
             if (checkMask.MaleBipedModel.Overall.HasValue && checkMask.MaleBipedModel.Overall.Value != item.MaleBipedModel_Property.HasBeenSet) return false;
             if (checkMask.MaleBipedModel.Specific != null && (item.MaleBipedModel_Property.Item == null || !item.MaleBipedModel_Property.Item.HasBeenSet(checkMask.MaleBipedModel.Specific))) return false;
             if (checkMask.MaleWorldModel.Overall.HasValue && checkMask.MaleWorldModel.Overall.Value != item.MaleWorldModel_Property.HasBeenSet) return false;
@@ -2186,8 +2165,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Script = item.Script_Property.HasBeenSet;
             ret.Enchantment = item.Enchantment_Property.HasBeenSet;
             ret.EnchantmentPoints = item.EnchantmentPoints_Property.HasBeenSet;
-            ret.BipedFlags = item.BipedFlags_Property.HasBeenSet;
-            ret.Flags = item.Flags_Property.HasBeenSet;
+            ret.BipedFlags = true;
+            ret.Flags = true;
             ret.MaleBipedModel = new MaskItem<bool, Model_Mask<bool>>(item.MaleBipedModel_Property.HasBeenSet, ModelCommon.GetHasBeenSetMask(item.MaleBipedModel_Property.Item));
             ret.MaleWorldModel = new MaskItem<bool, Model_Mask<bool>>(item.MaleWorldModel_Property.HasBeenSet, ModelCommon.GetHasBeenSetMask(item.MaleWorldModel_Property.Item));
             ret.MaleIcon = item.MaleIcon_Property.HasBeenSet;
@@ -2308,24 +2287,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             fieldIndex: (int)ClothingAbstract_FieldIndex.EnchantmentPoints,
                             errorMask: errorMask);
                     }
-                    if (item.BipedFlags_Property.HasBeenSet)
-                    {
-                        EnumXmlTranslation<BipedFlag>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.BipedFlags),
-                            item: item.BipedFlags_Property,
-                            fieldIndex: (int)ClothingAbstract_FieldIndex.BipedFlags,
-                            errorMask: errorMask);
-                    }
-                    if (item.Flags_Property.HasBeenSet)
-                    {
-                        EnumXmlTranslation<EquipmentFlag>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Flags),
-                            item: item.Flags_Property,
-                            fieldIndex: (int)ClothingAbstract_FieldIndex.Flags,
-                            errorMask: errorMask);
-                    }
+                    EnumXmlTranslation<BipedFlag>.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.BipedFlags),
+                        item: item.BipedFlags_Property,
+                        fieldIndex: (int)ClothingAbstract_FieldIndex.BipedFlags,
+                        errorMask: errorMask);
+                    EnumXmlTranslation<EquipmentFlag>.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Flags),
+                        item: item.Flags_Property,
+                        fieldIndex: (int)ClothingAbstract_FieldIndex.Flags,
+                        errorMask: errorMask);
                     if (item.MaleBipedModel_Property.HasBeenSet)
                     {
                         LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Write(

@@ -29,7 +29,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         static partial void WriteBinary_ArmorValue_Custom(MutagenWriter writer, IArmorGetter item, int fieldIndex, Func<Armor_ErrorMask> errorMask)
         {
-            if (!item.ArmorValue_Property.HasBeenSet) return;
             UInt16BinaryTranslation.Instance.Write(
                 writer,
                 (ushort)(item.ArmorValue * 100),

@@ -38,64 +38,64 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region MagicEffect
-        public EDIDSetLink<MagicEffect> MagicEffect_Property { get; } = new EDIDSetLink<MagicEffect>();
+        public EDIDLink<MagicEffect> MagicEffect_Property { get; } = new EDIDLink<MagicEffect>();
         public MagicEffect MagicEffect { get => MagicEffect_Property.Item; set => MagicEffect_Property.Item = value; }
-        EDIDSetLink<MagicEffect> IEffectGetter.MagicEffect_Property => this.MagicEffect_Property;
+        EDIDLink<MagicEffect> IEffectGetter.MagicEffect_Property => this.MagicEffect_Property;
         #endregion
         #region Magnitude
-        protected readonly INotifyingSetItem<UInt32> _Magnitude = NotifyingSetItem.Factory<UInt32>(markAsSet: false);
-        public INotifyingSetItem<UInt32> Magnitude_Property => _Magnitude;
+        protected readonly INotifyingItem<UInt32> _Magnitude = NotifyingItem.Factory<UInt32>();
+        public INotifyingItem<UInt32> Magnitude_Property => _Magnitude;
         public UInt32 Magnitude
         {
             get => this._Magnitude.Item;
             set => this._Magnitude.Set(value);
         }
-        INotifyingSetItem<UInt32> IEffect.Magnitude_Property => this.Magnitude_Property;
-        INotifyingSetItemGetter<UInt32> IEffectGetter.Magnitude_Property => this.Magnitude_Property;
+        INotifyingItem<UInt32> IEffect.Magnitude_Property => this.Magnitude_Property;
+        INotifyingItemGetter<UInt32> IEffectGetter.Magnitude_Property => this.Magnitude_Property;
         #endregion
         #region Area
-        protected readonly INotifyingSetItem<UInt32> _Area = NotifyingSetItem.Factory<UInt32>(markAsSet: false);
-        public INotifyingSetItem<UInt32> Area_Property => _Area;
+        protected readonly INotifyingItem<UInt32> _Area = NotifyingItem.Factory<UInt32>();
+        public INotifyingItem<UInt32> Area_Property => _Area;
         public UInt32 Area
         {
             get => this._Area.Item;
             set => this._Area.Set(value);
         }
-        INotifyingSetItem<UInt32> IEffect.Area_Property => this.Area_Property;
-        INotifyingSetItemGetter<UInt32> IEffectGetter.Area_Property => this.Area_Property;
+        INotifyingItem<UInt32> IEffect.Area_Property => this.Area_Property;
+        INotifyingItemGetter<UInt32> IEffectGetter.Area_Property => this.Area_Property;
         #endregion
         #region Duration
-        protected readonly INotifyingSetItem<UInt32> _Duration = NotifyingSetItem.Factory<UInt32>(markAsSet: false);
-        public INotifyingSetItem<UInt32> Duration_Property => _Duration;
+        protected readonly INotifyingItem<UInt32> _Duration = NotifyingItem.Factory<UInt32>();
+        public INotifyingItem<UInt32> Duration_Property => _Duration;
         public UInt32 Duration
         {
             get => this._Duration.Item;
             set => this._Duration.Set(value);
         }
-        INotifyingSetItem<UInt32> IEffect.Duration_Property => this.Duration_Property;
-        INotifyingSetItemGetter<UInt32> IEffectGetter.Duration_Property => this.Duration_Property;
+        INotifyingItem<UInt32> IEffect.Duration_Property => this.Duration_Property;
+        INotifyingItemGetter<UInt32> IEffectGetter.Duration_Property => this.Duration_Property;
         #endregion
         #region Type
-        protected readonly INotifyingSetItem<Effect.EffectType> _Type = NotifyingSetItem.Factory<Effect.EffectType>(markAsSet: false);
-        public INotifyingSetItem<Effect.EffectType> Type_Property => _Type;
+        protected readonly INotifyingItem<Effect.EffectType> _Type = NotifyingItem.Factory<Effect.EffectType>();
+        public INotifyingItem<Effect.EffectType> Type_Property => _Type;
         public Effect.EffectType Type
         {
             get => this._Type.Item;
             set => this._Type.Set(value);
         }
-        INotifyingSetItem<Effect.EffectType> IEffect.Type_Property => this.Type_Property;
-        INotifyingSetItemGetter<Effect.EffectType> IEffectGetter.Type_Property => this.Type_Property;
+        INotifyingItem<Effect.EffectType> IEffect.Type_Property => this.Type_Property;
+        INotifyingItemGetter<Effect.EffectType> IEffectGetter.Type_Property => this.Type_Property;
         #endregion
         #region ActorValue
-        protected readonly INotifyingSetItem<ActorValue> _ActorValue = NotifyingSetItem.Factory<ActorValue>(markAsSet: false);
-        public INotifyingSetItem<ActorValue> ActorValue_Property => _ActorValue;
+        protected readonly INotifyingItem<ActorValue> _ActorValue = NotifyingItem.Factory<ActorValue>();
+        public INotifyingItem<ActorValue> ActorValue_Property => _ActorValue;
         public ActorValue ActorValue
         {
             get => this._ActorValue.Item;
             set => this._ActorValue.Set(value);
         }
-        INotifyingSetItem<ActorValue> IEffect.ActorValue_Property => this.ActorValue_Property;
-        INotifyingSetItemGetter<ActorValue> IEffectGetter.ActorValue_Property => this.ActorValue_Property;
+        INotifyingItem<ActorValue> IEffect.ActorValue_Property => this.ActorValue_Property;
+        INotifyingItemGetter<ActorValue> IEffectGetter.ActorValue_Property => this.ActorValue_Property;
         #endregion
         #region ScriptEffect
         private readonly INotifyingSetItem<ScriptEffect> _ScriptEffect = new NotifyingSetItem<ScriptEffect>();
@@ -164,36 +164,12 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(Effect rhs)
         {
             if (rhs == null) return false;
-            if (MagicEffect_Property.HasBeenSet != rhs.MagicEffect_Property.HasBeenSet) return false;
-            if (MagicEffect_Property.HasBeenSet)
-            {
-                if (MagicEffect != rhs.MagicEffect) return false;
-            }
-            if (Magnitude_Property.HasBeenSet != rhs.Magnitude_Property.HasBeenSet) return false;
-            if (Magnitude_Property.HasBeenSet)
-            {
-                if (Magnitude != rhs.Magnitude) return false;
-            }
-            if (Area_Property.HasBeenSet != rhs.Area_Property.HasBeenSet) return false;
-            if (Area_Property.HasBeenSet)
-            {
-                if (Area != rhs.Area) return false;
-            }
-            if (Duration_Property.HasBeenSet != rhs.Duration_Property.HasBeenSet) return false;
-            if (Duration_Property.HasBeenSet)
-            {
-                if (Duration != rhs.Duration) return false;
-            }
-            if (Type_Property.HasBeenSet != rhs.Type_Property.HasBeenSet) return false;
-            if (Type_Property.HasBeenSet)
-            {
-                if (Type != rhs.Type) return false;
-            }
-            if (ActorValue_Property.HasBeenSet != rhs.ActorValue_Property.HasBeenSet) return false;
-            if (ActorValue_Property.HasBeenSet)
-            {
-                if (ActorValue != rhs.ActorValue) return false;
-            }
+            if (MagicEffect != rhs.MagicEffect) return false;
+            if (Magnitude != rhs.Magnitude) return false;
+            if (Area != rhs.Area) return false;
+            if (Duration != rhs.Duration) return false;
+            if (Type != rhs.Type) return false;
+            if (ActorValue != rhs.ActorValue) return false;
             if (ScriptEffect_Property.HasBeenSet != rhs.ScriptEffect_Property.HasBeenSet) return false;
             if (ScriptEffect_Property.HasBeenSet)
             {
@@ -205,30 +181,12 @@ namespace Mutagen.Bethesda.Oblivion
         public override int GetHashCode()
         {
             int ret = 0;
-            if (MagicEffect_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(MagicEffect).CombineHashCode(ret);
-            }
-            if (Magnitude_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Magnitude).CombineHashCode(ret);
-            }
-            if (Area_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Area).CombineHashCode(ret);
-            }
-            if (Duration_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Duration).CombineHashCode(ret);
-            }
-            if (Type_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Type).CombineHashCode(ret);
-            }
-            if (ActorValue_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(ActorValue).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(MagicEffect).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Magnitude).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Area).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Duration).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Type).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(ActorValue).CombineHashCode(ret);
             if (ScriptEffect_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(ScriptEffect).CombineHashCode(ret);
@@ -1043,7 +1001,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case Effect_FieldIndex.MagicEffect:
                     this.MagicEffect_Property.Set(
-                        (EDIDSetLink<MagicEffect>)obj,
+                        (EDIDLink<MagicEffect>)obj,
                         cmds);
                     break;
                 case Effect_FieldIndex.Magnitude:
@@ -1115,7 +1073,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case Effect_FieldIndex.MagicEffect:
                     obj.MagicEffect_Property.Set(
-                        (EDIDSetLink<MagicEffect>)pair.Value,
+                        (EDIDLink<MagicEffect>)pair.Value,
                         null);
                     break;
                 case Effect_FieldIndex.Magnitude:
@@ -1165,19 +1123,19 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new MagicEffect MagicEffect { get; set; }
         new UInt32 Magnitude { get; set; }
-        new INotifyingSetItem<UInt32> Magnitude_Property { get; }
+        new INotifyingItem<UInt32> Magnitude_Property { get; }
 
         new UInt32 Area { get; set; }
-        new INotifyingSetItem<UInt32> Area_Property { get; }
+        new INotifyingItem<UInt32> Area_Property { get; }
 
         new UInt32 Duration { get; set; }
-        new INotifyingSetItem<UInt32> Duration_Property { get; }
+        new INotifyingItem<UInt32> Duration_Property { get; }
 
         new Effect.EffectType Type { get; set; }
-        new INotifyingSetItem<Effect.EffectType> Type_Property { get; }
+        new INotifyingItem<Effect.EffectType> Type_Property { get; }
 
         new ActorValue ActorValue { get; set; }
-        new INotifyingSetItem<ActorValue> ActorValue_Property { get; }
+        new INotifyingItem<ActorValue> ActorValue_Property { get; }
 
         new ScriptEffect ScriptEffect { get; set; }
         new INotifyingSetItem<ScriptEffect> ScriptEffect_Property { get; }
@@ -1188,32 +1146,32 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region MagicEffect
         MagicEffect MagicEffect { get; }
-        EDIDSetLink<MagicEffect> MagicEffect_Property { get; }
+        EDIDLink<MagicEffect> MagicEffect_Property { get; }
 
         #endregion
         #region Magnitude
         UInt32 Magnitude { get; }
-        INotifyingSetItemGetter<UInt32> Magnitude_Property { get; }
+        INotifyingItemGetter<UInt32> Magnitude_Property { get; }
 
         #endregion
         #region Area
         UInt32 Area { get; }
-        INotifyingSetItemGetter<UInt32> Area_Property { get; }
+        INotifyingItemGetter<UInt32> Area_Property { get; }
 
         #endregion
         #region Duration
         UInt32 Duration { get; }
-        INotifyingSetItemGetter<UInt32> Duration_Property { get; }
+        INotifyingItemGetter<UInt32> Duration_Property { get; }
 
         #endregion
         #region Type
         Effect.EffectType Type { get; }
-        INotifyingSetItemGetter<Effect.EffectType> Type_Property { get; }
+        INotifyingItemGetter<Effect.EffectType> Type_Property { get; }
 
         #endregion
         #region ActorValue
         ActorValue ActorValue { get; }
-        INotifyingSetItemGetter<ActorValue> ActorValue_Property { get; }
+        INotifyingItemGetter<ActorValue> ActorValue_Property { get; }
 
         #endregion
         #region ScriptEffect
@@ -1425,7 +1383,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Effect_FieldIndex.MagicEffect:
-                    return typeof(EDIDSetLink<MagicEffect>);
+                    return typeof(EDIDLink<MagicEffect>);
                 case Effect_FieldIndex.Magnitude:
                     return typeof(UInt32);
                 case Effect_FieldIndex.Area:
@@ -1559,9 +1517,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.MagicEffect_Property.SetToWithDefault(
-                        rhs: rhs.MagicEffect_Property,
-                        def: def?.MagicEffect_Property,
+                    item.MagicEffect_Property.Set(
+                        value: rhs.MagicEffect,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1574,9 +1531,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Magnitude_Property.SetToWithDefault(
-                        rhs: rhs.Magnitude_Property,
-                        def: def?.Magnitude_Property,
+                    item.Magnitude_Property.Set(
+                        value: rhs.Magnitude,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1589,9 +1545,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Area_Property.SetToWithDefault(
-                        rhs: rhs.Area_Property,
-                        def: def?.Area_Property,
+                    item.Area_Property.Set(
+                        value: rhs.Area,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1604,9 +1559,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Duration_Property.SetToWithDefault(
-                        rhs: rhs.Duration_Property,
-                        def: def?.Duration_Property,
+                    item.Duration_Property.Set(
+                        value: rhs.Duration,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1619,9 +1573,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Type_Property.SetToWithDefault(
-                        rhs: rhs.Type_Property,
-                        def: def?.Type_Property,
+                    item.Type_Property.Set(
+                        value: rhs.Type,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1634,9 +1587,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.ActorValue_Property.SetToWithDefault(
-                        rhs: rhs.ActorValue_Property,
-                        def: def?.ActorValue_Property,
+                    item.ActorValue_Property.Set(
+                        value: rhs.ActorValue,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1710,23 +1662,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Effect_FieldIndex.MagicEffect:
-                    obj.MagicEffect_Property.HasBeenSet = on;
-                    break;
                 case Effect_FieldIndex.Magnitude:
-                    obj.Magnitude_Property.HasBeenSet = on;
-                    break;
                 case Effect_FieldIndex.Area:
-                    obj.Area_Property.HasBeenSet = on;
-                    break;
                 case Effect_FieldIndex.Duration:
-                    obj.Duration_Property.HasBeenSet = on;
-                    break;
                 case Effect_FieldIndex.Type:
-                    obj.Type_Property.HasBeenSet = on;
-                    break;
                 case Effect_FieldIndex.ActorValue:
-                    obj.ActorValue_Property.HasBeenSet = on;
-                    break;
+                    if (on) break;
+                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 case Effect_FieldIndex.ScriptEffect:
                     obj.ScriptEffect_Property.HasBeenSet = on;
                     break;
@@ -1744,22 +1686,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Effect_FieldIndex.MagicEffect:
-                    obj.MagicEffect_Property.Unset(cmds);
+                    obj.MagicEffect = default(EDIDLink<MagicEffect>);
                     break;
                 case Effect_FieldIndex.Magnitude:
-                    obj.Magnitude_Property.Unset(cmds);
+                    obj.Magnitude = default(UInt32);
                     break;
                 case Effect_FieldIndex.Area:
-                    obj.Area_Property.Unset(cmds);
+                    obj.Area = default(UInt32);
                     break;
                 case Effect_FieldIndex.Duration:
-                    obj.Duration_Property.Unset(cmds);
+                    obj.Duration = default(UInt32);
                     break;
                 case Effect_FieldIndex.Type:
-                    obj.Type_Property.Unset(cmds);
+                    obj.Type = default(Effect.EffectType);
                     break;
                 case Effect_FieldIndex.ActorValue:
-                    obj.ActorValue_Property.Unset(cmds);
+                    obj.ActorValue = default(ActorValue);
                     break;
                 case Effect_FieldIndex.ScriptEffect:
                     obj.ScriptEffect_Property.Unset(cmds);
@@ -1777,17 +1719,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Effect_FieldIndex.MagicEffect:
-                    return obj.MagicEffect_Property.HasBeenSet;
                 case Effect_FieldIndex.Magnitude:
-                    return obj.Magnitude_Property.HasBeenSet;
                 case Effect_FieldIndex.Area:
-                    return obj.Area_Property.HasBeenSet;
                 case Effect_FieldIndex.Duration:
-                    return obj.Duration_Property.HasBeenSet;
                 case Effect_FieldIndex.Type:
-                    return obj.Type_Property.HasBeenSet;
                 case Effect_FieldIndex.ActorValue:
-                    return obj.ActorValue_Property.HasBeenSet;
+                    return true;
                 case Effect_FieldIndex.ScriptEffect:
                     return obj.ScriptEffect_Property.HasBeenSet;
                 default:
@@ -1825,12 +1762,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEffect item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.MagicEffect_Property.Unset(cmds.ToUnsetParams());
-            item.Magnitude_Property.Unset(cmds.ToUnsetParams());
-            item.Area_Property.Unset(cmds.ToUnsetParams());
-            item.Duration_Property.Unset(cmds.ToUnsetParams());
-            item.Type_Property.Unset(cmds.ToUnsetParams());
-            item.ActorValue_Property.Unset(cmds.ToUnsetParams());
+            item.MagicEffect = default(EDIDLink<MagicEffect>);
+            item.Magnitude = default(UInt32);
+            item.Area = default(UInt32);
+            item.Duration = default(UInt32);
+            item.Type = default(Effect.EffectType);
+            item.ActorValue = default(ActorValue);
             item.ScriptEffect_Property.Unset(cmds.ToUnsetParams());
         }
 
@@ -1849,12 +1786,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Effect_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.MagicEffect = item.MagicEffect_Property.Equals(rhs.MagicEffect_Property, (l, r) => l == r);
-            ret.Magnitude = item.Magnitude_Property.Equals(rhs.Magnitude_Property, (l, r) => l == r);
-            ret.Area = item.Area_Property.Equals(rhs.Area_Property, (l, r) => l == r);
-            ret.Duration = item.Duration_Property.Equals(rhs.Duration_Property, (l, r) => l == r);
-            ret.Type = item.Type_Property.Equals(rhs.Type_Property, (l, r) => l == r);
-            ret.ActorValue = item.ActorValue_Property.Equals(rhs.ActorValue_Property, (l, r) => l == r);
+            ret.MagicEffect = item.MagicEffect == rhs.MagicEffect;
+            ret.Magnitude = item.Magnitude == rhs.Magnitude;
+            ret.Area = item.Area == rhs.Area;
+            ret.Duration = item.Duration == rhs.Duration;
+            ret.Type = item.Type == rhs.Type;
+            ret.ActorValue = item.ActorValue == rhs.ActorValue;
             ret.ScriptEffect = item.ScriptEffect_Property.LoquiEqualsHelper(rhs.ScriptEffect_Property, (loqLhs, loqRhs) => ScriptEffectCommon.GetEqualsMask(loqLhs, loqRhs));
         }
 
@@ -1921,12 +1858,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IEffectGetter item,
             Effect_Mask<bool?> checkMask)
         {
-            if (checkMask.MagicEffect.HasValue && checkMask.MagicEffect.Value != item.MagicEffect_Property.HasBeenSet) return false;
-            if (checkMask.Magnitude.HasValue && checkMask.Magnitude.Value != item.Magnitude_Property.HasBeenSet) return false;
-            if (checkMask.Area.HasValue && checkMask.Area.Value != item.Area_Property.HasBeenSet) return false;
-            if (checkMask.Duration.HasValue && checkMask.Duration.Value != item.Duration_Property.HasBeenSet) return false;
-            if (checkMask.Type.HasValue && checkMask.Type.Value != item.Type_Property.HasBeenSet) return false;
-            if (checkMask.ActorValue.HasValue && checkMask.ActorValue.Value != item.ActorValue_Property.HasBeenSet) return false;
             if (checkMask.ScriptEffect.Overall.HasValue && checkMask.ScriptEffect.Overall.Value != item.ScriptEffect_Property.HasBeenSet) return false;
             if (checkMask.ScriptEffect.Specific != null && (item.ScriptEffect_Property.Item == null || !item.ScriptEffect_Property.Item.HasBeenSet(checkMask.ScriptEffect.Specific))) return false;
             return true;
@@ -1935,12 +1866,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Effect_Mask<bool> GetHasBeenSetMask(IEffectGetter item)
         {
             var ret = new Effect_Mask<bool>();
-            ret.MagicEffect = item.MagicEffect_Property.HasBeenSet;
-            ret.Magnitude = item.Magnitude_Property.HasBeenSet;
-            ret.Area = item.Area_Property.HasBeenSet;
-            ret.Duration = item.Duration_Property.HasBeenSet;
-            ret.Type = item.Type_Property.HasBeenSet;
-            ret.ActorValue = item.ActorValue_Property.HasBeenSet;
+            ret.MagicEffect = true;
+            ret.Magnitude = true;
+            ret.Area = true;
+            ret.Duration = true;
+            ret.Type = true;
+            ret.ActorValue = true;
             ret.ScriptEffect = new MaskItem<bool, ScriptEffect_Mask<bool>>(item.ScriptEffect_Property.HasBeenSet, ScriptEffectCommon.GetHasBeenSetMask(item.ScriptEffect_Property.Item));
             return ret;
         }
@@ -1977,60 +1908,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.Effect");
                     }
-                    if (item.MagicEffect_Property.HasBeenSet)
-                    {
-                        RawFormIDXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.MagicEffect),
-                            item: item.MagicEffect?.FormID,
-                            fieldIndex: (int)Effect_FieldIndex.MagicEffect,
-                            errorMask: errorMask);
-                    }
-                    if (item.Magnitude_Property.HasBeenSet)
-                    {
-                        UInt32XmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Magnitude),
-                            item: item.Magnitude_Property,
-                            fieldIndex: (int)Effect_FieldIndex.Magnitude,
-                            errorMask: errorMask);
-                    }
-                    if (item.Area_Property.HasBeenSet)
-                    {
-                        UInt32XmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Area),
-                            item: item.Area_Property,
-                            fieldIndex: (int)Effect_FieldIndex.Area,
-                            errorMask: errorMask);
-                    }
-                    if (item.Duration_Property.HasBeenSet)
-                    {
-                        UInt32XmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Duration),
-                            item: item.Duration_Property,
-                            fieldIndex: (int)Effect_FieldIndex.Duration,
-                            errorMask: errorMask);
-                    }
-                    if (item.Type_Property.HasBeenSet)
-                    {
-                        EnumXmlTranslation<Effect.EffectType>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Type),
-                            item: item.Type_Property,
-                            fieldIndex: (int)Effect_FieldIndex.Type,
-                            errorMask: errorMask);
-                    }
-                    if (item.ActorValue_Property.HasBeenSet)
-                    {
-                        EnumXmlTranslation<ActorValue>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.ActorValue),
-                            item: item.ActorValue_Property,
-                            fieldIndex: (int)Effect_FieldIndex.ActorValue,
-                            errorMask: errorMask);
-                    }
+                    RawFormIDXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.MagicEffect),
+                        item: item.MagicEffect?.FormID,
+                        fieldIndex: (int)Effect_FieldIndex.MagicEffect,
+                        errorMask: errorMask);
+                    UInt32XmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Magnitude),
+                        item: item.Magnitude_Property,
+                        fieldIndex: (int)Effect_FieldIndex.Magnitude,
+                        errorMask: errorMask);
+                    UInt32XmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Area),
+                        item: item.Area_Property,
+                        fieldIndex: (int)Effect_FieldIndex.Area,
+                        errorMask: errorMask);
+                    UInt32XmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Duration),
+                        item: item.Duration_Property,
+                        fieldIndex: (int)Effect_FieldIndex.Duration,
+                        errorMask: errorMask);
+                    EnumXmlTranslation<Effect.EffectType>.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Type),
+                        item: item.Type_Property,
+                        fieldIndex: (int)Effect_FieldIndex.Type,
+                        errorMask: errorMask);
+                    EnumXmlTranslation<ActorValue>.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.ActorValue),
+                        item: item.ActorValue_Property,
+                        fieldIndex: (int)Effect_FieldIndex.ActorValue,
+                        errorMask: errorMask);
                     if (item.ScriptEffect_Property.HasBeenSet)
                     {
                         LoquiXmlTranslation<ScriptEffect, ScriptEffect_ErrorMask>.Instance.Write(

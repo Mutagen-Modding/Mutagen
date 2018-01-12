@@ -40,26 +40,26 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Value
-        protected readonly INotifyingSetItem<UInt32> _Value = NotifyingSetItem.Factory<UInt32>(markAsSet: false);
-        public INotifyingSetItem<UInt32> Value_Property => _Value;
+        protected readonly INotifyingItem<UInt32> _Value = NotifyingItem.Factory<UInt32>();
+        public INotifyingItem<UInt32> Value_Property => _Value;
         public UInt32 Value
         {
             get => this._Value.Item;
             set => this._Value.Set(value);
         }
-        INotifyingSetItem<UInt32> IClothing.Value_Property => this.Value_Property;
-        INotifyingSetItemGetter<UInt32> IClothingGetter.Value_Property => this.Value_Property;
+        INotifyingItem<UInt32> IClothing.Value_Property => this.Value_Property;
+        INotifyingItemGetter<UInt32> IClothingGetter.Value_Property => this.Value_Property;
         #endregion
         #region Weight
-        protected readonly INotifyingSetItem<Single> _Weight = NotifyingSetItem.Factory<Single>(markAsSet: false);
-        public INotifyingSetItem<Single> Weight_Property => _Weight;
+        protected readonly INotifyingItem<Single> _Weight = NotifyingItem.Factory<Single>();
+        public INotifyingItem<Single> Weight_Property => _Weight;
         public Single Weight
         {
             get => this._Weight.Item;
             set => this._Weight.Set(value);
         }
-        INotifyingSetItem<Single> IClothing.Weight_Property => this.Weight_Property;
-        INotifyingSetItemGetter<Single> IClothingGetter.Weight_Property => this.Weight_Property;
+        INotifyingItem<Single> IClothing.Weight_Property => this.Weight_Property;
+        INotifyingItemGetter<Single> IClothingGetter.Weight_Property => this.Weight_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -117,30 +117,16 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (Value_Property.HasBeenSet != rhs.Value_Property.HasBeenSet) return false;
-            if (Value_Property.HasBeenSet)
-            {
-                if (Value != rhs.Value) return false;
-            }
-            if (Weight_Property.HasBeenSet != rhs.Weight_Property.HasBeenSet) return false;
-            if (Weight_Property.HasBeenSet)
-            {
-                if (Weight != rhs.Weight) return false;
-            }
+            if (Value != rhs.Value) return false;
+            if (Weight != rhs.Weight) return false;
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            if (Value_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Value).CombineHashCode(ret);
-            }
-            if (Weight_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Weight).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(Value).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Weight).CombineHashCode(ret);
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -1015,10 +1001,10 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IClothing : IClothingGetter, IClothingAbstract, ILoquiClass<IClothing, IClothingGetter>, ILoquiClass<Clothing, IClothingGetter>
     {
         new UInt32 Value { get; set; }
-        new INotifyingSetItem<UInt32> Value_Property { get; }
+        new INotifyingItem<UInt32> Value_Property { get; }
 
         new Single Weight { get; set; }
-        new INotifyingSetItem<Single> Weight_Property { get; }
+        new INotifyingItem<Single> Weight_Property { get; }
 
     }
 
@@ -1026,12 +1012,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Value
         UInt32 Value { get; }
-        INotifyingSetItemGetter<UInt32> Value_Property { get; }
+        INotifyingItemGetter<UInt32> Value_Property { get; }
 
         #endregion
         #region Weight
         Single Weight { get; }
-        INotifyingSetItemGetter<Single> Weight_Property { get; }
+        INotifyingItemGetter<Single> Weight_Property { get; }
 
         #endregion
 
@@ -1335,9 +1321,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Value_Property.SetToWithDefault(
-                        rhs: rhs.Value_Property,
-                        def: def?.Value_Property,
+                    item.Value_Property.Set(
+                        value: rhs.Value,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1350,9 +1335,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Weight_Property.SetToWithDefault(
-                        rhs: rhs.Weight_Property,
-                        def: def?.Weight_Property,
+                    item.Weight_Property.Set(
+                        value: rhs.Weight,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1375,11 +1359,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Clothing_FieldIndex.Value:
-                    obj.Value_Property.HasBeenSet = on;
-                    break;
                 case Clothing_FieldIndex.Weight:
-                    obj.Weight_Property.HasBeenSet = on;
-                    break;
+                    if (on) break;
+                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 default:
                     ClothingAbstractCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
@@ -1395,10 +1377,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Clothing_FieldIndex.Value:
-                    obj.Value_Property.Unset(cmds);
+                    obj.Value = default(UInt32);
                     break;
                 case Clothing_FieldIndex.Weight:
-                    obj.Weight_Property.Unset(cmds);
+                    obj.Weight = default(Single);
                     break;
                 default:
                     ClothingAbstractCommon.UnsetNthObject(index, obj);
@@ -1414,9 +1396,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Clothing_FieldIndex.Value:
-                    return obj.Value_Property.HasBeenSet;
                 case Clothing_FieldIndex.Weight:
-                    return obj.Weight_Property.HasBeenSet;
+                    return true;
                 default:
                     return ClothingAbstractCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -1442,8 +1423,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IClothing item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.Value_Property.Unset(cmds.ToUnsetParams());
-            item.Weight_Property.Unset(cmds.ToUnsetParams());
+            item.Value = default(UInt32);
+            item.Weight = default(Single);
         }
 
         public static Clothing_Mask<bool> GetEqualsMask(
@@ -1461,8 +1442,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clothing_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Value = item.Value_Property.Equals(rhs.Value_Property, (l, r) => l == r);
-            ret.Weight = item.Weight_Property.Equals(rhs.Weight_Property, (l, r) => l == r);
+            ret.Value = item.Value == rhs.Value;
+            ret.Weight = item.Weight == rhs.Weight;
             ClothingAbstractCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -1509,16 +1490,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IClothingGetter item,
             Clothing_Mask<bool?> checkMask)
         {
-            if (checkMask.Value.HasValue && checkMask.Value.Value != item.Value_Property.HasBeenSet) return false;
-            if (checkMask.Weight.HasValue && checkMask.Weight.Value != item.Weight_Property.HasBeenSet) return false;
             return true;
         }
 
         public static Clothing_Mask<bool> GetHasBeenSetMask(IClothingGetter item)
         {
             var ret = new Clothing_Mask<bool>();
-            ret.Value = item.Value_Property.HasBeenSet;
-            ret.Weight = item.Weight_Property.HasBeenSet;
+            ret.Value = true;
+            ret.Weight = true;
             return ret;
         }
 
@@ -1655,24 +1634,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.Clothing");
                     }
-                    if (item.Value_Property.HasBeenSet)
-                    {
-                        UInt32XmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Value),
-                            item: item.Value_Property,
-                            fieldIndex: (int)Clothing_FieldIndex.Value,
-                            errorMask: errorMask);
-                    }
-                    if (item.Weight_Property.HasBeenSet)
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Weight),
-                            item: item.Weight_Property,
-                            fieldIndex: (int)Clothing_FieldIndex.Weight,
-                            errorMask: errorMask);
-                    }
+                    UInt32XmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Value),
+                        item: item.Value_Property,
+                        fieldIndex: (int)Clothing_FieldIndex.Value,
+                        errorMask: errorMask);
+                    FloatXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Weight),
+                        item: item.Weight_Property,
+                        fieldIndex: (int)Clothing_FieldIndex.Weight,
+                        errorMask: errorMask);
                 }
             }
             catch (Exception ex)

@@ -70,101 +70,99 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Model> IMagicEffectGetter.Model_Property => this.Model_Property;
         #endregion
         #region Flags
-        protected readonly INotifyingSetItem<MagicEffect.MagicFlag> _Flags = NotifyingSetItem.Factory<MagicEffect.MagicFlag>(markAsSet: false);
-        public INotifyingSetItem<MagicEffect.MagicFlag> Flags_Property => _Flags;
+        protected readonly INotifyingItem<MagicEffect.MagicFlag> _Flags = NotifyingItem.Factory<MagicEffect.MagicFlag>();
+        public INotifyingItem<MagicEffect.MagicFlag> Flags_Property => _Flags;
         public MagicEffect.MagicFlag Flags
         {
             get => this._Flags.Item;
             set => this._Flags.Set(value);
         }
-        INotifyingSetItem<MagicEffect.MagicFlag> IMagicEffect.Flags_Property => this.Flags_Property;
-        INotifyingSetItemGetter<MagicEffect.MagicFlag> IMagicEffectGetter.Flags_Property => this.Flags_Property;
+        INotifyingItem<MagicEffect.MagicFlag> IMagicEffect.Flags_Property => this.Flags_Property;
+        INotifyingItemGetter<MagicEffect.MagicFlag> IMagicEffectGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region BaseCost
-        protected readonly INotifyingSetItem<Single> _BaseCost = NotifyingSetItem.Factory<Single>(markAsSet: false);
-        public INotifyingSetItem<Single> BaseCost_Property => _BaseCost;
+        protected readonly INotifyingItem<Single> _BaseCost = NotifyingItem.Factory<Single>();
+        public INotifyingItem<Single> BaseCost_Property => _BaseCost;
         public Single BaseCost
         {
             get => this._BaseCost.Item;
             set => this._BaseCost.Set(value);
         }
-        INotifyingSetItem<Single> IMagicEffect.BaseCost_Property => this.BaseCost_Property;
-        INotifyingSetItemGetter<Single> IMagicEffectGetter.BaseCost_Property => this.BaseCost_Property;
+        INotifyingItem<Single> IMagicEffect.BaseCost_Property => this.BaseCost_Property;
+        INotifyingItemGetter<Single> IMagicEffectGetter.BaseCost_Property => this.BaseCost_Property;
         #endregion
         #region Unused
-        protected readonly INotifyingSetItem<Byte[]> _Unused = NotifyingSetItem.Factory<Byte[]>(
-            markAsSet: false,
-            noNullFallback: () => new byte[4]);
-        public INotifyingSetItem<Byte[]> Unused_Property => _Unused;
+        protected readonly INotifyingItem<Byte[]> _Unused = NotifyingItem.Factory<Byte[]>(noNullFallback: () => new byte[4]);
+        public INotifyingItem<Byte[]> Unused_Property => _Unused;
         public Byte[] Unused
         {
             get => this._Unused.Item;
             set => this._Unused.Set(value);
         }
-        INotifyingSetItem<Byte[]> IMagicEffect.Unused_Property => this.Unused_Property;
-        INotifyingSetItemGetter<Byte[]> IMagicEffectGetter.Unused_Property => this.Unused_Property;
+        INotifyingItem<Byte[]> IMagicEffect.Unused_Property => this.Unused_Property;
+        INotifyingItemGetter<Byte[]> IMagicEffectGetter.Unused_Property => this.Unused_Property;
         #endregion
         #region MagicSchool
-        protected readonly INotifyingSetItem<MagicSchool> _MagicSchool = NotifyingSetItem.Factory<MagicSchool>(markAsSet: false);
-        public INotifyingSetItem<MagicSchool> MagicSchool_Property => _MagicSchool;
+        protected readonly INotifyingItem<MagicSchool> _MagicSchool = NotifyingItem.Factory<MagicSchool>();
+        public INotifyingItem<MagicSchool> MagicSchool_Property => _MagicSchool;
         public MagicSchool MagicSchool
         {
             get => this._MagicSchool.Item;
             set => this._MagicSchool.Set(value);
         }
-        INotifyingSetItem<MagicSchool> IMagicEffect.MagicSchool_Property => this.MagicSchool_Property;
-        INotifyingSetItemGetter<MagicSchool> IMagicEffectGetter.MagicSchool_Property => this.MagicSchool_Property;
+        INotifyingItem<MagicSchool> IMagicEffect.MagicSchool_Property => this.MagicSchool_Property;
+        INotifyingItemGetter<MagicSchool> IMagicEffectGetter.MagicSchool_Property => this.MagicSchool_Property;
         #endregion
         #region Resistance
-        protected readonly INotifyingSetItem<Resistance> _Resistance = NotifyingSetItem.Factory<Resistance>(markAsSet: false);
-        public INotifyingSetItem<Resistance> Resistance_Property => _Resistance;
+        protected readonly INotifyingItem<Resistance> _Resistance = NotifyingItem.Factory<Resistance>();
+        public INotifyingItem<Resistance> Resistance_Property => _Resistance;
         public Resistance Resistance
         {
             get => this._Resistance.Item;
             set => this._Resistance.Set(value);
         }
-        INotifyingSetItem<Resistance> IMagicEffect.Resistance_Property => this.Resistance_Property;
-        INotifyingSetItemGetter<Resistance> IMagicEffectGetter.Resistance_Property => this.Resistance_Property;
+        INotifyingItem<Resistance> IMagicEffect.Resistance_Property => this.Resistance_Property;
+        INotifyingItemGetter<Resistance> IMagicEffectGetter.Resistance_Property => this.Resistance_Property;
         #endregion
         #region CounterEffectCount
-        protected readonly INotifyingSetItem<UInt32> _CounterEffectCount = NotifyingSetItem.Factory<UInt32>(markAsSet: false);
-        public INotifyingSetItem<UInt32> CounterEffectCount_Property => _CounterEffectCount;
+        protected readonly INotifyingItem<UInt32> _CounterEffectCount = NotifyingItem.Factory<UInt32>();
+        public INotifyingItem<UInt32> CounterEffectCount_Property => _CounterEffectCount;
         public UInt32 CounterEffectCount
         {
             get => this._CounterEffectCount.Item;
             set => this._CounterEffectCount.Set(value);
         }
-        INotifyingSetItem<UInt32> IMagicEffect.CounterEffectCount_Property => this.CounterEffectCount_Property;
-        INotifyingSetItemGetter<UInt32> IMagicEffectGetter.CounterEffectCount_Property => this.CounterEffectCount_Property;
+        INotifyingItem<UInt32> IMagicEffect.CounterEffectCount_Property => this.CounterEffectCount_Property;
+        INotifyingItemGetter<UInt32> IMagicEffectGetter.CounterEffectCount_Property => this.CounterEffectCount_Property;
         #endregion
         #region Light
-        public FormIDSetLink<Light> Light_Property { get; } = new FormIDSetLink<Light>();
+        public FormIDLink<Light> Light_Property { get; } = new FormIDLink<Light>();
         public Light Light { get => Light_Property.Item; set => Light_Property.Item = value; }
-        FormIDSetLink<Light> IMagicEffectGetter.Light_Property => this.Light_Property;
+        FormIDLink<Light> IMagicEffectGetter.Light_Property => this.Light_Property;
         #endregion
         #region ProjectileSpeed
-        protected readonly INotifyingSetItem<Single> _ProjectileSpeed = NotifyingSetItem.Factory<Single>(markAsSet: false);
-        public INotifyingSetItem<Single> ProjectileSpeed_Property => _ProjectileSpeed;
+        protected readonly INotifyingItem<Single> _ProjectileSpeed = NotifyingItem.Factory<Single>();
+        public INotifyingItem<Single> ProjectileSpeed_Property => _ProjectileSpeed;
         public Single ProjectileSpeed
         {
             get => this._ProjectileSpeed.Item;
             set => this._ProjectileSpeed.Set(value);
         }
-        INotifyingSetItem<Single> IMagicEffect.ProjectileSpeed_Property => this.ProjectileSpeed_Property;
-        INotifyingSetItemGetter<Single> IMagicEffectGetter.ProjectileSpeed_Property => this.ProjectileSpeed_Property;
+        INotifyingItem<Single> IMagicEffect.ProjectileSpeed_Property => this.ProjectileSpeed_Property;
+        INotifyingItemGetter<Single> IMagicEffectGetter.ProjectileSpeed_Property => this.ProjectileSpeed_Property;
         #endregion
         #region EffectShader
-        public FormIDSetLink<EffectShader> EffectShader_Property { get; } = new FormIDSetLink<EffectShader>();
+        public FormIDLink<EffectShader> EffectShader_Property { get; } = new FormIDLink<EffectShader>();
         public EffectShader EffectShader { get => EffectShader_Property.Item; set => EffectShader_Property.Item = value; }
-        FormIDSetLink<EffectShader> IMagicEffectGetter.EffectShader_Property => this.EffectShader_Property;
+        FormIDLink<EffectShader> IMagicEffectGetter.EffectShader_Property => this.EffectShader_Property;
         #endregion
         #region SubData
-        private readonly INotifyingSetItem<MagicEffectSubData> _SubData = new NotifyingSetItem<MagicEffectSubData>();
-        public INotifyingSetItem<MagicEffectSubData> SubData_Property => this._SubData;
+        private readonly INotifyingItem<MagicEffectSubData> _SubData = new NotifyingItem<MagicEffectSubData>();
+        public INotifyingItem<MagicEffectSubData> SubData_Property => this._SubData;
         MagicEffectSubData IMagicEffectGetter.SubData => this.SubData;
         public MagicEffectSubData SubData { get => _SubData.Item; set => _SubData.Item = value; }
-        INotifyingSetItem<MagicEffectSubData> IMagicEffect.SubData_Property => this.SubData_Property;
-        INotifyingSetItemGetter<MagicEffectSubData> IMagicEffectGetter.SubData_Property => this.SubData_Property;
+        INotifyingItem<MagicEffectSubData> IMagicEffect.SubData_Property => this.SubData_Property;
+        INotifyingItemGetter<MagicEffectSubData> IMagicEffectGetter.SubData_Property => this.SubData_Property;
         #endregion
         #region CounterEffects
         private readonly INotifyingList<EDIDLink<MagicEffect>> _CounterEffects = new NotifyingList<EDIDLink<MagicEffect>>();
@@ -246,56 +244,16 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!object.Equals(Model, rhs.Model)) return false;
             }
-            if (Flags_Property.HasBeenSet != rhs.Flags_Property.HasBeenSet) return false;
-            if (Flags_Property.HasBeenSet)
-            {
-                if (Flags != rhs.Flags) return false;
-            }
-            if (BaseCost_Property.HasBeenSet != rhs.BaseCost_Property.HasBeenSet) return false;
-            if (BaseCost_Property.HasBeenSet)
-            {
-                if (BaseCost != rhs.BaseCost) return false;
-            }
-            if (Unused_Property.HasBeenSet != rhs.Unused_Property.HasBeenSet) return false;
-            if (Unused_Property.HasBeenSet)
-            {
-                if (!Unused.EqualsFast(rhs.Unused)) return false;
-            }
-            if (MagicSchool_Property.HasBeenSet != rhs.MagicSchool_Property.HasBeenSet) return false;
-            if (MagicSchool_Property.HasBeenSet)
-            {
-                if (MagicSchool != rhs.MagicSchool) return false;
-            }
-            if (Resistance_Property.HasBeenSet != rhs.Resistance_Property.HasBeenSet) return false;
-            if (Resistance_Property.HasBeenSet)
-            {
-                if (Resistance != rhs.Resistance) return false;
-            }
-            if (CounterEffectCount_Property.HasBeenSet != rhs.CounterEffectCount_Property.HasBeenSet) return false;
-            if (CounterEffectCount_Property.HasBeenSet)
-            {
-                if (CounterEffectCount != rhs.CounterEffectCount) return false;
-            }
-            if (Light_Property.HasBeenSet != rhs.Light_Property.HasBeenSet) return false;
-            if (Light_Property.HasBeenSet)
-            {
-                if (Light != rhs.Light) return false;
-            }
-            if (ProjectileSpeed_Property.HasBeenSet != rhs.ProjectileSpeed_Property.HasBeenSet) return false;
-            if (ProjectileSpeed_Property.HasBeenSet)
-            {
-                if (ProjectileSpeed != rhs.ProjectileSpeed) return false;
-            }
-            if (EffectShader_Property.HasBeenSet != rhs.EffectShader_Property.HasBeenSet) return false;
-            if (EffectShader_Property.HasBeenSet)
-            {
-                if (EffectShader != rhs.EffectShader) return false;
-            }
-            if (SubData_Property.HasBeenSet != rhs.SubData_Property.HasBeenSet) return false;
-            if (SubData_Property.HasBeenSet)
-            {
-                if (!object.Equals(SubData, rhs.SubData)) return false;
-            }
+            if (Flags != rhs.Flags) return false;
+            if (BaseCost != rhs.BaseCost) return false;
+            if (!Unused.EqualsFast(rhs.Unused)) return false;
+            if (MagicSchool != rhs.MagicSchool) return false;
+            if (Resistance != rhs.Resistance) return false;
+            if (CounterEffectCount != rhs.CounterEffectCount) return false;
+            if (Light != rhs.Light) return false;
+            if (ProjectileSpeed != rhs.ProjectileSpeed) return false;
+            if (EffectShader != rhs.EffectShader) return false;
+            if (!object.Equals(SubData, rhs.SubData)) return false;
             if (CounterEffects.HasBeenSet != rhs.CounterEffects.HasBeenSet) return false;
             if (CounterEffects.HasBeenSet)
             {
@@ -319,46 +277,16 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(Model).CombineHashCode(ret);
             }
-            if (Flags_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            }
-            if (BaseCost_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(BaseCost).CombineHashCode(ret);
-            }
-            if (Unused_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Unused).CombineHashCode(ret);
-            }
-            if (MagicSchool_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(MagicSchool).CombineHashCode(ret);
-            }
-            if (Resistance_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Resistance).CombineHashCode(ret);
-            }
-            if (CounterEffectCount_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(CounterEffectCount).CombineHashCode(ret);
-            }
-            if (Light_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Light).CombineHashCode(ret);
-            }
-            if (ProjectileSpeed_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(ProjectileSpeed).CombineHashCode(ret);
-            }
-            if (EffectShader_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(EffectShader).CombineHashCode(ret);
-            }
-            if (SubData_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(SubData).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(BaseCost).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Unused).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(MagicSchool).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Resistance).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(CounterEffectCount).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Light).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(ProjectileSpeed).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(EffectShader).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(SubData).CombineHashCode(ret);
             if (CounterEffects.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(CounterEffects).CombineHashCode(ret);
@@ -1363,7 +1291,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case MagicEffect_FieldIndex.Light:
                     this.Light_Property.Set(
-                        (FormIDSetLink<Light>)obj,
+                        (FormIDLink<Light>)obj,
                         cmds);
                     break;
                 case MagicEffect_FieldIndex.ProjectileSpeed:
@@ -1373,7 +1301,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case MagicEffect_FieldIndex.EffectShader:
                     this.EffectShader_Property.Set(
-                        (FormIDSetLink<EffectShader>)obj,
+                        (FormIDLink<EffectShader>)obj,
                         cmds);
                     break;
                 case MagicEffect_FieldIndex.SubData:
@@ -1462,7 +1390,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case MagicEffect_FieldIndex.Light:
                     obj.Light_Property.Set(
-                        (FormIDSetLink<Light>)pair.Value,
+                        (FormIDLink<Light>)pair.Value,
                         null);
                     break;
                 case MagicEffect_FieldIndex.ProjectileSpeed:
@@ -1472,7 +1400,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case MagicEffect_FieldIndex.EffectShader:
                     obj.EffectShader_Property.Set(
-                        (FormIDSetLink<EffectShader>)pair.Value,
+                        (FormIDLink<EffectShader>)pair.Value,
                         null);
                     break;
                 case MagicEffect_FieldIndex.SubData:
@@ -1508,30 +1436,30 @@ namespace Mutagen.Bethesda.Oblivion
         new INotifyingSetItem<Model> Model_Property { get; }
 
         new MagicEffect.MagicFlag Flags { get; set; }
-        new INotifyingSetItem<MagicEffect.MagicFlag> Flags_Property { get; }
+        new INotifyingItem<MagicEffect.MagicFlag> Flags_Property { get; }
 
         new Single BaseCost { get; set; }
-        new INotifyingSetItem<Single> BaseCost_Property { get; }
+        new INotifyingItem<Single> BaseCost_Property { get; }
 
         new Byte[] Unused { get; set; }
-        new INotifyingSetItem<Byte[]> Unused_Property { get; }
+        new INotifyingItem<Byte[]> Unused_Property { get; }
 
         new MagicSchool MagicSchool { get; set; }
-        new INotifyingSetItem<MagicSchool> MagicSchool_Property { get; }
+        new INotifyingItem<MagicSchool> MagicSchool_Property { get; }
 
         new Resistance Resistance { get; set; }
-        new INotifyingSetItem<Resistance> Resistance_Property { get; }
+        new INotifyingItem<Resistance> Resistance_Property { get; }
 
         new UInt32 CounterEffectCount { get; set; }
-        new INotifyingSetItem<UInt32> CounterEffectCount_Property { get; }
+        new INotifyingItem<UInt32> CounterEffectCount_Property { get; }
 
         new Light Light { get; set; }
         new Single ProjectileSpeed { get; set; }
-        new INotifyingSetItem<Single> ProjectileSpeed_Property { get; }
+        new INotifyingItem<Single> ProjectileSpeed_Property { get; }
 
         new EffectShader EffectShader { get; set; }
         new MagicEffectSubData SubData { get; set; }
-        new INotifyingSetItem<MagicEffectSubData> SubData_Property { get; }
+        new INotifyingItem<MagicEffectSubData> SubData_Property { get; }
 
         new INotifyingList<EDIDLink<MagicEffect>> CounterEffects { get; }
     }
@@ -1555,52 +1483,52 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Flags
         MagicEffect.MagicFlag Flags { get; }
-        INotifyingSetItemGetter<MagicEffect.MagicFlag> Flags_Property { get; }
+        INotifyingItemGetter<MagicEffect.MagicFlag> Flags_Property { get; }
 
         #endregion
         #region BaseCost
         Single BaseCost { get; }
-        INotifyingSetItemGetter<Single> BaseCost_Property { get; }
+        INotifyingItemGetter<Single> BaseCost_Property { get; }
 
         #endregion
         #region Unused
         Byte[] Unused { get; }
-        INotifyingSetItemGetter<Byte[]> Unused_Property { get; }
+        INotifyingItemGetter<Byte[]> Unused_Property { get; }
 
         #endregion
         #region MagicSchool
         MagicSchool MagicSchool { get; }
-        INotifyingSetItemGetter<MagicSchool> MagicSchool_Property { get; }
+        INotifyingItemGetter<MagicSchool> MagicSchool_Property { get; }
 
         #endregion
         #region Resistance
         Resistance Resistance { get; }
-        INotifyingSetItemGetter<Resistance> Resistance_Property { get; }
+        INotifyingItemGetter<Resistance> Resistance_Property { get; }
 
         #endregion
         #region CounterEffectCount
         UInt32 CounterEffectCount { get; }
-        INotifyingSetItemGetter<UInt32> CounterEffectCount_Property { get; }
+        INotifyingItemGetter<UInt32> CounterEffectCount_Property { get; }
 
         #endregion
         #region Light
         Light Light { get; }
-        FormIDSetLink<Light> Light_Property { get; }
+        FormIDLink<Light> Light_Property { get; }
 
         #endregion
         #region ProjectileSpeed
         Single ProjectileSpeed { get; }
-        INotifyingSetItemGetter<Single> ProjectileSpeed_Property { get; }
+        INotifyingItemGetter<Single> ProjectileSpeed_Property { get; }
 
         #endregion
         #region EffectShader
         EffectShader EffectShader { get; }
-        FormIDSetLink<EffectShader> EffectShader_Property { get; }
+        FormIDLink<EffectShader> EffectShader_Property { get; }
 
         #endregion
         #region SubData
         MagicEffectSubData SubData { get; }
-        INotifyingSetItemGetter<MagicEffectSubData> SubData_Property { get; }
+        INotifyingItemGetter<MagicEffectSubData> SubData_Property { get; }
 
         #endregion
         #region CounterEffects
@@ -1905,11 +1833,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case MagicEffect_FieldIndex.CounterEffectCount:
                     return typeof(UInt32);
                 case MagicEffect_FieldIndex.Light:
-                    return typeof(FormIDSetLink<Light>);
+                    return typeof(FormIDLink<Light>);
                 case MagicEffect_FieldIndex.ProjectileSpeed:
                     return typeof(Single);
                 case MagicEffect_FieldIndex.EffectShader:
-                    return typeof(FormIDSetLink<EffectShader>);
+                    return typeof(FormIDLink<EffectShader>);
                 case MagicEffect_FieldIndex.SubData:
                     return typeof(MagicEffectSubData);
                 case MagicEffect_FieldIndex.CounterEffects:
@@ -2127,9 +2055,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Flags_Property.SetToWithDefault(
-                        rhs: rhs.Flags_Property,
-                        def: def?.Flags_Property,
+                    item.Flags_Property.Set(
+                        value: rhs.Flags,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -2142,9 +2069,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.BaseCost_Property.SetToWithDefault(
-                        rhs: rhs.BaseCost_Property,
-                        def: def?.BaseCost_Property,
+                    item.BaseCost_Property.Set(
+                        value: rhs.BaseCost,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -2157,9 +2083,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Unused_Property.SetToWithDefault(
-                        rhs: rhs.Unused_Property,
-                        def: def?.Unused_Property,
+                    item.Unused_Property.Set(
+                        value: rhs.Unused,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -2172,9 +2097,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.MagicSchool_Property.SetToWithDefault(
-                        rhs: rhs.MagicSchool_Property,
-                        def: def?.MagicSchool_Property,
+                    item.MagicSchool_Property.Set(
+                        value: rhs.MagicSchool,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -2187,9 +2111,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Resistance_Property.SetToWithDefault(
-                        rhs: rhs.Resistance_Property,
-                        def: def?.Resistance_Property,
+                    item.Resistance_Property.Set(
+                        value: rhs.Resistance,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -2202,9 +2125,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.CounterEffectCount_Property.SetToWithDefault(
-                        rhs: rhs.CounterEffectCount_Property,
-                        def: def?.CounterEffectCount_Property,
+                    item.CounterEffectCount_Property.Set(
+                        value: rhs.CounterEffectCount,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -2217,9 +2139,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Light_Property.SetToWithDefault(
-                        rhs: rhs.Light_Property,
-                        def: def?.Light_Property,
+                    item.Light_Property.Set(
+                        value: rhs.Light,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -2232,9 +2153,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.ProjectileSpeed_Property.SetToWithDefault(
-                        rhs: rhs.ProjectileSpeed_Property,
-                        def: def?.ProjectileSpeed_Property,
+                    item.ProjectileSpeed_Property.Set(
+                        value: rhs.ProjectileSpeed,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -2247,9 +2167,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.EffectShader_Property.SetToWithDefault(
-                        rhs: rhs.EffectShader_Property,
-                        def: def?.EffectShader_Property,
+                    item.EffectShader_Property.Set(
+                        value: rhs.EffectShader,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -2262,46 +2181,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.SubData_Property.SetToWithDefault(
-                        rhs.SubData_Property,
-                        def?.SubData_Property,
-                        cmds,
-                        (r, d) =>
-                        {
-                            switch (copyMask?.SubData.Overall ?? CopyOption.Reference)
+                    switch (copyMask?.SubData?.Overall ?? CopyOption.Reference)
+                    {
+                        case CopyOption.Reference:
+                            item.SubData = rhs.SubData;
+                            break;
+                        case CopyOption.CopyIn:
+                            MagicEffectSubDataCommon.CopyFieldsFrom(
+                                item: item.SubData,
+                                rhs: rhs.SubData,
+                                def: def?.SubData,
+                                doMasks: doMasks,
+                                errorMask: (doMasks ? new Func<MagicEffectSubData_ErrorMask>(() =>
+                                {
+                                    var baseMask = errorMask();
+                                    if (baseMask.SubData.Specific == null)
+                                    {
+                                        baseMask.SubData = new MaskItem<Exception, MagicEffectSubData_ErrorMask>(null, new MagicEffectSubData_ErrorMask());
+                                    }
+                                    return baseMask.SubData.Specific;
+                                }
+                                ) : null),
+                                copyMask: copyMask?.SubData.Specific,
+                                cmds: cmds);
+                            break;
+                        case CopyOption.MakeCopy:
+                            if (rhs.SubData == null)
                             {
-                                case CopyOption.Reference:
-                                    return r;
-                                case CopyOption.CopyIn:
-                                    MagicEffectSubDataCommon.CopyFieldsFrom(
-                                        item: item.SubData,
-                                        rhs: rhs.SubData,
-                                        def: def?.SubData,
-                                        doMasks: doMasks,
-                                        errorMask: (doMasks ? new Func<MagicEffectSubData_ErrorMask>(() =>
-                                        {
-                                            var baseMask = errorMask();
-                                            if (baseMask.SubData.Specific == null)
-                                            {
-                                                baseMask.SubData = new MaskItem<Exception, MagicEffectSubData_ErrorMask>(null, new MagicEffectSubData_ErrorMask());
-                                            }
-                                            return baseMask.SubData.Specific;
-                                        }
-                                        ) : null),
-                                        copyMask: copyMask?.SubData.Specific,
-                                        cmds: cmds);
-                                    return r;
-                                case CopyOption.MakeCopy:
-                                    if (r == null) return default(MagicEffectSubData);
-                                    return MagicEffectSubData.Copy(
-                                        r,
-                                        copyMask?.SubData?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.SubData?.Overall}. Cannot execute copy.");
+                                item.SubData = null;
                             }
-                        }
-                        );
+                            else
+                            {
+                                item.SubData = MagicEffectSubData.Copy(
+                                    rhs.SubData,
+                                    copyMask?.SubData?.Specific,
+                                    def?.SubData);
+                            }
+                            break;
+                        default:
+                            throw new NotImplementedException($"Unknown CopyOption {copyMask?.SubData?.Overall}. Cannot execute copy.");
+                    }
                 }
                 catch (Exception ex)
                 when (doMasks)
@@ -2337,6 +2256,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MagicEffect_FieldIndex enu = (MagicEffect_FieldIndex)index;
             switch (enu)
             {
+                case MagicEffect_FieldIndex.Flags:
+                case MagicEffect_FieldIndex.BaseCost:
+                case MagicEffect_FieldIndex.Unused:
+                case MagicEffect_FieldIndex.MagicSchool:
+                case MagicEffect_FieldIndex.Resistance:
+                case MagicEffect_FieldIndex.CounterEffectCount:
+                case MagicEffect_FieldIndex.Light:
+                case MagicEffect_FieldIndex.ProjectileSpeed:
+                case MagicEffect_FieldIndex.EffectShader:
+                case MagicEffect_FieldIndex.SubData:
+                    if (on) break;
+                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 case MagicEffect_FieldIndex.Description:
                     obj.Description_Property.HasBeenSet = on;
                     break;
@@ -2345,36 +2276,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case MagicEffect_FieldIndex.Model:
                     obj.Model_Property.HasBeenSet = on;
-                    break;
-                case MagicEffect_FieldIndex.Flags:
-                    obj.Flags_Property.HasBeenSet = on;
-                    break;
-                case MagicEffect_FieldIndex.BaseCost:
-                    obj.BaseCost_Property.HasBeenSet = on;
-                    break;
-                case MagicEffect_FieldIndex.Unused:
-                    obj.Unused_Property.HasBeenSet = on;
-                    break;
-                case MagicEffect_FieldIndex.MagicSchool:
-                    obj.MagicSchool_Property.HasBeenSet = on;
-                    break;
-                case MagicEffect_FieldIndex.Resistance:
-                    obj.Resistance_Property.HasBeenSet = on;
-                    break;
-                case MagicEffect_FieldIndex.CounterEffectCount:
-                    obj.CounterEffectCount_Property.HasBeenSet = on;
-                    break;
-                case MagicEffect_FieldIndex.Light:
-                    obj.Light_Property.HasBeenSet = on;
-                    break;
-                case MagicEffect_FieldIndex.ProjectileSpeed:
-                    obj.ProjectileSpeed_Property.HasBeenSet = on;
-                    break;
-                case MagicEffect_FieldIndex.EffectShader:
-                    obj.EffectShader_Property.HasBeenSet = on;
-                    break;
-                case MagicEffect_FieldIndex.SubData:
-                    obj.SubData_Property.HasBeenSet = on;
                     break;
                 case MagicEffect_FieldIndex.CounterEffects:
                     obj.CounterEffects.HasBeenSet = on;
@@ -2403,34 +2304,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Model_Property.Unset(cmds);
                     break;
                 case MagicEffect_FieldIndex.Flags:
-                    obj.Flags_Property.Unset(cmds);
+                    obj.Flags = default(MagicEffect.MagicFlag);
                     break;
                 case MagicEffect_FieldIndex.BaseCost:
-                    obj.BaseCost_Property.Unset(cmds);
+                    obj.BaseCost = default(Single);
                     break;
                 case MagicEffect_FieldIndex.Unused:
-                    obj.Unused_Property.Unset(cmds);
+                    obj.Unused = default(Byte[]);
                     break;
                 case MagicEffect_FieldIndex.MagicSchool:
-                    obj.MagicSchool_Property.Unset(cmds);
+                    obj.MagicSchool = default(MagicSchool);
                     break;
                 case MagicEffect_FieldIndex.Resistance:
-                    obj.Resistance_Property.Unset(cmds);
+                    obj.Resistance = default(Resistance);
                     break;
                 case MagicEffect_FieldIndex.CounterEffectCount:
-                    obj.CounterEffectCount_Property.Unset(cmds);
+                    obj.CounterEffectCount = default(UInt32);
                     break;
                 case MagicEffect_FieldIndex.Light:
-                    obj.Light_Property.Unset(cmds);
+                    obj.Light = default(FormIDLink<Light>);
                     break;
                 case MagicEffect_FieldIndex.ProjectileSpeed:
-                    obj.ProjectileSpeed_Property.Unset(cmds);
+                    obj.ProjectileSpeed = default(Single);
                     break;
                 case MagicEffect_FieldIndex.EffectShader:
-                    obj.EffectShader_Property.Unset(cmds);
+                    obj.EffectShader = default(FormIDLink<EffectShader>);
                     break;
                 case MagicEffect_FieldIndex.SubData:
-                    obj.SubData_Property.Unset(cmds);
+                    obj.SubData = default(MagicEffectSubData);
                     break;
                 case MagicEffect_FieldIndex.CounterEffects:
                     obj.CounterEffects.Unset(cmds);
@@ -2448,32 +2349,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MagicEffect_FieldIndex enu = (MagicEffect_FieldIndex)index;
             switch (enu)
             {
+                case MagicEffect_FieldIndex.Flags:
+                case MagicEffect_FieldIndex.BaseCost:
+                case MagicEffect_FieldIndex.Unused:
+                case MagicEffect_FieldIndex.MagicSchool:
+                case MagicEffect_FieldIndex.Resistance:
+                case MagicEffect_FieldIndex.CounterEffectCount:
+                case MagicEffect_FieldIndex.Light:
+                case MagicEffect_FieldIndex.ProjectileSpeed:
+                case MagicEffect_FieldIndex.EffectShader:
+                case MagicEffect_FieldIndex.SubData:
+                    return true;
                 case MagicEffect_FieldIndex.Description:
                     return obj.Description_Property.HasBeenSet;
                 case MagicEffect_FieldIndex.Icon:
                     return obj.Icon_Property.HasBeenSet;
                 case MagicEffect_FieldIndex.Model:
                     return obj.Model_Property.HasBeenSet;
-                case MagicEffect_FieldIndex.Flags:
-                    return obj.Flags_Property.HasBeenSet;
-                case MagicEffect_FieldIndex.BaseCost:
-                    return obj.BaseCost_Property.HasBeenSet;
-                case MagicEffect_FieldIndex.Unused:
-                    return obj.Unused_Property.HasBeenSet;
-                case MagicEffect_FieldIndex.MagicSchool:
-                    return obj.MagicSchool_Property.HasBeenSet;
-                case MagicEffect_FieldIndex.Resistance:
-                    return obj.Resistance_Property.HasBeenSet;
-                case MagicEffect_FieldIndex.CounterEffectCount:
-                    return obj.CounterEffectCount_Property.HasBeenSet;
-                case MagicEffect_FieldIndex.Light:
-                    return obj.Light_Property.HasBeenSet;
-                case MagicEffect_FieldIndex.ProjectileSpeed:
-                    return obj.ProjectileSpeed_Property.HasBeenSet;
-                case MagicEffect_FieldIndex.EffectShader:
-                    return obj.EffectShader_Property.HasBeenSet;
-                case MagicEffect_FieldIndex.SubData:
-                    return obj.SubData_Property.HasBeenSet;
                 case MagicEffect_FieldIndex.CounterEffects:
                     return obj.CounterEffects.HasBeenSet;
                 default:
@@ -2528,16 +2420,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Description_Property.Unset(cmds.ToUnsetParams());
             item.Icon_Property.Unset(cmds.ToUnsetParams());
             item.Model_Property.Unset(cmds.ToUnsetParams());
-            item.Flags_Property.Unset(cmds.ToUnsetParams());
-            item.BaseCost_Property.Unset(cmds.ToUnsetParams());
-            item.Unused_Property.Unset(cmds.ToUnsetParams());
-            item.MagicSchool_Property.Unset(cmds.ToUnsetParams());
-            item.Resistance_Property.Unset(cmds.ToUnsetParams());
-            item.CounterEffectCount_Property.Unset(cmds.ToUnsetParams());
-            item.Light_Property.Unset(cmds.ToUnsetParams());
-            item.ProjectileSpeed_Property.Unset(cmds.ToUnsetParams());
-            item.EffectShader_Property.Unset(cmds.ToUnsetParams());
-            item.SubData_Property.Unset(cmds.ToUnsetParams());
+            item.Flags = default(MagicEffect.MagicFlag);
+            item.BaseCost = default(Single);
+            item.Unused = default(Byte[]);
+            item.MagicSchool = default(MagicSchool);
+            item.Resistance = default(Resistance);
+            item.CounterEffectCount = default(UInt32);
+            item.Light = default(FormIDLink<Light>);
+            item.ProjectileSpeed = default(Single);
+            item.EffectShader = default(FormIDLink<EffectShader>);
+            item.SubData = default(MagicEffectSubData);
             item.CounterEffects.Unset(cmds.ToUnsetParams());
         }
 
@@ -2559,16 +2451,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Description = item.Description_Property.Equals(rhs.Description_Property, (l, r) => object.Equals(l, r));
             ret.Icon = item.Icon_Property.Equals(rhs.Icon_Property, (l, r) => object.Equals(l, r));
             ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs));
-            ret.Flags = item.Flags_Property.Equals(rhs.Flags_Property, (l, r) => l == r);
-            ret.BaseCost = item.BaseCost_Property.Equals(rhs.BaseCost_Property, (l, r) => l == r);
-            ret.Unused = item.Unused_Property.Equals(rhs.Unused_Property, (l, r) => l.EqualsFast(r));
-            ret.MagicSchool = item.MagicSchool_Property.Equals(rhs.MagicSchool_Property, (l, r) => l == r);
-            ret.Resistance = item.Resistance_Property.Equals(rhs.Resistance_Property, (l, r) => l == r);
-            ret.CounterEffectCount = item.CounterEffectCount_Property.Equals(rhs.CounterEffectCount_Property, (l, r) => l == r);
-            ret.Light = item.Light_Property.Equals(rhs.Light_Property, (l, r) => l == r);
-            ret.ProjectileSpeed = item.ProjectileSpeed_Property.Equals(rhs.ProjectileSpeed_Property, (l, r) => l == r);
-            ret.EffectShader = item.EffectShader_Property.Equals(rhs.EffectShader_Property, (l, r) => l == r);
-            ret.SubData = item.SubData_Property.LoquiEqualsHelper(rhs.SubData_Property, (loqLhs, loqRhs) => MagicEffectSubDataCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.BaseCost = item.BaseCost == rhs.BaseCost;
+            ret.Unused = item.Unused.EqualsFast(rhs.Unused);
+            ret.MagicSchool = item.MagicSchool == rhs.MagicSchool;
+            ret.Resistance = item.Resistance == rhs.Resistance;
+            ret.CounterEffectCount = item.CounterEffectCount == rhs.CounterEffectCount;
+            ret.Light = item.Light == rhs.Light;
+            ret.ProjectileSpeed = item.ProjectileSpeed == rhs.ProjectileSpeed;
+            ret.EffectShader = item.EffectShader == rhs.EffectShader;
+            ret.SubData = new MaskItem<bool, MagicEffectSubData_Mask<bool>>();
+            ret.SubData.Specific = MagicEffectSubDataCommon.GetEqualsMask(item.SubData, rhs.SubData);
+            ret.SubData.Overall = ret.SubData.Specific.AllEqual((b) => b);
             if (item.CounterEffects.HasBeenSet == rhs.CounterEffects.HasBeenSet)
             {
                 if (item.CounterEffects.HasBeenSet)
@@ -2700,17 +2594,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_Property.HasBeenSet) return false;
             if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_Property.HasBeenSet) return false;
             if (checkMask.Model.Specific != null && (item.Model_Property.Item == null || !item.Model_Property.Item.HasBeenSet(checkMask.Model.Specific))) return false;
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_Property.HasBeenSet) return false;
-            if (checkMask.BaseCost.HasValue && checkMask.BaseCost.Value != item.BaseCost_Property.HasBeenSet) return false;
-            if (checkMask.Unused.HasValue && checkMask.Unused.Value != item.Unused_Property.HasBeenSet) return false;
-            if (checkMask.MagicSchool.HasValue && checkMask.MagicSchool.Value != item.MagicSchool_Property.HasBeenSet) return false;
-            if (checkMask.Resistance.HasValue && checkMask.Resistance.Value != item.Resistance_Property.HasBeenSet) return false;
-            if (checkMask.CounterEffectCount.HasValue && checkMask.CounterEffectCount.Value != item.CounterEffectCount_Property.HasBeenSet) return false;
-            if (checkMask.Light.HasValue && checkMask.Light.Value != item.Light_Property.HasBeenSet) return false;
-            if (checkMask.ProjectileSpeed.HasValue && checkMask.ProjectileSpeed.Value != item.ProjectileSpeed_Property.HasBeenSet) return false;
-            if (checkMask.EffectShader.HasValue && checkMask.EffectShader.Value != item.EffectShader_Property.HasBeenSet) return false;
-            if (checkMask.SubData.Overall.HasValue && checkMask.SubData.Overall.Value != item.SubData_Property.HasBeenSet) return false;
-            if (checkMask.SubData.Specific != null && (item.SubData_Property.Item == null || !item.SubData_Property.Item.HasBeenSet(checkMask.SubData.Specific))) return false;
             if (checkMask.CounterEffects.Overall.HasValue && checkMask.CounterEffects.Overall.Value != item.CounterEffects.HasBeenSet) return false;
             return true;
         }
@@ -2721,16 +2604,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Description = item.Description_Property.HasBeenSet;
             ret.Icon = item.Icon_Property.HasBeenSet;
             ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_Property.HasBeenSet, ModelCommon.GetHasBeenSetMask(item.Model_Property.Item));
-            ret.Flags = item.Flags_Property.HasBeenSet;
-            ret.BaseCost = item.BaseCost_Property.HasBeenSet;
-            ret.Unused = item.Unused_Property.HasBeenSet;
-            ret.MagicSchool = item.MagicSchool_Property.HasBeenSet;
-            ret.Resistance = item.Resistance_Property.HasBeenSet;
-            ret.CounterEffectCount = item.CounterEffectCount_Property.HasBeenSet;
-            ret.Light = item.Light_Property.HasBeenSet;
-            ret.ProjectileSpeed = item.ProjectileSpeed_Property.HasBeenSet;
-            ret.EffectShader = item.EffectShader_Property.HasBeenSet;
-            ret.SubData = new MaskItem<bool, MagicEffectSubData_Mask<bool>>(item.SubData_Property.HasBeenSet, MagicEffectSubDataCommon.GetHasBeenSetMask(item.SubData_Property.Item));
+            ret.Flags = true;
+            ret.BaseCost = true;
+            ret.Unused = true;
+            ret.MagicSchool = true;
+            ret.Resistance = true;
+            ret.CounterEffectCount = true;
+            ret.Light = true;
+            ret.ProjectileSpeed = true;
+            ret.EffectShader = true;
+            ret.SubData = new MaskItem<bool, MagicEffectSubData_Mask<bool>>(true, MagicEffectSubDataCommon.GetHasBeenSetMask(item.SubData_Property.Item));
             ret.CounterEffects = new MaskItem<bool, IEnumerable<bool>>(item.CounterEffects.HasBeenSet, null);
             return ret;
         }
@@ -2846,96 +2729,66 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             fieldIndex: (int)MagicEffect_FieldIndex.Model,
                             errorMask: errorMask);
                     }
-                    if (item.Flags_Property.HasBeenSet)
-                    {
-                        EnumXmlTranslation<MagicEffect.MagicFlag>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Flags),
-                            item: item.Flags_Property,
-                            fieldIndex: (int)MagicEffect_FieldIndex.Flags,
-                            errorMask: errorMask);
-                    }
-                    if (item.BaseCost_Property.HasBeenSet)
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.BaseCost),
-                            item: item.BaseCost_Property,
-                            fieldIndex: (int)MagicEffect_FieldIndex.BaseCost,
-                            errorMask: errorMask);
-                    }
-                    if (item.Unused_Property.HasBeenSet)
-                    {
-                        ByteArrayXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Unused),
-                            item: item.Unused_Property,
-                            fieldIndex: (int)MagicEffect_FieldIndex.Unused,
-                            errorMask: errorMask);
-                    }
-                    if (item.MagicSchool_Property.HasBeenSet)
-                    {
-                        EnumXmlTranslation<MagicSchool>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.MagicSchool),
-                            item: item.MagicSchool_Property,
-                            fieldIndex: (int)MagicEffect_FieldIndex.MagicSchool,
-                            errorMask: errorMask);
-                    }
-                    if (item.Resistance_Property.HasBeenSet)
-                    {
-                        EnumXmlTranslation<Resistance>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Resistance),
-                            item: item.Resistance_Property,
-                            fieldIndex: (int)MagicEffect_FieldIndex.Resistance,
-                            errorMask: errorMask);
-                    }
-                    if (item.CounterEffectCount_Property.HasBeenSet)
-                    {
-                        UInt32XmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.CounterEffectCount),
-                            item: item.CounterEffectCount_Property,
-                            fieldIndex: (int)MagicEffect_FieldIndex.CounterEffectCount,
-                            errorMask: errorMask);
-                    }
-                    if (item.Light_Property.HasBeenSet)
-                    {
-                        RawFormIDXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Light),
-                            item: item.Light?.FormID,
-                            fieldIndex: (int)MagicEffect_FieldIndex.Light,
-                            errorMask: errorMask);
-                    }
-                    if (item.ProjectileSpeed_Property.HasBeenSet)
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.ProjectileSpeed),
-                            item: item.ProjectileSpeed_Property,
-                            fieldIndex: (int)MagicEffect_FieldIndex.ProjectileSpeed,
-                            errorMask: errorMask);
-                    }
-                    if (item.EffectShader_Property.HasBeenSet)
-                    {
-                        RawFormIDXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.EffectShader),
-                            item: item.EffectShader?.FormID,
-                            fieldIndex: (int)MagicEffect_FieldIndex.EffectShader,
-                            errorMask: errorMask);
-                    }
-                    if (item.SubData_Property.HasBeenSet)
-                    {
-                        LoquiXmlTranslation<MagicEffectSubData, MagicEffectSubData_ErrorMask>.Instance.Write(
-                            writer: writer,
-                            item: item.SubData_Property,
-                            name: nameof(item.SubData),
-                            fieldIndex: (int)MagicEffect_FieldIndex.SubData,
-                            errorMask: errorMask);
-                    }
+                    EnumXmlTranslation<MagicEffect.MagicFlag>.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Flags),
+                        item: item.Flags_Property,
+                        fieldIndex: (int)MagicEffect_FieldIndex.Flags,
+                        errorMask: errorMask);
+                    FloatXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.BaseCost),
+                        item: item.BaseCost_Property,
+                        fieldIndex: (int)MagicEffect_FieldIndex.BaseCost,
+                        errorMask: errorMask);
+                    ByteArrayXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Unused),
+                        item: item.Unused_Property,
+                        fieldIndex: (int)MagicEffect_FieldIndex.Unused,
+                        errorMask: errorMask);
+                    EnumXmlTranslation<MagicSchool>.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.MagicSchool),
+                        item: item.MagicSchool_Property,
+                        fieldIndex: (int)MagicEffect_FieldIndex.MagicSchool,
+                        errorMask: errorMask);
+                    EnumXmlTranslation<Resistance>.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Resistance),
+                        item: item.Resistance_Property,
+                        fieldIndex: (int)MagicEffect_FieldIndex.Resistance,
+                        errorMask: errorMask);
+                    UInt32XmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.CounterEffectCount),
+                        item: item.CounterEffectCount_Property,
+                        fieldIndex: (int)MagicEffect_FieldIndex.CounterEffectCount,
+                        errorMask: errorMask);
+                    RawFormIDXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Light),
+                        item: item.Light?.FormID,
+                        fieldIndex: (int)MagicEffect_FieldIndex.Light,
+                        errorMask: errorMask);
+                    FloatXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.ProjectileSpeed),
+                        item: item.ProjectileSpeed_Property,
+                        fieldIndex: (int)MagicEffect_FieldIndex.ProjectileSpeed,
+                        errorMask: errorMask);
+                    RawFormIDXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.EffectShader),
+                        item: item.EffectShader?.FormID,
+                        fieldIndex: (int)MagicEffect_FieldIndex.EffectShader,
+                        errorMask: errorMask);
+                    LoquiXmlTranslation<MagicEffectSubData, MagicEffectSubData_ErrorMask>.Instance.Write(
+                        writer: writer,
+                        item: item.SubData_Property,
+                        name: nameof(item.SubData),
+                        fieldIndex: (int)MagicEffect_FieldIndex.SubData,
+                        errorMask: errorMask);
                     if (item.CounterEffects.HasBeenSet)
                     {
                         ListXmlTranslation<EDIDLink<MagicEffect>, Exception>.Instance.Write(

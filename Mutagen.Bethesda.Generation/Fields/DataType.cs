@@ -67,6 +67,7 @@ namespace Mutagen.Bethesda.Generation
                     typeGen = await this.ObjectGen.LoadField(fieldNode, true);
                     if (typeGen.Succeeded)
                     {
+                        typeGen.Value.HasBeenSetProperty.Item = false;
                         this.SubFields.Add(typeGen.Value);
                     }
                 }

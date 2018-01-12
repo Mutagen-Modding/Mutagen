@@ -62,26 +62,26 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Flags
-        protected readonly INotifyingSetItem<Container.ContainerFlag> _Flags = NotifyingSetItem.Factory<Container.ContainerFlag>(markAsSet: false);
-        public INotifyingSetItem<Container.ContainerFlag> Flags_Property => _Flags;
+        protected readonly INotifyingItem<Container.ContainerFlag> _Flags = NotifyingItem.Factory<Container.ContainerFlag>();
+        public INotifyingItem<Container.ContainerFlag> Flags_Property => _Flags;
         public Container.ContainerFlag Flags
         {
             get => this._Flags.Item;
             set => this._Flags.Set(value);
         }
-        INotifyingSetItem<Container.ContainerFlag> IContainer.Flags_Property => this.Flags_Property;
-        INotifyingSetItemGetter<Container.ContainerFlag> IContainerGetter.Flags_Property => this.Flags_Property;
+        INotifyingItem<Container.ContainerFlag> IContainer.Flags_Property => this.Flags_Property;
+        INotifyingItemGetter<Container.ContainerFlag> IContainerGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region Weight
-        protected readonly INotifyingSetItem<Single> _Weight = NotifyingSetItem.Factory<Single>(markAsSet: false);
-        public INotifyingSetItem<Single> Weight_Property => _Weight;
+        protected readonly INotifyingItem<Single> _Weight = NotifyingItem.Factory<Single>();
+        public INotifyingItem<Single> Weight_Property => _Weight;
         public Single Weight
         {
             get => this._Weight.Item;
             set => this._Weight.Set(value);
         }
-        INotifyingSetItem<Single> IContainer.Weight_Property => this.Weight_Property;
-        INotifyingSetItemGetter<Single> IContainerGetter.Weight_Property => this.Weight_Property;
+        INotifyingItem<Single> IContainer.Weight_Property => this.Weight_Property;
+        INotifyingItemGetter<Single> IContainerGetter.Weight_Property => this.Weight_Property;
         #endregion
         #region OpenSound
         public FormIDSetLink<Sound> OpenSound_Property { get; } = new FormIDSetLink<Sound>();
@@ -164,16 +164,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!Items.SequenceEqual(rhs.Items)) return false;
             }
-            if (Flags_Property.HasBeenSet != rhs.Flags_Property.HasBeenSet) return false;
-            if (Flags_Property.HasBeenSet)
-            {
-                if (Flags != rhs.Flags) return false;
-            }
-            if (Weight_Property.HasBeenSet != rhs.Weight_Property.HasBeenSet) return false;
-            if (Weight_Property.HasBeenSet)
-            {
-                if (Weight != rhs.Weight) return false;
-            }
+            if (Flags != rhs.Flags) return false;
+            if (Weight != rhs.Weight) return false;
             if (OpenSound_Property.HasBeenSet != rhs.OpenSound_Property.HasBeenSet) return false;
             if (OpenSound_Property.HasBeenSet)
             {
@@ -202,14 +194,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(Items).CombineHashCode(ret);
             }
-            if (Flags_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            }
-            if (Weight_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Weight).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Weight).CombineHashCode(ret);
             if (OpenSound_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(OpenSound).CombineHashCode(ret);
@@ -1203,10 +1189,10 @@ namespace Mutagen.Bethesda.Oblivion
         new Script Script { get; set; }
         new INotifyingList<ContainerItem> Items { get; }
         new Container.ContainerFlag Flags { get; set; }
-        new INotifyingSetItem<Container.ContainerFlag> Flags_Property { get; }
+        new INotifyingItem<Container.ContainerFlag> Flags_Property { get; }
 
         new Single Weight { get; set; }
-        new INotifyingSetItem<Single> Weight_Property { get; }
+        new INotifyingItem<Single> Weight_Property { get; }
 
         new Sound OpenSound { get; set; }
         new Sound CloseSound { get; set; }
@@ -1229,12 +1215,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Flags
         Container.ContainerFlag Flags { get; }
-        INotifyingSetItemGetter<Container.ContainerFlag> Flags_Property { get; }
+        INotifyingItemGetter<Container.ContainerFlag> Flags_Property { get; }
 
         #endregion
         #region Weight
         Single Weight { get; }
-        INotifyingSetItemGetter<Single> Weight_Property { get; }
+        INotifyingItemGetter<Single> Weight_Property { get; }
 
         #endregion
         #region OpenSound
@@ -1702,9 +1688,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Flags_Property.SetToWithDefault(
-                        rhs: rhs.Flags_Property,
-                        def: def?.Flags_Property,
+                    item.Flags_Property.Set(
+                        value: rhs.Flags,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1717,9 +1702,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Weight_Property.SetToWithDefault(
-                        rhs: rhs.Weight_Property,
-                        def: def?.Weight_Property,
+                    item.Weight_Property.Set(
+                        value: rhs.Weight,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1771,6 +1755,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Container_FieldIndex enu = (Container_FieldIndex)index;
             switch (enu)
             {
+                case Container_FieldIndex.Flags:
+                case Container_FieldIndex.Weight:
+                    if (on) break;
+                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 case Container_FieldIndex.Model:
                     obj.Model_Property.HasBeenSet = on;
                     break;
@@ -1779,12 +1767,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case Container_FieldIndex.Items:
                     obj.Items.HasBeenSet = on;
-                    break;
-                case Container_FieldIndex.Flags:
-                    obj.Flags_Property.HasBeenSet = on;
-                    break;
-                case Container_FieldIndex.Weight:
-                    obj.Weight_Property.HasBeenSet = on;
                     break;
                 case Container_FieldIndex.OpenSound:
                     obj.OpenSound_Property.HasBeenSet = on;
@@ -1816,10 +1798,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Items.Unset(cmds);
                     break;
                 case Container_FieldIndex.Flags:
-                    obj.Flags_Property.Unset(cmds);
+                    obj.Flags = default(Container.ContainerFlag);
                     break;
                 case Container_FieldIndex.Weight:
-                    obj.Weight_Property.Unset(cmds);
+                    obj.Weight = default(Single);
                     break;
                 case Container_FieldIndex.OpenSound:
                     obj.OpenSound_Property.Unset(cmds);
@@ -1840,16 +1822,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Container_FieldIndex enu = (Container_FieldIndex)index;
             switch (enu)
             {
+                case Container_FieldIndex.Flags:
+                case Container_FieldIndex.Weight:
+                    return true;
                 case Container_FieldIndex.Model:
                     return obj.Model_Property.HasBeenSet;
                 case Container_FieldIndex.Script:
                     return obj.Script_Property.HasBeenSet;
                 case Container_FieldIndex.Items:
                     return obj.Items.HasBeenSet;
-                case Container_FieldIndex.Flags:
-                    return obj.Flags_Property.HasBeenSet;
-                case Container_FieldIndex.Weight:
-                    return obj.Weight_Property.HasBeenSet;
                 case Container_FieldIndex.OpenSound:
                     return obj.OpenSound_Property.HasBeenSet;
                 case Container_FieldIndex.CloseSound:
@@ -1892,8 +1873,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Model_Property.Unset(cmds.ToUnsetParams());
             item.Script_Property.Unset(cmds.ToUnsetParams());
             item.Items.Unset(cmds.ToUnsetParams());
-            item.Flags_Property.Unset(cmds.ToUnsetParams());
-            item.Weight_Property.Unset(cmds.ToUnsetParams());
+            item.Flags = default(Container.ContainerFlag);
+            item.Weight = default(Single);
             item.OpenSound_Property.Unset(cmds.ToUnsetParams());
             item.CloseSound_Property.Unset(cmds.ToUnsetParams());
         }
@@ -1940,8 +1921,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ret.Items = new MaskItem<bool, IEnumerable<MaskItem<bool, ContainerItem_Mask<bool>>>>();
                 ret.Items.Overall = false;
             }
-            ret.Flags = item.Flags_Property.Equals(rhs.Flags_Property, (l, r) => l == r);
-            ret.Weight = item.Weight_Property.Equals(rhs.Weight_Property, (l, r) => l == r);
+            ret.Flags = item.Flags == rhs.Flags;
+            ret.Weight = item.Weight == rhs.Weight;
             ret.OpenSound = item.OpenSound_Property.Equals(rhs.OpenSound_Property, (l, r) => l == r);
             ret.CloseSound = item.CloseSound_Property.Equals(rhs.CloseSound_Property, (l, r) => l == r);
             NamedMajorRecordCommon.FillEqualsMask(item, rhs, ret);
@@ -2028,8 +2009,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Model.Specific != null && (item.Model_Property.Item == null || !item.Model_Property.Item.HasBeenSet(checkMask.Model.Specific))) return false;
             if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script_Property.HasBeenSet) return false;
             if (checkMask.Items.Overall.HasValue && checkMask.Items.Overall.Value != item.Items.HasBeenSet) return false;
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_Property.HasBeenSet) return false;
-            if (checkMask.Weight.HasValue && checkMask.Weight.Value != item.Weight_Property.HasBeenSet) return false;
             if (checkMask.OpenSound.HasValue && checkMask.OpenSound.Value != item.OpenSound_Property.HasBeenSet) return false;
             if (checkMask.CloseSound.HasValue && checkMask.CloseSound.Value != item.CloseSound_Property.HasBeenSet) return false;
             return true;
@@ -2041,8 +2020,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_Property.HasBeenSet, ModelCommon.GetHasBeenSetMask(item.Model_Property.Item));
             ret.Script = item.Script_Property.HasBeenSet;
             ret.Items = new MaskItem<bool, IEnumerable<MaskItem<bool, ContainerItem_Mask<bool>>>>(item.Items.HasBeenSet, item.Items.Select((i) => new MaskItem<bool, ContainerItem_Mask<bool>>(true, i.GetHasBeenSetMask())));
-            ret.Flags = item.Flags_Property.HasBeenSet;
-            ret.Weight = item.Weight_Property.HasBeenSet;
+            ret.Flags = true;
+            ret.Weight = true;
             ret.OpenSound = item.OpenSound_Property.HasBeenSet;
             ret.CloseSound = item.CloseSound_Property.HasBeenSet;
             return ret;
@@ -2169,24 +2148,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             }
                             );
                     }
-                    if (item.Flags_Property.HasBeenSet)
-                    {
-                        EnumXmlTranslation<Container.ContainerFlag>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Flags),
-                            item: item.Flags_Property,
-                            fieldIndex: (int)Container_FieldIndex.Flags,
-                            errorMask: errorMask);
-                    }
-                    if (item.Weight_Property.HasBeenSet)
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Weight),
-                            item: item.Weight_Property,
-                            fieldIndex: (int)Container_FieldIndex.Weight,
-                            errorMask: errorMask);
-                    }
+                    EnumXmlTranslation<Container.ContainerFlag>.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Flags),
+                        item: item.Flags_Property,
+                        fieldIndex: (int)Container_FieldIndex.Flags,
+                        errorMask: errorMask);
+                    FloatXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Weight),
+                        item: item.Weight_Property,
+                        fieldIndex: (int)Container_FieldIndex.Weight,
+                        errorMask: errorMask);
                     if (item.OpenSound_Property.HasBeenSet)
                     {
                         RawFormIDXmlTranslation.Instance.Write(

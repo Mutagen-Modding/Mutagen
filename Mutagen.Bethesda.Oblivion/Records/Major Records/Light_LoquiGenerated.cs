@@ -76,50 +76,48 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<FilePath> ILightGetter.Icon_Property => this.Icon_Property;
         #endregion
         #region Time
-        protected readonly INotifyingSetItem<Int32> _Time = NotifyingSetItem.Factory<Int32>(
-            defaultVal: -1,
-            markAsSet: false);
-        public INotifyingSetItem<Int32> Time_Property => _Time;
+        protected readonly INotifyingItem<Int32> _Time = NotifyingItem.Factory<Int32>(defaultVal: -1);
+        public INotifyingItem<Int32> Time_Property => _Time;
         public Int32 Time
         {
             get => this._Time.Item;
             set => this._Time.Set(value);
         }
-        INotifyingSetItem<Int32> ILight.Time_Property => this.Time_Property;
-        INotifyingSetItemGetter<Int32> ILightGetter.Time_Property => this.Time_Property;
+        INotifyingItem<Int32> ILight.Time_Property => this.Time_Property;
+        INotifyingItemGetter<Int32> ILightGetter.Time_Property => this.Time_Property;
         #endregion
         #region Radius
-        protected readonly INotifyingSetItem<UInt32> _Radius = NotifyingSetItem.Factory<UInt32>(markAsSet: false);
-        public INotifyingSetItem<UInt32> Radius_Property => _Radius;
+        protected readonly INotifyingItem<UInt32> _Radius = NotifyingItem.Factory<UInt32>();
+        public INotifyingItem<UInt32> Radius_Property => _Radius;
         public UInt32 Radius
         {
             get => this._Radius.Item;
             set => this._Radius.Set(value);
         }
-        INotifyingSetItem<UInt32> ILight.Radius_Property => this.Radius_Property;
-        INotifyingSetItemGetter<UInt32> ILightGetter.Radius_Property => this.Radius_Property;
+        INotifyingItem<UInt32> ILight.Radius_Property => this.Radius_Property;
+        INotifyingItemGetter<UInt32> ILightGetter.Radius_Property => this.Radius_Property;
         #endregion
         #region Color
-        protected readonly INotifyingSetItem<Color> _Color = NotifyingSetItem.Factory<Color>(markAsSet: false);
-        public INotifyingSetItem<Color> Color_Property => _Color;
+        protected readonly INotifyingItem<Color> _Color = NotifyingItem.Factory<Color>();
+        public INotifyingItem<Color> Color_Property => _Color;
         public Color Color
         {
             get => this._Color.Item;
             set => this._Color.Set(value);
         }
-        INotifyingSetItem<Color> ILight.Color_Property => this.Color_Property;
-        INotifyingSetItemGetter<Color> ILightGetter.Color_Property => this.Color_Property;
+        INotifyingItem<Color> ILight.Color_Property => this.Color_Property;
+        INotifyingItemGetter<Color> ILightGetter.Color_Property => this.Color_Property;
         #endregion
         #region Flags
-        protected readonly INotifyingSetItem<Light.LightFlag> _Flags = NotifyingSetItem.Factory<Light.LightFlag>(markAsSet: false);
-        public INotifyingSetItem<Light.LightFlag> Flags_Property => _Flags;
+        protected readonly INotifyingItem<Light.LightFlag> _Flags = NotifyingItem.Factory<Light.LightFlag>();
+        public INotifyingItem<Light.LightFlag> Flags_Property => _Flags;
         public Light.LightFlag Flags
         {
             get => this._Flags.Item;
             set => this._Flags.Set(value);
         }
-        INotifyingSetItem<Light.LightFlag> ILight.Flags_Property => this.Flags_Property;
-        INotifyingSetItemGetter<Light.LightFlag> ILightGetter.Flags_Property => this.Flags_Property;
+        INotifyingItem<Light.LightFlag> ILight.Flags_Property => this.Flags_Property;
+        INotifyingItemGetter<Light.LightFlag> ILightGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region FalloffExponent
         protected readonly INotifyingSetItem<Single> _FalloffExponent = NotifyingSetItem.Factory<Single>(
@@ -148,26 +146,26 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Single> ILightGetter.FOV_Property => this.FOV_Property;
         #endregion
         #region Value
-        protected readonly INotifyingSetItem<UInt32> _Value = NotifyingSetItem.Factory<UInt32>(markAsSet: false);
-        public INotifyingSetItem<UInt32> Value_Property => _Value;
+        protected readonly INotifyingItem<UInt32> _Value = NotifyingItem.Factory<UInt32>();
+        public INotifyingItem<UInt32> Value_Property => _Value;
         public UInt32 Value
         {
             get => this._Value.Item;
             set => this._Value.Set(value);
         }
-        INotifyingSetItem<UInt32> ILight.Value_Property => this.Value_Property;
-        INotifyingSetItemGetter<UInt32> ILightGetter.Value_Property => this.Value_Property;
+        INotifyingItem<UInt32> ILight.Value_Property => this.Value_Property;
+        INotifyingItemGetter<UInt32> ILightGetter.Value_Property => this.Value_Property;
         #endregion
         #region Weight
-        protected readonly INotifyingSetItem<Single> _Weight = NotifyingSetItem.Factory<Single>(markAsSet: false);
-        public INotifyingSetItem<Single> Weight_Property => _Weight;
+        protected readonly INotifyingItem<Single> _Weight = NotifyingItem.Factory<Single>();
+        public INotifyingItem<Single> Weight_Property => _Weight;
         public Single Weight
         {
             get => this._Weight.Item;
             set => this._Weight.Set(value);
         }
-        INotifyingSetItem<Single> ILight.Weight_Property => this.Weight_Property;
-        INotifyingSetItemGetter<Single> ILightGetter.Weight_Property => this.Weight_Property;
+        INotifyingItem<Single> ILight.Weight_Property => this.Weight_Property;
+        INotifyingItemGetter<Single> ILightGetter.Weight_Property => this.Weight_Property;
         #endregion
         #region Fade
         protected readonly INotifyingSetItem<Single> _Fade = NotifyingSetItem.Factory<Single>(markAsSet: false);
@@ -261,26 +259,10 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!object.Equals(Icon, rhs.Icon)) return false;
             }
-            if (Time_Property.HasBeenSet != rhs.Time_Property.HasBeenSet) return false;
-            if (Time_Property.HasBeenSet)
-            {
-                if (Time != rhs.Time) return false;
-            }
-            if (Radius_Property.HasBeenSet != rhs.Radius_Property.HasBeenSet) return false;
-            if (Radius_Property.HasBeenSet)
-            {
-                if (Radius != rhs.Radius) return false;
-            }
-            if (Color_Property.HasBeenSet != rhs.Color_Property.HasBeenSet) return false;
-            if (Color_Property.HasBeenSet)
-            {
-                if (Color != rhs.Color) return false;
-            }
-            if (Flags_Property.HasBeenSet != rhs.Flags_Property.HasBeenSet) return false;
-            if (Flags_Property.HasBeenSet)
-            {
-                if (Flags != rhs.Flags) return false;
-            }
+            if (Time != rhs.Time) return false;
+            if (Radius != rhs.Radius) return false;
+            if (Color != rhs.Color) return false;
+            if (Flags != rhs.Flags) return false;
             if (FalloffExponent_Property.HasBeenSet != rhs.FalloffExponent_Property.HasBeenSet) return false;
             if (FalloffExponent_Property.HasBeenSet)
             {
@@ -291,16 +273,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (FOV != rhs.FOV) return false;
             }
-            if (Value_Property.HasBeenSet != rhs.Value_Property.HasBeenSet) return false;
-            if (Value_Property.HasBeenSet)
-            {
-                if (Value != rhs.Value) return false;
-            }
-            if (Weight_Property.HasBeenSet != rhs.Weight_Property.HasBeenSet) return false;
-            if (Weight_Property.HasBeenSet)
-            {
-                if (Weight != rhs.Weight) return false;
-            }
+            if (Value != rhs.Value) return false;
+            if (Weight != rhs.Weight) return false;
             if (Fade_Property.HasBeenSet != rhs.Fade_Property.HasBeenSet) return false;
             if (Fade_Property.HasBeenSet)
             {
@@ -333,22 +307,10 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(Icon).CombineHashCode(ret);
             }
-            if (Time_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Time).CombineHashCode(ret);
-            }
-            if (Radius_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Radius).CombineHashCode(ret);
-            }
-            if (Color_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Color).CombineHashCode(ret);
-            }
-            if (Flags_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(Time).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Radius).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Color).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
             if (FalloffExponent_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(FalloffExponent).CombineHashCode(ret);
@@ -357,14 +319,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(FOV).CombineHashCode(ret);
             }
-            if (Value_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Value).CombineHashCode(ret);
-            }
-            if (Weight_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Weight).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(Value).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Weight).CombineHashCode(ret);
             if (Fade_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(Fade).CombineHashCode(ret);
@@ -1482,16 +1438,16 @@ namespace Mutagen.Bethesda.Oblivion
         new INotifyingSetItem<FilePath> Icon_Property { get; }
 
         new Int32 Time { get; set; }
-        new INotifyingSetItem<Int32> Time_Property { get; }
+        new INotifyingItem<Int32> Time_Property { get; }
 
         new UInt32 Radius { get; set; }
-        new INotifyingSetItem<UInt32> Radius_Property { get; }
+        new INotifyingItem<UInt32> Radius_Property { get; }
 
         new Color Color { get; set; }
-        new INotifyingSetItem<Color> Color_Property { get; }
+        new INotifyingItem<Color> Color_Property { get; }
 
         new Light.LightFlag Flags { get; set; }
-        new INotifyingSetItem<Light.LightFlag> Flags_Property { get; }
+        new INotifyingItem<Light.LightFlag> Flags_Property { get; }
 
         new Single FalloffExponent { get; set; }
         new INotifyingSetItem<Single> FalloffExponent_Property { get; }
@@ -1500,10 +1456,10 @@ namespace Mutagen.Bethesda.Oblivion
         new INotifyingSetItem<Single> FOV_Property { get; }
 
         new UInt32 Value { get; set; }
-        new INotifyingSetItem<UInt32> Value_Property { get; }
+        new INotifyingItem<UInt32> Value_Property { get; }
 
         new Single Weight { get; set; }
-        new INotifyingSetItem<Single> Weight_Property { get; }
+        new INotifyingItem<Single> Weight_Property { get; }
 
         new Single Fade { get; set; }
         new INotifyingSetItem<Single> Fade_Property { get; }
@@ -1535,22 +1491,22 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Time
         Int32 Time { get; }
-        INotifyingSetItemGetter<Int32> Time_Property { get; }
+        INotifyingItemGetter<Int32> Time_Property { get; }
 
         #endregion
         #region Radius
         UInt32 Radius { get; }
-        INotifyingSetItemGetter<UInt32> Radius_Property { get; }
+        INotifyingItemGetter<UInt32> Radius_Property { get; }
 
         #endregion
         #region Color
         Color Color { get; }
-        INotifyingSetItemGetter<Color> Color_Property { get; }
+        INotifyingItemGetter<Color> Color_Property { get; }
 
         #endregion
         #region Flags
         Light.LightFlag Flags { get; }
-        INotifyingSetItemGetter<Light.LightFlag> Flags_Property { get; }
+        INotifyingItemGetter<Light.LightFlag> Flags_Property { get; }
 
         #endregion
         #region FalloffExponent
@@ -1565,12 +1521,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Value
         UInt32 Value { get; }
-        INotifyingSetItemGetter<UInt32> Value_Property { get; }
+        INotifyingItemGetter<UInt32> Value_Property { get; }
 
         #endregion
         #region Weight
         Single Weight { get; }
-        INotifyingSetItemGetter<Single> Weight_Property { get; }
+        INotifyingItemGetter<Single> Weight_Property { get; }
 
         #endregion
         #region Fade
@@ -2119,9 +2075,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Time_Property.SetToWithDefault(
-                        rhs: rhs.Time_Property,
-                        def: def?.Time_Property,
+                    item.Time_Property.Set(
+                        value: rhs.Time,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -2134,9 +2089,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Radius_Property.SetToWithDefault(
-                        rhs: rhs.Radius_Property,
-                        def: def?.Radius_Property,
+                    item.Radius_Property.Set(
+                        value: rhs.Radius,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -2149,9 +2103,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Color_Property.SetToWithDefault(
-                        rhs: rhs.Color_Property,
-                        def: def?.Color_Property,
+                    item.Color_Property.Set(
+                        value: rhs.Color,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -2164,9 +2117,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Flags_Property.SetToWithDefault(
-                        rhs: rhs.Flags_Property,
-                        def: def?.Flags_Property,
+                    item.Flags_Property.Set(
+                        value: rhs.Flags,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -2209,9 +2161,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Value_Property.SetToWithDefault(
-                        rhs: rhs.Value_Property,
-                        def: def?.Value_Property,
+                    item.Value_Property.Set(
+                        value: rhs.Value,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -2224,9 +2175,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Weight_Property.SetToWithDefault(
-                        rhs: rhs.Weight_Property,
-                        def: def?.Weight_Property,
+                    item.Weight_Property.Set(
+                        value: rhs.Weight,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -2278,6 +2228,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Light_FieldIndex enu = (Light_FieldIndex)index;
             switch (enu)
             {
+                case Light_FieldIndex.Time:
+                case Light_FieldIndex.Radius:
+                case Light_FieldIndex.Color:
+                case Light_FieldIndex.Flags:
+                case Light_FieldIndex.Value:
+                case Light_FieldIndex.Weight:
+                    if (on) break;
+                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 case Light_FieldIndex.Model:
                     obj.Model_Property.HasBeenSet = on;
                     break;
@@ -2290,29 +2248,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Light_FieldIndex.Icon:
                     obj.Icon_Property.HasBeenSet = on;
                     break;
-                case Light_FieldIndex.Time:
-                    obj.Time_Property.HasBeenSet = on;
-                    break;
-                case Light_FieldIndex.Radius:
-                    obj.Radius_Property.HasBeenSet = on;
-                    break;
-                case Light_FieldIndex.Color:
-                    obj.Color_Property.HasBeenSet = on;
-                    break;
-                case Light_FieldIndex.Flags:
-                    obj.Flags_Property.HasBeenSet = on;
-                    break;
                 case Light_FieldIndex.FalloffExponent:
                     obj.FalloffExponent_Property.HasBeenSet = on;
                     break;
                 case Light_FieldIndex.FOV:
                     obj.FOV_Property.HasBeenSet = on;
-                    break;
-                case Light_FieldIndex.Value:
-                    obj.Value_Property.HasBeenSet = on;
-                    break;
-                case Light_FieldIndex.Weight:
-                    obj.Weight_Property.HasBeenSet = on;
                     break;
                 case Light_FieldIndex.Fade:
                     obj.Fade_Property.HasBeenSet = on;
@@ -2347,16 +2287,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Icon_Property.Unset(cmds);
                     break;
                 case Light_FieldIndex.Time:
-                    obj.Time_Property.Unset(cmds);
+                    obj.Time = default(Int32);
                     break;
                 case Light_FieldIndex.Radius:
-                    obj.Radius_Property.Unset(cmds);
+                    obj.Radius = default(UInt32);
                     break;
                 case Light_FieldIndex.Color:
-                    obj.Color_Property.Unset(cmds);
+                    obj.Color = default(Color);
                     break;
                 case Light_FieldIndex.Flags:
-                    obj.Flags_Property.Unset(cmds);
+                    obj.Flags = default(Light.LightFlag);
                     break;
                 case Light_FieldIndex.FalloffExponent:
                     obj.FalloffExponent_Property.Unset(cmds);
@@ -2365,10 +2305,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.FOV_Property.Unset(cmds);
                     break;
                 case Light_FieldIndex.Value:
-                    obj.Value_Property.Unset(cmds);
+                    obj.Value = default(UInt32);
                     break;
                 case Light_FieldIndex.Weight:
-                    obj.Weight_Property.Unset(cmds);
+                    obj.Weight = default(Single);
                     break;
                 case Light_FieldIndex.Fade:
                     obj.Fade_Property.Unset(cmds);
@@ -2389,6 +2329,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Light_FieldIndex enu = (Light_FieldIndex)index;
             switch (enu)
             {
+                case Light_FieldIndex.Time:
+                case Light_FieldIndex.Radius:
+                case Light_FieldIndex.Color:
+                case Light_FieldIndex.Flags:
+                case Light_FieldIndex.Value:
+                case Light_FieldIndex.Weight:
+                    return true;
                 case Light_FieldIndex.Model:
                     return obj.Model_Property.HasBeenSet;
                 case Light_FieldIndex.Script:
@@ -2397,22 +2344,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.Name_Property.HasBeenSet;
                 case Light_FieldIndex.Icon:
                     return obj.Icon_Property.HasBeenSet;
-                case Light_FieldIndex.Time:
-                    return obj.Time_Property.HasBeenSet;
-                case Light_FieldIndex.Radius:
-                    return obj.Radius_Property.HasBeenSet;
-                case Light_FieldIndex.Color:
-                    return obj.Color_Property.HasBeenSet;
-                case Light_FieldIndex.Flags:
-                    return obj.Flags_Property.HasBeenSet;
                 case Light_FieldIndex.FalloffExponent:
                     return obj.FalloffExponent_Property.HasBeenSet;
                 case Light_FieldIndex.FOV:
                     return obj.FOV_Property.HasBeenSet;
-                case Light_FieldIndex.Value:
-                    return obj.Value_Property.HasBeenSet;
-                case Light_FieldIndex.Weight:
-                    return obj.Weight_Property.HasBeenSet;
                 case Light_FieldIndex.Fade:
                     return obj.Fade_Property.HasBeenSet;
                 case Light_FieldIndex.Sound:
@@ -2470,14 +2405,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Script_Property.Unset(cmds.ToUnsetParams());
             item.Name_Property.Unset(cmds.ToUnsetParams());
             item.Icon_Property.Unset(cmds.ToUnsetParams());
-            item.Time_Property.Unset(cmds.ToUnsetParams());
-            item.Radius_Property.Unset(cmds.ToUnsetParams());
-            item.Color_Property.Unset(cmds.ToUnsetParams());
-            item.Flags_Property.Unset(cmds.ToUnsetParams());
+            item.Time = default(Int32);
+            item.Radius = default(UInt32);
+            item.Color = default(Color);
+            item.Flags = default(Light.LightFlag);
             item.FalloffExponent_Property.Unset(cmds.ToUnsetParams());
             item.FOV_Property.Unset(cmds.ToUnsetParams());
-            item.Value_Property.Unset(cmds.ToUnsetParams());
-            item.Weight_Property.Unset(cmds.ToUnsetParams());
+            item.Value = default(UInt32);
+            item.Weight = default(Single);
             item.Fade_Property.Unset(cmds.ToUnsetParams());
             item.Sound_Property.Unset(cmds.ToUnsetParams());
         }
@@ -2501,14 +2436,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Script = item.Script_Property.Equals(rhs.Script_Property, (l, r) => l == r);
             ret.Name = item.Name_Property.Equals(rhs.Name_Property, (l, r) => object.Equals(l, r));
             ret.Icon = item.Icon_Property.Equals(rhs.Icon_Property, (l, r) => object.Equals(l, r));
-            ret.Time = item.Time_Property.Equals(rhs.Time_Property, (l, r) => l == r);
-            ret.Radius = item.Radius_Property.Equals(rhs.Radius_Property, (l, r) => l == r);
-            ret.Color = item.Color_Property.Equals(rhs.Color_Property, (l, r) => l == r);
-            ret.Flags = item.Flags_Property.Equals(rhs.Flags_Property, (l, r) => l == r);
+            ret.Time = item.Time == rhs.Time;
+            ret.Radius = item.Radius == rhs.Radius;
+            ret.Color = item.Color == rhs.Color;
+            ret.Flags = item.Flags == rhs.Flags;
             ret.FalloffExponent = item.FalloffExponent_Property.Equals(rhs.FalloffExponent_Property, (l, r) => l == r);
             ret.FOV = item.FOV_Property.Equals(rhs.FOV_Property, (l, r) => l == r);
-            ret.Value = item.Value_Property.Equals(rhs.Value_Property, (l, r) => l == r);
-            ret.Weight = item.Weight_Property.Equals(rhs.Weight_Property, (l, r) => l == r);
+            ret.Value = item.Value == rhs.Value;
+            ret.Weight = item.Weight == rhs.Weight;
             ret.Fade = item.Fade_Property.Equals(rhs.Fade_Property, (l, r) => l == r);
             ret.Sound = item.Sound_Property.Equals(rhs.Sound_Property, (l, r) => l == r);
             MajorRecordCommon.FillEqualsMask(item, rhs, ret);
@@ -2610,14 +2545,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script_Property.HasBeenSet) return false;
             if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_Property.HasBeenSet) return false;
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_Property.HasBeenSet) return false;
-            if (checkMask.Time.HasValue && checkMask.Time.Value != item.Time_Property.HasBeenSet) return false;
-            if (checkMask.Radius.HasValue && checkMask.Radius.Value != item.Radius_Property.HasBeenSet) return false;
-            if (checkMask.Color.HasValue && checkMask.Color.Value != item.Color_Property.HasBeenSet) return false;
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_Property.HasBeenSet) return false;
             if (checkMask.FalloffExponent.HasValue && checkMask.FalloffExponent.Value != item.FalloffExponent_Property.HasBeenSet) return false;
             if (checkMask.FOV.HasValue && checkMask.FOV.Value != item.FOV_Property.HasBeenSet) return false;
-            if (checkMask.Value.HasValue && checkMask.Value.Value != item.Value_Property.HasBeenSet) return false;
-            if (checkMask.Weight.HasValue && checkMask.Weight.Value != item.Weight_Property.HasBeenSet) return false;
             if (checkMask.Fade.HasValue && checkMask.Fade.Value != item.Fade_Property.HasBeenSet) return false;
             if (checkMask.Sound.HasValue && checkMask.Sound.Value != item.Sound_Property.HasBeenSet) return false;
             return true;
@@ -2630,14 +2559,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Script = item.Script_Property.HasBeenSet;
             ret.Name = item.Name_Property.HasBeenSet;
             ret.Icon = item.Icon_Property.HasBeenSet;
-            ret.Time = item.Time_Property.HasBeenSet;
-            ret.Radius = item.Radius_Property.HasBeenSet;
-            ret.Color = item.Color_Property.HasBeenSet;
-            ret.Flags = item.Flags_Property.HasBeenSet;
+            ret.Time = true;
+            ret.Radius = true;
+            ret.Color = true;
+            ret.Flags = true;
             ret.FalloffExponent = item.FalloffExponent_Property.HasBeenSet;
             ret.FOV = item.FOV_Property.HasBeenSet;
-            ret.Value = item.Value_Property.HasBeenSet;
-            ret.Weight = item.Weight_Property.HasBeenSet;
+            ret.Value = true;
+            ret.Weight = true;
             ret.Fade = item.Fade_Property.HasBeenSet;
             ret.Sound = item.Sound_Property.HasBeenSet;
             return ret;
@@ -2736,42 +2665,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             fieldIndex: (int)Light_FieldIndex.Icon,
                             errorMask: errorMask);
                     }
-                    if (item.Time_Property.HasBeenSet)
-                    {
-                        Int32XmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Time),
-                            item: item.Time_Property,
-                            fieldIndex: (int)Light_FieldIndex.Time,
-                            errorMask: errorMask);
-                    }
-                    if (item.Radius_Property.HasBeenSet)
-                    {
-                        UInt32XmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Radius),
-                            item: item.Radius_Property,
-                            fieldIndex: (int)Light_FieldIndex.Radius,
-                            errorMask: errorMask);
-                    }
-                    if (item.Color_Property.HasBeenSet)
-                    {
-                        ColorXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Color),
-                            item: item.Color_Property,
-                            fieldIndex: (int)Light_FieldIndex.Color,
-                            errorMask: errorMask);
-                    }
-                    if (item.Flags_Property.HasBeenSet)
-                    {
-                        EnumXmlTranslation<Light.LightFlag>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Flags),
-                            item: item.Flags_Property,
-                            fieldIndex: (int)Light_FieldIndex.Flags,
-                            errorMask: errorMask);
-                    }
+                    Int32XmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Time),
+                        item: item.Time_Property,
+                        fieldIndex: (int)Light_FieldIndex.Time,
+                        errorMask: errorMask);
+                    UInt32XmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Radius),
+                        item: item.Radius_Property,
+                        fieldIndex: (int)Light_FieldIndex.Radius,
+                        errorMask: errorMask);
+                    ColorXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Color),
+                        item: item.Color_Property,
+                        fieldIndex: (int)Light_FieldIndex.Color,
+                        errorMask: errorMask);
+                    EnumXmlTranslation<Light.LightFlag>.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Flags),
+                        item: item.Flags_Property,
+                        fieldIndex: (int)Light_FieldIndex.Flags,
+                        errorMask: errorMask);
                     if (item.FalloffExponent_Property.HasBeenSet)
                     {
                         FloatXmlTranslation.Instance.Write(
@@ -2790,24 +2707,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             fieldIndex: (int)Light_FieldIndex.FOV,
                             errorMask: errorMask);
                     }
-                    if (item.Value_Property.HasBeenSet)
-                    {
-                        UInt32XmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Value),
-                            item: item.Value_Property,
-                            fieldIndex: (int)Light_FieldIndex.Value,
-                            errorMask: errorMask);
-                    }
-                    if (item.Weight_Property.HasBeenSet)
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Weight),
-                            item: item.Weight_Property,
-                            fieldIndex: (int)Light_FieldIndex.Weight,
-                            errorMask: errorMask);
-                    }
+                    UInt32XmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Value),
+                        item: item.Value_Property,
+                        fieldIndex: (int)Light_FieldIndex.Value,
+                        errorMask: errorMask);
+                    FloatXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Weight),
+                        item: item.Weight_Property,
+                        fieldIndex: (int)Light_FieldIndex.Weight,
+                        errorMask: errorMask);
                     if (item.Fade_Property.HasBeenSet)
                     {
                         FloatXmlTranslation.Instance.Write(
