@@ -349,6 +349,44 @@ namespace Mutagen.Bethesda.Generation
                                 }
                             }
                         }
+                        foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.FalseAndInclude))
+                        {
+                            if (!(field is DataType dataType)) continue;
+                            List<TypeGeneration> affectedFields = new List<TypeGeneration>();
+                            foreach (var subField in dataType.IterateFieldsWithMeta())
+                            {
+                                if (!subField.EncounteredBreaks.Any()
+                                    && subField.Range == null)
+                                {
+                                    continue;
+                                }
+                                affectedFields.Add(subField.Field);
+                            }
+                            if (affectedFields.Count == 0) continue;
+                            fg.AppendLine($"if (ret.{dataType.StateName} != default({dataType.EnumName}))");
+                            using (new BraceWrapper(fg))
+                            {
+                                fg.AppendLine("Action unsubAction = () =>");
+                                using (new BraceWrapper(fg) { AppendSemicolon = true })
+                                {
+                                    foreach (var subField in affectedFields)
+                                    {
+                                        fg.AppendLine($"ret.{subField.Property}.Unsubscribe(DataTypeStateSubber);");
+                                    }
+                                    fg.AppendLine($"ret.{dataType.StateName} = default({dataType.EnumName});");
+                                }
+                                foreach (var subField in affectedFields)
+                                {
+                                    using (var args = new ArgsWrapper(fg,
+                                        $"ret.{subField.Property}.Subscribe"))
+                                    {
+                                        args.Add($"owner: DataTypeStateSubber");
+                                        args.Add("callback: unsubAction");
+                                        args.Add("fireInitial: false");
+                                    }
+                                }
+                            }
+                        }
                     }
                     fg.AppendLine("catch (Exception ex)");
                     fg.AppendLine("when (errorMask != null)");

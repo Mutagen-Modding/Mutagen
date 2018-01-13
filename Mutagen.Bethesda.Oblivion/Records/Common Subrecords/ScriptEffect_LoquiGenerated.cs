@@ -497,6 +497,7 @@ namespace Mutagen.Bethesda.Oblivion
             Break0 = 1,
             Break1 = 2
         }
+        public static readonly object DataTypeStateSubber = new object();
         #endregion
 
         #region Binary Translation
@@ -781,6 +782,28 @@ namespace Mutagen.Bethesda.Oblivion
                         if (parsed.Failed) break;
                         lastParsed = parsed.Value;
                     }
+                }
+                if (ret.SCITDataTypeState != default(SCITDataType))
+                {
+                    Action unsubAction = () =>
+                    {
+                        ret.MagicSchool_Property.Unsubscribe(DataTypeStateSubber);
+                        ret.VisualEffect_Property.Unsubscribe(DataTypeStateSubber);
+                        ret.Flags_Property.Unsubscribe(DataTypeStateSubber);
+                        ret.SCITDataTypeState = default(SCITDataType);
+                    };
+                    ret.MagicSchool_Property.Subscribe(
+                        owner: DataTypeStateSubber,
+                        callback: unsubAction,
+                        fireInitial: false);
+                    ret.VisualEffect_Property.Subscribe(
+                        owner: DataTypeStateSubber,
+                        callback: unsubAction,
+                        fireInitial: false);
+                    ret.Flags_Property.Subscribe(
+                        owner: DataTypeStateSubber,
+                        callback: unsubAction,
+                        fireInitial: false);
                 }
             }
             catch (Exception ex)

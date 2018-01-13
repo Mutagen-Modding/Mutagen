@@ -13,10 +13,12 @@ namespace Mutagen.Bethesda.Generation
     {
         public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
         {
+            bool generated = false;
             foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.FalseAndInclude))
             {
                 if (!(field is DataType dataType)) continue;
-                if (!dataType.HasCustomLogic) continue;
+                if (!dataType.HasStateLogic) continue;
+                generated = true;
                 List<string> enumTypes = new List<string>();
                 int breaks = 0;
                 int ranges = 0;
@@ -49,6 +51,10 @@ namespace Mutagen.Bethesda.Generation
                         }
                     }
                 }
+            }
+            if (generated)
+            {
+                fg.AppendLine($"public static readonly object DataTypeStateSubber = new object();");
             }
         }
     }

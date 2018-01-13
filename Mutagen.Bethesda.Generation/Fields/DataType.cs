@@ -18,7 +18,7 @@ namespace Mutagen.Bethesda.Generation
         public const string MIN = "Min";
         public List<int> BreakIndices = new List<int>();
         public List<DataTypeRange> RangeIndices = new List<DataTypeRange>();
-        public bool HasCustomLogic => this.BreakIndices.Count > 0 || this.RangeIndices.Count > 0;
+        public bool HasStateLogic => this.BreakIndices.Count > 0 || this.RangeIndices.Count > 0;
         public string EnumName => $"{this.GetFieldData().RecordType.Value.Type}DataType";
         public string StateName => $"{this.EnumName}State";
 

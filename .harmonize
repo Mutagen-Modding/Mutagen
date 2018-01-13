@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>daf195ff62fac95383aad0fec9ecad90f23b6ce3</Sha>
+         <Sha>c93df81a11da55a627289adea06df1a50453b73b</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>01-13-2018 15:34:32</CommitDate>
-         <Description>TaskCompletionSource with no generic</Description>
+         <CommitDate>01-13-2018 17:52:44</CommitDate>
+         <Description>NotifyingItem subscribe /w Action.  Other subscribe API refactors</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
