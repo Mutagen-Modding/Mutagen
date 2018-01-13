@@ -97,9 +97,9 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        public override IEnumerable<string> RequiredUsingStatements()
+        public override IEnumerable<string> RequiredUsingStatements(ObjectGeneration obj)
         {
-            return base.RequiredUsingStatements().And("Mutagen.Bethesda.Binary");
+            return base.RequiredUsingStatements(obj).And("Mutagen.Bethesda.Binary");
         }
 
         public override IEnumerable<string> Interfaces(ObjectGeneration obj)

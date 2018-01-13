@@ -76,7 +76,14 @@
     <Compile Include="Modules\Binary\BinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\SpecialParseTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\StringBinaryTranslationGeneration.cs" />
-    <Compile Include="Modules\MutagenModule.cs" />
+    <Compile Include="Modules\Mutagen Module\CorrectnessModule.cs" />
+    <Compile Include="Modules\Mutagen Module\DataTypeModule.cs" />
+    <Compile Include="Modules\Mutagen Module\GenericsModule.cs" />
+    <Compile Include="Modules\Mutagen Module\MutagenModule.cs" />
+    <Compile Include="Modules\Mutagen Module\NumFieldsModule.cs" />
+    <Compile Include="Modules\Mutagen Module\RecordTypeConverterModule.cs" />
+    <Compile Include="Modules\Mutagen Module\SpecialParseModule.cs" />
+    <Compile Include="Modules\Mutagen Module\TriggeringRecordModule.cs" />
     <Compile Include="Modules\XML\FormIDLinkXmlTranslationGeneration.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -971,6 +971,8 @@ namespace Mutagen.Bethesda.Internals
             }
         }
 
+        public const int NumStructFields = 4;
+        public const int NumTypedFields = 1;
         public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType EFSH_HEADER = new RecordType("EFSH");
         public static readonly RecordType GMST_HEADER = new RecordType("GMST");
@@ -1052,8 +1054,6 @@ namespace Mutagen.Bethesda.Internals
                     })
             );
         });
-        public const int NumStructFields = 4;
-        public const int NumTypedFields = 1;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;

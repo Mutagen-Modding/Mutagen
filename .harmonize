@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>f728488f78728e190ed919d1d79983bc9c952152</Sha>
+         <Sha>daf195ff62fac95383aad0fec9ecad90f23b6ce3</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>01-02-2018 08:15:37</CommitDate>
-         <Description>Renamed NotifyingItem.Set cmd param to cmds</Description>
+         <CommitDate>01-13-2018 15:34:32</CommitDate>
+         <Description>TaskCompletionSource with no generic</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>7b4cd0fc3581db5acd414b33c291d0b3af907a8f</Sha>
+         <Sha>3236f5ffe3c808cb5a17c73ba0a2f56473e80294</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>01-12-2018 17:17:46</CommitDate>
-         <Description>XElement node added to TypeGeneration, for reference</Description>
+         <CommitDate>01-13-2018 15:34:40</CommitDate>
+         <Description>IGenerationModule, GenerationModuleCollection.  Other refactors</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

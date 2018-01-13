@@ -1,4 +1,5 @@
 ﻿using Loqui.Generation;
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,7 @@ namespace Mutagen.Bethesda.Generation
         public HashSet<RecordType> TriggeringRecordTypes = new HashSet<RecordType>();
         public string TriggeringSource;
         public Task<IEnumerable<KeyValuePair<IEnumerable<RecordType>, ObjectGeneration>>> GenerationTypes => GetGenerationTypes();
+        public TaskCompletionSource WiringComplete = new TaskCompletionSource();
 
         public MutagenObjData(ObjectGeneration objGen)
         {
