@@ -17,10 +17,34 @@ namespace Mutagen.Bethesda.Generation
         public const string RANGE = "Range";
         public const string MIN = "Min";
         public List<int> BreakIndices = new List<int>();
-        public List<(RangeInt32 FieldIndexRange, int DataSetSizeMin)> RangeIndices = new List<(RangeInt32 FieldIndexRange, int DataSetSizeMin)>();
+        public List<DataTypeRange> RangeIndices = new List<DataTypeRange>();
         public bool HasCustomLogic => this.BreakIndices.Count > 0 || this.RangeIndices.Count > 0;
         public string EnumName => $"{this.GetFieldData().RecordType.Value.Type}DataType";
         public string StateName => $"{this.EnumName}State";
+
+        public class DataTypeRange
+        {
+            public RangeInt32 Range { get; private set; }
+            public int DataSetSizeMin { get; private set; }
+
+            public DataTypeRange(
+                RangeInt32 range,
+                int dataSetSizeMin)
+            {
+                this.Range = range;
+                this.DataSetSizeMin = dataSetSizeMin;
+            }
+        }
+
+        public class DataTypeIteration
+        {
+            public int FieldIndex;
+            public TypeGeneration Field;
+            public int BreakIndex;
+            public IEnumerable<int> EncounteredBreaks;
+            public int RangeIndex;
+            public DataTypeRange Range;
+        }
 
         public override async Task Load(XElement node, bool requireName = true)
         {
@@ -57,10 +81,11 @@ namespace Mutagen.Bethesda.Generation
                             }
                         }
                         this.RangeIndices.Add(
-                            (new RangeInt32(
-                                curIndex,
-                                this.SubFields.Count - 1),
-                            fieldNode.GetAttribute<int>(MIN, throwException: true)));
+                            new DataTypeRange(
+                                new RangeInt32(
+                                    curIndex,
+                                    this.SubFields.Count - 1),
+                                fieldNode.GetAttribute<int>(MIN, throwException: true)));
                         continue;
                     }
 
@@ -71,6 +96,34 @@ namespace Mutagen.Bethesda.Generation
                         this.SubFields.Add(typeGen.Value);
                     }
                 }
+            }
+        }
+
+        public IEnumerable<DataTypeIteration> IterateFieldsWithMeta()
+        {
+            HashSet<int> encounteredBreaks = new HashSet<int>();
+            for (int i = 0; i < this.SubFields.Count; i++)
+            {
+                var breakIndex = this.BreakIndices.IndexOf(i);
+                if (breakIndex != -1)
+                {
+                    encounteredBreaks.Add(breakIndex);
+                }
+                DataTypeRange range = null;
+                var rangeIndex = this.RangeIndices.FindIndex((r) => r.Range.IsInRange(i));
+                if (rangeIndex != -1)
+                {
+                    range = this.RangeIndices[rangeIndex];
+                }
+                yield return new DataTypeIteration()
+                {
+                    EncounteredBreaks = encounteredBreaks,
+                    Field = this.SubFields[i],
+                    FieldIndex = i,
+                    Range = range,
+                    RangeIndex = rangeIndex,
+                    BreakIndex = breakIndex
+                };
             }
         }
     }

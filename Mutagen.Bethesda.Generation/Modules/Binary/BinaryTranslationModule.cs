@@ -611,45 +611,38 @@ namespace Mutagen.Bethesda.Generation
                 using (new BraceWrapper(fg))
                 {
                     bool isInRange = false;
-                    (RangeInt32 FieldIndexRange, int DataSetSizeMin) range;
-                    int rangeIndex = -1;
-                    for (int i = 0; i < set.SubFields.Count; i++)
+                    foreach (var subField in set.IterateFieldsWithMeta())
                     {
-                        var subfield = set.SubFields[i];
-                        if (!this.TryGetTypeGeneration(subfield.GetType(), out var subGenerator))
+                        if (!this.TryGetTypeGeneration(subField.Field.GetType(), out var subGenerator))
                         {
-                            throw new ArgumentException("Unsupported type generator: " + subfield);
+                            throw new ArgumentException("Unsupported type generator: " + subField.Field);
                         }
 
-                        if (!subGenerator.ShouldGenerateCopyIn(subfield)) continue;
-                        var breakIndex = set.BreakIndices.IndexOf(i);
-                        if (breakIndex != -1)
+                        if (!subGenerator.ShouldGenerateCopyIn(subField.Field)) continue;
+                        if (subField.BreakIndex != -1)
                         {
                             fg.AppendLine($"if (dataFrame.Complete)");
                             using (new BraceWrapper(fg))
                             {
-                                fg.AppendLine($"item.{set.StateName} |= {set.EnumName}.Break{breakIndex};");
-                                fg.AppendLine($"return TryGet<{obj.FieldIndexName}?>.Succeed({set.SubFields.TryGet(i - 1)?.IndexEnumName ?? "null"});");
+                                fg.AppendLine($"item.{set.StateName} |= {set.EnumName}.Break{subField.BreakIndex};");
+                                fg.AppendLine($"return TryGet<{obj.FieldIndexName}?>.Succeed({set.SubFields.TryGet(subField.FieldIndex - 1)?.IndexEnumName ?? "null"});");
                             }
                         }
-                        bool hasRange = set.RangeIndices.Any((r) => r.FieldIndexRange.IsInRange(i));
-                        if (hasRange && !isInRange)
+                        if (subField.Range != null && !isInRange)
                         {
-                            rangeIndex = set.RangeIndices.FindIndex((r) => r.FieldIndexRange.IsInRange(i));
-                            range = set.RangeIndices[rangeIndex];
                             isInRange = true;
-                            fg.AppendLine($"if (dataFrame.TotalLength > {range.DataSetSizeMin})");
+                            fg.AppendLine($"if (dataFrame.TotalLength > {subField.Range.DataSetSizeMin})");
                             fg.AppendLine("{");
                             fg.Depth++;
+                            fg.AppendLine($"item.{set.StateName} |= {set.EnumName}.Range{subField.RangeIndex};");
                         }
-                        if (!hasRange && isInRange)
+                        if (subField.Range == null && isInRange)
                         {
                             isInRange = false;
-                            fg.AppendLine($"item.{set.StateName} |= {set.EnumName}.Range{rangeIndex};");
                             fg.Depth--;
                             fg.AppendLine("}");
                         }
-                        GenerateFillSnippet(obj, fg, subfield, subGenerator, "dataFrame");
+                        GenerateFillSnippet(obj, fg, subField.Field, subGenerator, "dataFrame");
                     }
                     if (isInRange)
                     {
@@ -953,48 +946,41 @@ namespace Mutagen.Bethesda.Generation
                             using (new BraceWrapper(fg))
                             {
                                 bool isInRange = false;
-                                (RangeInt32 FieldIndexRange, int DataSetSizeMin) range;
-                                int rangeIndex = -1;
-                                for (int i = 0; i < dataType.SubFields.Count; i++)
+                                foreach (var subField in dataType.IterateFieldsWithMeta())
                                 {
-                                    var subfield = dataType.SubFields[i];
-                                    if (!this.TryGetTypeGeneration(subfield.GetType(), out var subGenerator))
+                                    if (!this.TryGetTypeGeneration(subField.Field.GetType(), out var subGenerator))
                                     {
-                                        throw new ArgumentException("Unsupported type generator: " + subfield);
+                                        throw new ArgumentException("Unsupported type generator: " + subField.Field);
                                     }
 
-                                    var subData = subfield.GetFieldData();
-                                    if (!subGenerator.ShouldGenerateCopyIn(subfield)) continue;
+                                    var subData = subField.Field.GetFieldData();
+                                    if (!subGenerator.ShouldGenerateCopyIn(subField.Field)) continue;
                                     if (subData.CustomBinary)
                                     {
                                         using (var args = new ArgsWrapper(fg,
-                                            $"{obj.ObjectName}.WriteBinary_{subfield.Name}"))
+                                            $"{obj.ObjectName}.WriteBinary_{subField.Field.Name}"))
                                         {
                                             args.Add("writer: writer");
                                             args.Add("item: item");
-                                            args.Add($"fieldIndex: (int){subfield.IndexEnumName}");
+                                            args.Add($"fieldIndex: (int){subField.Field.IndexEnumName}");
                                             args.Add("errorMask: errorMask");
                                         }
                                         continue;
                                     }
-                                    var breakIndex = dataType.BreakIndices.IndexOf(i);
-                                    if (breakIndex != -1)
+                                    if (subField.BreakIndex != -1)
                                     {
-                                        fg.AppendLine($"if (!item.{dataType.StateName}.HasFlag({obj.Name}.{dataType.EnumName}.Break{breakIndex}))");
+                                        fg.AppendLine($"if (!item.{dataType.StateName}.HasFlag({obj.Name}.{dataType.EnumName}.Break{subField.BreakIndex}))");
                                         fg.AppendLine("{");
                                         fg.Depth++;
                                     }
-                                    bool hasRange = dataType.RangeIndices.Any((r) => r.FieldIndexRange.IsInRange(i));
-                                    if (hasRange && !isInRange)
+                                    if (subField.Range != null && !isInRange)
                                     {
-                                        rangeIndex = dataType.RangeIndices.FindIndex((r) => r.FieldIndexRange.IsInRange(i));
-                                        range = dataType.RangeIndices[rangeIndex];
                                         isInRange = true;
-                                        fg.AppendLine($"if (item.{dataType.StateName}.HasFlag({obj.Name}.{dataType.EnumName}.Range{rangeIndex}))");
+                                        fg.AppendLine($"if (item.{dataType.StateName}.HasFlag({obj.Name}.{dataType.EnumName}.Range{subField.RangeIndex}))");
                                         fg.AppendLine("{");
                                         fg.Depth++;
                                     }
-                                    if (!hasRange && isInRange)
+                                    if (subField.Range == null && isInRange)
                                     {
                                         isInRange = false;
                                         fg.Depth--;
@@ -1003,9 +989,9 @@ namespace Mutagen.Bethesda.Generation
                                     subGenerator.GenerateWrite(
                                         fg: fg,
                                         objGen: obj,
-                                        typeGen: subfield,
+                                        typeGen: subField.Field,
                                         writerAccessor: "writer",
-                                        itemAccessor: new Accessor(subfield, "item."),
+                                        itemAccessor: new Accessor(subField.Field, "item."),
                                         doMaskAccessor: "errorMask != null",
                                         maskAccessor: $"errorMask");
                                 }

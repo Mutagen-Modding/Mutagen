@@ -1115,6 +1115,7 @@ namespace Mutagen.Bethesda.Oblivion
                         item._Flags.SetIfSucceeded(FlagstryGet);
                         if (dataFrame.TotalLength > 24)
                         {
+                            item.DATADataTypeState |= DATADataType.Range0;
                             item._FalloffExponent.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                                 frame: dataFrame,
                                 fieldIndex: (int)Light_FieldIndex.FalloffExponent,
@@ -1123,7 +1124,6 @@ namespace Mutagen.Bethesda.Oblivion
                                 frame: dataFrame,
                                 fieldIndex: (int)Light_FieldIndex.FOV,
                                 errorMask: errorMask));
-                            item.DATADataTypeState |= DATADataType.Range0;
                         }
                         item._Value.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
