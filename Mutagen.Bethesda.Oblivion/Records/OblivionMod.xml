@@ -160,6 +160,11 @@
           <GenericSpecification Definition="Weapon" TypeToSpecify="T" />
         </Direct>
       </Ref>
+      <Ref name="Ammo">
+        <Direct refName="Group" >
+          <GenericSpecification Definition="Ammo" TypeToSpecify="T" />
+        </Direct>
+      </Ref>
     </Fields>
   </Object>
 </Loqui>

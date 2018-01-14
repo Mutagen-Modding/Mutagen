@@ -296,6 +296,14 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItem<Group<Weapon>> IOblivionMod.Weapons_Property => this.Weapons_Property;
         INotifyingSetItemGetter<Group<Weapon>> IOblivionModGetter.Weapons_Property => this.Weapons_Property;
         #endregion
+        #region Ammo
+        private readonly INotifyingSetItem<Group<Ammo>> _Ammo = new NotifyingSetItem<Group<Ammo>>();
+        public INotifyingSetItem<Group<Ammo>> Ammo_Property => this._Ammo;
+        Group<Ammo> IOblivionModGetter.Ammo => this.Ammo;
+        public Group<Ammo> Ammo { get => _Ammo.Item; set => _Ammo.Item = value; }
+        INotifyingSetItem<Group<Ammo>> IOblivionMod.Ammo_Property => this.Ammo_Property;
+        INotifyingSetItemGetter<Group<Ammo>> IOblivionModGetter.Ammo_Property => this.Ammo_Property;
+        #endregion
 
         #region Loqui Getter Interface
 
@@ -515,6 +523,11 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!object.Equals(Weapons, rhs.Weapons)) return false;
             }
+            if (Ammo_Property.HasBeenSet != rhs.Ammo_Property.HasBeenSet) return false;
+            if (Ammo_Property.HasBeenSet)
+            {
+                if (!object.Equals(Ammo, rhs.Ammo)) return false;
+            }
             return true;
         }
 
@@ -648,6 +661,10 @@ namespace Mutagen.Bethesda.Oblivion
             if (Weapons_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(Weapons).CombineHashCode(ret);
+            }
+            if (Ammo_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Ammo).CombineHashCode(ret);
             }
             return ret;
         }
@@ -1140,6 +1157,12 @@ namespace Mutagen.Bethesda.Oblivion
                     item._Weapons.SetIfSucceeded(LoquiXmlTranslation<Group<Weapon>, Group_ErrorMask<Weapon_ErrorMask>>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)OblivionMod_FieldIndex.Weapons,
+                        errorMask: errorMask));
+                    break;
+                case "Ammo":
+                    item._Ammo.SetIfSucceeded(LoquiXmlTranslation<Group<Ammo>, Group_ErrorMask<Ammo_ErrorMask>>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Ammo,
                         errorMask: errorMask));
                     break;
                 default:
@@ -1662,6 +1685,12 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)OblivionMod_FieldIndex.Weapons,
                         errorMask: errorMask));
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Weapons);
+                case "AMMO":
+                    item._Ammo.SetIfSucceeded(LoquiBinaryTranslation<Group<Ammo>, Group_ErrorMask<Ammo_ErrorMask>>.Instance.Parse(
+                        frame: frame,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Ammo,
+                        errorMask: errorMask));
+                    return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Ammo);
                 default:
                     errorMask().Warnings.Add($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength;
@@ -1912,6 +1941,11 @@ namespace Mutagen.Bethesda.Oblivion
                         (Group<Weapon>)obj,
                         cmds);
                     break;
+                case OblivionMod_FieldIndex.Ammo:
+                    this._Ammo.Set(
+                        (Group<Ammo>)obj,
+                        cmds);
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2107,6 +2141,11 @@ namespace Mutagen.Bethesda.Oblivion
                         (Group<Weapon>)pair.Value,
                         null);
                     break;
+                case OblivionMod_FieldIndex.Ammo:
+                    obj._Ammo.Set(
+                        (Group<Ammo>)pair.Value,
+                        null);
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -2214,6 +2253,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Group<Weapon> Weapons { get; set; }
         new INotifyingSetItem<Group<Weapon>> Weapons_Property { get; }
+
+        new Group<Ammo> Ammo { get; set; }
+        new INotifyingSetItem<Group<Ammo>> Ammo_Property { get; }
 
     }
 
@@ -2379,6 +2421,11 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Group<Weapon>> Weapons_Property { get; }
 
         #endregion
+        #region Ammo
+        Group<Ammo> Ammo { get; }
+        INotifyingSetItemGetter<Group<Ammo>> Ammo_Property { get; }
+
+        #endregion
 
     }
 
@@ -2423,6 +2470,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Flora = 29,
         Furnature = 30,
         Weapons = 31,
+        Ammo = 32,
     }
     #endregion
 
@@ -2440,7 +2488,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "b6f626df-b164-466b-960a-1639d88f66bc";
 
-        public const ushort FieldCount = 32;
+        public const ushort FieldCount = 33;
 
         public static readonly Type MaskType = typeof(OblivionMod_Mask<>);
 
@@ -2532,6 +2580,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)OblivionMod_FieldIndex.Furnature;
                 case "WEAPONS":
                     return (ushort)OblivionMod_FieldIndex.Weapons;
+                case "AMMO":
+                    return (ushort)OblivionMod_FieldIndex.Ammo;
                 default:
                     return null;
             }
@@ -2574,6 +2624,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Flora:
                 case OblivionMod_FieldIndex.Furnature:
                 case OblivionMod_FieldIndex.Weapons:
+                case OblivionMod_FieldIndex.Ammo:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2617,6 +2668,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Flora:
                 case OblivionMod_FieldIndex.Furnature:
                 case OblivionMod_FieldIndex.Weapons:
+                case OblivionMod_FieldIndex.Ammo:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2661,6 +2713,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Flora:
                 case OblivionMod_FieldIndex.Furnature:
                 case OblivionMod_FieldIndex.Weapons:
+                case OblivionMod_FieldIndex.Ammo:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2736,6 +2789,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Furnature";
                 case OblivionMod_FieldIndex.Weapons:
                     return "Weapons";
+                case OblivionMod_FieldIndex.Ammo:
+                    return "Ammo";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2778,6 +2833,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Flora:
                 case OblivionMod_FieldIndex.Furnature:
                 case OblivionMod_FieldIndex.Weapons:
+                case OblivionMod_FieldIndex.Ammo:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2822,6 +2878,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Flora:
                 case OblivionMod_FieldIndex.Furnature:
                 case OblivionMod_FieldIndex.Weapons:
+                case OblivionMod_FieldIndex.Ammo:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2897,6 +2954,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(Group<Furnature>);
                 case OblivionMod_FieldIndex.Weapons:
                     return typeof(Group<Weapon>);
+                case OblivionMod_FieldIndex.Ammo:
+                    return typeof(Group<Ammo>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2934,6 +2993,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType FLOR_HEADER = new RecordType("FLOR");
         public static readonly RecordType FURN_HEADER = new RecordType("FURN");
         public static readonly RecordType WEAP_HEADER = new RecordType("WEAP");
+        public static readonly RecordType AMMO_HEADER = new RecordType("AMMO");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -2972,12 +3032,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         TREE_HEADER,
                         FLOR_HEADER,
                         FURN_HEADER,
-                        WEAP_HEADER
+                        WEAP_HEADER,
+                        AMMO_HEADER
                     })
             );
         });
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 32;
+        public const int NumTypedFields = 33;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -4693,6 +4754,57 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask().SetNthException((int)OblivionMod_FieldIndex.Weapons, ex);
                 }
             }
+            if (copyMask?.Ammo.Overall != CopyOption.Skip)
+            {
+                try
+                {
+                    item.Ammo_Property.SetToWithDefault(
+                        rhs.Ammo_Property,
+                        def?.Ammo_Property,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.Ammo.Overall ?? CopyOption.Reference)
+                            {
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    GroupCommon.CopyFieldsFrom(
+                                        item: item.Ammo,
+                                        rhs: rhs.Ammo,
+                                        def: def?.Ammo,
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<Group_ErrorMask<Ammo_ErrorMask>>(() =>
+                                        {
+                                            var baseMask = errorMask();
+                                            if (baseMask.Ammo.Specific == null)
+                                            {
+                                                baseMask.Ammo = new MaskItem<Exception, Group_ErrorMask<Ammo_ErrorMask>>(null, new Group_ErrorMask<Ammo_ErrorMask>());
+                                            }
+                                            return baseMask.Ammo.Specific;
+                                        }
+                                        ) : null),
+                                        copyMask: copyMask?.Ammo.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(Group<Ammo>);
+                                    return Group<Ammo>.Copy(
+                                        r,
+                                        copyMask?.Ammo?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Ammo?.Overall}. Cannot execute copy.");
+                            }
+                        }
+                        );
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)OblivionMod_FieldIndex.Ammo, ex);
+                }
+            }
         }
 
         #endregion
@@ -4800,6 +4912,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case OblivionMod_FieldIndex.Weapons:
                     obj.Weapons_Property.HasBeenSet = on;
+                    break;
+                case OblivionMod_FieldIndex.Ammo:
+                    obj.Ammo_Property.HasBeenSet = on;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -4909,6 +5024,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Weapons:
                     obj.Weapons_Property.Unset(cmds);
                     break;
+                case OblivionMod_FieldIndex.Ammo:
+                    obj.Ammo_Property.Unset(cmds);
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -4985,6 +5103,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.Furnature_Property.HasBeenSet;
                 case OblivionMod_FieldIndex.Weapons:
                     return obj.Weapons_Property.HasBeenSet;
+                case OblivionMod_FieldIndex.Ammo:
+                    return obj.Ammo_Property.HasBeenSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -5061,6 +5181,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.Furnature;
                 case OblivionMod_FieldIndex.Weapons:
                     return obj.Weapons;
+                case OblivionMod_FieldIndex.Ammo:
+                    return obj.Ammo;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -5101,6 +5223,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Flora_Property.Unset(cmds.ToUnsetParams());
             item.Furnature_Property.Unset(cmds.ToUnsetParams());
             item.Weapons_Property.Unset(cmds.ToUnsetParams());
+            item.Ammo_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static OblivionMod_Mask<bool> GetEqualsMask(
@@ -5150,6 +5273,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Flora = item.Flora_Property.LoquiEqualsHelper(rhs.Flora_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
             ret.Furnature = item.Furnature_Property.LoquiEqualsHelper(rhs.Furnature_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
             ret.Weapons = item.Weapons_Property.LoquiEqualsHelper(rhs.Weapons_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Ammo = item.Ammo_Property.LoquiEqualsHelper(rhs.Ammo_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
         }
 
         public static string ToString(
@@ -5307,6 +5431,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Weapons?.ToString(fg, "Weapons");
                 }
+                if (printMask?.Ammo?.Overall ?? true)
+                {
+                    item.Ammo?.ToString(fg, "Ammo");
+                }
             }
             fg.AppendLine("]");
         }
@@ -5379,6 +5507,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Furnature.Specific != null && (item.Furnature_Property.Item == null || !item.Furnature_Property.Item.HasBeenSet(checkMask.Furnature.Specific))) return false;
             if (checkMask.Weapons.Overall.HasValue && checkMask.Weapons.Overall.Value != item.Weapons_Property.HasBeenSet) return false;
             if (checkMask.Weapons.Specific != null && (item.Weapons_Property.Item == null || !item.Weapons_Property.Item.HasBeenSet(checkMask.Weapons.Specific))) return false;
+            if (checkMask.Ammo.Overall.HasValue && checkMask.Ammo.Overall.Value != item.Ammo_Property.HasBeenSet) return false;
+            if (checkMask.Ammo.Specific != null && (item.Ammo_Property.Item == null || !item.Ammo_Property.Item.HasBeenSet(checkMask.Ammo.Specific))) return false;
             return true;
         }
 
@@ -5417,6 +5547,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Flora = new MaskItem<bool, Group_Mask<bool>>(item.Flora_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.Flora_Property.Item));
             ret.Furnature = new MaskItem<bool, Group_Mask<bool>>(item.Furnature_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.Furnature_Property.Item));
             ret.Weapons = new MaskItem<bool, Group_Mask<bool>>(item.Weapons_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.Weapons_Property.Item));
+            ret.Ammo = new MaskItem<bool, Group_Mask<bool>>(item.Ammo_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.Ammo_Property.Item));
             return ret;
         }
 
@@ -5740,6 +5871,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             fieldIndex: (int)OblivionMod_FieldIndex.Weapons,
                             errorMask: errorMask);
                     }
+                    if (item.Ammo_Property.HasBeenSet)
+                    {
+                        LoquiXmlTranslation<Group<Ammo>, Group_ErrorMask<Ammo_ErrorMask>>.Instance.Write(
+                            writer: writer,
+                            item: item.Ammo_Property,
+                            name: nameof(item.Ammo),
+                            fieldIndex: (int)OblivionMod_FieldIndex.Ammo,
+                            errorMask: errorMask);
+                    }
                 }
             }
             catch (Exception ex)
@@ -5958,6 +6098,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Weapons_Property,
                 fieldIndex: (int)OblivionMod_FieldIndex.Weapons,
                 errorMask: errorMask);
+            LoquiBinaryTranslation<Group<Ammo>, Group_ErrorMask<Ammo_ErrorMask>>.Instance.Write(
+                writer: writer,
+                item: item.Ammo_Property,
+                fieldIndex: (int)OblivionMod_FieldIndex.Ammo,
+                errorMask: errorMask);
         }
 
         #endregion
@@ -6009,6 +6154,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Flora = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.Furnature = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.Weapons = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
+            this.Ammo = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
         }
         #endregion
 
@@ -6045,6 +6191,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<T, Group_Mask<T>> Flora { get; set; }
         public MaskItem<T, Group_Mask<T>> Furnature { get; set; }
         public MaskItem<T, Group_Mask<T>> Weapons { get; set; }
+        public MaskItem<T, Group_Mask<T>> Ammo { get; set; }
         #endregion
 
         #region Equals
@@ -6089,6 +6236,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.Flora, rhs.Flora)) return false;
             if (!object.Equals(this.Furnature, rhs.Furnature)) return false;
             if (!object.Equals(this.Weapons, rhs.Weapons)) return false;
+            if (!object.Equals(this.Ammo, rhs.Ammo)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -6126,6 +6274,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.Flora?.GetHashCode());
             ret = ret.CombineHashCode(this.Furnature?.GetHashCode());
             ret = ret.CombineHashCode(this.Weapons?.GetHashCode());
+            ret = ret.CombineHashCode(this.Ammo?.GetHashCode());
             return ret;
         }
 
@@ -6293,6 +6442,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (!eval(this.Weapons.Overall)) return false;
                 if (this.Weapons.Specific != null && !this.Weapons.Specific.AllEqual(eval)) return false;
+            }
+            if (Ammo != null)
+            {
+                if (!eval(this.Ammo.Overall)) return false;
+                if (this.Ammo.Specific != null && !this.Ammo.Specific.AllEqual(eval)) return false;
             }
             return true;
         }
@@ -6596,6 +6750,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Weapons.Specific = this.Weapons.Specific.Translate(eval);
                 }
             }
+            if (this.Ammo != null)
+            {
+                obj.Ammo = new MaskItem<R, Group_Mask<R>>();
+                obj.Ammo.Overall = eval(this.Ammo.Overall);
+                if (this.Ammo.Specific != null)
+                {
+                    obj.Ammo.Specific = this.Ammo.Specific.Translate(eval);
+                }
+            }
         }
         #endregion
 
@@ -6752,6 +6915,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     Weapons?.ToString(fg);
                 }
+                if (printMask?.Ammo?.Overall ?? true)
+                {
+                    Ammo?.ToString(fg);
+                }
             }
             fg.AppendLine("]");
         }
@@ -6807,6 +6974,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<Exception, Group_ErrorMask<Flora_ErrorMask>> Flora;
         public MaskItem<Exception, Group_ErrorMask<Furnature_ErrorMask>> Furnature;
         public MaskItem<Exception, Group_ErrorMask<Weapon_ErrorMask>> Weapons;
+        public MaskItem<Exception, Group_ErrorMask<Ammo_ErrorMask>> Ammo;
         #endregion
 
         #region IErrorMask
@@ -6910,6 +7078,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case OblivionMod_FieldIndex.Weapons:
                     this.Weapons = new MaskItem<Exception, Group_ErrorMask<Weapon_ErrorMask>>(ex, null);
+                    break;
+                case OblivionMod_FieldIndex.Ammo:
+                    this.Ammo = new MaskItem<Exception, Group_ErrorMask<Ammo_ErrorMask>>(ex, null);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -7017,6 +7188,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Weapons:
                     this.Weapons = (MaskItem<Exception, Group_ErrorMask<Weapon_ErrorMask>>)obj;
                     break;
+                case OblivionMod_FieldIndex.Ammo:
+                    this.Ammo = (MaskItem<Exception, Group_ErrorMask<Ammo_ErrorMask>>)obj;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -7057,6 +7231,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Flora != null) return true;
             if (Furnature != null) return true;
             if (Weapons != null) return true;
+            if (Ammo != null) return true;
             return false;
         }
         #endregion
@@ -7123,6 +7298,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Flora?.ToString(fg);
             Furnature?.ToString(fg);
             Weapons?.ToString(fg);
+            Ammo?.ToString(fg);
         }
         #endregion
 
@@ -7162,6 +7338,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Flora = new MaskItem<Exception, Group_ErrorMask<Flora_ErrorMask>>(this.Flora.Overall.Combine(rhs.Flora.Overall), ((IErrorMask<Group_ErrorMask<Flora_ErrorMask>>)this.Flora.Specific).Combine(rhs.Flora.Specific));
             ret.Furnature = new MaskItem<Exception, Group_ErrorMask<Furnature_ErrorMask>>(this.Furnature.Overall.Combine(rhs.Furnature.Overall), ((IErrorMask<Group_ErrorMask<Furnature_ErrorMask>>)this.Furnature.Specific).Combine(rhs.Furnature.Specific));
             ret.Weapons = new MaskItem<Exception, Group_ErrorMask<Weapon_ErrorMask>>(this.Weapons.Overall.Combine(rhs.Weapons.Overall), ((IErrorMask<Group_ErrorMask<Weapon_ErrorMask>>)this.Weapons.Specific).Combine(rhs.Weapons.Specific));
+            ret.Ammo = new MaskItem<Exception, Group_ErrorMask<Ammo_ErrorMask>>(this.Ammo.Overall.Combine(rhs.Ammo.Overall), ((IErrorMask<Group_ErrorMask<Ammo_ErrorMask>>)this.Ammo.Specific).Combine(rhs.Ammo.Specific));
             return ret;
         }
         public static OblivionMod_ErrorMask Combine(OblivionMod_ErrorMask lhs, OblivionMod_ErrorMask rhs)
@@ -7207,6 +7384,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<CopyOption, Group_CopyMask<Flora_CopyMask>> Flora;
         public MaskItem<CopyOption, Group_CopyMask<Furnature_CopyMask>> Furnature;
         public MaskItem<CopyOption, Group_CopyMask<Weapon_CopyMask>> Weapons;
+        public MaskItem<CopyOption, Group_CopyMask<Ammo_CopyMask>> Ammo;
         #endregion
 
     }

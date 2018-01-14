@@ -987,6 +987,7 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType TREE_HEADER = new RecordType("TREE");
         public static readonly RecordType ACTI_HEADER = new RecordType("ACTI");
         public static readonly RecordType APPA_HEADER = new RecordType("APPA");
+        public static readonly RecordType AMMO_HEADER = new RecordType("AMMO");
         public static readonly RecordType BSGN_HEADER = new RecordType("BSGN");
         public static readonly RecordType BOOK_HEADER = new RecordType("BOOK");
         public static readonly RecordType CLAS_HEADER = new RecordType("CLAS");
@@ -1034,6 +1035,7 @@ namespace Mutagen.Bethesda.Internals
                         TREE_HEADER,
                         ACTI_HEADER,
                         APPA_HEADER,
+                        AMMO_HEADER,
                         BSGN_HEADER,
                         BOOK_HEADER,
                         CLAS_HEADER,

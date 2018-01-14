@@ -76,6 +76,9 @@
     <Compile Include="Records\Major Records\AlchemicalApparatus.cs">
       <DependentUpon>AlchemicalApparatus.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Ammo.cs">
+      <DependentUpon>Ammo.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Armor.cs">
       <DependentUpon>Armor.xml</DependentUpon>
     </Compile>
@@ -382,6 +385,9 @@
     <Compile Include="Records\Major Records\Weapon_LoquiGenerated.cs">
       <DependentUpon>Weapon.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Ammo_LoquiGenerated.cs">
+      <DependentUpon>Ammo.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Records\Common Subrecords\Effect.xml">
@@ -406,6 +412,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\AlchemicalApparatus.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\Ammo.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Armor.xml">
