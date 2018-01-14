@@ -999,11 +999,10 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             );
                         item._PrimaryAttributes.SetIfSucceeded(PrimaryAttributestryGet);
-                        var SpecializationtryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Class.SpecializationFlag>.Instance.Parse(
+                        item._Specialization.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Class.SpecializationFlag>.Instance.Parse(
                             frame: dataFrame.Spawn(new ContentLength(4)),
                             fieldIndex: (int)Class_FieldIndex.Specialization,
-                            errorMask: errorMask);
-                        item._Specialization.SetIfSucceeded(SpecializationtryGet);
+                            errorMask: errorMask));
                         var SecondaryAttributestryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<ActorValue, Exception>.Instance.ParseRepeatedItem(
                             frame: frame,
                             amount: 7,
@@ -1018,16 +1017,14 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                             );
                         item._SecondaryAttributes.SetIfSucceeded(SecondaryAttributestryGet);
-                        var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<ClassFlag>.Instance.Parse(
+                        item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<ClassFlag>.Instance.Parse(
                             frame: dataFrame.Spawn(new ContentLength(4)),
                             fieldIndex: (int)Class_FieldIndex.Flags,
-                            errorMask: errorMask);
-                        item._Flags.SetIfSucceeded(FlagstryGet);
-                        var ClassServicestryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<ClassService>.Instance.Parse(
+                            errorMask: errorMask));
+                        item._ClassServices.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<ClassService>.Instance.Parse(
                             frame: dataFrame.Spawn(new ContentLength(4)),
                             fieldIndex: (int)Class_FieldIndex.ClassServices,
-                            errorMask: errorMask);
-                        item._ClassServices.SetIfSucceeded(ClassServicestryGet);
+                            errorMask: errorMask));
                         if (dataFrame.Complete)
                         {
                             item.DATADataTypeState |= DATADataType.Break0;

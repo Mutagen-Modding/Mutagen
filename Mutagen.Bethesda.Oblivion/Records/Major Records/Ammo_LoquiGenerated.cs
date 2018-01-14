@@ -992,11 +992,10 @@ namespace Mutagen.Bethesda.Oblivion
                             frame: dataFrame,
                             fieldIndex: (int)Ammo_FieldIndex.Speed,
                             errorMask: errorMask));
-                        var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Ammo.AmmoFlag>.Instance.Parse(
+                        item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Ammo.AmmoFlag>.Instance.Parse(
                             frame: dataFrame.Spawn(new ContentLength(4)),
                             fieldIndex: (int)Ammo_FieldIndex.Flags,
-                            errorMask: errorMask);
-                        item._Flags.SetIfSucceeded(FlagstryGet);
+                            errorMask: errorMask));
                         item._Value.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Ammo_FieldIndex.Value,

@@ -765,11 +765,10 @@ namespace Mutagen.Bethesda.Oblivion
                 case "INDX":
                     if (lastParsed.HasValue && lastParsed.Value >= BodyPart_FieldIndex.Index) return TryGet<BodyPart_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var IndextryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Race.BodyIndex>.Instance.Parse(
+                    item._Index.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Race.BodyIndex>.Instance.Parse(
                         frame.Spawn(contentLength),
                         fieldIndex: (int)BodyPart_FieldIndex.Index,
-                        errorMask: errorMask);
-                    item._Index.SetIfSucceeded(IndextryGet);
+                        errorMask: errorMask));
                     return TryGet<BodyPart_FieldIndex?>.Succeed(BodyPart_FieldIndex.Index);
                 case "ICON":
                     if (lastParsed.HasValue && lastParsed.Value >= BodyPart_FieldIndex.Icon) return TryGet<BodyPart_FieldIndex?>.Failure;

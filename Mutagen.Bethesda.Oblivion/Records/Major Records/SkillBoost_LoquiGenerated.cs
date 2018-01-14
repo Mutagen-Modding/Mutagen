@@ -736,11 +736,10 @@ namespace Mutagen.Bethesda.Oblivion
             Func<SkillBoost_ErrorMask> errorMask)
         {
             if (frame.Complete) return;
-            var SkilltryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
+            item._Skill.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(1)),
                 fieldIndex: (int)SkillBoost_FieldIndex.Skill,
-                errorMask: errorMask);
-            item._Skill.SetIfSucceeded(SkilltryGet);
+                errorMask: errorMask));
             if (frame.Complete) return;
             item._Boost.SetIfSucceeded(Mutagen.Bethesda.Binary.Int8BinaryTranslation.Instance.Parse(
                 frame: frame,

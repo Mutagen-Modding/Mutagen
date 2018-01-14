@@ -954,11 +954,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.Spawn(contentLength))
                     {
-                        var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Container.ContainerFlag>.Instance.Parse(
+                        item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Container.ContainerFlag>.Instance.Parse(
                             frame: dataFrame.Spawn(new ContentLength(1)),
                             fieldIndex: (int)Container_FieldIndex.Flags,
-                            errorMask: errorMask);
-                        item._Flags.SetIfSucceeded(FlagstryGet);
+                            errorMask: errorMask));
                         item._Weight.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Container_FieldIndex.Weight,

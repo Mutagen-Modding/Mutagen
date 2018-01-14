@@ -937,11 +937,10 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.Spawn(contentLength))
                     {
-                        var TypetryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<AlchemicalApparatus.ApparatusType>.Instance.Parse(
+                        item._Type.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<AlchemicalApparatus.ApparatusType>.Instance.Parse(
                             frame: dataFrame.Spawn(new ContentLength(1)),
                             fieldIndex: (int)AlchemicalApparatus_FieldIndex.Type,
-                            errorMask: errorMask);
-                        item._Type.SetIfSucceeded(TypetryGet);
+                            errorMask: errorMask));
                         item._Value.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)AlchemicalApparatus_FieldIndex.Value,

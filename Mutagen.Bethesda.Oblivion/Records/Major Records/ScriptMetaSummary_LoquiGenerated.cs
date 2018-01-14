@@ -865,11 +865,10 @@ namespace Mutagen.Bethesda.Oblivion
                 fieldIndex: (int)ScriptMetaSummary_FieldIndex.VariableCount,
                 errorMask: errorMask));
             if (frame.Complete) return;
-            var TypetryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Script.ScriptType>.Instance.Parse(
+            item._Type.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Script.ScriptType>.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(4)),
                 fieldIndex: (int)ScriptMetaSummary_FieldIndex.Type,
-                errorMask: errorMask);
-            item._Type.SetIfSucceeded(TypetryGet);
+                errorMask: errorMask));
         }
 
         #endregion

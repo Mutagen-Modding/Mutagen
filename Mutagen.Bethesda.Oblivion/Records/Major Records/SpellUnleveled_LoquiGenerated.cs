@@ -905,25 +905,22 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.Spawn(contentLength))
                     {
-                        var TypetryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Spell.SpellType>.Instance.Parse(
+                        item._Type.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Spell.SpellType>.Instance.Parse(
                             frame: dataFrame.Spawn(new ContentLength(4)),
                             fieldIndex: (int)SpellUnleveled_FieldIndex.Type,
-                            errorMask: errorMask);
-                        item._Type.SetIfSucceeded(TypetryGet);
+                            errorMask: errorMask));
                         item._Cost.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)SpellUnleveled_FieldIndex.Cost,
                             errorMask: errorMask));
-                        var LeveltryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Spell.SpellLevel>.Instance.Parse(
+                        item._Level.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Spell.SpellLevel>.Instance.Parse(
                             frame: dataFrame.Spawn(new ContentLength(4)),
                             fieldIndex: (int)SpellUnleveled_FieldIndex.Level,
-                            errorMask: errorMask);
-                        item._Level.SetIfSucceeded(LeveltryGet);
-                        var FlagtryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Spell.SpellFlag>.Instance.Parse(
+                            errorMask: errorMask));
+                        item._Flag.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Spell.SpellFlag>.Instance.Parse(
                             frame: dataFrame.Spawn(new ContentLength(4)),
                             fieldIndex: (int)SpellUnleveled_FieldIndex.Flag,
-                            errorMask: errorMask);
-                        item._Flag.SetIfSucceeded(FlagtryGet);
+                            errorMask: errorMask));
                     }
                     return TryGet<SpellUnleveled_FieldIndex?>.Succeed(SpellUnleveled_FieldIndex.Flag);
                 case "EFID":

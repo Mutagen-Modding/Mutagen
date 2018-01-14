@@ -848,11 +848,10 @@ namespace Mutagen.Bethesda.Oblivion
                             item.SCITDataTypeState |= SCITDataType.Break0;
                             return TryGet<ScriptEffect_FieldIndex?>.Succeed(ScriptEffect_FieldIndex.Script);
                         }
-                        var MagicSchooltryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicSchool>.Instance.Parse(
+                        item._MagicSchool.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicSchool>.Instance.Parse(
                             frame: dataFrame.Spawn(new ContentLength(4)),
                             fieldIndex: (int)ScriptEffect_FieldIndex.MagicSchool,
-                            errorMask: errorMask);
-                        item._MagicSchool.SetIfSucceeded(MagicSchooltryGet);
+                            errorMask: errorMask));
                         item.VisualEffect_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)ScriptEffect_FieldIndex.VisualEffect,
@@ -862,11 +861,10 @@ namespace Mutagen.Bethesda.Oblivion
                             item.SCITDataTypeState |= SCITDataType.Break1;
                             return TryGet<ScriptEffect_FieldIndex?>.Succeed(ScriptEffect_FieldIndex.VisualEffect);
                         }
-                        var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<ScriptEffect.Flag>.Instance.Parse(
+                        item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<ScriptEffect.Flag>.Instance.Parse(
                             frame: dataFrame.Spawn(new ContentLength(4)),
                             fieldIndex: (int)ScriptEffect_FieldIndex.Flags,
-                            errorMask: errorMask);
-                        item._Flags.SetIfSucceeded(FlagstryGet);
+                            errorMask: errorMask));
                     }
                     return TryGet<ScriptEffect_FieldIndex?>.Succeed(ScriptEffect_FieldIndex.Flags);
                 case "FULL":

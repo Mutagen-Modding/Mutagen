@@ -902,11 +902,10 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<Faction_FieldIndex?>.Succeed(Faction_FieldIndex.Relations);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Faction.FactionFlag>.Instance.Parse(
+                    item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Faction.FactionFlag>.Instance.Parse(
                         frame.Spawn(contentLength),
                         fieldIndex: (int)Faction_FieldIndex.Flags,
-                        errorMask: errorMask);
-                    item._Flags.SetIfSucceeded(FlagstryGet);
+                        errorMask: errorMask));
                     return TryGet<Faction_FieldIndex?>.Succeed(Faction_FieldIndex.Flags);
                 case "CNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;

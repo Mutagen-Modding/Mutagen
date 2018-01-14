@@ -1126,11 +1126,10 @@ namespace Mutagen.Bethesda.Oblivion
                             frame: dataFrame,
                             fieldIndex: (int)Light_FieldIndex.Color,
                             errorMask: errorMask));
-                        var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Light.LightFlag>.Instance.Parse(
+                        item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Light.LightFlag>.Instance.Parse(
                             frame: dataFrame.Spawn(new ContentLength(4)),
                             fieldIndex: (int)Light_FieldIndex.Flags,
-                            errorMask: errorMask);
-                        item._Flags.SetIfSucceeded(FlagstryGet);
+                            errorMask: errorMask));
                         if (dataFrame.TotalLength > 24)
                         {
                             item.DATADataTypeState |= DATADataType.Range0;

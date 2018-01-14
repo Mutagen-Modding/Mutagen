@@ -733,16 +733,14 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.Spawn(contentLength))
                     {
-                        var BipedFlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<BipedFlag>.Instance.Parse(
+                        item._BipedFlags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<BipedFlag>.Instance.Parse(
                             frame: dataFrame.Spawn(new ContentLength(2)),
                             fieldIndex: (int)ClothingAbstract_FieldIndex.BipedFlags,
-                            errorMask: errorMask);
-                        item._BipedFlags.SetIfSucceeded(BipedFlagstryGet);
-                        var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<EquipmentFlag>.Instance.Parse(
+                            errorMask: errorMask));
+                        item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<EquipmentFlag>.Instance.Parse(
                             frame: dataFrame.Spawn(new ContentLength(2)),
                             fieldIndex: (int)ClothingAbstract_FieldIndex.Flags,
-                            errorMask: errorMask);
-                        item._Flags.SetIfSucceeded(FlagstryGet);
+                            errorMask: errorMask));
                     }
                     return TryGet<ClothingAbstract_FieldIndex?>.Succeed(ClothingAbstract_FieldIndex.Flags);
                 case "MODL":

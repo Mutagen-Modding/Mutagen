@@ -1035,11 +1035,10 @@ namespace Mutagen.Bethesda.Oblivion
                             item: item,
                             fieldIndex: (int)Grass_FieldIndex.UnitFromWaterAmount,
                             errorMask: errorMask);
-                        var UnitFromWaterModetryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Grass.UnitFromWaterType>.Instance.Parse(
+                        item._UnitFromWaterMode.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Grass.UnitFromWaterType>.Instance.Parse(
                             frame: dataFrame.Spawn(new ContentLength(4)),
                             fieldIndex: (int)Grass_FieldIndex.UnitFromWaterMode,
-                            errorMask: errorMask);
-                        item._UnitFromWaterMode.SetIfSucceeded(UnitFromWaterModetryGet);
+                            errorMask: errorMask));
                         item._PositionRange.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Grass_FieldIndex.PositionRange,
@@ -1056,11 +1055,10 @@ namespace Mutagen.Bethesda.Oblivion
                             frame: dataFrame,
                             fieldIndex: (int)Grass_FieldIndex.WavePeriod,
                             errorMask: errorMask));
-                        var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Grass.GrassFlag>.Instance.Parse(
+                        item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Grass.GrassFlag>.Instance.Parse(
                             frame: dataFrame.Spawn(new ContentLength(4)),
                             fieldIndex: (int)Grass_FieldIndex.Flags,
-                            errorMask: errorMask);
-                        item._Flags.SetIfSucceeded(FlagstryGet);
+                            errorMask: errorMask));
                     }
                     return TryGet<Grass_FieldIndex?>.Succeed(Grass_FieldIndex.Flags);
                 default:

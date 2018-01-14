@@ -765,11 +765,10 @@ namespace Mutagen.Bethesda.Oblivion
             Func<ClassTraining_ErrorMask> errorMask)
         {
             if (frame.Complete) return;
-            var TrainedSkilltryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Parse(
+            item._TrainedSkill.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(1)),
                 fieldIndex: (int)ClassTraining_FieldIndex.TrainedSkill,
-                errorMask: errorMask);
-            item._TrainedSkill.SetIfSucceeded(TrainedSkilltryGet);
+                errorMask: errorMask));
             if (frame.Complete) return;
             item._MaximumTrainingLevel.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,

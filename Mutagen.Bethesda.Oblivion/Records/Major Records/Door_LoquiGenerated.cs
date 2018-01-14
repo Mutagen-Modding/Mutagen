@@ -965,11 +965,10 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<Door_FieldIndex?>.Succeed(Door_FieldIndex.LoopSound);
                 case "FNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Door.DoorFlag>.Instance.Parse(
+                    item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Door.DoorFlag>.Instance.Parse(
                         frame.Spawn(contentLength),
                         fieldIndex: (int)Door_FieldIndex.Flags,
-                        errorMask: errorMask);
-                    item._Flags.SetIfSucceeded(FlagstryGet);
+                        errorMask: errorMask));
                     return TryGet<Door_FieldIndex?>.Succeed(Door_FieldIndex.Flags);
                 case "TNAM":
                     var RandomTeleportDestinationstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDSetLink<Worldspace>, Exception>.Instance.ParseRepeatedItem(

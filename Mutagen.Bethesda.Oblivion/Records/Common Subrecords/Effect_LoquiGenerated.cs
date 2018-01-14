@@ -891,16 +891,14 @@ namespace Mutagen.Bethesda.Oblivion
                             frame: dataFrame,
                             fieldIndex: (int)Effect_FieldIndex.Duration,
                             errorMask: errorMask));
-                        var TypetryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Effect.EffectType>.Instance.Parse(
+                        item._Type.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Effect.EffectType>.Instance.Parse(
                             frame: dataFrame.Spawn(new ContentLength(4)),
                             fieldIndex: (int)Effect_FieldIndex.Type,
-                            errorMask: errorMask);
-                        item._Type.SetIfSucceeded(TypetryGet);
-                        var ActorValuetryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
+                            errorMask: errorMask));
+                        item._ActorValue.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
                             frame: dataFrame.Spawn(new ContentLength(4)),
                             fieldIndex: (int)Effect_FieldIndex.ActorValue,
-                            errorMask: errorMask);
-                        item._ActorValue.SetIfSucceeded(ActorValuetryGet);
+                            errorMask: errorMask));
                     }
                     return TryGet<Effect_FieldIndex?>.Succeed(Effect_FieldIndex.ActorValue);
                 case "SCIT":

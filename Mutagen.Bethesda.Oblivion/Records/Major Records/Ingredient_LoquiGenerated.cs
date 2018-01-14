@@ -967,11 +967,10 @@ namespace Mutagen.Bethesda.Oblivion
                             frame: dataFrame,
                             fieldIndex: (int)Ingredient_FieldIndex.Value,
                             errorMask: errorMask));
-                        var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Ingredient.IngredientFlag>.Instance.Parse(
+                        item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Ingredient.IngredientFlag>.Instance.Parse(
                             frame: dataFrame.Spawn(new ContentLength(4)),
                             fieldIndex: (int)Ingredient_FieldIndex.Flags,
-                            errorMask: errorMask);
-                        item._Flags.SetIfSucceeded(FlagstryGet);
+                            errorMask: errorMask));
                     }
                     return TryGet<Ingredient_FieldIndex?>.Succeed(Ingredient_FieldIndex.Flags);
                 case "EFID":

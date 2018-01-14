@@ -857,11 +857,10 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<Hair_FieldIndex?>.Succeed(Hair_FieldIndex.Icon);
                 case "DATA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Hair.HairFlag>.Instance.Parse(
+                    item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Hair.HairFlag>.Instance.Parse(
                         frame.Spawn(contentLength),
                         fieldIndex: (int)Hair_FieldIndex.Flags,
-                        errorMask: errorMask);
-                    item._Flags.SetIfSucceeded(FlagstryGet);
+                        errorMask: errorMask));
                     return TryGet<Hair_FieldIndex?>.Succeed(Hair_FieldIndex.Flags);
                 default:
                     return NamedMajorRecord.Fill_Binary_RecordTypes(

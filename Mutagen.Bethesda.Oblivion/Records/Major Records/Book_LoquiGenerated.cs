@@ -1031,16 +1031,14 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.Spawn(contentLength))
                     {
-                        var FlagstryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Book.BookFlag>.Instance.Parse(
+                        item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Book.BookFlag>.Instance.Parse(
                             frame: dataFrame.Spawn(new ContentLength(1)),
                             fieldIndex: (int)Book_FieldIndex.Flags,
-                            errorMask: errorMask);
-                        item._Flags.SetIfSucceeded(FlagstryGet);
-                        var TeachestryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Parse(
+                            errorMask: errorMask));
+                        item._Teaches.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Parse(
                             frame: dataFrame.Spawn(new ContentLength(1)),
                             fieldIndex: (int)Book_FieldIndex.Teaches,
-                            errorMask: errorMask);
-                        item._Teaches.SetIfSucceeded(TeachestryGet);
+                            errorMask: errorMask));
                         item._Value.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Book_FieldIndex.Value,
