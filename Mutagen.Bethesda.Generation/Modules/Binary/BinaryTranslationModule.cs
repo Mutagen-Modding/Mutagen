@@ -61,6 +61,7 @@ namespace Mutagen.Bethesda.Generation
             this._typeGenerations[typeof(DataType)] = new DataBinaryTranslationModule();
             this._typeGenerations[typeof(ColorType)] = new PrimitiveBinaryTranslationGeneration<Color>();
             this._typeGenerations[typeof(SpecialParseType)] = new SpecialParseTranslationGeneration();
+            this._typeGenerations[typeof(ZeroType)] = new ZeroBinaryTranslationGeneration();
             this.MainAPI = new TranslationModuleAPI(
                 writerAPI: new MethodAPI(
                     majorAPI: new string[] { "MutagenWriter writer" },

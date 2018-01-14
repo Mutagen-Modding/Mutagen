@@ -63,6 +63,7 @@
     <Compile Include="Fields\BufferType.cs" />
     <Compile Include="Fields\SpecialParseType.cs" />
     <Compile Include="Fields\StringType.cs" />
+    <Compile Include="Fields\ZeroType.cs" />
     <Compile Include="Modules\Binary\BinaryTranslationModule.cs" />
     <Compile Include="Modules\Binary\ByteArrayTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\DataBinaryTranslationModule.cs" />
@@ -76,6 +77,7 @@
     <Compile Include="Modules\Binary\BinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\SpecialParseTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\StringBinaryTranslationGeneration.cs" />
+    <Compile Include="Modules\Binary\ZeroBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Mutagen Module\CorrectnessModule.cs" />
     <Compile Include="Modules\Mutagen Module\DataTypeModule.cs" />
     <Compile Include="Modules\Mutagen Module\GenericsModule.cs" />

@@ -134,6 +134,7 @@
         <xs:element name="Buffer" type="NBuffer"/>
         <xs:element name="Data" type="DataType" />
         <xs:element name="SpecialParse" type="NSpecialParse"/>
+        <xs:element name="Zero" type="ZeroType"/>
       </xs:choice>
     </xs:group>
 
@@ -144,6 +145,7 @@
         <xs:element name="RawFormID" type="RawFormID"/>
         <xs:element name="Buffer" type="Buffer"/>
         <xs:element name="SpecialParse" type="SpecialParse"/>
+        <xs:element name="Zero" type="ZeroType"/>
       </xs:choice>
     </xs:group>
   </xs:redefine>
@@ -160,7 +162,7 @@
   <xs:complexType name="Buffer" >
     <xs:complexContent>
       <xs:extension base="Nothing">
-        <xs:attribute name="length" type="xs:int" />
+        <xs:attribute name="length" type="xs:int" use="required" />
         <xs:attribute name="static" type="xs:boolean" />
       </xs:extension>
     </xs:complexContent>
@@ -172,6 +174,10 @@
         <xs:attribute name="name" type="xs:string" use="required" />
       </xs:extension>
     </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="ZeroType">
+    <xs:attribute name="byteLength" type="xs:byte" use="required" />
   </xs:complexType>
 
   <xs:complexType name="SpecialParse" >

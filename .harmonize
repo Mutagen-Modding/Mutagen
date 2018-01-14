@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>7b7501407dbc1baa0fa2f57980bc655207c5d9ae</Sha>
+         <Sha>26a6f4b07161b32445a7aa65fd6d5125ee9d1743</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>01-13-2018 19:17:27</CommitDate>
-         <Description>ObjectGeneration load failure improvements</Description>
+         <CommitDate>01-14-2018 00:38:40</CommitDate>
+         <Description>TypeGeneration Namable boolean to let a field control if it can override requiring a name</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

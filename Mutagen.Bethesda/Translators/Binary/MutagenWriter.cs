@@ -12,6 +12,7 @@ namespace Mutagen.Bethesda.Binary
     public class MutagenWriter : IDisposable
     {
         private System.IO.BinaryWriter writer;
+        private static byte Zero = 0;
 
         public FileLocation Position
         {
@@ -107,6 +108,14 @@ namespace Mutagen.Bethesda.Binary
         public void Write(char[] c)
         {
             this.writer.Write(c);
+        }
+
+        public void WriteZeros(uint num)
+        {
+            for (uint i = 0; i < num; i++)
+            {
+                this.Write(Zero);
+            }
         }
 
         public void Write(string str)
