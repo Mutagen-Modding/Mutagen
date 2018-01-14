@@ -63,6 +63,7 @@
     <Compile Include="Fields\BufferType.cs" />
     <Compile Include="Fields\SpecialParseType.cs" />
     <Compile Include="Fields\StringType.cs" />
+    <Compile Include="Fields\TransferType.cs" />
     <Compile Include="Fields\ZeroType.cs" />
     <Compile Include="Modules\Binary\BinaryTranslationModule.cs" />
     <Compile Include="Modules\Binary\ByteArrayTranslationGeneration.cs" />

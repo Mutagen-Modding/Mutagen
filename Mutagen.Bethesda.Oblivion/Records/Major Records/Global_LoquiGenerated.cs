@@ -474,19 +474,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         static partial void FillBinary_TypeChar_Custom(
             MutagenFrame frame,
-            IGlobal item,
+            Global item,
             int fieldIndex,
             Func<Global_ErrorMask> errorMask);
 
         static partial void WriteBinary_TypeChar_Custom(
             MutagenWriter writer,
-            IGlobalGetter item,
+            Global item,
             int fieldIndex,
             Func<Global_ErrorMask> errorMask);
 
         public static void WriteBinary_TypeChar(
             MutagenWriter writer,
-            IGlobalGetter item,
+            Global item,
             int fieldIndex,
             Func<Global_ErrorMask> errorMask)
         {

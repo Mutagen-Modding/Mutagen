@@ -760,19 +760,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         static partial void FillBinary_MinimumAttenuationDistance_Custom(
             MutagenFrame frame,
-            ISoundData item,
+            SoundData item,
             int fieldIndex,
             Func<SoundData_ErrorMask> errorMask);
 
         static partial void WriteBinary_MinimumAttenuationDistance_Custom(
             MutagenWriter writer,
-            ISoundDataGetter item,
+            SoundData item,
             int fieldIndex,
             Func<SoundData_ErrorMask> errorMask);
 
         public static void WriteBinary_MinimumAttenuationDistance(
             MutagenWriter writer,
-            ISoundDataGetter item,
+            SoundData item,
             int fieldIndex,
             Func<SoundData_ErrorMask> errorMask)
         {
@@ -785,19 +785,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         static partial void FillBinary_MaximumAttenuationDistance_Custom(
             MutagenFrame frame,
-            ISoundData item,
+            SoundData item,
             int fieldIndex,
             Func<SoundData_ErrorMask> errorMask);
 
         static partial void WriteBinary_MaximumAttenuationDistance_Custom(
             MutagenWriter writer,
-            ISoundDataGetter item,
+            SoundData item,
             int fieldIndex,
             Func<SoundData_ErrorMask> errorMask);
 
         public static void WriteBinary_MaximumAttenuationDistance(
             MutagenWriter writer,
-            ISoundDataGetter item,
+            SoundData item,
             int fieldIndex,
             Func<SoundData_ErrorMask> errorMask)
         {

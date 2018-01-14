@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Oblivion
             });
         }
 
-        static partial void FillBinary_MinimumAttenuationDistance_Custom(MutagenFrame frame, ISoundData item, int fieldIndex, Func<SoundData_ErrorMask> errorMask)
+        static partial void FillBinary_MinimumAttenuationDistance_Custom(MutagenFrame frame, SoundData item, int fieldIndex, Func<SoundData_ErrorMask> errorMask)
         {
             var ret = ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        static partial void WriteBinary_MinimumAttenuationDistance_Custom(MutagenWriter writer, ISoundDataGetter item, int fieldIndex, Func<SoundData_ErrorMask> errorMask)
+        static partial void WriteBinary_MinimumAttenuationDistance_Custom(MutagenWriter writer, SoundData item, int fieldIndex, Func<SoundData_ErrorMask> errorMask)
         {
             var val = (byte)(item.MinimumAttenuationDistance / MinAttenuationDistanceMultiplier);
             ByteBinaryTranslation.Instance.Write(
@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        static partial void FillBinary_MaximumAttenuationDistance_Custom(MutagenFrame frame, ISoundData item, int fieldIndex, Func<SoundData_ErrorMask> errorMask)
+        static partial void FillBinary_MaximumAttenuationDistance_Custom(MutagenFrame frame, SoundData item, int fieldIndex, Func<SoundData_ErrorMask> errorMask)
         {
             var ret = ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
@@ -83,7 +83,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        static partial void WriteBinary_MaximumAttenuationDistance_Custom(MutagenWriter writer, ISoundDataGetter item, int fieldIndex, Func<SoundData_ErrorMask> errorMask)
+        static partial void WriteBinary_MaximumAttenuationDistance_Custom(MutagenWriter writer, SoundData item, int fieldIndex, Func<SoundData_ErrorMask> errorMask)
         {
             var val = (byte)(item.MaximumAttenuationDistance / MaxAttenuationDistanceMultiplier);
             ByteBinaryTranslation.Instance.Write(

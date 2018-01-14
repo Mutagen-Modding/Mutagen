@@ -774,19 +774,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         static partial void FillBinary_StaticAttenuation_Custom(
             MutagenFrame frame,
-            ISoundDataExtended item,
+            SoundDataExtended item,
             int fieldIndex,
             Func<SoundDataExtended_ErrorMask> errorMask);
 
         static partial void WriteBinary_StaticAttenuation_Custom(
             MutagenWriter writer,
-            ISoundDataExtendedGetter item,
+            SoundDataExtended item,
             int fieldIndex,
             Func<SoundDataExtended_ErrorMask> errorMask);
 
         public static void WriteBinary_StaticAttenuation(
             MutagenWriter writer,
-            ISoundDataExtendedGetter item,
+            SoundDataExtended item,
             int fieldIndex,
             Func<SoundDataExtended_ErrorMask> errorMask)
         {
@@ -799,19 +799,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         static partial void FillBinary_StopTime_Custom(
             MutagenFrame frame,
-            ISoundDataExtended item,
+            SoundDataExtended item,
             int fieldIndex,
             Func<SoundDataExtended_ErrorMask> errorMask);
 
         static partial void WriteBinary_StopTime_Custom(
             MutagenWriter writer,
-            ISoundDataExtendedGetter item,
+            SoundDataExtended item,
             int fieldIndex,
             Func<SoundDataExtended_ErrorMask> errorMask);
 
         public static void WriteBinary_StopTime(
             MutagenWriter writer,
-            ISoundDataExtendedGetter item,
+            SoundDataExtended item,
             int fieldIndex,
             Func<SoundDataExtended_ErrorMask> errorMask)
         {
@@ -824,19 +824,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         static partial void FillBinary_StartTime_Custom(
             MutagenFrame frame,
-            ISoundDataExtended item,
+            SoundDataExtended item,
             int fieldIndex,
             Func<SoundDataExtended_ErrorMask> errorMask);
 
         static partial void WriteBinary_StartTime_Custom(
             MutagenWriter writer,
-            ISoundDataExtendedGetter item,
+            SoundDataExtended item,
             int fieldIndex,
             Func<SoundDataExtended_ErrorMask> errorMask);
 
         public static void WriteBinary_StartTime(
             MutagenWriter writer,
-            ISoundDataExtendedGetter item,
+            SoundDataExtended item,
             int fieldIndex,
             Func<SoundDataExtended_ErrorMask> errorMask)
         {

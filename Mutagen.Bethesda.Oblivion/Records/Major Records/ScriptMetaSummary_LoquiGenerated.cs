@@ -787,19 +787,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         static partial void FillBinary_CompiledSize_Custom(
             MutagenFrame frame,
-            IScriptMetaSummary item,
+            ScriptMetaSummary item,
             int fieldIndex,
             Func<ScriptMetaSummary_ErrorMask> errorMask);
 
         static partial void WriteBinary_CompiledSize_Custom(
             MutagenWriter writer,
-            IScriptMetaSummaryGetter item,
+            ScriptMetaSummary item,
             int fieldIndex,
             Func<ScriptMetaSummary_ErrorMask> errorMask);
 
         public static void WriteBinary_CompiledSize(
             MutagenWriter writer,
-            IScriptMetaSummaryGetter item,
+            ScriptMetaSummary item,
             int fieldIndex,
             Func<ScriptMetaSummary_ErrorMask> errorMask)
         {

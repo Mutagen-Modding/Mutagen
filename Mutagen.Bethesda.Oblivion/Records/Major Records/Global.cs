@@ -106,7 +106,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         static partial void WriteBinary_TypeChar_Custom(
             MutagenWriter writer, 
-            IGlobalGetter item, 
+            Global item, 
             int fieldIndex,
             Func<Global_ErrorMask> errorMask)
         {

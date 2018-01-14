@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>26a6f4b07161b32445a7aa65fd6d5125ee9d1743</Sha>
+         <Sha>8ef36ec1d5b9b527d3040b9e7f78399e2f573b66</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>01-14-2018 00:38:40</CommitDate>
-         <Description>TypeGeneration Namable boolean to let a field control if it can override requiring a name</Description>
+         <CommitDate>01-14-2018 01:10:57</CommitDate>
+         <Description>TypeGeneration.Protected renamed to more applicable ReadOnly</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

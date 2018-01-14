@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.Generation
                 })
                 {
                     args.Add($"{nameof(MutagenFrame)} frame");
-                    args.Add($"{obj.InterfaceStr} item");
+                    args.Add($"{obj.ObjectName} item");
                     if (field.HasIndex)
                     {
                         args.Add($"int fieldIndex");
@@ -169,7 +169,7 @@ namespace Mutagen.Bethesda.Generation
                 })
                 {
                     args.Add($"{nameof(MutagenWriter)} writer");
-                    args.Add($"{obj.Getter_InterfaceStr} item");
+                    args.Add($"{obj.ObjectName} item");
                     if (field.HasIndex)
                     {
                         args.Add($"int fieldIndex");
@@ -187,7 +187,7 @@ namespace Mutagen.Bethesda.Generation
                     wheres: obj.GenericTypes_ErrorMaskWheres))
                 {
                     args.Add($"{nameof(MutagenWriter)} writer");
-                    args.Add($"{obj.Getter_InterfaceStr} item");
+                    args.Add($"{obj.ObjectName} item");
                     if (field.HasIndex)
                     {
                         args.Add($"int fieldIndex");

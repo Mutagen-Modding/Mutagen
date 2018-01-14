@@ -135,6 +135,7 @@
         <xs:element name="Data" type="DataType" />
         <xs:element name="SpecialParse" type="NSpecialParse"/>
         <xs:element name="Zero" type="ZeroType"/>
+        <xs:element name="Transfer" type="TransferType"/>
       </xs:choice>
     </xs:group>
 
@@ -146,6 +147,7 @@
         <xs:element name="Buffer" type="Buffer"/>
         <xs:element name="SpecialParse" type="SpecialParse"/>
         <xs:element name="Zero" type="ZeroType"/>
+        <xs:element name="Transfer" type="TransferType"/>
       </xs:choice>
     </xs:group>
   </xs:redefine>
@@ -177,6 +179,10 @@
   </xs:complexType>
 
   <xs:complexType name="ZeroType">
+    <xs:attribute name="byteLength" type="xs:byte" use="required" />
+  </xs:complexType>
+
+  <xs:complexType name="TransferType">
     <xs:attribute name="byteLength" type="xs:byte" use="required" />
   </xs:complexType>
 

@@ -898,6 +898,56 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
+        static partial void FillBinary_MaxSlope_Custom(
+            MutagenFrame frame,
+            Grass item,
+            int fieldIndex,
+            Func<Grass_ErrorMask> errorMask);
+
+        static partial void WriteBinary_MaxSlope_Custom(
+            MutagenWriter writer,
+            Grass item,
+            int fieldIndex,
+            Func<Grass_ErrorMask> errorMask);
+
+        public static void WriteBinary_MaxSlope(
+            MutagenWriter writer,
+            Grass item,
+            int fieldIndex,
+            Func<Grass_ErrorMask> errorMask)
+        {
+            WriteBinary_MaxSlope_Custom(
+                writer: writer,
+                item: item,
+                fieldIndex: fieldIndex,
+                errorMask: errorMask);
+        }
+
+        static partial void FillBinary_UnitFromWaterAmount_Custom(
+            MutagenFrame frame,
+            Grass item,
+            int fieldIndex,
+            Func<Grass_ErrorMask> errorMask);
+
+        static partial void WriteBinary_UnitFromWaterAmount_Custom(
+            MutagenWriter writer,
+            Grass item,
+            int fieldIndex,
+            Func<Grass_ErrorMask> errorMask);
+
+        public static void WriteBinary_UnitFromWaterAmount(
+            MutagenWriter writer,
+            Grass item,
+            int fieldIndex,
+            Func<Grass_ErrorMask> errorMask)
+        {
+            WriteBinary_UnitFromWaterAmount_Custom(
+                writer: writer,
+                item: item,
+                fieldIndex: fieldIndex,
+                errorMask: errorMask);
+        }
+
         private static Grass Create_Binary_Internal(
             MutagenFrame frame,
             Func<Grass_ErrorMask> errorMask,
@@ -975,14 +1025,16 @@ namespace Mutagen.Bethesda.Oblivion
                             frame: dataFrame,
                             fieldIndex: (int)Grass_FieldIndex.MinSlope,
                             errorMask: errorMask));
-                        item._MaxSlope.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
+                        FillBinary_MaxSlope_Custom(
                             frame: dataFrame,
+                            item: item,
                             fieldIndex: (int)Grass_FieldIndex.MaxSlope,
-                            errorMask: errorMask));
-                        item._UnitFromWaterAmount.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                            errorMask: errorMask);
+                        FillBinary_UnitFromWaterAmount_Custom(
                             frame: dataFrame,
+                            item: item,
                             fieldIndex: (int)Grass_FieldIndex.UnitFromWaterAmount,
-                            errorMask: errorMask));
+                            errorMask: errorMask);
                         var UnitFromWaterModetryGet = Mutagen.Bethesda.Binary.EnumBinaryTranslation<Grass.UnitFromWaterType>.Instance.Parse(
                             frame: dataFrame.Spawn(new ContentLength(4)),
                             fieldIndex: (int)Grass_FieldIndex.UnitFromWaterMode,
@@ -2440,14 +2492,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.MinSlope_Property,
                     fieldIndex: (int)Grass_FieldIndex.MinSlope,
                     errorMask: errorMask);
-                Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Write(
+                Grass.WriteBinary_MaxSlope(
                     writer: writer,
-                    item: item.MaxSlope_Property,
+                    item: item,
                     fieldIndex: (int)Grass_FieldIndex.MaxSlope,
                     errorMask: errorMask);
-                Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
+                Grass.WriteBinary_UnitFromWaterAmount(
                     writer: writer,
-                    item: item.UnitFromWaterAmount_Property,
+                    item: item,
                     fieldIndex: (int)Grass_FieldIndex.UnitFromWaterAmount,
                     errorMask: errorMask);
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<Grass.UnitFromWaterType>.Instance.Write(

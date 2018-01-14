@@ -7,8 +7,8 @@
         <Fields>
           <UInt8 name="Density" />
           <UInt8 name="MinSlope" />
-          <UInt8 name="MaxSlope" />
-          <UInt16 name="UnitFromWaterAmount" />
+          <UInt8 name="MaxSlope" customBinary="true" />
+          <UInt16 name="UnitFromWaterAmount" customBinary="true" />
           <Enum name="UnitFromWaterMode" enumName="Grass.UnitFromWaterType" byteLength="4" />
           <Float name="PositionRange" />
           <Float name="HeightRange" />

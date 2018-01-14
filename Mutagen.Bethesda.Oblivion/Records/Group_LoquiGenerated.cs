@@ -853,21 +853,21 @@ namespace Mutagen.Bethesda.Oblivion
 
         static partial void FillBinary_ContainedRecordType_Custom<T_ErrMask>(
             MutagenFrame frame,
-            IGroup<T> item,
+            Group<T> item,
             int fieldIndex,
             Func<Group_ErrorMask<T_ErrMask>> errorMask)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new();
 
         static partial void WriteBinary_ContainedRecordType_Custom<T_ErrMask>(
             MutagenWriter writer,
-            IGroupGetter<T> item,
+            Group<T> item,
             int fieldIndex,
             Func<Group_ErrorMask<T_ErrMask>> errorMask)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new();
 
         public static void WriteBinary_ContainedRecordType<T_ErrMask>(
             MutagenWriter writer,
-            IGroupGetter<T> item,
+            Group<T> item,
             int fieldIndex,
             Func<Group_ErrorMask<T_ErrMask>> errorMask)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()

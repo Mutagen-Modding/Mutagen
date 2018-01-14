@@ -809,19 +809,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         static partial void FillBinary_ArmorValue_Custom(
             MutagenFrame frame,
-            IArmor item,
+            Armor item,
             int fieldIndex,
             Func<Armor_ErrorMask> errorMask);
 
         static partial void WriteBinary_ArmorValue_Custom(
             MutagenWriter writer,
-            IArmorGetter item,
+            Armor item,
             int fieldIndex,
             Func<Armor_ErrorMask> errorMask);
 
         public static void WriteBinary_ArmorValue(
             MutagenWriter writer,
-            IArmorGetter item,
+            Armor item,
             int fieldIndex,
             Func<Armor_ErrorMask> errorMask)
         {
