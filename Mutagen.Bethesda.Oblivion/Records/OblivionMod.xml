@@ -140,6 +140,11 @@
           <GenericSpecification Definition="Grass" TypeToSpecify="T" />
         </Direct>
       </Ref>
+      <Ref name="Trees">
+        <Direct refName="Group" >
+          <GenericSpecification Definition="Tree" TypeToSpecify="T" />
+        </Direct>
+      </Ref>
     </Fields>
   </Object>
 </Loqui>
