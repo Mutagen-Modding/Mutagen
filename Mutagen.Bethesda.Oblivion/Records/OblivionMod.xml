@@ -135,6 +135,11 @@
           <GenericSpecification Definition="Static" TypeToSpecify="T" />
         </Direct>
       </Ref>
+      <Ref name="Grasses">
+        <Direct refName="Group" >
+          <GenericSpecification Definition="Grass" TypeToSpecify="T" />
+        </Direct>
+      </Ref>
     </Fields>
   </Object>
 </Loqui>

@@ -181,6 +181,9 @@
     <Compile Include="Records\Major Records\Global_LoquiGenerated.cs">
       <DependentUpon>Global.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Grass.cs">
+      <DependentUpon>Grass.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Hair.cs">
       <DependentUpon>Hair.xml</DependentUpon>
     </Compile>

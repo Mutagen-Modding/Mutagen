@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>3236f5ffe3c808cb5a17c73ba0a2f56473e80294</Sha>
+         <Sha>7b7501407dbc1baa0fa2f57980bc655207c5d9ae</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>01-13-2018 15:34:40</CommitDate>
-         <Description>IGenerationModule, GenerationModuleCollection.  Other refactors</Description>
+         <CommitDate>01-13-2018 19:17:27</CommitDate>
+         <Description>ObjectGeneration load failure improvements</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>
