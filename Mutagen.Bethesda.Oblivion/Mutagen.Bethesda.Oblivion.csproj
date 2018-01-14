@@ -370,6 +370,12 @@
     <Compile Include="Records\Major Records\Tree_LoquiGenerated.cs">
       <DependentUpon>Tree.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Flora_LoquiGenerated.cs">
+      <DependentUpon>Flora.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Furnature_LoquiGenerated.cs">
+      <DependentUpon>Furnature.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Records\Common Subrecords\Effect.xml">
@@ -430,6 +436,12 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Faction.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\Flora.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\Furnature.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\GameSetting.xml">

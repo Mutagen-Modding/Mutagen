@@ -999,6 +999,8 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType ENCH_HEADER = new RecordType("ENCH");
         public static readonly RecordType EYES_HEADER = new RecordType("EYES");
         public static readonly RecordType FACT_HEADER = new RecordType("FACT");
+        public static readonly RecordType FLOR_HEADER = new RecordType("FLOR");
+        public static readonly RecordType FURN_HEADER = new RecordType("FURN");
         public static readonly RecordType HAIR_HEADER = new RecordType("HAIR");
         public static readonly RecordType INGR_HEADER = new RecordType("INGR");
         public static readonly RecordType MGEF_HEADER = new RecordType("MGEF");
@@ -1043,6 +1045,8 @@ namespace Mutagen.Bethesda.Internals
                         ENCH_HEADER,
                         EYES_HEADER,
                         FACT_HEADER,
+                        FLOR_HEADER,
+                        FURN_HEADER,
                         HAIR_HEADER,
                         INGR_HEADER,
                         MGEF_HEADER,

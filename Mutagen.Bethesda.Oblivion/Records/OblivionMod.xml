@@ -145,6 +145,16 @@
           <GenericSpecification Definition="Tree" TypeToSpecify="T" />
         </Direct>
       </Ref>
+      <Ref name="Flora">
+        <Direct refName="Group" >
+          <GenericSpecification Definition="Flora" TypeToSpecify="T" />
+        </Direct>
+      </Ref>
+      <Ref name="Furnature">
+        <Direct refName="Group" >
+          <GenericSpecification Definition="Furnature" TypeToSpecify="T" />
+        </Direct>
+      </Ref>
     </Fields>
   </Object>
 </Loqui>

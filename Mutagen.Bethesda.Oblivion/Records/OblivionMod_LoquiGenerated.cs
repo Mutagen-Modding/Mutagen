@@ -272,6 +272,22 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItem<Group<Tree>> IOblivionMod.Trees_Property => this.Trees_Property;
         INotifyingSetItemGetter<Group<Tree>> IOblivionModGetter.Trees_Property => this.Trees_Property;
         #endregion
+        #region Flora
+        private readonly INotifyingSetItem<Group<Flora>> _Flora = new NotifyingSetItem<Group<Flora>>();
+        public INotifyingSetItem<Group<Flora>> Flora_Property => this._Flora;
+        Group<Flora> IOblivionModGetter.Flora => this.Flora;
+        public Group<Flora> Flora { get => _Flora.Item; set => _Flora.Item = value; }
+        INotifyingSetItem<Group<Flora>> IOblivionMod.Flora_Property => this.Flora_Property;
+        INotifyingSetItemGetter<Group<Flora>> IOblivionModGetter.Flora_Property => this.Flora_Property;
+        #endregion
+        #region Furnature
+        private readonly INotifyingSetItem<Group<Furnature>> _Furnature = new NotifyingSetItem<Group<Furnature>>();
+        public INotifyingSetItem<Group<Furnature>> Furnature_Property => this._Furnature;
+        Group<Furnature> IOblivionModGetter.Furnature => this.Furnature;
+        public Group<Furnature> Furnature { get => _Furnature.Item; set => _Furnature.Item = value; }
+        INotifyingSetItem<Group<Furnature>> IOblivionMod.Furnature_Property => this.Furnature_Property;
+        INotifyingSetItemGetter<Group<Furnature>> IOblivionModGetter.Furnature_Property => this.Furnature_Property;
+        #endregion
 
         #region Loqui Getter Interface
 
@@ -476,6 +492,16 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!object.Equals(Trees, rhs.Trees)) return false;
             }
+            if (Flora_Property.HasBeenSet != rhs.Flora_Property.HasBeenSet) return false;
+            if (Flora_Property.HasBeenSet)
+            {
+                if (!object.Equals(Flora, rhs.Flora)) return false;
+            }
+            if (Furnature_Property.HasBeenSet != rhs.Furnature_Property.HasBeenSet) return false;
+            if (Furnature_Property.HasBeenSet)
+            {
+                if (!object.Equals(Furnature, rhs.Furnature)) return false;
+            }
             return true;
         }
 
@@ -597,6 +623,14 @@ namespace Mutagen.Bethesda.Oblivion
             if (Trees_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(Trees).CombineHashCode(ret);
+            }
+            if (Flora_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Flora).CombineHashCode(ret);
+            }
+            if (Furnature_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Furnature).CombineHashCode(ret);
             }
             return ret;
         }
@@ -1071,6 +1105,18 @@ namespace Mutagen.Bethesda.Oblivion
                     item._Trees.SetIfSucceeded(LoquiXmlTranslation<Group<Tree>, Group_ErrorMask<Tree_ErrorMask>>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)OblivionMod_FieldIndex.Trees,
+                        errorMask: errorMask));
+                    break;
+                case "Flora":
+                    item._Flora.SetIfSucceeded(LoquiXmlTranslation<Group<Flora>, Group_ErrorMask<Flora_ErrorMask>>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Flora,
+                        errorMask: errorMask));
+                    break;
+                case "Furnature":
+                    item._Furnature.SetIfSucceeded(LoquiXmlTranslation<Group<Furnature>, Group_ErrorMask<Furnature_ErrorMask>>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Furnature,
                         errorMask: errorMask));
                     break;
                 default:
@@ -1575,6 +1621,18 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)OblivionMod_FieldIndex.Trees,
                         errorMask: errorMask));
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Trees);
+                case "FLOR":
+                    item._Flora.SetIfSucceeded(LoquiBinaryTranslation<Group<Flora>, Group_ErrorMask<Flora_ErrorMask>>.Instance.Parse(
+                        frame: frame,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Flora,
+                        errorMask: errorMask));
+                    return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Flora);
+                case "FURN":
+                    item._Furnature.SetIfSucceeded(LoquiBinaryTranslation<Group<Furnature>, Group_ErrorMask<Furnature_ErrorMask>>.Instance.Parse(
+                        frame: frame,
+                        fieldIndex: (int)OblivionMod_FieldIndex.Furnature,
+                        errorMask: errorMask));
+                    return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Furnature);
                 default:
                     errorMask().Warnings.Add($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength;
@@ -1810,6 +1868,16 @@ namespace Mutagen.Bethesda.Oblivion
                         (Group<Tree>)obj,
                         cmds);
                     break;
+                case OblivionMod_FieldIndex.Flora:
+                    this._Flora.Set(
+                        (Group<Flora>)obj,
+                        cmds);
+                    break;
+                case OblivionMod_FieldIndex.Furnature:
+                    this._Furnature.Set(
+                        (Group<Furnature>)obj,
+                        cmds);
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1990,6 +2058,16 @@ namespace Mutagen.Bethesda.Oblivion
                         (Group<Tree>)pair.Value,
                         null);
                     break;
+                case OblivionMod_FieldIndex.Flora:
+                    obj._Flora.Set(
+                        (Group<Flora>)pair.Value,
+                        null);
+                    break;
+                case OblivionMod_FieldIndex.Furnature:
+                    obj._Furnature.Set(
+                        (Group<Furnature>)pair.Value,
+                        null);
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -2088,6 +2166,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         new Group<Tree> Trees { get; set; }
         new INotifyingSetItem<Group<Tree>> Trees_Property { get; }
+
+        new Group<Flora> Flora { get; set; }
+        new INotifyingSetItem<Group<Flora>> Flora_Property { get; }
+
+        new Group<Furnature> Furnature { get; set; }
+        new INotifyingSetItem<Group<Furnature>> Furnature_Property { get; }
 
     }
 
@@ -2238,6 +2322,16 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Group<Tree>> Trees_Property { get; }
 
         #endregion
+        #region Flora
+        Group<Flora> Flora { get; }
+        INotifyingSetItemGetter<Group<Flora>> Flora_Property { get; }
+
+        #endregion
+        #region Furnature
+        Group<Furnature> Furnature { get; }
+        INotifyingSetItemGetter<Group<Furnature>> Furnature_Property { get; }
+
+        #endregion
 
     }
 
@@ -2279,6 +2373,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Statics = 26,
         Grasses = 27,
         Trees = 28,
+        Flora = 29,
+        Furnature = 30,
     }
     #endregion
 
@@ -2296,7 +2392,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "b6f626df-b164-466b-960a-1639d88f66bc";
 
-        public const ushort FieldCount = 29;
+        public const ushort FieldCount = 31;
 
         public static readonly Type MaskType = typeof(OblivionMod_Mask<>);
 
@@ -2382,6 +2478,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)OblivionMod_FieldIndex.Grasses;
                 case "TREES":
                     return (ushort)OblivionMod_FieldIndex.Trees;
+                case "FLORA":
+                    return (ushort)OblivionMod_FieldIndex.Flora;
+                case "FURNATURE":
+                    return (ushort)OblivionMod_FieldIndex.Furnature;
                 default:
                     return null;
             }
@@ -2421,6 +2521,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Statics:
                 case OblivionMod_FieldIndex.Grasses:
                 case OblivionMod_FieldIndex.Trees:
+                case OblivionMod_FieldIndex.Flora:
+                case OblivionMod_FieldIndex.Furnature:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2461,6 +2563,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Statics:
                 case OblivionMod_FieldIndex.Grasses:
                 case OblivionMod_FieldIndex.Trees:
+                case OblivionMod_FieldIndex.Flora:
+                case OblivionMod_FieldIndex.Furnature:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2502,6 +2606,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Statics:
                 case OblivionMod_FieldIndex.Grasses:
                 case OblivionMod_FieldIndex.Trees:
+                case OblivionMod_FieldIndex.Flora:
+                case OblivionMod_FieldIndex.Furnature:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2571,6 +2677,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Grasses";
                 case OblivionMod_FieldIndex.Trees:
                     return "Trees";
+                case OblivionMod_FieldIndex.Flora:
+                    return "Flora";
+                case OblivionMod_FieldIndex.Furnature:
+                    return "Furnature";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2610,6 +2720,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Statics:
                 case OblivionMod_FieldIndex.Grasses:
                 case OblivionMod_FieldIndex.Trees:
+                case OblivionMod_FieldIndex.Flora:
+                case OblivionMod_FieldIndex.Furnature:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2651,6 +2763,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Statics:
                 case OblivionMod_FieldIndex.Grasses:
                 case OblivionMod_FieldIndex.Trees:
+                case OblivionMod_FieldIndex.Flora:
+                case OblivionMod_FieldIndex.Furnature:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2720,6 +2834,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(Group<Grass>);
                 case OblivionMod_FieldIndex.Trees:
                     return typeof(Group<Tree>);
+                case OblivionMod_FieldIndex.Flora:
+                    return typeof(Group<Flora>);
+                case OblivionMod_FieldIndex.Furnature:
+                    return typeof(Group<Furnature>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2754,6 +2872,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType STAT_HEADER = new RecordType("STAT");
         public static readonly RecordType GRAS_HEADER = new RecordType("GRAS");
         public static readonly RecordType TREE_HEADER = new RecordType("TREE");
+        public static readonly RecordType FLOR_HEADER = new RecordType("FLOR");
+        public static readonly RecordType FURN_HEADER = new RecordType("FURN");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -2789,12 +2909,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         MISC_HEADER,
                         STAT_HEADER,
                         GRAS_HEADER,
-                        TREE_HEADER
+                        TREE_HEADER,
+                        FLOR_HEADER,
+                        FURN_HEADER
                     })
             );
         });
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 29;
+        public const int NumTypedFields = 31;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -4357,6 +4479,108 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask().SetNthException((int)OblivionMod_FieldIndex.Trees, ex);
                 }
             }
+            if (copyMask?.Flora.Overall != CopyOption.Skip)
+            {
+                try
+                {
+                    item.Flora_Property.SetToWithDefault(
+                        rhs.Flora_Property,
+                        def?.Flora_Property,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.Flora.Overall ?? CopyOption.Reference)
+                            {
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    GroupCommon.CopyFieldsFrom(
+                                        item: item.Flora,
+                                        rhs: rhs.Flora,
+                                        def: def?.Flora,
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<Group_ErrorMask<Flora_ErrorMask>>(() =>
+                                        {
+                                            var baseMask = errorMask();
+                                            if (baseMask.Flora.Specific == null)
+                                            {
+                                                baseMask.Flora = new MaskItem<Exception, Group_ErrorMask<Flora_ErrorMask>>(null, new Group_ErrorMask<Flora_ErrorMask>());
+                                            }
+                                            return baseMask.Flora.Specific;
+                                        }
+                                        ) : null),
+                                        copyMask: copyMask?.Flora.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(Group<Flora>);
+                                    return Group<Flora>.Copy(
+                                        r,
+                                        copyMask?.Flora?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Flora?.Overall}. Cannot execute copy.");
+                            }
+                        }
+                        );
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)OblivionMod_FieldIndex.Flora, ex);
+                }
+            }
+            if (copyMask?.Furnature.Overall != CopyOption.Skip)
+            {
+                try
+                {
+                    item.Furnature_Property.SetToWithDefault(
+                        rhs.Furnature_Property,
+                        def?.Furnature_Property,
+                        cmds,
+                        (r, d) =>
+                        {
+                            switch (copyMask?.Furnature.Overall ?? CopyOption.Reference)
+                            {
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.CopyIn:
+                                    GroupCommon.CopyFieldsFrom(
+                                        item: item.Furnature,
+                                        rhs: rhs.Furnature,
+                                        def: def?.Furnature,
+                                        doMasks: doMasks,
+                                        errorMask: (doMasks ? new Func<Group_ErrorMask<Furnature_ErrorMask>>(() =>
+                                        {
+                                            var baseMask = errorMask();
+                                            if (baseMask.Furnature.Specific == null)
+                                            {
+                                                baseMask.Furnature = new MaskItem<Exception, Group_ErrorMask<Furnature_ErrorMask>>(null, new Group_ErrorMask<Furnature_ErrorMask>());
+                                            }
+                                            return baseMask.Furnature.Specific;
+                                        }
+                                        ) : null),
+                                        copyMask: copyMask?.Furnature.Specific,
+                                        cmds: cmds);
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(Group<Furnature>);
+                                    return Group<Furnature>.Copy(
+                                        r,
+                                        copyMask?.Furnature?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Furnature?.Overall}. Cannot execute copy.");
+                            }
+                        }
+                        );
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)OblivionMod_FieldIndex.Furnature, ex);
+                }
+            }
         }
 
         #endregion
@@ -4455,6 +4679,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case OblivionMod_FieldIndex.Trees:
                     obj.Trees_Property.HasBeenSet = on;
+                    break;
+                case OblivionMod_FieldIndex.Flora:
+                    obj.Flora_Property.HasBeenSet = on;
+                    break;
+                case OblivionMod_FieldIndex.Furnature:
+                    obj.Furnature_Property.HasBeenSet = on;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -4555,6 +4785,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Trees:
                     obj.Trees_Property.Unset(cmds);
                     break;
+                case OblivionMod_FieldIndex.Flora:
+                    obj.Flora_Property.Unset(cmds);
+                    break;
+                case OblivionMod_FieldIndex.Furnature:
+                    obj.Furnature_Property.Unset(cmds);
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -4625,6 +4861,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.Grasses_Property.HasBeenSet;
                 case OblivionMod_FieldIndex.Trees:
                     return obj.Trees_Property.HasBeenSet;
+                case OblivionMod_FieldIndex.Flora:
+                    return obj.Flora_Property.HasBeenSet;
+                case OblivionMod_FieldIndex.Furnature:
+                    return obj.Furnature_Property.HasBeenSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -4695,6 +4935,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.Grasses;
                 case OblivionMod_FieldIndex.Trees:
                     return obj.Trees;
+                case OblivionMod_FieldIndex.Flora:
+                    return obj.Flora;
+                case OblivionMod_FieldIndex.Furnature:
+                    return obj.Furnature;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -4732,6 +4976,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Statics_Property.Unset(cmds.ToUnsetParams());
             item.Grasses_Property.Unset(cmds.ToUnsetParams());
             item.Trees_Property.Unset(cmds.ToUnsetParams());
+            item.Flora_Property.Unset(cmds.ToUnsetParams());
+            item.Furnature_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static OblivionMod_Mask<bool> GetEqualsMask(
@@ -4778,6 +5024,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Statics = item.Statics_Property.LoquiEqualsHelper(rhs.Statics_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
             ret.Grasses = item.Grasses_Property.LoquiEqualsHelper(rhs.Grasses_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
             ret.Trees = item.Trees_Property.LoquiEqualsHelper(rhs.Trees_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Flora = item.Flora_Property.LoquiEqualsHelper(rhs.Flora_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
+            ret.Furnature = item.Furnature_Property.LoquiEqualsHelper(rhs.Furnature_Property, (loqLhs, loqRhs) => GroupCommon.GetEqualsMask(loqLhs, loqRhs));
         }
 
         public static string ToString(
@@ -4923,6 +5171,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Trees?.ToString(fg, "Trees");
                 }
+                if (printMask?.Flora?.Overall ?? true)
+                {
+                    item.Flora?.ToString(fg, "Flora");
+                }
+                if (printMask?.Furnature?.Overall ?? true)
+                {
+                    item.Furnature?.ToString(fg, "Furnature");
+                }
             }
             fg.AppendLine("]");
         }
@@ -4989,6 +5245,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Grasses.Specific != null && (item.Grasses_Property.Item == null || !item.Grasses_Property.Item.HasBeenSet(checkMask.Grasses.Specific))) return false;
             if (checkMask.Trees.Overall.HasValue && checkMask.Trees.Overall.Value != item.Trees_Property.HasBeenSet) return false;
             if (checkMask.Trees.Specific != null && (item.Trees_Property.Item == null || !item.Trees_Property.Item.HasBeenSet(checkMask.Trees.Specific))) return false;
+            if (checkMask.Flora.Overall.HasValue && checkMask.Flora.Overall.Value != item.Flora_Property.HasBeenSet) return false;
+            if (checkMask.Flora.Specific != null && (item.Flora_Property.Item == null || !item.Flora_Property.Item.HasBeenSet(checkMask.Flora.Specific))) return false;
+            if (checkMask.Furnature.Overall.HasValue && checkMask.Furnature.Overall.Value != item.Furnature_Property.HasBeenSet) return false;
+            if (checkMask.Furnature.Specific != null && (item.Furnature_Property.Item == null || !item.Furnature_Property.Item.HasBeenSet(checkMask.Furnature.Specific))) return false;
             return true;
         }
 
@@ -5024,6 +5284,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Statics = new MaskItem<bool, Group_Mask<bool>>(item.Statics_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.Statics_Property.Item));
             ret.Grasses = new MaskItem<bool, Group_Mask<bool>>(item.Grasses_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.Grasses_Property.Item));
             ret.Trees = new MaskItem<bool, Group_Mask<bool>>(item.Trees_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.Trees_Property.Item));
+            ret.Flora = new MaskItem<bool, Group_Mask<bool>>(item.Flora_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.Flora_Property.Item));
+            ret.Furnature = new MaskItem<bool, Group_Mask<bool>>(item.Furnature_Property.HasBeenSet, GroupCommon.GetHasBeenSetMask(item.Furnature_Property.Item));
             return ret;
         }
 
@@ -5320,6 +5582,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             fieldIndex: (int)OblivionMod_FieldIndex.Trees,
                             errorMask: errorMask);
                     }
+                    if (item.Flora_Property.HasBeenSet)
+                    {
+                        LoquiXmlTranslation<Group<Flora>, Group_ErrorMask<Flora_ErrorMask>>.Instance.Write(
+                            writer: writer,
+                            item: item.Flora_Property,
+                            name: nameof(item.Flora),
+                            fieldIndex: (int)OblivionMod_FieldIndex.Flora,
+                            errorMask: errorMask);
+                    }
+                    if (item.Furnature_Property.HasBeenSet)
+                    {
+                        LoquiXmlTranslation<Group<Furnature>, Group_ErrorMask<Furnature_ErrorMask>>.Instance.Write(
+                            writer: writer,
+                            item: item.Furnature_Property,
+                            name: nameof(item.Furnature),
+                            fieldIndex: (int)OblivionMod_FieldIndex.Furnature,
+                            errorMask: errorMask);
+                    }
                 }
             }
             catch (Exception ex)
@@ -5523,6 +5803,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Trees_Property,
                 fieldIndex: (int)OblivionMod_FieldIndex.Trees,
                 errorMask: errorMask);
+            LoquiBinaryTranslation<Group<Flora>, Group_ErrorMask<Flora_ErrorMask>>.Instance.Write(
+                writer: writer,
+                item: item.Flora_Property,
+                fieldIndex: (int)OblivionMod_FieldIndex.Flora,
+                errorMask: errorMask);
+            LoquiBinaryTranslation<Group<Furnature>, Group_ErrorMask<Furnature_ErrorMask>>.Instance.Write(
+                writer: writer,
+                item: item.Furnature_Property,
+                fieldIndex: (int)OblivionMod_FieldIndex.Furnature,
+                errorMask: errorMask);
         }
 
         #endregion
@@ -5571,6 +5861,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Statics = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.Grasses = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.Trees = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
+            this.Flora = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
+            this.Furnature = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
         }
         #endregion
 
@@ -5604,6 +5896,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<T, Group_Mask<T>> Statics { get; set; }
         public MaskItem<T, Group_Mask<T>> Grasses { get; set; }
         public MaskItem<T, Group_Mask<T>> Trees { get; set; }
+        public MaskItem<T, Group_Mask<T>> Flora { get; set; }
+        public MaskItem<T, Group_Mask<T>> Furnature { get; set; }
         #endregion
 
         #region Equals
@@ -5645,6 +5939,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.Statics, rhs.Statics)) return false;
             if (!object.Equals(this.Grasses, rhs.Grasses)) return false;
             if (!object.Equals(this.Trees, rhs.Trees)) return false;
+            if (!object.Equals(this.Flora, rhs.Flora)) return false;
+            if (!object.Equals(this.Furnature, rhs.Furnature)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -5679,6 +5975,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.Statics?.GetHashCode());
             ret = ret.CombineHashCode(this.Grasses?.GetHashCode());
             ret = ret.CombineHashCode(this.Trees?.GetHashCode());
+            ret = ret.CombineHashCode(this.Flora?.GetHashCode());
+            ret = ret.CombineHashCode(this.Furnature?.GetHashCode());
             return ret;
         }
 
@@ -5831,6 +6129,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (!eval(this.Trees.Overall)) return false;
                 if (this.Trees.Specific != null && !this.Trees.Specific.AllEqual(eval)) return false;
+            }
+            if (Flora != null)
+            {
+                if (!eval(this.Flora.Overall)) return false;
+                if (this.Flora.Specific != null && !this.Flora.Specific.AllEqual(eval)) return false;
+            }
+            if (Furnature != null)
+            {
+                if (!eval(this.Furnature.Overall)) return false;
+                if (this.Furnature.Specific != null && !this.Furnature.Specific.AllEqual(eval)) return false;
             }
             return true;
         }
@@ -6107,6 +6415,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Trees.Specific = this.Trees.Specific.Translate(eval);
                 }
             }
+            if (this.Flora != null)
+            {
+                obj.Flora = new MaskItem<R, Group_Mask<R>>();
+                obj.Flora.Overall = eval(this.Flora.Overall);
+                if (this.Flora.Specific != null)
+                {
+                    obj.Flora.Specific = this.Flora.Specific.Translate(eval);
+                }
+            }
+            if (this.Furnature != null)
+            {
+                obj.Furnature = new MaskItem<R, Group_Mask<R>>();
+                obj.Furnature.Overall = eval(this.Furnature.Overall);
+                if (this.Furnature.Specific != null)
+                {
+                    obj.Furnature.Specific = this.Furnature.Specific.Translate(eval);
+                }
+            }
         }
         #endregion
 
@@ -6251,6 +6577,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     Trees?.ToString(fg);
                 }
+                if (printMask?.Flora?.Overall ?? true)
+                {
+                    Flora?.ToString(fg);
+                }
+                if (printMask?.Furnature?.Overall ?? true)
+                {
+                    Furnature?.ToString(fg);
+                }
             }
             fg.AppendLine("]");
         }
@@ -6303,6 +6637,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<Exception, Group_ErrorMask<Static_ErrorMask>> Statics;
         public MaskItem<Exception, Group_ErrorMask<Grass_ErrorMask>> Grasses;
         public MaskItem<Exception, Group_ErrorMask<Tree_ErrorMask>> Trees;
+        public MaskItem<Exception, Group_ErrorMask<Flora_ErrorMask>> Flora;
+        public MaskItem<Exception, Group_ErrorMask<Furnature_ErrorMask>> Furnature;
         #endregion
 
         #region IErrorMask
@@ -6397,6 +6733,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case OblivionMod_FieldIndex.Trees:
                     this.Trees = new MaskItem<Exception, Group_ErrorMask<Tree_ErrorMask>>(ex, null);
+                    break;
+                case OblivionMod_FieldIndex.Flora:
+                    this.Flora = new MaskItem<Exception, Group_ErrorMask<Flora_ErrorMask>>(ex, null);
+                    break;
+                case OblivionMod_FieldIndex.Furnature:
+                    this.Furnature = new MaskItem<Exception, Group_ErrorMask<Furnature_ErrorMask>>(ex, null);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -6495,6 +6837,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Trees:
                     this.Trees = (MaskItem<Exception, Group_ErrorMask<Tree_ErrorMask>>)obj;
                     break;
+                case OblivionMod_FieldIndex.Flora:
+                    this.Flora = (MaskItem<Exception, Group_ErrorMask<Flora_ErrorMask>>)obj;
+                    break;
+                case OblivionMod_FieldIndex.Furnature:
+                    this.Furnature = (MaskItem<Exception, Group_ErrorMask<Furnature_ErrorMask>>)obj;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -6532,6 +6880,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Statics != null) return true;
             if (Grasses != null) return true;
             if (Trees != null) return true;
+            if (Flora != null) return true;
+            if (Furnature != null) return true;
             return false;
         }
         #endregion
@@ -6595,6 +6945,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Statics?.ToString(fg);
             Grasses?.ToString(fg);
             Trees?.ToString(fg);
+            Flora?.ToString(fg);
+            Furnature?.ToString(fg);
         }
         #endregion
 
@@ -6631,6 +6983,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Statics = new MaskItem<Exception, Group_ErrorMask<Static_ErrorMask>>(this.Statics.Overall.Combine(rhs.Statics.Overall), ((IErrorMask<Group_ErrorMask<Static_ErrorMask>>)this.Statics.Specific).Combine(rhs.Statics.Specific));
             ret.Grasses = new MaskItem<Exception, Group_ErrorMask<Grass_ErrorMask>>(this.Grasses.Overall.Combine(rhs.Grasses.Overall), ((IErrorMask<Group_ErrorMask<Grass_ErrorMask>>)this.Grasses.Specific).Combine(rhs.Grasses.Specific));
             ret.Trees = new MaskItem<Exception, Group_ErrorMask<Tree_ErrorMask>>(this.Trees.Overall.Combine(rhs.Trees.Overall), ((IErrorMask<Group_ErrorMask<Tree_ErrorMask>>)this.Trees.Specific).Combine(rhs.Trees.Specific));
+            ret.Flora = new MaskItem<Exception, Group_ErrorMask<Flora_ErrorMask>>(this.Flora.Overall.Combine(rhs.Flora.Overall), ((IErrorMask<Group_ErrorMask<Flora_ErrorMask>>)this.Flora.Specific).Combine(rhs.Flora.Specific));
+            ret.Furnature = new MaskItem<Exception, Group_ErrorMask<Furnature_ErrorMask>>(this.Furnature.Overall.Combine(rhs.Furnature.Overall), ((IErrorMask<Group_ErrorMask<Furnature_ErrorMask>>)this.Furnature.Specific).Combine(rhs.Furnature.Specific));
             return ret;
         }
         public static OblivionMod_ErrorMask Combine(OblivionMod_ErrorMask lhs, OblivionMod_ErrorMask rhs)
@@ -6673,6 +7027,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<CopyOption, Group_CopyMask<Static_CopyMask>> Statics;
         public MaskItem<CopyOption, Group_CopyMask<Grass_CopyMask>> Grasses;
         public MaskItem<CopyOption, Group_CopyMask<Tree_CopyMask>> Trees;
+        public MaskItem<CopyOption, Group_CopyMask<Flora_CopyMask>> Flora;
+        public MaskItem<CopyOption, Group_CopyMask<Furnature_CopyMask>> Furnature;
         #endregion
 
     }
