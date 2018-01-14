@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>8ef36ec1d5b9b527d3040b9e7f78399e2f573b66</Sha>
+         <Sha>86879909353aa25f1a8804520177ef82545d87ea</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>01-14-2018 01:10:57</CommitDate>
-         <Description>TypeGeneration.Protected renamed to more applicable ReadOnly</Description>
+         <CommitDate>01-14-2018 13:41:08</CommitDate>
+         <Description>ErrorMask.WrapForOverallException</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

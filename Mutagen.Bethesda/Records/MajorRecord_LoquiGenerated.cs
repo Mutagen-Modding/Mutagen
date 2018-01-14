@@ -37,17 +37,15 @@ namespace Mutagen.Bethesda
         #endregion
 
         #region MajorRecordFlags
-        protected readonly INotifyingSetItem<Byte[]> _MajorRecordFlags = NotifyingSetItem.Factory<Byte[]>(
-            markAsSet: false,
-            noNullFallback: () => new byte[4]);
-        public INotifyingSetItem<Byte[]> MajorRecordFlags_Property => _MajorRecordFlags;
-        public Byte[] MajorRecordFlags
+        protected readonly INotifyingSetItem<MajorRecord.MajorRecordFlag> _MajorRecordFlags = NotifyingSetItem.Factory<MajorRecord.MajorRecordFlag>(markAsSet: false);
+        public INotifyingSetItem<MajorRecord.MajorRecordFlag> MajorRecordFlags_Property => _MajorRecordFlags;
+        public MajorRecord.MajorRecordFlag MajorRecordFlags
         {
             get => this._MajorRecordFlags.Item;
             set => this._MajorRecordFlags.Set(value);
         }
-        INotifyingSetItem<Byte[]> IMajorRecord.MajorRecordFlags_Property => this.MajorRecordFlags_Property;
-        INotifyingSetItemGetter<Byte[]> IMajorRecordGetter.MajorRecordFlags_Property => this.MajorRecordFlags_Property;
+        INotifyingSetItem<MajorRecord.MajorRecordFlag> IMajorRecord.MajorRecordFlags_Property => this.MajorRecordFlags_Property;
+        INotifyingSetItemGetter<MajorRecord.MajorRecordFlag> IMajorRecordGetter.MajorRecordFlags_Property => this.MajorRecordFlags_Property;
         #endregion
         #region FormID
         protected readonly INotifyingSetItem<RawFormID> _FormID = NotifyingSetItem.Factory<RawFormID>(markAsSet: false);
@@ -155,7 +153,7 @@ namespace Mutagen.Bethesda
             if (MajorRecordFlags_Property.HasBeenSet != rhs.MajorRecordFlags_Property.HasBeenSet) return false;
             if (MajorRecordFlags_Property.HasBeenSet)
             {
-                if (!MajorRecordFlags.EqualsFast(rhs.MajorRecordFlags)) return false;
+                if (MajorRecordFlags != rhs.MajorRecordFlags) return false;
             }
             if (FormID_Property.HasBeenSet != rhs.FormID_Property.HasBeenSet) return false;
             if (FormID_Property.HasBeenSet)
@@ -361,10 +359,11 @@ namespace Mutagen.Bethesda
             switch (name)
             {
                 case "MajorRecordFlags":
-                    item._MajorRecordFlags.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                    item._MajorRecordFlags.SetIfSucceeded(EnumXmlTranslation<MajorRecord.MajorRecordFlag>.Instance.Parse(
                         root,
+                        nullable: false,
                         fieldIndex: (int)MajorRecord_FieldIndex.MajorRecordFlags,
-                        errorMask: errorMask));
+                        errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "FormID":
                     item._FormID.SetIfSucceeded(RawFormIDXmlTranslation.Instance.ParseNonNull(
@@ -544,11 +543,10 @@ namespace Mutagen.Bethesda
             Func<MajorRecord_ErrorMask> errorMask)
         {
             if (frame.Complete) return;
-            var MajorRecordFlagstryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+            item._MajorRecordFlags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<MajorRecord.MajorRecordFlag>.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(4)),
                 fieldIndex: (int)MajorRecord_FieldIndex.MajorRecordFlags,
-                errorMask: errorMask);
-            item._MajorRecordFlags.SetIfSucceeded(MajorRecordFlagstryGet);
+                errorMask: errorMask));
             if (frame.Complete) return;
             item._FormID.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
@@ -654,7 +652,7 @@ namespace Mutagen.Bethesda
                     throw new ArgumentException($"Tried to set at a derivative index {index}");
                 case MajorRecord_FieldIndex.MajorRecordFlags:
                     this._MajorRecordFlags.Set(
-                        (Byte[])obj,
+                        (MajorRecord.MajorRecordFlag)obj,
                         cmds);
                     break;
                 case MajorRecord_FieldIndex.FormID:
@@ -701,7 +699,7 @@ namespace Mutagen.Bethesda
             {
                 case MajorRecord_FieldIndex.MajorRecordFlags:
                     obj._MajorRecordFlags.Set(
-                        (Byte[])pair.Value,
+                        (MajorRecord.MajorRecordFlag)pair.Value,
                         null);
                     break;
                 case MajorRecord_FieldIndex.FormID:
@@ -734,8 +732,8 @@ namespace Mutagen.Bethesda
     #region Interface
     public interface IMajorRecord : IMajorRecordGetter, ILoquiClass<IMajorRecord, IMajorRecordGetter>, ILoquiClass<MajorRecord, IMajorRecordGetter>
     {
-        new Byte[] MajorRecordFlags { get; set; }
-        new INotifyingSetItem<Byte[]> MajorRecordFlags_Property { get; }
+        new MajorRecord.MajorRecordFlag MajorRecordFlags { get; set; }
+        new INotifyingSetItem<MajorRecord.MajorRecordFlag> MajorRecordFlags_Property { get; }
 
         new Byte[] Version { get; set; }
         new INotifyingSetItem<Byte[]> Version_Property { get; }
@@ -748,8 +746,8 @@ namespace Mutagen.Bethesda
     public interface IMajorRecordGetter : ILoquiObject
     {
         #region MajorRecordFlags
-        Byte[] MajorRecordFlags { get; }
-        INotifyingSetItemGetter<Byte[]> MajorRecordFlags_Property { get; }
+        MajorRecord.MajorRecordFlag MajorRecordFlags { get; }
+        INotifyingSetItemGetter<MajorRecord.MajorRecordFlag> MajorRecordFlags_Property { get; }
 
         #endregion
         #region FormID
@@ -957,7 +955,7 @@ namespace Mutagen.Bethesda.Internals
             switch (enu)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlags:
-                    return typeof(Byte[]);
+                    return typeof(MajorRecord.MajorRecordFlag);
                 case MajorRecord_FieldIndex.FormID:
                     return typeof(RawFormID);
                 case MajorRecord_FieldIndex.Version:
@@ -1340,7 +1338,7 @@ namespace Mutagen.Bethesda.Internals
             MajorRecord_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.MajorRecordFlags = item.MajorRecordFlags_Property.Equals(rhs.MajorRecordFlags_Property, (l, r) => l.EqualsFast(r));
+            ret.MajorRecordFlags = item.MajorRecordFlags_Property.Equals(rhs.MajorRecordFlags_Property, (l, r) => l == r);
             ret.FormID = item.FormID_Property.Equals(rhs.FormID_Property, (l, r) => l == r);
             ret.Version = item.Version_Property.Equals(rhs.Version_Property, (l, r) => l.EqualsFast(r));
             ret.EditorID = item.EditorID_Property.Equals(rhs.EditorID_Property, (l, r) => object.Equals(l, r));
@@ -1455,7 +1453,7 @@ namespace Mutagen.Bethesda.Internals
                     }
                     if (item.MajorRecordFlags_Property.HasBeenSet)
                     {
-                        ByteArrayXmlTranslation.Instance.Write(
+                        EnumXmlTranslation<MajorRecord.MajorRecordFlag>.Instance.Write(
                             writer: writer,
                             name: nameof(item.MajorRecordFlags),
                             item: item.MajorRecordFlags_Property,
@@ -1550,9 +1548,10 @@ namespace Mutagen.Bethesda.Internals
             MutagenWriter writer,
             Func<MajorRecord_ErrorMask> errorMask)
         {
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.MajorRecordFlags_Property,
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<MajorRecord.MajorRecordFlag>.Instance.Write(
+                writer,
+                item.MajorRecordFlags_Property,
+                length: new ContentLength(4),
                 fieldIndex: (int)MajorRecord_FieldIndex.MajorRecordFlags,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
