@@ -209,8 +209,10 @@ namespace Mutagen.Bethesda.Tests
             RangeCollection reader1Skips,
             RangeCollection reader2Skips)
         {
-            while (reader1.Position < reader1.Length
-                && reader2.Position < reader2.Length)
+            var reader1Len = reader1.Length;
+            var reader2Len = reader2.Length;
+            while (reader1.Position < reader1Len
+                && reader2.Position < reader2Len)
             {
                 if (reader1Skips != null
                     && reader1Skips.TryGetCurrentRange(reader1.Position, out var range1))
