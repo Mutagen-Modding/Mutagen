@@ -1645,7 +1645,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region XML Write
         public static void Write_XML(
             XmlWriter writer,
-            SoundData item,
+            ISoundDataGetter item,
             bool doMasks,
             out SoundData_ErrorMask errorMask,
             string name = null)
@@ -1661,7 +1661,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         private static void Write_XML_Internal(
             XmlWriter writer,
-            SoundData item,
+            ISoundDataGetter item,
             Func<SoundData_ErrorMask> errorMask,
             string name = null)
         {
