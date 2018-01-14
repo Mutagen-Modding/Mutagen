@@ -875,35 +875,14 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Door_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            var ret = new Door();
-            try
-            {
-                frame = frame.Spawn(HeaderTranslation.ParseRecord(
-                    frame,
-                    Door_Registration.DOOR_HEADER));
-                using (frame)
-                {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        errorMask: errorMask);
-                    while (!frame.Complete)
-                    {
-                        var parsed = Fill_Binary_RecordTypes(
-                            item: ret,
-                            frame: frame,
-                            errorMask: errorMask,
-                            recordTypeConverter: recordTypeConverter);
-                        if (parsed.Failed) break;
-                    }
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
+            return MajorRecord.TypicalParsing<Door, Door_ErrorMask, Door_FieldIndex>(
+                record: new Door(),
+                frame: frame,
+                errorMask: errorMask,
+                recType: Door_Registration.DOOR_HEADER,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: Fill_Binary_Structs,
+                fillTyped: Fill_Binary_RecordTypes);
         }
 
         protected static void Fill_Binary_Structs(

@@ -796,35 +796,14 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Birthsign_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            var ret = new Birthsign();
-            try
-            {
-                frame = frame.Spawn(HeaderTranslation.ParseRecord(
-                    frame,
-                    Birthsign_Registration.BSGN_HEADER));
-                using (frame)
-                {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        errorMask: errorMask);
-                    while (!frame.Complete)
-                    {
-                        var parsed = Fill_Binary_RecordTypes(
-                            item: ret,
-                            frame: frame,
-                            errorMask: errorMask,
-                            recordTypeConverter: recordTypeConverter);
-                        if (parsed.Failed) break;
-                    }
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
+            return MajorRecord.TypicalParsing<Birthsign, Birthsign_ErrorMask, Birthsign_FieldIndex>(
+                record: new Birthsign(),
+                frame: frame,
+                errorMask: errorMask,
+                recType: Birthsign_Registration.BSGN_HEADER,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: Fill_Binary_Structs,
+                fillTyped: Fill_Binary_RecordTypes);
         }
 
         protected static void Fill_Binary_Structs(

@@ -1011,52 +1011,14 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Light_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            var ret = new Light();
-            try
-            {
-                frame = frame.Spawn(HeaderTranslation.ParseRecord(
-                    frame,
-                    Light_Registration.LIGH_HEADER));
-                using (frame)
-                {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        errorMask: errorMask);
-                    while (!frame.Complete)
-                    {
-                        var parsed = Fill_Binary_RecordTypes(
-                            item: ret,
-                            frame: frame,
-                            errorMask: errorMask,
-                            recordTypeConverter: recordTypeConverter);
-                        if (parsed.Failed) break;
-                    }
-                }
-                if (ret.DATADataTypeState != default(DATADataType))
-                {
-                    Action unsubAction = () =>
-                    {
-                        ret.FalloffExponent_Property.Unsubscribe(DataTypeStateSubber);
-                        ret.FOV_Property.Unsubscribe(DataTypeStateSubber);
-                        ret.DATADataTypeState = default(DATADataType);
-                    };
-                    ret.FalloffExponent_Property.Subscribe(
-                        owner: DataTypeStateSubber,
-                        callback: unsubAction,
-                        fireInitial: false);
-                    ret.FOV_Property.Subscribe(
-                        owner: DataTypeStateSubber,
-                        callback: unsubAction,
-                        fireInitial: false);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
+            return MajorRecord.TypicalParsing<Light, Light_ErrorMask, Light_FieldIndex>(
+                record: new Light(),
+                frame: frame,
+                errorMask: errorMask,
+                recType: Light_Registration.LIGH_HEADER,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: Fill_Binary_Structs,
+                fillTyped: Fill_Binary_RecordTypes);
         }
 
         protected static void Fill_Binary_Structs(

@@ -1,5 +1,7 @@
-﻿using Mutagen.Bethesda.Binary;
+﻿using Loqui;
+using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -28,6 +30,49 @@ namespace Mutagen.Bethesda
             Dangerous_OffLimits_InteriorCell = 0x00020000,
             Compressed = 0x00040000,
             CantWait = 0x00080000,
+        }
+
+        public static M TypicalParsing<M, E, I>(
+            M record,
+            MutagenFrame frame,
+            Func<E> errorMask,
+            RecordType recType,
+            RecordTypeConverter recordTypeConverter,
+            Action<M, MutagenFrame, Func<E>> fillStructs,
+            Func<M, MutagenFrame, Func<E>, RecordTypeConverter, TryGet<I?>> fillTyped)
+            where M : MajorRecord
+            where E : IErrorMask
+            where I : struct
+        {
+            try
+            {
+                frame = frame.Spawn(HeaderTranslation.ParseRecord(
+                    frame,
+                    recType));
+                fillStructs(
+                    record,
+                    frame,
+                    errorMask);
+                using (frame)
+                {
+                    if (fillTyped == null) return record;
+                    while (!frame.Complete)
+                    {
+                        var parsed = fillTyped(
+                            record,
+                            frame,
+                            errorMask,
+                            recordTypeConverter);
+                        if (parsed.Failed) break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask().Overall = ex;
+            }
+            return record;
         }
 
         public static void Fill_Binary(

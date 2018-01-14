@@ -788,35 +788,14 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Hair_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            var ret = new Hair();
-            try
-            {
-                frame = frame.Spawn(HeaderTranslation.ParseRecord(
-                    frame,
-                    Hair_Registration.HAIR_HEADER));
-                using (frame)
-                {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        errorMask: errorMask);
-                    while (!frame.Complete)
-                    {
-                        var parsed = Fill_Binary_RecordTypes(
-                            item: ret,
-                            frame: frame,
-                            errorMask: errorMask,
-                            recordTypeConverter: recordTypeConverter);
-                        if (parsed.Failed) break;
-                    }
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
+            return MajorRecord.TypicalParsing<Hair, Hair_ErrorMask, Hair_FieldIndex>(
+                record: new Hair(),
+                frame: frame,
+                errorMask: errorMask,
+                recType: Hair_Registration.HAIR_HEADER,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: Fill_Binary_Structs,
+                fillTyped: Fill_Binary_RecordTypes);
         }
 
         protected static void Fill_Binary_Structs(

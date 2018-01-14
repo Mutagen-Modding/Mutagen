@@ -859,35 +859,14 @@ namespace Mutagen.Bethesda.Oblivion
             Func<AlchemicalApparatus_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            var ret = new AlchemicalApparatus();
-            try
-            {
-                frame = frame.Spawn(HeaderTranslation.ParseRecord(
-                    frame,
-                    AlchemicalApparatus_Registration.APPA_HEADER));
-                using (frame)
-                {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        errorMask: errorMask);
-                    while (!frame.Complete)
-                    {
-                        var parsed = Fill_Binary_RecordTypes(
-                            item: ret,
-                            frame: frame,
-                            errorMask: errorMask,
-                            recordTypeConverter: recordTypeConverter);
-                        if (parsed.Failed) break;
-                    }
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
+            return MajorRecord.TypicalParsing<AlchemicalApparatus, AlchemicalApparatus_ErrorMask, AlchemicalApparatus_FieldIndex>(
+                record: new AlchemicalApparatus(),
+                frame: frame,
+                errorMask: errorMask,
+                recType: AlchemicalApparatus_Registration.APPA_HEADER,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: Fill_Binary_Structs,
+                fillTyped: Fill_Binary_RecordTypes);
         }
 
         protected static void Fill_Binary_Structs(

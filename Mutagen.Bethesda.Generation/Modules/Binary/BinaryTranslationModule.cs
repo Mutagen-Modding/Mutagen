@@ -266,136 +266,153 @@ namespace Mutagen.Bethesda.Generation
                 }
                 using (new BraceWrapper(fg))
                 {
-                    fg.AppendLine($"var ret = new {obj.Name}{obj.GenericTypes}();");
-                    fg.AppendLine("try");
-                    using (new BraceWrapper(fg))
+                    if (obj.BaseClassTrail().Any((b) => b.Name == "MajorRecord"))
                     {
-                        IEnumerable<RecordType> recordTypes = await obj.GetTriggeringRecordTypes();
-                        var frameMod = (objType != ObjectType.Subrecord || recordTypes.Any())
-                            && objType != ObjectType.Mod;
-                        if (frameMod)
+                        using (var args = new ArgsWrapper(fg,
+                            $"return MajorRecord.TypicalParsing<{obj.Name}, {obj.Mask(MaskType.Error)}, {obj.FieldIndexName}>"))
                         {
-                            switch (objType)
+                            args.Add($"record: new {obj.Name}()");
+                            args.Add($"frame: frame");
+                            args.Add($"errorMask: errorMask");
+                            args.Add($"recType: {obj.GetTriggeringSource()}");
+                            args.Add($"recordTypeConverter: recordTypeConverter");
+                            args.Add($"fillStructs: Fill_Binary_Structs");
+                            args.Add($"fillTyped: {(HasRecordTypeFields(obj) ? "Fill_Binary_RecordTypes" : "null")}");
+                        }
+                    }
+                    else
+                    {
+                        fg.AppendLine($"var ret = new {obj.Name}{obj.GenericTypes}();");
+                        fg.AppendLine("try");
+                        using (new BraceWrapper(fg))
+                        {
+                            IEnumerable<RecordType> recordTypes = await obj.GetTriggeringRecordTypes();
+                            var frameMod = (objType != ObjectType.Subrecord || recordTypes.Any())
+                                && objType != ObjectType.Mod;
+                            if (frameMod)
                             {
-                                case ObjectType.Subrecord:
-                                    if (obj.TryGetRecordType(out var recType))
-                                    {
+                                switch (objType)
+                                {
+                                    case ObjectType.Subrecord:
+                                        if (obj.TryGetRecordType(out var recType))
+                                        {
+                                            using (var args = new ArgsWrapper(fg,
+                                                $"frame = frame.Spawn({nameof(HeaderTranslation)}.ParseSubrecord",
+                                                suffixLine: ")"))
+                                            {
+                                                args.Add("frame");
+                                                args.Add($"{obj.GetTriggeringSource()}");
+                                            }
+                                        }
+                                        break;
+                                    case ObjectType.Record:
                                         using (var args = new ArgsWrapper(fg,
-                                            $"frame = frame.Spawn({nameof(HeaderTranslation)}.ParseSubrecord",
+                                            $"frame = frame.Spawn({nameof(HeaderTranslation)}.ParseRecord",
                                             suffixLine: ")"))
                                         {
                                             args.Add("frame");
                                             args.Add($"{obj.GetTriggeringSource()}");
                                         }
-                                    }
-                                    break;
-                                case ObjectType.Record:
-                                    using (var args = new ArgsWrapper(fg,
-                                        $"frame = frame.Spawn({nameof(HeaderTranslation)}.ParseRecord",
-                                        suffixLine: ")"))
-                                    {
-                                        args.Add("frame");
-                                        args.Add($"{obj.GetTriggeringSource()}");
-                                    }
-                                    break;
-                                case ObjectType.Group:
-                                    using (var args = new ArgsWrapper(fg,
-                                        $"frame = frame.Spawn({nameof(HeaderTranslation)}.ParseGroup",
-                                        suffixLine: ")"))
-                                    {
-                                        args.Add("frame");
-                                    }
-                                    break;
-                                case ObjectType.Mod:
-                                default:
-                                    throw new NotImplementedException();
-                            }
-                        }
-                        fg.AppendLine("using (frame)");
-                        using (new BraceWrapper(fg))
-                        {
-                            using (var args = new ArgsWrapper(fg,
-                                $"Fill_{ModuleNickname}_Structs"))
-                            {
-                                args.Add("item: ret");
-                                args.Add("frame: frame");
-                                args.Add("errorMask: errorMask");
-                            }
-                            if (HasRecordTypeFields(obj))
-                            {
-                                if (typelessStruct)
-                                {
-                                    fg.AppendLine($"{obj.FieldIndexName}? lastParsed = null;");
-                                }
-                                fg.AppendLine($"while (!frame.Complete)");
-                                using (new BraceWrapper(fg))
-                                {
-                                    using (var args = new ArgsWrapper(fg,
-                                        $"var parsed = Fill_{ModuleNickname}_RecordTypes"))
-                                    {
-                                        args.Add("item: ret");
-                                        args.Add("frame: frame");
-                                        if (typelessStruct)
+                                        break;
+                                    case ObjectType.Group:
+                                        using (var args = new ArgsWrapper(fg,
+                                            $"frame = frame.Spawn({nameof(HeaderTranslation)}.ParseGroup",
+                                            suffixLine: ")"))
                                         {
-                                            args.Add("lastParsed: lastParsed");
+                                            args.Add("frame");
                                         }
-                                        args.Add("errorMask: errorMask");
-                                        args.Add($"recordTypeConverter: recordTypeConverter");
-                                    }
-                                    fg.AppendLine("if (parsed.Failed) break;");
-                                    if (typelessStruct)
-                                    {
-                                        fg.AppendLine("lastParsed = parsed.Value;");
-                                    }
+                                        break;
+                                    case ObjectType.Mod:
+                                    default:
+                                        throw new NotImplementedException();
                                 }
                             }
-                        }
-                        foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.FalseAndInclude))
-                        {
-                            if (!(field is DataType dataType)) continue;
-                            List<TypeGeneration> affectedFields = new List<TypeGeneration>();
-                            foreach (var subField in dataType.IterateFieldsWithMeta())
-                            {
-                                if (!subField.EncounteredBreaks.Any()
-                                    && subField.Range == null)
-                                {
-                                    continue;
-                                }
-                                affectedFields.Add(subField.Field);
-                            }
-                            if (affectedFields.Count == 0) continue;
-                            fg.AppendLine($"if (ret.{dataType.StateName} != default({dataType.EnumName}))");
+                            fg.AppendLine("using (frame)");
                             using (new BraceWrapper(fg))
                             {
-                                fg.AppendLine("Action unsubAction = () =>");
-                                using (new BraceWrapper(fg) { AppendSemicolon = true })
+                                using (var args = new ArgsWrapper(fg,
+                                    $"Fill_{ModuleNickname}_Structs"))
                                 {
+                                    args.Add("item: ret");
+                                    args.Add("frame: frame");
+                                    args.Add("errorMask: errorMask");
+                                }
+                                if (HasRecordTypeFields(obj))
+                                {
+                                    if (typelessStruct)
+                                    {
+                                        fg.AppendLine($"{obj.FieldIndexName}? lastParsed = null;");
+                                    }
+                                    fg.AppendLine($"while (!frame.Complete)");
+                                    using (new BraceWrapper(fg))
+                                    {
+                                        using (var args = new ArgsWrapper(fg,
+                                            $"var parsed = Fill_{ModuleNickname}_RecordTypes"))
+                                        {
+                                            args.Add("item: ret");
+                                            args.Add("frame: frame");
+                                            if (typelessStruct)
+                                            {
+                                                args.Add("lastParsed: lastParsed");
+                                            }
+                                            args.Add("errorMask: errorMask");
+                                            args.Add($"recordTypeConverter: recordTypeConverter");
+                                        }
+                                        fg.AppendLine("if (parsed.Failed) break;");
+                                        if (typelessStruct)
+                                        {
+                                            fg.AppendLine("lastParsed = parsed.Value;");
+                                        }
+                                    }
+                                }
+                            }
+                            foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.FalseAndInclude))
+                            {
+                                if (!(field is DataType dataType)) continue;
+                                List<TypeGeneration> affectedFields = new List<TypeGeneration>();
+                                foreach (var subField in dataType.IterateFieldsWithMeta())
+                                {
+                                    if (!subField.EncounteredBreaks.Any()
+                                        && subField.Range == null)
+                                    {
+                                        continue;
+                                    }
+                                    affectedFields.Add(subField.Field);
+                                }
+                                if (affectedFields.Count == 0) continue;
+                                fg.AppendLine($"if (ret.{dataType.StateName} != default({dataType.EnumName}))");
+                                using (new BraceWrapper(fg))
+                                {
+                                    fg.AppendLine("Action unsubAction = () =>");
+                                    using (new BraceWrapper(fg) { AppendSemicolon = true })
+                                    {
+                                        foreach (var subField in affectedFields)
+                                        {
+                                            fg.AppendLine($"ret.{subField.Property}.Unsubscribe(DataTypeStateSubber);");
+                                        }
+                                        fg.AppendLine($"ret.{dataType.StateName} = default({dataType.EnumName});");
+                                    }
                                     foreach (var subField in affectedFields)
                                     {
-                                        fg.AppendLine($"ret.{subField.Property}.Unsubscribe(DataTypeStateSubber);");
-                                    }
-                                    fg.AppendLine($"ret.{dataType.StateName} = default({dataType.EnumName});");
-                                }
-                                foreach (var subField in affectedFields)
-                                {
-                                    using (var args = new ArgsWrapper(fg,
-                                        $"ret.{subField.Property}.Subscribe"))
-                                    {
-                                        args.Add($"owner: DataTypeStateSubber");
-                                        args.Add("callback: unsubAction");
-                                        args.Add("fireInitial: false");
+                                        using (var args = new ArgsWrapper(fg,
+                                            $"ret.{subField.Property}.Subscribe"))
+                                        {
+                                            args.Add($"owner: DataTypeStateSubber");
+                                            args.Add("callback: unsubAction");
+                                            args.Add("fireInitial: false");
+                                        }
                                     }
                                 }
                             }
                         }
+                        fg.AppendLine("catch (Exception ex)");
+                        fg.AppendLine("when (errorMask != null)");
+                        using (new BraceWrapper(fg))
+                        {
+                            fg.AppendLine("errorMask().Overall = ex;");
+                        }
+                        fg.AppendLine("return ret;");
                     }
-                    fg.AppendLine("catch (Exception ex)");
-                    fg.AppendLine("when (errorMask != null)");
-                    using (new BraceWrapper(fg))
-                    {
-                        fg.AppendLine("errorMask().Overall = ex;");
-                    }
-                    fg.AppendLine("return ret;");
                 }
                 fg.AppendLine();
             }

@@ -878,35 +878,14 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Ingredient_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            var ret = new Ingredient();
-            try
-            {
-                frame = frame.Spawn(HeaderTranslation.ParseRecord(
-                    frame,
-                    Ingredient_Registration.INGR_HEADER));
-                using (frame)
-                {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        errorMask: errorMask);
-                    while (!frame.Complete)
-                    {
-                        var parsed = Fill_Binary_RecordTypes(
-                            item: ret,
-                            frame: frame,
-                            errorMask: errorMask,
-                            recordTypeConverter: recordTypeConverter);
-                        if (parsed.Failed) break;
-                    }
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
+            return MajorRecord.TypicalParsing<Ingredient, Ingredient_ErrorMask, Ingredient_FieldIndex>(
+                record: new Ingredient(),
+                frame: frame,
+                errorMask: errorMask,
+                recType: Ingredient_Registration.INGR_HEADER,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: Fill_Binary_Structs,
+                fillTyped: Fill_Binary_RecordTypes);
         }
 
         protected static void Fill_Binary_Structs(

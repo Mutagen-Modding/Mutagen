@@ -147,5 +147,10 @@ namespace Mutagen.Bethesda.Binary
                 this.FinalPosition,
                 snapToFinalPosition);
         }
+
+        //public MutagenFrame Decompress()
+        //{
+
+        //}
     }
 }

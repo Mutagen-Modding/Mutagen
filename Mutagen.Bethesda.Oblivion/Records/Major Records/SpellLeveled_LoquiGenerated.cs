@@ -736,26 +736,14 @@ namespace Mutagen.Bethesda.Oblivion
             Func<SpellLeveled_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            var ret = new SpellLeveled();
-            try
-            {
-                frame = frame.Spawn(HeaderTranslation.ParseRecord(
-                    frame,
-                    SpellLeveled_Registration.LVSP_HEADER));
-                using (frame)
-                {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
+            return MajorRecord.TypicalParsing<SpellLeveled, SpellLeveled_ErrorMask, SpellLeveled_FieldIndex>(
+                record: new SpellLeveled(),
+                frame: frame,
+                errorMask: errorMask,
+                recType: SpellLeveled_Registration.LVSP_HEADER,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: Fill_Binary_Structs,
+                fillTyped: null);
         }
 
         protected static void Fill_Binary_Structs(

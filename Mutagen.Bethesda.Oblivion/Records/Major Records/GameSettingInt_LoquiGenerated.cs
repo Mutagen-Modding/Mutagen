@@ -738,35 +738,14 @@ namespace Mutagen.Bethesda.Oblivion
             Func<GameSettingInt_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            var ret = new GameSettingInt();
-            try
-            {
-                frame = frame.Spawn(HeaderTranslation.ParseRecord(
-                    frame,
-                    GameSettingInt_Registration.GMST_HEADER));
-                using (frame)
-                {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        errorMask: errorMask);
-                    while (!frame.Complete)
-                    {
-                        var parsed = Fill_Binary_RecordTypes(
-                            item: ret,
-                            frame: frame,
-                            errorMask: errorMask,
-                            recordTypeConverter: recordTypeConverter);
-                        if (parsed.Failed) break;
-                    }
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
+            return MajorRecord.TypicalParsing<GameSettingInt, GameSettingInt_ErrorMask, GameSettingInt_FieldIndex>(
+                record: new GameSettingInt(),
+                frame: frame,
+                errorMask: errorMask,
+                recType: GameSettingInt_Registration.GMST_HEADER,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: Fill_Binary_Structs,
+                fillTyped: Fill_Binary_RecordTypes);
         }
 
         protected static void Fill_Binary_Structs(

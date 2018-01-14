@@ -737,26 +737,14 @@ namespace Mutagen.Bethesda.Oblivion
             Func<GlobalInt_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            var ret = new GlobalInt();
-            try
-            {
-                frame = frame.Spawn(HeaderTranslation.ParseRecord(
-                    frame,
-                    GlobalInt_Registration.GLOB_HEADER));
-                using (frame)
-                {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
+            return MajorRecord.TypicalParsing<GlobalInt, GlobalInt_ErrorMask, GlobalInt_FieldIndex>(
+                record: new GlobalInt(),
+                frame: frame,
+                errorMask: errorMask,
+                recType: GlobalInt_Registration.GLOB_HEADER,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: Fill_Binary_Structs,
+                fillTyped: null);
         }
 
         protected static void Fill_Binary_Structs(

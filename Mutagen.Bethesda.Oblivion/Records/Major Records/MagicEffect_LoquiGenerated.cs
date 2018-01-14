@@ -1008,47 +1008,14 @@ namespace Mutagen.Bethesda.Oblivion
             Func<MagicEffect_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            var ret = new MagicEffect();
-            try
-            {
-                frame = frame.Spawn(HeaderTranslation.ParseRecord(
-                    frame,
-                    MagicEffect_Registration.MGEF_HEADER));
-                using (frame)
-                {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        errorMask: errorMask);
-                    while (!frame.Complete)
-                    {
-                        var parsed = Fill_Binary_RecordTypes(
-                            item: ret,
-                            frame: frame,
-                            errorMask: errorMask,
-                            recordTypeConverter: recordTypeConverter);
-                        if (parsed.Failed) break;
-                    }
-                }
-                if (ret.DATADataTypeState != default(DATADataType))
-                {
-                    Action unsubAction = () =>
-                    {
-                        ret.SubData_Property.Unsubscribe(DataTypeStateSubber);
-                        ret.DATADataTypeState = default(DATADataType);
-                    };
-                    ret.SubData_Property.Subscribe(
-                        owner: DataTypeStateSubber,
-                        callback: unsubAction,
-                        fireInitial: false);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
+            return MajorRecord.TypicalParsing<MagicEffect, MagicEffect_ErrorMask, MagicEffect_FieldIndex>(
+                record: new MagicEffect(),
+                frame: frame,
+                errorMask: errorMask,
+                recType: MagicEffect_Registration.MGEF_HEADER,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: Fill_Binary_Structs,
+                fillTyped: Fill_Binary_RecordTypes);
         }
 
         protected static void Fill_Binary_Structs(

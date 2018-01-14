@@ -687,26 +687,14 @@ namespace Mutagen.Bethesda.Oblivion
             Func<EffectShader_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            var ret = new EffectShader();
-            try
-            {
-                frame = frame.Spawn(HeaderTranslation.ParseRecord(
-                    frame,
-                    EffectShader_Registration.EFSH_HEADER));
-                using (frame)
-                {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        errorMask: errorMask);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
+            return MajorRecord.TypicalParsing<EffectShader, EffectShader_ErrorMask, EffectShader_FieldIndex>(
+                record: new EffectShader(),
+                frame: frame,
+                errorMask: errorMask,
+                recType: EffectShader_Registration.EFSH_HEADER,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: Fill_Binary_Structs,
+                fillTyped: null);
         }
 
         protected static void Fill_Binary_Structs(

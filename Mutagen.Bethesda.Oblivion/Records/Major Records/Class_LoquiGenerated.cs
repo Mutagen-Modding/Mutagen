@@ -900,47 +900,14 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Class_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            var ret = new Class();
-            try
-            {
-                frame = frame.Spawn(HeaderTranslation.ParseRecord(
-                    frame,
-                    Class_Registration.CLAS_HEADER));
-                using (frame)
-                {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        errorMask: errorMask);
-                    while (!frame.Complete)
-                    {
-                        var parsed = Fill_Binary_RecordTypes(
-                            item: ret,
-                            frame: frame,
-                            errorMask: errorMask,
-                            recordTypeConverter: recordTypeConverter);
-                        if (parsed.Failed) break;
-                    }
-                }
-                if (ret.DATADataTypeState != default(DATADataType))
-                {
-                    Action unsubAction = () =>
-                    {
-                        ret.Training_Property.Unsubscribe(DataTypeStateSubber);
-                        ret.DATADataTypeState = default(DATADataType);
-                    };
-                    ret.Training_Property.Subscribe(
-                        owner: DataTypeStateSubber,
-                        callback: unsubAction,
-                        fireInitial: false);
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
+            return MajorRecord.TypicalParsing<Class, Class_ErrorMask, Class_FieldIndex>(
+                record: new Class(),
+                frame: frame,
+                errorMask: errorMask,
+                recType: Class_Registration.CLAS_HEADER,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: Fill_Binary_Structs,
+                fillTyped: Fill_Binary_RecordTypes);
         }
 
         protected static void Fill_Binary_Structs(
