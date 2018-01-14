@@ -155,6 +155,11 @@
           <GenericSpecification Definition="Furnature" TypeToSpecify="T" />
         </Direct>
       </Ref>
+      <Ref name="Weapons">
+        <Direct refName="Group" >
+          <GenericSpecification Definition="Weapon" TypeToSpecify="T" />
+        </Direct>
+      </Ref>
     </Fields>
   </Object>
 </Loqui>

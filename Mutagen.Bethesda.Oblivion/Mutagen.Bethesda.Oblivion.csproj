@@ -269,6 +269,9 @@
     <Compile Include="Records\Major Records\Spell.cs">
       <DependentUpon>Spell.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Weapon.cs">
+      <DependentUpon>Weapon.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\OblivionMod.cs">
       <DependentUpon>OblivionMod.xml</DependentUpon>
     </Compile>
@@ -375,6 +378,9 @@
     </Compile>
     <Compile Include="Records\Major Records\Furnature_LoquiGenerated.cs">
       <DependentUpon>Furnature.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Weapon_LoquiGenerated.cs">
+      <DependentUpon>Weapon.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -499,6 +505,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Tree.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\Weapon.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Worldspace.xml">

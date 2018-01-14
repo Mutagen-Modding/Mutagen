@@ -770,6 +770,7 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType MGEF_HEADER = new RecordType("MGEF");
         public static readonly RecordType MISC_HEADER = new RecordType("MISC");
         public static readonly RecordType RACE_HEADER = new RecordType("RACE");
+        public static readonly RecordType WEAP_HEADER = new RecordType("WEAP");
         public static readonly RecordType WRLD_HEADER = new RecordType("WRLD");
         public static readonly RecordType ARMO_HEADER = new RecordType("ARMO");
         public static readonly RecordType CLOT_HEADER = new RecordType("CLOT");
@@ -804,6 +805,7 @@ namespace Mutagen.Bethesda.Internals
                         MGEF_HEADER,
                         MISC_HEADER,
                         RACE_HEADER,
+                        WEAP_HEADER,
                         WRLD_HEADER,
                         ARMO_HEADER,
                         CLOT_HEADER,
