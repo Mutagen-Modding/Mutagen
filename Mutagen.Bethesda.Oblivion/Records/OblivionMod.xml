@@ -2,174 +2,40 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="OblivionMod" objType="Mod" failOnUnknownType="false" GUID="b6f626df-b164-466b-960a-1639d88f66bc" ID="3">
     <Fields>
-      <Ref name="TES4" nullable="Singleton" >
-        <Direct refName="TES4" />
-      </Ref>
-      <Ref name="GameSettings">
-        <Direct refName="Group" >
-          <GenericSpecification Definition="GameSetting" TypeToSpecify="T" />
-        </Direct>
-      </Ref>
-      <Ref name="Globals">
-        <Direct refName="Group" >
-          <GenericSpecification Definition="Global" TypeToSpecify="T" />
-        </Direct>
-      </Ref>
-      <Ref name="Classes">
-        <Direct refName="Group" >
-          <GenericSpecification Definition="Class" TypeToSpecify="T" />
-        </Direct>
-      </Ref>
-      <Ref name="Factions">
-        <Direct refName="Group" >
-          <GenericSpecification Definition="Faction" TypeToSpecify="T" />
-        </Direct>
-      </Ref>
-      <Ref name="Hairs">
-        <Direct refName="Group" >
-          <GenericSpecification Definition="Hair" TypeToSpecify="T" />
-        </Direct>
-      </Ref>
-      <Ref name="Eyes">
-        <Direct refName="Group" >
-          <GenericSpecification Definition="Eye" TypeToSpecify="T" />
-        </Direct>
-      </Ref>
-      <Ref name="Races">
-        <Direct refName="Group" >
-          <GenericSpecification Definition="Race" TypeToSpecify="T" />
-        </Direct>
-      </Ref>
-      <Ref name="Sounds">
-        <Direct refName="Group" >
-          <GenericSpecification Definition="Sound" TypeToSpecify="T" />
-        </Direct>
-      </Ref>
-      <Ref name="Skills">
-        <Direct refName="Group" >
-          <GenericSpecification Definition="SkillRecord" TypeToSpecify="T" />
-        </Direct>
-      </Ref>
-      <Ref name="MagicEffects">
-        <Direct refName="Group" >
-          <GenericSpecification Definition="MagicEffect" TypeToSpecify="T" />
-        </Direct>
-      </Ref>
-      <Ref name="Scripts">
-        <Direct refName="Group" >
-          <GenericSpecification Definition="Script" TypeToSpecify="T" />
-        </Direct>
-      </Ref>
-      <Ref name="LandTextures">
-        <Direct refName="Group" >
-          <GenericSpecification Definition="LandTexture" TypeToSpecify="T" />
-        </Direct>
-      </Ref>
-      <Ref name="Enchantments">
-        <Direct refName="Group" >
-          <GenericSpecification Definition="Enchantment" TypeToSpecify="T" />
-        </Direct>
-      </Ref>
-      <Ref name="Spells">
-        <Direct refName="Group" >
-          <GenericSpecification Definition="SpellUnleveled" TypeToSpecify="T" />
-        </Direct>
-      </Ref>
-      <Ref name="Birthsigns">
-        <Direct refName="Group" >
-          <GenericSpecification Definition="Birthsign" TypeToSpecify="T" />
-        </Direct>
-      </Ref>
-      <Ref name="Activators">
-        <Direct refName="Group" >
-          <GenericSpecification Definition="Activator" TypeToSpecify="T" />
-        </Direct>
-      </Ref>
-      <Ref name="AlchemicalApparatus">
-        <Direct refName="Group" >
-          <GenericSpecification Definition="AlchemicalApparatus" TypeToSpecify="T" />
-        </Direct>
-      </Ref>
-      <Ref name="Armors">
-        <Direct refName="Group" >
-          <GenericSpecification Definition="Armor" TypeToSpecify="T" />
-        </Direct>
-      </Ref>
-      <Ref name="Books">
-        <Direct refName="Group" >
-          <GenericSpecification Definition="Book" TypeToSpecify="T" />
-        </Direct>
-      </Ref>
-      <Ref name="Clothes">
-        <Direct refName="Group" >
-          <GenericSpecification Definition="Clothing" TypeToSpecify="T" />
-        </Direct>
-      </Ref>
-      <Ref name="Containers">
-        <Direct refName="Group" >
-          <GenericSpecification Definition="Container" TypeToSpecify="T" />
-        </Direct>
-      </Ref>
-      <Ref name="Doors">
-        <Direct refName="Group" >
-          <GenericSpecification Definition="Door" TypeToSpecify="T" />
-        </Direct>
-      </Ref>
-      <Ref name="Ingredients">
-        <Direct refName="Group" >
-          <GenericSpecification Definition="Ingredient" TypeToSpecify="T" />
-        </Direct>
-      </Ref>
-      <Ref name="Lights">
-        <Direct refName="Group" >
-          <GenericSpecification Definition="Light" TypeToSpecify="T" />
-        </Direct>
-      </Ref>
-      <Ref name="Miscellaneous">
-        <Direct refName="Group" >
-          <GenericSpecification Definition="Miscellaneous" TypeToSpecify="T" />
-        </Direct>
-      </Ref>
-      <Ref name="Statics">
-        <Direct refName="Group" >
-          <GenericSpecification Definition="Static" TypeToSpecify="T" />
-        </Direct>
-      </Ref>
-      <Ref name="Grasses">
-        <Direct refName="Group" >
-          <GenericSpecification Definition="Grass" TypeToSpecify="T" />
-        </Direct>
-      </Ref>
-      <Ref name="Trees">
-        <Direct refName="Group" >
-          <GenericSpecification Definition="Tree" TypeToSpecify="T" />
-        </Direct>
-      </Ref>
-      <Ref name="Flora">
-        <Direct refName="Group" >
-          <GenericSpecification Definition="Flora" TypeToSpecify="T" />
-        </Direct>
-      </Ref>
-      <Ref name="Furnature">
-        <Direct refName="Group" >
-          <GenericSpecification Definition="Furnature" TypeToSpecify="T" />
-        </Direct>
-      </Ref>
-      <Ref name="Weapons">
-        <Direct refName="Group" >
-          <GenericSpecification Definition="Weapon" TypeToSpecify="T" />
-        </Direct>
-      </Ref>
-      <Ref name="Ammo">
-        <Direct refName="Group" >
-          <GenericSpecification Definition="Ammo" TypeToSpecify="T" />
-        </Direct>
-      </Ref>
-      <Ref name="NPCs">
-        <Direct refName="Group" >
-          <GenericSpecification Definition="NPC" TypeToSpecify="T" />
-        </Direct>
-      </Ref>
+      <RefDirect name="TES4" refName="TES4" nullable="Singleton" />
+      <Group name="GameSettings" refName="GameSetting" />
+      <Group name="Globals" refName="Global" />
+      <Group name="Classes" refName="Class" />
+      <Group name="Factions" refName="Faction" />
+      <Group name="Hairs" refName="Hair" />
+      <Group name="Eyes" refName="Eye" />
+      <Group name="Races" refName="Race" />
+      <Group name="Sounds" refName="Sound" />
+      <Group name="Skills" refName="SkillRecord" />
+      <Group name="MagicEffects" refName="MagicEffect" />
+      <Group name="Scripts" refName="Script" />
+      <Group name="LandTextures" refName="LandTexture" />
+      <Group name="Enchantments" refName="Enchantment" />
+      <Group name="Spells" refName="SpellUnleveled" />
+      <Group name="Birthsigns" refName="Birthsign" />
+      <Group name="Activators" refName="Activator" />
+      <Group name="AlchemicalApparatus" refName="AlchemicalApparatus" />
+      <Group name="Armors" refName="Armor" />
+      <Group name="Books" refName="Book" />
+      <Group name="Clothes" refName="Clothing" />
+      <Group name="Containers" refName="Container" />
+      <Group name="Doors" refName="Door" />
+      <Group name="Ingredients" refName="Ingredient" />
+      <Group name="Lights" refName="Light" />
+      <Group name="Miscellaneous" refName="Miscellaneous" />
+      <Group name="Statics" refName="Static" />
+      <Group name="Grasses" refName="Grass" />
+      <Group name="Trees" refName="Tree" />
+      <Group name="Flora" refName="Flora" />
+      <Group name="Furnature" refName="Furnature" />
+      <Group name="Weapons" refName="Weapon" />
+      <Group name="Ammo" refName="Ammo" />
+      <Group name="NPCs" refName="NPC" />
     </Fields>
   </Object>
 </Loqui>

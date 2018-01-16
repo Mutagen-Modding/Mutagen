@@ -136,6 +136,7 @@
         <xs:element name="SpecialParse" type="NSpecialParse"/>
         <xs:element name="Zero" type="ZeroType"/>
         <xs:element name="Transfer" type="TransferType"/>
+        <xs:element name="Group" type="GroupType" />
       </xs:choice>
     </xs:group>
 
@@ -272,6 +273,11 @@
   <xs:complexType name="RecordTypeMappingType" >
     <xs:attribute name="From" type="xs:string" use="required" />
     <xs:attribute name="To" type="xs:string" use="required" />
+  </xs:complexType>
+
+  <xs:complexType name="GroupType" >
+    <xs:attribute name="name" use="required" />
+    <xs:attribute name="refName" use="required" />
   </xs:complexType>
   
 </xs:schema>
