@@ -214,6 +214,9 @@
     <Compile Include="Records\Major Records\MagicEffect_LoquiGenerated.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\NPC.cs">
+      <DependentUpon>NPC.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Race.cs">
       <DependentUpon>Race.xml</DependentUpon>
     </Compile>
@@ -388,6 +391,21 @@
     <Compile Include="Records\Major Records\Ammo_LoquiGenerated.cs">
       <DependentUpon>Ammo.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\NPC_LoquiGenerated.cs">
+      <DependentUpon>NPC.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RankPlacement_LoquiGenerated.cs">
+      <DependentUpon>NPC.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ItemEntry_LoquiGenerated.cs">
+      <DependentUpon>NPC.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AIPackage_LoquiGenerated.cs">
+      <DependentUpon>AIPackage.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\CombatStyle_LoquiGenerated.cs">
+      <DependentUpon>CombatStyle.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Records\Common Subrecords\Effect.xml">
@@ -411,6 +429,7 @@
     <Content Include="Records\Major Records\Activator.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Records\Major Records\AIPackage.xml" />
     <Content Include="Records\Major Records\AlchemicalApparatus.xml">
       <SubType>Designer</SubType>
     </Content>
@@ -433,6 +452,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\ClothingAbstract.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\CombatStyle.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Container.xml">
@@ -487,6 +509,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Miscellaneous.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\NPC.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Race.xml">

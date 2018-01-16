@@ -31,14 +31,22 @@ namespace Mutagen.Bethesda.Generation
             {
                 args.Add($"writer: {writerAccessor}");
                 args.Add($"item: {itemAccessor.PropertyOrDirectAccess}");
-                args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
-                args.Add($"errorMask: {maskAccessor}");
+                if (typeGen.HasIndex)
+                {
+                    args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
+                    args.Add($"errorMask: {maskAccessor}");
+                }
+                else
+                {
+                    args.Add($"doMasks: {doMaskAccessor}");
+                    args.Add($"errorMask: out {maskAccessor}");
+                }
                 if (data.RecordType.HasValue)
                 {
                     args.Add($"header: recordTypeConverter.ConvertToCustom({objGen.RecordTypeHeaderName(data.RecordType.Value)})");
                     args.Add($"nullable: {(data.Optional ? "true" : "false")}");
                 }
-                else
+                else if (data.Length.HasValue)
                 {
                     args.Add($"length: {data.Length.Value}");
                 }
@@ -113,7 +121,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     args.Add($"header: recordTypeConverter.Convert({objGen.RecordTypeHeaderName(data.RecordType.Value)})");
                 }
-                else
+                else if (data.Length.HasValue)
                 {
                     args.Add($"length: {data.Length.Value}");
                 }

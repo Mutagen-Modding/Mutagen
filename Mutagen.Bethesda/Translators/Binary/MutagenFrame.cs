@@ -1,7 +1,9 @@
-﻿using Mutagen.Bethesda.Internals;
+﻿using Ionic.Zlib;
+using Mutagen.Bethesda.Internals;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -148,9 +150,15 @@ namespace Mutagen.Bethesda.Binary
                 snapToFinalPosition);
         }
 
-        //public MutagenFrame Decompress()
-        //{
-
-        //}
+        public MutagenFrame Decompress()
+        {
+            var resultLen = this.Reader.ReadUInt32();
+            var bytes = this.Reader.ReadBytes((int)this.RemainingLength.Value);
+            var res = ZlibStream.UncompressBuffer(bytes);
+            return new MutagenFrame(
+                new MutagenReader(
+                    new BinaryReader(
+                        new MemoryStream(res))));
+        }
     }
 }

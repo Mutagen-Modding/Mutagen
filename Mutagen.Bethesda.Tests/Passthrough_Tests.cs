@@ -31,7 +31,6 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
-
         [Fact]
         public void OblivionESM_Binary()
         {
@@ -83,6 +82,7 @@ namespace Mutagen.Bethesda.Tests
                 Assert.Null(outputErrMask);
             }
         }
+
         [Fact]
         public void OblivionESM_XML()
         {

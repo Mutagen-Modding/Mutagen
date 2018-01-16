@@ -658,6 +658,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public static readonly RecordType AMMO_HEADER = new RecordType("AMMO");
+        public static readonly RecordType TRIGGERING_RECORD_TYPE = AMMO_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 0;
         #region Interface

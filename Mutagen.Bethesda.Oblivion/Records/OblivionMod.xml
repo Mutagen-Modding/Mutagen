@@ -165,6 +165,11 @@
           <GenericSpecification Definition="Ammo" TypeToSpecify="T" />
         </Direct>
       </Ref>
+      <Ref name="NPCs">
+        <Direct refName="Group" >
+          <GenericSpecification Definition="NPC" TypeToSpecify="T" />
+        </Direct>
+      </Ref>
     </Fields>
   </Object>
 </Loqui>

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Ammo" baseClass="Bethesda.NamedMajorRecord" objType="Record" recordType="AMMO" GUID="b9883ff5-be2f-44d5-acf7-69751cd6e87f" ID="83">
+  <Object name="Ammo" baseClass="ItemAbstract" objType="Record" recordType="AMMO" GUID="b9883ff5-be2f-44d5-acf7-69751cd6e87f" ID="83">
     <Fields>
+      <String name="Name" recordType="FULL" />
       <RefDirect name="Model" refName="Model" />
       <FilePath name="Icon" recordType="ICON" />
       <FormID name="Enchantment" refName="Enchantment" recordType="ENAM" />
