@@ -11,5 +11,6 @@ namespace Mutagen.Bethesda
     {
         INotifyingListGetter<MasterReference> MasterReferences { get; }
         bool TryGetRecord<T>(uint id, out T record);
+        IEnumerable<MajorRecord> MajorRecords { get; }
     }
 }

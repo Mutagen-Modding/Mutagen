@@ -1195,6 +1195,145 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #region Mutagen
+        public IEnumerable<MajorRecord> MajorRecords => GetMajorRecords();
+        private IEnumerable<MajorRecord> GetMajorRecords()
+        {
+            foreach (var rec in GameSettings.Items)
+            {
+                yield return rec;
+            }
+            foreach (var rec in Globals.Items)
+            {
+                yield return rec;
+            }
+            foreach (var rec in Classes.Items)
+            {
+                yield return rec;
+            }
+            foreach (var rec in Factions.Items)
+            {
+                yield return rec;
+            }
+            foreach (var rec in Hairs.Items)
+            {
+                yield return rec;
+            }
+            foreach (var rec in Eyes.Items)
+            {
+                yield return rec;
+            }
+            foreach (var rec in Races.Items)
+            {
+                yield return rec;
+            }
+            foreach (var rec in Sounds.Items)
+            {
+                yield return rec;
+            }
+            foreach (var rec in Skills.Items)
+            {
+                yield return rec;
+            }
+            foreach (var rec in MagicEffects.Items)
+            {
+                yield return rec;
+            }
+            foreach (var rec in Scripts.Items)
+            {
+                yield return rec;
+            }
+            foreach (var rec in LandTextures.Items)
+            {
+                yield return rec;
+            }
+            foreach (var rec in Enchantments.Items)
+            {
+                yield return rec;
+            }
+            foreach (var rec in Spells.Items)
+            {
+                yield return rec;
+            }
+            foreach (var rec in Birthsigns.Items)
+            {
+                yield return rec;
+            }
+            foreach (var rec in Activators.Items)
+            {
+                yield return rec;
+            }
+            foreach (var rec in AlchemicalApparatus.Items)
+            {
+                yield return rec;
+            }
+            foreach (var rec in Armors.Items)
+            {
+                yield return rec;
+            }
+            foreach (var rec in Books.Items)
+            {
+                yield return rec;
+            }
+            foreach (var rec in Clothes.Items)
+            {
+                yield return rec;
+            }
+            foreach (var rec in Containers.Items)
+            {
+                yield return rec;
+            }
+            foreach (var rec in Doors.Items)
+            {
+                yield return rec;
+            }
+            foreach (var rec in Ingredients.Items)
+            {
+                yield return rec;
+            }
+            foreach (var rec in Lights.Items)
+            {
+                yield return rec;
+            }
+            foreach (var rec in Miscellaneous.Items)
+            {
+                yield return rec;
+            }
+            foreach (var rec in Statics.Items)
+            {
+                yield return rec;
+            }
+            foreach (var rec in Grasses.Items)
+            {
+                yield return rec;
+            }
+            foreach (var rec in Trees.Items)
+            {
+                yield return rec;
+            }
+            foreach (var rec in Flora.Items)
+            {
+                yield return rec;
+            }
+            foreach (var rec in Furnature.Items)
+            {
+                yield return rec;
+            }
+            foreach (var rec in Weapons.Items)
+            {
+                yield return rec;
+            }
+            foreach (var rec in Ammo.Items)
+            {
+                yield return rec;
+            }
+            foreach (var rec in NPCs.Items)
+            {
+                yield return rec;
+            }
+        }
+        #endregion
+
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
