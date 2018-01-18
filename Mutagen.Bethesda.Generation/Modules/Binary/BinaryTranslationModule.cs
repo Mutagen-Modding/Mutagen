@@ -558,7 +558,7 @@ namespace Mutagen.Bethesda.Generation
                                     GenerateFillSnippet(obj, fg, gen.Value, generator, "frame");
                                     if (dataSet != null)
                                     {
-                                        fg.AppendLine($"return TryGet<{obj.FieldIndexName}?>.Succeed({dataSet.SubFields.Last().IndexEnumName});");
+                                        fg.AppendLine($"return TryGet<{obj.FieldIndexName}?>.Succeed({dataSet.SubFields.Last(f => f.IntegrateField).IndexEnumName});");
                                     }
                                     else if (field.Field is SpecialParseType special)
                                     {
