@@ -690,7 +690,7 @@ namespace Mutagen.Bethesda.Oblivion
             try
             {
                 frame = frame.Spawn(HeaderTranslation.ParseSubrecord(
-                    frame,
+                    frame.Reader,
                     LocalVariableData_Registration.SLSD_HEADER));
                 using (frame)
                 {

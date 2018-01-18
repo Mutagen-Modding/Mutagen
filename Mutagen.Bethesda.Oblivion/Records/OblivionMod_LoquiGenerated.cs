@@ -1637,7 +1637,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter = null)
         {
             var nextRecordType = HeaderTranslation.GetNextType(
-                frame: frame,
+                reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
             switch (nextRecordType.Type)

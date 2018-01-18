@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             var initialPos = frame.Position;
             frame.Position += 20;
-            if (!MajorRecord_Registration.EDID_HEADER.Equals(HeaderTranslation.GetNextSubRecordType(frame, out var edidLength)))
+            if (!MajorRecord_Registration.EDID_HEADER.Equals(HeaderTranslation.GetNextSubRecordType(frame.Reader, out var edidLength)))
             {
                 throw new ArgumentException($"EDID was not located in expected position: {frame.Position}");
             }

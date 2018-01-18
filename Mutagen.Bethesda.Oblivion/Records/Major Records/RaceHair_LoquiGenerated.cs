@@ -702,7 +702,7 @@ namespace Mutagen.Bethesda.Oblivion
             try
             {
                 frame = frame.Spawn(HeaderTranslation.ParseSubrecord(
-                    frame,
+                    frame.Reader,
                     RaceHair_Registration.DNAM_HEADER));
                 using (frame)
                 {

@@ -1036,7 +1036,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter = null)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
-                frame: frame,
+                reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
             switch (nextRecordType.Type)
@@ -1124,7 +1124,7 @@ namespace Mutagen.Bethesda.Oblivion
                         transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
                         {
                             listSubMask = null;
-                            return TryGet<EDIDLink<MagicEffect>>.Succeed(new EDIDLink<MagicEffect>(HeaderTranslation.ReadNextRecordType(r)));
+                            return TryGet<EDIDLink<MagicEffect>>.Succeed(new EDIDLink<MagicEffect>(HeaderTranslation.ReadNextRecordType(r.Reader)));
                         }
                         );
                     item._CounterEffects.SetIfSucceeded(CounterEffectstryGet);

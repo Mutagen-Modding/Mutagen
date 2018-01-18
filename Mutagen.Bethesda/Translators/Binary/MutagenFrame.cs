@@ -60,48 +60,6 @@ namespace Mutagen.Bethesda.Binary
             this.SnapToFinalPosition = snapToFinalPosition;
         }
 
-        public bool TryCheckUpcomingRead(ContentLength length)
-        {
-            return this.Position + length <= this.FinalPosition;
-        }
-
-        public void CheckUpcomingRead(ContentLength length)
-        {
-            if (!TryCheckUpcomingRead(length, out var ex))
-            {
-                throw ex;
-            }
-        }
-
-        public bool TryCheckUpcomingRead(ContentLength length, out Exception ex)
-        {
-            if (!TryCheckUpcomingRead(length))
-            {
-                if (Complete)
-                {
-                    ex = new ArgumentException($"Frame was complete, so did not have any remaining bytes to parse. At {this.Position}. Desired {length} more bytes. {this.RemainingLength} past the final position {this.FinalPosition}.");
-                    return false;
-                }
-                else
-                {
-                    ex = new ArgumentException($"Frame did not have enough remaining bytes to parse. At {this.Position}. Desired {length} more bytes.  Only {this.RemainingLength} left before final position {this.FinalPosition}.");
-                    return false;
-                }
-            }
-            ex = null;
-            return true;
-        }
-
-        public bool ContainsPosition(FileLocation loc)
-        {
-            return this.Position <= loc && this.FinalPosition >= loc;
-        }
-
-        public void SetPosition(FileLocation pos)
-        {
-            this.Position = pos;
-        }
-
         public void Dispose()
         {
             if (this.SnapToFinalPosition 

@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda.Binary
 
         protected override RecordType ParseValue(MutagenFrame reader)
         {
-            return HeaderTranslation.ReadNextRecordType(reader);
+            return HeaderTranslation.ReadNextRecordType(reader.Reader);
         }
 
         protected override void WriteValue(MutagenWriter writer, RecordType item)

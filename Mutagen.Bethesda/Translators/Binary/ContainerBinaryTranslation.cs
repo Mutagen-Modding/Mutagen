@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Binary
                 var ret = new List<T>();
                 while (!frame.Complete)
                 {
-                    if (!HeaderTranslation.TryGetRecordType(safeFrame, objType, triggeringRecord)) break;
+                    if (!HeaderTranslation.TryGetRecordType(safeFrame.Reader, objType, triggeringRecord)) break;
                     var startingPos = frame.Position;
                     var get = transl(safeFrame, doMasks, out var subMaskObj);
                     if (get.Succeeded)
@@ -85,7 +85,7 @@ namespace Mutagen.Bethesda.Binary
                 var ret = new List<T>();
                 while (!frame.Complete)
                 {
-                    var nextRecord = HeaderTranslation.GetNextRecordType(frame);
+                    var nextRecord = HeaderTranslation.GetNextRecordType(frame.Reader);
                     if (!triggeringRecord.Contains(nextRecord)) break;
                     var startingPos = frame.Position;
                     var get = transl(safeFrame, nextRecord, doMasks, out var subMaskObj);

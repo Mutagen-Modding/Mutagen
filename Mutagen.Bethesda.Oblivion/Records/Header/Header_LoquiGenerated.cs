@@ -740,7 +740,7 @@ namespace Mutagen.Bethesda.Oblivion
             try
             {
                 frame = frame.Spawn(HeaderTranslation.ParseSubrecord(
-                    frame,
+                    frame.Reader,
                     Header_Registration.HEDR_HEADER));
                 using (frame)
                 {

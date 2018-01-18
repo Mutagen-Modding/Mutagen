@@ -702,7 +702,7 @@ namespace Mutagen.Bethesda.Oblivion
             try
             {
                 frame = frame.Spawn(HeaderTranslation.ParseSubrecord(
-                    frame,
+                    frame.Reader,
                     RaceVoices_Registration.VNAM_HEADER));
                 using (frame)
                 {

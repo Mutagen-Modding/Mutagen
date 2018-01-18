@@ -888,7 +888,7 @@ namespace Mutagen.Bethesda.Oblivion
             var ret = new Group<T>();
             try
             {
-                frame = frame.Spawn(HeaderTranslation.ParseGroup(frame));
+                frame = frame.Spawn(HeaderTranslation.ParseGroup(frame.Reader));
                 using (frame)
                 {
                     Fill_Binary_Structs(
@@ -947,7 +947,7 @@ namespace Mutagen.Bethesda.Oblivion
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             var nextRecordType = HeaderTranslation.GetNextRecordType(
-                frame: frame,
+                reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
             switch (nextRecordType.Type)

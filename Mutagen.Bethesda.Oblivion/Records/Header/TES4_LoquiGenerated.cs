@@ -862,7 +862,7 @@ namespace Mutagen.Bethesda.Oblivion
             try
             {
                 frame = frame.Spawn(HeaderTranslation.ParseRecord(
-                    frame,
+                    frame.Reader,
                     TES4_Registration.TES4_HEADER));
                 using (frame)
                 {
@@ -909,7 +909,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter = null)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
-                frame: frame,
+                reader: frame.Reader,
                 contentLength: out var contentLength,
                 recordTypeConverter: recordTypeConverter);
             switch (nextRecordType.Type)

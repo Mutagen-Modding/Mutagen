@@ -709,7 +709,7 @@ namespace Mutagen.Bethesda.Oblivion
             try
             {
                 frame = frame.Spawn(HeaderTranslation.ParseSubrecord(
-                    frame,
+                    frame.Reader,
                     RaceStatsGendered_Registration.ATTR_HEADER));
                 using (frame)
                 {

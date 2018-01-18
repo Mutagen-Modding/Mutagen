@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Generation
                     break;
                 case FormIDLinkType.FormIDTypeEnum.EDIDChars:
                     fg.AppendLine($"{maskAccessor} = null;");
-                    fg.AppendLine($"return TryGet<{linkType.TypeName}>.Succeed(new {linkType.TypeName}(HeaderTranslation.ReadNextRecordType(r)));");
+                    fg.AppendLine($"return TryGet<{linkType.TypeName}>.Succeed(new {linkType.TypeName}(HeaderTranslation.ReadNextRecordType(r.Reader)));");
                     break;
                 default:
                     throw new NotImplementedException();

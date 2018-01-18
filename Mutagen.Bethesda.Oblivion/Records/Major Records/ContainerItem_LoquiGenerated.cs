@@ -708,7 +708,7 @@ namespace Mutagen.Bethesda.Oblivion
             try
             {
                 frame = frame.Spawn(HeaderTranslation.ParseSubrecord(
-                    frame,
+                    frame.Reader,
                     ContainerItem_Registration.CNTO_HEADER));
                 using (frame)
                 {

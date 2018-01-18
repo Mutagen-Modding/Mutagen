@@ -22,13 +22,13 @@ namespace Mutagen.Bethesda.Oblivion
         {
             // Skip to FNAM
             var initialPos = frame.Position;
-            frame.CheckUpcomingRead(new ContentLength(26));
+            frame.Reader.CheckUpcomingRead(new ContentLength(26));
             frame.Position += 24;
             var edidLength = frame.Reader.ReadInt16();
             frame.Position += edidLength;
 
             // Confirm FNAM
-            var type = HeaderTranslation.ReadNextSubRecordType(frame, out var len);
+            var type = HeaderTranslation.ReadNextSubRecordType(frame.Reader, out var len);
             if (!type.Equals(FNAM))
             {
                 var ex = new ArgumentException($"Could not find FNAM in its expected location: {frame.Position}");

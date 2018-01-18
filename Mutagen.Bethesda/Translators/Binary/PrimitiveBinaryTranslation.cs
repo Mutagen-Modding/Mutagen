@@ -19,7 +19,7 @@ namespace Mutagen.Bethesda.Binary
             {
                 if (ExpectedLength.HasValue)
                 {
-                    if (!frame.TryCheckUpcomingRead(this.ExpectedLength.Value, out var ex))
+                    if (!frame.Reader.TryCheckUpcomingRead(this.ExpectedLength.Value, out var ex))
                     {
                         frame.Position = frame.FinalPosition;
                         throw ex;

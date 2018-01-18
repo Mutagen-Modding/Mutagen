@@ -300,7 +300,7 @@ namespace Mutagen.Bethesda.Generation
                                                 $"frame = frame.Spawn({nameof(HeaderTranslation)}.ParseSubrecord",
                                                 suffixLine: ")"))
                                             {
-                                                args.Add("frame");
+                                                args.Add("frame.Reader");
                                                 args.Add($"{obj.GetTriggeringSource()}");
                                             }
                                         }
@@ -310,7 +310,7 @@ namespace Mutagen.Bethesda.Generation
                                             $"frame = frame.Spawn({nameof(HeaderTranslation)}.ParseRecord",
                                             suffixLine: ")"))
                                         {
-                                            args.Add("frame");
+                                            args.Add("frame.Reader");
                                             args.Add($"{obj.GetTriggeringSource()}");
                                         }
                                         break;
@@ -319,7 +319,7 @@ namespace Mutagen.Bethesda.Generation
                                             $"frame = frame.Spawn({nameof(HeaderTranslation)}.ParseGroup",
                                             suffixLine: ")"))
                                         {
-                                            args.Add("frame");
+                                            args.Add("frame.Reader");
                                         }
                                         break;
                                     case ObjectType.Mod:
@@ -495,7 +495,7 @@ namespace Mutagen.Bethesda.Generation
                     using (var args = new ArgsWrapper(fg,
                         $"var nextRecordType = {nameof(HeaderTranslation)}.{funcName}"))
                     {
-                        args.Add("frame: frame");
+                        args.Add("reader: frame.Reader");
                         args.Add("contentLength: out var contentLength");
                         args.Add("recordTypeConverter: recordTypeConverter");
                     }

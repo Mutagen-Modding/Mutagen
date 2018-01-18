@@ -741,7 +741,7 @@ namespace Mutagen.Bethesda.Oblivion
             try
             {
                 frame = frame.Spawn(HeaderTranslation.ParseSubrecord(
-                    frame,
+                    frame.Reader,
                     HavokData_Registration.HNAM_HEADER));
                 using (frame)
                 {
