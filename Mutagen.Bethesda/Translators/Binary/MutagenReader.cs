@@ -19,7 +19,7 @@ namespace Mutagen.Bethesda.Binary
             set => this.reader.BaseStream.Position = value;
         }
         public FileLocation Length => new FileLocation(this.reader.BaseStream.Length);
-        public bool Complete => this.Position < this.Length;
+        public bool Complete => this.Position >= this.Length;
         public FileLocation FinalLocation => new FileLocation(this.reader.BaseStream.Length);
         public ContentLength RemainingLength => this.FinalLocation - this.Position;
 
