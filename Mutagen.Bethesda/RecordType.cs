@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ namespace Mutagen.Bethesda
         public readonly string Type;
         public const byte HEADER_LENGTH = 4;
 
+        [DebuggerStepThrough]
         internal RecordType (string type, bool validate)
         {
             this.Type = type;
@@ -22,6 +24,7 @@ namespace Mutagen.Bethesda
             }
         }
 
+        [DebuggerStepThrough]
         public RecordType(string type)
             : this(type, validate: true)
         {
