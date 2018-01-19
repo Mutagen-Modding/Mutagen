@@ -181,7 +181,8 @@ namespace Mutagen.Bethesda.Generation
                     if (loqui.TargetObjectGeneration.Name.Equals("Group"))
                     {
                         var objName = loqui.GenericSpecification.Specifications["T"];
-                        var grupObj = obj.ProtoGen.ObjectGenerationsByName[objName];
+                        var nameKey = ObjectNamedKey.Factory(objName);
+                        var grupObj = obj.ProtoGen.Gen.ObjectGenerationsByObjectNameKey[nameKey];
                         data.RecordType = grupObj.GetRecordType();
                         data.TriggeringRecordAccessors.Add(grupObj.RecordTypeHeaderName(data.RecordType.Value));
                         data.TriggeringRecordTypes.Add(data.RecordType.Value);

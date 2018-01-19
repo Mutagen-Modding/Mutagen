@@ -11,9 +11,8 @@ using System.Text;
 using Loqui;
 using Noggog;
 using Noggog.Notifying;
-using Mutagen.Bethesda.Oblivion.Internals;
-using Mutagen.Bethesda;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -22,11 +21,11 @@ using Loqui.Xml;
 using System.Diagnostics;
 using Mutagen.Bethesda.Binary;
 
-namespace Mutagen.Bethesda.Oblivion
+namespace Mutagen.Bethesda
 {
     #region Class
     public partial class Group<T> : IGroup<T>, ILoquiObjectSetter, IEquatable<Group<T>>
-        where T : Bethesda.MajorRecord, ILoquiObjectGetter
+        where T : MajorRecord, ILoquiObjectGetter
     {
         ILoquiRegistration ILoquiObject.Registration => Group_Registration.Instance;
         public static Group_Registration Registration => Group_Registration.Instance;
@@ -1146,7 +1145,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public interface IGroup<T> : IGroupGetter<T>, ILoquiClass<IGroup<T>, IGroupGetter<T>>, ILoquiClass<Group<T>, IGroupGetter<T>>
-        where T : Bethesda.MajorRecord, ILoquiObjectGetter
+        where T : MajorRecord, ILoquiObjectGetter
     {
         new Int32 GroupType { get; set; }
         new INotifyingSetItem<Int32> GroupType_Property { get; }
@@ -1155,7 +1154,7 @@ namespace Mutagen.Bethesda.Oblivion
     }
 
     public interface IGroupGetter<T> : ILoquiObject
-        where T : Bethesda.MajorRecord, ILoquiObjectGetter
+        where T : MajorRecord, ILoquiObjectGetter
     {
         #region ContainedRecordType
         String ContainedRecordType { get; }
@@ -1182,7 +1181,7 @@ namespace Mutagen.Bethesda.Oblivion
 
 }
 
-namespace Mutagen.Bethesda.Oblivion.Internals
+namespace Mutagen.Bethesda.Internals
 {
     #region Field Index
     public enum Group_FieldIndex
@@ -1199,10 +1198,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static readonly Group_Registration Instance = new Group_Registration();
 
-        public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
+        public static ProtocolKey ProtocolKey => ProtocolDefinition_Bethesda.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
+            protocolKey: ProtocolDefinition_Bethesda.ProtocolKey,
             msgID: 11,
             version: 0);
 
@@ -1222,11 +1221,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static readonly Type CommonType = typeof(GroupCommon);
 
-        public const string FullName = "Mutagen.Bethesda.Oblivion.Group";
+        public const string FullName = "Mutagen.Bethesda.Group";
 
         public const string Name = "Group";
 
-        public const string Namespace = "Mutagen.Bethesda.Oblivion";
+        public const string Namespace = "Mutagen.Bethesda";
 
         public const byte GenericCount = 1;
 
@@ -1381,7 +1380,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     }
 
     public class Group_Registration<T> : Group_Registration
-        where T : Bethesda.MajorRecord, ILoquiObjectGetter
+        where T : MajorRecord, ILoquiObjectGetter
     {
         public static readonly Group_Registration<T> GenericInstance = new Group_Registration<T>();
 
@@ -1416,7 +1415,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Group_CopyMask<T_CopyMask> copyMask = null,
             IGroupGetter<T> def = null,
             NotifyingFireParameters? cmds = null)
-            where T : Bethesda.MajorRecord, ILoquiObjectGetter
+            where T : MajorRecord, ILoquiObjectGetter
             where T_CopyMask : MajorRecord_CopyMask, new()
         {
             GroupCommon.CopyFieldsFrom<T, MajorRecord_ErrorMask, T_CopyMask>(
@@ -1436,7 +1435,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Group_CopyMask<T_CopyMask> copyMask = null,
             IGroupGetter<T> def = null,
             NotifyingFireParameters? cmds = null)
-            where T : Bethesda.MajorRecord, ILoquiObjectGetter
+            where T : MajorRecord, ILoquiObjectGetter
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
             where T_CopyMask : MajorRecord_CopyMask, new()
         {
@@ -1458,7 +1457,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out Group_ErrorMask<T_ErrMask> errorMask,
             Group_CopyMask<T_CopyMask> copyMask,
             NotifyingFireParameters? cmds)
-            where T : Bethesda.MajorRecord, ILoquiObjectGetter
+            where T : MajorRecord, ILoquiObjectGetter
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
             where T_CopyMask : MajorRecord_CopyMask, new()
         {
@@ -1490,7 +1489,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Func<Group_ErrorMask<T_ErrMask>> errorMask,
             Group_CopyMask<T_CopyMask> copyMask,
             NotifyingFireParameters? cmds)
-            where T : Bethesda.MajorRecord, ILoquiObjectGetter
+            where T : MajorRecord, ILoquiObjectGetter
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
             where T_CopyMask : MajorRecord_CopyMask, new()
         {
@@ -1548,7 +1547,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool on,
             IGroup<T> obj,
             NotifyingFireParameters? cmds = null)
-            where T : Bethesda.MajorRecord, ILoquiObjectGetter
+            where T : MajorRecord, ILoquiObjectGetter
         {
             Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
@@ -1572,7 +1571,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ushort index,
             IGroup<T> obj,
             NotifyingUnsetParameters? cmds = null)
-            where T : Bethesda.MajorRecord, ILoquiObjectGetter
+            where T : MajorRecord, ILoquiObjectGetter
         {
             Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
@@ -1595,7 +1594,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static bool GetNthObjectHasBeenSet<T>(
             ushort index,
             IGroup<T> obj)
-            where T : Bethesda.MajorRecord, ILoquiObjectGetter
+            where T : MajorRecord, ILoquiObjectGetter
         {
             Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
@@ -1616,7 +1615,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static object GetNthObject<T>(
             ushort index,
             IGroupGetter<T> obj)
-            where T : Bethesda.MajorRecord, ILoquiObjectGetter
+            where T : MajorRecord, ILoquiObjectGetter
         {
             Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
@@ -1637,7 +1636,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void Clear<T>(
             IGroup<T> item,
             NotifyingUnsetParameters? cmds = null)
-            where T : Bethesda.MajorRecord, ILoquiObjectGetter
+            where T : MajorRecord, ILoquiObjectGetter
         {
             item.GroupType_Property.Unset(cmds.ToUnsetParams());
             item.Items.Unset(cmds.ToUnsetParams());
@@ -1646,7 +1645,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static Group_Mask<bool> GetEqualsMask<T>(
             this IGroupGetter<T> item,
             IGroupGetter<T> rhs)
-            where T : Bethesda.MajorRecord, ILoquiObjectGetter
+            where T : MajorRecord, ILoquiObjectGetter
         {
             var ret = new Group_Mask<bool>();
             FillEqualsMask(item, rhs, ret);
@@ -1657,7 +1656,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IGroupGetter<T> item,
             IGroupGetter<T> rhs,
             Group_Mask<bool> ret)
-            where T : Bethesda.MajorRecord, ILoquiObjectGetter
+            where T : MajorRecord, ILoquiObjectGetter
         {
             if (rhs == null) return;
             ret.ContainedRecordType = item.ContainedRecordType_Property.Equals(rhs.ContainedRecordType_Property, (l, r) => object.Equals(l, r));
@@ -1694,7 +1693,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IGroupGetter<T> item,
             string name = null,
             Group_Mask<bool> printMask = null)
-            where T : Bethesda.MajorRecord, ILoquiObjectGetter
+            where T : MajorRecord, ILoquiObjectGetter
         {
             var fg = new FileGeneration();
             item.ToString(fg, name, printMask);
@@ -1706,7 +1705,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FileGeneration fg,
             string name = null,
             Group_Mask<bool> printMask = null)
-            where T : Bethesda.MajorRecord, ILoquiObjectGetter
+            where T : MajorRecord, ILoquiObjectGetter
         {
             if (name == null)
             {
@@ -1756,7 +1755,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static bool HasBeenSet<T>(
             this IGroupGetter<T> item,
             Group_Mask<bool?> checkMask)
-            where T : Bethesda.MajorRecord, ILoquiObjectGetter
+            where T : MajorRecord, ILoquiObjectGetter
         {
             if (checkMask.ContainedRecordType.HasValue && checkMask.ContainedRecordType.Value != item.ContainedRecordType_Property.HasBeenSet) return false;
             if (checkMask.GroupType.HasValue && checkMask.GroupType.Value != item.GroupType_Property.HasBeenSet) return false;
@@ -1766,7 +1765,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static Group_Mask<bool> GetHasBeenSetMask<T>(IGroupGetter<T> item)
-            where T : Bethesda.MajorRecord, ILoquiObjectGetter
+            where T : MajorRecord, ILoquiObjectGetter
         {
             var ret = new Group_Mask<bool>();
             ret.ContainedRecordType = item.ContainedRecordType_Property.HasBeenSet;
@@ -1784,7 +1783,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             out Group_ErrorMask<T_ErrMask> errorMask,
             string name = null)
-            where T : Bethesda.MajorRecord, ILoquiObjectGetter
+            where T : MajorRecord, ILoquiObjectGetter
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             Group_ErrorMask<T_ErrMask> errMaskRet = null;
@@ -1801,16 +1800,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IGroupGetter<T> item,
             Func<Group_ErrorMask<T_ErrMask>> errorMask,
             string name = null)
-            where T : Bethesda.MajorRecord, ILoquiObjectGetter
+            where T : MajorRecord, ILoquiObjectGetter
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.Group"))
+                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Group"))
                 {
                     if (name != null)
                     {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.Group");
+                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Group");
                     }
                     if (item.GroupType_Property.HasBeenSet)
                     {
@@ -1869,7 +1868,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
             out Group_ErrorMask<T_ErrMask> errorMask)
-            where T : Bethesda.MajorRecord, ILoquiObjectGetter
+            where T : MajorRecord, ILoquiObjectGetter
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             Group_ErrorMask<T_ErrMask> errMaskRet = null;
@@ -1886,7 +1885,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Group<T> item,
             RecordTypeConverter recordTypeConverter,
             Func<Group_ErrorMask<T_ErrMask>> errorMask)
-            where T : Bethesda.MajorRecord, ILoquiObjectGetter
+            where T : MajorRecord, ILoquiObjectGetter
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             try
@@ -1919,7 +1918,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Group<T> item,
             MutagenWriter writer,
             Func<Group_ErrorMask<T_ErrMask>> errorMask)
-            where T : Bethesda.MajorRecord, ILoquiObjectGetter
+            where T : MajorRecord, ILoquiObjectGetter
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             Group<T>.WriteBinary_ContainedRecordType(
@@ -1944,7 +1943,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             Func<Group_ErrorMask<T_ErrMask>> errorMask)
-            where T : Bethesda.MajorRecord, ILoquiObjectGetter
+            where T : MajorRecord, ILoquiObjectGetter
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             Mutagen.Bethesda.Binary.ListBinaryTranslation<T, MaskItem<Exception, T_ErrMask>>.Instance.Write(

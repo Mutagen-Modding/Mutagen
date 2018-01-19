@@ -6,10 +6,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Internals;
 
-namespace Mutagen.Bethesda.Oblivion
+namespace Mutagen.Bethesda
 {
     public partial class Group<T>
         where T : MajorRecord, ILoquiObjectGetter

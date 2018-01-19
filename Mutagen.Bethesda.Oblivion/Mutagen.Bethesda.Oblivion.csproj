@@ -61,12 +61,6 @@
     <Compile Include="Records\Common Subrecords\ScriptEffect.cs">
       <DependentUpon>Effect.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Group.cs">
-      <DependentUpon>Group.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Group_LoquiGenerated.cs">
-      <DependentUpon>Group.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Header\Header_LoquiGenerated.cs">
       <DependentUpon>HEDR.xml</DependentUpon>
     </Compile>
@@ -281,9 +275,6 @@
     <Compile Include="Records\OblivionMod.cs">
       <DependentUpon>OblivionMod.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\OblivionMod_LoquiGenerated.cs">
-      <DependentUpon>OblivionMod.xml</DependentUpon>
-    </Compile>
     <Compile Include="Utility.cs" />
     <Compile Include="Records\Major Records\ScriptReference_LoquiGenerated.cs">
       <DependentUpon>Script.xml</DependentUpon>
@@ -406,6 +397,9 @@
     <Compile Include="Records\Major Records\CombatStyle_LoquiGenerated.cs">
       <DependentUpon>CombatStyle.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\OblivionMod_LoquiGenerated.cs">
+      <DependentUpon>OblivionMod.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Records\Common Subrecords\Effect.xml">
@@ -415,9 +409,6 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Common Subrecords\Relation.xml">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Records\Group.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Header\HEDR.xml">
@@ -547,9 +538,7 @@
     <Content Include="Records\Major Records\Worldspace.xml">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Records\OblivionMod.xml">
-      <SubType>Designer</SubType>
-    </Content>
+    <Content Include="Records\OblivionMod.xml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\CSharpExt\CSharpExt\CSharpExt.csproj">
