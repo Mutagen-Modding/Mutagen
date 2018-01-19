@@ -47,17 +47,15 @@ namespace Mutagen.Bethesda.Tests
                     uninterestingTypes: OblivionMod.NonTypeGroups);
             }
 
-            using (var tmp = new TempFolder(new DirectoryInfo(Path.Combine(Path.GetTempPath(), "Mutagen_Oblivion_Binary"))))
+            // Test compressions separately
+            using (var stream = new MutagenReader(Properties.Settings.Default.OblivionESM))
             {
-                var oblivionOutputPath = Path.Combine(tmp.Dir.FullName, Constants.OBLIVION_ESM);
-
-                // Test compressions separately
-                using (var stream = new MutagenReader(Properties.Settings.Default.OblivionESM))
+                foreach (var majorRec in mod.MajorRecords)
                 {
-                    foreach (var majorRec in mod.MajorRecords)
-                    {
-                        if (!majorRec.MajorRecordFlags.HasFlag(MajorRecord.MajorRecordFlag.Compressed)) continue;
+                    if (!majorRec.MajorRecordFlags.HasFlag(MajorRecord.MajorRecordFlag.Compressed)) continue;
 
+                    using (var tmp = new TempFolder(new DirectoryInfo(Path.Combine(Path.GetTempPath(), "Mutagen_Oblivion_Binary_CompressionTests"))))
+                    {
                         var origPath = Path.Combine(tmp.Dir.FullName, majorRec.TitleString);
                         var outputPath = Path.Combine(tmp.Dir.FullName, $"{majorRec.TitleString}Output");
                         majorRec.Write_Binary(outputPath);
@@ -71,14 +69,19 @@ namespace Mutagen.Bethesda.Tests
                         var majorLen = new ContentLength(stream.ReadUInt32());
                         stream.Position = majorLoc;
 
-                        using (var outputStream = new BinaryWriter(new FileStream(origPath, FileMode.Create)))
+                        using (var outputStream = new MutagenWriter(new FileStream(origPath, FileMode.Create)))
                         {
-                            outputStream.Write(stream.ReadBytes(Constants.RECORD_HEADER_LENGTH + 4));
-                            using (var frame = new MutagenFrame(stream, majorLen))
+                            var recType = stream.ReadString(4);
+                            using (HeaderExport.ExportRecordHeader(outputStream, new RecordType(recType)))
                             {
-                                using (var decomp = frame.Decompress())
+                                stream.Position += new ContentLength(4);
+                                outputStream.Write(stream.ReadBytes(Constants.RECORD_HEADER_LENGTH - 4));
+                                using (var frame = new MutagenFrame(stream, majorLen))
                                 {
-                                    outputStream.Write(decomp.ReadRemaining());
+                                    using (var decomp = frame.Decompress())
+                                    {
+                                        outputStream.Write(decomp.ReadRemaining());
+                                    }
                                 }
                             }
                         }
@@ -91,6 +94,11 @@ namespace Mutagen.Bethesda.Tests
                             targetSkips: null);
                     }
                 }
+            }
+
+            using (var tmp = new TempFolder(new DirectoryInfo(Path.Combine(Path.GetTempPath(), "Mutagen_Oblivion_Binary"))))
+            {
+                var oblivionOutputPath = Path.Combine(tmp.Dir.FullName, Constants.OBLIVION_ESM);
 
                 mod.Write_Binary(
                     oblivionOutputPath,
@@ -198,15 +206,15 @@ namespace Mutagen.Bethesda.Tests
                         reader2).First(5).ToArray();
                     if (errs.Length > 0)
                     {
-                        throw new ArgumentException($"Bytes did not match at positions: {string.Join(" ", errs.Select((r) => r.ToString("X")))}");
+                        throw new ArgumentException($"{prototypePath} vs {path2} Bytes did not match at positions: {string.Join(" ", errs.Select((r) => r.ToString("X")))}");
                     }
                     if (prototypeReader.Position != prototypeReader.Length)
                     {
-                        return new ArgumentException($"Stream {prototypePath} had more data past position 0x{prototypeReader.Position} than {path2}");
+                        return new ArgumentException($"{prototypePath} vs {path2} Stream {prototypePath} had more data past position 0x{prototypeReader.Position} than {path2}");
                     }
                     if (reader2.Position != reader2.Length)
                     {
-                        return new ArgumentException($"Stream {path2} had more data past position 0x{reader2.Position} than {prototypePath}");
+                        return new ArgumentException($"{prototypePath} vs {path2} Stream {path2} had more data past position 0x{reader2.Position} than {prototypePath}");
                     }
                 }
             }

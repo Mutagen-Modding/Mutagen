@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>86879909353aa25f1a8804520177ef82545d87ea</Sha>
+         <Sha>8b99e54550ce7e83d0281bbf0d6b469d1bb82af9</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>01-14-2018 13:41:08</CommitDate>
-         <Description>ErrorMask.WrapForOverallException</Description>
+         <CommitDate>01-18-2018 23:08:03</CommitDate>
+         <Description>Named key adjustments to fix reference issues cross-protocol</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>
