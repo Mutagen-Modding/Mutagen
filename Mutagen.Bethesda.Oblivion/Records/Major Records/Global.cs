@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             // Skip to FNAM
             var initialPos = frame.Position;
-            frame.Reader.CheckUpcomingRead(new ContentLength(26));
+            frame.CheckUpcomingRead(new ContentLength(26));
             frame.Position += 24;
             var edidLength = frame.Reader.ReadInt16();
             frame.Position += edidLength;
