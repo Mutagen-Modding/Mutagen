@@ -6,7 +6,7 @@
     </Generic>
     <Fields>
       <String name="ContainedRecordType" derivative="true" customBinary="true" />
-      <Int32 name="GroupType" />
+      <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
       <ByteArray name="LastModified" protected="true" length="4" nullable="NotNull" />
       <List name="Items">
         <Ref>

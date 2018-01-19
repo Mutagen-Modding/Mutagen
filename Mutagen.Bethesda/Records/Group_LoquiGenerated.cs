@@ -56,15 +56,15 @@ namespace Mutagen.Bethesda
         INotifyingSetItemGetter<String> IGroupGetter<T>.ContainedRecordType_Property => this.ContainedRecordType_Property;
         #endregion
         #region GroupType
-        protected readonly INotifyingSetItem<Int32> _GroupType = NotifyingSetItem.Factory<Int32>(markAsSet: false);
-        public INotifyingSetItem<Int32> GroupType_Property => _GroupType;
-        public Int32 GroupType
+        protected readonly INotifyingSetItem<GroupTypeEnum> _GroupType = NotifyingSetItem.Factory<GroupTypeEnum>(markAsSet: false);
+        public INotifyingSetItem<GroupTypeEnum> GroupType_Property => _GroupType;
+        public GroupTypeEnum GroupType
         {
             get => this._GroupType.Item;
             set => this._GroupType.Set(value);
         }
-        INotifyingSetItem<Int32> IGroup<T>.GroupType_Property => this.GroupType_Property;
-        INotifyingSetItemGetter<Int32> IGroupGetter<T>.GroupType_Property => this.GroupType_Property;
+        INotifyingSetItem<GroupTypeEnum> IGroup<T>.GroupType_Property => this.GroupType_Property;
+        INotifyingSetItemGetter<GroupTypeEnum> IGroupGetter<T>.GroupType_Property => this.GroupType_Property;
         #endregion
         #region LastModified
         protected readonly INotifyingSetItem<Byte[]> _LastModified = NotifyingSetItem.Factory<Byte[]>(
@@ -528,10 +528,11 @@ namespace Mutagen.Bethesda
                         errorMask: errorMask));
                     break;
                 case "GroupType":
-                    item._GroupType.SetIfSucceeded(Int32XmlTranslation.Instance.ParseNonNull(
+                    item._GroupType.SetIfSucceeded(EnumXmlTranslation<GroupTypeEnum>.Instance.Parse(
                         root,
+                        nullable: false,
                         fieldIndex: (int)Group_FieldIndex.GroupType,
-                        errorMask: errorMask));
+                        errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "LastModified":
                     item._LastModified.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
@@ -926,8 +927,8 @@ namespace Mutagen.Bethesda
                 fieldIndex: (int)Group_FieldIndex.ContainedRecordType,
                 errorMask: errorMask);
             if (frame.Complete) return;
-            item._GroupType.SetIfSucceeded(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
-                frame: frame,
+            item._GroupType.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(
+                frame: frame.Spawn(new ContentLength(4)),
                 fieldIndex: (int)Group_FieldIndex.GroupType,
                 errorMask: errorMask));
             if (frame.Complete) return;
@@ -1070,7 +1071,7 @@ namespace Mutagen.Bethesda
                     throw new ArgumentException($"Tried to set at a derivative index {index}");
                 case Group_FieldIndex.GroupType:
                     this._GroupType.Set(
-                        (Int32)obj,
+                        (GroupTypeEnum)obj,
                         cmds);
                     break;
                 case Group_FieldIndex.LastModified:
@@ -1120,7 +1121,7 @@ namespace Mutagen.Bethesda
             {
                 case Group_FieldIndex.GroupType:
                     obj._GroupType.Set(
-                        (Int32)pair.Value,
+                        (GroupTypeEnum)pair.Value,
                         null);
                     break;
                 case Group_FieldIndex.LastModified:
@@ -1147,8 +1148,8 @@ namespace Mutagen.Bethesda
     public interface IGroup<T> : IGroupGetter<T>, ILoquiClass<IGroup<T>, IGroupGetter<T>>, ILoquiClass<Group<T>, IGroupGetter<T>>
         where T : MajorRecord, ILoquiObjectGetter
     {
-        new Int32 GroupType { get; set; }
-        new INotifyingSetItem<Int32> GroupType_Property { get; }
+        new GroupTypeEnum GroupType { get; set; }
+        new INotifyingSetItem<GroupTypeEnum> GroupType_Property { get; }
 
         new INotifyingList<T> Items { get; }
     }
@@ -1162,8 +1163,8 @@ namespace Mutagen.Bethesda
 
         #endregion
         #region GroupType
-        Int32 GroupType { get; }
-        INotifyingSetItemGetter<Int32> GroupType_Property { get; }
+        GroupTypeEnum GroupType { get; }
+        INotifyingSetItemGetter<GroupTypeEnum> GroupType_Property { get; }
 
         #endregion
         #region LastModified
@@ -1392,7 +1393,7 @@ namespace Mutagen.Bethesda.Internals
                 case Group_FieldIndex.ContainedRecordType:
                     return typeof(String);
                 case Group_FieldIndex.GroupType:
-                    return typeof(Int32);
+                    return typeof(GroupTypeEnum);
                 case Group_FieldIndex.LastModified:
                     return typeof(Byte[]);
                 case Group_FieldIndex.Items:
@@ -1813,7 +1814,7 @@ namespace Mutagen.Bethesda.Internals
                     }
                     if (item.GroupType_Property.HasBeenSet)
                     {
-                        Int32XmlTranslation.Instance.Write(
+                        EnumXmlTranslation<GroupTypeEnum>.Instance.Write(
                             writer: writer,
                             name: nameof(item.GroupType),
                             item: item.GroupType_Property,
@@ -1926,9 +1927,10 @@ namespace Mutagen.Bethesda.Internals
                 item: item,
                 fieldIndex: (int)Group_FieldIndex.ContainedRecordType,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.GroupType_Property,
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<GroupTypeEnum>.Instance.Write(
+                writer,
+                item.GroupType_Property,
+                length: new ContentLength(4),
                 fieldIndex: (int)Group_FieldIndex.GroupType,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
