@@ -303,7 +303,7 @@ namespace Mutagen.Bethesda.Binary
                 errorMask);
         }
 
-        protected E ParseValue(MutagenFrame reader)
+        public E ParseValue(MutagenFrame reader)
         {
             int i;
             switch (reader.RemainingLength.Value)

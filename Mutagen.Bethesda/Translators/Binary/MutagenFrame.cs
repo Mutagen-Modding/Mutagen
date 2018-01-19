@@ -51,6 +51,17 @@ namespace Mutagen.Bethesda.Binary
         [DebuggerStepThrough]
         public MutagenFrame(
             MutagenReader reader,
+            ContentLength length)
+        {
+            this.Reader = reader;
+            this.InitialPosition = reader.Position;
+            this.FinalPosition = reader.Position + length;
+            this.SnapToFinalPosition = true;
+        }
+
+        [DebuggerStepThrough]
+        public MutagenFrame(
+            MutagenReader reader,
             FileLocation finalPosition,
             bool snapToFinalPosition)
         {
@@ -76,6 +87,11 @@ namespace Mutagen.Bethesda.Binary
                     this.Reader.Position = this.FinalPosition;
                 }
             }
+        }
+
+        public byte[] ReadRemaining()
+        {
+            return this.Reader.ReadBytes(this.RemainingLength);
         }
 
         public override string ToString()

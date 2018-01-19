@@ -171,6 +171,11 @@ namespace Mutagen.Bethesda.Binary
             this.Position = pos;
         }
 
+        public override string ToString()
+        {
+            return $"MutagenReader ({this.Position}-{this.Length})";
+        }
+
         public void Dispose()
         {
             this.reader.Dispose();

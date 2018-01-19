@@ -32,6 +32,8 @@ namespace Mutagen.Bethesda
             CantWait = 0x00080000,
         }
 
+        public string TitleString => $"{this.EditorID} - {this.FormID.IDString()}";
+        
         public static M TypicalParsing<M, E, I>(
             M record,
             MutagenFrame frame,

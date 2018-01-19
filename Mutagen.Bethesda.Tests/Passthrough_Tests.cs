@@ -38,20 +38,71 @@ namespace Mutagen.Bethesda.Tests
             var mod = OblivionMod.Create_Binary(
                 Properties.Settings.Default.OblivionESM,
                 out inputErrMask);
-            var substitutions = new Substitutions();
+
+            Dictionary<RawFormID, FileLocation> fileLocs;
+            using (var stream = new FileStream(Properties.Settings.Default.OblivionESM, FileMode.Open))
+            {
+                fileLocs = MajorRecordLocator.GetFileLocations(
+                    stream: stream,
+                    uninterestingTypes: OblivionMod.NonTypeGroups);
+            }
+
             using (var tmp = new TempFolder(new DirectoryInfo(Path.Combine(Path.GetTempPath(), "Mutagen_Oblivion_Binary"))))
             {
-                var outputPath = Path.Combine(tmp.Dir.FullName, Constants.OBLIVION_ESM);
+                var oblivionOutputPath = Path.Combine(tmp.Dir.FullName, Constants.OBLIVION_ESM);
+
+                // Test compressions separately
+                using (var stream = new MutagenReader(Properties.Settings.Default.OblivionESM))
+                {
+                    foreach (var majorRec in mod.MajorRecords)
+                    {
+                        if (!majorRec.MajorRecordFlags.HasFlag(MajorRecord.MajorRecordFlag.Compressed)) continue;
+
+                        var origPath = Path.Combine(tmp.Dir.FullName, majorRec.TitleString);
+                        var outputPath = Path.Combine(tmp.Dir.FullName, $"{majorRec.TitleString}Output");
+                        majorRec.Write_Binary(outputPath);
+
+                        if (!fileLocs.TryGetValue(majorRec.FormID, out var majorLoc))
+                        {
+                            throw new ArgumentException($"Trying to process a compressed major record that is not in the locations dictionary: {majorRec}");
+                        }
+
+                        stream.Position = majorLoc + 4;
+                        var majorLen = new ContentLength(stream.ReadUInt32());
+                        stream.Position = majorLoc;
+
+                        using (var outputStream = new BinaryWriter(new FileStream(origPath, FileMode.Create)))
+                        {
+                            outputStream.Write(stream.ReadBytes(Constants.RECORD_HEADER_LENGTH + 4));
+                            using (var frame = new MutagenFrame(stream, majorLen))
+                            {
+                                using (var decomp = frame.Decompress())
+                                {
+                                    outputStream.Write(decomp.ReadRemaining());
+                                }
+                            }
+                        }
+
+                        AssertFilesEqual(
+                            origPath,
+                            outputPath,
+                            substitutions: null,
+                            sourceSkips: null,
+                            targetSkips: null);
+                    }
+                }
+
                 mod.Write_Binary(
-                    outputPath,
+                    oblivionOutputPath,
                     out outputErrMask);
+                var substitutions = new Substitutions();
                 substitutions.Add(23192, 0);
                 substitutions.Add(24134, 0);
                 RangeCollection sourceSkip = new RangeCollection();
                 RangeCollection targetSkip = new RangeCollection();
                 var lowPrioEx = AssertFilesEqual(
-                    Properties.Settings.Default.OblivionESM, 
-                    outputPath, 
+                    Properties.Settings.Default.OblivionESM,
+                    oblivionOutputPath,
                     substitutions,
                     sourceSkips: sourceSkip,
                     targetSkips: targetSkip);
@@ -143,7 +194,7 @@ namespace Mutagen.Bethesda.Tests
                         RangeInt64.ConstructRanges(
                             GetDifferences(prototypeReader, reader2, sourceSkips, targetSkips),
                             b => !b),
-                        substitutions.RawSubstitutions,
+                        substitutions?.RawSubstitutions,
                         reader2).First(5).ToArray();
                     if (errs.Length > 0)
                     {

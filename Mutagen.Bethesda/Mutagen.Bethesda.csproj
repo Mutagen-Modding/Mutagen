@@ -55,6 +55,7 @@
     <Compile Include="Links\RawFormID.cs" />
     <Compile Include="Links\FormIDLink.cs" />
     <Compile Include="IMod.cs" />
+    <Compile Include="MajorRecordLocator.cs" />
     <Compile Include="ModID.cs" />
     <Compile Include="ModList.cs" />
     <Compile Include="ObjectType.cs" />

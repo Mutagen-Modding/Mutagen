@@ -74,12 +74,17 @@ namespace Mutagen.Bethesda
 
         public string ToHex()
         {
-            return $"{ModID}{ID.ToString("X8")}";
+            return $"{ModID}{IDString()}";
         }
 
         public override string ToString()
         {
-            return $"({ModID}){ID.ToString("X8")}";
+            return $"({ModID}){IDString()}";
+        }
+
+        public string IDString()
+        {
+            return ID.ToString("X8");
         }
 
         public override bool Equals(object obj)
