@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>c93df81a11da55a627289adea06df1a50453b73b</Sha>
+         <Sha>0f918cb008cf1fa2185a7bb62133cca578a7c85b</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>01-13-2018 17:52:44</CommitDate>
-         <Description>NotifyingItem subscribe /w Action.  Other subscribe API refactors</Description>
+         <CommitDate>01-19-2018 23:33:32</CommitDate>
+         <Description>ListExt.BinarySearch changes.  SortedListExt.TryGetInDirectionIndex, TryGetEncapsualtedIndices.  Unit tests</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

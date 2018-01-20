@@ -103,6 +103,16 @@ namespace Mutagen.Bethesda.Binary
             return true;
         }
 
+        public bool ContainsPosition(FileLocation loc)
+        {
+            return this.Position <= loc && this.FinalLocation >= loc;
+        }
+
+        public void SetPosition(FileLocation pos)
+        {
+            this.Position = pos;
+        }
+
         public void Dispose()
         {
             if (this.SnapToFinalPosition 
@@ -157,7 +167,7 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public MutagenFrame Decompress()
-        {
+        { 
             var resultLen = this.Reader.ReadUInt32();
             var bytes = this.Reader.ReadBytes((int)this.RemainingLength.Value);
             var res = ZlibStream.UncompressBuffer(bytes);
