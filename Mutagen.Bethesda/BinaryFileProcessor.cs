@@ -1,4 +1,5 @@
-﻿using Noggog;
+﻿using Mutagen.Bethesda.Internals;
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,14 +11,47 @@ namespace Mutagen.Bethesda
 {
     public class BinaryFileProcessor : Stream
     {
-        private SortedList<long, byte> _substitutions;
-        private Dictionary<RangeInt64, long> _moves;
+        #region Config
+        public class Config
+        {
+            public SortedList<FileLocation, byte> _substitutions;
+            private RangeCollection _moveRanges;
+            public Dictionary<RangeInt64, long> _moves;
+
+            public void SetSubstitution(FileLocation loc, byte sub)
+            {
+                if (_substitutions == null)
+                {
+                    _substitutions = new SortedList<FileLocation, byte>();
+                }
+                _substitutions[loc] = sub;
+            }
+
+            public void SetMove(RangeInt64 move, long loc)
+            {
+                if (_moves == null)
+                {
+                    _moveRanges = new RangeCollection();
+                    _moves = new Dictionary<RangeInt64, long>();
+                }
+                if (_moveRanges.Collides(move))
+                {
+                    throw new ArgumentException("Can not have colliding moves.");
+                }
+                _moves[move] = loc;
+            }
+        }
+        #endregion
+
+        private Config config;
         private readonly Stream source;
         private readonly byte[] _buffer;
         private int bufferPos;
         private int bufferEnd;
-        private long _position;
+        private FileLocation _position;
         private bool done;
+        private SortedList<long, byte[]> _activeMoves;
+        private SortedList<long, RangeInt64> _sortedMoves;
 
         public override bool CanRead => true;
 
@@ -33,9 +67,17 @@ namespace Mutagen.Bethesda
             set => throw new NotImplementedException();
         }
 
-        public BinaryFileProcessor(Stream source, int bufferLen = 4096)
+        public BinaryFileProcessor(Stream source, Config config, int bufferLen = 4096)
         {
             this.source = source;
+            this.config = config;
+            if (this.config._moves != null)
+            { 
+                this._activeMoves = new SortedList<long, byte[]>();
+                this._sortedMoves = new SortedList<long, RangeInt64>();
+                this._sortedMoves.Add(
+                    this.config._moves.Select((m) => new KeyValuePair<long, RangeInt64>(m.Key.Min, m.Key)));
+            }
             this._buffer = new byte[bufferLen];
         }
 
@@ -44,26 +86,6 @@ namespace Mutagen.Bethesda
             this.source.Dispose();
             base.Dispose(disposing);
         }
-
-        #region Set Rules API
-        public void SetSubstitution(long loc, byte sub)
-        {
-            if (_substitutions == null)
-            {
-                _substitutions = new SortedList<long, byte>();
-            }
-            _substitutions[loc] = sub;
-        }
-
-        public void SetMove(RangeInt64 move, long loc)
-        {
-            if (_moves == null)
-            {
-                _moves = new Dictionary<RangeInt64, long>();
-            }
-            _moves[move] = loc;
-        }
-        #endregion
 
         private void GetNextBuffer()
         {
@@ -89,21 +111,32 @@ namespace Mutagen.Bethesda
 
         private void DoSubstitutions()
         {
-            if (_substitutions == null) return;
-            if (!_substitutions.TryGetEncapsulatedIndices(
-                lowerKey: _position + bufferPos,
-                higherKey: _position + bufferEnd,
+            if (config._substitutions == null) return;
+            if (!config._substitutions.TryGetEncapsulatedIndices<FileLocation, byte>(
+                lowerKey: new FileLocation(_position + bufferPos),
+                higherKey: new FileLocation(_position + bufferEnd),
                 result: out var substitutionRange)) return;
             for (int i = substitutionRange.Min; i <= substitutionRange.Max; i++)
             {
-                _buffer[_substitutions.Keys[i] - _position] = _substitutions.Values[i];
+                var targetPos = config._substitutions.Keys[i];
+                var bufferPos = targetPos - _position;
+                var sub = config._substitutions.Values[i];
+                _buffer[bufferPos] = sub;
             }
         }
 
         private void DoMoves()
         {
-            if (_moves == null) return;
-
+            if (config._moves == null) return;
+            if (!_sortedMoves.TryGetEncapsulatedIndices(
+                lowerKey: _position + bufferPos,
+                higherKey: _position + bufferEnd,
+                result: out var moveIndices)) return;
+            for (int i = moveIndices.Min; i <= moveIndices.Max; i++)
+            {
+                var moveRange = _sortedMoves.Values[i];
+                var moveLoc = config._moves[moveRange];
+            }
         }
 
         public override int Read(byte[] buffer, int offset, int count)

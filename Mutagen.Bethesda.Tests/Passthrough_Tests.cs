@@ -93,11 +93,12 @@ namespace Mutagen.Bethesda.Tests
                     out outputErrMask);
                 RangeCollection sourceSkip = new RangeCollection();
                 RangeCollection targetSkip = new RangeCollection();
-                var processor = new BinaryFileProcessor(
-                    new FileStream(Properties.Settings.Default.OblivionESM, FileMode.Open, FileAccess.Read));
-                processor.SetSubstitution(0x5A98, 0);
-                processor.SetSubstitution(0x5E56, 0);
-                using (processor)
+                var processorConfig = new BinaryFileProcessor.Config();
+                processorConfig.SetSubstitution(new FileLocation(0x5A98), 0);
+                processorConfig.SetSubstitution(new FileLocation(0x5E46), 0);
+                using (var processor = new BinaryFileProcessor(
+                    new FileStream(Properties.Settings.Default.OblivionESM, FileMode.Open, FileAccess.Read),
+                    processorConfig))
                 {
                     var lowPrioEx = AssertFilesEqual(
                         processor,
