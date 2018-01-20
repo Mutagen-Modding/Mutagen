@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>0f918cb008cf1fa2185a7bb62133cca578a7c85b</Sha>
+         <Sha>f32b3b5a7287970c2d4f512e4a4874cb8b3ccb19</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>01-19-2018 23:33:32</CommitDate>
-         <Description>ListExt.BinarySearch changes.  SortedListExt.TryGetInDirectionIndex, TryGetEncapsualtedIndices.  Unit tests</Description>
+         <CommitDate>01-20-2018 15:36:01</CommitDate>
+         <Description>SortedListExt.Add(IEnumerable)</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

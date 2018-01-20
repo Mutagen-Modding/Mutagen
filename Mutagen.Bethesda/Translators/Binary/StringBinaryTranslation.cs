@@ -18,7 +18,10 @@ namespace Mutagen.Bethesda.Binary
             {
                 errorMask = null;
                 var str = frame.Reader.ReadString(frame.RemainingLength);
-                str = str.TrimEnd('\0');
+                if (str[str.Length - 1] == '\0')
+                {
+                    str = str.Substring(0, str.Length - 1);
+                }
                 return TryGet<string>.Succeed(str);
             }
             catch (Exception ex)
