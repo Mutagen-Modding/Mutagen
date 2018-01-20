@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Creature" objType="Record" baseClass="Bethesda.NamedMajorRecord" recordType="CREA" GUID="9859ec12-21c5-4de8-9caa-404330da8b79" ID="89">
+    <Fields>
+      <RefDirect name="Model" refName="Model" />
+      <List name="Items">
+        <RefDirect refName="ItemEntry" />
+      </List>
+      <List name="Spells">
+        <FormID refName="Spell" recordType="SPLO" />
+      </List>
+      <List name="Models" recordType="NIFZ">
+        <String />
+      </List>
+      <Data recordType="ACBS">
+        <Fields>
+          <Enum name="Flags" enumName="Creature.CreatureFlag" byteLength="4" />
+          <UInt16 name="BaseSpellPoints" />
+          <UInt16 name="Fatigue" />
+          <UInt16 name="BarterGold" />
+          <Int16 name="LevelOffset" />
+          <UInt16 name="CalcMin" />
+          <UInt16 name="CalcMax" />
+        </Fields>
+      </Data>
+      <List name="Factions">
+        <RefDirect refName="RankPlacement" />
+      </List>
+      <FormID name="DeathItem" refName="ItemAbstract" recordType="INAM" />
+      <FormID name="Script" refName="Script" recordType="SCRI" />
+      <Data recordType="AIDT">
+        <Fields>
+          <UInt8 name="Aggression" />
+          <UInt8 name="Confidence" />
+          <UInt8 name="EnergyLevel" />
+          <UInt8 name="Responsibility" />
+          <Enum name="BuySellServices" enumName="NPC.BuySellServiceFlag" byteLength="4" />
+          <Enum name="Teaches" enumName="Skill" byteLength="1" />
+          <UInt8 name="MaximumTrainingLevel" />
+          <Zero byteLength="2" />
+        </Fields>
+      </Data>
+      <List name="AIPackages">
+        <FormID refName="AIPackage" recordType="PKID" />
+      </List>
+      <List name="Animations" recordType="KFFZ">
+        <String />
+      </List>
+      <Data>
+        <Fields>
+          <Enum name="CreatureType" enumName="Creature.CreatureTypeEnum" byteLength="1" />
+          <UInt8 name="CombatSKill" />
+          <UInt8 name="MagicSKill" />
+          <UInt8 name="StealthSKill" />
+          <Enum name="SoulLevel" enumName="SoulLevel" byteLength="1" />
+          <UInt16 name="Health" />
+          <UInt16 name="AttackDamage" />
+          <UInt8 name="Strength" />
+          <UInt8 name="Intelligence" />
+          <UInt8 name="Willpower" />
+          <UInt8 name="Agility" />
+          <UInt8 name="Speed" />
+          <UInt8 name="Endurance" />
+          <UInt8 name="Personality" />
+          <UInt8 name="Luck" />
+        </Fields>
+      </Data>
+      <UInt8 name="AttackReach" recordType="RNAM" />
+      <FormID name="CombatStyle" refName="CombatStyle" recordType="ZNAM" />
+      <Float name="TurningSpeed" recordType="TNAM" />
+      <Float name="BaseScale" recordType="BNAM" />
+      <FilePath name="BloodSpray" recordType="NAM0" />
+      <FilePath name="BloodDecal" recordType="NAM1" />
+      <FormID name="InheritsSoundFrom" recordType="CSCR" refName="Creature" />
+    </Fields>
+  </Object>
+  <Object name="CreatureSound" objType="Subrecord" GUID="f3d5081c-a137-4a9e-8dd9-c79a8bf94fc3" ID="90">
+    <Fields>
+      <Enum name="SoundType" enumName="CreatureSound.CreatureSoundType" byteLength="4" recordType="CSDT" />
+      <FormID name="Sound" refName="Sound" recordType="CSDI" />
+      <UInt8 name="Chance" recordType="CSDC" />
+    </Fields>
+  </Object>
+</Loqui>

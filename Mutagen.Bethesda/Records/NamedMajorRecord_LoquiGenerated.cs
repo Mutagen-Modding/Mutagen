@@ -759,6 +759,7 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType ANAM_HEADER = new RecordType("ANAM");
         public static readonly RecordType BMDT_HEADER = new RecordType("BMDT");
         public static readonly RecordType CONT_HEADER = new RecordType("CONT");
+        public static readonly RecordType CREA_HEADER = new RecordType("CREA");
         public static readonly RecordType DOOR_HEADER = new RecordType("DOOR");
         public static readonly RecordType ENCH_HEADER = new RecordType("ENCH");
         public static readonly RecordType EYES_HEADER = new RecordType("EYES");
@@ -795,6 +796,7 @@ namespace Mutagen.Bethesda.Internals
                         ANAM_HEADER,
                         BMDT_HEADER,
                         CONT_HEADER,
+                        CREA_HEADER,
                         DOOR_HEADER,
                         ENCH_HEADER,
                         EYES_HEADER,

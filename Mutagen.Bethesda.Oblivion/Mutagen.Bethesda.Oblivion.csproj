@@ -48,6 +48,7 @@
     <Compile Include="Records\Common Enums\MagicSchool.cs" />
     <Compile Include="Records\Common Enums\Resistance.cs" />
     <Compile Include="Records\Common Enums\Skill.cs" />
+    <Compile Include="Records\Common Enums\SoulLevel.cs" />
     <Compile Include="Records\Common Enums\Specialization.cs" />
     <Compile Include="Records\Common Subrecords\Effect.cs">
       <DependentUpon>Effect.xml</DependentUpon>
@@ -102,6 +103,12 @@
     </Compile>
     <Compile Include="Records\Major Records\Container.cs">
       <DependentUpon>Container.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Creature.cs">
+      <DependentUpon>Creature.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\CreatureSound.cs">
+      <DependentUpon>Creature.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Door.cs">
       <DependentUpon>Door.xml</DependentUpon>
@@ -400,6 +407,12 @@
     <Compile Include="Records\OblivionMod_LoquiGenerated.cs">
       <DependentUpon>OblivionMod.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Creature_LoquiGenerated.cs">
+      <DependentUpon>Creature.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\CreatureSound_LoquiGenerated.cs">
+      <DependentUpon>Creature.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Records\Common Subrecords\Effect.xml">
@@ -449,6 +462,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Container.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\Creature.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Door.xml">
