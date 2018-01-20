@@ -33,5 +33,25 @@ namespace Mutagen.Bethesda.Tests
             bool i = 52184 == id.ID;
             Assert.True(i);
         }
+
+        [Fact]
+        public void Import_String()
+        {
+            Assert.True(
+                RawFormID.TryFactory("0100C51A", out RawFormID id));
+            Assert.Equal(
+                new RawFormID(modID: new ModID(1), id: 0x00C51A),
+                id);
+        }
+
+        [Fact]
+        public void Import_String0x()
+        {
+            Assert.True(
+                RawFormID.TryFactory("0x0100C51A", out RawFormID id));
+            Assert.Equal(
+                new RawFormID(modID: new ModID(1), id: 0x00C51A),
+                id);
+        }
     }
 }

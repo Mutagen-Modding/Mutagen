@@ -31,9 +31,23 @@ namespace Mutagen.Bethesda
             return false;
         }
 
+        public static RawFormID Factory(string hexString)
+        {
+            if (!TryFactory(hexString, out RawFormID result))
+            {
+                throw new ArgumentException($"Invalid formID hex: {hexString}");
+            }
+            return result;
+        }
+
         public static bool TryFactory(string hexString, out RawFormID? id)
         {
-            if (hexString.Length != 12)
+            if (hexString.StartsWith("0x"))
+            {
+                hexString = hexString.Substring(2);
+            }
+
+            if (hexString.Length != 8)
             {
                 id = null;
                 return false;
@@ -43,7 +57,7 @@ namespace Mutagen.Bethesda
             {
                 id = new RawFormID(
                     new ModID(Convert.ToByte(hexString.Substring(0, 2), 16)),
-                    Convert.ToUInt32(hexString.Substring(2, 8), 16));
+                    Convert.ToUInt32(hexString.Substring(2, 6), 16));
                 return true;
             }
             catch (Exception)
