@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Internals
 {
-    public struct FileLocation : IEquatable<FileLocation>
+    public struct FileLocation : IEquatable<FileLocation>, IComparable, IComparable<FileLocation>, IComparable<long>
     {
         public readonly long Offset;
 
@@ -41,6 +41,32 @@ namespace Mutagen.Bethesda.Internals
         public override int GetHashCode()
         {
             return this.Offset.GetHashCode();
+        }
+
+        public int CompareTo(object obj)
+        {
+            if (obj is FileLocation loc)
+            {
+                return this.CompareTo(loc);
+            }
+            else if (obj is long l)
+            {
+                return this.CompareTo(l);
+            }
+            else
+            {
+                throw new ArgumentException();
+            }
+        }
+
+        public int CompareTo(FileLocation other)
+        {
+            return this.Offset.CompareTo(other.Offset);
+        }
+
+        public int CompareTo(long other)
+        {
+            return this.Offset.CompareTo(other);
         }
 
         public static implicit operator long(FileLocation loc)
