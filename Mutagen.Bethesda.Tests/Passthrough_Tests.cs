@@ -33,17 +33,93 @@ namespace Mutagen.Bethesda.Tests
                     uninterestingTypes: OblivionMod.NonTypeGroups);
             }
 
-            // Test compressions separately
-            using (var stream = new MutagenReader(Properties.Settings.Default.OblivionESM))
-            {
-                int i = 0;
-                foreach (var majorRec in mod.MajorRecords)
-                {
-                    if (!majorRec.MajorRecordFlags.HasFlag(MajorRecord.MajorRecordFlag.Compressed)) continue;
+            var instructions = BinaryProcessorInstructions.Create_XML("../../../Mutagen.Bethesda.Tests/OblivionModPassthroughInstructions.xml");
 
-                    i++;
-                    using (var tmp = new TempFolder(new DirectoryInfo(Path.Combine(Path.GetTempPath(), "Mutagen_Oblivion_Binary_CompressionTests"))))
+            Dictionary<RawFormID, BinaryFileProcessor.Config> compressionProcessing = new Dictionary<RawFormID, BinaryFileProcessor.Config>();
+            var config = new BinaryFileProcessor.Config();
+            config.SetMove(new RangeInt64(0x7A, 0xC9), new FileLocation(0x10C));
+            compressionProcessing[RawFormID.Factory("0x0000C51A")] = config;
+            config = new BinaryFileProcessor.Config();
+            config.SetMove(new RangeInt64(0x63, 0x9A), new FileLocation(0xF5));
+            compressionProcessing[RawFormID.Factory("0x0000C23E")] = config;
+            config = new BinaryFileProcessor.Config();
+            config.SetMove(new RangeInt64(0x73, 0x108), new FileLocation(0x195));
+            compressionProcessing[RawFormID.Factory("0x0000B513")] = config;
+            config = new BinaryFileProcessor.Config();
+            config.SetMove(new RangeInt64(0x73, 0x108), new FileLocation(0x195));
+            compressionProcessing[RawFormID.Factory("0x0000B512")] = config;
+            config = new BinaryFileProcessor.Config();
+            config.SetMove(new RangeInt64(0x72, 0x107), new FileLocation(0x194));
+            compressionProcessing[RawFormID.Factory("0x0000B511")] = config;
+            config = new BinaryFileProcessor.Config();
+            config.SetMove(new RangeInt64(0x72, 0x115), new FileLocation(0x1AC));
+            compressionProcessing[RawFormID.Factory("0x0000B510")] = config;
+            config = new BinaryFileProcessor.Config();
+            config.SetMove(new RangeInt64(0x72, 0x107), new FileLocation(0x19E));
+            compressionProcessing[RawFormID.Factory("0x0000B50F")] = config;
+            config = new BinaryFileProcessor.Config();
+            config.SetMove(new RangeInt64(0x71, 0x106), new FileLocation(0x19D));
+            compressionProcessing[RawFormID.Factory("0x0000B50E")] = config;
+            config = new BinaryFileProcessor.Config();
+            config.SetMove(new RangeInt64(0x74, 0x16B), new FileLocation(0x1EE));
+            compressionProcessing[RawFormID.Factory("0x0000B50D")] = config;
+            config = new BinaryFileProcessor.Config();
+            config.SetMove(new RangeInt64(0x74, 0x16B), new FileLocation(0x1EE));
+            compressionProcessing[RawFormID.Factory("0x0000B50C")] = config;
+            config = new BinaryFileProcessor.Config();
+            config.SetMove(new RangeInt64(0x73, 0x16A), new FileLocation(0x1ED));
+            compressionProcessing[RawFormID.Factory("0x0000B50B")] = config;
+            config = new BinaryFileProcessor.Config();
+            config.SetMove(new RangeInt64(0x70, 0xE9), new FileLocation(0x176));
+            compressionProcessing[RawFormID.Factory("0x0000B50A")] = config;
+            config = new BinaryFileProcessor.Config();
+            config.SetMove(new RangeInt64(0x71, 0x106), new FileLocation(0x193));
+            compressionProcessing[RawFormID.Factory("0x0000B509")] = config;
+            config = new BinaryFileProcessor.Config();
+            config.SetMove(new RangeInt64(0x72, 0x14D), new FileLocation(0x1D0));
+            compressionProcessing[RawFormID.Factory("0x0000B508")] = config;
+            config = new BinaryFileProcessor.Config();
+            config.SetMove(new RangeInt64(0x72, 0x14D), new FileLocation(0x19E));
+            compressionProcessing[RawFormID.Factory("0x00009ADF")] = config;
+            config = new BinaryFileProcessor.Config();
+            config.SetMove(new RangeInt64(0x72, 0x14D), new FileLocation(0x19E));
+            compressionProcessing[RawFormID.Factory("0x00009ADE")] = config;
+            config = new BinaryFileProcessor.Config();
+            config.SetMove(new RangeInt64(0x71, 0x14C), new FileLocation(0x19D));
+            compressionProcessing[RawFormID.Factory("0x00009ADD")] = config;
+            config = new BinaryFileProcessor.Config();
+            config.SetMove(new RangeInt64(0x6E, 0x12D), new FileLocation(0x15C));
+            compressionProcessing[RawFormID.Factory("0x00009ADC")] = config;
+            config = new BinaryFileProcessor.Config();
+            config.SetMove(new RangeInt64(0x6E, 0x12D), new FileLocation(0x15C));
+            compressionProcessing[RawFormID.Factory("0x00009ADB")] = config;
+            config = new BinaryFileProcessor.Config();
+            config.SetMove(new RangeInt64(0x6D, 0x12C), new FileLocation(0x15B));
+            compressionProcessing[RawFormID.Factory("0x00009ADA")] = config;
+            config = new BinaryFileProcessor.Config();
+            config.SetMove(new RangeInt64(0x6C, 0x10F), new FileLocation(0x152));
+            compressionProcessing[RawFormID.Factory("0x00009AD9")] = config;
+            config = new BinaryFileProcessor.Config();
+            config.SetMove(new RangeInt64(0x6C, 0x10F), new FileLocation(0x152));
+            compressionProcessing[RawFormID.Factory("0x00009AD8")] = config;
+            config = new BinaryFileProcessor.Config();
+            config.SetMove(new RangeInt64(0x6B, 0x10E), new FileLocation(0x151));
+            compressionProcessing[RawFormID.Factory("0x00009AD7")] = config;
+            config = new BinaryFileProcessor.Config();
+            config.SetMove(new RangeInt64(0x6D, 0x12C), new FileLocation(0x151));
+            compressionProcessing[RawFormID.Factory("0x00009AD7")] = config;
+
+            // Test compressions separately
+            using (var tmp = new TempFolder(new DirectoryInfo(Path.Combine(Path.GetTempPath(), "Mutagen_Oblivion_Binary_CompressionTests"))))
+            {
+                using (var stream = new MutagenReader(Properties.Settings.Default.OblivionESM))
+                {
+                    int i = 0;
+                    foreach (var majorRec in mod.MajorRecords)
                     {
+                        if (!majorRec.MajorRecordFlags.HasFlag(MajorRecord.MajorRecordFlag.Compressed)) continue;
+
+                        i++;
                         var origPath = Path.Combine(tmp.Dir.FullName, $"{i} - {majorRec.TitleString}");
                         var outputPath = Path.Combine(tmp.Dir.FullName, $"{i} - {majorRec.TitleString}Output");
                         majorRec.Write_Binary(outputPath);
@@ -74,7 +150,19 @@ namespace Mutagen.Bethesda.Tests
                             }
                         }
 
-                        using (var sourceStream = new FileStream(origPath, FileMode.Open, FileAccess.Read))
+                        FileStream fileSourceStream = new FileStream(origPath, FileMode.Open, FileAccess.Read);
+                        Stream sourceStream;
+                        if (compressionProcessing.TryGetValue(majorRec.FormID, out var processorConfig))
+                        {
+                            sourceStream = new BinaryFileProcessor(
+                                fileSourceStream,
+                                processorConfig);
+                        }
+                        else
+                        {
+                            sourceStream = fileSourceStream;
+                        }
+                        using (sourceStream)
                         {
                             AssertFilesEqual(
                                 sourceStream,
@@ -175,7 +263,7 @@ namespace Mutagen.Bethesda.Tests
                 Assert.Null(outputErrMask);
             }
         }
-        
+
         private Exception AssertFilesEqual(
             Stream stream,
             string path2)

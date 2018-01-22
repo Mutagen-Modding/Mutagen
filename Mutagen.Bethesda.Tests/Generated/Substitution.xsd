@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<xs:schema id="Substitution" targetNamespace="Tests" elementFormDefault="qualified" xmlns="Tests" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+   <xs:include schemaLocation="Common.xsd" />
+   <xs:element name="Substitution" type="SubstitutionType" />
+   <xs:complexType name="SubstitutionType">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+         <xs:element name="Location" type="ValueType" minOccurs="0" maxOccurs="1" />
+         <xs:element name="Data" type="ValueType" minOccurs="0" maxOccurs="1" />
+      </xs:choice>
+   </xs:complexType>
+</xs:schema>

@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>f32b3b5a7287970c2d4f512e4a4874cb8b3ccb19</Sha>
+         <Sha>def5017b11916564db4f3f0bc1c5980a906ea6ef</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>01-20-2018 15:36:01</CommitDate>
-         <Description>SortedListExt.Add(IEnumerable)</Description>
+         <CommitDate>01-21-2018 21:56:14</CommitDate>
+         <Description>XmlExt.ContentEqual work</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>8b99e54550ce7e83d0281bbf0d6b469d1bb82af9</Sha>
+         <Sha>ee7543ec695a33e3739a3e0865c02c4fdc755980</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>01-18-2018 23:08:03</CommitDate>
-         <Description>Named key adjustments to fix reference issues cross-protocol</Description>
+         <CommitDate>01-21-2018 23:17:42</CommitDate>
+         <Description>Bugfix for Protocol definition file project modification</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

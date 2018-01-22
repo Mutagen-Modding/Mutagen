@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -50,6 +50,22 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Generated\BinaryProcessorInstructions_LoquiGenerated.cs">
+      <DependentUpon>BinaryProcessorInstructions.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\Move_LoquiGenerated.cs">
+      <DependentUpon>BinaryProcessorInstructions.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\Substitution_LoquiGenerated.cs">
+      <DependentUpon>BinaryProcessorInstructions.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\Instruction_LoquiGenerated.cs">
+      <DependentUpon>BinaryProcessorInstructions.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\RecordInstruction_LoquiGenerated.cs">
+      <DependentUpon>BinaryProcessorInstructions.xml</DependentUpon>
+    </Compile>
+    <Compile Include="C:\Users\Noggog\Documents\Repos\Mutagen\Mutagen.Bethesda.Tests\Generated/ProtocolDefinition_Tests.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="System.ValueTuple">
@@ -64,9 +80,27 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="Generated\Common.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Generated\BinaryProcessorInstructions.xsd">
+      <DependentUpon>BinaryProcessorInstructions.xml</DependentUpon>
+    </None>
+    <None Include="Generated\Move.xsd">
+      <DependentUpon>BinaryProcessorInstructions.xml</DependentUpon>
+    </None>
+    <None Include="Generated\Substitution.xsd">
+      <DependentUpon>BinaryProcessorInstructions.xml</DependentUpon>
+    </None>
+    <None Include="Generated\Instruction.xsd">
+      <DependentUpon>BinaryProcessorInstructions.xml</DependentUpon>
+    </None>
+    <None Include="Generated\RecordInstruction.xsd">
+      <DependentUpon>BinaryProcessorInstructions.xml</DependentUpon>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -89,6 +123,14 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Generated\BinaryProcessorInstructions.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="OblivionModPassthroughInstructions.xml">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

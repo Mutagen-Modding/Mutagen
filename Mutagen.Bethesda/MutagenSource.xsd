@@ -3,12 +3,10 @@
     targetNamespace="http://tempuri.org/LoquiSource.xsd"
     elementFormDefault="qualified"
     xmlns="http://tempuri.org/LoquiSource.xsd"
-    xmlns:mstns="http://tempuri.org/LoquiSource.xsd"
     xmlns:xs="http://www.w3.org/2001/XMLSchema">
-
   <xs:redefine schemaLocation="../../Loqui/Loqui/LoquiSource.xsd">
     
-    <xs:complexType name="ObjectType">
+    <xs:complexType name="ObjectType" >
       <xs:complexContent>
         <xs:extension base="ObjectType">
           <xs:attribute name="recordType" type="xs:string">
