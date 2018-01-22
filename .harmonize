@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>ee7543ec695a33e3739a3e0865c02c4fdc755980</Sha>
+         <Sha>e16453a3215dda8ab0e91c702c44828545f44c31</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>01-21-2018 23:17:42</CommitDate>
-         <Description>Bugfix for Protocol definition file project modification</Description>
+         <CommitDate>01-22-2018 08:07:02</CommitDate>
+         <Description>Another bugfix for definition file project modification to make it relative</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

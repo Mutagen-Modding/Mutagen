@@ -65,7 +65,7 @@
     <Compile Include="Generated\RecordInstruction_LoquiGenerated.cs">
       <DependentUpon>BinaryProcessorInstructions.xml</DependentUpon>
     </Compile>
-    <Compile Include="C:\Users\Noggog\Documents\Repos\Mutagen\Mutagen.Bethesda.Tests\Generated/ProtocolDefinition_Tests.cs" />
+    <Compile Include="Generated\ProtocolDefinition_Tests.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="System.ValueTuple">
