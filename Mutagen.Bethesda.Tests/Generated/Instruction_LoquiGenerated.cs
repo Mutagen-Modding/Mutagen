@@ -39,6 +39,11 @@ namespace Mutagen.Bethesda.Tests
         #region Moves
         private readonly INotifyingList<Move> _Moves = new NotifyingList<Move>();
         public INotifyingList<Move> Moves => _Moves;
+        public IEnumerable<Move> MovesEnumerable
+        {
+            get => _Moves;
+            set => _Moves.SetTo(value);
+        }
         #region Interface Members
         INotifyingList<Move> IInstruction.Moves => _Moves;
         INotifyingListGetter<Move> IInstructionGetter.Moves => _Moves;
@@ -48,6 +53,11 @@ namespace Mutagen.Bethesda.Tests
         #region Substitutions
         private readonly INotifyingList<Substitution> _Substitutions = new NotifyingList<Substitution>();
         public INotifyingList<Substitution> Substitutions => _Substitutions;
+        public IEnumerable<Substitution> SubstitutionsEnumerable
+        {
+            get => _Substitutions;
+            set => _Substitutions.SetTo(value);
+        }
         #region Interface Members
         INotifyingList<Substitution> IInstruction.Substitutions => _Substitutions;
         INotifyingListGetter<Substitution> IInstructionGetter.Substitutions => _Substitutions;

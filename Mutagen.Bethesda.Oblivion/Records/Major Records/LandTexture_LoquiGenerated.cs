@@ -72,6 +72,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region PotentialGrass
         private readonly INotifyingList<FormIDSetLink<Grass>> _PotentialGrass = new NotifyingList<FormIDSetLink<Grass>>();
         public INotifyingList<FormIDSetLink<Grass>> PotentialGrass => _PotentialGrass;
+        public IEnumerable<FormIDSetLink<Grass>> PotentialGrassEnumerable
+        {
+            get => _PotentialGrass;
+            set => _PotentialGrass.SetTo(value);
+        }
         #region Interface Members
         INotifyingList<FormIDSetLink<Grass>> ILandTexture.PotentialGrass => _PotentialGrass;
         INotifyingListGetter<FormIDSetLink<Grass>> ILandTextureGetter.PotentialGrass => _PotentialGrass;

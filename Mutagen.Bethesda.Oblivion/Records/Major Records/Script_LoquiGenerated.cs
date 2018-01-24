@@ -75,6 +75,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region LocalVariables
         private readonly INotifyingList<LocalVariable> _LocalVariables = new NotifyingList<LocalVariable>();
         public INotifyingList<LocalVariable> LocalVariables => _LocalVariables;
+        public IEnumerable<LocalVariable> LocalVariablesEnumerable
+        {
+            get => _LocalVariables;
+            set => _LocalVariables.SetTo(value);
+        }
         #region Interface Members
         INotifyingList<LocalVariable> IScript.LocalVariables => _LocalVariables;
         INotifyingListGetter<LocalVariable> IScriptGetter.LocalVariables => _LocalVariables;
@@ -84,6 +89,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region References
         private readonly INotifyingList<ScriptReference> _References = new NotifyingList<ScriptReference>();
         public INotifyingList<ScriptReference> References => _References;
+        public IEnumerable<ScriptReference> ReferencesEnumerable
+        {
+            get => _References;
+            set => _References.SetTo(value);
+        }
         #region Interface Members
         INotifyingList<ScriptReference> IScript.References => _References;
         INotifyingListGetter<ScriptReference> IScriptGetter.References => _References;

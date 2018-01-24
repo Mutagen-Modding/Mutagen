@@ -99,6 +99,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region Effects
         private readonly INotifyingList<Effect> _Effects = new NotifyingList<Effect>();
         public INotifyingList<Effect> Effects => _Effects;
+        public IEnumerable<Effect> EffectsEnumerable
+        {
+            get => _Effects;
+            set => _Effects.SetTo(value);
+        }
         #region Interface Members
         INotifyingList<Effect> IIngredient.Effects => _Effects;
         INotifyingListGetter<Effect> IIngredientGetter.Effects => _Effects;

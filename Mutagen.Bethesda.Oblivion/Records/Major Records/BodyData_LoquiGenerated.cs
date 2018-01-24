@@ -48,6 +48,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region BodyParts
         private readonly INotifyingList<BodyPart> _BodyParts = new NotifyingList<BodyPart>();
         public INotifyingList<BodyPart> BodyParts => _BodyParts;
+        public IEnumerable<BodyPart> BodyPartsEnumerable
+        {
+            get => _BodyParts;
+            set => _BodyParts.SetTo(value);
+        }
         #region Interface Members
         INotifyingList<BodyPart> IBodyData.BodyParts => _BodyParts;
         INotifyingListGetter<BodyPart> IBodyDataGetter.BodyParts => _BodyParts;

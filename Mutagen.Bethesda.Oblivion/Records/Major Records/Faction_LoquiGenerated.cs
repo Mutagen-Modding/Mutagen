@@ -42,6 +42,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region Relations
         private readonly INotifyingList<Relation> _Relations = new NotifyingList<Relation>();
         public INotifyingList<Relation> Relations => _Relations;
+        public IEnumerable<Relation> RelationsEnumerable
+        {
+            get => _Relations;
+            set => _Relations.SetTo(value);
+        }
         #region Interface Members
         INotifyingList<Relation> IFaction.Relations => _Relations;
         INotifyingListGetter<Relation> IFactionGetter.Relations => _Relations;
@@ -73,6 +78,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region Ranks
         private readonly INotifyingList<Rank> _Ranks = new NotifyingList<Rank>();
         public INotifyingList<Rank> Ranks => _Ranks;
+        public IEnumerable<Rank> RanksEnumerable
+        {
+            get => _Ranks;
+            set => _Ranks.SetTo(value);
+        }
         #region Interface Members
         INotifyingList<Rank> IFaction.Ranks => _Ranks;
         INotifyingListGetter<Rank> IFactionGetter.Ranks => _Ranks;

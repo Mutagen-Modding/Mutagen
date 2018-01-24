@@ -64,6 +64,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region PrimaryAttributes
         private readonly INotifyingList<ActorValue> _PrimaryAttributes = new NotifyingListBounded<ActorValue>(max: 2);
         public INotifyingList<ActorValue> PrimaryAttributes => _PrimaryAttributes;
+        public IEnumerable<ActorValue> PrimaryAttributesEnumerable
+        {
+            get => _PrimaryAttributes;
+            set => _PrimaryAttributes.SetTo(value);
+        }
         #region Interface Members
         INotifyingList<ActorValue> IClass.PrimaryAttributes => _PrimaryAttributes;
         INotifyingListGetter<ActorValue> IClassGetter.PrimaryAttributes => _PrimaryAttributes;
@@ -84,6 +89,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region SecondaryAttributes
         private readonly INotifyingList<ActorValue> _SecondaryAttributes = new NotifyingListBounded<ActorValue>(max: 7);
         public INotifyingList<ActorValue> SecondaryAttributes => _SecondaryAttributes;
+        public IEnumerable<ActorValue> SecondaryAttributesEnumerable
+        {
+            get => _SecondaryAttributes;
+            set => _SecondaryAttributes.SetTo(value);
+        }
         #region Interface Members
         INotifyingList<ActorValue> IClass.SecondaryAttributes => _SecondaryAttributes;
         INotifyingListGetter<ActorValue> IClassGetter.SecondaryAttributes => _SecondaryAttributes;

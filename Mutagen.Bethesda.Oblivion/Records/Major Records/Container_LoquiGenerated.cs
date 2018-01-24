@@ -55,6 +55,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region Items
         private readonly INotifyingList<ContainerItem> _Items = new NotifyingList<ContainerItem>();
         public INotifyingList<ContainerItem> Items => _Items;
+        public IEnumerable<ContainerItem> ItemsEnumerable
+        {
+            get => _Items;
+            set => _Items.SetTo(value);
+        }
         #region Interface Members
         INotifyingList<ContainerItem> IContainer.Items => _Items;
         INotifyingListGetter<ContainerItem> IContainerGetter.Items => _Items;

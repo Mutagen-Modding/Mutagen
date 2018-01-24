@@ -63,6 +63,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region Spells
         private readonly INotifyingList<FormIDSetLink<Spell>> _Spells = new NotifyingList<FormIDSetLink<Spell>>();
         public INotifyingList<FormIDSetLink<Spell>> Spells => _Spells;
+        public IEnumerable<FormIDSetLink<Spell>> SpellsEnumerable
+        {
+            get => _Spells;
+            set => _Spells.SetTo(value);
+        }
         #region Interface Members
         INotifyingList<FormIDSetLink<Spell>> IBirthsign.Spells => _Spells;
         INotifyingListGetter<FormIDSetLink<Spell>> IBirthsignGetter.Spells => _Spells;

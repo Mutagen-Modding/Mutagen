@@ -167,6 +167,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region CounterEffects
         private readonly INotifyingList<EDIDLink<MagicEffect>> _CounterEffects = new NotifyingList<EDIDLink<MagicEffect>>();
         public INotifyingList<EDIDLink<MagicEffect>> CounterEffects => _CounterEffects;
+        public IEnumerable<EDIDLink<MagicEffect>> CounterEffectsEnumerable
+        {
+            get => _CounterEffects;
+            set => _CounterEffects.SetTo(value);
+        }
         #region Interface Members
         INotifyingList<EDIDLink<MagicEffect>> IMagicEffect.CounterEffects => _CounterEffects;
         INotifyingListGetter<EDIDLink<MagicEffect>> IMagicEffectGetter.CounterEffects => _CounterEffects;

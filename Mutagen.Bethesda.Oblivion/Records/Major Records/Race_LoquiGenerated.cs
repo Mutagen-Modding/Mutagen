@@ -53,6 +53,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region Spells
         private readonly INotifyingList<FormIDSetLink<Spell>> _Spells = new NotifyingList<FormIDSetLink<Spell>>();
         public INotifyingList<FormIDSetLink<Spell>> Spells => _Spells;
+        public IEnumerable<FormIDSetLink<Spell>> SpellsEnumerable
+        {
+            get => _Spells;
+            set => _Spells.SetTo(value);
+        }
         #region Interface Members
         INotifyingList<FormIDSetLink<Spell>> IRace.Spells => _Spells;
         INotifyingListGetter<FormIDSetLink<Spell>> IRaceGetter.Spells => _Spells;
@@ -62,6 +67,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region Relations
         private readonly INotifyingList<Relation> _Relations = new NotifyingList<Relation>();
         public INotifyingList<Relation> Relations => _Relations;
+        public IEnumerable<Relation> RelationsEnumerable
+        {
+            get => _Relations;
+            set => _Relations.SetTo(value);
+        }
         #region Interface Members
         INotifyingList<Relation> IRace.Relations => _Relations;
         INotifyingListGetter<Relation> IRaceGetter.Relations => _Relations;
@@ -71,6 +81,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region SkillBoosts
         private readonly INotifyingList<SkillBoost> _SkillBoosts = new NotifyingListBounded<SkillBoost>(max: 7);
         public INotifyingList<SkillBoost> SkillBoosts => _SkillBoosts;
+        public IEnumerable<SkillBoost> SkillBoostsEnumerable
+        {
+            get => _SkillBoosts;
+            set => _SkillBoosts.SetTo(value);
+        }
         #region Interface Members
         INotifyingList<SkillBoost> IRace.SkillBoosts => _SkillBoosts;
         INotifyingListGetter<SkillBoost> IRaceGetter.SkillBoosts => _SkillBoosts;
@@ -203,6 +218,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region FaceData
         private readonly INotifyingList<FacePart> _FaceData = new NotifyingList<FacePart>();
         public INotifyingList<FacePart> FaceData => _FaceData;
+        public IEnumerable<FacePart> FaceDataEnumerable
+        {
+            get => _FaceData;
+            set => _FaceData.SetTo(value);
+        }
         #region Interface Members
         INotifyingList<FacePart> IRace.FaceData => _FaceData;
         INotifyingListGetter<FacePart> IRaceGetter.FaceData => _FaceData;
@@ -220,6 +240,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region Hairs
         private readonly INotifyingList<FormIDLink<Hair>> _Hairs = new NotifyingList<FormIDLink<Hair>>();
         public INotifyingList<FormIDLink<Hair>> Hairs => _Hairs;
+        public IEnumerable<FormIDLink<Hair>> HairsEnumerable
+        {
+            get => _Hairs;
+            set => _Hairs.SetTo(value);
+        }
         #region Interface Members
         INotifyingList<FormIDLink<Hair>> IRace.Hairs => _Hairs;
         INotifyingListGetter<FormIDLink<Hair>> IRaceGetter.Hairs => _Hairs;
@@ -229,6 +254,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region Eyes
         private readonly INotifyingList<FormIDLink<Eye>> _Eyes = new NotifyingList<FormIDLink<Eye>>();
         public INotifyingList<FormIDLink<Eye>> Eyes => _Eyes;
+        public IEnumerable<FormIDLink<Eye>> EyesEnumerable
+        {
+            get => _Eyes;
+            set => _Eyes.SetTo(value);
+        }
         #region Interface Members
         INotifyingList<FormIDLink<Eye>> IRace.Eyes => _Eyes;
         INotifyingListGetter<FormIDLink<Eye>> IRaceGetter.Eyes => _Eyes;

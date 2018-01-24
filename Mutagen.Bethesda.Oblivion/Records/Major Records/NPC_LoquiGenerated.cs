@@ -128,6 +128,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region Factions
         private readonly INotifyingList<RankPlacement> _Factions = new NotifyingList<RankPlacement>();
         public INotifyingList<RankPlacement> Factions => _Factions;
+        public IEnumerable<RankPlacement> FactionsEnumerable
+        {
+            get => _Factions;
+            set => _Factions.SetTo(value);
+        }
         #region Interface Members
         INotifyingList<RankPlacement> INPC.Factions => _Factions;
         INotifyingListGetter<RankPlacement> INPCGetter.Factions => _Factions;
@@ -147,6 +152,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region Spells
         private readonly INotifyingList<FormIDSetLink<Spell>> _Spells = new NotifyingList<FormIDSetLink<Spell>>();
         public INotifyingList<FormIDSetLink<Spell>> Spells => _Spells;
+        public IEnumerable<FormIDSetLink<Spell>> SpellsEnumerable
+        {
+            get => _Spells;
+            set => _Spells.SetTo(value);
+        }
         #region Interface Members
         INotifyingList<FormIDSetLink<Spell>> INPC.Spells => _Spells;
         INotifyingListGetter<FormIDSetLink<Spell>> INPCGetter.Spells => _Spells;
@@ -161,6 +171,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region Items
         private readonly INotifyingList<ItemEntry> _Items = new NotifyingList<ItemEntry>();
         public INotifyingList<ItemEntry> Items => _Items;
+        public IEnumerable<ItemEntry> ItemsEnumerable
+        {
+            get => _Items;
+            set => _Items.SetTo(value);
+        }
         #region Interface Members
         INotifyingList<ItemEntry> INPC.Items => _Items;
         INotifyingListGetter<ItemEntry> INPCGetter.Items => _Items;
@@ -258,6 +273,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region AIPackages
         private readonly INotifyingList<FormIDSetLink<AIPackage>> _AIPackages = new NotifyingList<FormIDSetLink<AIPackage>>();
         public INotifyingList<FormIDSetLink<AIPackage>> AIPackages => _AIPackages;
+        public IEnumerable<FormIDSetLink<AIPackage>> AIPackagesEnumerable
+        {
+            get => _AIPackages;
+            set => _AIPackages.SetTo(value);
+        }
         #region Interface Members
         INotifyingList<FormIDSetLink<AIPackage>> INPC.AIPackages => _AIPackages;
         INotifyingListGetter<FormIDSetLink<AIPackage>> INPCGetter.AIPackages => _AIPackages;
@@ -267,6 +287,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region Animations
         private readonly INotifyingList<String> _Animations = new NotifyingList<String>();
         public INotifyingList<String> Animations => _Animations;
+        public IEnumerable<String> AnimationsEnumerable
+        {
+            get => _Animations;
+            set => _Animations.SetTo(value);
+        }
         #region Interface Members
         INotifyingList<String> INPC.Animations => _Animations;
         INotifyingListGetter<String> INPCGetter.Animations => _Animations;
@@ -627,6 +652,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region Eyes
         private readonly INotifyingList<FormIDLink<Eye>> _Eyes = new NotifyingList<FormIDLink<Eye>>();
         public INotifyingList<FormIDLink<Eye>> Eyes => _Eyes;
+        public IEnumerable<FormIDLink<Eye>> EyesEnumerable
+        {
+            get => _Eyes;
+            set => _Eyes.SetTo(value);
+        }
         #region Interface Members
         INotifyingList<FormIDLink<Eye>> INPC.Eyes => _Eyes;
         INotifyingListGetter<FormIDLink<Eye>> INPCGetter.Eyes => _Eyes;

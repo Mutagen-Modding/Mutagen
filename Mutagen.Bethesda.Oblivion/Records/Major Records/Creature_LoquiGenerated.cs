@@ -50,6 +50,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region Items
         private readonly INotifyingList<ItemEntry> _Items = new NotifyingList<ItemEntry>();
         public INotifyingList<ItemEntry> Items => _Items;
+        public IEnumerable<ItemEntry> ItemsEnumerable
+        {
+            get => _Items;
+            set => _Items.SetTo(value);
+        }
         #region Interface Members
         INotifyingList<ItemEntry> ICreature.Items => _Items;
         INotifyingListGetter<ItemEntry> ICreatureGetter.Items => _Items;
@@ -59,6 +64,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region Spells
         private readonly INotifyingList<FormIDSetLink<Spell>> _Spells = new NotifyingList<FormIDSetLink<Spell>>();
         public INotifyingList<FormIDSetLink<Spell>> Spells => _Spells;
+        public IEnumerable<FormIDSetLink<Spell>> SpellsEnumerable
+        {
+            get => _Spells;
+            set => _Spells.SetTo(value);
+        }
         #region Interface Members
         INotifyingList<FormIDSetLink<Spell>> ICreature.Spells => _Spells;
         INotifyingListGetter<FormIDSetLink<Spell>> ICreatureGetter.Spells => _Spells;
@@ -68,6 +78,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region Models
         private readonly INotifyingList<String> _Models = new NotifyingList<String>();
         public INotifyingList<String> Models => _Models;
+        public IEnumerable<String> ModelsEnumerable
+        {
+            get => _Models;
+            set => _Models.SetTo(value);
+        }
         #region Interface Members
         INotifyingList<String> ICreature.Models => _Models;
         INotifyingListGetter<String> ICreatureGetter.Models => _Models;
@@ -154,6 +169,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region Factions
         private readonly INotifyingList<RankPlacement> _Factions = new NotifyingList<RankPlacement>();
         public INotifyingList<RankPlacement> Factions => _Factions;
+        public IEnumerable<RankPlacement> FactionsEnumerable
+        {
+            get => _Factions;
+            set => _Factions.SetTo(value);
+        }
         #region Interface Members
         INotifyingList<RankPlacement> ICreature.Factions => _Factions;
         INotifyingListGetter<RankPlacement> ICreatureGetter.Factions => _Factions;
@@ -250,6 +270,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region AIPackages
         private readonly INotifyingList<FormIDSetLink<AIPackage>> _AIPackages = new NotifyingList<FormIDSetLink<AIPackage>>();
         public INotifyingList<FormIDSetLink<AIPackage>> AIPackages => _AIPackages;
+        public IEnumerable<FormIDSetLink<AIPackage>> AIPackagesEnumerable
+        {
+            get => _AIPackages;
+            set => _AIPackages.SetTo(value);
+        }
         #region Interface Members
         INotifyingList<FormIDSetLink<AIPackage>> ICreature.AIPackages => _AIPackages;
         INotifyingListGetter<FormIDSetLink<AIPackage>> ICreatureGetter.AIPackages => _AIPackages;
@@ -259,6 +284,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region Animations
         private readonly INotifyingList<String> _Animations = new NotifyingList<String>();
         public INotifyingList<String> Animations => _Animations;
+        public IEnumerable<String> AnimationsEnumerable
+        {
+            get => _Animations;
+            set => _Animations.SetTo(value);
+        }
         #region Interface Members
         INotifyingList<String> ICreature.Animations => _Animations;
         INotifyingListGetter<String> ICreatureGetter.Animations => _Animations;

@@ -81,6 +81,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region RandomTeleportDestinations
         private readonly INotifyingList<FormIDSetLink<Worldspace>> _RandomTeleportDestinations = new NotifyingList<FormIDSetLink<Worldspace>>();
         public INotifyingList<FormIDSetLink<Worldspace>> RandomTeleportDestinations => _RandomTeleportDestinations;
+        public IEnumerable<FormIDSetLink<Worldspace>> RandomTeleportDestinationsEnumerable
+        {
+            get => _RandomTeleportDestinations;
+            set => _RandomTeleportDestinations.SetTo(value);
+        }
         #region Interface Members
         INotifyingList<FormIDSetLink<Worldspace>> IDoor.RandomTeleportDestinations => _RandomTeleportDestinations;
         INotifyingListGetter<FormIDSetLink<Worldspace>> IDoorGetter.RandomTeleportDestinations => _RandomTeleportDestinations;

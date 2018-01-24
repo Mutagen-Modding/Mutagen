@@ -117,6 +117,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region MasterReferences
         private readonly INotifyingList<MasterReference> _MasterReferences = new NotifyingList<MasterReference>();
         public INotifyingList<MasterReference> MasterReferences => _MasterReferences;
+        public IEnumerable<MasterReference> MasterReferencesEnumerable
+        {
+            get => _MasterReferences;
+            set => _MasterReferences.SetTo(value);
+        }
         #region Interface Members
         INotifyingList<MasterReference> ITES4.MasterReferences => _MasterReferences;
         INotifyingListGetter<MasterReference> ITES4Getter.MasterReferences => _MasterReferences;

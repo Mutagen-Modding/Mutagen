@@ -81,6 +81,11 @@ namespace Mutagen.Bethesda
         #region Items
         private readonly INotifyingList<T> _Items = new NotifyingList<T>();
         public INotifyingList<T> Items => _Items;
+        public IEnumerable<T> ItemsEnumerable
+        {
+            get => _Items;
+            set => _Items.SetTo(value);
+        }
         #region Interface Members
         INotifyingList<T> IGroup<T>.Items => _Items;
         INotifyingListGetter<T> IGroupGetter<T>.Items => _Items;

@@ -61,6 +61,11 @@ namespace Mutagen.Bethesda.Oblivion
         #region SpeedTreeSeeds
         private readonly INotifyingList<UInt32> _SpeedTreeSeeds = new NotifyingList<UInt32>();
         public INotifyingList<UInt32> SpeedTreeSeeds => _SpeedTreeSeeds;
+        public IEnumerable<UInt32> SpeedTreeSeedsEnumerable
+        {
+            get => _SpeedTreeSeeds;
+            set => _SpeedTreeSeeds.SetTo(value);
+        }
         #region Interface Members
         INotifyingList<UInt32> ITree.SpeedTreeSeeds => _SpeedTreeSeeds;
         INotifyingListGetter<UInt32> ITreeGetter.SpeedTreeSeeds => _SpeedTreeSeeds;
