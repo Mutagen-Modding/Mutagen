@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>def5017b11916564db4f3f0bc1c5980a906ea6ef</Sha>
+         <Sha>0b52f29a21de276c79e6ad755d9d7e24db481000</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>01-21-2018 21:56:14</CommitDate>
-         <Description>XmlExt.ContentEqual work</Description>
+         <CommitDate>01-23-2018 21:13:12</CommitDate>
+         <Description>MathExt.Min/Max with enumerable parameters</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

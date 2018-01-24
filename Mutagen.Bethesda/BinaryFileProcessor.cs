@@ -27,6 +27,18 @@ namespace Mutagen.Bethesda
                 _substitutions[loc] = sub;
             }
 
+            public void SetSubstitution(FileLocation loc, byte[] sub)
+            {
+                if (_substitutions == null)
+                {
+                    _substitutions = new SortedList<FileLocation, byte>();
+                }
+                for (long i = 0; i < sub.Length; i++)
+                {
+                    _substitutions[loc + i] = sub[i];
+                }
+            }
+
             public void SetMove(RangeInt64 move, FileLocation loc)
             {
                 if (_moves == null)

@@ -11,6 +11,7 @@ namespace Mutagen.Bethesda.Binary
 {
     public class MutagenWriter : IDisposable
     {
+        private bool dispose = true;
         private System.IO.BinaryWriter writer;
         private static byte Zero = 0;
 
@@ -30,8 +31,9 @@ namespace Mutagen.Bethesda.Binary
             this.writer = new BinaryWriter(new FileStream(path, FileMode.Create, FileAccess.Write));
         }
 
-        public MutagenWriter(Stream stream)
+        public MutagenWriter(Stream stream, bool dispose = true)
         {
+            this.dispose = dispose;
             this.writer = new BinaryWriter(stream);
         }
 
@@ -139,7 +141,10 @@ namespace Mutagen.Bethesda.Binary
 
         public void Dispose()
         {
-            this.writer.Dispose();
+            if (dispose)
+            {
+                this.writer.Dispose();
+            }
         }
     }
 }

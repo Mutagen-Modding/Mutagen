@@ -76,6 +76,9 @@ namespace Mutagen.Bethesda.Generation
                 NotifyingDefault = false,
                 HasBeenSetDefault = false
             };
+            gen.XmlTranslation.ShouldGenerateXSD = false;
+            gen.XmlTranslation.AddTypeAssociation<RawFormIDType>(new PrimitiveXmlTranslationGeneration<RawFormID>());
+            gen.AddTypeAssociation<RawFormIDType>("RawFormID");
             var testerProto = gen.AddProtocol(
                 new ProtocolGeneration(
                     gen,

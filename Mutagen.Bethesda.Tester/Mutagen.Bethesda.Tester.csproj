@@ -68,6 +68,10 @@
       <Project>{8838681b-f77c-421d-bd96-46d2c89388c5}</Project>
       <Name>Mutagen.Bethesda.Tests</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Mutagen.Bethesda\Mutagen.Bethesda.csproj">
+      <Project>{fe4b569a-c9e5-4a2b-b990-8c5161235c21}</Project>
+      <Name>Mutagen.Bethesda</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="System.ValueTuple">

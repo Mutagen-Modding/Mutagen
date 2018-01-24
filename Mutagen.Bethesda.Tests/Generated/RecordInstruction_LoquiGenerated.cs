@@ -37,7 +37,7 @@ namespace Mutagen.Bethesda.Tests
         #endregion
 
         #region Record
-        public String Record { get; set; }
+        public RawFormID Record { get; set; }
         #endregion
 
         #region Loqui Getter Interface
@@ -95,7 +95,7 @@ namespace Mutagen.Bethesda.Tests
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (!object.Equals(Record, rhs.Record)) return false;
+            if (Record != rhs.Record) return false;
             return true;
         }
 
@@ -407,7 +407,7 @@ namespace Mutagen.Bethesda.Tests
             switch (name)
             {
                 case "Record":
-                    item.Record = StringXmlTranslation.Instance.Parse(
+                    item.Record = RawFormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)RecordInstruction_FieldIndex.Record,
                         errorMask: errorMask).GetOrDefault(item.Record);
@@ -507,7 +507,7 @@ namespace Mutagen.Bethesda.Tests
             switch (enu)
             {
                 case RecordInstruction_FieldIndex.Record:
-                    this.Record = (String)obj;
+                    this.Record = (RawFormID)obj;
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -541,7 +541,7 @@ namespace Mutagen.Bethesda.Tests
             switch (enu)
             {
                 case RecordInstruction_FieldIndex.Record:
-                    obj.Record = (String)pair.Value;
+                    obj.Record = (RawFormID)pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -558,14 +558,14 @@ namespace Mutagen.Bethesda.Tests
     #region Interface
     public interface IRecordInstruction : IRecordInstructionGetter, IInstruction, ILoquiClass<IRecordInstruction, IRecordInstructionGetter>, ILoquiClass<RecordInstruction, IRecordInstructionGetter>
     {
-        new String Record { get; set; }
+        new RawFormID Record { get; set; }
 
     }
 
     public interface IRecordInstructionGetter : IInstructionGetter
     {
         #region Record
-        String Record { get; }
+        RawFormID Record { get; }
 
         #endregion
 
@@ -713,7 +713,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             switch (enu)
             {
                 case RecordInstruction_FieldIndex.Record:
-                    return typeof(String);
+                    return typeof(RawFormID);
                 default:
                     return Instruction_Registration.GetNthType(index);
             }
@@ -868,7 +868,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             switch (enu)
             {
                 case RecordInstruction_FieldIndex.Record:
-                    obj.Record = default(String);
+                    obj.Record = default(RawFormID);
                     break;
                 default:
                     InstructionCommon.UnsetNthObject(index, obj);
@@ -908,7 +908,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             IRecordInstruction item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.Record = default(String);
+            item.Record = default(RawFormID);
         }
 
         public static RecordInstruction_Mask<bool> GetEqualsMask(
@@ -926,7 +926,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             RecordInstruction_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Record = object.Equals(item.Record, rhs.Record);
+            ret.Record = item.Record == rhs.Record;
             InstructionCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -1030,7 +1030,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Tests.RecordInstruction");
                     }
-                    StringXmlTranslation.Instance.Write(
+                    RawFormIDXmlTranslation.Instance.Write(
                         writer: writer,
                         name: nameof(item.Record),
                         item: item.Record,

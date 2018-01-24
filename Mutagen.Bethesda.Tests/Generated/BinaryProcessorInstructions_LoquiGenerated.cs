@@ -12,7 +12,6 @@ using Loqui;
 using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Tests.Internals;
-using Mutagen.Bethesda.Tests;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -37,11 +36,11 @@ namespace Mutagen.Bethesda.Tests
         #endregion
 
         #region CompressionInstructions
-        private readonly INotifyingList<RecordInstruction> _CompressionInstructions = new NotifyingList<RecordInstruction>();
-        public INotifyingList<RecordInstruction> CompressionInstructions => _CompressionInstructions;
+        private readonly INotifyingKeyedCollection<RawFormID, RecordInstruction> _CompressionInstructions = new NotifyingKeyedCollection<RawFormID, RecordInstruction>((item) => item.Record);
+        public INotifyingKeyedCollection<RawFormID, RecordInstruction> CompressionInstructions => _CompressionInstructions;
         #region Interface Members
-        INotifyingList<RecordInstruction> IBinaryProcessorInstructions.CompressionInstructions => _CompressionInstructions;
-        INotifyingListGetter<RecordInstruction> IBinaryProcessorInstructionsGetter.CompressionInstructions => _CompressionInstructions;
+        INotifyingKeyedCollection<RawFormID, RecordInstruction> IBinaryProcessorInstructions.CompressionInstructions => _CompressionInstructions;
+        INotifyingKeyedCollectionGetter<RawFormID, RecordInstruction> IBinaryProcessorInstructionsGetter.CompressionInstructions => _CompressionInstructions;
         #endregion
 
         #endregion
@@ -402,21 +401,21 @@ namespace Mutagen.Bethesda.Tests
             switch (name)
             {
                 case "CompressionInstructions":
-                    var CompressionInstructionslist = ListXmlTranslation<RecordInstruction, MaskItem<Exception, RecordInstruction_ErrorMask>>.Instance.Parse(
+                    var CompressionInstructionsdict = KeyedDictXmlTranslation<RawFormID, RecordInstruction, MaskItem<Exception, RecordInstruction_ErrorMask>>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)BinaryProcessorInstructions_FieldIndex.CompressionInstructions,
                         errorMask: errorMask,
-                        transl: (XElement r, bool listDoMasks, out MaskItem<Exception, RecordInstruction_ErrorMask> listSubMask) =>
+                        valTransl: (XElement r, bool dictDoMasks, out MaskItem<Exception, RecordInstruction_ErrorMask> dictSubMask) =>
                         {
                             return LoquiXmlTranslation<RecordInstruction, RecordInstruction_ErrorMask>.Instance.Parse(
                                 root: r,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask);
+                                doMasks: dictDoMasks,
+                                errorMask: out dictSubMask);
                         }
                         );
-                    if (CompressionInstructionslist.Succeeded)
+                    if (CompressionInstructionsdict.Succeeded)
                     {
-                        item._CompressionInstructions.SetTo(CompressionInstructionslist.Value);
+                        item._CompressionInstructions.SetTo(CompressionInstructionsdict.Value);
                     }
                     break;
                 default:
@@ -510,7 +509,9 @@ namespace Mutagen.Bethesda.Tests
             switch (enu)
             {
                 case BinaryProcessorInstructions_FieldIndex.CompressionInstructions:
-                    this._CompressionInstructions.SetTo((IEnumerable<RecordInstruction>)obj, cmds);
+                    this.CompressionInstructions.SetTo(
+                        ((IEnumerable<RecordInstruction>)(NotifyingDictionary<RawFormID, RecordInstruction>)obj),
+                        cmds);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -550,7 +551,9 @@ namespace Mutagen.Bethesda.Tests
             switch (enu)
             {
                 case BinaryProcessorInstructions_FieldIndex.CompressionInstructions:
-                    obj._CompressionInstructions.SetTo((IEnumerable<RecordInstruction>)pair.Value, null);
+                    obj.CompressionInstructions.SetTo(
+                        ((IEnumerable<RecordInstruction>)(NotifyingDictionary<RawFormID, RecordInstruction>)pair.Value),
+                        null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -567,13 +570,13 @@ namespace Mutagen.Bethesda.Tests
     #region Interface
     public interface IBinaryProcessorInstructions : IBinaryProcessorInstructionsGetter, ILoquiClass<IBinaryProcessorInstructions, IBinaryProcessorInstructionsGetter>, ILoquiClass<BinaryProcessorInstructions, IBinaryProcessorInstructionsGetter>
     {
-        new INotifyingList<RecordInstruction> CompressionInstructions { get; }
+        new INotifyingKeyedCollection<RawFormID, RecordInstruction> CompressionInstructions { get; }
     }
 
     public interface IBinaryProcessorInstructionsGetter : ILoquiObject
     {
         #region CompressionInstructions
-        INotifyingListGetter<RecordInstruction> CompressionInstructions { get; }
+        INotifyingKeyedCollectionGetter<RawFormID, RecordInstruction> CompressionInstructions { get; }
         #endregion
 
     }
@@ -646,7 +649,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             switch (enu)
             {
                 case BinaryProcessorInstructions_FieldIndex.CompressionInstructions:
-                    return true;
+                    return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -658,7 +661,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             switch (enu)
             {
                 case BinaryProcessorInstructions_FieldIndex.CompressionInstructions:
-                    return true;
+                    return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -718,7 +721,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             switch (enu)
             {
                 case BinaryProcessorInstructions_FieldIndex.CompressionInstructions:
-                    return typeof(NotifyingList<RecordInstruction>);
+                    return typeof(NotifyingDictionary<RawFormID, RecordInstruction>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -845,11 +848,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                                 case CopyOption.Reference:
                                     return r;
                                 case CopyOption.MakeCopy:
-                                    if (r == null) return default(RecordInstruction);
-                                    return RecordInstruction.Copy(
-                                        r,
-                                        copyMask?.CompressionInstructions?.Specific,
-                                        def: d);
+                                    return r.Copy(copyMask?.CompressionInstructions.Specific, d);
                                 default:
                                     throw new NotImplementedException($"Unknown CopyOption {copyMask?.CompressionInstructions.Overall}. Cannot execute copy.");
                             }
@@ -950,7 +949,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             if (rhs == null) return;
             ret.CompressionInstructions = new MaskItem<bool, IEnumerable<MaskItem<bool, RecordInstruction_Mask<bool>>>>();
-            ret.CompressionInstructions.Specific = item.CompressionInstructions.SelectAgainst<RecordInstruction, MaskItem<bool, RecordInstruction_Mask<bool>>>(rhs.CompressionInstructions, ((l, r) =>
+            ret.CompressionInstructions.Specific = item.CompressionInstructions.Values.SelectAgainst<RecordInstruction, MaskItem<bool, RecordInstruction_Mask<bool>>>(rhs.CompressionInstructions.Values, ((l, r) =>
             {
                 MaskItem<bool, RecordInstruction_Mask<bool>> itemRet;
                 itemRet = new MaskItem<bool, RecordInstruction_Mask<bool>>();
@@ -995,7 +994,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                     fg.AppendLine("[");
                     using (new DepthWrapper(fg))
                     {
-                        foreach (var subItem in item.CompressionInstructions)
+                        foreach (var subItem in item.CompressionInstructions.Values)
                         {
                             fg.AppendLine("[");
                             using (new DepthWrapper(fg))
@@ -1021,7 +1020,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         public static BinaryProcessorInstructions_Mask<bool> GetHasBeenSetMask(IBinaryProcessorInstructionsGetter item)
         {
             var ret = new BinaryProcessorInstructions_Mask<bool>();
-            ret.CompressionInstructions = new MaskItem<bool, IEnumerable<MaskItem<bool, RecordInstruction_Mask<bool>>>>(item.CompressionInstructions.HasBeenSet, item.CompressionInstructions.Select((i) => new MaskItem<bool, RecordInstruction_Mask<bool>>(true, i.GetHasBeenSetMask())));
+            ret.CompressionInstructions = new MaskItem<bool, IEnumerable<MaskItem<bool, RecordInstruction_Mask<bool>>>>(item.CompressionInstructions.HasBeenSet, item.CompressionInstructions.Values.Select((i) => new MaskItem<bool, RecordInstruction_Mask<bool>>(true, i.GetHasBeenSetMask())));
             return ret;
         }
 
@@ -1057,20 +1056,20 @@ namespace Mutagen.Bethesda.Tests.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Tests.BinaryProcessorInstructions");
                     }
-                    ListXmlTranslation<RecordInstruction, MaskItem<Exception, RecordInstruction_ErrorMask>>.Instance.Write(
+                    KeyedDictXmlTranslation<RawFormID, RecordInstruction, MaskItem<Exception, RecordInstruction_ErrorMask>>.Instance.Write(
                         writer: writer,
                         name: nameof(item.CompressionInstructions),
-                        item: item.CompressionInstructions,
+                        items: item.CompressionInstructions.Values,
                         fieldIndex: (int)BinaryProcessorInstructions_FieldIndex.CompressionInstructions,
                         errorMask: errorMask,
-                        transl: (RecordInstruction subItem, bool listDoMasks, out MaskItem<Exception, RecordInstruction_ErrorMask> listSubMask) =>
+                        valTransl: (RecordInstruction subItem, bool dictDoMask, out MaskItem<Exception, RecordInstruction_ErrorMask> dictSubMask) =>
                         {
                             LoquiXmlTranslation<RecordInstruction, RecordInstruction_ErrorMask>.Instance.Write(
                                 writer: writer,
                                 item: subItem,
                                 name: "Item",
-                                doMasks: errorMask != null,
-                                errorMask: out listSubMask);
+                                doMasks: dictDoMask,
+                                errorMask: out dictSubMask);
                         }
                         );
                 }
@@ -1141,7 +1140,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                     foreach (var item in this.CompressionInstructions.Specific)
                     {
                         if (!eval(item.Overall)) return false;
-                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                        if (!item.Specific?.AllEqual(eval) ?? false) return false;
                     }
                 }
             }
@@ -1229,7 +1228,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
                                 {
-                                    subItem?.ToString(fg);
+                                    fg.AppendLine($"Record => {subItem}");
                                 }
                                 fg.AppendLine("]");
                             }
@@ -1343,7 +1342,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            subItem?.ToString(fg);
+                            fg.AppendLine($"Record => {subItem}");
                         }
                         fg.AppendLine("]");
                     }

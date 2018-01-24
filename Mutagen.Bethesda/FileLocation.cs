@@ -114,6 +114,16 @@ namespace Mutagen.Bethesda.Internals
             return new ContentLength((int)(c1.Offset - c2.Offset));
         }
 
+        public static FileLocation operator +(FileLocation c1, long c2)
+        {
+            return new FileLocation(c1.Offset + c2);
+        }
+
+        public static FileLocation operator -(FileLocation c1, long c2)
+        {
+            return new FileLocation(c1.Offset - c2);
+        }
+
         public static FileLocation operator +(FileLocation c1, int c2)
         {
             return new FileLocation(c1.Offset + c2);

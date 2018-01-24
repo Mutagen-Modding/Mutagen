@@ -2,7 +2,13 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="BinaryProcessorInstructions" GUID="73f79186-d8ce-4187-a063-f443409f5f78" ID="1">
     <Fields>
-      <RefList name="CompressionInstructions" refName="RecordInstruction" />
+      <Dict name="CompressionInstructions">
+        <KeyedValue keyAccessor="Record">
+          <Ref>
+            <Direct refName="RecordInstruction" />
+          </Ref>
+        </KeyedValue>
+      </Dict>
     </Fields>
   </Object>
   <Object name="Move" GUID="226328fc-e330-4693-9377-5d70b7a70342" ID="2">
@@ -25,7 +31,7 @@
   </Object>
   <Object name="RecordInstruction" baseClass="Instruction" GUID="bf254321-e86f-49a5-9699-105f6b5d2457" ID="5">
     <Fields>
-      <String name="Record" />
+      <RawFormID name="Record" />
     </Fields>
   </Object>
 </Loqui>
