@@ -61,11 +61,53 @@ namespace Mutagen.Bethesda.Tests
         [Fact]
         public async Task OblivionESM_Binary()
         {
-            OblivionMod_ErrorMask inputErrMask, outputErrMask;
             var mod = OblivionMod.Create_Binary(
                 Properties.Settings.Default.OblivionESM,
-                out inputErrMask);
+                out var inputErrMask);
 
+            var instructions = GetOblivionInstructions();
+
+            // Test compressions separately
+            var compressionTest = Task.Run(() => OblivionESM_Compression(mod, instructions));
+            var test = Task.Run(() => OblivionESM_Typical(mod, instructions, inputErrMask: inputErrMask));
+            await compressionTest;
+            await test;
+        }
+
+        private async Task OblivionESM_Typical(
+            OblivionMod mod,
+            BinaryProcessorInstructions instructions, 
+            OblivionMod_ErrorMask inputErrMask)
+        {
+
+            using (var tmp = new TempFolder(new DirectoryInfo(Path.Combine(Path.GetTempPath(), "Mutagen_Oblivion_Binary"))))
+            {
+                var oblivionOutputPath = Path.Combine(tmp.Dir.FullName, Constants.OBLIVION_ESM);
+
+                mod.Write_Binary(oblivionOutputPath, out var outputErrMask);
+                var binConfig = instructions.Instruction.ToProcessorConfig();
+                using (var processor = new BinaryFileProcessor(
+                    new FileStream(Properties.Settings.Default.OblivionESM, FileMode.Open, FileAccess.Read),
+                    binConfig))
+                {
+                    var lowPrioEx = Passthrough_Tests.AssertFilesEqual(
+                        processor,
+                        oblivionOutputPath,
+                        ignoreList: new RangeCollection(instructions.IgnoreDifferenceSections),
+                        sourceSkips: new RangeCollection(instructions.SkipSourceSections),
+                        targetSkips: new RangeCollection(instructions.SkipOutputSections));
+                    Assert.False(inputErrMask?.IsInError() ?? false);
+                    Assert.False(outputErrMask?.IsInError() ?? false);
+                    if (lowPrioEx != null)
+                    {
+                        throw lowPrioEx;
+                    }
+                }
+            }
+        }
+
+        private async Task OblivionESM_Compression(OblivionMod mod, BinaryProcessorInstructions instructions)
+        {
             Dictionary<RawFormID, FileLocation> fileLocs;
             using (var stream = new FileStream(Properties.Settings.Default.OblivionESM, FileMode.Open, FileAccess.Read))
             {
@@ -74,9 +116,6 @@ namespace Mutagen.Bethesda.Tests
                     uninterestingTypes: OblivionMod.NonTypeGroups);
             }
 
-            var instructions = GetOblivionInstructions();
-
-            // Test compressions separately
             using (var tmp = new TempFolder(new DirectoryInfo(Path.Combine(Path.GetTempPath(), "Mutagen_Oblivion_Binary_CompressionTests"))))
             {
                 List<Task> tasks = new List<Task>();
@@ -171,31 +210,6 @@ namespace Mutagen.Bethesda.Tests
                         }));
                 }
                 await Task.WhenAll(tasks);
-            }
-
-            using (var tmp = new TempFolder(new DirectoryInfo(Path.Combine(Path.GetTempPath(), "Mutagen_Oblivion_Binary"))))
-            {
-                var oblivionOutputPath = Path.Combine(tmp.Dir.FullName, Constants.OBLIVION_ESM);
-
-                mod.Write_Binary(oblivionOutputPath, out outputErrMask);
-                var binConfig = instructions.Instruction.ToProcessorConfig();
-                using (var processor = new BinaryFileProcessor(
-                    new FileStream(Properties.Settings.Default.OblivionESM, FileMode.Open, FileAccess.Read),
-                    binConfig))
-                {
-                    var lowPrioEx = Passthrough_Tests.AssertFilesEqual(
-                        processor,
-                        oblivionOutputPath,
-                        ignoreList: new RangeCollection(instructions.IgnoreDifferenceSections),
-                        sourceSkips: new RangeCollection(instructions.SkipSourceSections),
-                        targetSkips: new RangeCollection(instructions.SkipOutputSections));
-                    Assert.False(inputErrMask?.IsInError() ?? false);
-                    Assert.False(outputErrMask?.IsInError() ?? false);
-                    if (lowPrioEx != null)
-                    {
-                        throw lowPrioEx;
-                    }
-                }
             }
         }
 
