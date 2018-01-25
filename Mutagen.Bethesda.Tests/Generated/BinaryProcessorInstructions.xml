@@ -9,6 +9,16 @@
           </Ref>
         </KeyedValue>
       </Dict>
+      <RefDirect name="Instruction" refName="Instruction" nullable="NotNull" />
+      <List name="SkipSourceSections">
+        <RangeInt64 />
+      </List>
+      <List name="SkipOutputSections">
+        <RangeInt64 />
+      </List>
+      <List name="IgnoreDifferenceSections">
+        <RangeInt64 />
+      </List>
     </Fields>
   </Object>
   <Object name="Move" GUID="226328fc-e330-4693-9377-5d70b7a70342" ID="2">

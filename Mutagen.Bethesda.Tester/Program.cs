@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Tester
         static void Main(string[] args)
         {
             var tests = new Oblivion_Passthrough_Tests();
-            tests.OblivionESM_Binary();
+            tests.OblivionESM_Binary().Wait();
         }
     }
 }

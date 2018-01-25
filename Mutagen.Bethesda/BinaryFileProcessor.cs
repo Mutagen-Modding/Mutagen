@@ -17,6 +17,8 @@ namespace Mutagen.Bethesda
             public SortedList<FileLocation, byte> _substitutions;
             private RangeCollection _moveRanges;
             public Dictionary<RangeInt64, FileLocation> _moves;
+            public bool HasProcessing => this._moves?.Count > 0
+                || this._substitutions?.Count > 0;
 
             public void SetSubstitution(FileLocation loc, byte sub)
             {
@@ -71,6 +73,7 @@ namespace Mutagen.Bethesda
         private SortedList<long, byte[]> _activeMoves;
         private SortedList<long, RangeInt64> _sortedMoves;
         private bool ExpandableBufferActive => _expandableBuffer.Count > 0;
+        public bool HasProcessing { get; private set; }
 
         public override bool CanRead => true;
 
@@ -83,7 +86,7 @@ namespace Mutagen.Bethesda
         public override long Position
         {
             get => this._position + bufferPos;
-            set => throw new NotImplementedException();
+            set => this.SetPosition(value);
         }
 
         public BinaryFileProcessor(Stream source, Config config, int bufferLen = 4096)
@@ -98,6 +101,7 @@ namespace Mutagen.Bethesda
                     this.config._moves.Select((m) => new KeyValuePair<long, RangeInt64>(m.Key.Min, m.Key)));
             }
             this._buffer = new byte[bufferLen];
+            this.HasProcessing = this.config.HasProcessing;
         }
 
         protected override void Dispose(bool disposing)
@@ -222,6 +226,12 @@ namespace Mutagen.Bethesda
 
         public override int Read(byte[] buffer, int offset, int count)
         {
+            if (!HasProcessing)
+            {
+                var ret = this.source.Read(buffer, offset, count);
+                this._position += ret;
+                return ret;
+            }
             if (count == 0) return 0;
             int initialCount = count;
             while (count > 0 && !done)
@@ -259,6 +269,22 @@ namespace Mutagen.Bethesda
         public override void Flush()
         {
             throw new NotImplementedException();
+        }
+
+        private void SetPosition(long pos)
+        {
+            if (pos == this.Position) return;
+            if (pos < this.Position)
+            {
+                throw new NotImplementedException("Cannot move back in position");
+            }
+            var diff = pos - this.Position;
+            if (diff > int.MaxValue)
+            {
+                throw new NotImplementedException("Need to upgrade to move large positions");
+            }
+            byte[] trash = new byte[diff];
+            this.Read(trash, offset: 0, count: (int)diff);
         }
 
         #region N/A
