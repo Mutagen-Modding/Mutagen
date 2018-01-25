@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>a6fd6e1ed37a873e690d76f6c1c7ae274c6cc147</Sha>
+         <Sha>63de44277d0bb84fbddcb32609e13c5aec2e1798</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>01-24-2018 18:40:11</CommitDate>
-         <Description>RangeCollection add/ctor with enumerables</Description>
+         <CommitDate>01-24-2018 19:13:20</CommitDate>
+         <Description>ListExt.RemoveEnd renamed to RemoveToCount.  NotifyingList internal set to logic moved to ListExt.SetTo(IEnumerable)</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
