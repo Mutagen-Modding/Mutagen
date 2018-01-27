@@ -27,35 +27,118 @@ namespace Mutagen.Bethesda.Tests
             return instructions;
         }
 
-        private void ProcessNPC_CNTOMismatch(
+        /*
+         * Some records that seem older have an odd record order.  Rather than accommodating, dynamically mark as exceptions
+         */
+        private void AddDynamicProcessorInstructions(
             MajorRecord rec,
-            RecordInstruction instr,
-            string filePath)
+            Instruction instr,
+            string filePath,
+            FileSection loc,
+            bool compressed)
+        {
+            ProcessNPC_Mismatch(rec, instr, filePath, loc, compressed);
+            ProcessCreature_Mismatch(rec, instr, filePath, loc, compressed);
+        }
+
+        private void ProcessNPC_Mismatch(
+            MajorRecord rec,
+            Instruction instr,
+            string filePath,
+            FileSection loc,
+            bool compressed)
         {
             if (!(rec is NPC)) return;
+            if (compressed != rec.MajorRecordFlags.HasFlag(MajorRecord.MajorRecordFlag.Compressed)) return;
+            this.DynamicMove(
+                instr,
+                filePath,
+                loc,
+                offendingIndices: new RecordType[]
+                {
+                    new RecordType("CNTO"),
+                    new RecordType("SCRI"),
+                    new RecordType("AIDT")
+                },
+                offendingLimits: new RecordType[]
+                {
+                    new RecordType("ACBS")
+                },
+                locationsToMove: new RecordType[]
+                {
+                    new RecordType("CNAM")
+                });
+        }
+
+        private void ProcessCreature_Mismatch(
+            MajorRecord rec,
+            Instruction instr,
+            string filePath,
+            FileSection loc,
+            bool compressed)
+        {
+            if (!(rec is Creature)) return;
+            if (compressed != rec.MajorRecordFlags.HasFlag(MajorRecord.MajorRecordFlag.Compressed)) return;
+            this.DynamicMove(
+                instr,
+                filePath,
+                loc,
+                offendingIndices: new RecordType[]
+                {
+                    new RecordType("SPLO"),
+                    new RecordType("NIFZ"),
+                    new RecordType("ACBS"),
+                    new RecordType("SNAM"),
+                },
+                offendingLimits: new RecordType[]
+                {
+                    new RecordType("INAM"),
+                    new RecordType("SCRI"),
+                    new RecordType("AIDT"),
+                    new RecordType("PKID"),
+                    new RecordType("CNTO"),
+                },
+                locationsToMove: new RecordType[]
+                {
+                    new RecordType("INAM"),
+                    new RecordType("SCRI"),
+                    new RecordType("AIDT"),
+                    new RecordType("PKID"),
+                });
+        }
+
+        private void DynamicMove(
+            Instruction instr,
+            string filePath,
+            FileSection loc,
+            IEnumerable<RecordType> offendingIndices,
+            IEnumerable<RecordType> offendingLimits,
+            IEnumerable<RecordType> locationsToMove)
+        {
             using (var stream = new MutagenReader(filePath))
             {
-                var str = stream.ReadString(stream.RemainingLength);
-                List<int> indices = new List<int>()
-                {
-                    str.IndexOf("CNTO"),
-                    str.IndexOf("SCRI"),
-                    str.IndexOf("AIDT")
-                };
-                var min = MathExt.Min(indices.Where((i) => i != -1));
-
-                int acbs = str.IndexOf("ACBS");
-                int cnam = str.IndexOf("CNAM");
-                if (min < acbs)
+                stream.Position = loc.Min;
+                var str = stream.ReadString((int)loc.Range.Width);
+                var offender = LocateFirstOf(str, loc.Min, offendingIndices);
+                var limit = LocateFirstOf(str, loc.Min, offendingLimits);
+                var locToMove = LocateFirstOf(str, loc.Min, locationsToMove);
+                if (limit == locToMove) return;
+                if (offender < limit)
                 {
                     instr.Moves.Add(
                         new Move()
                         {
-                            SectionToMove = new RangeInt64(min, acbs - 1),
-                            LocationToMove = cnam
+                            SectionToMove = new RangeInt64(offender, limit - 1),
+                            LocationToMove = locToMove
                         });
                 }
             }
+        }
+
+        private FileLocation LocateFirstOf(string str, FileLocation offset, IEnumerable<RecordType> types)
+        {
+            List<int> indices = new List<int>(types.Select((r) => str.IndexOf(r.Type)));
+            return new FileLocation(MathExt.Min(indices.Where((i) => i != -1)) + offset.Offset);
         }
 
         [Fact]
@@ -68,30 +151,52 @@ namespace Mutagen.Bethesda.Tests
             var instructions = GetOblivionInstructions();
 
             // Test compressions separately
-            var compressionTest = Task.Run(() => OblivionESM_Compression(mod, instructions));
-            var test = Task.Run(() => OblivionESM_Typical(mod, instructions, inputErrMask: inputErrMask));
+            var fileLocations = Task.Run(() => OblivionESM_FileLocs());
+            var compressionTest = Task.Run(() => OblivionESM_Compression(mod, instructions, fileLocations));
+            var test = Task.Run(() => OblivionESM_Typical(mod, instructions, inputErrMask: inputErrMask, fileLocationsTask: fileLocations));
             await compressionTest;
             await test;
         }
 
         private async Task OblivionESM_Typical(
             OblivionMod mod,
-            BinaryProcessorInstructions instructions, 
-            OblivionMod_ErrorMask inputErrMask)
+            BinaryProcessorInstructions instructions,
+            OblivionMod_ErrorMask inputErrMask, Task<Dictionary<RawFormID, FileSection>> fileLocationsTask)
         {
+            Dictionary<RawFormID, FileSection> fileLocs = await fileLocationsTask;
+
+            foreach (var rec in mod.MajorRecords)
+            {
+                if (rec.MajorRecordFlags.HasFlag(MajorRecord.MajorRecordFlag.Compressed)) continue;
+                AddDynamicProcessorInstructions(
+                    rec,
+                    instructions.Instruction,
+                    Properties.Settings.Default.OblivionESM,
+                    fileLocs[rec.FormID],
+                    compressed: false);
+            }
 
             using (var tmp = new TempFolder(new DirectoryInfo(Path.Combine(Path.GetTempPath(), "Mutagen_Oblivion_Binary"))))
             {
                 var oblivionOutputPath = Path.Combine(tmp.Dir.FullName, Constants.OBLIVION_ESM);
+                var processedPath = Path.Combine(tmp.Dir.FullName, $"{Constants.OBLIVION_ESM}_Processed");
 
-                mod.Write_Binary(oblivionOutputPath, out var outputErrMask);
                 var binConfig = instructions.Instruction.ToProcessorConfig();
                 using (var processor = new BinaryFileProcessor(
                     new FileStream(Properties.Settings.Default.OblivionESM, FileMode.Open, FileAccess.Read),
                     binConfig))
                 {
+                    using (var outStream = new FileStream(processedPath, FileMode.Create, FileAccess.Write))
+                    {
+                         processor.CopyTo(outStream);
+                    }
+                }
+
+                mod.Write_Binary(oblivionOutputPath, out var outputErrMask);
+                using (var stream = new FileStream(processedPath, FileMode.Open, FileAccess.Read))
+                {
                     var lowPrioEx = Passthrough_Tests.AssertFilesEqual(
-                        processor,
+                        stream,
                         oblivionOutputPath,
                         ignoreList: new RangeCollection(instructions.IgnoreDifferenceSections),
                         sourceSkips: new RangeCollection(instructions.SkipSourceSections),
@@ -106,15 +211,21 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
-        private async Task OblivionESM_Compression(OblivionMod mod, BinaryProcessorInstructions instructions)
+        private Dictionary<RawFormID, FileSection> OblivionESM_FileLocs()
         {
-            Dictionary<RawFormID, FileLocation> fileLocs;
+            Dictionary<RawFormID, FileSection> fileLocs;
             using (var stream = new FileStream(Properties.Settings.Default.OblivionESM, FileMode.Open, FileAccess.Read))
             {
                 fileLocs = MajorRecordLocator.GetFileLocations(
                     stream: stream,
                     uninterestingTypes: OblivionMod.NonTypeGroups);
             }
+            return fileLocs;
+        }
+
+        private async Task OblivionESM_Compression(OblivionMod mod, BinaryProcessorInstructions instructions, Task<Dictionary<RawFormID, FileSection>> fileLocationsTasks)
+        {
+            Dictionary<RawFormID, FileSection> fileLocs = await fileLocationsTasks;
 
             using (var tmp = new TempFolder(new DirectoryInfo(Path.Combine(Path.GetTempPath(), "Mutagen_Oblivion_Binary_CompressionTests"))))
             {
@@ -148,9 +259,9 @@ namespace Mutagen.Bethesda.Tests
                                     throw new ArgumentException($"Trying to process a compressed major record that is not in the locations dictionary: {majorRec}");
                                 }
 
-                                stream.Position = majorLoc + 4;
+                                stream.Position = majorLoc.Min + 4;
                                 var majorLen = new ContentLength(stream.ReadUInt32());
-                                stream.Position = majorLoc;
+                                stream.Position = majorLoc.Min;
 
                                 var memStream = new MemoryStream();
                                 using (var outputStream = new MutagenWriter(memStream, dispose: false))
@@ -177,7 +288,7 @@ namespace Mutagen.Bethesda.Tests
                                 }
                                 memStream.Position = 0;
 
-                                ProcessNPC_CNTOMismatch(majorRec, processorConfig, origPath);
+                                AddDynamicProcessorInstructions(majorRec, processorConfig, origPath, loc: new FileSection(0, memStream.Length), compressed: true);
                                 var binaryConfig = processorConfig.ToProcessorConfig();
 
                                 string sourcePath;

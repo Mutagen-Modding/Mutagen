@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>63de44277d0bb84fbddcb32609e13c5aec2e1798</Sha>
+         <Sha>54b9d5fee4e71b5120ea41a0274b471ad2a25393</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>01-24-2018 19:13:20</CommitDate>
-         <Description>ListExt.RemoveEnd renamed to RemoveToCount.  NotifyingList internal set to logic moved to ListExt.SetTo(IEnumerable)</Description>
+         <CommitDate>01-26-2018 19:41:43</CommitDate>
+         <Description>SortedListExt.TryGetEncapsulatedIndices edge case + tests</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

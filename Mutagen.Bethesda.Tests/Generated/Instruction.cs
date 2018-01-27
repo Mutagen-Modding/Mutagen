@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Tests
             var config = new BinaryFileProcessor.Config();
             foreach (var move in this.Moves)
             {
-                config.SetMove(move.SectionToMove, new FileLocation(move.LocationToMove));
+                config.SetMove(new FileSection(move.SectionToMove), new FileLocation(move.LocationToMove));
             }
             foreach (var sub in this.Substitutions)
             {

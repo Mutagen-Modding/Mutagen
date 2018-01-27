@@ -13,14 +13,14 @@ namespace Mutagen.Bethesda
     {
         private readonly static RecordType GRUP = new RecordType("GRUP");
 
-        public static Dictionary<RawFormID, FileLocation> GetFileLocations(
+        public static Dictionary<RawFormID, FileSection> GetFileLocations(
             Stream stream,
             params RecordType[] interestingTypes)
         {
             return GetFileLocations(stream, (IEnumerable<RecordType>)interestingTypes);
         }
 
-        public static Dictionary<RawFormID, FileLocation> GetFileLocations(
+        public static Dictionary<RawFormID, FileSection> GetFileLocations(
             Stream stream,
             IEnumerable<RecordType> interestingTypes = null,
             IEnumerable<RecordType> uninterestingTypes = null)
@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda
                 uninterestingSet = null;
             }
 
-            Dictionary<RawFormID, FileLocation> ret = new Dictionary<RawFormID, FileLocation>();
+            Dictionary<RawFormID, FileSection> ret = new Dictionary<RawFormID, FileSection>();
             using (var reader = new MutagenReader(stream))
             {
                 // Skip header
@@ -93,7 +93,7 @@ namespace Mutagen.Bethesda
                             }
                             reader.Position += new ContentLength(4); // Skip flags
                             var formID = RawFormID.Factory(reader.ReadBytes(4));
-                            ret[formID] = recordLocation;
+                            ret[formID] = new FileSection(recordLocation, recordLocation + recLength - 1);
                             reader.Position += new ContentLength(4);
                             reader.Position += recLength;
                         }

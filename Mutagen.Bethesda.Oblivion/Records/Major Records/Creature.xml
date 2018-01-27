@@ -12,6 +12,7 @@
       <List name="Models" recordType="NIFZ">
         <String />
       </List>
+      <ByteArray name="NIFT" recordType="NIFT"  />
       <Data recordType="ACBS">
         <Fields>
           <Enum name="Flags" enumName="Creature.CreatureFlag" byteLength="4" />
@@ -52,8 +53,8 @@
           <UInt8 name="CombatSKill" />
           <UInt8 name="MagicSKill" />
           <UInt8 name="StealthSKill" />
-          <Enum name="SoulLevel" enumName="SoulLevel" byteLength="1" />
-          <UInt16 name="Health" />
+          <Enum name="SoulLevel" enumName="SoulLevel" byteLength="2" />
+          <UInt32 name="Health" />
           <UInt16 name="AttackDamage" />
           <UInt8 name="Strength" />
           <UInt8 name="Intelligence" />
@@ -69,6 +70,7 @@
       <FormID name="CombatStyle" refName="CombatStyle" recordType="ZNAM" />
       <Float name="TurningSpeed" recordType="TNAM" />
       <Float name="BaseScale" recordType="BNAM" />
+      <Float name="FootWeight" recordType="WNAM" />
       <FilePath name="BloodSpray" recordType="NAM0" />
       <FilePath name="BloodDecal" recordType="NAM1" />
       <FormID name="InheritsSoundFrom" recordType="CSCR" refName="Creature" />

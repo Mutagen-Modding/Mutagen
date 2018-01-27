@@ -45,6 +45,7 @@
     <Compile Include="Constants.cs" />
     <Compile Include="ContentLength.cs" />
     <Compile Include="FileLocation.cs" />
+    <Compile Include="FileSection.cs" />
     <Compile Include="Links\EDIDSetLink.cs" />
     <Compile Include="Links\EDIDLink.cs" />
     <Compile Include="Links\FormIDSetLink.cs" />

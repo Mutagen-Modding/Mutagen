@@ -89,6 +89,17 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #endregion
+        #region NIFT
+        protected readonly INotifyingSetItem<Byte[]> _NIFT = NotifyingSetItem.Factory<Byte[]>(markAsSet: false);
+        public INotifyingSetItem<Byte[]> NIFT_Property => _NIFT;
+        public Byte[] NIFT
+        {
+            get => this._NIFT.Item;
+            set => this._NIFT.Set(value);
+        }
+        INotifyingSetItem<Byte[]> ICreature.NIFT_Property => this.NIFT_Property;
+        INotifyingSetItemGetter<Byte[]> ICreatureGetter.NIFT_Property => this.NIFT_Property;
+        #endregion
         #region Flags
         protected readonly INotifyingItem<Creature.CreatureFlag> _Flags = NotifyingItem.Factory<Creature.CreatureFlag>();
         public INotifyingItem<Creature.CreatureFlag> Flags_Property => _Flags;
@@ -351,15 +362,15 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<SoulLevel> ICreatureGetter.SoulLevel_Property => this.SoulLevel_Property;
         #endregion
         #region Health
-        protected readonly INotifyingItem<UInt16> _Health = NotifyingItem.Factory<UInt16>();
-        public INotifyingItem<UInt16> Health_Property => _Health;
-        public UInt16 Health
+        protected readonly INotifyingItem<UInt32> _Health = NotifyingItem.Factory<UInt32>();
+        public INotifyingItem<UInt32> Health_Property => _Health;
+        public UInt32 Health
         {
             get => this._Health.Item;
             set => this._Health.Set(value);
         }
-        INotifyingItem<UInt16> ICreature.Health_Property => this.Health_Property;
-        INotifyingItemGetter<UInt16> ICreatureGetter.Health_Property => this.Health_Property;
+        INotifyingItem<UInt32> ICreature.Health_Property => this.Health_Property;
+        INotifyingItemGetter<UInt32> ICreatureGetter.Health_Property => this.Health_Property;
         #endregion
         #region AttackDamage
         protected readonly INotifyingItem<UInt16> _AttackDamage = NotifyingItem.Factory<UInt16>();
@@ -498,6 +509,17 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItem<Single> ICreature.BaseScale_Property => this.BaseScale_Property;
         INotifyingSetItemGetter<Single> ICreatureGetter.BaseScale_Property => this.BaseScale_Property;
         #endregion
+        #region FootWeight
+        protected readonly INotifyingSetItem<Single> _FootWeight = NotifyingSetItem.Factory<Single>(markAsSet: false);
+        public INotifyingSetItem<Single> FootWeight_Property => _FootWeight;
+        public Single FootWeight
+        {
+            get => this._FootWeight.Item;
+            set => this._FootWeight.Set(value);
+        }
+        INotifyingSetItem<Single> ICreature.FootWeight_Property => this.FootWeight_Property;
+        INotifyingSetItemGetter<Single> ICreatureGetter.FootWeight_Property => this.FootWeight_Property;
+        #endregion
         #region BloodSpray
         protected readonly INotifyingSetItem<FilePath> _BloodSpray = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
         public INotifyingSetItem<FilePath> BloodSpray_Property => _BloodSpray;
@@ -601,6 +623,11 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (!Models.SequenceEqual(rhs.Models)) return false;
             }
+            if (NIFT_Property.HasBeenSet != rhs.NIFT_Property.HasBeenSet) return false;
+            if (NIFT_Property.HasBeenSet)
+            {
+                if (!NIFT.EqualsFast(rhs.NIFT)) return false;
+            }
             if (Flags != rhs.Flags) return false;
             if (BaseSpellPoints != rhs.BaseSpellPoints) return false;
             if (Fatigue != rhs.Fatigue) return false;
@@ -675,6 +702,11 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (BaseScale != rhs.BaseScale) return false;
             }
+            if (FootWeight_Property.HasBeenSet != rhs.FootWeight_Property.HasBeenSet) return false;
+            if (FootWeight_Property.HasBeenSet)
+            {
+                if (FootWeight != rhs.FootWeight) return false;
+            }
             if (BloodSpray_Property.HasBeenSet != rhs.BloodSpray_Property.HasBeenSet) return false;
             if (BloodSpray_Property.HasBeenSet)
             {
@@ -711,6 +743,10 @@ namespace Mutagen.Bethesda.Oblivion
             if (Models.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(Models).CombineHashCode(ret);
+            }
+            if (NIFT_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(NIFT).CombineHashCode(ret);
             }
             ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(BaseSpellPoints).CombineHashCode(ret);
@@ -776,6 +812,10 @@ namespace Mutagen.Bethesda.Oblivion
             if (BaseScale_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(BaseScale).CombineHashCode(ret);
+            }
+            if (FootWeight_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(FootWeight).CombineHashCode(ret);
             }
             if (BloodSpray_Property.HasBeenSet)
             {
@@ -1152,6 +1192,12 @@ namespace Mutagen.Bethesda.Oblivion
                         }
                         ));
                     break;
+                case "NIFT":
+                    item._NIFT.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                        root,
+                        fieldIndex: (int)Creature_FieldIndex.NIFT,
+                        errorMask: errorMask));
+                    break;
                 case "Flags":
                     item._Flags.SetIfSucceeded(EnumXmlTranslation<Creature.CreatureFlag>.Instance.Parse(
                         root,
@@ -1327,7 +1373,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "Health":
-                    item._Health.SetIfSucceeded(UInt16XmlTranslation.Instance.ParseNonNull(
+                    item._Health.SetIfSucceeded(UInt32XmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.Health,
                         errorMask: errorMask));
@@ -1408,6 +1454,12 @@ namespace Mutagen.Bethesda.Oblivion
                     item._BaseScale.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Creature_FieldIndex.BaseScale,
+                        errorMask: errorMask));
+                    break;
+                case "FootWeight":
+                    item._FootWeight.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
+                        root,
+                        fieldIndex: (int)Creature_FieldIndex.FootWeight,
                         errorMask: errorMask));
                     break;
                 case "BloodSpray":
@@ -1816,6 +1868,14 @@ namespace Mutagen.Bethesda.Oblivion
                         );
                     item._Models.SetIfSucceeded(ModelstryGet);
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.Models);
+                case "NIFT":
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    var NIFTtryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                        frame.Spawn(contentLength),
+                        fieldIndex: (int)Creature_FieldIndex.NIFT,
+                        errorMask: errorMask);
+                    item._NIFT.SetIfSucceeded(NIFTtryGet);
+                    return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.NIFT);
                 case "ACBS":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.Spawn(contentLength))
@@ -1972,10 +2032,10 @@ namespace Mutagen.Bethesda.Oblivion
                             fieldIndex: (int)Creature_FieldIndex.StealthSKill,
                             errorMask: errorMask));
                         item._SoulLevel.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<SoulLevel>.Instance.Parse(
-                            frame: dataFrame.Spawn(new ContentLength(1)),
+                            frame: dataFrame.Spawn(new ContentLength(2)),
                             fieldIndex: (int)Creature_FieldIndex.SoulLevel,
                             errorMask: errorMask));
-                        item._Health.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Parse(
+                        item._Health.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Creature_FieldIndex.Health,
                             errorMask: errorMask));
@@ -2045,6 +2105,13 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)Creature_FieldIndex.BaseScale,
                         errorMask: errorMask));
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.BaseScale);
+                case "WNAM":
+                    frame.Position += Constants.SUBRECORD_LENGTH;
+                    item._FootWeight.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: frame.Spawn(contentLength),
+                        fieldIndex: (int)Creature_FieldIndex.FootWeight,
+                        errorMask: errorMask));
+                    return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.FootWeight);
                 case "NAM0":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._BloodSpray.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
@@ -2172,6 +2239,11 @@ namespace Mutagen.Bethesda.Oblivion
                 case Creature_FieldIndex.Models:
                     this._Models.SetTo((IEnumerable<String>)obj, cmds);
                     break;
+                case Creature_FieldIndex.NIFT:
+                    this._NIFT.Set(
+                        (Byte[])obj,
+                        cmds);
+                    break;
                 case Creature_FieldIndex.Flags:
                     this._Flags.Set(
                         (Creature.CreatureFlag)obj,
@@ -2288,7 +2360,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case Creature_FieldIndex.Health:
                     this._Health.Set(
-                        (UInt16)obj,
+                        (UInt32)obj,
                         cmds);
                     break;
                 case Creature_FieldIndex.AttackDamage:
@@ -2356,6 +2428,11 @@ namespace Mutagen.Bethesda.Oblivion
                         (Single)obj,
                         cmds);
                     break;
+                case Creature_FieldIndex.FootWeight:
+                    this._FootWeight.Set(
+                        (Single)obj,
+                        cmds);
+                    break;
                 case Creature_FieldIndex.BloodSpray:
                     this._BloodSpray.Set(
                         (FilePath)obj,
@@ -2415,6 +2492,11 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case Creature_FieldIndex.Models:
                     obj._Models.SetTo((IEnumerable<String>)pair.Value, null);
+                    break;
+                case Creature_FieldIndex.NIFT:
+                    obj._NIFT.Set(
+                        (Byte[])pair.Value,
+                        null);
                     break;
                 case Creature_FieldIndex.Flags:
                     obj._Flags.Set(
@@ -2532,7 +2614,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case Creature_FieldIndex.Health:
                     obj._Health.Set(
-                        (UInt16)pair.Value,
+                        (UInt32)pair.Value,
                         null);
                     break;
                 case Creature_FieldIndex.AttackDamage:
@@ -2600,6 +2682,11 @@ namespace Mutagen.Bethesda.Oblivion
                         (Single)pair.Value,
                         null);
                     break;
+                case Creature_FieldIndex.FootWeight:
+                    obj._FootWeight.Set(
+                        (Single)pair.Value,
+                        null);
+                    break;
                 case Creature_FieldIndex.BloodSpray:
                     obj._BloodSpray.Set(
                         (FilePath)pair.Value,
@@ -2636,6 +2723,9 @@ namespace Mutagen.Bethesda.Oblivion
         new INotifyingList<ItemEntry> Items { get; }
         new INotifyingList<FormIDSetLink<Spell>> Spells { get; }
         new INotifyingList<String> Models { get; }
+        new Byte[] NIFT { get; set; }
+        new INotifyingSetItem<Byte[]> NIFT_Property { get; }
+
         new Creature.CreatureFlag Flags { get; set; }
         new INotifyingItem<Creature.CreatureFlag> Flags_Property { get; }
 
@@ -2698,8 +2788,8 @@ namespace Mutagen.Bethesda.Oblivion
         new SoulLevel SoulLevel { get; set; }
         new INotifyingItem<SoulLevel> SoulLevel_Property { get; }
 
-        new UInt16 Health { get; set; }
-        new INotifyingItem<UInt16> Health_Property { get; }
+        new UInt32 Health { get; set; }
+        new INotifyingItem<UInt32> Health_Property { get; }
 
         new UInt16 AttackDamage { get; set; }
         new INotifyingItem<UInt16> AttackDamage_Property { get; }
@@ -2738,6 +2828,9 @@ namespace Mutagen.Bethesda.Oblivion
         new Single BaseScale { get; set; }
         new INotifyingSetItem<Single> BaseScale_Property { get; }
 
+        new Single FootWeight { get; set; }
+        new INotifyingSetItem<Single> FootWeight_Property { get; }
+
         new FilePath BloodSpray { get; set; }
         new INotifyingSetItem<FilePath> BloodSpray_Property { get; }
 
@@ -2762,6 +2855,11 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Models
         INotifyingListGetter<String> Models { get; }
+        #endregion
+        #region NIFT
+        Byte[] NIFT { get; }
+        INotifyingSetItemGetter<Byte[]> NIFT_Property { get; }
+
         #endregion
         #region Flags
         Creature.CreatureFlag Flags { get; }
@@ -2878,8 +2976,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Health
-        UInt16 Health { get; }
-        INotifyingItemGetter<UInt16> Health_Property { get; }
+        UInt32 Health { get; }
+        INotifyingItemGetter<UInt32> Health_Property { get; }
 
         #endregion
         #region AttackDamage
@@ -2947,6 +3045,11 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Single> BaseScale_Property { get; }
 
         #endregion
+        #region FootWeight
+        Single FootWeight { get; }
+        INotifyingSetItemGetter<Single> FootWeight_Property { get; }
+
+        #endregion
         #region BloodSpray
         FilePath BloodSpray { get; }
         INotifyingSetItemGetter<FilePath> BloodSpray_Property { get; }
@@ -2984,47 +3087,49 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Items = 7,
         Spells = 8,
         Models = 9,
-        Flags = 10,
-        BaseSpellPoints = 11,
-        Fatigue = 12,
-        BarterGold = 13,
-        LevelOffset = 14,
-        CalcMin = 15,
-        CalcMax = 16,
-        Factions = 17,
-        DeathItem = 18,
-        Script = 19,
-        Aggression = 20,
-        Confidence = 21,
-        EnergyLevel = 22,
-        Responsibility = 23,
-        BuySellServices = 24,
-        Teaches = 25,
-        MaximumTrainingLevel = 26,
-        AIPackages = 27,
-        Animations = 28,
-        CreatureType = 29,
-        CombatSKill = 30,
-        MagicSKill = 31,
-        StealthSKill = 32,
-        SoulLevel = 33,
-        Health = 34,
-        AttackDamage = 35,
-        Strength = 36,
-        Intelligence = 37,
-        Willpower = 38,
-        Agility = 39,
-        Speed = 40,
-        Endurance = 41,
-        Personality = 42,
-        Luck = 43,
-        AttackReach = 44,
-        CombatStyle = 45,
-        TurningSpeed = 46,
-        BaseScale = 47,
-        BloodSpray = 48,
-        BloodDecal = 49,
-        InheritsSoundFrom = 50,
+        NIFT = 10,
+        Flags = 11,
+        BaseSpellPoints = 12,
+        Fatigue = 13,
+        BarterGold = 14,
+        LevelOffset = 15,
+        CalcMin = 16,
+        CalcMax = 17,
+        Factions = 18,
+        DeathItem = 19,
+        Script = 20,
+        Aggression = 21,
+        Confidence = 22,
+        EnergyLevel = 23,
+        Responsibility = 24,
+        BuySellServices = 25,
+        Teaches = 26,
+        MaximumTrainingLevel = 27,
+        AIPackages = 28,
+        Animations = 29,
+        CreatureType = 30,
+        CombatSKill = 31,
+        MagicSKill = 32,
+        StealthSKill = 33,
+        SoulLevel = 34,
+        Health = 35,
+        AttackDamage = 36,
+        Strength = 37,
+        Intelligence = 38,
+        Willpower = 39,
+        Agility = 40,
+        Speed = 41,
+        Endurance = 42,
+        Personality = 43,
+        Luck = 44,
+        AttackReach = 45,
+        CombatStyle = 46,
+        TurningSpeed = 47,
+        BaseScale = 48,
+        FootWeight = 49,
+        BloodSpray = 50,
+        BloodDecal = 51,
+        InheritsSoundFrom = 52,
     }
     #endregion
 
@@ -3042,7 +3147,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "9859ec12-21c5-4de8-9caa-404330da8b79";
 
-        public const ushort FieldCount = 45;
+        public const ushort FieldCount = 47;
 
         public static readonly Type MaskType = typeof(Creature_Mask<>);
 
@@ -3078,6 +3183,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)Creature_FieldIndex.Spells;
                 case "MODELS":
                     return (ushort)Creature_FieldIndex.Models;
+                case "NIFT":
+                    return (ushort)Creature_FieldIndex.NIFT;
                 case "FLAGS":
                     return (ushort)Creature_FieldIndex.Flags;
                 case "BASESPELLPOINTS":
@@ -3154,6 +3261,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)Creature_FieldIndex.TurningSpeed;
                 case "BASESCALE":
                     return (ushort)Creature_FieldIndex.BaseScale;
+                case "FOOTWEIGHT":
+                    return (ushort)Creature_FieldIndex.FootWeight;
                 case "BLOODSPRAY":
                     return (ushort)Creature_FieldIndex.BloodSpray;
                 case "BLOODDECAL":
@@ -3178,6 +3287,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.Animations:
                     return true;
                 case Creature_FieldIndex.Model:
+                case Creature_FieldIndex.NIFT:
                 case Creature_FieldIndex.Flags:
                 case Creature_FieldIndex.BaseSpellPoints:
                 case Creature_FieldIndex.Fatigue:
@@ -3213,6 +3323,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.CombatStyle:
                 case Creature_FieldIndex.TurningSpeed:
                 case Creature_FieldIndex.BaseScale:
+                case Creature_FieldIndex.FootWeight:
                 case Creature_FieldIndex.BloodSpray:
                 case Creature_FieldIndex.BloodDecal:
                 case Creature_FieldIndex.InheritsSoundFrom:
@@ -3233,6 +3344,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return true;
                 case Creature_FieldIndex.Spells:
                 case Creature_FieldIndex.Models:
+                case Creature_FieldIndex.NIFT:
                 case Creature_FieldIndex.Flags:
                 case Creature_FieldIndex.BaseSpellPoints:
                 case Creature_FieldIndex.Fatigue:
@@ -3270,6 +3382,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.CombatStyle:
                 case Creature_FieldIndex.TurningSpeed:
                 case Creature_FieldIndex.BaseScale:
+                case Creature_FieldIndex.FootWeight:
                 case Creature_FieldIndex.BloodSpray:
                 case Creature_FieldIndex.BloodDecal:
                 case Creature_FieldIndex.InheritsSoundFrom:
@@ -3288,6 +3401,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.Items:
                 case Creature_FieldIndex.Spells:
                 case Creature_FieldIndex.Models:
+                case Creature_FieldIndex.NIFT:
                 case Creature_FieldIndex.Flags:
                 case Creature_FieldIndex.BaseSpellPoints:
                 case Creature_FieldIndex.Fatigue:
@@ -3326,6 +3440,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.CombatStyle:
                 case Creature_FieldIndex.TurningSpeed:
                 case Creature_FieldIndex.BaseScale:
+                case Creature_FieldIndex.FootWeight:
                 case Creature_FieldIndex.BloodSpray:
                 case Creature_FieldIndex.BloodDecal:
                 case Creature_FieldIndex.InheritsSoundFrom:
@@ -3348,6 +3463,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Spells";
                 case Creature_FieldIndex.Models:
                     return "Models";
+                case Creature_FieldIndex.NIFT:
+                    return "NIFT";
                 case Creature_FieldIndex.Flags:
                     return "Flags";
                 case Creature_FieldIndex.BaseSpellPoints:
@@ -3424,6 +3541,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "TurningSpeed";
                 case Creature_FieldIndex.BaseScale:
                     return "BaseScale";
+                case Creature_FieldIndex.FootWeight:
+                    return "FootWeight";
                 case Creature_FieldIndex.BloodSpray:
                     return "BloodSpray";
                 case Creature_FieldIndex.BloodDecal:
@@ -3444,6 +3563,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.Items:
                 case Creature_FieldIndex.Spells:
                 case Creature_FieldIndex.Models:
+                case Creature_FieldIndex.NIFT:
                 case Creature_FieldIndex.Flags:
                 case Creature_FieldIndex.BaseSpellPoints:
                 case Creature_FieldIndex.Fatigue:
@@ -3482,6 +3602,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.CombatStyle:
                 case Creature_FieldIndex.TurningSpeed:
                 case Creature_FieldIndex.BaseScale:
+                case Creature_FieldIndex.FootWeight:
                 case Creature_FieldIndex.BloodSpray:
                 case Creature_FieldIndex.BloodDecal:
                 case Creature_FieldIndex.InheritsSoundFrom:
@@ -3500,6 +3621,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.Items:
                 case Creature_FieldIndex.Spells:
                 case Creature_FieldIndex.Models:
+                case Creature_FieldIndex.NIFT:
                 case Creature_FieldIndex.Flags:
                 case Creature_FieldIndex.BaseSpellPoints:
                 case Creature_FieldIndex.Fatigue:
@@ -3538,6 +3660,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.CombatStyle:
                 case Creature_FieldIndex.TurningSpeed:
                 case Creature_FieldIndex.BaseScale:
+                case Creature_FieldIndex.FootWeight:
                 case Creature_FieldIndex.BloodSpray:
                 case Creature_FieldIndex.BloodDecal:
                 case Creature_FieldIndex.InheritsSoundFrom:
@@ -3560,6 +3683,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(NotifyingList<FormIDSetLink<Spell>>);
                 case Creature_FieldIndex.Models:
                     return typeof(NotifyingList<String>);
+                case Creature_FieldIndex.NIFT:
+                    return typeof(Byte[]);
                 case Creature_FieldIndex.Flags:
                     return typeof(Creature.CreatureFlag);
                 case Creature_FieldIndex.BaseSpellPoints:
@@ -3609,7 +3734,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.SoulLevel:
                     return typeof(SoulLevel);
                 case Creature_FieldIndex.Health:
-                    return typeof(UInt16);
+                    return typeof(UInt32);
                 case Creature_FieldIndex.AttackDamage:
                     return typeof(UInt16);
                 case Creature_FieldIndex.Strength:
@@ -3636,6 +3761,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(Single);
                 case Creature_FieldIndex.BaseScale:
                     return typeof(Single);
+                case Creature_FieldIndex.FootWeight:
+                    return typeof(Single);
                 case Creature_FieldIndex.BloodSpray:
                     return typeof(FilePath);
                 case Creature_FieldIndex.BloodDecal:
@@ -3652,6 +3779,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType CNTO_HEADER = new RecordType("CNTO");
         public static readonly RecordType SPLO_HEADER = new RecordType("SPLO");
         public static readonly RecordType NIFZ_HEADER = new RecordType("NIFZ");
+        public static readonly RecordType NIFT_HEADER = new RecordType("NIFT");
         public static readonly RecordType ACBS_HEADER = new RecordType("ACBS");
         public static readonly RecordType SNAM_HEADER = new RecordType("SNAM");
         public static readonly RecordType INAM_HEADER = new RecordType("INAM");
@@ -3664,12 +3792,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType ZNAM_HEADER = new RecordType("ZNAM");
         public static readonly RecordType TNAM_HEADER = new RecordType("TNAM");
         public static readonly RecordType BNAM_HEADER = new RecordType("BNAM");
+        public static readonly RecordType WNAM_HEADER = new RecordType("WNAM");
         public static readonly RecordType NAM0_HEADER = new RecordType("NAM0");
         public static readonly RecordType NAM1_HEADER = new RecordType("NAM1");
         public static readonly RecordType CSCR_HEADER = new RecordType("CSCR");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = CREA_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 16;
+        public const int NumTypedFields = 18;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -3895,6 +4024,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 when (doMasks)
                 {
                     errorMask().SetNthException((int)Creature_FieldIndex.Models, ex);
+                }
+            }
+            if (copyMask?.NIFT ?? true)
+            {
+                try
+                {
+                    item.NIFT_Property.SetToWithDefault(
+                        rhs: rhs.NIFT_Property,
+                        def: def?.NIFT_Property,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Creature_FieldIndex.NIFT, ex);
                 }
             }
             if (copyMask?.Flags ?? true)
@@ -4455,6 +4599,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask().SetNthException((int)Creature_FieldIndex.BaseScale, ex);
                 }
             }
+            if (copyMask?.FootWeight ?? true)
+            {
+                try
+                {
+                    item.FootWeight_Property.SetToWithDefault(
+                        rhs: rhs.FootWeight_Property,
+                        def: def?.FootWeight_Property,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Creature_FieldIndex.FootWeight, ex);
+                }
+            }
             if (copyMask?.BloodSpray ?? true)
             {
                 try
@@ -4556,6 +4715,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.Models:
                     obj.Models.HasBeenSet = on;
                     break;
+                case Creature_FieldIndex.NIFT:
+                    obj.NIFT_Property.HasBeenSet = on;
+                    break;
                 case Creature_FieldIndex.Factions:
                     obj.Factions.HasBeenSet = on;
                     break;
@@ -4582,6 +4744,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case Creature_FieldIndex.BaseScale:
                     obj.BaseScale_Property.HasBeenSet = on;
+                    break;
+                case Creature_FieldIndex.FootWeight:
+                    obj.FootWeight_Property.HasBeenSet = on;
                     break;
                 case Creature_FieldIndex.BloodSpray:
                     obj.BloodSpray_Property.HasBeenSet = on;
@@ -4617,6 +4782,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case Creature_FieldIndex.Models:
                     obj.Models.Unset(cmds);
+                    break;
+                case Creature_FieldIndex.NIFT:
+                    obj.NIFT_Property.Unset(cmds);
                     break;
                 case Creature_FieldIndex.Flags:
                     obj.Flags = default(Creature.CreatureFlag);
@@ -4691,7 +4859,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.SoulLevel = default(SoulLevel);
                     break;
                 case Creature_FieldIndex.Health:
-                    obj.Health = default(UInt16);
+                    obj.Health = default(UInt32);
                     break;
                 case Creature_FieldIndex.AttackDamage:
                     obj.AttackDamage = default(UInt16);
@@ -4731,6 +4899,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case Creature_FieldIndex.BaseScale:
                     obj.BaseScale_Property.Unset(cmds);
+                    break;
+                case Creature_FieldIndex.FootWeight:
+                    obj.FootWeight_Property.Unset(cmds);
                     break;
                 case Creature_FieldIndex.BloodSpray:
                     obj.BloodSpray_Property.Unset(cmds);
@@ -4792,6 +4963,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.Spells.HasBeenSet;
                 case Creature_FieldIndex.Models:
                     return obj.Models.HasBeenSet;
+                case Creature_FieldIndex.NIFT:
+                    return obj.NIFT_Property.HasBeenSet;
                 case Creature_FieldIndex.Factions:
                     return obj.Factions.HasBeenSet;
                 case Creature_FieldIndex.DeathItem:
@@ -4810,6 +4983,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.TurningSpeed_Property.HasBeenSet;
                 case Creature_FieldIndex.BaseScale:
                     return obj.BaseScale_Property.HasBeenSet;
+                case Creature_FieldIndex.FootWeight:
+                    return obj.FootWeight_Property.HasBeenSet;
                 case Creature_FieldIndex.BloodSpray:
                     return obj.BloodSpray_Property.HasBeenSet;
                 case Creature_FieldIndex.BloodDecal:
@@ -4836,6 +5011,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.Spells;
                 case Creature_FieldIndex.Models:
                     return obj.Models;
+                case Creature_FieldIndex.NIFT:
+                    return obj.NIFT;
                 case Creature_FieldIndex.Flags:
                     return obj.Flags;
                 case Creature_FieldIndex.BaseSpellPoints:
@@ -4912,6 +5089,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.TurningSpeed;
                 case Creature_FieldIndex.BaseScale:
                     return obj.BaseScale;
+                case Creature_FieldIndex.FootWeight:
+                    return obj.FootWeight;
                 case Creature_FieldIndex.BloodSpray:
                     return obj.BloodSpray;
                 case Creature_FieldIndex.BloodDecal:
@@ -4931,6 +5110,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Items.Unset(cmds.ToUnsetParams());
             item.Spells.Unset(cmds.ToUnsetParams());
             item.Models.Unset(cmds.ToUnsetParams());
+            item.NIFT_Property.Unset(cmds.ToUnsetParams());
             item.Flags = default(Creature.CreatureFlag);
             item.BaseSpellPoints = default(UInt16);
             item.Fatigue = default(UInt16);
@@ -4955,7 +5135,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.MagicSKill = default(Byte);
             item.StealthSKill = default(Byte);
             item.SoulLevel = default(SoulLevel);
-            item.Health = default(UInt16);
+            item.Health = default(UInt32);
             item.AttackDamage = default(UInt16);
             item.Strength = default(Byte);
             item.Intelligence = default(Byte);
@@ -4969,6 +5149,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.CombatStyle_Property.Unset(cmds.ToUnsetParams());
             item.TurningSpeed_Property.Unset(cmds.ToUnsetParams());
             item.BaseScale_Property.Unset(cmds.ToUnsetParams());
+            item.FootWeight_Property.Unset(cmds.ToUnsetParams());
             item.BloodSpray_Property.Unset(cmds.ToUnsetParams());
             item.BloodDecal_Property.Unset(cmds.ToUnsetParams());
             item.InheritsSoundFrom_Property.Unset(cmds.ToUnsetParams());
@@ -5053,6 +5234,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 ret.Models = new MaskItem<bool, IEnumerable<bool>>();
                 ret.Models.Overall = false;
             }
+            ret.NIFT = item.NIFT_Property.Equals(rhs.NIFT_Property, (l, r) => l.EqualsFast(r));
             ret.Flags = item.Flags == rhs.Flags;
             ret.BaseSpellPoints = item.BaseSpellPoints == rhs.BaseSpellPoints;
             ret.Fatigue = item.Fatigue == rhs.Fatigue;
@@ -5151,6 +5333,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.CombatStyle = item.CombatStyle_Property.Equals(rhs.CombatStyle_Property, (l, r) => l == r);
             ret.TurningSpeed = item.TurningSpeed_Property.Equals(rhs.TurningSpeed_Property, (l, r) => l == r);
             ret.BaseScale = item.BaseScale_Property.Equals(rhs.BaseScale_Property, (l, r) => l == r);
+            ret.FootWeight = item.FootWeight_Property.Equals(rhs.FootWeight_Property, (l, r) => l == r);
             ret.BloodSpray = item.BloodSpray_Property.Equals(rhs.BloodSpray_Property, (l, r) => object.Equals(l, r));
             ret.BloodDecal = item.BloodDecal_Property.Equals(rhs.BloodDecal_Property, (l, r) => object.Equals(l, r));
             ret.InheritsSoundFrom = item.InheritsSoundFrom_Property.Equals(rhs.InheritsSoundFrom_Property, (l, r) => l == r);
@@ -5241,6 +5424,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         }
                     }
                     fg.AppendLine("]");
+                }
+                if (printMask?.NIFT ?? true)
+                {
+                    fg.AppendLine($"NIFT => {item.NIFT}");
                 }
                 if (printMask?.Flags ?? true)
                 {
@@ -5436,6 +5623,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"BaseScale => {item.BaseScale}");
                 }
+                if (printMask?.FootWeight ?? true)
+                {
+                    fg.AppendLine($"FootWeight => {item.FootWeight}");
+                }
                 if (printMask?.BloodSpray ?? true)
                 {
                     fg.AppendLine($"BloodSpray => {item.BloodSpray}");
@@ -5461,6 +5652,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Items.Overall.HasValue && checkMask.Items.Overall.Value != item.Items.HasBeenSet) return false;
             if (checkMask.Spells.Overall.HasValue && checkMask.Spells.Overall.Value != item.Spells.HasBeenSet) return false;
             if (checkMask.Models.Overall.HasValue && checkMask.Models.Overall.Value != item.Models.HasBeenSet) return false;
+            if (checkMask.NIFT.HasValue && checkMask.NIFT.Value != item.NIFT_Property.HasBeenSet) return false;
             if (checkMask.Factions.Overall.HasValue && checkMask.Factions.Overall.Value != item.Factions.HasBeenSet) return false;
             if (checkMask.DeathItem.HasValue && checkMask.DeathItem.Value != item.DeathItem_Property.HasBeenSet) return false;
             if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script_Property.HasBeenSet) return false;
@@ -5470,6 +5662,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.CombatStyle.HasValue && checkMask.CombatStyle.Value != item.CombatStyle_Property.HasBeenSet) return false;
             if (checkMask.TurningSpeed.HasValue && checkMask.TurningSpeed.Value != item.TurningSpeed_Property.HasBeenSet) return false;
             if (checkMask.BaseScale.HasValue && checkMask.BaseScale.Value != item.BaseScale_Property.HasBeenSet) return false;
+            if (checkMask.FootWeight.HasValue && checkMask.FootWeight.Value != item.FootWeight_Property.HasBeenSet) return false;
             if (checkMask.BloodSpray.HasValue && checkMask.BloodSpray.Value != item.BloodSpray_Property.HasBeenSet) return false;
             if (checkMask.BloodDecal.HasValue && checkMask.BloodDecal.Value != item.BloodDecal_Property.HasBeenSet) return false;
             if (checkMask.InheritsSoundFrom.HasValue && checkMask.InheritsSoundFrom.Value != item.InheritsSoundFrom_Property.HasBeenSet) return false;
@@ -5483,6 +5676,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Items = new MaskItem<bool, IEnumerable<MaskItem<bool, ItemEntry_Mask<bool>>>>(item.Items.HasBeenSet, item.Items.Select((i) => new MaskItem<bool, ItemEntry_Mask<bool>>(true, i.GetHasBeenSetMask())));
             ret.Spells = new MaskItem<bool, IEnumerable<bool>>(item.Spells.HasBeenSet, null);
             ret.Models = new MaskItem<bool, IEnumerable<bool>>(item.Models.HasBeenSet, null);
+            ret.NIFT = item.NIFT_Property.HasBeenSet;
             ret.Flags = true;
             ret.BaseSpellPoints = true;
             ret.Fatigue = true;
@@ -5521,6 +5715,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.CombatStyle = item.CombatStyle_Property.HasBeenSet;
             ret.TurningSpeed = item.TurningSpeed_Property.HasBeenSet;
             ret.BaseScale = item.BaseScale_Property.HasBeenSet;
+            ret.FootWeight = item.FootWeight_Property.HasBeenSet;
             ret.BloodSpray = item.BloodSpray_Property.HasBeenSet;
             ret.BloodDecal = item.BloodDecal_Property.HasBeenSet;
             ret.InheritsSoundFrom = item.InheritsSoundFrom_Property.HasBeenSet;
@@ -5676,6 +5871,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     errorMask: out listSubMask);
                             }
                             );
+                    }
+                    if (item.NIFT_Property.HasBeenSet)
+                    {
+                        ByteArrayXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.NIFT),
+                            item: item.NIFT_Property,
+                            fieldIndex: (int)Creature_FieldIndex.NIFT,
+                            errorMask: errorMask);
                     }
                     EnumXmlTranslation<Creature.CreatureFlag>.Instance.Write(
                         writer: writer,
@@ -5866,7 +6070,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item: item.SoulLevel_Property,
                         fieldIndex: (int)Creature_FieldIndex.SoulLevel,
                         errorMask: errorMask);
-                    UInt16XmlTranslation.Instance.Write(
+                    UInt32XmlTranslation.Instance.Write(
                         writer: writer,
                         name: nameof(item.Health),
                         item: item.Health_Property,
@@ -5960,6 +6164,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             name: nameof(item.BaseScale),
                             item: item.BaseScale_Property,
                             fieldIndex: (int)Creature_FieldIndex.BaseScale,
+                            errorMask: errorMask);
+                    }
+                    if (item.FootWeight_Property.HasBeenSet)
+                    {
+                        FloatXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.FootWeight),
+                            item: item.FootWeight_Property,
+                            fieldIndex: (int)Creature_FieldIndex.FootWeight,
                             errorMask: errorMask);
                     }
                     if (item.BloodSpray_Property.HasBeenSet)
@@ -6112,6 +6325,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: out listSubMask);
                 }
                 );
+            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.NIFT_Property,
+                fieldIndex: (int)Creature_FieldIndex.NIFT,
+                errorMask: errorMask,
+                header: recordTypeConverter.ConvertToCustom(Creature_Registration.NIFT_HEADER),
+                nullable: false);
             using (HeaderExport.ExportSubRecordHeader(writer, Creature_Registration.ACBS_HEADER))
             {
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<Creature.CreatureFlag>.Instance.Write(
@@ -6277,10 +6497,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<SoulLevel>.Instance.Write(
                     writer,
                     item.SoulLevel_Property,
-                    length: new ContentLength(1),
+                    length: new ContentLength(2),
                     fieldIndex: (int)Creature_FieldIndex.SoulLevel,
                     errorMask: errorMask);
-                Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Health_Property,
                     fieldIndex: (int)Creature_FieldIndex.Health,
@@ -6359,6 +6579,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(Creature_Registration.BNAM_HEADER),
                 nullable: false);
+            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.FootWeight_Property,
+                fieldIndex: (int)Creature_FieldIndex.FootWeight,
+                errorMask: errorMask,
+                header: recordTypeConverter.ConvertToCustom(Creature_Registration.WNAM_HEADER),
+                nullable: false);
             Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.BloodSpray_Property,
@@ -6403,6 +6630,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Items = new MaskItem<T, IEnumerable<MaskItem<T, ItemEntry_Mask<T>>>>(initialValue, null);
             this.Spells = new MaskItem<T, IEnumerable<T>>(initialValue, null);
             this.Models = new MaskItem<T, IEnumerable<T>>(initialValue, null);
+            this.NIFT = initialValue;
             this.Flags = initialValue;
             this.BaseSpellPoints = initialValue;
             this.Fatigue = initialValue;
@@ -6441,6 +6669,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.CombatStyle = initialValue;
             this.TurningSpeed = initialValue;
             this.BaseScale = initialValue;
+            this.FootWeight = initialValue;
             this.BloodSpray = initialValue;
             this.BloodDecal = initialValue;
             this.InheritsSoundFrom = initialValue;
@@ -6452,6 +6681,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<T, IEnumerable<MaskItem<T, ItemEntry_Mask<T>>>> Items;
         public MaskItem<T, IEnumerable<T>> Spells;
         public MaskItem<T, IEnumerable<T>> Models;
+        public T NIFT;
         public T Flags;
         public T BaseSpellPoints;
         public T Fatigue;
@@ -6490,6 +6720,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public T CombatStyle;
         public T TurningSpeed;
         public T BaseScale;
+        public T FootWeight;
         public T BloodSpray;
         public T BloodDecal;
         public T InheritsSoundFrom;
@@ -6510,6 +6741,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.Items, rhs.Items)) return false;
             if (!object.Equals(this.Spells, rhs.Spells)) return false;
             if (!object.Equals(this.Models, rhs.Models)) return false;
+            if (!object.Equals(this.NIFT, rhs.NIFT)) return false;
             if (!object.Equals(this.Flags, rhs.Flags)) return false;
             if (!object.Equals(this.BaseSpellPoints, rhs.BaseSpellPoints)) return false;
             if (!object.Equals(this.Fatigue, rhs.Fatigue)) return false;
@@ -6548,6 +6780,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.CombatStyle, rhs.CombatStyle)) return false;
             if (!object.Equals(this.TurningSpeed, rhs.TurningSpeed)) return false;
             if (!object.Equals(this.BaseScale, rhs.BaseScale)) return false;
+            if (!object.Equals(this.FootWeight, rhs.FootWeight)) return false;
             if (!object.Equals(this.BloodSpray, rhs.BloodSpray)) return false;
             if (!object.Equals(this.BloodDecal, rhs.BloodDecal)) return false;
             if (!object.Equals(this.InheritsSoundFrom, rhs.InheritsSoundFrom)) return false;
@@ -6560,6 +6793,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.Items?.GetHashCode());
             ret = ret.CombineHashCode(this.Spells?.GetHashCode());
             ret = ret.CombineHashCode(this.Models?.GetHashCode());
+            ret = ret.CombineHashCode(this.NIFT?.GetHashCode());
             ret = ret.CombineHashCode(this.Flags?.GetHashCode());
             ret = ret.CombineHashCode(this.BaseSpellPoints?.GetHashCode());
             ret = ret.CombineHashCode(this.Fatigue?.GetHashCode());
@@ -6598,6 +6832,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.CombatStyle?.GetHashCode());
             ret = ret.CombineHashCode(this.TurningSpeed?.GetHashCode());
             ret = ret.CombineHashCode(this.BaseScale?.GetHashCode());
+            ret = ret.CombineHashCode(this.FootWeight?.GetHashCode());
             ret = ret.CombineHashCode(this.BloodSpray?.GetHashCode());
             ret = ret.CombineHashCode(this.BloodDecal?.GetHashCode());
             ret = ret.CombineHashCode(this.InheritsSoundFrom?.GetHashCode());
@@ -6650,6 +6885,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                 }
             }
+            if (!eval(this.NIFT)) return false;
             if (!eval(this.Flags)) return false;
             if (!eval(this.BaseSpellPoints)) return false;
             if (!eval(this.Fatigue)) return false;
@@ -6719,6 +6955,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!eval(this.CombatStyle)) return false;
             if (!eval(this.TurningSpeed)) return false;
             if (!eval(this.BaseScale)) return false;
+            if (!eval(this.FootWeight)) return false;
             if (!eval(this.BloodSpray)) return false;
             if (!eval(this.BloodDecal)) return false;
             if (!eval(this.InheritsSoundFrom)) return false;
@@ -6802,6 +7039,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                 }
             }
+            obj.NIFT = eval(this.NIFT);
             obj.Flags = eval(this.Flags);
             obj.BaseSpellPoints = eval(this.BaseSpellPoints);
             obj.Fatigue = eval(this.Fatigue);
@@ -6893,6 +7131,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.CombatStyle = eval(this.CombatStyle);
             obj.TurningSpeed = eval(this.TurningSpeed);
             obj.BaseScale = eval(this.BaseScale);
+            obj.FootWeight = eval(this.FootWeight);
             obj.BloodSpray = eval(this.BloodSpray);
             obj.BloodDecal = eval(this.BloodDecal);
             obj.InheritsSoundFrom = eval(this.InheritsSoundFrom);
@@ -7009,6 +7248,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         }
                     }
                     fg.AppendLine("]");
+                }
+                if (printMask?.NIFT ?? true)
+                {
+                    fg.AppendLine($"NIFT => {NIFT}");
                 }
                 if (printMask?.Flags ?? true)
                 {
@@ -7225,6 +7468,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"BaseScale => {BaseScale}");
                 }
+                if (printMask?.FootWeight ?? true)
+                {
+                    fg.AppendLine($"FootWeight => {FootWeight}");
+                }
                 if (printMask?.BloodSpray ?? true)
                 {
                     fg.AppendLine($"BloodSpray => {BloodSpray}");
@@ -7251,6 +7498,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<Exception, IEnumerable<MaskItem<Exception, ItemEntry_ErrorMask>>> Items;
         public MaskItem<Exception, IEnumerable<Exception>> Spells;
         public MaskItem<Exception, IEnumerable<Exception>> Models;
+        public Exception NIFT;
         public Exception Flags;
         public Exception BaseSpellPoints;
         public Exception Fatigue;
@@ -7289,6 +7537,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Exception CombatStyle;
         public Exception TurningSpeed;
         public Exception BaseScale;
+        public Exception FootWeight;
         public Exception BloodSpray;
         public Exception BloodDecal;
         public Exception InheritsSoundFrom;
@@ -7311,6 +7560,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case Creature_FieldIndex.Models:
                     this.Models = new MaskItem<Exception, IEnumerable<Exception>>(ex, null);
+                    break;
+                case Creature_FieldIndex.NIFT:
+                    this.NIFT = ex;
                     break;
                 case Creature_FieldIndex.Flags:
                     this.Flags = ex;
@@ -7426,6 +7678,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.BaseScale:
                     this.BaseScale = ex;
                     break;
+                case Creature_FieldIndex.FootWeight:
+                    this.FootWeight = ex;
+                    break;
                 case Creature_FieldIndex.BloodSpray:
                     this.BloodSpray = ex;
                     break;
@@ -7457,6 +7712,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case Creature_FieldIndex.Models:
                     this.Models = (MaskItem<Exception, IEnumerable<Exception>>)obj;
+                    break;
+                case Creature_FieldIndex.NIFT:
+                    this.NIFT = (Exception)obj;
                     break;
                 case Creature_FieldIndex.Flags:
                     this.Flags = (Exception)obj;
@@ -7572,6 +7830,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.BaseScale:
                     this.BaseScale = (Exception)obj;
                     break;
+                case Creature_FieldIndex.FootWeight:
+                    this.FootWeight = (Exception)obj;
+                    break;
                 case Creature_FieldIndex.BloodSpray:
                     this.BloodSpray = (Exception)obj;
                     break;
@@ -7594,6 +7855,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Items != null) return true;
             if (Spells != null) return true;
             if (Models != null) return true;
+            if (NIFT != null) return true;
             if (Flags != null) return true;
             if (BaseSpellPoints != null) return true;
             if (Fatigue != null) return true;
@@ -7632,6 +7894,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (CombatStyle != null) return true;
             if (TurningSpeed != null) return true;
             if (BaseScale != null) return true;
+            if (FootWeight != null) return true;
             if (BloodSpray != null) return true;
             if (BloodDecal != null) return true;
             if (InheritsSoundFrom != null) return true;
@@ -7737,6 +8000,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
             fg.AppendLine("]");
+            fg.AppendLine($"NIFT => {NIFT}");
             fg.AppendLine($"Flags => {Flags}");
             fg.AppendLine($"BaseSpellPoints => {BaseSpellPoints}");
             fg.AppendLine($"Fatigue => {Fatigue}");
@@ -7838,6 +8102,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine($"CombatStyle => {CombatStyle}");
             fg.AppendLine($"TurningSpeed => {TurningSpeed}");
             fg.AppendLine($"BaseScale => {BaseScale}");
+            fg.AppendLine($"FootWeight => {FootWeight}");
             fg.AppendLine($"BloodSpray => {BloodSpray}");
             fg.AppendLine($"BloodDecal => {BloodDecal}");
             fg.AppendLine($"InheritsSoundFrom => {InheritsSoundFrom}");
@@ -7852,6 +8117,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Items = new MaskItem<Exception, IEnumerable<MaskItem<Exception, ItemEntry_ErrorMask>>>(this.Items.Overall.Combine(rhs.Items.Overall), new List<MaskItem<Exception, ItemEntry_ErrorMask>>(this.Items.Specific.And(rhs.Items.Specific)));
             ret.Spells = new MaskItem<Exception, IEnumerable<Exception>>(this.Spells.Overall.Combine(rhs.Spells.Overall), new List<Exception>(this.Spells.Specific.And(rhs.Spells.Specific)));
             ret.Models = new MaskItem<Exception, IEnumerable<Exception>>(this.Models.Overall.Combine(rhs.Models.Overall), new List<Exception>(this.Models.Specific.And(rhs.Models.Specific)));
+            ret.NIFT = this.NIFT.Combine(rhs.NIFT);
             ret.Flags = this.Flags.Combine(rhs.Flags);
             ret.BaseSpellPoints = this.BaseSpellPoints.Combine(rhs.BaseSpellPoints);
             ret.Fatigue = this.Fatigue.Combine(rhs.Fatigue);
@@ -7890,6 +8156,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.CombatStyle = this.CombatStyle.Combine(rhs.CombatStyle);
             ret.TurningSpeed = this.TurningSpeed.Combine(rhs.TurningSpeed);
             ret.BaseScale = this.BaseScale.Combine(rhs.BaseScale);
+            ret.FootWeight = this.FootWeight.Combine(rhs.FootWeight);
             ret.BloodSpray = this.BloodSpray.Combine(rhs.BloodSpray);
             ret.BloodDecal = this.BloodDecal.Combine(rhs.BloodDecal);
             ret.InheritsSoundFrom = this.InheritsSoundFrom.Combine(rhs.InheritsSoundFrom);
@@ -7910,6 +8177,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<CopyOption, ItemEntry_CopyMask> Items;
         public CopyOption Spells;
         public CopyOption Models;
+        public bool NIFT;
         public bool Flags;
         public bool BaseSpellPoints;
         public bool Fatigue;
@@ -7948,6 +8216,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool CombatStyle;
         public bool TurningSpeed;
         public bool BaseScale;
+        public bool FootWeight;
         public bool BloodSpray;
         public bool BloodDecal;
         public bool InheritsSoundFrom;

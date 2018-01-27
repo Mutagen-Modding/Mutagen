@@ -16,7 +16,43 @@ using Mutagen.Bethesda.Internals;
 namespace Mutagen.Bethesda.Tests
 {
     public class Passthrough_Tests
-    { 
+    {
+        public static IEnumerable<(RangeInt64 Source, RangeInt64? Output)> ConstructRanges<T>(
+            IEnumerable<(long Source, long Output, T Item)> items,
+            Func<T, bool> eval)
+        {
+            bool inRange = false;
+            long startRange = 0;
+            long outputStartRange = 0;
+            foreach (var item in items)
+            {
+                if (eval(item.Item))
+                {
+                    if (!inRange)
+                    {
+                        startRange = item.Source;
+                        outputStartRange = item.Output;
+                        inRange = true;
+                    }
+                }
+                else
+                {
+                    if (inRange)
+                    {
+                        var sourceRange = new RangeInt64(startRange, item.Source - 1);
+                        RangeInt64? outputRange = null;
+                        if (startRange != outputStartRange
+                            || item.Source != item.Output)
+                        {
+                            outputRange = new RangeInt64(outputStartRange, item.Output - 1);
+                        }
+                        yield return (sourceRange, outputRange);
+                        inRange = false;
+                    }
+                }
+            }
+        }
+
         public static Exception AssertFilesEqual(
             Stream stream,
             string path2,
@@ -27,12 +63,23 @@ namespace Mutagen.Bethesda.Tests
             List<RangeInt32> errorRanges = new List<RangeInt32>();
             using (var reader2 = new FileStream(path2, FileMode.Open, FileAccess.Read))
             {
-                var errs = RangeInt64.ConstructRanges(
+                var errs = ConstructRanges(
                         GetDifferences(stream, reader2, ignoreList, sourceSkips, targetSkips),
                         b => !b).First(5).ToArray();
                 if (errs.Length > 0)
                 {
-                    throw new ArgumentException($"{path2} Bytes did not match at positions: {string.Join(" ", errs.Select((r) => r.ToString("X")))}");
+                    var posStr = string.Join(" ", errs.Select((r) =>
+                    {
+                        if (r.Output == null)
+                        {
+                            return r.Source.ToString("X");
+                        }
+                        else
+                        {
+                            return $"[{r.Source.ToString("X")} --- {r.Output.Value.ToString("X")}]";
+                        }
+                    }));
+                    throw new ArgumentException($"{path2} Bytes did not match at positions: {posStr}");
                 }
                 if (stream.Position != stream.Length)
                 {
@@ -66,7 +113,7 @@ namespace Mutagen.Bethesda.Tests
             return false;
         }
 
-        public static IEnumerable<KeyValuePair<long, bool>> GetDifferences(
+        public static IEnumerable<(long Source, long Output, bool Equal)> GetDifferences(
             Stream reader1,
             Stream reader2,
             RangeCollection ignoreList,
@@ -92,9 +139,11 @@ namespace Mutagen.Bethesda.Tests
                 }
                 var b1 = reader1.ReadByte();
                 var b2 = reader2.ReadByte();
-                var same = b1 == b2 || (ignoreList?.IsEncapsulated(reader1.Length) ?? false);
-                yield return new KeyValuePair<long, bool>(
-                    reader1.Position - 1,
+                var pos = reader1.Position - 1;
+                var same = b1 == b2 || (ignoreList?.IsEncapsulated(pos) ?? false);
+                yield return (
+                    pos,
+                    reader2.Position - 1,
                     same);
             }
         }

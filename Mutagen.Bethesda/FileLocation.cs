@@ -17,13 +17,18 @@ namespace Mutagen.Bethesda.Internals
 
         public override string ToString()
         {
-            if (this.Offset >= 0)
+            return ToString(this.Offset);
+        }
+
+        public static string ToString(long l)
+        {
+            if (l >= 0)
             {
-                return $"0x{this.Offset.ToString("X")}";
+                return $"0x{l.ToString("X")}";
             }
             else
             {
-                return $"-0x{(this.Offset * -1).ToString("X")}";
+                return $"-0x{(l * -1).ToString("X")}";
             }
         }
 
