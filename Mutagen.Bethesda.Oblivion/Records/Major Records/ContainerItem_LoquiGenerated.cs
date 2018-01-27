@@ -37,20 +37,20 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Item
-        public FormIDSetLink<ItemAbstract> Item_Property { get; } = new FormIDSetLink<ItemAbstract>();
+        public FormIDLink<ItemAbstract> Item_Property { get; } = new FormIDLink<ItemAbstract>();
         public ItemAbstract Item { get => Item_Property.Item; set => Item_Property.Item = value; }
-        FormIDSetLink<ItemAbstract> IContainerItemGetter.Item_Property => this.Item_Property;
+        FormIDLink<ItemAbstract> IContainerItemGetter.Item_Property => this.Item_Property;
         #endregion
         #region Count
-        protected readonly INotifyingSetItem<UInt32> _Count = NotifyingSetItem.Factory<UInt32>(markAsSet: false);
-        public INotifyingSetItem<UInt32> Count_Property => _Count;
+        protected readonly INotifyingItem<UInt32> _Count = NotifyingItem.Factory<UInt32>();
+        public INotifyingItem<UInt32> Count_Property => _Count;
         public UInt32 Count
         {
             get => this._Count.Item;
             set => this._Count.Set(value);
         }
-        INotifyingSetItem<UInt32> IContainerItem.Count_Property => this.Count_Property;
-        INotifyingSetItemGetter<UInt32> IContainerItemGetter.Count_Property => this.Count_Property;
+        INotifyingItem<UInt32> IContainerItem.Count_Property => this.Count_Property;
+        INotifyingItemGetter<UInt32> IContainerItemGetter.Count_Property => this.Count_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -111,30 +111,16 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(ContainerItem rhs)
         {
             if (rhs == null) return false;
-            if (Item_Property.HasBeenSet != rhs.Item_Property.HasBeenSet) return false;
-            if (Item_Property.HasBeenSet)
-            {
-                if (Item != rhs.Item) return false;
-            }
-            if (Count_Property.HasBeenSet != rhs.Count_Property.HasBeenSet) return false;
-            if (Count_Property.HasBeenSet)
-            {
-                if (Count != rhs.Count) return false;
-            }
+            if (Item != rhs.Item) return false;
+            if (Count != rhs.Count) return false;
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            if (Item_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Item).CombineHashCode(ret);
-            }
-            if (Count_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Count).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(Item).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Count).CombineHashCode(ret);
             return ret;
         }
 
@@ -830,7 +816,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case ContainerItem_FieldIndex.Item:
                     this.Item_Property.Set(
-                        (FormIDSetLink<ItemAbstract>)obj,
+                        (FormIDLink<ItemAbstract>)obj,
                         cmds);
                     break;
                 case ContainerItem_FieldIndex.Count:
@@ -877,7 +863,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case ContainerItem_FieldIndex.Item:
                     obj.Item_Property.Set(
-                        (FormIDSetLink<ItemAbstract>)pair.Value,
+                        (FormIDLink<ItemAbstract>)pair.Value,
                         null);
                     break;
                 case ContainerItem_FieldIndex.Count:
@@ -902,7 +888,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new ItemAbstract Item { get; set; }
         new UInt32 Count { get; set; }
-        new INotifyingSetItem<UInt32> Count_Property { get; }
+        new INotifyingItem<UInt32> Count_Property { get; }
 
     }
 
@@ -910,12 +896,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Item
         ItemAbstract Item { get; }
-        FormIDSetLink<ItemAbstract> Item_Property { get; }
+        FormIDLink<ItemAbstract> Item_Property { get; }
 
         #endregion
         #region Count
         UInt32 Count { get; }
-        INotifyingSetItemGetter<UInt32> Count_Property { get; }
+        INotifyingItemGetter<UInt32> Count_Property { get; }
 
         #endregion
 
@@ -1071,7 +1057,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case ContainerItem_FieldIndex.Item:
-                    return typeof(FormIDSetLink<ItemAbstract>);
+                    return typeof(FormIDLink<ItemAbstract>);
                 case ContainerItem_FieldIndex.Count:
                     return typeof(UInt32);
                 default:
@@ -1193,9 +1179,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Item_Property.SetToWithDefault(
-                        rhs: rhs.Item_Property,
-                        def: def?.Item_Property,
+                    item.Item_Property.Set(
+                        value: rhs.Item,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1208,9 +1193,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Count_Property.SetToWithDefault(
-                        rhs: rhs.Count_Property,
-                        def: def?.Count_Property,
+                    item.Count_Property.Set(
+                        value: rhs.Count,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1233,11 +1217,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case ContainerItem_FieldIndex.Item:
-                    obj.Item_Property.HasBeenSet = on;
-                    break;
                 case ContainerItem_FieldIndex.Count:
-                    obj.Count_Property.HasBeenSet = on;
-                    break;
+                    if (on) break;
+                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1252,10 +1234,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case ContainerItem_FieldIndex.Item:
-                    obj.Item_Property.Unset(cmds);
+                    obj.Item = default(FormIDLink<ItemAbstract>);
                     break;
                 case ContainerItem_FieldIndex.Count:
-                    obj.Count_Property.Unset(cmds);
+                    obj.Count = default(UInt32);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1270,9 +1252,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case ContainerItem_FieldIndex.Item:
-                    return obj.Item_Property.HasBeenSet;
                 case ContainerItem_FieldIndex.Count:
-                    return obj.Count_Property.HasBeenSet;
+                    return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1298,8 +1279,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IContainerItem item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.Item_Property.Unset(cmds.ToUnsetParams());
-            item.Count_Property.Unset(cmds.ToUnsetParams());
+            item.Item = default(FormIDLink<ItemAbstract>);
+            item.Count = default(UInt32);
         }
 
         public static ContainerItem_Mask<bool> GetEqualsMask(
@@ -1317,8 +1298,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ContainerItem_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Item = item.Item_Property.Equals(rhs.Item_Property, (l, r) => l == r);
-            ret.Count = item.Count_Property.Equals(rhs.Count_Property, (l, r) => l == r);
+            ret.Item = item.Item == rhs.Item;
+            ret.Count = item.Count == rhs.Count;
         }
 
         public static string ToString(
@@ -1364,16 +1345,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IContainerItemGetter item,
             ContainerItem_Mask<bool?> checkMask)
         {
-            if (checkMask.Item.HasValue && checkMask.Item.Value != item.Item_Property.HasBeenSet) return false;
-            if (checkMask.Count.HasValue && checkMask.Count.Value != item.Count_Property.HasBeenSet) return false;
             return true;
         }
 
         public static ContainerItem_Mask<bool> GetHasBeenSetMask(IContainerItemGetter item)
         {
             var ret = new ContainerItem_Mask<bool>();
-            ret.Item = item.Item_Property.HasBeenSet;
-            ret.Count = item.Count_Property.HasBeenSet;
+            ret.Item = true;
+            ret.Count = true;
             return ret;
         }
 
@@ -1409,24 +1388,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.ContainerItem");
                     }
-                    if (item.Item_Property.HasBeenSet)
-                    {
-                        RawFormIDXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Item),
-                            item: item.Item?.FormID,
-                            fieldIndex: (int)ContainerItem_FieldIndex.Item,
-                            errorMask: errorMask);
-                    }
-                    if (item.Count_Property.HasBeenSet)
-                    {
-                        UInt32XmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Count),
-                            item: item.Count_Property,
-                            fieldIndex: (int)ContainerItem_FieldIndex.Count,
-                            errorMask: errorMask);
-                    }
+                    RawFormIDXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Item),
+                        item: item.Item?.FormID,
+                        fieldIndex: (int)ContainerItem_FieldIndex.Item,
+                        errorMask: errorMask);
+                    UInt32XmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Count),
+                        item: item.Count_Property,
+                        fieldIndex: (int)ContainerItem_FieldIndex.Count,
+                        errorMask: errorMask);
                 }
             }
             catch (Exception ex)

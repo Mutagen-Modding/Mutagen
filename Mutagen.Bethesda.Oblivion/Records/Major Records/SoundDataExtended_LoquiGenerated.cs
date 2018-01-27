@@ -38,39 +38,39 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region StaticAttenuation
-        protected readonly INotifyingSetItem<Single> _StaticAttenuation = NotifyingSetItem.Factory<Single>(markAsSet: false);
-        public INotifyingSetItem<Single> StaticAttenuation_Property => _StaticAttenuation;
+        protected readonly INotifyingItem<Single> _StaticAttenuation = NotifyingItem.Factory<Single>();
+        public INotifyingItem<Single> StaticAttenuation_Property => _StaticAttenuation;
         public Single StaticAttenuation
         {
             get => this._StaticAttenuation.Item;
             set => this._StaticAttenuation.Set(value.PutInRange(StaticAttenuation_Range.Min, StaticAttenuation_Range.Max));
         }
-        INotifyingSetItem<Single> ISoundDataExtended.StaticAttenuation_Property => this.StaticAttenuation_Property;
-        INotifyingSetItemGetter<Single> ISoundDataExtendedGetter.StaticAttenuation_Property => this.StaticAttenuation_Property;
+        INotifyingItem<Single> ISoundDataExtended.StaticAttenuation_Property => this.StaticAttenuation_Property;
+        INotifyingItemGetter<Single> ISoundDataExtendedGetter.StaticAttenuation_Property => this.StaticAttenuation_Property;
         public static RangeFloat StaticAttenuation_Range = new RangeFloat(0f, 655.35f);
         #endregion
         #region StopTime
-        protected readonly INotifyingSetItem<Single> _StopTime = NotifyingSetItem.Factory<Single>(markAsSet: false);
-        public INotifyingSetItem<Single> StopTime_Property => _StopTime;
+        protected readonly INotifyingItem<Single> _StopTime = NotifyingItem.Factory<Single>();
+        public INotifyingItem<Single> StopTime_Property => _StopTime;
         public Single StopTime
         {
             get => this._StopTime.Item;
             set => this._StopTime.Set(value.PutInRange(StopTime_Range.Min, StopTime_Range.Max));
         }
-        INotifyingSetItem<Single> ISoundDataExtended.StopTime_Property => this.StopTime_Property;
-        INotifyingSetItemGetter<Single> ISoundDataExtendedGetter.StopTime_Property => this.StopTime_Property;
+        INotifyingItem<Single> ISoundDataExtended.StopTime_Property => this.StopTime_Property;
+        INotifyingItemGetter<Single> ISoundDataExtendedGetter.StopTime_Property => this.StopTime_Property;
         public static RangeFloat StopTime_Range = new RangeFloat(0f, 1434.375f);
         #endregion
         #region StartTime
-        protected readonly INotifyingSetItem<Single> _StartTime = NotifyingSetItem.Factory<Single>(markAsSet: false);
-        public INotifyingSetItem<Single> StartTime_Property => _StartTime;
+        protected readonly INotifyingItem<Single> _StartTime = NotifyingItem.Factory<Single>();
+        public INotifyingItem<Single> StartTime_Property => _StartTime;
         public Single StartTime
         {
             get => this._StartTime.Item;
             set => this._StartTime.Set(value.PutInRange(StartTime_Range.Min, StartTime_Range.Max));
         }
-        INotifyingSetItem<Single> ISoundDataExtended.StartTime_Property => this.StartTime_Property;
-        INotifyingSetItemGetter<Single> ISoundDataExtendedGetter.StartTime_Property => this.StartTime_Property;
+        INotifyingItem<Single> ISoundDataExtended.StartTime_Property => this.StartTime_Property;
+        INotifyingItemGetter<Single> ISoundDataExtendedGetter.StartTime_Property => this.StartTime_Property;
         public static RangeFloat StartTime_Range = new RangeFloat(0f, 1434.375f);
         #endregion
 
@@ -129,39 +129,18 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (StaticAttenuation_Property.HasBeenSet != rhs.StaticAttenuation_Property.HasBeenSet) return false;
-            if (StaticAttenuation_Property.HasBeenSet)
-            {
-                if (StaticAttenuation != rhs.StaticAttenuation) return false;
-            }
-            if (StopTime_Property.HasBeenSet != rhs.StopTime_Property.HasBeenSet) return false;
-            if (StopTime_Property.HasBeenSet)
-            {
-                if (StopTime != rhs.StopTime) return false;
-            }
-            if (StartTime_Property.HasBeenSet != rhs.StartTime_Property.HasBeenSet) return false;
-            if (StartTime_Property.HasBeenSet)
-            {
-                if (StartTime != rhs.StartTime) return false;
-            }
+            if (StaticAttenuation != rhs.StaticAttenuation) return false;
+            if (StopTime != rhs.StopTime) return false;
+            if (StartTime != rhs.StartTime) return false;
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            if (StaticAttenuation_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(StaticAttenuation).CombineHashCode(ret);
-            }
-            if (StopTime_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(StopTime).CombineHashCode(ret);
-            }
-            if (StartTime_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(StartTime).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(StaticAttenuation).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(StopTime).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(StartTime).CombineHashCode(ret);
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -1064,13 +1043,13 @@ namespace Mutagen.Bethesda.Oblivion
     public interface ISoundDataExtended : ISoundDataExtendedGetter, ISoundData, ILoquiClass<ISoundDataExtended, ISoundDataExtendedGetter>, ILoquiClass<SoundDataExtended, ISoundDataExtendedGetter>
     {
         new Single StaticAttenuation { get; set; }
-        new INotifyingSetItem<Single> StaticAttenuation_Property { get; }
+        new INotifyingItem<Single> StaticAttenuation_Property { get; }
 
         new Single StopTime { get; set; }
-        new INotifyingSetItem<Single> StopTime_Property { get; }
+        new INotifyingItem<Single> StopTime_Property { get; }
 
         new Single StartTime { get; set; }
-        new INotifyingSetItem<Single> StartTime_Property { get; }
+        new INotifyingItem<Single> StartTime_Property { get; }
 
     }
 
@@ -1078,17 +1057,17 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region StaticAttenuation
         Single StaticAttenuation { get; }
-        INotifyingSetItemGetter<Single> StaticAttenuation_Property { get; }
+        INotifyingItemGetter<Single> StaticAttenuation_Property { get; }
 
         #endregion
         #region StopTime
         Single StopTime { get; }
-        INotifyingSetItemGetter<Single> StopTime_Property { get; }
+        INotifyingItemGetter<Single> StopTime_Property { get; }
 
         #endregion
         #region StartTime
         Single StartTime { get; }
-        INotifyingSetItemGetter<Single> StartTime_Property { get; }
+        INotifyingItemGetter<Single> StartTime_Property { get; }
 
         #endregion
 
@@ -1390,9 +1369,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.StaticAttenuation_Property.SetToWithDefault(
-                        rhs: rhs.StaticAttenuation_Property,
-                        def: def?.StaticAttenuation_Property,
+                    item.StaticAttenuation_Property.Set(
+                        value: rhs.StaticAttenuation,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1405,9 +1383,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.StopTime_Property.SetToWithDefault(
-                        rhs: rhs.StopTime_Property,
-                        def: def?.StopTime_Property,
+                    item.StopTime_Property.Set(
+                        value: rhs.StopTime,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1420,9 +1397,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.StartTime_Property.SetToWithDefault(
-                        rhs: rhs.StartTime_Property,
-                        def: def?.StartTime_Property,
+                    item.StartTime_Property.Set(
+                        value: rhs.StartTime,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1445,14 +1421,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case SoundDataExtended_FieldIndex.StaticAttenuation:
-                    obj.StaticAttenuation_Property.HasBeenSet = on;
-                    break;
                 case SoundDataExtended_FieldIndex.StopTime:
-                    obj.StopTime_Property.HasBeenSet = on;
-                    break;
                 case SoundDataExtended_FieldIndex.StartTime:
-                    obj.StartTime_Property.HasBeenSet = on;
-                    break;
+                    if (on) break;
+                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 default:
                     SoundDataCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
@@ -1468,13 +1440,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case SoundDataExtended_FieldIndex.StaticAttenuation:
-                    obj.StaticAttenuation_Property.Unset(cmds);
+                    obj.StaticAttenuation = default(Single);
                     break;
                 case SoundDataExtended_FieldIndex.StopTime:
-                    obj.StopTime_Property.Unset(cmds);
+                    obj.StopTime = default(Single);
                     break;
                 case SoundDataExtended_FieldIndex.StartTime:
-                    obj.StartTime_Property.Unset(cmds);
+                    obj.StartTime = default(Single);
                     break;
                 default:
                     SoundDataCommon.UnsetNthObject(index, obj);
@@ -1490,11 +1462,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case SoundDataExtended_FieldIndex.StaticAttenuation:
-                    return obj.StaticAttenuation_Property.HasBeenSet;
                 case SoundDataExtended_FieldIndex.StopTime:
-                    return obj.StopTime_Property.HasBeenSet;
                 case SoundDataExtended_FieldIndex.StartTime:
-                    return obj.StartTime_Property.HasBeenSet;
+                    return true;
                 default:
                     return SoundDataCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -1522,9 +1492,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISoundDataExtended item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.StaticAttenuation_Property.Unset(cmds.ToUnsetParams());
-            item.StopTime_Property.Unset(cmds.ToUnsetParams());
-            item.StartTime_Property.Unset(cmds.ToUnsetParams());
+            item.StaticAttenuation = default(Single);
+            item.StopTime = default(Single);
+            item.StartTime = default(Single);
         }
 
         public static SoundDataExtended_Mask<bool> GetEqualsMask(
@@ -1542,9 +1512,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             SoundDataExtended_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.StaticAttenuation = item.StaticAttenuation_Property.Equals(rhs.StaticAttenuation_Property, (l, r) => l == r);
-            ret.StopTime = item.StopTime_Property.Equals(rhs.StopTime_Property, (l, r) => l == r);
-            ret.StartTime = item.StartTime_Property.Equals(rhs.StartTime_Property, (l, r) => l == r);
+            ret.StaticAttenuation = item.StaticAttenuation == rhs.StaticAttenuation;
+            ret.StopTime = item.StopTime == rhs.StopTime;
+            ret.StartTime = item.StartTime == rhs.StartTime;
             SoundDataCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -1595,18 +1565,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this ISoundDataExtendedGetter item,
             SoundDataExtended_Mask<bool?> checkMask)
         {
-            if (checkMask.StaticAttenuation.HasValue && checkMask.StaticAttenuation.Value != item.StaticAttenuation_Property.HasBeenSet) return false;
-            if (checkMask.StopTime.HasValue && checkMask.StopTime.Value != item.StopTime_Property.HasBeenSet) return false;
-            if (checkMask.StartTime.HasValue && checkMask.StartTime.Value != item.StartTime_Property.HasBeenSet) return false;
             return true;
         }
 
         public static SoundDataExtended_Mask<bool> GetHasBeenSetMask(ISoundDataExtendedGetter item)
         {
             var ret = new SoundDataExtended_Mask<bool>();
-            ret.StaticAttenuation = item.StaticAttenuation_Property.HasBeenSet;
-            ret.StopTime = item.StopTime_Property.HasBeenSet;
-            ret.StartTime = item.StartTime_Property.HasBeenSet;
+            ret.StaticAttenuation = true;
+            ret.StopTime = true;
+            ret.StartTime = true;
             return ret;
         }
 
@@ -1665,33 +1632,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.SoundDataExtended");
                     }
-                    if (item.StaticAttenuation_Property.HasBeenSet)
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.StaticAttenuation),
-                            item: item.StaticAttenuation_Property,
-                            fieldIndex: (int)SoundDataExtended_FieldIndex.StaticAttenuation,
-                            errorMask: errorMask);
-                    }
-                    if (item.StopTime_Property.HasBeenSet)
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.StopTime),
-                            item: item.StopTime_Property,
-                            fieldIndex: (int)SoundDataExtended_FieldIndex.StopTime,
-                            errorMask: errorMask);
-                    }
-                    if (item.StartTime_Property.HasBeenSet)
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.StartTime),
-                            item: item.StartTime_Property,
-                            fieldIndex: (int)SoundDataExtended_FieldIndex.StartTime,
-                            errorMask: errorMask);
-                    }
+                    FloatXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.StaticAttenuation),
+                        item: item.StaticAttenuation_Property,
+                        fieldIndex: (int)SoundDataExtended_FieldIndex.StaticAttenuation,
+                        errorMask: errorMask);
+                    FloatXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.StopTime),
+                        item: item.StopTime_Property,
+                        fieldIndex: (int)SoundDataExtended_FieldIndex.StopTime,
+                        errorMask: errorMask);
+                    FloatXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.StartTime),
+                        item: item.StartTime_Property,
+                        fieldIndex: (int)SoundDataExtended_FieldIndex.StartTime,
+                        errorMask: errorMask);
                 }
             }
             catch (Exception ex)

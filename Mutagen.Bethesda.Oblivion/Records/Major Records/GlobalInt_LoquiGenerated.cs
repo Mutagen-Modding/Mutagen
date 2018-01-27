@@ -40,14 +40,14 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Data
-        protected readonly INotifyingSetItem<Int32> _Data = NotifyingSetItem.Factory<Int32>(markAsSet: false);
-        public INotifyingSetItemGetter<Int32> Data_Property => _Data;
+        protected readonly INotifyingItem<Int32> _Data = NotifyingItem.Factory<Int32>();
+        public INotifyingItemGetter<Int32> Data_Property => _Data;
         public Int32 Data
         {
             get => this._Data.Item;
             protected set => this._Data.Set(value);
         }
-        INotifyingSetItemGetter<Int32> IGlobalIntGetter.Data_Property => this.Data_Property;
+        INotifyingItemGetter<Int32> IGlobalIntGetter.Data_Property => this.Data_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -105,21 +105,14 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (Data_Property.HasBeenSet != rhs.Data_Property.HasBeenSet) return false;
-            if (Data_Property.HasBeenSet)
-            {
-                if (Data != rhs.Data) return false;
-            }
+            if (Data != rhs.Data) return false;
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            if (Data_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Data).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(Data).CombineHashCode(ret);
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -896,7 +889,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Data
         Int32 Data { get; }
-        INotifyingSetItemGetter<Int32> Data_Property { get; }
+        INotifyingItemGetter<Int32> Data_Property { get; }
 
         #endregion
 
@@ -1218,7 +1211,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case GlobalInt_FieldIndex.Data:
-                    return obj.Data_Property.HasBeenSet;
+                    return true;
                 default:
                     return GlobalCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -1259,7 +1252,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             GlobalInt_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Data = item.Data_Property.Equals(rhs.Data_Property, (l, r) => l == r);
+            ret.Data = item.Data == rhs.Data;
             GlobalCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -1302,14 +1295,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IGlobalIntGetter item,
             GlobalInt_Mask<bool?> checkMask)
         {
-            if (checkMask.Data.HasValue && checkMask.Data.Value != item.Data_Property.HasBeenSet) return false;
             return true;
         }
 
         public static GlobalInt_Mask<bool> GetHasBeenSetMask(IGlobalIntGetter item)
         {
             var ret = new GlobalInt_Mask<bool>();
-            ret.Data = item.Data_Property.HasBeenSet;
+            ret.Data = true;
             return ret;
         }
 

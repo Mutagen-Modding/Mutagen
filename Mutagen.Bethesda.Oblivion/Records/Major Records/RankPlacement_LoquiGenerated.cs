@@ -37,33 +37,31 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Faction
-        public FormIDSetLink<Faction> Faction_Property { get; } = new FormIDSetLink<Faction>();
+        public FormIDLink<Faction> Faction_Property { get; } = new FormIDLink<Faction>();
         public Faction Faction { get => Faction_Property.Item; set => Faction_Property.Item = value; }
-        FormIDSetLink<Faction> IRankPlacementGetter.Faction_Property => this.Faction_Property;
+        FormIDLink<Faction> IRankPlacementGetter.Faction_Property => this.Faction_Property;
         #endregion
         #region Rank
-        protected readonly INotifyingSetItem<Byte> _Rank = NotifyingSetItem.Factory<Byte>(markAsSet: false);
-        public INotifyingSetItem<Byte> Rank_Property => _Rank;
+        protected readonly INotifyingItem<Byte> _Rank = NotifyingItem.Factory<Byte>();
+        public INotifyingItem<Byte> Rank_Property => _Rank;
         public Byte Rank
         {
             get => this._Rank.Item;
             set => this._Rank.Set(value);
         }
-        INotifyingSetItem<Byte> IRankPlacement.Rank_Property => this.Rank_Property;
-        INotifyingSetItemGetter<Byte> IRankPlacementGetter.Rank_Property => this.Rank_Property;
+        INotifyingItem<Byte> IRankPlacement.Rank_Property => this.Rank_Property;
+        INotifyingItemGetter<Byte> IRankPlacementGetter.Rank_Property => this.Rank_Property;
         #endregion
         #region Fluff
-        protected readonly INotifyingSetItem<Byte[]> _Fluff = NotifyingSetItem.Factory<Byte[]>(
-            markAsSet: false,
-            noNullFallback: () => new byte[3]);
-        public INotifyingSetItem<Byte[]> Fluff_Property => _Fluff;
+        protected readonly INotifyingItem<Byte[]> _Fluff = NotifyingItem.Factory<Byte[]>(noNullFallback: () => new byte[3]);
+        public INotifyingItem<Byte[]> Fluff_Property => _Fluff;
         public Byte[] Fluff
         {
             get => this._Fluff.Item;
             set => this._Fluff.Set(value);
         }
-        INotifyingSetItem<Byte[]> IRankPlacement.Fluff_Property => this.Fluff_Property;
-        INotifyingSetItemGetter<Byte[]> IRankPlacementGetter.Fluff_Property => this.Fluff_Property;
+        INotifyingItem<Byte[]> IRankPlacement.Fluff_Property => this.Fluff_Property;
+        INotifyingItemGetter<Byte[]> IRankPlacementGetter.Fluff_Property => this.Fluff_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -124,39 +122,18 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(RankPlacement rhs)
         {
             if (rhs == null) return false;
-            if (Faction_Property.HasBeenSet != rhs.Faction_Property.HasBeenSet) return false;
-            if (Faction_Property.HasBeenSet)
-            {
-                if (Faction != rhs.Faction) return false;
-            }
-            if (Rank_Property.HasBeenSet != rhs.Rank_Property.HasBeenSet) return false;
-            if (Rank_Property.HasBeenSet)
-            {
-                if (Rank != rhs.Rank) return false;
-            }
-            if (Fluff_Property.HasBeenSet != rhs.Fluff_Property.HasBeenSet) return false;
-            if (Fluff_Property.HasBeenSet)
-            {
-                if (!Fluff.EqualsFast(rhs.Fluff)) return false;
-            }
+            if (Faction != rhs.Faction) return false;
+            if (Rank != rhs.Rank) return false;
+            if (!Fluff.EqualsFast(rhs.Fluff)) return false;
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            if (Faction_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Faction).CombineHashCode(ret);
-            }
-            if (Rank_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Rank).CombineHashCode(ret);
-            }
-            if (Fluff_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Fluff).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(Faction).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Rank).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Fluff).CombineHashCode(ret);
             return ret;
         }
 
@@ -864,7 +841,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RankPlacement_FieldIndex.Faction:
                     this.Faction_Property.Set(
-                        (FormIDSetLink<Faction>)obj,
+                        (FormIDLink<Faction>)obj,
                         cmds);
                     break;
                 case RankPlacement_FieldIndex.Rank:
@@ -916,7 +893,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RankPlacement_FieldIndex.Faction:
                     obj.Faction_Property.Set(
-                        (FormIDSetLink<Faction>)pair.Value,
+                        (FormIDLink<Faction>)pair.Value,
                         null);
                     break;
                 case RankPlacement_FieldIndex.Rank:
@@ -946,10 +923,10 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new Faction Faction { get; set; }
         new Byte Rank { get; set; }
-        new INotifyingSetItem<Byte> Rank_Property { get; }
+        new INotifyingItem<Byte> Rank_Property { get; }
 
         new Byte[] Fluff { get; set; }
-        new INotifyingSetItem<Byte[]> Fluff_Property { get; }
+        new INotifyingItem<Byte[]> Fluff_Property { get; }
 
     }
 
@@ -957,17 +934,17 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Faction
         Faction Faction { get; }
-        FormIDSetLink<Faction> Faction_Property { get; }
+        FormIDLink<Faction> Faction_Property { get; }
 
         #endregion
         #region Rank
         Byte Rank { get; }
-        INotifyingSetItemGetter<Byte> Rank_Property { get; }
+        INotifyingItemGetter<Byte> Rank_Property { get; }
 
         #endregion
         #region Fluff
         Byte[] Fluff { get; }
-        INotifyingSetItemGetter<Byte[]> Fluff_Property { get; }
+        INotifyingItemGetter<Byte[]> Fluff_Property { get; }
 
         #endregion
 
@@ -1133,7 +1110,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RankPlacement_FieldIndex.Faction:
-                    return typeof(FormIDSetLink<Faction>);
+                    return typeof(FormIDLink<Faction>);
                 case RankPlacement_FieldIndex.Rank:
                     return typeof(Byte);
                 case RankPlacement_FieldIndex.Fluff:
@@ -1257,9 +1234,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Faction_Property.SetToWithDefault(
-                        rhs: rhs.Faction_Property,
-                        def: def?.Faction_Property,
+                    item.Faction_Property.Set(
+                        value: rhs.Faction,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1272,9 +1248,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Rank_Property.SetToWithDefault(
-                        rhs: rhs.Rank_Property,
-                        def: def?.Rank_Property,
+                    item.Rank_Property.Set(
+                        value: rhs.Rank,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1287,9 +1262,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Fluff_Property.SetToWithDefault(
-                        rhs: rhs.Fluff_Property,
-                        def: def?.Fluff_Property,
+                    item.Fluff_Property.Set(
+                        value: rhs.Fluff,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1312,14 +1286,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RankPlacement_FieldIndex.Faction:
-                    obj.Faction_Property.HasBeenSet = on;
-                    break;
                 case RankPlacement_FieldIndex.Rank:
-                    obj.Rank_Property.HasBeenSet = on;
-                    break;
                 case RankPlacement_FieldIndex.Fluff:
-                    obj.Fluff_Property.HasBeenSet = on;
-                    break;
+                    if (on) break;
+                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1334,13 +1304,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RankPlacement_FieldIndex.Faction:
-                    obj.Faction_Property.Unset(cmds);
+                    obj.Faction = default(FormIDLink<Faction>);
                     break;
                 case RankPlacement_FieldIndex.Rank:
-                    obj.Rank_Property.Unset(cmds);
+                    obj.Rank = default(Byte);
                     break;
                 case RankPlacement_FieldIndex.Fluff:
-                    obj.Fluff_Property.Unset(cmds);
+                    obj.Fluff = default(Byte[]);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1355,11 +1325,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RankPlacement_FieldIndex.Faction:
-                    return obj.Faction_Property.HasBeenSet;
                 case RankPlacement_FieldIndex.Rank:
-                    return obj.Rank_Property.HasBeenSet;
                 case RankPlacement_FieldIndex.Fluff:
-                    return obj.Fluff_Property.HasBeenSet;
+                    return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1387,9 +1355,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRankPlacement item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.Faction_Property.Unset(cmds.ToUnsetParams());
-            item.Rank_Property.Unset(cmds.ToUnsetParams());
-            item.Fluff_Property.Unset(cmds.ToUnsetParams());
+            item.Faction = default(FormIDLink<Faction>);
+            item.Rank = default(Byte);
+            item.Fluff = default(Byte[]);
         }
 
         public static RankPlacement_Mask<bool> GetEqualsMask(
@@ -1407,9 +1375,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RankPlacement_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Faction = item.Faction_Property.Equals(rhs.Faction_Property, (l, r) => l == r);
-            ret.Rank = item.Rank_Property.Equals(rhs.Rank_Property, (l, r) => l == r);
-            ret.Fluff = item.Fluff_Property.Equals(rhs.Fluff_Property, (l, r) => l.EqualsFast(r));
+            ret.Faction = item.Faction == rhs.Faction;
+            ret.Rank = item.Rank == rhs.Rank;
+            ret.Fluff = item.Fluff.EqualsFast(rhs.Fluff);
         }
 
         public static string ToString(
@@ -1459,18 +1427,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IRankPlacementGetter item,
             RankPlacement_Mask<bool?> checkMask)
         {
-            if (checkMask.Faction.HasValue && checkMask.Faction.Value != item.Faction_Property.HasBeenSet) return false;
-            if (checkMask.Rank.HasValue && checkMask.Rank.Value != item.Rank_Property.HasBeenSet) return false;
-            if (checkMask.Fluff.HasValue && checkMask.Fluff.Value != item.Fluff_Property.HasBeenSet) return false;
             return true;
         }
 
         public static RankPlacement_Mask<bool> GetHasBeenSetMask(IRankPlacementGetter item)
         {
             var ret = new RankPlacement_Mask<bool>();
-            ret.Faction = item.Faction_Property.HasBeenSet;
-            ret.Rank = item.Rank_Property.HasBeenSet;
-            ret.Fluff = item.Fluff_Property.HasBeenSet;
+            ret.Faction = true;
+            ret.Rank = true;
+            ret.Fluff = true;
             return ret;
         }
 
@@ -1506,33 +1471,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.RankPlacement");
                     }
-                    if (item.Faction_Property.HasBeenSet)
-                    {
-                        RawFormIDXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Faction),
-                            item: item.Faction?.FormID,
-                            fieldIndex: (int)RankPlacement_FieldIndex.Faction,
-                            errorMask: errorMask);
-                    }
-                    if (item.Rank_Property.HasBeenSet)
-                    {
-                        ByteXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Rank),
-                            item: item.Rank_Property,
-                            fieldIndex: (int)RankPlacement_FieldIndex.Rank,
-                            errorMask: errorMask);
-                    }
-                    if (item.Fluff_Property.HasBeenSet)
-                    {
-                        ByteArrayXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Fluff),
-                            item: item.Fluff_Property,
-                            fieldIndex: (int)RankPlacement_FieldIndex.Fluff,
-                            errorMask: errorMask);
-                    }
+                    RawFormIDXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Faction),
+                        item: item.Faction?.FormID,
+                        fieldIndex: (int)RankPlacement_FieldIndex.Faction,
+                        errorMask: errorMask);
+                    ByteXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Rank),
+                        item: item.Rank_Property,
+                        fieldIndex: (int)RankPlacement_FieldIndex.Rank,
+                        errorMask: errorMask);
+                    ByteArrayXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Fluff),
+                        item: item.Fluff_Property,
+                        fieldIndex: (int)RankPlacement_FieldIndex.Fluff,
+                        errorMask: errorMask);
                 }
             }
             catch (Exception ex)

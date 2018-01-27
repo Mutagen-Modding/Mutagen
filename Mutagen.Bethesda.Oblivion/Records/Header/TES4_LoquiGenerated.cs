@@ -40,17 +40,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Fluff
-        protected readonly INotifyingSetItem<Byte[]> _Fluff = NotifyingSetItem.Factory<Byte[]>(
-            markAsSet: false,
-            noNullFallback: () => new byte[12]);
-        public INotifyingSetItem<Byte[]> Fluff_Property => _Fluff;
+        protected readonly INotifyingItem<Byte[]> _Fluff = NotifyingItem.Factory<Byte[]>(noNullFallback: () => new byte[12]);
+        public INotifyingItem<Byte[]> Fluff_Property => _Fluff;
         public Byte[] Fluff
         {
             get => this._Fluff.Item;
             set => this._Fluff.Set(value);
         }
-        INotifyingSetItem<Byte[]> ITES4.Fluff_Property => this.Fluff_Property;
-        INotifyingSetItemGetter<Byte[]> ITES4Getter.Fluff_Property => this.Fluff_Property;
+        INotifyingItem<Byte[]> ITES4.Fluff_Property => this.Fluff_Property;
+        INotifyingItemGetter<Byte[]> ITES4Getter.Fluff_Property => this.Fluff_Property;
         #endregion
         #region Header
         private readonly INotifyingSetItem<Header> _Header = new NotifyingSetItemConvertWrapper<Header>(
@@ -187,11 +185,7 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(TES4 rhs)
         {
             if (rhs == null) return false;
-            if (Fluff_Property.HasBeenSet != rhs.Fluff_Property.HasBeenSet) return false;
-            if (Fluff_Property.HasBeenSet)
-            {
-                if (!Fluff.EqualsFast(rhs.Fluff)) return false;
-            }
+            if (!Fluff.EqualsFast(rhs.Fluff)) return false;
             if (Header_Property.HasBeenSet != rhs.Header_Property.HasBeenSet) return false;
             if (Header_Property.HasBeenSet)
             {
@@ -228,10 +222,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override int GetHashCode()
         {
             int ret = 0;
-            if (Fluff_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Fluff).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(Fluff).CombineHashCode(ret);
             if (Header_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(Header).CombineHashCode(ret);
@@ -1186,7 +1177,7 @@ namespace Mutagen.Bethesda.Oblivion
     public interface ITES4 : ITES4Getter, ILoquiClass<ITES4, ITES4Getter>, ILoquiClass<TES4, ITES4Getter>
     {
         new Byte[] Fluff { get; set; }
-        new INotifyingSetItem<Byte[]> Fluff_Property { get; }
+        new INotifyingItem<Byte[]> Fluff_Property { get; }
 
         new Header Header { get; set; }
         new INotifyingSetItem<Header> Header_Property { get; }
@@ -1210,7 +1201,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Fluff
         Byte[] Fluff { get; }
-        INotifyingSetItemGetter<Byte[]> Fluff_Property { get; }
+        INotifyingItemGetter<Byte[]> Fluff_Property { get; }
 
         #endregion
         #region Header
@@ -1585,9 +1576,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Fluff_Property.SetToWithDefault(
-                        rhs: rhs.Fluff_Property,
-                        def: def?.Fluff_Property,
+                    item.Fluff_Property.Set(
+                        value: rhs.Fluff,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1753,8 +1743,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case TES4_FieldIndex.Fluff:
-                    obj.Fluff_Property.HasBeenSet = on;
-                    break;
+                    if (on) break;
+                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 case TES4_FieldIndex.Header:
                     obj.Header_Property.HasBeenSet = on;
                     break;
@@ -1787,7 +1777,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case TES4_FieldIndex.Fluff:
-                    obj.Fluff_Property.Unset(cmds);
+                    obj.Fluff = default(Byte[]);
                     break;
                 case TES4_FieldIndex.Header:
                     obj.Header_Property.Unset(cmds);
@@ -1820,7 +1810,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case TES4_FieldIndex.Fluff:
-                    return obj.Fluff_Property.HasBeenSet;
+                    return true;
                 case TES4_FieldIndex.Header:
                     return obj.Header_Property.HasBeenSet;
                 case TES4_FieldIndex.TypeOffsets:
@@ -1868,7 +1858,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ITES4 item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.Fluff_Property.Unset(cmds.ToUnsetParams());
+            item.Fluff = default(Byte[]);
             item.Header_Property.Unset(cmds.ToUnsetParams());
             item.TypeOffsets_Property.Unset(cmds.ToUnsetParams());
             item.Deleted_Property.Unset(cmds.ToUnsetParams());
@@ -1892,7 +1882,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TES4_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Fluff = item.Fluff_Property.Equals(rhs.Fluff_Property, (l, r) => l.EqualsFast(r));
+            ret.Fluff = item.Fluff.EqualsFast(rhs.Fluff);
             ret.Header = item.Header_Property.LoquiEqualsHelper(rhs.Header_Property, (loqLhs, loqRhs) => HeaderCommon.GetEqualsMask(loqLhs, loqRhs));
             ret.TypeOffsets = item.TypeOffsets_Property.Equals(rhs.TypeOffsets_Property, (l, r) => l.EqualsFast(r));
             ret.Deleted = item.Deleted_Property.Equals(rhs.Deleted_Property, (l, r) => l.EqualsFast(r));
@@ -2002,7 +1992,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this ITES4Getter item,
             TES4_Mask<bool?> checkMask)
         {
-            if (checkMask.Fluff.HasValue && checkMask.Fluff.Value != item.Fluff_Property.HasBeenSet) return false;
             if (checkMask.Header.Overall.HasValue && checkMask.Header.Overall.Value != item.Header_Property.HasBeenSet) return false;
             if (checkMask.Header.Specific != null && (item.Header_Property.Item == null || !item.Header_Property.Item.HasBeenSet(checkMask.Header.Specific))) return false;
             if (checkMask.TypeOffsets.HasValue && checkMask.TypeOffsets.Value != item.TypeOffsets_Property.HasBeenSet) return false;
@@ -2016,7 +2005,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static TES4_Mask<bool> GetHasBeenSetMask(ITES4Getter item)
         {
             var ret = new TES4_Mask<bool>();
-            ret.Fluff = item.Fluff_Property.HasBeenSet;
+            ret.Fluff = true;
             ret.Header = new MaskItem<bool, Header_Mask<bool>>(item.Header_Property.HasBeenSet, HeaderCommon.GetHasBeenSetMask(item.Header_Property.Item));
             ret.TypeOffsets = item.TypeOffsets_Property.HasBeenSet;
             ret.Deleted = item.Deleted_Property.HasBeenSet;
@@ -2058,15 +2047,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.TES4");
                     }
-                    if (item.Fluff_Property.HasBeenSet)
-                    {
-                        ByteArrayXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Fluff),
-                            item: item.Fluff_Property,
-                            fieldIndex: (int)TES4_FieldIndex.Fluff,
-                            errorMask: errorMask);
-                    }
+                    ByteArrayXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Fluff),
+                        item: item.Fluff_Property,
+                        fieldIndex: (int)TES4_FieldIndex.Fluff,
+                        errorMask: errorMask);
                     if (item.Header_Property.HasBeenSet)
                     {
                         LoquiXmlTranslation<Header, Header_ErrorMask>.Instance.Write(

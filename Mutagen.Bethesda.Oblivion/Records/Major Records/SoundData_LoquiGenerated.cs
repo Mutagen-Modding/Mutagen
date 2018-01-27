@@ -37,48 +37,48 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region MinimumAttenuationDistance
-        protected readonly INotifyingSetItem<UInt16> _MinimumAttenuationDistance = NotifyingSetItem.Factory<UInt16>(markAsSet: false);
-        public INotifyingSetItem<UInt16> MinimumAttenuationDistance_Property => _MinimumAttenuationDistance;
+        protected readonly INotifyingItem<UInt16> _MinimumAttenuationDistance = NotifyingItem.Factory<UInt16>();
+        public INotifyingItem<UInt16> MinimumAttenuationDistance_Property => _MinimumAttenuationDistance;
         public UInt16 MinimumAttenuationDistance
         {
             get => this._MinimumAttenuationDistance.Item;
             set => this._MinimumAttenuationDistance.Set(value);
         }
-        INotifyingSetItem<UInt16> ISoundData.MinimumAttenuationDistance_Property => this.MinimumAttenuationDistance_Property;
-        INotifyingSetItemGetter<UInt16> ISoundDataGetter.MinimumAttenuationDistance_Property => this.MinimumAttenuationDistance_Property;
+        INotifyingItem<UInt16> ISoundData.MinimumAttenuationDistance_Property => this.MinimumAttenuationDistance_Property;
+        INotifyingItemGetter<UInt16> ISoundDataGetter.MinimumAttenuationDistance_Property => this.MinimumAttenuationDistance_Property;
         #endregion
         #region MaximumAttenuationDistance
-        protected readonly INotifyingSetItem<UInt16> _MaximumAttenuationDistance = NotifyingSetItem.Factory<UInt16>(markAsSet: false);
-        public INotifyingSetItem<UInt16> MaximumAttenuationDistance_Property => _MaximumAttenuationDistance;
+        protected readonly INotifyingItem<UInt16> _MaximumAttenuationDistance = NotifyingItem.Factory<UInt16>();
+        public INotifyingItem<UInt16> MaximumAttenuationDistance_Property => _MaximumAttenuationDistance;
         public UInt16 MaximumAttenuationDistance
         {
             get => this._MaximumAttenuationDistance.Item;
             set => this._MaximumAttenuationDistance.Set(value);
         }
-        INotifyingSetItem<UInt16> ISoundData.MaximumAttenuationDistance_Property => this.MaximumAttenuationDistance_Property;
-        INotifyingSetItemGetter<UInt16> ISoundDataGetter.MaximumAttenuationDistance_Property => this.MaximumAttenuationDistance_Property;
+        INotifyingItem<UInt16> ISoundData.MaximumAttenuationDistance_Property => this.MaximumAttenuationDistance_Property;
+        INotifyingItemGetter<UInt16> ISoundDataGetter.MaximumAttenuationDistance_Property => this.MaximumAttenuationDistance_Property;
         #endregion
         #region FrequencyAdjustment
-        protected readonly INotifyingSetItem<SByte> _FrequencyAdjustment = NotifyingSetItem.Factory<SByte>(markAsSet: false);
-        public INotifyingSetItem<SByte> FrequencyAdjustment_Property => _FrequencyAdjustment;
+        protected readonly INotifyingItem<SByte> _FrequencyAdjustment = NotifyingItem.Factory<SByte>();
+        public INotifyingItem<SByte> FrequencyAdjustment_Property => _FrequencyAdjustment;
         public SByte FrequencyAdjustment
         {
             get => this._FrequencyAdjustment.Item;
             set => this._FrequencyAdjustment.Set(value);
         }
-        INotifyingSetItem<SByte> ISoundData.FrequencyAdjustment_Property => this.FrequencyAdjustment_Property;
-        INotifyingSetItemGetter<SByte> ISoundDataGetter.FrequencyAdjustment_Property => this.FrequencyAdjustment_Property;
+        INotifyingItem<SByte> ISoundData.FrequencyAdjustment_Property => this.FrequencyAdjustment_Property;
+        INotifyingItemGetter<SByte> ISoundDataGetter.FrequencyAdjustment_Property => this.FrequencyAdjustment_Property;
         #endregion
         #region Flags
-        protected readonly INotifyingSetItem<SoundData.Flag> _Flags = NotifyingSetItem.Factory<SoundData.Flag>(markAsSet: false);
-        public INotifyingSetItem<SoundData.Flag> Flags_Property => _Flags;
+        protected readonly INotifyingItem<SoundData.Flag> _Flags = NotifyingItem.Factory<SoundData.Flag>();
+        public INotifyingItem<SoundData.Flag> Flags_Property => _Flags;
         public SoundData.Flag Flags
         {
             get => this._Flags.Item;
             set => this._Flags.Set(value);
         }
-        INotifyingSetItem<SoundData.Flag> ISoundData.Flags_Property => this.Flags_Property;
-        INotifyingSetItemGetter<SoundData.Flag> ISoundDataGetter.Flags_Property => this.Flags_Property;
+        INotifyingItem<SoundData.Flag> ISoundData.Flags_Property => this.Flags_Property;
+        INotifyingItemGetter<SoundData.Flag> ISoundDataGetter.Flags_Property => this.Flags_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -139,48 +139,20 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(SoundData rhs)
         {
             if (rhs == null) return false;
-            if (MinimumAttenuationDistance_Property.HasBeenSet != rhs.MinimumAttenuationDistance_Property.HasBeenSet) return false;
-            if (MinimumAttenuationDistance_Property.HasBeenSet)
-            {
-                if (MinimumAttenuationDistance != rhs.MinimumAttenuationDistance) return false;
-            }
-            if (MaximumAttenuationDistance_Property.HasBeenSet != rhs.MaximumAttenuationDistance_Property.HasBeenSet) return false;
-            if (MaximumAttenuationDistance_Property.HasBeenSet)
-            {
-                if (MaximumAttenuationDistance != rhs.MaximumAttenuationDistance) return false;
-            }
-            if (FrequencyAdjustment_Property.HasBeenSet != rhs.FrequencyAdjustment_Property.HasBeenSet) return false;
-            if (FrequencyAdjustment_Property.HasBeenSet)
-            {
-                if (FrequencyAdjustment != rhs.FrequencyAdjustment) return false;
-            }
-            if (Flags_Property.HasBeenSet != rhs.Flags_Property.HasBeenSet) return false;
-            if (Flags_Property.HasBeenSet)
-            {
-                if (Flags != rhs.Flags) return false;
-            }
+            if (MinimumAttenuationDistance != rhs.MinimumAttenuationDistance) return false;
+            if (MaximumAttenuationDistance != rhs.MaximumAttenuationDistance) return false;
+            if (FrequencyAdjustment != rhs.FrequencyAdjustment) return false;
+            if (Flags != rhs.Flags) return false;
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            if (MinimumAttenuationDistance_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(MinimumAttenuationDistance).CombineHashCode(ret);
-            }
-            if (MaximumAttenuationDistance_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(MaximumAttenuationDistance).CombineHashCode(ret);
-            }
-            if (FrequencyAdjustment_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(FrequencyAdjustment).CombineHashCode(ret);
-            }
-            if (Flags_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(MinimumAttenuationDistance).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(MaximumAttenuationDistance).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(FrequencyAdjustment).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
             return ret;
         }
 
@@ -1044,16 +1016,16 @@ namespace Mutagen.Bethesda.Oblivion
     public interface ISoundData : ISoundDataGetter, ILoquiClass<ISoundData, ISoundDataGetter>, ILoquiClass<SoundData, ISoundDataGetter>
     {
         new UInt16 MinimumAttenuationDistance { get; set; }
-        new INotifyingSetItem<UInt16> MinimumAttenuationDistance_Property { get; }
+        new INotifyingItem<UInt16> MinimumAttenuationDistance_Property { get; }
 
         new UInt16 MaximumAttenuationDistance { get; set; }
-        new INotifyingSetItem<UInt16> MaximumAttenuationDistance_Property { get; }
+        new INotifyingItem<UInt16> MaximumAttenuationDistance_Property { get; }
 
         new SByte FrequencyAdjustment { get; set; }
-        new INotifyingSetItem<SByte> FrequencyAdjustment_Property { get; }
+        new INotifyingItem<SByte> FrequencyAdjustment_Property { get; }
 
         new SoundData.Flag Flags { get; set; }
-        new INotifyingSetItem<SoundData.Flag> Flags_Property { get; }
+        new INotifyingItem<SoundData.Flag> Flags_Property { get; }
 
     }
 
@@ -1061,22 +1033,22 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region MinimumAttenuationDistance
         UInt16 MinimumAttenuationDistance { get; }
-        INotifyingSetItemGetter<UInt16> MinimumAttenuationDistance_Property { get; }
+        INotifyingItemGetter<UInt16> MinimumAttenuationDistance_Property { get; }
 
         #endregion
         #region MaximumAttenuationDistance
         UInt16 MaximumAttenuationDistance { get; }
-        INotifyingSetItemGetter<UInt16> MaximumAttenuationDistance_Property { get; }
+        INotifyingItemGetter<UInt16> MaximumAttenuationDistance_Property { get; }
 
         #endregion
         #region FrequencyAdjustment
         SByte FrequencyAdjustment { get; }
-        INotifyingSetItemGetter<SByte> FrequencyAdjustment_Property { get; }
+        INotifyingItemGetter<SByte> FrequencyAdjustment_Property { get; }
 
         #endregion
         #region Flags
         SoundData.Flag Flags { get; }
-        INotifyingSetItemGetter<SoundData.Flag> Flags_Property { get; }
+        INotifyingItemGetter<SoundData.Flag> Flags_Property { get; }
 
         #endregion
 
@@ -1390,9 +1362,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.MinimumAttenuationDistance_Property.SetToWithDefault(
-                        rhs: rhs.MinimumAttenuationDistance_Property,
-                        def: def?.MinimumAttenuationDistance_Property,
+                    item.MinimumAttenuationDistance_Property.Set(
+                        value: rhs.MinimumAttenuationDistance,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1405,9 +1376,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.MaximumAttenuationDistance_Property.SetToWithDefault(
-                        rhs: rhs.MaximumAttenuationDistance_Property,
-                        def: def?.MaximumAttenuationDistance_Property,
+                    item.MaximumAttenuationDistance_Property.Set(
+                        value: rhs.MaximumAttenuationDistance,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1420,9 +1390,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.FrequencyAdjustment_Property.SetToWithDefault(
-                        rhs: rhs.FrequencyAdjustment_Property,
-                        def: def?.FrequencyAdjustment_Property,
+                    item.FrequencyAdjustment_Property.Set(
+                        value: rhs.FrequencyAdjustment,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1435,9 +1404,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Flags_Property.SetToWithDefault(
-                        rhs: rhs.Flags_Property,
-                        def: def?.Flags_Property,
+                    item.Flags_Property.Set(
+                        value: rhs.Flags,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1460,17 +1428,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case SoundData_FieldIndex.MinimumAttenuationDistance:
-                    obj.MinimumAttenuationDistance_Property.HasBeenSet = on;
-                    break;
                 case SoundData_FieldIndex.MaximumAttenuationDistance:
-                    obj.MaximumAttenuationDistance_Property.HasBeenSet = on;
-                    break;
                 case SoundData_FieldIndex.FrequencyAdjustment:
-                    obj.FrequencyAdjustment_Property.HasBeenSet = on;
-                    break;
                 case SoundData_FieldIndex.Flags:
-                    obj.Flags_Property.HasBeenSet = on;
-                    break;
+                    if (on) break;
+                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1485,16 +1447,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case SoundData_FieldIndex.MinimumAttenuationDistance:
-                    obj.MinimumAttenuationDistance_Property.Unset(cmds);
+                    obj.MinimumAttenuationDistance = default(UInt16);
                     break;
                 case SoundData_FieldIndex.MaximumAttenuationDistance:
-                    obj.MaximumAttenuationDistance_Property.Unset(cmds);
+                    obj.MaximumAttenuationDistance = default(UInt16);
                     break;
                 case SoundData_FieldIndex.FrequencyAdjustment:
-                    obj.FrequencyAdjustment_Property.Unset(cmds);
+                    obj.FrequencyAdjustment = default(SByte);
                     break;
                 case SoundData_FieldIndex.Flags:
-                    obj.Flags_Property.Unset(cmds);
+                    obj.Flags = default(SoundData.Flag);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1509,13 +1471,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case SoundData_FieldIndex.MinimumAttenuationDistance:
-                    return obj.MinimumAttenuationDistance_Property.HasBeenSet;
                 case SoundData_FieldIndex.MaximumAttenuationDistance:
-                    return obj.MaximumAttenuationDistance_Property.HasBeenSet;
                 case SoundData_FieldIndex.FrequencyAdjustment:
-                    return obj.FrequencyAdjustment_Property.HasBeenSet;
                 case SoundData_FieldIndex.Flags:
-                    return obj.Flags_Property.HasBeenSet;
+                    return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1545,10 +1504,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISoundData item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.MinimumAttenuationDistance_Property.Unset(cmds.ToUnsetParams());
-            item.MaximumAttenuationDistance_Property.Unset(cmds.ToUnsetParams());
-            item.FrequencyAdjustment_Property.Unset(cmds.ToUnsetParams());
-            item.Flags_Property.Unset(cmds.ToUnsetParams());
+            item.MinimumAttenuationDistance = default(UInt16);
+            item.MaximumAttenuationDistance = default(UInt16);
+            item.FrequencyAdjustment = default(SByte);
+            item.Flags = default(SoundData.Flag);
         }
 
         public static SoundData_Mask<bool> GetEqualsMask(
@@ -1566,10 +1525,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             SoundData_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.MinimumAttenuationDistance = item.MinimumAttenuationDistance_Property.Equals(rhs.MinimumAttenuationDistance_Property, (l, r) => l == r);
-            ret.MaximumAttenuationDistance = item.MaximumAttenuationDistance_Property.Equals(rhs.MaximumAttenuationDistance_Property, (l, r) => l == r);
-            ret.FrequencyAdjustment = item.FrequencyAdjustment_Property.Equals(rhs.FrequencyAdjustment_Property, (l, r) => l == r);
-            ret.Flags = item.Flags_Property.Equals(rhs.Flags_Property, (l, r) => l == r);
+            ret.MinimumAttenuationDistance = item.MinimumAttenuationDistance == rhs.MinimumAttenuationDistance;
+            ret.MaximumAttenuationDistance = item.MaximumAttenuationDistance == rhs.MaximumAttenuationDistance;
+            ret.FrequencyAdjustment = item.FrequencyAdjustment == rhs.FrequencyAdjustment;
+            ret.Flags = item.Flags == rhs.Flags;
         }
 
         public static string ToString(
@@ -1623,20 +1582,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this ISoundDataGetter item,
             SoundData_Mask<bool?> checkMask)
         {
-            if (checkMask.MinimumAttenuationDistance.HasValue && checkMask.MinimumAttenuationDistance.Value != item.MinimumAttenuationDistance_Property.HasBeenSet) return false;
-            if (checkMask.MaximumAttenuationDistance.HasValue && checkMask.MaximumAttenuationDistance.Value != item.MaximumAttenuationDistance_Property.HasBeenSet) return false;
-            if (checkMask.FrequencyAdjustment.HasValue && checkMask.FrequencyAdjustment.Value != item.FrequencyAdjustment_Property.HasBeenSet) return false;
-            if (checkMask.Flags.HasValue && checkMask.Flags.Value != item.Flags_Property.HasBeenSet) return false;
             return true;
         }
 
         public static SoundData_Mask<bool> GetHasBeenSetMask(ISoundDataGetter item)
         {
             var ret = new SoundData_Mask<bool>();
-            ret.MinimumAttenuationDistance = item.MinimumAttenuationDistance_Property.HasBeenSet;
-            ret.MaximumAttenuationDistance = item.MaximumAttenuationDistance_Property.HasBeenSet;
-            ret.FrequencyAdjustment = item.FrequencyAdjustment_Property.HasBeenSet;
-            ret.Flags = item.Flags_Property.HasBeenSet;
+            ret.MinimumAttenuationDistance = true;
+            ret.MaximumAttenuationDistance = true;
+            ret.FrequencyAdjustment = true;
+            ret.Flags = true;
             return ret;
         }
 
@@ -1672,42 +1627,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.SoundData");
                     }
-                    if (item.MinimumAttenuationDistance_Property.HasBeenSet)
-                    {
-                        UInt16XmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.MinimumAttenuationDistance),
-                            item: item.MinimumAttenuationDistance_Property,
-                            fieldIndex: (int)SoundData_FieldIndex.MinimumAttenuationDistance,
-                            errorMask: errorMask);
-                    }
-                    if (item.MaximumAttenuationDistance_Property.HasBeenSet)
-                    {
-                        UInt16XmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.MaximumAttenuationDistance),
-                            item: item.MaximumAttenuationDistance_Property,
-                            fieldIndex: (int)SoundData_FieldIndex.MaximumAttenuationDistance,
-                            errorMask: errorMask);
-                    }
-                    if (item.FrequencyAdjustment_Property.HasBeenSet)
-                    {
-                        Int8XmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.FrequencyAdjustment),
-                            item: item.FrequencyAdjustment_Property,
-                            fieldIndex: (int)SoundData_FieldIndex.FrequencyAdjustment,
-                            errorMask: errorMask);
-                    }
-                    if (item.Flags_Property.HasBeenSet)
-                    {
-                        EnumXmlTranslation<SoundData.Flag>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Flags),
-                            item: item.Flags_Property,
-                            fieldIndex: (int)SoundData_FieldIndex.Flags,
-                            errorMask: errorMask);
-                    }
+                    UInt16XmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.MinimumAttenuationDistance),
+                        item: item.MinimumAttenuationDistance_Property,
+                        fieldIndex: (int)SoundData_FieldIndex.MinimumAttenuationDistance,
+                        errorMask: errorMask);
+                    UInt16XmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.MaximumAttenuationDistance),
+                        item: item.MaximumAttenuationDistance_Property,
+                        fieldIndex: (int)SoundData_FieldIndex.MaximumAttenuationDistance,
+                        errorMask: errorMask);
+                    Int8XmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.FrequencyAdjustment),
+                        item: item.FrequencyAdjustment_Property,
+                        fieldIndex: (int)SoundData_FieldIndex.FrequencyAdjustment,
+                        errorMask: errorMask);
+                    EnumXmlTranslation<SoundData.Flag>.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Flags),
+                        item: item.Flags_Property,
+                        fieldIndex: (int)SoundData_FieldIndex.Flags,
+                        errorMask: errorMask);
                 }
             }
             catch (Exception ex)

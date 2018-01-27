@@ -37,14 +37,14 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Male
-        public FormIDSetLink<Hair> Male_Property { get; } = new FormIDSetLink<Hair>();
+        public FormIDLink<Hair> Male_Property { get; } = new FormIDLink<Hair>();
         public Hair Male { get => Male_Property.Item; set => Male_Property.Item = value; }
-        FormIDSetLink<Hair> IRaceHairGetter.Male_Property => this.Male_Property;
+        FormIDLink<Hair> IRaceHairGetter.Male_Property => this.Male_Property;
         #endregion
         #region Female
-        public FormIDSetLink<Hair> Female_Property { get; } = new FormIDSetLink<Hair>();
+        public FormIDLink<Hair> Female_Property { get; } = new FormIDLink<Hair>();
         public Hair Female { get => Female_Property.Item; set => Female_Property.Item = value; }
-        FormIDSetLink<Hair> IRaceHairGetter.Female_Property => this.Female_Property;
+        FormIDLink<Hair> IRaceHairGetter.Female_Property => this.Female_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -105,30 +105,16 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(RaceHair rhs)
         {
             if (rhs == null) return false;
-            if (Male_Property.HasBeenSet != rhs.Male_Property.HasBeenSet) return false;
-            if (Male_Property.HasBeenSet)
-            {
-                if (Male != rhs.Male) return false;
-            }
-            if (Female_Property.HasBeenSet != rhs.Female_Property.HasBeenSet) return false;
-            if (Female_Property.HasBeenSet)
-            {
-                if (Female != rhs.Female) return false;
-            }
+            if (Male != rhs.Male) return false;
+            if (Female != rhs.Female) return false;
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            if (Male_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Male).CombineHashCode(ret);
-            }
-            if (Female_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Female).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(Male).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Female).CombineHashCode(ret);
             return ret;
         }
 
@@ -824,12 +810,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RaceHair_FieldIndex.Male:
                     this.Male_Property.Set(
-                        (FormIDSetLink<Hair>)obj,
+                        (FormIDLink<Hair>)obj,
                         cmds);
                     break;
                 case RaceHair_FieldIndex.Female:
                     this.Female_Property.Set(
-                        (FormIDSetLink<Hair>)obj,
+                        (FormIDLink<Hair>)obj,
                         cmds);
                     break;
                 default:
@@ -871,12 +857,12 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 case RaceHair_FieldIndex.Male:
                     obj.Male_Property.Set(
-                        (FormIDSetLink<Hair>)pair.Value,
+                        (FormIDLink<Hair>)pair.Value,
                         null);
                     break;
                 case RaceHair_FieldIndex.Female:
                     obj.Female_Property.Set(
-                        (FormIDSetLink<Hair>)pair.Value,
+                        (FormIDLink<Hair>)pair.Value,
                         null);
                     break;
                 default:
@@ -902,12 +888,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Male
         Hair Male { get; }
-        FormIDSetLink<Hair> Male_Property { get; }
+        FormIDLink<Hair> Male_Property { get; }
 
         #endregion
         #region Female
         Hair Female { get; }
-        FormIDSetLink<Hair> Female_Property { get; }
+        FormIDLink<Hair> Female_Property { get; }
 
         #endregion
 
@@ -1063,9 +1049,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RaceHair_FieldIndex.Male:
-                    return typeof(FormIDSetLink<Hair>);
+                    return typeof(FormIDLink<Hair>);
                 case RaceHair_FieldIndex.Female:
-                    return typeof(FormIDSetLink<Hair>);
+                    return typeof(FormIDLink<Hair>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1185,9 +1171,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Male_Property.SetToWithDefault(
-                        rhs: rhs.Male_Property,
-                        def: def?.Male_Property,
+                    item.Male_Property.Set(
+                        value: rhs.Male,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1200,9 +1185,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Female_Property.SetToWithDefault(
-                        rhs: rhs.Female_Property,
-                        def: def?.Female_Property,
+                    item.Female_Property.Set(
+                        value: rhs.Female,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1225,11 +1209,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RaceHair_FieldIndex.Male:
-                    obj.Male_Property.HasBeenSet = on;
-                    break;
                 case RaceHair_FieldIndex.Female:
-                    obj.Female_Property.HasBeenSet = on;
-                    break;
+                    if (on) break;
+                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1244,10 +1226,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RaceHair_FieldIndex.Male:
-                    obj.Male_Property.Unset(cmds);
+                    obj.Male = default(FormIDLink<Hair>);
                     break;
                 case RaceHair_FieldIndex.Female:
-                    obj.Female_Property.Unset(cmds);
+                    obj.Female = default(FormIDLink<Hair>);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1262,9 +1244,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case RaceHair_FieldIndex.Male:
-                    return obj.Male_Property.HasBeenSet;
                 case RaceHair_FieldIndex.Female:
-                    return obj.Female_Property.HasBeenSet;
+                    return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1290,8 +1271,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRaceHair item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.Male_Property.Unset(cmds.ToUnsetParams());
-            item.Female_Property.Unset(cmds.ToUnsetParams());
+            item.Male = default(FormIDLink<Hair>);
+            item.Female = default(FormIDLink<Hair>);
         }
 
         public static RaceHair_Mask<bool> GetEqualsMask(
@@ -1309,8 +1290,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RaceHair_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Male = item.Male_Property.Equals(rhs.Male_Property, (l, r) => l == r);
-            ret.Female = item.Female_Property.Equals(rhs.Female_Property, (l, r) => l == r);
+            ret.Male = item.Male == rhs.Male;
+            ret.Female = item.Female == rhs.Female;
         }
 
         public static string ToString(
@@ -1356,16 +1337,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IRaceHairGetter item,
             RaceHair_Mask<bool?> checkMask)
         {
-            if (checkMask.Male.HasValue && checkMask.Male.Value != item.Male_Property.HasBeenSet) return false;
-            if (checkMask.Female.HasValue && checkMask.Female.Value != item.Female_Property.HasBeenSet) return false;
             return true;
         }
 
         public static RaceHair_Mask<bool> GetHasBeenSetMask(IRaceHairGetter item)
         {
             var ret = new RaceHair_Mask<bool>();
-            ret.Male = item.Male_Property.HasBeenSet;
-            ret.Female = item.Female_Property.HasBeenSet;
+            ret.Male = true;
+            ret.Female = true;
             return ret;
         }
 
@@ -1401,24 +1380,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.RaceHair");
                     }
-                    if (item.Male_Property.HasBeenSet)
-                    {
-                        RawFormIDXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Male),
-                            item: item.Male?.FormID,
-                            fieldIndex: (int)RaceHair_FieldIndex.Male,
-                            errorMask: errorMask);
-                    }
-                    if (item.Female_Property.HasBeenSet)
-                    {
-                        RawFormIDXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Female),
-                            item: item.Female?.FormID,
-                            fieldIndex: (int)RaceHair_FieldIndex.Female,
-                            errorMask: errorMask);
-                    }
+                    RawFormIDXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Male),
+                        item: item.Male?.FormID,
+                        fieldIndex: (int)RaceHair_FieldIndex.Male,
+                        errorMask: errorMask);
+                    RawFormIDXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Female),
+                        item: item.Female?.FormID,
+                        fieldIndex: (int)RaceHair_FieldIndex.Female,
+                        errorMask: errorMask);
                 }
             }
             catch (Exception ex)

@@ -120,30 +120,26 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Light.LightFlag> ILightGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region FalloffExponent
-        protected readonly INotifyingSetItem<Single> _FalloffExponent = NotifyingSetItem.Factory<Single>(
-            defaultVal: 1,
-            markAsSet: false);
-        public INotifyingSetItem<Single> FalloffExponent_Property => _FalloffExponent;
+        protected readonly INotifyingItem<Single> _FalloffExponent = NotifyingItem.Factory<Single>(defaultVal: 1);
+        public INotifyingItem<Single> FalloffExponent_Property => _FalloffExponent;
         public Single FalloffExponent
         {
             get => this._FalloffExponent.Item;
             set => this._FalloffExponent.Set(value);
         }
-        INotifyingSetItem<Single> ILight.FalloffExponent_Property => this.FalloffExponent_Property;
-        INotifyingSetItemGetter<Single> ILightGetter.FalloffExponent_Property => this.FalloffExponent_Property;
+        INotifyingItem<Single> ILight.FalloffExponent_Property => this.FalloffExponent_Property;
+        INotifyingItemGetter<Single> ILightGetter.FalloffExponent_Property => this.FalloffExponent_Property;
         #endregion
         #region FOV
-        protected readonly INotifyingSetItem<Single> _FOV = NotifyingSetItem.Factory<Single>(
-            defaultVal: 90,
-            markAsSet: false);
-        public INotifyingSetItem<Single> FOV_Property => _FOV;
+        protected readonly INotifyingItem<Single> _FOV = NotifyingItem.Factory<Single>(defaultVal: 90);
+        public INotifyingItem<Single> FOV_Property => _FOV;
         public Single FOV
         {
             get => this._FOV.Item;
             set => this._FOV.Set(value);
         }
-        INotifyingSetItem<Single> ILight.FOV_Property => this.FOV_Property;
-        INotifyingSetItemGetter<Single> ILightGetter.FOV_Property => this.FOV_Property;
+        INotifyingItem<Single> ILight.FOV_Property => this.FOV_Property;
+        INotifyingItemGetter<Single> ILightGetter.FOV_Property => this.FOV_Property;
         #endregion
         #region Value
         protected readonly INotifyingItem<UInt32> _Value = NotifyingItem.Factory<UInt32>();
@@ -263,16 +259,8 @@ namespace Mutagen.Bethesda.Oblivion
             if (Radius != rhs.Radius) return false;
             if (Color != rhs.Color) return false;
             if (Flags != rhs.Flags) return false;
-            if (FalloffExponent_Property.HasBeenSet != rhs.FalloffExponent_Property.HasBeenSet) return false;
-            if (FalloffExponent_Property.HasBeenSet)
-            {
-                if (FalloffExponent != rhs.FalloffExponent) return false;
-            }
-            if (FOV_Property.HasBeenSet != rhs.FOV_Property.HasBeenSet) return false;
-            if (FOV_Property.HasBeenSet)
-            {
-                if (FOV != rhs.FOV) return false;
-            }
+            if (FalloffExponent != rhs.FalloffExponent) return false;
+            if (FOV != rhs.FOV) return false;
             if (Value != rhs.Value) return false;
             if (Weight != rhs.Weight) return false;
             if (Fade_Property.HasBeenSet != rhs.Fade_Property.HasBeenSet) return false;
@@ -311,14 +299,8 @@ namespace Mutagen.Bethesda.Oblivion
             ret = HashHelper.GetHashCode(Radius).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Color).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            if (FalloffExponent_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(FalloffExponent).CombineHashCode(ret);
-            }
-            if (FOV_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(FOV).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(FalloffExponent).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(FOV).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Value).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Weight).CombineHashCode(ret);
             if (Fade_Property.HasBeenSet)
@@ -1429,10 +1411,10 @@ namespace Mutagen.Bethesda.Oblivion
         new INotifyingItem<Light.LightFlag> Flags_Property { get; }
 
         new Single FalloffExponent { get; set; }
-        new INotifyingSetItem<Single> FalloffExponent_Property { get; }
+        new INotifyingItem<Single> FalloffExponent_Property { get; }
 
         new Single FOV { get; set; }
-        new INotifyingSetItem<Single> FOV_Property { get; }
+        new INotifyingItem<Single> FOV_Property { get; }
 
         new UInt32 Value { get; set; }
         new INotifyingItem<UInt32> Value_Property { get; }
@@ -1490,12 +1472,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region FalloffExponent
         Single FalloffExponent { get; }
-        INotifyingSetItemGetter<Single> FalloffExponent_Property { get; }
+        INotifyingItemGetter<Single> FalloffExponent_Property { get; }
 
         #endregion
         #region FOV
         Single FOV { get; }
-        INotifyingSetItemGetter<Single> FOV_Property { get; }
+        INotifyingItemGetter<Single> FOV_Property { get; }
 
         #endregion
         #region Value
@@ -2110,9 +2092,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.FalloffExponent_Property.SetToWithDefault(
-                        rhs: rhs.FalloffExponent_Property,
-                        def: def?.FalloffExponent_Property,
+                    item.FalloffExponent_Property.Set(
+                        value: rhs.FalloffExponent,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -2125,9 +2106,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.FOV_Property.SetToWithDefault(
-                        rhs: rhs.FOV_Property,
-                        def: def?.FOV_Property,
+                    item.FOV_Property.Set(
+                        value: rhs.FOV,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -2211,6 +2191,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Light_FieldIndex.Radius:
                 case Light_FieldIndex.Color:
                 case Light_FieldIndex.Flags:
+                case Light_FieldIndex.FalloffExponent:
+                case Light_FieldIndex.FOV:
                 case Light_FieldIndex.Value:
                 case Light_FieldIndex.Weight:
                     if (on) break;
@@ -2226,12 +2208,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case Light_FieldIndex.Icon:
                     obj.Icon_Property.HasBeenSet = on;
-                    break;
-                case Light_FieldIndex.FalloffExponent:
-                    obj.FalloffExponent_Property.HasBeenSet = on;
-                    break;
-                case Light_FieldIndex.FOV:
-                    obj.FOV_Property.HasBeenSet = on;
                     break;
                 case Light_FieldIndex.Fade:
                     obj.Fade_Property.HasBeenSet = on;
@@ -2278,10 +2254,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Flags = default(Light.LightFlag);
                     break;
                 case Light_FieldIndex.FalloffExponent:
-                    obj.FalloffExponent_Property.Unset(cmds);
+                    obj.FalloffExponent = default(Single);
                     break;
                 case Light_FieldIndex.FOV:
-                    obj.FOV_Property.Unset(cmds);
+                    obj.FOV = default(Single);
                     break;
                 case Light_FieldIndex.Value:
                     obj.Value = default(UInt32);
@@ -2312,6 +2288,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Light_FieldIndex.Radius:
                 case Light_FieldIndex.Color:
                 case Light_FieldIndex.Flags:
+                case Light_FieldIndex.FalloffExponent:
+                case Light_FieldIndex.FOV:
                 case Light_FieldIndex.Value:
                 case Light_FieldIndex.Weight:
                     return true;
@@ -2323,10 +2301,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.Name_Property.HasBeenSet;
                 case Light_FieldIndex.Icon:
                     return obj.Icon_Property.HasBeenSet;
-                case Light_FieldIndex.FalloffExponent:
-                    return obj.FalloffExponent_Property.HasBeenSet;
-                case Light_FieldIndex.FOV:
-                    return obj.FOV_Property.HasBeenSet;
                 case Light_FieldIndex.Fade:
                     return obj.Fade_Property.HasBeenSet;
                 case Light_FieldIndex.Sound:
@@ -2388,8 +2362,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Radius = default(UInt32);
             item.Color = default(Color);
             item.Flags = default(Light.LightFlag);
-            item.FalloffExponent_Property.Unset(cmds.ToUnsetParams());
-            item.FOV_Property.Unset(cmds.ToUnsetParams());
+            item.FalloffExponent = default(Single);
+            item.FOV = default(Single);
             item.Value = default(UInt32);
             item.Weight = default(Single);
             item.Fade_Property.Unset(cmds.ToUnsetParams());
@@ -2419,8 +2393,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Radius = item.Radius == rhs.Radius;
             ret.Color = item.Color == rhs.Color;
             ret.Flags = item.Flags == rhs.Flags;
-            ret.FalloffExponent = item.FalloffExponent_Property.Equals(rhs.FalloffExponent_Property, (l, r) => l == r);
-            ret.FOV = item.FOV_Property.Equals(rhs.FOV_Property, (l, r) => l == r);
+            ret.FalloffExponent = item.FalloffExponent == rhs.FalloffExponent;
+            ret.FOV = item.FOV == rhs.FOV;
             ret.Value = item.Value == rhs.Value;
             ret.Weight = item.Weight == rhs.Weight;
             ret.Fade = item.Fade_Property.Equals(rhs.Fade_Property, (l, r) => l == r);
@@ -2524,8 +2498,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script_Property.HasBeenSet) return false;
             if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_Property.HasBeenSet) return false;
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_Property.HasBeenSet) return false;
-            if (checkMask.FalloffExponent.HasValue && checkMask.FalloffExponent.Value != item.FalloffExponent_Property.HasBeenSet) return false;
-            if (checkMask.FOV.HasValue && checkMask.FOV.Value != item.FOV_Property.HasBeenSet) return false;
             if (checkMask.Fade.HasValue && checkMask.Fade.Value != item.Fade_Property.HasBeenSet) return false;
             if (checkMask.Sound.HasValue && checkMask.Sound.Value != item.Sound_Property.HasBeenSet) return false;
             return true;
@@ -2542,8 +2514,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Radius = true;
             ret.Color = true;
             ret.Flags = true;
-            ret.FalloffExponent = item.FalloffExponent_Property.HasBeenSet;
-            ret.FOV = item.FOV_Property.HasBeenSet;
+            ret.FalloffExponent = true;
+            ret.FOV = true;
             ret.Value = true;
             ret.Weight = true;
             ret.Fade = item.Fade_Property.HasBeenSet;
@@ -2668,24 +2640,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item: item.Flags_Property,
                         fieldIndex: (int)Light_FieldIndex.Flags,
                         errorMask: errorMask);
-                    if (item.FalloffExponent_Property.HasBeenSet)
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.FalloffExponent),
-                            item: item.FalloffExponent_Property,
-                            fieldIndex: (int)Light_FieldIndex.FalloffExponent,
-                            errorMask: errorMask);
-                    }
-                    if (item.FOV_Property.HasBeenSet)
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.FOV),
-                            item: item.FOV_Property,
-                            fieldIndex: (int)Light_FieldIndex.FOV,
-                            errorMask: errorMask);
-                    }
+                    FloatXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.FalloffExponent),
+                        item: item.FalloffExponent_Property,
+                        fieldIndex: (int)Light_FieldIndex.FalloffExponent,
+                        errorMask: errorMask);
+                    FloatXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.FOV),
+                        item: item.FOV_Property,
+                        fieldIndex: (int)Light_FieldIndex.FOV,
+                        errorMask: errorMask);
                     UInt32XmlTranslation.Instance.Write(
                         writer: writer,
                         name: nameof(item.Value),

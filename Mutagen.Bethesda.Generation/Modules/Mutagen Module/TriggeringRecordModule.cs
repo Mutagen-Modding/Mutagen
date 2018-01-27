@@ -241,10 +241,7 @@ namespace Mutagen.Bethesda.Generation
 
             SetTriggeringRecordAccessors(obj, field, data);
 
-            if (data.HasTrigger)
-            {
-                field.HasBeenSetProperty.SetIfNotSet(true);
-            }
+            field.HasBeenSetProperty.SetIfNotSet(data.HasTrigger);
         }
         
         private async Task AddLoquiSubTypes(LoquiType loqui)

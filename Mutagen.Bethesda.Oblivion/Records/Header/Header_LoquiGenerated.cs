@@ -37,37 +37,37 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Version
-        protected readonly INotifyingSetItem<Single> _Version = NotifyingSetItem.Factory<Single>(markAsSet: false);
-        public INotifyingSetItem<Single> Version_Property => _Version;
+        protected readonly INotifyingItem<Single> _Version = NotifyingItem.Factory<Single>();
+        public INotifyingItem<Single> Version_Property => _Version;
         public Single Version
         {
             get => this._Version.Item;
             set => this._Version.Set(value);
         }
-        INotifyingSetItem<Single> IHeader.Version_Property => this.Version_Property;
-        INotifyingSetItemGetter<Single> IHeaderGetter.Version_Property => this.Version_Property;
+        INotifyingItem<Single> IHeader.Version_Property => this.Version_Property;
+        INotifyingItemGetter<Single> IHeaderGetter.Version_Property => this.Version_Property;
         #endregion
         #region NumRecords
-        protected readonly INotifyingSetItem<Int32> _NumRecords = NotifyingSetItem.Factory<Int32>(markAsSet: false);
-        public INotifyingSetItem<Int32> NumRecords_Property => _NumRecords;
+        protected readonly INotifyingItem<Int32> _NumRecords = NotifyingItem.Factory<Int32>();
+        public INotifyingItem<Int32> NumRecords_Property => _NumRecords;
         public Int32 NumRecords
         {
             get => this._NumRecords.Item;
             set => this._NumRecords.Set(value);
         }
-        INotifyingSetItem<Int32> IHeader.NumRecords_Property => this.NumRecords_Property;
-        INotifyingSetItemGetter<Int32> IHeaderGetter.NumRecords_Property => this.NumRecords_Property;
+        INotifyingItem<Int32> IHeader.NumRecords_Property => this.NumRecords_Property;
+        INotifyingItemGetter<Int32> IHeaderGetter.NumRecords_Property => this.NumRecords_Property;
         #endregion
         #region NextObjectID
-        protected readonly INotifyingSetItem<UInt32> _NextObjectID = NotifyingSetItem.Factory<UInt32>(markAsSet: false);
-        public INotifyingSetItem<UInt32> NextObjectID_Property => _NextObjectID;
+        protected readonly INotifyingItem<UInt32> _NextObjectID = NotifyingItem.Factory<UInt32>();
+        public INotifyingItem<UInt32> NextObjectID_Property => _NextObjectID;
         public UInt32 NextObjectID
         {
             get => this._NextObjectID.Item;
             set => this._NextObjectID.Set(value);
         }
-        INotifyingSetItem<UInt32> IHeader.NextObjectID_Property => this.NextObjectID_Property;
-        INotifyingSetItemGetter<UInt32> IHeaderGetter.NextObjectID_Property => this.NextObjectID_Property;
+        INotifyingItem<UInt32> IHeader.NextObjectID_Property => this.NextObjectID_Property;
+        INotifyingItemGetter<UInt32> IHeaderGetter.NextObjectID_Property => this.NextObjectID_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -128,39 +128,18 @@ namespace Mutagen.Bethesda.Oblivion
         public bool Equals(Header rhs)
         {
             if (rhs == null) return false;
-            if (Version_Property.HasBeenSet != rhs.Version_Property.HasBeenSet) return false;
-            if (Version_Property.HasBeenSet)
-            {
-                if (Version != rhs.Version) return false;
-            }
-            if (NumRecords_Property.HasBeenSet != rhs.NumRecords_Property.HasBeenSet) return false;
-            if (NumRecords_Property.HasBeenSet)
-            {
-                if (NumRecords != rhs.NumRecords) return false;
-            }
-            if (NextObjectID_Property.HasBeenSet != rhs.NextObjectID_Property.HasBeenSet) return false;
-            if (NextObjectID_Property.HasBeenSet)
-            {
-                if (NextObjectID != rhs.NextObjectID) return false;
-            }
+            if (Version != rhs.Version) return false;
+            if (NumRecords != rhs.NumRecords) return false;
+            if (NextObjectID != rhs.NextObjectID) return false;
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            if (Version_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Version).CombineHashCode(ret);
-            }
-            if (NumRecords_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(NumRecords).CombineHashCode(ret);
-            }
-            if (NextObjectID_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(NextObjectID).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(Version).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(NumRecords).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(NextObjectID).CombineHashCode(ret);
             return ret;
         }
 
@@ -948,13 +927,13 @@ namespace Mutagen.Bethesda.Oblivion
     public interface IHeader : IHeaderGetter, ILoquiClass<IHeader, IHeaderGetter>, ILoquiClass<Header, IHeaderGetter>
     {
         new Single Version { get; set; }
-        new INotifyingSetItem<Single> Version_Property { get; }
+        new INotifyingItem<Single> Version_Property { get; }
 
         new Int32 NumRecords { get; set; }
-        new INotifyingSetItem<Int32> NumRecords_Property { get; }
+        new INotifyingItem<Int32> NumRecords_Property { get; }
 
         new UInt32 NextObjectID { get; set; }
-        new INotifyingSetItem<UInt32> NextObjectID_Property { get; }
+        new INotifyingItem<UInt32> NextObjectID_Property { get; }
 
     }
 
@@ -962,17 +941,17 @@ namespace Mutagen.Bethesda.Oblivion
     {
         #region Version
         Single Version { get; }
-        INotifyingSetItemGetter<Single> Version_Property { get; }
+        INotifyingItemGetter<Single> Version_Property { get; }
 
         #endregion
         #region NumRecords
         Int32 NumRecords { get; }
-        INotifyingSetItemGetter<Int32> NumRecords_Property { get; }
+        INotifyingItemGetter<Int32> NumRecords_Property { get; }
 
         #endregion
         #region NextObjectID
         UInt32 NextObjectID { get; }
-        INotifyingSetItemGetter<UInt32> NextObjectID_Property { get; }
+        INotifyingItemGetter<UInt32> NextObjectID_Property { get; }
 
         #endregion
 
@@ -1262,9 +1241,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Version_Property.SetToWithDefault(
-                        rhs: rhs.Version_Property,
-                        def: def?.Version_Property,
+                    item.Version_Property.Set(
+                        value: rhs.Version,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1277,9 +1255,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.NumRecords_Property.SetToWithDefault(
-                        rhs: rhs.NumRecords_Property,
-                        def: def?.NumRecords_Property,
+                    item.NumRecords_Property.Set(
+                        value: rhs.NumRecords,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1292,9 +1269,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.NextObjectID_Property.SetToWithDefault(
-                        rhs: rhs.NextObjectID_Property,
-                        def: def?.NextObjectID_Property,
+                    item.NextObjectID_Property.Set(
+                        value: rhs.NextObjectID,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1317,14 +1293,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Header_FieldIndex.Version:
-                    obj.Version_Property.HasBeenSet = on;
-                    break;
                 case Header_FieldIndex.NumRecords:
-                    obj.NumRecords_Property.HasBeenSet = on;
-                    break;
                 case Header_FieldIndex.NextObjectID:
-                    obj.NextObjectID_Property.HasBeenSet = on;
-                    break;
+                    if (on) break;
+                    throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1339,13 +1311,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Header_FieldIndex.Version:
-                    obj.Version_Property.Unset(cmds);
+                    obj.Version = default(Single);
                     break;
                 case Header_FieldIndex.NumRecords:
-                    obj.NumRecords_Property.Unset(cmds);
+                    obj.NumRecords = default(Int32);
                     break;
                 case Header_FieldIndex.NextObjectID:
-                    obj.NextObjectID_Property.Unset(cmds);
+                    obj.NextObjectID = default(UInt32);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1360,11 +1332,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case Header_FieldIndex.Version:
-                    return obj.Version_Property.HasBeenSet;
                 case Header_FieldIndex.NumRecords:
-                    return obj.NumRecords_Property.HasBeenSet;
                 case Header_FieldIndex.NextObjectID:
-                    return obj.NextObjectID_Property.HasBeenSet;
+                    return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1392,9 +1362,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IHeader item,
             NotifyingUnsetParameters? cmds = null)
         {
-            item.Version_Property.Unset(cmds.ToUnsetParams());
-            item.NumRecords_Property.Unset(cmds.ToUnsetParams());
-            item.NextObjectID_Property.Unset(cmds.ToUnsetParams());
+            item.Version = default(Single);
+            item.NumRecords = default(Int32);
+            item.NextObjectID = default(UInt32);
         }
 
         public static Header_Mask<bool> GetEqualsMask(
@@ -1412,9 +1382,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Header_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Version = item.Version_Property.Equals(rhs.Version_Property, (l, r) => l == r);
-            ret.NumRecords = item.NumRecords_Property.Equals(rhs.NumRecords_Property, (l, r) => l == r);
-            ret.NextObjectID = item.NextObjectID_Property.Equals(rhs.NextObjectID_Property, (l, r) => l == r);
+            ret.Version = item.Version == rhs.Version;
+            ret.NumRecords = item.NumRecords == rhs.NumRecords;
+            ret.NextObjectID = item.NextObjectID == rhs.NextObjectID;
         }
 
         public static string ToString(
@@ -1464,18 +1434,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IHeaderGetter item,
             Header_Mask<bool?> checkMask)
         {
-            if (checkMask.Version.HasValue && checkMask.Version.Value != item.Version_Property.HasBeenSet) return false;
-            if (checkMask.NumRecords.HasValue && checkMask.NumRecords.Value != item.NumRecords_Property.HasBeenSet) return false;
-            if (checkMask.NextObjectID.HasValue && checkMask.NextObjectID.Value != item.NextObjectID_Property.HasBeenSet) return false;
             return true;
         }
 
         public static Header_Mask<bool> GetHasBeenSetMask(IHeaderGetter item)
         {
             var ret = new Header_Mask<bool>();
-            ret.Version = item.Version_Property.HasBeenSet;
-            ret.NumRecords = item.NumRecords_Property.HasBeenSet;
-            ret.NextObjectID = item.NextObjectID_Property.HasBeenSet;
+            ret.Version = true;
+            ret.NumRecords = true;
+            ret.NextObjectID = true;
             return ret;
         }
 
@@ -1511,33 +1478,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.Header");
                     }
-                    if (item.Version_Property.HasBeenSet)
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Version),
-                            item: item.Version_Property,
-                            fieldIndex: (int)Header_FieldIndex.Version,
-                            errorMask: errorMask);
-                    }
-                    if (item.NumRecords_Property.HasBeenSet)
-                    {
-                        Int32XmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.NumRecords),
-                            item: item.NumRecords_Property,
-                            fieldIndex: (int)Header_FieldIndex.NumRecords,
-                            errorMask: errorMask);
-                    }
-                    if (item.NextObjectID_Property.HasBeenSet)
-                    {
-                        UInt32XmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.NextObjectID),
-                            item: item.NextObjectID_Property,
-                            fieldIndex: (int)Header_FieldIndex.NextObjectID,
-                            errorMask: errorMask);
-                    }
+                    FloatXmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Version),
+                        item: item.Version_Property,
+                        fieldIndex: (int)Header_FieldIndex.Version,
+                        errorMask: errorMask);
+                    Int32XmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.NumRecords),
+                        item: item.NumRecords_Property,
+                        fieldIndex: (int)Header_FieldIndex.NumRecords,
+                        errorMask: errorMask);
+                    UInt32XmlTranslation.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.NextObjectID),
+                        item: item.NextObjectID_Property,
+                        fieldIndex: (int)Header_FieldIndex.NextObjectID,
+                        errorMask: errorMask);
                 }
             }
             catch (Exception ex)
