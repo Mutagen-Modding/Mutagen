@@ -717,12 +717,10 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<Relation_ErrorMask> errorMask)
         {
-            if (frame.Complete) return;
             item.Faction_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)Relation_FieldIndex.Faction,
                 errorMask: errorMask));
-            if (frame.Complete) return;
             item._Modifier.SetIfSucceeded(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)Relation_FieldIndex.Modifier,

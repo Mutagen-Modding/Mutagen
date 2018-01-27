@@ -512,17 +512,14 @@ namespace Mutagen.Bethesda
             MutagenFrame frame,
             Func<MajorRecord_ErrorMask> errorMask)
         {
-            if (frame.Complete) return;
             item._MajorRecordFlags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<MajorRecord.MajorRecordFlag>.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(4)),
                 fieldIndex: (int)MajorRecord_FieldIndex.MajorRecordFlags,
                 errorMask: errorMask));
-            if (frame.Complete) return;
             item._FormID.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)MajorRecord_FieldIndex.FormID,
                 errorMask: errorMask));
-            if (frame.Complete) return;
             var VersiontryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(4)),
                 fieldIndex: (int)MajorRecord_FieldIndex.Version,

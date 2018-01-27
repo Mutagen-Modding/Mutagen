@@ -451,7 +451,10 @@ namespace Mutagen.Bethesda.Generation
                         {
                             throw new ArgumentException("Unsupported type generator: " + field);
                         }
-                        fg.AppendLine($"if (frame.Complete) return;");
+                        if (field.HasBeenSet)
+                        {
+                            fg.AppendLine($"if (frame.Complete) return;");
+                        }
                         GenerateFillSnippet(obj, fg, field, generator, "frame");
                     }
                 }

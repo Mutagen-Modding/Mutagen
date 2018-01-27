@@ -711,12 +711,10 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<RaceHair_ErrorMask> errorMask)
         {
-            if (frame.Complete) return;
             item.Male_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)RaceHair_FieldIndex.Male,
                 errorMask: errorMask));
-            if (frame.Complete) return;
             item.Female_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)RaceHair_FieldIndex.Female,

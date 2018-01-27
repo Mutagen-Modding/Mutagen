@@ -862,19 +862,16 @@ namespace Mutagen.Bethesda.Oblivion
                 item: item,
                 frame: frame,
                 errorMask: errorMask);
-            if (frame.Complete) return;
             FillBinary_StaticAttenuation_Custom(
                 frame: frame,
                 item: item,
                 fieldIndex: (int)SoundDataExtended_FieldIndex.StaticAttenuation,
                 errorMask: errorMask);
-            if (frame.Complete) return;
             FillBinary_StopTime_Custom(
                 frame: frame,
                 item: item,
                 fieldIndex: (int)SoundDataExtended_FieldIndex.StopTime,
                 errorMask: errorMask);
-            if (frame.Complete) return;
             FillBinary_StartTime_Custom(
                 frame: frame,
                 item: item,

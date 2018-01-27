@@ -812,26 +812,21 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<SoundData_ErrorMask> errorMask)
         {
-            if (frame.Complete) return;
             FillBinary_MinimumAttenuationDistance_Custom(
                 frame: frame,
                 item: item,
                 fieldIndex: (int)SoundData_FieldIndex.MinimumAttenuationDistance,
                 errorMask: errorMask);
-            if (frame.Complete) return;
             FillBinary_MaximumAttenuationDistance_Custom(
                 frame: frame,
                 item: item,
                 fieldIndex: (int)SoundData_FieldIndex.MaximumAttenuationDistance,
                 errorMask: errorMask);
-            if (frame.Complete) return;
             item._FrequencyAdjustment.SetIfSucceeded(Mutagen.Bethesda.Binary.Int8BinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)SoundData_FieldIndex.FrequencyAdjustment,
                 errorMask: errorMask));
-            if (frame.Complete) return;
             frame.Position += 1;
-            if (frame.Complete) return;
             item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<SoundData.Flag>.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(4)),
                 fieldIndex: (int)SoundData_FieldIndex.Flags,

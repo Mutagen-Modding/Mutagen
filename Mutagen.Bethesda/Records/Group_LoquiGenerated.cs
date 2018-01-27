@@ -902,18 +902,15 @@ namespace Mutagen.Bethesda
             Func<Group_ErrorMask<T_ErrMask>> errorMask)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
-            if (frame.Complete) return;
             FillBinary_ContainedRecordType_Custom(
                 frame: frame,
                 item: item,
                 fieldIndex: (int)Group_FieldIndex.ContainedRecordType,
                 errorMask: errorMask);
-            if (frame.Complete) return;
             item._GroupType.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(4)),
                 fieldIndex: (int)Group_FieldIndex.GroupType,
                 errorMask: errorMask));
-            if (frame.Complete) return;
             var LastModifiedtryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(4)),
                 fieldIndex: (int)Group_FieldIndex.LastModified,

@@ -718,12 +718,10 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<RaceStatsGendered_ErrorMask> errorMask)
         {
-            if (frame.Complete) return;
             item._Male.SetIfSucceeded(LoquiBinaryTranslation<RaceStats, RaceStats_ErrorMask>.Instance.Parse(
                 frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)RaceStatsGendered_FieldIndex.Male,
                 errorMask: errorMask));
-            if (frame.Complete) return;
             item._Female.SetIfSucceeded(LoquiBinaryTranslation<RaceStats, RaceStats_ErrorMask>.Instance.Parse(
                 frame: frame.Spawn(snapToFinalPosition: false),
                 fieldIndex: (int)RaceStatsGendered_FieldIndex.Female,

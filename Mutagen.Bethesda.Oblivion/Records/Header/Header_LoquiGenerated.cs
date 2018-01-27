@@ -742,17 +742,14 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<Header_ErrorMask> errorMask)
         {
-            if (frame.Complete) return;
             item._Version.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)Header_FieldIndex.Version,
                 errorMask: errorMask));
-            if (frame.Complete) return;
             item._NumRecords.SetIfSucceeded(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)Header_FieldIndex.NumRecords,
                 errorMask: errorMask));
-            if (frame.Complete) return;
             item._NextObjectID.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)Header_FieldIndex.NextObjectID,

@@ -717,12 +717,10 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<ContainerItem_ErrorMask> errorMask)
         {
-            if (frame.Complete) return;
             item.Item_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)ContainerItem_FieldIndex.Item,
                 errorMask: errorMask));
-            if (frame.Complete) return;
             item._Count.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)ContainerItem_FieldIndex.Count,

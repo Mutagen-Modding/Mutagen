@@ -805,29 +805,24 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<ScriptMetaSummary_ErrorMask> errorMask)
         {
-            if (frame.Complete) return;
             var FlufftryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(4)),
                 fieldIndex: (int)ScriptMetaSummary_FieldIndex.Fluff,
                 errorMask: errorMask);
             item._Fluff.SetIfSucceeded(FlufftryGet);
-            if (frame.Complete) return;
             item._RefCount.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)ScriptMetaSummary_FieldIndex.RefCount,
                 errorMask: errorMask));
-            if (frame.Complete) return;
             FillBinary_CompiledSize_Custom(
                 frame: frame,
                 item: item,
                 fieldIndex: (int)ScriptMetaSummary_FieldIndex.CompiledSize,
                 errorMask: errorMask);
-            if (frame.Complete) return;
             item._VariableCount.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)ScriptMetaSummary_FieldIndex.VariableCount,
                 errorMask: errorMask));
-            if (frame.Complete) return;
             item._Type.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Script.ScriptType>.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(4)),
                 fieldIndex: (int)ScriptMetaSummary_FieldIndex.Type,

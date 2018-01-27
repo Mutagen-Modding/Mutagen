@@ -743,17 +743,14 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<HavokData_ErrorMask> errorMask)
         {
-            if (frame.Complete) return;
             item._Material.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<HavokData.MaterialType>.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(1)),
                 fieldIndex: (int)HavokData_FieldIndex.Material,
                 errorMask: errorMask));
-            if (frame.Complete) return;
             item._Friction.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)HavokData_FieldIndex.Friction,
                 errorMask: errorMask));
-            if (frame.Complete) return;
             item._Restitution.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)HavokData_FieldIndex.Restitution,

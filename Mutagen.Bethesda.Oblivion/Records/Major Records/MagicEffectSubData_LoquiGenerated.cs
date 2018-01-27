@@ -785,37 +785,30 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<MagicEffectSubData_ErrorMask> errorMask)
         {
-            if (frame.Complete) return;
             item.EnchantEffect_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)MagicEffectSubData_FieldIndex.EnchantEffect,
                 errorMask: errorMask));
-            if (frame.Complete) return;
             item.CastingSound_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)MagicEffectSubData_FieldIndex.CastingSound,
                 errorMask: errorMask));
-            if (frame.Complete) return;
             item.BoltSound_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)MagicEffectSubData_FieldIndex.BoltSound,
                 errorMask: errorMask));
-            if (frame.Complete) return;
             item.HitSound_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)MagicEffectSubData_FieldIndex.HitSound,
                 errorMask: errorMask));
-            if (frame.Complete) return;
             item.AreaSound_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)MagicEffectSubData_FieldIndex.AreaSound,
                 errorMask: errorMask));
-            if (frame.Complete) return;
             item._ConstantEffectEnchantmentFactor.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)MagicEffectSubData_FieldIndex.ConstantEffectEnchantmentFactor,
                 errorMask: errorMask));
-            if (frame.Complete) return;
             item._ConstantEffectBarterFactor.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)MagicEffectSubData_FieldIndex.ConstantEffectBarterFactor,

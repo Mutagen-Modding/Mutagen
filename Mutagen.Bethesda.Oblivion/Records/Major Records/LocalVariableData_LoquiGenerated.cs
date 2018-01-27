@@ -704,7 +704,6 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<LocalVariableData_ErrorMask> errorMask)
         {
-            if (frame.Complete) return;
             var DatatryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(24)),
                 fieldIndex: (int)LocalVariableData_FieldIndex.Data,

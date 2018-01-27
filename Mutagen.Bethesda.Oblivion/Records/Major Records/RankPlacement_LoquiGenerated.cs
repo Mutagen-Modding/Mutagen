@@ -736,17 +736,14 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<RankPlacement_ErrorMask> errorMask)
         {
-            if (frame.Complete) return;
             item.Faction_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)RankPlacement_FieldIndex.Faction,
                 errorMask: errorMask));
-            if (frame.Complete) return;
             item._Rank.SetIfSucceeded(Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)RankPlacement_FieldIndex.Rank,
                 errorMask: errorMask));
-            if (frame.Complete) return;
             var FlufftryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(3)),
                 fieldIndex: (int)RankPlacement_FieldIndex.Fluff,
