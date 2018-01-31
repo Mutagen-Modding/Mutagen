@@ -52,7 +52,17 @@ namespace Mutagen.Bethesda.Generation
             data.IncludeInLength = node.GetAttribute<bool>("includeInLength", true);
             data.Vestigial = node.GetAttribute<bool>("vestigial", false);
             data.CustomBinary = node.GetAttribute<bool>("customBinary", false);
+            ModifyGRUPAttributes(field);
             await base.PostFieldLoad(obj, field, node);
+        }
+
+        private void ModifyGRUPAttributes(TypeGeneration field)
+        {
+            if (!(field is LoquiType loqui)) return;
+            if (loqui.TargetObjectGeneration?.GetObjectType() != ObjectType.Group) return;
+            loqui.SingletonType = SingletonLevel.Singleton;
+            loqui.HasBeenSetProperty.Set(false);
+            loqui.NotifyingProperty.Set(false);
         }
     }
 }

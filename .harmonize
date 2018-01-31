@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>54b9d5fee4e71b5120ea41a0274b471ad2a25393</Sha>
+         <Sha>ab1cc6284e67ca20a33fa4271cee62da7e276186</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>01-26-2018 19:41:43</CommitDate>
-         <Description>SortedListExt.TryGetEncapsulatedIndices edge case + tests</Description>
+         <CommitDate>01-29-2018 18:24:53</CommitDate>
+         <Description>EnumerableExt.And now naturally handles a null rhs</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>5f39e193b9285fb9222a6cdf4cd8cad1bd52bd17</Sha>
+         <Sha>eed59073909adb2f55a76311e23a68b8ff826c98</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>01-23-2018 18:04:42</CommitDate>
-         <Description>ListType now exposes an Enumerable member.  Helps for adding values at construction</Description>
+         <CommitDate>01-30-2018 21:03:07</CommitDate>
+         <Description>Exposed copy parameter on source XSD</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

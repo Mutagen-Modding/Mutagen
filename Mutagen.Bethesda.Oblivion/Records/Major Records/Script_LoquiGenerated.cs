@@ -886,23 +886,23 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "SCHR":
-                    var tmp = ScriptMetaSummary.Create_Binary(
+                    var tmpMetadataSummary = ScriptMetaSummary.Create_Binary(
                         frame: frame,
                         doMasks: errorMask != null,
                         errorMask: out ScriptMetaSummary_ErrorMask MetadataSummarycreateMask);
                     ScriptMetaSummaryCommon.CopyFieldsFrom(
                         item: item._MetadataSummary_Object,
-                        rhs: tmp,
+                        rhs: tmpMetadataSummary,
                         def: null,
                         cmds: null,
                         copyMask: null,
                         doMasks: errorMask != null,
                         errorMask: out ScriptMetaSummary_ErrorMask MetadataSummaryerrorMask);
-                    var combined = ScriptMetaSummary_ErrorMask.Combine(MetadataSummarycreateMask, MetadataSummaryerrorMask);
+                    var combinedMetadataSummary = ScriptMetaSummary_ErrorMask.Combine(MetadataSummarycreateMask, MetadataSummaryerrorMask);
                     ErrorMask.HandleErrorMask(
                         creator: errorMask,
                         index: (int)Script_FieldIndex.MetadataSummary,
-                        errMaskObj: combined == null ? null : new MaskItem<Exception, ScriptMetaSummary_ErrorMask>(null, combined));
+                        errMaskObj: combinedMetadataSummary == null ? null : new MaskItem<Exception, ScriptMetaSummary_ErrorMask>(null, combinedMetadataSummary));
                     return TryGet<Script_FieldIndex?>.Succeed(Script_FieldIndex.MetadataSummary);
                 case "SCDA":
                     frame.Position += Constants.SUBRECORD_LENGTH;
@@ -1066,7 +1066,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Script_FieldIndex.MetadataSummary:
-                    this._MetadataSummary_Object.CopyFieldsFrom(rhs: (ScriptMetaSummary)obj, cmds: cmds);
+                    this._MetadataSummary_Object.CopyFieldsFrom(rhs: (ScriptMetaSummary)obj);
                     break;
                 case Script_FieldIndex.CompiledScript:
                     this._CompiledScript.Set(
@@ -1116,7 +1116,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (enu)
             {
                 case Script_FieldIndex.MetadataSummary:
-                    obj._MetadataSummary_Object.CopyFieldsFrom(rhs: (ScriptMetaSummary)pair.Value, cmds: null);
+                    obj._MetadataSummary_Object.CopyFieldsFrom(rhs: (ScriptMetaSummary)pair.Value);
                     break;
                 case Script_FieldIndex.CompiledScript:
                     obj._CompiledScript.Set(

@@ -68,12 +68,13 @@ namespace Mutagen.Bethesda
         #endregion
         #region LastModified
         protected readonly INotifyingItem<Byte[]> _LastModified = NotifyingItem.Factory<Byte[]>(noNullFallback: () => new byte[4]);
-        public INotifyingItemGetter<Byte[]> LastModified_Property => _LastModified;
+        public INotifyingItem<Byte[]> LastModified_Property => _LastModified;
         public Byte[] LastModified
         {
             get => this._LastModified.Item;
-            protected set => this._LastModified.Set(value);
+            set => this._LastModified.Set(value);
         }
+        INotifyingItem<Byte[]> IGroup<T>.LastModified_Property => this.LastModified_Property;
         INotifyingItemGetter<Byte[]> IGroupGetter<T>.LastModified_Property => this.LastModified_Property;
         #endregion
         #region Items
@@ -1130,6 +1131,9 @@ namespace Mutagen.Bethesda
         new GroupTypeEnum GroupType { get; set; }
         new INotifyingItem<GroupTypeEnum> GroupType_Property { get; }
 
+        new Byte[] LastModified { get; set; }
+        new INotifyingItem<Byte[]> LastModified_Property { get; }
+
         new INotifyingList<T> Items { get; }
     }
 
@@ -1315,9 +1319,9 @@ namespace Mutagen.Bethesda.Internals
             switch (enu)
             {
                 case Group_FieldIndex.ContainedRecordType:
-                case Group_FieldIndex.LastModified:
                     return true;
                 case Group_FieldIndex.GroupType:
+                case Group_FieldIndex.LastModified:
                 case Group_FieldIndex.Items:
                     return false;
                 default:
@@ -1487,6 +1491,20 @@ namespace Mutagen.Bethesda.Internals
                     errorMask().SetNthException((int)Group_FieldIndex.GroupType, ex);
                 }
             }
+            if (copyMask?.LastModified ?? true)
+            {
+                try
+                {
+                    item.LastModified_Property.Set(
+                        value: rhs.LastModified,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Group_FieldIndex.LastModified, ex);
+                }
+            }
             if (copyMask?.Items.Overall != CopyOption.Skip)
             {
                 try
@@ -1560,7 +1578,8 @@ namespace Mutagen.Bethesda.Internals
                     obj.GroupType = default(GroupTypeEnum);
                     break;
                 case Group_FieldIndex.LastModified:
-                    throw new ArgumentException("Tried to set at a readonly index " + index);
+                    obj.LastModified = default(Byte[]);
+                    break;
                 case Group_FieldIndex.Items:
                     obj.Items.Unset(cmds);
                     break;
@@ -1615,6 +1634,7 @@ namespace Mutagen.Bethesda.Internals
             where T : MajorRecord, ILoquiObjectGetter
         {
             item.GroupType = default(GroupTypeEnum);
+            item.LastModified = default(Byte[]);
             item.Items.Unset(cmds.ToUnsetParams());
         }
 

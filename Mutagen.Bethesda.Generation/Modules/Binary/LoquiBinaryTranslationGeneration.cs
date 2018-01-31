@@ -90,30 +90,30 @@ namespace Mutagen.Bethesda.Generation
                 {
                     if (loquiGen.InterfaceType == LoquiInterfaceType.IGetter) return;
                     using (var args = new ArgsWrapper(fg,
-                        $"var tmp = {loquiGen.TargetObjectGeneration.Name}.Create_{ModNickname}"))
+                        $"var tmp{typeGen.Name} = {loquiGen.TypeName}.Create_{ModNickname}"))
                     {
                         args.Add($"frame: {frameAccessor}");
                         args.Add($"doMasks: errorMask != null");
                         args.Add($"errorMask: out {loquiGen.MaskItemString(MaskType.Error)} {loquiGen.Name}createMask");
                     }
                     using (var args = new ArgsWrapper(fg,
-                        $"{loquiGen.TargetObjectGeneration.ExtCommonName}.CopyFieldsFrom"))
+                        $"{loquiGen.TargetObjectGeneration.ExtCommonName}.CopyFieldsFrom{loquiGen.GetGenericTypes(MaskType.Normal, MaskType.Error, MaskType.Copy)}"))
                     {
                         args.Add($"item: {itemAccessor.DirectAccess}");
-                        args.Add("rhs: tmp");
+                        args.Add($"rhs: tmp{typeGen.Name}");
                         args.Add("def: null");
                         args.Add("cmds: null");
                         args.Add("copyMask: null");
                         args.Add("doMasks: errorMask != null");
                         args.Add($"errorMask: out {loquiGen.MaskItemString(MaskType.Error)} {loquiGen.Name}errorMask");
                     }
-                    fg.AppendLine($"var combined = {loquiGen.MaskItemString(MaskType.Error)}.Combine({loquiGen.Name}createMask, {loquiGen.Name}errorMask);");
+                    fg.AppendLine($"var combined{typeGen.Name} = {loquiGen.MaskItemString(MaskType.Error)}.Combine({loquiGen.Name}createMask, {loquiGen.Name}errorMask);");
                     using (var args = new ArgsWrapper(fg,
                         $"ErrorMask.HandleErrorMask"))
                     {
                         args.Add($"creator: {maskAccessor}");
                         args.Add($"index: (int){typeGen.IndexEnumName}");
-                        args.Add($"errMaskObj: combined == null ? null : new MaskItem<Exception, {loquiGen.MaskItemString(MaskType.Error)}>(null, combined)");
+                        args.Add($"errMaskObj: combined{typeGen.Name} == null ? null : new MaskItem<Exception, {loquiGen.MaskItemString(MaskType.Error)}>(null, combined{typeGen.Name})");
                     }
                 }
                 else

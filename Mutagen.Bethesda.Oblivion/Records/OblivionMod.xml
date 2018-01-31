@@ -36,7 +36,7 @@
       <Group name="Weapons" refName="Weapon" />
       <Group name="Ammo" refName="Ammo" />
       <Group name="NPCs" refName="NPC" />
-      <Group name="Creatures" refName="Creature" />
+      <!--<Group name="Creatures" refName="Creature" />-->
     </Fields>
   </Object>
 </Loqui>
