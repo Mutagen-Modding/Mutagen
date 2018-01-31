@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>ab1cc6284e67ca20a33fa4271cee62da7e276186</Sha>
+         <Sha>2d2f3b43e6b12f3dcbec63e313985b205b1ffecf</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>01-29-2018 18:24:53</CommitDate>
-         <Description>EnumerableExt.And now naturally handles a null rhs</Description>
+         <CommitDate>01-30-2018 22:47:31</CommitDate>
+         <Description>Missing cmd null check in NotifyingSetItem</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>eed59073909adb2f55a76311e23a68b8ff826c98</Sha>
+         <Sha>ebc2c90dd2458745a649c104e94c4d94018f0682</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>01-30-2018 21:03:07</CommitDate>
-         <Description>Exposed copy parameter on source XSD</Description>
+         <CommitDate>01-30-2018 22:03:46</CommitDate>
+         <Description>More generic singleton fixes</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

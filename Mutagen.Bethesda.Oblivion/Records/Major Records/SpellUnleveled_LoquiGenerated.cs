@@ -104,7 +104,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected override bool GetNthObjectHasBeenSet(ushort index) => SpellUnleveledCommon.GetNthObjectHasBeenSet(index, this);
 
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => SpellUnleveledCommon.UnsetNthObject(index, this, cmds);
+        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => SpellUnleveledCommon.UnsetNthObject(index, this, cmds);
 
         #endregion
 
@@ -267,7 +267,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region XML Copy In
         public override void CopyIn_XML(
             XElement root,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             LoquiXmlTranslation<SpellUnleveled, SpellUnleveled_ErrorMask>.Instance.CopyIn(
                 root: root,
@@ -281,7 +281,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyIn_XML(
             XElement root,
             out SpellUnleveled_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             LoquiXmlTranslation<SpellUnleveled, SpellUnleveled_ErrorMask>.Instance.CopyIn(
                 root: root,
@@ -294,7 +294,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_XML(
             string path,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(path).Root;
             this.CopyIn_XML(
@@ -305,7 +305,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void CopyIn_XML(
             string path,
             out SpellUnleveled_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(path).Root;
             this.CopyIn_XML(
@@ -316,7 +316,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_XML(
             Stream stream,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(stream).Root;
             this.CopyIn_XML(
@@ -327,7 +327,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void CopyIn_XML(
             Stream stream,
             out SpellUnleveled_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(stream).Root;
             this.CopyIn_XML(
@@ -339,7 +339,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void CopyIn_XML(
             XElement root,
             out Spell_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             this.CopyIn_XML(
                 root: root,
@@ -351,7 +351,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void CopyIn_XML(
             XElement root,
             out NamedMajorRecord_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             this.CopyIn_XML(
                 root: root,
@@ -363,7 +363,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void CopyIn_XML(
             XElement root,
             out MajorRecord_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             this.CopyIn_XML(
                 root: root,
@@ -654,7 +654,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Copy In
         public override void CopyIn_Binary(
             MutagenFrame frame,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             LoquiBinaryTranslation<SpellUnleveled, SpellUnleveled_ErrorMask>.Instance.CopyIn(
                 frame: frame,
@@ -668,7 +668,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyIn_Binary(
             MutagenFrame frame,
             out SpellUnleveled_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             LoquiBinaryTranslation<SpellUnleveled, SpellUnleveled_ErrorMask>.Instance.CopyIn(
                 frame: frame,
@@ -681,7 +681,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_Binary(
             string path,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             using (var reader = new MutagenReader(path))
             {
@@ -695,7 +695,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void CopyIn_Binary(
             string path,
             out SpellUnleveled_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             using (var reader = new MutagenReader(path))
             {
@@ -709,7 +709,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_Binary(
             Stream stream,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             using (var reader = new MutagenReader(stream))
             {
@@ -723,7 +723,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void CopyIn_Binary(
             Stream stream,
             out SpellUnleveled_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             using (var reader = new MutagenReader(stream))
             {
@@ -738,7 +738,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void CopyIn_Binary(
             MutagenFrame frame,
             out Spell_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             this.CopyIn_Binary(
                 frame: frame,
@@ -750,7 +750,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void CopyIn_Binary(
             MutagenFrame frame,
             out NamedMajorRecord_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             this.CopyIn_Binary(
                 frame: frame,
@@ -762,7 +762,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void CopyIn_Binary(
             MutagenFrame frame,
             out MajorRecord_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             this.CopyIn_Binary(
                 frame: frame,
@@ -1011,7 +1011,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds = null)
+        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             SpellUnleveled_FieldIndex enu = (SpellUnleveled_FieldIndex)index;
             switch (enu)
@@ -1045,7 +1045,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public override void Clear(NotifyingUnsetParameters? cmds = null)
+        public override void Clear(NotifyingUnsetParameters cmds = null)
         {
             CallClearPartial_Internal(cmds);
             SpellUnleveledCommon.Clear(this, cmds);
@@ -1397,7 +1397,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISpellUnleveledGetter rhs,
             SpellUnleveled_CopyMask copyMask = null,
             ISpellUnleveledGetter def = null,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             SpellUnleveledCommon.CopyFieldsFrom(
                 item: item,
@@ -1415,7 +1415,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out SpellUnleveled_ErrorMask errorMask,
             SpellUnleveled_CopyMask copyMask = null,
             ISpellUnleveledGetter def = null,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             SpellUnleveledCommon.CopyFieldsFrom(
                 item: item,
@@ -1434,7 +1434,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             out SpellUnleveled_ErrorMask errorMask,
             SpellUnleveled_CopyMask copyMask,
-            NotifyingFireParameters? cmds)
+            NotifyingFireParameters cmds = null)
         {
             SpellUnleveled_ErrorMask retErrorMask = null;
             Func<SpellUnleveled_ErrorMask> maskGetter = () =>
@@ -1463,7 +1463,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             Func<SpellUnleveled_ErrorMask> errorMask,
             SpellUnleveled_CopyMask copyMask,
-            NotifyingFireParameters? cmds)
+            NotifyingFireParameters cmds = null)
         {
             SpellCommon.CopyFieldsFrom(
                 item,
@@ -1534,10 +1534,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.Effects.SetToWithDefault(
-                        rhs.Effects,
-                        def?.Effects,
-                        cmds,
-                        (r, d) =>
+                        rhs: rhs.Effects,
+                        def: def?.Effects,
+                        cmds: cmds,
+                        converter: (r, d) =>
                         {
                             switch (copyMask?.Effects.Overall ?? CopyOption.Reference)
                             {
@@ -1569,7 +1569,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ushort index,
             bool on,
             ISpellUnleveled obj,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             SpellUnleveled_FieldIndex enu = (SpellUnleveled_FieldIndex)index;
             switch (enu)
@@ -1592,7 +1592,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void UnsetNthObject(
             ushort index,
             ISpellUnleveled obj,
-            NotifyingUnsetParameters? cmds = null)
+            NotifyingUnsetParameters cmds = null)
         {
             SpellUnleveled_FieldIndex enu = (SpellUnleveled_FieldIndex)index;
             switch (enu)
@@ -1661,7 +1661,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void Clear(
             ISpellUnleveled item,
-            NotifyingUnsetParameters? cmds = null)
+            NotifyingUnsetParameters cmds = null)
         {
             item.Type = default(Spell.SpellType);
             item.Cost = default(UInt32);

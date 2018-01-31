@@ -55,8 +55,8 @@ namespace Mutagen.Bethesda.Tests
         protected bool GetNthObjectHasBeenSet(ushort index) => SubstitutionCommon.GetNthObjectHasBeenSet(index, this);
         bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
 
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => SubstitutionCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => this.UnsetNthObject(index, cmds);
+        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => SubstitutionCommon.UnsetNthObject(index, this, cmds);
+        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
 
         #endregion
 
@@ -205,7 +205,7 @@ namespace Mutagen.Bethesda.Tests
         #region XML Copy In
         public void CopyIn_XML(
             XElement root,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             LoquiXmlTranslation<Substitution, Substitution_ErrorMask>.Instance.CopyIn(
                 root: root,
@@ -219,7 +219,7 @@ namespace Mutagen.Bethesda.Tests
         public virtual void CopyIn_XML(
             XElement root,
             out Substitution_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             LoquiXmlTranslation<Substitution, Substitution_ErrorMask>.Instance.CopyIn(
                 root: root,
@@ -232,7 +232,7 @@ namespace Mutagen.Bethesda.Tests
 
         public void CopyIn_XML(
             string path,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(path).Root;
             this.CopyIn_XML(
@@ -243,7 +243,7 @@ namespace Mutagen.Bethesda.Tests
         public void CopyIn_XML(
             string path,
             out Substitution_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(path).Root;
             this.CopyIn_XML(
@@ -254,7 +254,7 @@ namespace Mutagen.Bethesda.Tests
 
         public void CopyIn_XML(
             Stream stream,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(stream).Root;
             this.CopyIn_XML(
@@ -265,7 +265,7 @@ namespace Mutagen.Bethesda.Tests
         public void CopyIn_XML(
             Stream stream,
             out Substitution_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(stream).Root;
             this.CopyIn_XML(
@@ -500,8 +500,8 @@ namespace Mutagen.Bethesda.Tests
             return ret;
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds) => this.SetNthObject(index, obj, cmds);
-        protected void SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds = null)
+        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
+        protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             Substitution_FieldIndex enu = (Substitution_FieldIndex)index;
             switch (enu)
@@ -517,14 +517,14 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
-        partial void ClearPartial(NotifyingUnsetParameters? cmds);
+        partial void ClearPartial(NotifyingUnsetParameters cmds);
 
-        protected void CallClearPartial_Internal(NotifyingUnsetParameters? cmds)
+        protected void CallClearPartial_Internal(NotifyingUnsetParameters cmds)
         {
             ClearPartial(cmds);
         }
 
-        public void Clear(NotifyingUnsetParameters? cmds = null)
+        public void Clear(NotifyingUnsetParameters cmds = null)
         {
             CallClearPartial_Internal(cmds);
             SubstitutionCommon.Clear(this, cmds);
@@ -785,7 +785,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ISubstitutionGetter rhs,
             Substitution_CopyMask copyMask = null,
             ISubstitutionGetter def = null,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             SubstitutionCommon.CopyFieldsFrom(
                 item: item,
@@ -803,7 +803,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             out Substitution_ErrorMask errorMask,
             Substitution_CopyMask copyMask = null,
             ISubstitutionGetter def = null,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             SubstitutionCommon.CopyFieldsFrom(
                 item: item,
@@ -822,7 +822,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             bool doMasks,
             out Substitution_ErrorMask errorMask,
             Substitution_CopyMask copyMask,
-            NotifyingFireParameters? cmds)
+            NotifyingFireParameters cmds = null)
         {
             Substitution_ErrorMask retErrorMask = null;
             Func<Substitution_ErrorMask> maskGetter = () =>
@@ -851,7 +851,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             bool doMasks,
             Func<Substitution_ErrorMask> errorMask,
             Substitution_CopyMask copyMask,
-            NotifyingFireParameters? cmds)
+            NotifyingFireParameters cmds = null)
         {
             if (copyMask?.Location ?? true)
             {
@@ -869,7 +869,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ushort index,
             bool on,
             ISubstitution obj,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             Substitution_FieldIndex enu = (Substitution_FieldIndex)index;
             switch (enu)
@@ -886,7 +886,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         public static void UnsetNthObject(
             ushort index,
             ISubstitution obj,
-            NotifyingUnsetParameters? cmds = null)
+            NotifyingUnsetParameters cmds = null)
         {
             Substitution_FieldIndex enu = (Substitution_FieldIndex)index;
             switch (enu)
@@ -935,7 +935,7 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public static void Clear(
             ISubstitution item,
-            NotifyingUnsetParameters? cmds = null)
+            NotifyingUnsetParameters cmds = null)
         {
             item.Location = default(Int64);
             item.Data = default(Byte[]);

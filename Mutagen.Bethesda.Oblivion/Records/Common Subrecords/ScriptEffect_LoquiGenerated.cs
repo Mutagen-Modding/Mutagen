@@ -88,8 +88,8 @@ namespace Mutagen.Bethesda.Oblivion
         protected bool GetNthObjectHasBeenSet(ushort index) => ScriptEffectCommon.GetNthObjectHasBeenSet(index, this);
         bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
 
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => ScriptEffectCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => this.UnsetNthObject(index, cmds);
+        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => ScriptEffectCommon.UnsetNthObject(index, this, cmds);
+        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
 
         #endregion
 
@@ -251,7 +251,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region XML Copy In
         public void CopyIn_XML(
             XElement root,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             LoquiXmlTranslation<ScriptEffect, ScriptEffect_ErrorMask>.Instance.CopyIn(
                 root: root,
@@ -265,7 +265,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyIn_XML(
             XElement root,
             out ScriptEffect_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             LoquiXmlTranslation<ScriptEffect, ScriptEffect_ErrorMask>.Instance.CopyIn(
                 root: root,
@@ -278,7 +278,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_XML(
             string path,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(path).Root;
             this.CopyIn_XML(
@@ -289,7 +289,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void CopyIn_XML(
             string path,
             out ScriptEffect_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(path).Root;
             this.CopyIn_XML(
@@ -300,7 +300,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_XML(
             Stream stream,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(stream).Root;
             this.CopyIn_XML(
@@ -311,7 +311,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void CopyIn_XML(
             Stream stream,
             out ScriptEffect_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(stream).Root;
             this.CopyIn_XML(
@@ -599,7 +599,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Copy In
         public void CopyIn_Binary(
             MutagenFrame frame,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             LoquiBinaryTranslation<ScriptEffect, ScriptEffect_ErrorMask>.Instance.CopyIn(
                 frame: frame,
@@ -613,7 +613,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyIn_Binary(
             MutagenFrame frame,
             out ScriptEffect_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             LoquiBinaryTranslation<ScriptEffect, ScriptEffect_ErrorMask>.Instance.CopyIn(
                 frame: frame,
@@ -626,7 +626,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_Binary(
             string path,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             using (var reader = new MutagenReader(path))
             {
@@ -640,7 +640,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void CopyIn_Binary(
             string path,
             out ScriptEffect_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             using (var reader = new MutagenReader(path))
             {
@@ -654,7 +654,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_Binary(
             Stream stream,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             using (var reader = new MutagenReader(stream))
             {
@@ -668,7 +668,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void CopyIn_Binary(
             Stream stream,
             out ScriptEffect_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             using (var reader = new MutagenReader(stream))
             {
@@ -795,15 +795,15 @@ namespace Mutagen.Bethesda.Oblivion
                     ret.MagicSchool_Property.Subscribe(
                         owner: DataTypeStateSubber,
                         callback: unsubAction,
-                        fireInitial: false);
+                        cmds: NotifyingSubscribeParameters.NoFire);
                     ret.VisualEffect_Property.Subscribe(
                         owner: DataTypeStateSubber,
                         callback: unsubAction,
-                        fireInitial: false);
+                        cmds: NotifyingSubscribeParameters.NoFire);
                     ret.Flags_Property.Subscribe(
                         owner: DataTypeStateSubber,
                         callback: unsubAction,
-                        fireInitial: false);
+                        cmds: NotifyingSubscribeParameters.NoFire);
                 }
             }
             catch (Exception ex)
@@ -959,8 +959,8 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds) => this.SetNthObject(index, obj, cmds);
-        protected void SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds = null)
+        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
+        protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             ScriptEffect_FieldIndex enu = (ScriptEffect_FieldIndex)index;
             switch (enu)
@@ -995,14 +995,14 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial(NotifyingUnsetParameters? cmds);
+        partial void ClearPartial(NotifyingUnsetParameters cmds);
 
-        protected void CallClearPartial_Internal(NotifyingUnsetParameters? cmds)
+        protected void CallClearPartial_Internal(NotifyingUnsetParameters cmds)
         {
             ClearPartial(cmds);
         }
 
-        public void Clear(NotifyingUnsetParameters? cmds = null)
+        public void Clear(NotifyingUnsetParameters cmds = null)
         {
             CallClearPartial_Internal(cmds);
             ScriptEffectCommon.Clear(this, cmds);
@@ -1347,7 +1347,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptEffectGetter rhs,
             ScriptEffect_CopyMask copyMask = null,
             IScriptEffectGetter def = null,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             ScriptEffectCommon.CopyFieldsFrom(
                 item: item,
@@ -1365,7 +1365,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out ScriptEffect_ErrorMask errorMask,
             ScriptEffect_CopyMask copyMask = null,
             IScriptEffectGetter def = null,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             ScriptEffectCommon.CopyFieldsFrom(
                 item: item,
@@ -1384,7 +1384,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             out ScriptEffect_ErrorMask errorMask,
             ScriptEffect_CopyMask copyMask,
-            NotifyingFireParameters? cmds)
+            NotifyingFireParameters cmds = null)
         {
             ScriptEffect_ErrorMask retErrorMask = null;
             Func<ScriptEffect_ErrorMask> maskGetter = () =>
@@ -1413,7 +1413,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             Func<ScriptEffect_ErrorMask> errorMask,
             ScriptEffect_CopyMask copyMask,
-            NotifyingFireParameters? cmds)
+            NotifyingFireParameters cmds = null)
         {
             if (copyMask?.Script ?? true)
             {
@@ -1494,7 +1494,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ushort index,
             bool on,
             IScriptEffect obj,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             ScriptEffect_FieldIndex enu = (ScriptEffect_FieldIndex)index;
             switch (enu)
@@ -1516,7 +1516,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void UnsetNthObject(
             ushort index,
             IScriptEffect obj,
-            NotifyingUnsetParameters? cmds = null)
+            NotifyingUnsetParameters cmds = null)
         {
             ScriptEffect_FieldIndex enu = (ScriptEffect_FieldIndex)index;
             switch (enu)
@@ -1584,7 +1584,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void Clear(
             IScriptEffect item,
-            NotifyingUnsetParameters? cmds = null)
+            NotifyingUnsetParameters cmds = null)
         {
             item.Script = default(FormIDLink<Script>);
             item.MagicSchool = default(MagicSchool);

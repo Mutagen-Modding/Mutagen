@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected override bool GetNthObjectHasBeenSet(ushort index) => BirthsignCommon.GetNthObjectHasBeenSet(index, this);
 
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => BirthsignCommon.UnsetNthObject(index, this, cmds);
+        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => BirthsignCommon.UnsetNthObject(index, this, cmds);
 
         #endregion
 
@@ -254,7 +254,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region XML Copy In
         public override void CopyIn_XML(
             XElement root,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             LoquiXmlTranslation<Birthsign, Birthsign_ErrorMask>.Instance.CopyIn(
                 root: root,
@@ -268,7 +268,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyIn_XML(
             XElement root,
             out Birthsign_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             LoquiXmlTranslation<Birthsign, Birthsign_ErrorMask>.Instance.CopyIn(
                 root: root,
@@ -281,7 +281,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_XML(
             string path,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(path).Root;
             this.CopyIn_XML(
@@ -292,7 +292,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void CopyIn_XML(
             string path,
             out Birthsign_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(path).Root;
             this.CopyIn_XML(
@@ -303,7 +303,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_XML(
             Stream stream,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(stream).Root;
             this.CopyIn_XML(
@@ -314,7 +314,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void CopyIn_XML(
             Stream stream,
             out Birthsign_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(stream).Root;
             this.CopyIn_XML(
@@ -326,7 +326,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void CopyIn_XML(
             XElement root,
             out NamedMajorRecord_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             this.CopyIn_XML(
                 root: root,
@@ -338,7 +338,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void CopyIn_XML(
             XElement root,
             out MajorRecord_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             this.CopyIn_XML(
                 root: root,
@@ -615,7 +615,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Copy In
         public override void CopyIn_Binary(
             MutagenFrame frame,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             LoquiBinaryTranslation<Birthsign, Birthsign_ErrorMask>.Instance.CopyIn(
                 frame: frame,
@@ -629,7 +629,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyIn_Binary(
             MutagenFrame frame,
             out Birthsign_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             LoquiBinaryTranslation<Birthsign, Birthsign_ErrorMask>.Instance.CopyIn(
                 frame: frame,
@@ -642,7 +642,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_Binary(
             string path,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             using (var reader = new MutagenReader(path))
             {
@@ -656,7 +656,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void CopyIn_Binary(
             string path,
             out Birthsign_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             using (var reader = new MutagenReader(path))
             {
@@ -670,7 +670,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_Binary(
             Stream stream,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             using (var reader = new MutagenReader(stream))
             {
@@ -684,7 +684,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void CopyIn_Binary(
             Stream stream,
             out Birthsign_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             using (var reader = new MutagenReader(stream))
             {
@@ -699,7 +699,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void CopyIn_Binary(
             MutagenFrame frame,
             out NamedMajorRecord_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             this.CopyIn_Binary(
                 frame: frame,
@@ -711,7 +711,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void CopyIn_Binary(
             MutagenFrame frame,
             out MajorRecord_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             this.CopyIn_Binary(
                 frame: frame,
@@ -954,7 +954,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds = null)
+        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             Birthsign_FieldIndex enu = (Birthsign_FieldIndex)index;
             switch (enu)
@@ -978,7 +978,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public override void Clear(NotifyingUnsetParameters? cmds = null)
+        public override void Clear(NotifyingUnsetParameters cmds = null)
         {
             CallClearPartial_Internal(cmds);
             BirthsignCommon.Clear(this, cmds);
@@ -1280,7 +1280,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IBirthsignGetter rhs,
             Birthsign_CopyMask copyMask = null,
             IBirthsignGetter def = null,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             BirthsignCommon.CopyFieldsFrom(
                 item: item,
@@ -1298,7 +1298,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out Birthsign_ErrorMask errorMask,
             Birthsign_CopyMask copyMask = null,
             IBirthsignGetter def = null,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             BirthsignCommon.CopyFieldsFrom(
                 item: item,
@@ -1317,7 +1317,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             out Birthsign_ErrorMask errorMask,
             Birthsign_CopyMask copyMask,
-            NotifyingFireParameters? cmds)
+            NotifyingFireParameters cmds = null)
         {
             Birthsign_ErrorMask retErrorMask = null;
             Func<Birthsign_ErrorMask> maskGetter = () =>
@@ -1346,7 +1346,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             Func<Birthsign_ErrorMask> errorMask,
             Birthsign_CopyMask copyMask,
-            NotifyingFireParameters? cmds)
+            NotifyingFireParameters cmds = null)
         {
             NamedMajorRecordCommon.CopyFieldsFrom(
                 item,
@@ -1409,7 +1409,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ushort index,
             bool on,
             IBirthsign obj,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             Birthsign_FieldIndex enu = (Birthsign_FieldIndex)index;
             switch (enu)
@@ -1432,7 +1432,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void UnsetNthObject(
             ushort index,
             IBirthsign obj,
-            NotifyingUnsetParameters? cmds = null)
+            NotifyingUnsetParameters cmds = null)
         {
             Birthsign_FieldIndex enu = (Birthsign_FieldIndex)index;
             switch (enu)
@@ -1490,7 +1490,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void Clear(
             IBirthsign item,
-            NotifyingUnsetParameters? cmds = null)
+            NotifyingUnsetParameters cmds = null)
         {
             item.Icon_Property.Unset(cmds.ToUnsetParams());
             item.Description_Property.Unset(cmds.ToUnsetParams());

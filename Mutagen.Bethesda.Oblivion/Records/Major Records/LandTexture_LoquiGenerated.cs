@@ -90,7 +90,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected override bool GetNthObjectHasBeenSet(ushort index) => LandTextureCommon.GetNthObjectHasBeenSet(index, this);
 
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => LandTextureCommon.UnsetNthObject(index, this, cmds);
+        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => LandTextureCommon.UnsetNthObject(index, this, cmds);
 
         #endregion
 
@@ -272,7 +272,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region XML Copy In
         public override void CopyIn_XML(
             XElement root,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             LoquiXmlTranslation<LandTexture, LandTexture_ErrorMask>.Instance.CopyIn(
                 root: root,
@@ -286,7 +286,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyIn_XML(
             XElement root,
             out LandTexture_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             LoquiXmlTranslation<LandTexture, LandTexture_ErrorMask>.Instance.CopyIn(
                 root: root,
@@ -299,7 +299,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_XML(
             string path,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(path).Root;
             this.CopyIn_XML(
@@ -310,7 +310,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void CopyIn_XML(
             string path,
             out LandTexture_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(path).Root;
             this.CopyIn_XML(
@@ -321,7 +321,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_XML(
             Stream stream,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(stream).Root;
             this.CopyIn_XML(
@@ -332,7 +332,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void CopyIn_XML(
             Stream stream,
             out LandTexture_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(stream).Root;
             this.CopyIn_XML(
@@ -344,7 +344,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void CopyIn_XML(
             XElement root,
             out MajorRecord_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             this.CopyIn_XML(
                 root: root,
@@ -627,7 +627,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Copy In
         public override void CopyIn_Binary(
             MutagenFrame frame,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             LoquiBinaryTranslation<LandTexture, LandTexture_ErrorMask>.Instance.CopyIn(
                 frame: frame,
@@ -641,7 +641,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyIn_Binary(
             MutagenFrame frame,
             out LandTexture_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             LoquiBinaryTranslation<LandTexture, LandTexture_ErrorMask>.Instance.CopyIn(
                 frame: frame,
@@ -654,7 +654,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_Binary(
             string path,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             using (var reader = new MutagenReader(path))
             {
@@ -668,7 +668,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void CopyIn_Binary(
             string path,
             out LandTexture_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             using (var reader = new MutagenReader(path))
             {
@@ -682,7 +682,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_Binary(
             Stream stream,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             using (var reader = new MutagenReader(stream))
             {
@@ -696,7 +696,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void CopyIn_Binary(
             Stream stream,
             out LandTexture_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             using (var reader = new MutagenReader(stream))
             {
@@ -711,7 +711,7 @@ namespace Mutagen.Bethesda.Oblivion
         public override void CopyIn_Binary(
             MutagenFrame frame,
             out MajorRecord_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             this.CopyIn_Binary(
                 frame: frame,
@@ -959,7 +959,7 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds = null)
+        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             LandTexture_FieldIndex enu = (LandTexture_FieldIndex)index;
             switch (enu)
@@ -988,7 +988,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public override void Clear(NotifyingUnsetParameters? cmds = null)
+        public override void Clear(NotifyingUnsetParameters cmds = null)
         {
             CallClearPartial_Internal(cmds);
             LandTextureCommon.Clear(this, cmds);
@@ -1316,7 +1316,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILandTextureGetter rhs,
             LandTexture_CopyMask copyMask = null,
             ILandTextureGetter def = null,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             LandTextureCommon.CopyFieldsFrom(
                 item: item,
@@ -1334,7 +1334,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out LandTexture_ErrorMask errorMask,
             LandTexture_CopyMask copyMask = null,
             ILandTextureGetter def = null,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             LandTextureCommon.CopyFieldsFrom(
                 item: item,
@@ -1353,7 +1353,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             out LandTexture_ErrorMask errorMask,
             LandTexture_CopyMask copyMask,
-            NotifyingFireParameters? cmds)
+            NotifyingFireParameters cmds = null)
         {
             LandTexture_ErrorMask retErrorMask = null;
             Func<LandTexture_ErrorMask> maskGetter = () =>
@@ -1382,7 +1382,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             Func<LandTexture_ErrorMask> errorMask,
             LandTexture_CopyMask copyMask,
-            NotifyingFireParameters? cmds)
+            NotifyingFireParameters cmds = null)
         {
             MajorRecordCommon.CopyFieldsFrom(
                 item,
@@ -1496,7 +1496,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ushort index,
             bool on,
             ILandTexture obj,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             LandTexture_FieldIndex enu = (LandTexture_FieldIndex)index;
             switch (enu)
@@ -1522,7 +1522,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void UnsetNthObject(
             ushort index,
             ILandTexture obj,
-            NotifyingUnsetParameters? cmds = null)
+            NotifyingUnsetParameters cmds = null)
         {
             LandTexture_FieldIndex enu = (LandTexture_FieldIndex)index;
             switch (enu)
@@ -1587,7 +1587,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void Clear(
             ILandTexture item,
-            NotifyingUnsetParameters? cmds = null)
+            NotifyingUnsetParameters cmds = null)
         {
             item.Icon_Property.Unset(cmds.ToUnsetParams());
             item.Havok_Property.Unset(cmds.ToUnsetParams());

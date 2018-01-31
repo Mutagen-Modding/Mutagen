@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Noggog.Notifying;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,7 +23,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     this.MetadataSummary.CompiledSizeInternal = change.New.Length;
                 },
-                fireInitial: false);
+                cmds: NotifyingSubscribeParameters.NoFire);
         }
     }
 }

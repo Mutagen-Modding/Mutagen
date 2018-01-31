@@ -98,8 +98,8 @@ namespace Mutagen.Bethesda
         protected virtual bool GetNthObjectHasBeenSet(ushort index) => MajorRecordCommon.GetNthObjectHasBeenSet(index, this);
         bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
 
-        protected virtual void UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => MajorRecordCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => this.UnsetNthObject(index, cmds);
+        protected virtual void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => MajorRecordCommon.UnsetNthObject(index, this, cmds);
+        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
 
         #endregion
 
@@ -181,7 +181,7 @@ namespace Mutagen.Bethesda
         #region XML Copy In
         public virtual void CopyIn_XML(
             XElement root,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             LoquiXmlTranslation<MajorRecord, MajorRecord_ErrorMask>.Instance.CopyIn(
                 root: root,
@@ -195,7 +195,7 @@ namespace Mutagen.Bethesda
         public virtual void CopyIn_XML(
             XElement root,
             out MajorRecord_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             LoquiXmlTranslation<MajorRecord, MajorRecord_ErrorMask>.Instance.CopyIn(
                 root: root,
@@ -208,7 +208,7 @@ namespace Mutagen.Bethesda
 
         public void CopyIn_XML(
             string path,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(path).Root;
             this.CopyIn_XML(
@@ -219,7 +219,7 @@ namespace Mutagen.Bethesda
         public void CopyIn_XML(
             string path,
             out MajorRecord_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(path).Root;
             this.CopyIn_XML(
@@ -230,7 +230,7 @@ namespace Mutagen.Bethesda
 
         public void CopyIn_XML(
             Stream stream,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(stream).Root;
             this.CopyIn_XML(
@@ -241,7 +241,7 @@ namespace Mutagen.Bethesda
         public void CopyIn_XML(
             Stream stream,
             out MajorRecord_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(stream).Root;
             this.CopyIn_XML(
@@ -370,7 +370,7 @@ namespace Mutagen.Bethesda
         #region Binary Copy In
         public virtual void CopyIn_Binary(
             MutagenFrame frame,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             LoquiBinaryTranslation<MajorRecord, MajorRecord_ErrorMask>.Instance.CopyIn(
                 frame: frame,
@@ -384,7 +384,7 @@ namespace Mutagen.Bethesda
         public virtual void CopyIn_Binary(
             MutagenFrame frame,
             out MajorRecord_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             LoquiBinaryTranslation<MajorRecord, MajorRecord_ErrorMask>.Instance.CopyIn(
                 frame: frame,
@@ -397,7 +397,7 @@ namespace Mutagen.Bethesda
 
         public void CopyIn_Binary(
             string path,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             using (var reader = new MutagenReader(path))
             {
@@ -411,7 +411,7 @@ namespace Mutagen.Bethesda
         public void CopyIn_Binary(
             string path,
             out MajorRecord_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             using (var reader = new MutagenReader(path))
             {
@@ -425,7 +425,7 @@ namespace Mutagen.Bethesda
 
         public void CopyIn_Binary(
             Stream stream,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             using (var reader = new MutagenReader(stream))
             {
@@ -439,7 +439,7 @@ namespace Mutagen.Bethesda
         public void CopyIn_Binary(
             Stream stream,
             out MajorRecord_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             using (var reader = new MutagenReader(stream))
             {
@@ -609,8 +609,8 @@ namespace Mutagen.Bethesda
             return ret;
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds) => this.SetNthObject(index, obj, cmds);
-        protected virtual void SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds = null)
+        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
+        protected virtual void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
             switch (enu)
@@ -642,14 +642,14 @@ namespace Mutagen.Bethesda
             }
         }
 
-        partial void ClearPartial(NotifyingUnsetParameters? cmds);
+        partial void ClearPartial(NotifyingUnsetParameters cmds);
 
-        protected void CallClearPartial_Internal(NotifyingUnsetParameters? cmds)
+        protected void CallClearPartial_Internal(NotifyingUnsetParameters cmds)
         {
             ClearPartial(cmds);
         }
 
-        public virtual void Clear(NotifyingUnsetParameters? cmds = null)
+        public virtual void Clear(NotifyingUnsetParameters cmds = null)
         {
             CallClearPartial_Internal(cmds);
             MajorRecordCommon.Clear(this, cmds);
@@ -1075,7 +1075,7 @@ namespace Mutagen.Bethesda.Internals
             IMajorRecordGetter rhs,
             MajorRecord_CopyMask copyMask = null,
             IMajorRecordGetter def = null,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             MajorRecordCommon.CopyFieldsFrom(
                 item: item,
@@ -1093,7 +1093,7 @@ namespace Mutagen.Bethesda.Internals
             out MajorRecord_ErrorMask errorMask,
             MajorRecord_CopyMask copyMask = null,
             IMajorRecordGetter def = null,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             MajorRecordCommon.CopyFieldsFrom(
                 item: item,
@@ -1112,7 +1112,7 @@ namespace Mutagen.Bethesda.Internals
             bool doMasks,
             out MajorRecord_ErrorMask errorMask,
             MajorRecord_CopyMask copyMask,
-            NotifyingFireParameters? cmds)
+            NotifyingFireParameters cmds = null)
         {
             MajorRecord_ErrorMask retErrorMask = null;
             Func<MajorRecord_ErrorMask> maskGetter = () =>
@@ -1141,7 +1141,7 @@ namespace Mutagen.Bethesda.Internals
             bool doMasks,
             Func<MajorRecord_ErrorMask> errorMask,
             MajorRecord_CopyMask copyMask,
-            NotifyingFireParameters? cmds)
+            NotifyingFireParameters cmds = null)
         {
             if (copyMask?.MajorRecordFlags ?? true)
             {
@@ -1194,7 +1194,7 @@ namespace Mutagen.Bethesda.Internals
             ushort index,
             bool on,
             IMajorRecord obj,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
             switch (enu)
@@ -1217,7 +1217,7 @@ namespace Mutagen.Bethesda.Internals
         public static void UnsetNthObject(
             ushort index,
             IMajorRecord obj,
-            NotifyingUnsetParameters? cmds = null)
+            NotifyingUnsetParameters cmds = null)
         {
             MajorRecord_FieldIndex enu = (MajorRecord_FieldIndex)index;
             switch (enu)
@@ -1283,7 +1283,7 @@ namespace Mutagen.Bethesda.Internals
 
         public static void Clear(
             IMajorRecord item,
-            NotifyingUnsetParameters? cmds = null)
+            NotifyingUnsetParameters cmds = null)
         {
             item.MajorRecordFlags = default(MajorRecord.MajorRecordFlag);
             item.Version = default(Byte[]);

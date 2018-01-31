@@ -16,20 +16,20 @@ namespace Mutagen.Bethesda
         public EDIDSetLink()
             : base()
         {
-            this.Subscribe(HandleItemChange, fireInitial: false);
+            this.Subscribe(HandleItemChange, cmds: NotifyingSubscribeParameters.NoFire);
         }
 
         public EDIDSetLink(RecordType unlinkedEDID)
             : this()
         {
             this.EDID = unlinkedEDID;
-            this.Subscribe(HandleItemChange, fireInitial: false);
+            this.Subscribe(HandleItemChange, cmds: NotifyingSubscribeParameters.NoFire);
         }
 
         public EDIDSetLink(RawFormID unlinkedForm)
             : base(unlinkedForm)
         {
-            this.Subscribe(HandleItemChange, fireInitial: false);
+            this.Subscribe(HandleItemChange, cmds: NotifyingSubscribeParameters.NoFire);
         }
 
         private void HandleItemChange(Change<T> change)

@@ -135,8 +135,8 @@ namespace Mutagen.Bethesda.Oblivion
         protected bool GetNthObjectHasBeenSet(ushort index) => TES4Common.GetNthObjectHasBeenSet(index, this);
         bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
 
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => TES4Common.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => this.UnsetNthObject(index, cmds);
+        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => TES4Common.UnsetNthObject(index, this, cmds);
+        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
 
         #endregion
 
@@ -337,7 +337,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region XML Copy In
         public void CopyIn_XML(
             XElement root,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             LoquiXmlTranslation<TES4, TES4_ErrorMask>.Instance.CopyIn(
                 root: root,
@@ -351,7 +351,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyIn_XML(
             XElement root,
             out TES4_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             LoquiXmlTranslation<TES4, TES4_ErrorMask>.Instance.CopyIn(
                 root: root,
@@ -364,7 +364,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_XML(
             string path,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(path).Root;
             this.CopyIn_XML(
@@ -375,7 +375,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void CopyIn_XML(
             string path,
             out TES4_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(path).Root;
             this.CopyIn_XML(
@@ -386,7 +386,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_XML(
             Stream stream,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(stream).Root;
             this.CopyIn_XML(
@@ -397,7 +397,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void CopyIn_XML(
             Stream stream,
             out TES4_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(stream).Root;
             this.CopyIn_XML(
@@ -692,7 +692,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Copy In
         public void CopyIn_Binary(
             MutagenFrame frame,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             LoquiBinaryTranslation<TES4, TES4_ErrorMask>.Instance.CopyIn(
                 frame: frame,
@@ -706,7 +706,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyIn_Binary(
             MutagenFrame frame,
             out TES4_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             LoquiBinaryTranslation<TES4, TES4_ErrorMask>.Instance.CopyIn(
                 frame: frame,
@@ -719,7 +719,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_Binary(
             string path,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             using (var reader = new MutagenReader(path))
             {
@@ -733,7 +733,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void CopyIn_Binary(
             string path,
             out TES4_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             using (var reader = new MutagenReader(path))
             {
@@ -747,7 +747,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_Binary(
             Stream stream,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             using (var reader = new MutagenReader(stream))
             {
@@ -761,7 +761,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void CopyIn_Binary(
             Stream stream,
             out TES4_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             using (var reader = new MutagenReader(stream))
             {
@@ -1051,8 +1051,8 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds) => this.SetNthObject(index, obj, cmds);
-        protected void SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds = null)
+        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
+        protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             TES4_FieldIndex enu = (TES4_FieldIndex)index;
             switch (enu)
@@ -1095,14 +1095,14 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial(NotifyingUnsetParameters? cmds);
+        partial void ClearPartial(NotifyingUnsetParameters cmds);
 
-        protected void CallClearPartial_Internal(NotifyingUnsetParameters? cmds)
+        protected void CallClearPartial_Internal(NotifyingUnsetParameters cmds)
         {
             ClearPartial(cmds);
         }
 
-        public void Clear(NotifyingUnsetParameters? cmds = null)
+        public void Clear(NotifyingUnsetParameters cmds = null)
         {
             CallClearPartial_Internal(cmds);
             TES4Common.Clear(this, cmds);
@@ -1503,7 +1503,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ITES4Getter rhs,
             TES4_CopyMask copyMask = null,
             ITES4Getter def = null,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             TES4Common.CopyFieldsFrom(
                 item: item,
@@ -1521,7 +1521,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out TES4_ErrorMask errorMask,
             TES4_CopyMask copyMask = null,
             ITES4Getter def = null,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             TES4Common.CopyFieldsFrom(
                 item: item,
@@ -1540,7 +1540,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             out TES4_ErrorMask errorMask,
             TES4_CopyMask copyMask,
-            NotifyingFireParameters? cmds)
+            NotifyingFireParameters cmds = null)
         {
             TES4_ErrorMask retErrorMask = null;
             Func<TES4_ErrorMask> maskGetter = () =>
@@ -1569,7 +1569,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             Func<TES4_ErrorMask> errorMask,
             TES4_CopyMask copyMask,
-            NotifyingFireParameters? cmds)
+            NotifyingFireParameters cmds = null)
         {
             if (copyMask?.Fluff ?? true)
             {
@@ -1701,10 +1701,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 try
                 {
                     item.MasterReferences.SetToWithDefault(
-                        rhs.MasterReferences,
-                        def?.MasterReferences,
-                        cmds,
-                        (r, d) =>
+                        rhs: rhs.MasterReferences,
+                        def: def?.MasterReferences,
+                        cmds: cmds,
+                        converter: (r, d) =>
                         {
                             switch (copyMask?.MasterReferences.Overall ?? CopyOption.Reference)
                             {
@@ -1736,7 +1736,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ushort index,
             bool on,
             ITES4 obj,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             TES4_FieldIndex enu = (TES4_FieldIndex)index;
             switch (enu)
@@ -1770,7 +1770,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void UnsetNthObject(
             ushort index,
             ITES4 obj,
-            NotifyingUnsetParameters? cmds = null)
+            NotifyingUnsetParameters cmds = null)
         {
             TES4_FieldIndex enu = (TES4_FieldIndex)index;
             switch (enu)
@@ -1855,7 +1855,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void Clear(
             ITES4 item,
-            NotifyingUnsetParameters? cmds = null)
+            NotifyingUnsetParameters cmds = null)
         {
             item.Fluff = default(Byte[]);
             item.Header_Property.Unset(cmds.ToUnsetParams());

@@ -104,8 +104,8 @@ namespace Mutagen.Bethesda.Tests
         protected bool GetNthObjectHasBeenSet(ushort index) => BinaryProcessorInstructionsCommon.GetNthObjectHasBeenSet(index, this);
         bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
 
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => BinaryProcessorInstructionsCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => this.UnsetNthObject(index, cmds);
+        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => BinaryProcessorInstructionsCommon.UnsetNthObject(index, this, cmds);
+        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
 
         #endregion
 
@@ -260,7 +260,7 @@ namespace Mutagen.Bethesda.Tests
         #region XML Copy In
         public void CopyIn_XML(
             XElement root,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             LoquiXmlTranslation<BinaryProcessorInstructions, BinaryProcessorInstructions_ErrorMask>.Instance.CopyIn(
                 root: root,
@@ -274,7 +274,7 @@ namespace Mutagen.Bethesda.Tests
         public virtual void CopyIn_XML(
             XElement root,
             out BinaryProcessorInstructions_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             LoquiXmlTranslation<BinaryProcessorInstructions, BinaryProcessorInstructions_ErrorMask>.Instance.CopyIn(
                 root: root,
@@ -287,7 +287,7 @@ namespace Mutagen.Bethesda.Tests
 
         public void CopyIn_XML(
             string path,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(path).Root;
             this.CopyIn_XML(
@@ -298,7 +298,7 @@ namespace Mutagen.Bethesda.Tests
         public void CopyIn_XML(
             string path,
             out BinaryProcessorInstructions_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(path).Root;
             this.CopyIn_XML(
@@ -309,7 +309,7 @@ namespace Mutagen.Bethesda.Tests
 
         public void CopyIn_XML(
             Stream stream,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(stream).Root;
             this.CopyIn_XML(
@@ -320,7 +320,7 @@ namespace Mutagen.Bethesda.Tests
         public void CopyIn_XML(
             Stream stream,
             out BinaryProcessorInstructions_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(stream).Root;
             this.CopyIn_XML(
@@ -624,8 +624,8 @@ namespace Mutagen.Bethesda.Tests
             return ret;
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds) => this.SetNthObject(index, obj, cmds);
-        protected void SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds = null)
+        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
+        protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             BinaryProcessorInstructions_FieldIndex enu = (BinaryProcessorInstructions_FieldIndex)index;
             switch (enu)
@@ -652,14 +652,14 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
-        partial void ClearPartial(NotifyingUnsetParameters? cmds);
+        partial void ClearPartial(NotifyingUnsetParameters cmds);
 
-        protected void CallClearPartial_Internal(NotifyingUnsetParameters? cmds)
+        protected void CallClearPartial_Internal(NotifyingUnsetParameters cmds)
         {
             ClearPartial(cmds);
         }
 
-        public void Clear(NotifyingUnsetParameters? cmds = null)
+        public void Clear(NotifyingUnsetParameters cmds = null)
         {
             CallClearPartial_Internal(cmds);
             BinaryProcessorInstructionsCommon.Clear(this, cmds);
@@ -978,7 +978,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             IBinaryProcessorInstructionsGetter rhs,
             BinaryProcessorInstructions_CopyMask copyMask = null,
             IBinaryProcessorInstructionsGetter def = null,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             BinaryProcessorInstructionsCommon.CopyFieldsFrom(
                 item: item,
@@ -996,7 +996,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             out BinaryProcessorInstructions_ErrorMask errorMask,
             BinaryProcessorInstructions_CopyMask copyMask = null,
             IBinaryProcessorInstructionsGetter def = null,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             BinaryProcessorInstructionsCommon.CopyFieldsFrom(
                 item: item,
@@ -1015,7 +1015,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             bool doMasks,
             out BinaryProcessorInstructions_ErrorMask errorMask,
             BinaryProcessorInstructions_CopyMask copyMask,
-            NotifyingFireParameters? cmds)
+            NotifyingFireParameters cmds = null)
         {
             BinaryProcessorInstructions_ErrorMask retErrorMask = null;
             Func<BinaryProcessorInstructions_ErrorMask> maskGetter = () =>
@@ -1044,7 +1044,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             bool doMasks,
             Func<BinaryProcessorInstructions_ErrorMask> errorMask,
             BinaryProcessorInstructions_CopyMask copyMask,
-            NotifyingFireParameters? cmds)
+            NotifyingFireParameters cmds = null)
         {
             if (copyMask?.CompressionInstructions.Overall != CopyOption.Skip)
             {
@@ -1178,7 +1178,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ushort index,
             bool on,
             IBinaryProcessorInstructions obj,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             BinaryProcessorInstructions_FieldIndex enu = (BinaryProcessorInstructions_FieldIndex)index;
             switch (enu)
@@ -1198,7 +1198,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         public static void UnsetNthObject(
             ushort index,
             IBinaryProcessorInstructions obj,
-            NotifyingUnsetParameters? cmds = null)
+            NotifyingUnsetParameters cmds = null)
         {
             BinaryProcessorInstructions_FieldIndex enu = (BinaryProcessorInstructions_FieldIndex)index;
             switch (enu)
@@ -1265,7 +1265,7 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public static void Clear(
             IBinaryProcessorInstructions item,
-            NotifyingUnsetParameters? cmds = null)
+            NotifyingUnsetParameters cmds = null)
         {
             item.CompressionInstructions.Unset(cmds.ToUnsetParams());
             item.Instruction = default(Instruction);

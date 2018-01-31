@@ -20,8 +20,6 @@ namespace Mutagen.Bethesda.Tests
         private BinaryProcessorInstructions GetOblivionInstructions()
         {
             var instructions = new BinaryProcessorInstructions();
-            instructions.Instruction.Substitutions.Add(new Substitution(0x5A98, 0));
-            instructions.Instruction.Substitutions.Add(new Substitution(0x5E46, 0));
             instructions.SkipSourceSections.Add(new RangeInt64(0x93A648, 0xB44656));
             instructions.SkipOutputSections.Add(new RangeInt64(0x93A648, 0xB8BA09));
             return instructions;

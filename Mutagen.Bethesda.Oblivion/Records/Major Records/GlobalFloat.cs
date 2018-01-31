@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Noggog.Notifying;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,7 +15,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.TypeChar = TRIGGER_CHAR;
             this.RawFloat_Property.Subscribe((change) => this.Data = change.New);
-            this.Data_Property.Subscribe((change) => this.RawFloat = change.New, fireInitial: false);
+            this.Data_Property.Subscribe((change) => this.RawFloat = change.New, cmds: NotifyingSubscribeParameters.NoFire);
         }
     }
 }

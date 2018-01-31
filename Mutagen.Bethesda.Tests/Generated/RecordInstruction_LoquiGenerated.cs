@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.Tests
 
         protected override bool GetNthObjectHasBeenSet(ushort index) => RecordInstructionCommon.GetNthObjectHasBeenSet(index, this);
 
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => RecordInstructionCommon.UnsetNthObject(index, this, cmds);
+        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => RecordInstructionCommon.UnsetNthObject(index, this, cmds);
 
         #endregion
 
@@ -194,7 +194,7 @@ namespace Mutagen.Bethesda.Tests
         #region XML Copy In
         public override void CopyIn_XML(
             XElement root,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             LoquiXmlTranslation<RecordInstruction, RecordInstruction_ErrorMask>.Instance.CopyIn(
                 root: root,
@@ -208,7 +208,7 @@ namespace Mutagen.Bethesda.Tests
         public virtual void CopyIn_XML(
             XElement root,
             out RecordInstruction_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             LoquiXmlTranslation<RecordInstruction, RecordInstruction_ErrorMask>.Instance.CopyIn(
                 root: root,
@@ -221,7 +221,7 @@ namespace Mutagen.Bethesda.Tests
 
         public void CopyIn_XML(
             string path,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(path).Root;
             this.CopyIn_XML(
@@ -232,7 +232,7 @@ namespace Mutagen.Bethesda.Tests
         public void CopyIn_XML(
             string path,
             out RecordInstruction_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(path).Root;
             this.CopyIn_XML(
@@ -243,7 +243,7 @@ namespace Mutagen.Bethesda.Tests
 
         public void CopyIn_XML(
             Stream stream,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(stream).Root;
             this.CopyIn_XML(
@@ -254,7 +254,7 @@ namespace Mutagen.Bethesda.Tests
         public void CopyIn_XML(
             Stream stream,
             out RecordInstruction_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(stream).Root;
             this.CopyIn_XML(
@@ -266,7 +266,7 @@ namespace Mutagen.Bethesda.Tests
         public override void CopyIn_XML(
             XElement root,
             out Instruction_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             this.CopyIn_XML(
                 root: root,
@@ -501,7 +501,7 @@ namespace Mutagen.Bethesda.Tests
             return ret;
         }
 
-        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds = null)
+        protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             RecordInstruction_FieldIndex enu = (RecordInstruction_FieldIndex)index;
             switch (enu)
@@ -515,7 +515,7 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
-        public override void Clear(NotifyingUnsetParameters? cmds = null)
+        public override void Clear(NotifyingUnsetParameters cmds = null)
         {
             CallClearPartial_Internal(cmds);
             RecordInstructionCommon.Clear(this, cmds);
@@ -757,7 +757,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             IRecordInstructionGetter rhs,
             RecordInstruction_CopyMask copyMask = null,
             IRecordInstructionGetter def = null,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             RecordInstructionCommon.CopyFieldsFrom(
                 item: item,
@@ -775,7 +775,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             out RecordInstruction_ErrorMask errorMask,
             RecordInstruction_CopyMask copyMask = null,
             IRecordInstructionGetter def = null,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             RecordInstructionCommon.CopyFieldsFrom(
                 item: item,
@@ -794,7 +794,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             bool doMasks,
             out RecordInstruction_ErrorMask errorMask,
             RecordInstruction_CopyMask copyMask,
-            NotifyingFireParameters? cmds)
+            NotifyingFireParameters cmds = null)
         {
             RecordInstruction_ErrorMask retErrorMask = null;
             Func<RecordInstruction_ErrorMask> maskGetter = () =>
@@ -823,7 +823,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             bool doMasks,
             Func<RecordInstruction_ErrorMask> errorMask,
             RecordInstruction_CopyMask copyMask,
-            NotifyingFireParameters? cmds)
+            NotifyingFireParameters cmds = null)
         {
             InstructionCommon.CopyFieldsFrom(
                 item,
@@ -845,7 +845,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ushort index,
             bool on,
             IRecordInstruction obj,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             RecordInstruction_FieldIndex enu = (RecordInstruction_FieldIndex)index;
             switch (enu)
@@ -862,7 +862,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         public static void UnsetNthObject(
             ushort index,
             IRecordInstruction obj,
-            NotifyingUnsetParameters? cmds = null)
+            NotifyingUnsetParameters cmds = null)
         {
             RecordInstruction_FieldIndex enu = (RecordInstruction_FieldIndex)index;
             switch (enu)
@@ -906,7 +906,7 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public static void Clear(
             IRecordInstruction item,
-            NotifyingUnsetParameters? cmds = null)
+            NotifyingUnsetParameters cmds = null)
         {
             item.Record = default(RawFormID);
         }

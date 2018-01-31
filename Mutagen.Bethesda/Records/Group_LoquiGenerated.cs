@@ -100,8 +100,8 @@ namespace Mutagen.Bethesda
         protected bool GetNthObjectHasBeenSet(ushort index) => GroupCommon.GetNthObjectHasBeenSet<T>(index, this);
         bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
 
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => GroupCommon.UnsetNthObject<T>(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => this.UnsetNthObject(index, cmds);
+        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => GroupCommon.UnsetNthObject<T>(index, this, cmds);
+        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
 
         #endregion
 
@@ -266,7 +266,7 @@ namespace Mutagen.Bethesda
         #region XML Copy In
         public void CopyIn_XML(
             XElement root,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             LoquiXmlTranslation<Group<T>, Group_ErrorMask<MajorRecord_ErrorMask>>.Instance.CopyIn(
                 root: root,
@@ -280,7 +280,7 @@ namespace Mutagen.Bethesda
         public virtual void CopyIn_XML<T_ErrMask>(
             XElement root,
             out Group_ErrorMask<T_ErrMask> errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             LoquiXmlTranslation<Group<T>, Group_ErrorMask<T_ErrMask>>.Instance.CopyIn(
@@ -294,7 +294,7 @@ namespace Mutagen.Bethesda
 
         public void CopyIn_XML(
             string path,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(path).Root;
             this.CopyIn_XML(
@@ -305,7 +305,7 @@ namespace Mutagen.Bethesda
         public void CopyIn_XML<T_ErrMask>(
             string path,
             out Group_ErrorMask<T_ErrMask> errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             var root = XDocument.Load(path).Root;
@@ -317,7 +317,7 @@ namespace Mutagen.Bethesda
 
         public void CopyIn_XML(
             Stream stream,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(stream).Root;
             this.CopyIn_XML(
@@ -328,7 +328,7 @@ namespace Mutagen.Bethesda
         public void CopyIn_XML<T_ErrMask>(
             Stream stream,
             out Group_ErrorMask<T_ErrMask> errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             var root = XDocument.Load(stream).Root;
@@ -652,7 +652,7 @@ namespace Mutagen.Bethesda
         #region Binary Copy In
         public void CopyIn_Binary(
             MutagenFrame frame,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             LoquiBinaryTranslation<Group<T>, Group_ErrorMask<MajorRecord_ErrorMask>>.Instance.CopyIn(
                 frame: frame,
@@ -666,7 +666,7 @@ namespace Mutagen.Bethesda
         public virtual void CopyIn_Binary<T_ErrMask>(
             MutagenFrame frame,
             out Group_ErrorMask<T_ErrMask> errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             LoquiBinaryTranslation<Group<T>, Group_ErrorMask<T_ErrMask>>.Instance.CopyIn(
@@ -680,7 +680,7 @@ namespace Mutagen.Bethesda
 
         public void CopyIn_Binary(
             string path,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             using (var reader = new MutagenReader(path))
             {
@@ -694,7 +694,7 @@ namespace Mutagen.Bethesda
         public void CopyIn_Binary<T_ErrMask>(
             string path,
             out Group_ErrorMask<T_ErrMask> errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             using (var reader = new MutagenReader(path))
@@ -709,7 +709,7 @@ namespace Mutagen.Bethesda
 
         public void CopyIn_Binary(
             Stream stream,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             using (var reader = new MutagenReader(stream))
             {
@@ -723,7 +723,7 @@ namespace Mutagen.Bethesda
         public void CopyIn_Binary<T_ErrMask>(
             Stream stream,
             out Group_ErrorMask<T_ErrMask> errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
         {
             using (var reader = new MutagenReader(stream))
@@ -1041,8 +1041,8 @@ namespace Mutagen.Bethesda
             return ret;
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds) => this.SetNthObject(index, obj, cmds);
-        protected void SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds = null)
+        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
+        protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
@@ -1067,14 +1067,14 @@ namespace Mutagen.Bethesda
             }
         }
 
-        partial void ClearPartial(NotifyingUnsetParameters? cmds);
+        partial void ClearPartial(NotifyingUnsetParameters cmds);
 
-        protected void CallClearPartial_Internal(NotifyingUnsetParameters? cmds)
+        protected void CallClearPartial_Internal(NotifyingUnsetParameters cmds)
         {
             ClearPartial(cmds);
         }
 
-        public void Clear(NotifyingUnsetParameters? cmds = null)
+        public void Clear(NotifyingUnsetParameters cmds = null)
         {
             CallClearPartial_Internal(cmds);
             GroupCommon.Clear(this, cmds);
@@ -1398,7 +1398,7 @@ namespace Mutagen.Bethesda.Internals
             IGroupGetter<T> rhs,
             Group_CopyMask<T_CopyMask> copyMask = null,
             IGroupGetter<T> def = null,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
             where T : MajorRecord, ILoquiObjectGetter
             where T_CopyMask : MajorRecord_CopyMask, new()
         {
@@ -1418,7 +1418,7 @@ namespace Mutagen.Bethesda.Internals
             out Group_ErrorMask<T_ErrMask> errorMask,
             Group_CopyMask<T_CopyMask> copyMask = null,
             IGroupGetter<T> def = null,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
             where T : MajorRecord, ILoquiObjectGetter
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
             where T_CopyMask : MajorRecord_CopyMask, new()
@@ -1440,7 +1440,7 @@ namespace Mutagen.Bethesda.Internals
             bool doMasks,
             out Group_ErrorMask<T_ErrMask> errorMask,
             Group_CopyMask<T_CopyMask> copyMask,
-            NotifyingFireParameters? cmds)
+            NotifyingFireParameters cmds = null)
             where T : MajorRecord, ILoquiObjectGetter
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
             where T_CopyMask : MajorRecord_CopyMask, new()
@@ -1472,7 +1472,7 @@ namespace Mutagen.Bethesda.Internals
             bool doMasks,
             Func<Group_ErrorMask<T_ErrMask>> errorMask,
             Group_CopyMask<T_CopyMask> copyMask,
-            NotifyingFireParameters? cmds)
+            NotifyingFireParameters cmds = null)
             where T : MajorRecord, ILoquiObjectGetter
             where T_ErrMask : MajorRecord_ErrorMask, IErrorMask<T_ErrMask>, new()
             where T_CopyMask : MajorRecord_CopyMask, new()
@@ -1510,10 +1510,10 @@ namespace Mutagen.Bethesda.Internals
                 try
                 {
                     item.Items.SetToWithDefault(
-                        rhs.Items,
-                        def?.Items,
-                        cmds,
-                        (r, d) =>
+                        rhs: rhs.Items,
+                        def: def?.Items,
+                        cmds: cmds,
+                        converter: (r, d) =>
                         {
                             switch (copyMask?.Items.Overall ?? CopyOption.Reference)
                             {
@@ -1543,7 +1543,7 @@ namespace Mutagen.Bethesda.Internals
             ushort index,
             bool on,
             IGroup<T> obj,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
             where T : MajorRecord, ILoquiObjectGetter
         {
             Group_FieldIndex enu = (Group_FieldIndex)index;
@@ -1566,7 +1566,7 @@ namespace Mutagen.Bethesda.Internals
         public static void UnsetNthObject<T>(
             ushort index,
             IGroup<T> obj,
-            NotifyingUnsetParameters? cmds = null)
+            NotifyingUnsetParameters cmds = null)
             where T : MajorRecord, ILoquiObjectGetter
         {
             Group_FieldIndex enu = (Group_FieldIndex)index;
@@ -1630,7 +1630,7 @@ namespace Mutagen.Bethesda.Internals
 
         public static void Clear<T>(
             IGroup<T> item,
-            NotifyingUnsetParameters? cmds = null)
+            NotifyingUnsetParameters cmds = null)
             where T : MajorRecord, ILoquiObjectGetter
         {
             item.GroupType = default(GroupTypeEnum);

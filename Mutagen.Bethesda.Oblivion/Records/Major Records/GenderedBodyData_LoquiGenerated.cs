@@ -62,8 +62,8 @@ namespace Mutagen.Bethesda.Oblivion
         protected bool GetNthObjectHasBeenSet(ushort index) => GenderedBodyDataCommon.GetNthObjectHasBeenSet(index, this);
         bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
 
-        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => GenderedBodyDataCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => this.UnsetNthObject(index, cmds);
+        protected void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => GenderedBodyDataCommon.UnsetNthObject(index, this, cmds);
+        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
 
         #endregion
 
@@ -226,7 +226,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region XML Copy In
         public void CopyIn_XML(
             XElement root,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             LoquiXmlTranslation<GenderedBodyData, GenderedBodyData_ErrorMask>.Instance.CopyIn(
                 root: root,
@@ -240,7 +240,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyIn_XML(
             XElement root,
             out GenderedBodyData_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             LoquiXmlTranslation<GenderedBodyData, GenderedBodyData_ErrorMask>.Instance.CopyIn(
                 root: root,
@@ -253,7 +253,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_XML(
             string path,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(path).Root;
             this.CopyIn_XML(
@@ -264,7 +264,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void CopyIn_XML(
             string path,
             out GenderedBodyData_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(path).Root;
             this.CopyIn_XML(
@@ -275,7 +275,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_XML(
             Stream stream,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(stream).Root;
             this.CopyIn_XML(
@@ -286,7 +286,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void CopyIn_XML(
             Stream stream,
             out GenderedBodyData_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(stream).Root;
             this.CopyIn_XML(
@@ -543,7 +543,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Copy In
         public void CopyIn_Binary(
             MutagenFrame frame,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             LoquiBinaryTranslation<GenderedBodyData, GenderedBodyData_ErrorMask>.Instance.CopyIn(
                 frame: frame,
@@ -557,7 +557,7 @@ namespace Mutagen.Bethesda.Oblivion
         public virtual void CopyIn_Binary(
             MutagenFrame frame,
             out GenderedBodyData_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             LoquiBinaryTranslation<GenderedBodyData, GenderedBodyData_ErrorMask>.Instance.CopyIn(
                 frame: frame,
@@ -570,7 +570,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_Binary(
             string path,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             using (var reader = new MutagenReader(path))
             {
@@ -584,7 +584,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void CopyIn_Binary(
             string path,
             out GenderedBodyData_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             using (var reader = new MutagenReader(path))
             {
@@ -598,7 +598,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_Binary(
             Stream stream,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             using (var reader = new MutagenReader(stream))
             {
@@ -612,7 +612,7 @@ namespace Mutagen.Bethesda.Oblivion
         public void CopyIn_Binary(
             Stream stream,
             out GenderedBodyData_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             using (var reader = new MutagenReader(stream))
             {
@@ -856,8 +856,8 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds) => this.SetNthObject(index, obj, cmds);
-        protected void SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds = null)
+        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
+        protected void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             GenderedBodyData_FieldIndex enu = (GenderedBodyData_FieldIndex)index;
             switch (enu)
@@ -877,14 +877,14 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        partial void ClearPartial(NotifyingUnsetParameters? cmds);
+        partial void ClearPartial(NotifyingUnsetParameters cmds);
 
-        protected void CallClearPartial_Internal(NotifyingUnsetParameters? cmds)
+        protected void CallClearPartial_Internal(NotifyingUnsetParameters cmds)
         {
             ClearPartial(cmds);
         }
 
-        public void Clear(NotifyingUnsetParameters? cmds = null)
+        public void Clear(NotifyingUnsetParameters cmds = null)
         {
             CallClearPartial_Internal(cmds);
             GenderedBodyDataCommon.Clear(this, cmds);
@@ -1169,7 +1169,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IGenderedBodyDataGetter rhs,
             GenderedBodyData_CopyMask copyMask = null,
             IGenderedBodyDataGetter def = null,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             GenderedBodyDataCommon.CopyFieldsFrom(
                 item: item,
@@ -1187,7 +1187,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             out GenderedBodyData_ErrorMask errorMask,
             GenderedBodyData_CopyMask copyMask = null,
             IGenderedBodyDataGetter def = null,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             GenderedBodyDataCommon.CopyFieldsFrom(
                 item: item,
@@ -1206,7 +1206,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             out GenderedBodyData_ErrorMask errorMask,
             GenderedBodyData_CopyMask copyMask,
-            NotifyingFireParameters? cmds)
+            NotifyingFireParameters cmds = null)
         {
             GenderedBodyData_ErrorMask retErrorMask = null;
             Func<GenderedBodyData_ErrorMask> maskGetter = () =>
@@ -1235,7 +1235,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool doMasks,
             Func<GenderedBodyData_ErrorMask> errorMask,
             GenderedBodyData_CopyMask copyMask,
-            NotifyingFireParameters? cmds)
+            NotifyingFireParameters cmds = null)
         {
             if (copyMask?.Male.Overall != CopyOption.Skip)
             {
@@ -1347,7 +1347,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ushort index,
             bool on,
             IGenderedBodyData obj,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             GenderedBodyData_FieldIndex enu = (GenderedBodyData_FieldIndex)index;
             switch (enu)
@@ -1366,7 +1366,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void UnsetNthObject(
             ushort index,
             IGenderedBodyData obj,
-            NotifyingUnsetParameters? cmds = null)
+            NotifyingUnsetParameters cmds = null)
         {
             GenderedBodyData_FieldIndex enu = (GenderedBodyData_FieldIndex)index;
             switch (enu)
@@ -1416,7 +1416,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void Clear(
             IGenderedBodyData item,
-            NotifyingUnsetParameters? cmds = null)
+            NotifyingUnsetParameters cmds = null)
         {
             item.Male_Property.Unset(cmds.ToUnsetParams());
             item.Female_Property.Unset(cmds.ToUnsetParams());

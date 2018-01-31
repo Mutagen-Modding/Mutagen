@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         partial void CustomCtor()
         {
-            this.EditorID_Property.Subscribe(CorrectEDID, fireInitial: false);
+            this.EditorID_Property.Subscribe(CorrectEDID, cmds: NotifyingSubscribeParameters.NoFire);
         }
 
         private void CorrectEDID(Change<string> change)

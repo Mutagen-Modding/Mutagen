@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Binary
             bool skipProtected,
             bool doMasks,
             out M mask,
-            NotifyingFireParameters? cmds)
+            NotifyingFireParameters cmds)
             where C : T, ILoquiObject
         {
             var maskObj = default(M);

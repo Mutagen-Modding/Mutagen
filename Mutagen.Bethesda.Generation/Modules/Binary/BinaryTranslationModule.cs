@@ -399,7 +399,7 @@ namespace Mutagen.Bethesda.Generation
                                         {
                                             args.Add($"owner: DataTypeStateSubber");
                                             args.Add("callback: unsubAction");
-                                            args.Add("fireInitial: false");
+                                            args.Add("cmds: NotifyingSubscribeParameters.NoFire");
                                         }
                                     }
                                 }

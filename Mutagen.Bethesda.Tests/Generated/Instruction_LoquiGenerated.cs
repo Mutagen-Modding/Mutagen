@@ -73,8 +73,8 @@ namespace Mutagen.Bethesda.Tests
         protected virtual bool GetNthObjectHasBeenSet(ushort index) => InstructionCommon.GetNthObjectHasBeenSet(index, this);
         bool ILoquiObjectGetter.GetNthObjectHasBeenSet(ushort index) => this.GetNthObjectHasBeenSet(index);
 
-        protected virtual void UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => InstructionCommon.UnsetNthObject(index, this, cmds);
-        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters? cmds) => this.UnsetNthObject(index, cmds);
+        protected virtual void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => InstructionCommon.UnsetNthObject(index, this, cmds);
+        void ILoquiObjectSetter.UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => this.UnsetNthObject(index, cmds);
 
         #endregion
 
@@ -223,7 +223,7 @@ namespace Mutagen.Bethesda.Tests
         #region XML Copy In
         public virtual void CopyIn_XML(
             XElement root,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             LoquiXmlTranslation<Instruction, Instruction_ErrorMask>.Instance.CopyIn(
                 root: root,
@@ -237,7 +237,7 @@ namespace Mutagen.Bethesda.Tests
         public virtual void CopyIn_XML(
             XElement root,
             out Instruction_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             LoquiXmlTranslation<Instruction, Instruction_ErrorMask>.Instance.CopyIn(
                 root: root,
@@ -250,7 +250,7 @@ namespace Mutagen.Bethesda.Tests
 
         public void CopyIn_XML(
             string path,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(path).Root;
             this.CopyIn_XML(
@@ -261,7 +261,7 @@ namespace Mutagen.Bethesda.Tests
         public void CopyIn_XML(
             string path,
             out Instruction_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(path).Root;
             this.CopyIn_XML(
@@ -272,7 +272,7 @@ namespace Mutagen.Bethesda.Tests
 
         public void CopyIn_XML(
             Stream stream,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(stream).Root;
             this.CopyIn_XML(
@@ -283,7 +283,7 @@ namespace Mutagen.Bethesda.Tests
         public void CopyIn_XML(
             Stream stream,
             out Instruction_ErrorMask errorMask,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(stream).Root;
             this.CopyIn_XML(
@@ -542,8 +542,8 @@ namespace Mutagen.Bethesda.Tests
             return ret;
         }
 
-        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds) => this.SetNthObject(index, obj, cmds);
-        protected virtual void SetNthObject(ushort index, object obj, NotifyingFireParameters? cmds = null)
+        void ILoquiObjectSetter.SetNthObject(ushort index, object obj, NotifyingFireParameters cmds) => this.SetNthObject(index, obj, cmds);
+        protected virtual void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
             Instruction_FieldIndex enu = (Instruction_FieldIndex)index;
             switch (enu)
@@ -559,14 +559,14 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
-        partial void ClearPartial(NotifyingUnsetParameters? cmds);
+        partial void ClearPartial(NotifyingUnsetParameters cmds);
 
-        protected void CallClearPartial_Internal(NotifyingUnsetParameters? cmds)
+        protected void CallClearPartial_Internal(NotifyingUnsetParameters cmds)
         {
             ClearPartial(cmds);
         }
 
-        public virtual void Clear(NotifyingUnsetParameters? cmds = null)
+        public virtual void Clear(NotifyingUnsetParameters cmds = null)
         {
             CallClearPartial_Internal(cmds);
             InstructionCommon.Clear(this, cmds);
@@ -823,7 +823,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             IInstructionGetter rhs,
             Instruction_CopyMask copyMask = null,
             IInstructionGetter def = null,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             InstructionCommon.CopyFieldsFrom(
                 item: item,
@@ -841,7 +841,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             out Instruction_ErrorMask errorMask,
             Instruction_CopyMask copyMask = null,
             IInstructionGetter def = null,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             InstructionCommon.CopyFieldsFrom(
                 item: item,
@@ -860,7 +860,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             bool doMasks,
             out Instruction_ErrorMask errorMask,
             Instruction_CopyMask copyMask,
-            NotifyingFireParameters? cmds)
+            NotifyingFireParameters cmds = null)
         {
             Instruction_ErrorMask retErrorMask = null;
             Func<Instruction_ErrorMask> maskGetter = () =>
@@ -889,17 +889,17 @@ namespace Mutagen.Bethesda.Tests.Internals
             bool doMasks,
             Func<Instruction_ErrorMask> errorMask,
             Instruction_CopyMask copyMask,
-            NotifyingFireParameters? cmds)
+            NotifyingFireParameters cmds = null)
         {
             if (copyMask?.Moves.Overall != CopyOption.Skip)
             {
                 try
                 {
                     item.Moves.SetToWithDefault(
-                        rhs.Moves,
-                        def?.Moves,
-                        cmds,
-                        (r, d) =>
+                        rhs: rhs.Moves,
+                        def: def?.Moves,
+                        cmds: cmds,
+                        converter: (r, d) =>
                         {
                             switch (copyMask?.Moves.Overall ?? CopyOption.Reference)
                             {
@@ -928,10 +928,10 @@ namespace Mutagen.Bethesda.Tests.Internals
                 try
                 {
                     item.Substitutions.SetToWithDefault(
-                        rhs.Substitutions,
-                        def?.Substitutions,
-                        cmds,
-                        (r, d) =>
+                        rhs: rhs.Substitutions,
+                        def: def?.Substitutions,
+                        cmds: cmds,
+                        converter: (r, d) =>
                         {
                             switch (copyMask?.Substitutions.Overall ?? CopyOption.Reference)
                             {
@@ -963,7 +963,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             ushort index,
             bool on,
             IInstruction obj,
-            NotifyingFireParameters? cmds = null)
+            NotifyingFireParameters cmds = null)
         {
             Instruction_FieldIndex enu = (Instruction_FieldIndex)index;
             switch (enu)
@@ -980,7 +980,7 @@ namespace Mutagen.Bethesda.Tests.Internals
         public static void UnsetNthObject(
             ushort index,
             IInstruction obj,
-            NotifyingUnsetParameters? cmds = null)
+            NotifyingUnsetParameters cmds = null)
         {
             Instruction_FieldIndex enu = (Instruction_FieldIndex)index;
             switch (enu)
@@ -1029,7 +1029,7 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public static void Clear(
             IInstruction item,
-            NotifyingUnsetParameters? cmds = null)
+            NotifyingUnsetParameters cmds = null)
         {
             item.Moves.Unset(cmds.ToUnsetParams());
             item.Substitutions.Unset(cmds.ToUnsetParams());
