@@ -37,11 +37,11 @@ namespace Mutagen.Bethesda.Tests
         #endregion
 
         #region CompressionInstructions
-        private readonly INotifyingKeyedCollection<RawFormID, RecordInstruction> _CompressionInstructions = new NotifyingKeyedCollection<RawFormID, RecordInstruction>((item) => item.Record);
-        public INotifyingKeyedCollection<RawFormID, RecordInstruction> CompressionInstructions => _CompressionInstructions;
+        private readonly INotifyingKeyedCollection<FormID, RecordInstruction> _CompressionInstructions = new NotifyingKeyedCollection<FormID, RecordInstruction>((item) => item.Record);
+        public INotifyingKeyedCollection<FormID, RecordInstruction> CompressionInstructions => _CompressionInstructions;
         #region Interface Members
-        INotifyingKeyedCollection<RawFormID, RecordInstruction> IBinaryProcessorInstructions.CompressionInstructions => _CompressionInstructions;
-        INotifyingKeyedCollectionGetter<RawFormID, RecordInstruction> IBinaryProcessorInstructionsGetter.CompressionInstructions => _CompressionInstructions;
+        INotifyingKeyedCollection<FormID, RecordInstruction> IBinaryProcessorInstructions.CompressionInstructions => _CompressionInstructions;
+        INotifyingKeyedCollectionGetter<FormID, RecordInstruction> IBinaryProcessorInstructionsGetter.CompressionInstructions => _CompressionInstructions;
         #endregion
 
         #endregion
@@ -460,7 +460,7 @@ namespace Mutagen.Bethesda.Tests
             switch (name)
             {
                 case "CompressionInstructions":
-                    var CompressionInstructionsdict = KeyedDictXmlTranslation<RawFormID, RecordInstruction, MaskItem<Exception, RecordInstruction_ErrorMask>>.Instance.Parse(
+                    var CompressionInstructionsdict = KeyedDictXmlTranslation<FormID, RecordInstruction, MaskItem<Exception, RecordInstruction_ErrorMask>>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)BinaryProcessorInstructions_FieldIndex.CompressionInstructions,
                         errorMask: errorMask,
@@ -632,7 +632,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 case BinaryProcessorInstructions_FieldIndex.CompressionInstructions:
                     this.CompressionInstructions.SetTo(
-                        ((IEnumerable<RecordInstruction>)(NotifyingDictionary<RawFormID, RecordInstruction>)obj),
+                        ((IEnumerable<RecordInstruction>)(NotifyingDictionary<FormID, RecordInstruction>)obj),
                         cmds);
                     break;
                 case BinaryProcessorInstructions_FieldIndex.Instruction:
@@ -686,7 +686,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 case BinaryProcessorInstructions_FieldIndex.CompressionInstructions:
                     obj.CompressionInstructions.SetTo(
-                        ((IEnumerable<RecordInstruction>)(NotifyingDictionary<RawFormID, RecordInstruction>)pair.Value),
+                        ((IEnumerable<RecordInstruction>)(NotifyingDictionary<FormID, RecordInstruction>)pair.Value),
                         null);
                     break;
                 case BinaryProcessorInstructions_FieldIndex.Instruction:
@@ -716,7 +716,7 @@ namespace Mutagen.Bethesda.Tests
     #region Interface
     public interface IBinaryProcessorInstructions : IBinaryProcessorInstructionsGetter, ILoquiClass<IBinaryProcessorInstructions, IBinaryProcessorInstructionsGetter>, ILoquiClass<BinaryProcessorInstructions, IBinaryProcessorInstructionsGetter>
     {
-        new INotifyingKeyedCollection<RawFormID, RecordInstruction> CompressionInstructions { get; }
+        new INotifyingKeyedCollection<FormID, RecordInstruction> CompressionInstructions { get; }
         new Instruction Instruction { get; set; }
 
         new INotifyingList<RangeInt64> SkipSourceSections { get; }
@@ -727,7 +727,7 @@ namespace Mutagen.Bethesda.Tests
     public interface IBinaryProcessorInstructionsGetter : ILoquiObject
     {
         #region CompressionInstructions
-        INotifyingKeyedCollectionGetter<RawFormID, RecordInstruction> CompressionInstructions { get; }
+        INotifyingKeyedCollectionGetter<FormID, RecordInstruction> CompressionInstructions { get; }
         #endregion
         #region Instruction
         Instruction Instruction { get; }
@@ -926,7 +926,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             switch (enu)
             {
                 case BinaryProcessorInstructions_FieldIndex.CompressionInstructions:
-                    return typeof(NotifyingDictionary<RawFormID, RecordInstruction>);
+                    return typeof(NotifyingDictionary<FormID, RecordInstruction>);
                 case BinaryProcessorInstructions_FieldIndex.Instruction:
                     return typeof(Instruction);
                 case BinaryProcessorInstructions_FieldIndex.SkipSourceSections:
@@ -1471,7 +1471,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Tests.BinaryProcessorInstructions");
                     }
-                    KeyedDictXmlTranslation<RawFormID, RecordInstruction, MaskItem<Exception, RecordInstruction_ErrorMask>>.Instance.Write(
+                    KeyedDictXmlTranslation<FormID, RecordInstruction, MaskItem<Exception, RecordInstruction_ErrorMask>>.Instance.Write(
                         writer: writer,
                         name: nameof(item.CompressionInstructions),
                         items: item.CompressionInstructions.Values,

@@ -1424,13 +1424,13 @@ namespace Mutagen.Bethesda.Oblivion
                         ));
                     break;
                 case "DeathItem":
-                    item.DeathItem_Property.SetIfSucceeded(RawFormIDXmlTranslation.Instance.ParseNonNull(
+                    item.DeathItem_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.DeathItem,
                         errorMask: errorMask));
                     break;
                 case "Race":
-                    item.Race_Property.SetIfSucceeded(RawFormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Race_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Race,
                         errorMask: errorMask));
@@ -1442,7 +1442,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask,
                         transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
                         {
-                            return RawFormIDXmlTranslation.Instance.Parse(
+                            return FormIDXmlTranslation.Instance.Parse(
                                 r,
                                 nullable: false,
                                 doMasks: listDoMasks,
@@ -1451,7 +1451,7 @@ namespace Mutagen.Bethesda.Oblivion
                         ));
                     break;
                 case "Script":
-                    item.Script_Property.SetIfSucceeded(RawFormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Script_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Script,
                         errorMask: errorMask));
@@ -1527,7 +1527,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask,
                         transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
                         {
-                            return RawFormIDXmlTranslation.Instance.Parse(
+                            return FormIDXmlTranslation.Instance.Parse(
                                 r,
                                 nullable: false,
                                 doMasks: listDoMasks,
@@ -1550,7 +1550,7 @@ namespace Mutagen.Bethesda.Oblivion
                         ));
                     break;
                 case "Class":
-                    item.Class_Property.SetIfSucceeded(RawFormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Class_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Class,
                         errorMask: errorMask));
@@ -1736,7 +1736,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 case "Hair":
-                    item.Hair_Property.SetIfSucceeded(RawFormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Hair_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.Hair,
                         errorMask: errorMask));
@@ -1754,7 +1754,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask,
                         transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
                         {
-                            return RawFormIDXmlTranslation.Instance.Parse(
+                            return FormIDXmlTranslation.Instance.Parse(
                                 r,
                                 nullable: false,
                                 doMasks: listDoMasks,
@@ -1769,7 +1769,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 case "CombatStyle":
-                    item.CombatStyle_Property.SetIfSucceeded(RawFormIDXmlTranslation.Instance.ParseNonNull(
+                    item.CombatStyle_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)NPC_FieldIndex.CombatStyle,
                         errorMask: errorMask));
@@ -2187,14 +2187,14 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.Factions);
                 case "INAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.DeathItem_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
+                    item.DeathItem_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)NPC_FieldIndex.DeathItem,
                         errorMask: errorMask));
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.DeathItem);
                 case "RNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Race_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
+                    item.Race_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)NPC_FieldIndex.Race,
                         errorMask: errorMask));
@@ -2209,7 +2209,7 @@ namespace Mutagen.Bethesda.Oblivion
                         transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
                         {
                             r.Position += Constants.SUBRECORD_LENGTH;
-                            return Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
+                            return Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                                 r,
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask).Bubble((o) => new FormIDSetLink<Spell>(o));
@@ -2219,7 +2219,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.Spells);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
+                    item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)NPC_FieldIndex.Script,
                         errorMask: errorMask));
@@ -2290,7 +2290,7 @@ namespace Mutagen.Bethesda.Oblivion
                         transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
                         {
                             r.Position += Constants.SUBRECORD_LENGTH;
-                            return Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
+                            return Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                                 r,
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask).Bubble((o) => new FormIDSetLink<AIPackage>(o));
@@ -2317,7 +2317,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.Animations);
                 case "CNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Class_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
+                    item.Class_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)NPC_FieldIndex.Class,
                         errorMask: errorMask));
@@ -2450,7 +2450,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.Luck);
                 case "HNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Hair_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
+                    item.Hair_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)NPC_FieldIndex.Hair,
                         errorMask: errorMask));
@@ -2471,7 +2471,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask,
                         transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
                         {
-                            return Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
+                            return Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                                 r,
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask).Bubble((o) => new FormIDLink<Eye>(o));
@@ -2488,7 +2488,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.HairColor);
                 case "ZNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.CombatStyle_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
+                    item.CombatStyle_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)NPC_FieldIndex.CombatStyle,
                         errorMask: errorMask));
@@ -7258,7 +7258,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.DeathItem_Property.HasBeenSet)
                     {
-                        RawFormIDXmlTranslation.Instance.Write(
+                        FormIDXmlTranslation.Instance.Write(
                             writer: writer,
                             name: nameof(item.DeathItem),
                             item: item.DeathItem?.FormID,
@@ -7267,7 +7267,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.Race_Property.HasBeenSet)
                     {
-                        RawFormIDXmlTranslation.Instance.Write(
+                        FormIDXmlTranslation.Instance.Write(
                             writer: writer,
                             name: nameof(item.Race),
                             item: item.Race?.FormID,
@@ -7284,7 +7284,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             transl: (FormIDSetLink<Spell> subItem, bool listDoMasks, out Exception listSubMask) =>
                             {
-                                RawFormIDXmlTranslation.Instance.Write(
+                                FormIDXmlTranslation.Instance.Write(
                                     writer: writer,
                                     name: "Item",
                                     item: subItem?.FormID,
@@ -7295,7 +7295,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.Script_Property.HasBeenSet)
                     {
-                        RawFormIDXmlTranslation.Instance.Write(
+                        FormIDXmlTranslation.Instance.Write(
                             writer: writer,
                             name: nameof(item.Script),
                             item: item.Script?.FormID,
@@ -7379,7 +7379,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             transl: (FormIDSetLink<AIPackage> subItem, bool listDoMasks, out Exception listSubMask) =>
                             {
-                                RawFormIDXmlTranslation.Instance.Write(
+                                FormIDXmlTranslation.Instance.Write(
                                     writer: writer,
                                     name: "Item",
                                     item: subItem?.FormID,
@@ -7409,7 +7409,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.Class_Property.HasBeenSet)
                     {
-                        RawFormIDXmlTranslation.Instance.Write(
+                        FormIDXmlTranslation.Instance.Write(
                             writer: writer,
                             name: nameof(item.Class),
                             item: item.Class?.FormID,
@@ -7598,7 +7598,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                     if (item.Hair_Property.HasBeenSet)
                     {
-                        RawFormIDXmlTranslation.Instance.Write(
+                        FormIDXmlTranslation.Instance.Write(
                             writer: writer,
                             name: nameof(item.Hair),
                             item: item.Hair?.FormID,
@@ -7624,7 +7624,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             transl: (FormIDLink<Eye> subItem, bool listDoMasks, out Exception listSubMask) =>
                             {
-                                RawFormIDXmlTranslation.Instance.Write(
+                                FormIDXmlTranslation.Instance.Write(
                                     writer: writer,
                                     name: "Item",
                                     item: subItem?.FormID,
@@ -7644,7 +7644,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.CombatStyle_Property.HasBeenSet)
                     {
-                        RawFormIDXmlTranslation.Instance.Write(
+                        FormIDXmlTranslation.Instance.Write(
                             writer: writer,
                             name: nameof(item.CombatStyle),
                             item: item.CombatStyle?.FormID,
@@ -7818,14 +7818,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: out listSubMask);
                 }
                 );
-            Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.DeathItem_Property,
                 fieldIndex: (int)NPC_FieldIndex.DeathItem,
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(NPC_Registration.INAM_HEADER),
                 nullable: false);
-            Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Race_Property,
                 fieldIndex: (int)NPC_FieldIndex.Race,
@@ -7839,7 +7839,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 transl: (FormIDSetLink<Spell> subItem, bool listDoMasks, out Exception listSubMask) =>
                 {
-                    Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
+                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: subItem,
                         doMasks: listDoMasks,
@@ -7848,7 +7848,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         nullable: false);
                 }
                 );
-            Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Script_Property,
                 fieldIndex: (int)NPC_FieldIndex.Script,
@@ -7921,7 +7921,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 transl: (FormIDSetLink<AIPackage> subItem, bool listDoMasks, out Exception listSubMask) =>
                 {
-                    Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
+                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: subItem,
                         doMasks: listDoMasks,
@@ -7945,7 +7945,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: out listSubMask);
                 }
                 );
-            Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Class_Property,
                 fieldIndex: (int)NPC_FieldIndex.Class,
@@ -8105,7 +8105,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)NPC_FieldIndex.Luck,
                     errorMask: errorMask);
             }
-            Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Hair_Property,
                 fieldIndex: (int)NPC_FieldIndex.Hair,
@@ -8127,7 +8127,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 transl: (FormIDLink<Eye> subItem, bool listDoMasks, out Exception listSubMask) =>
                 {
-                    Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
+                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: subItem,
                         doMasks: listDoMasks,
@@ -8141,7 +8141,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(NPC_Registration.HCLR_HEADER),
                 nullable: false);
-            Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.CombatStyle_Property,
                 fieldIndex: (int)NPC_FieldIndex.CombatStyle,

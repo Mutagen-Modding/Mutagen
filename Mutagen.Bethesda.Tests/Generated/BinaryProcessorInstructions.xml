@@ -41,7 +41,7 @@
   </Object>
   <Object name="RecordInstruction" baseClass="Instruction" GUID="bf254321-e86f-49a5-9699-105f6b5d2457" ID="5">
     <Fields>
-      <RawFormID name="Record" />
+      <FormID name="Record" />
     </Fields>
   </Object>
 </Loqui>

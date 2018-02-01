@@ -496,7 +496,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask,
                         transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
                         {
-                            return RawFormIDXmlTranslation.Instance.Parse(
+                            return FormIDXmlTranslation.Instance.Parse(
                                 r,
                                 nullable: false,
                                 doMasks: listDoMasks,
@@ -859,7 +859,7 @@ namespace Mutagen.Bethesda.Oblivion
                         transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
                         {
                             r.Position += Constants.SUBRECORD_LENGTH;
-                            return Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
+                            return Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                                 r,
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask).Bubble((o) => new FormIDSetLink<Spell>(o));
@@ -1724,7 +1724,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             errorMask: errorMask,
                             transl: (FormIDSetLink<Spell> subItem, bool listDoMasks, out Exception listSubMask) =>
                             {
-                                RawFormIDXmlTranslation.Instance.Write(
+                                FormIDXmlTranslation.Instance.Write(
                                     writer: writer,
                                     name: "Item",
                                     item: subItem?.FormID,
@@ -1827,7 +1827,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 transl: (FormIDSetLink<Spell> subItem, bool listDoMasks, out Exception listSubMask) =>
                 {
-                    Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
+                    Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: subItem,
                         doMasks: listDoMasks,

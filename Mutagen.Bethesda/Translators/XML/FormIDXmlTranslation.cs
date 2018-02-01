@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
 {
-    public class RawFormIDXmlTranslation : PrimitiveXmlTranslation<RawFormID>
+    public class FormIDXmlTranslation : PrimitiveXmlTranslation<FormID>
     {
-        public readonly static RawFormIDXmlTranslation Instance = new RawFormIDXmlTranslation();
+        public readonly static FormIDXmlTranslation Instance = new FormIDXmlTranslation();
 
-        protected override RawFormID ParseNonNullString(string str)
+        protected override FormID ParseNonNullString(string str)
         {
-            if (RawFormID.TryFactory(str, out RawFormID parsed))
+            if (FormID.TryFactory(str, out FormID parsed))
             {
                 return parsed;
             }

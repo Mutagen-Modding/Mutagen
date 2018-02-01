@@ -409,7 +409,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Reference":
-                    item.Reference_Property.SetIfSucceeded(RawFormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Reference_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)ScriptObjectReference_FieldIndex.Reference,
                         errorMask: errorMask));
@@ -753,7 +753,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "SCRO":
                     if (lastParsed.HasValue && lastParsed.Value >= ScriptObjectReference_FieldIndex.Reference) return TryGet<ScriptObjectReference_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Reference_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
+                    item.Reference_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)ScriptObjectReference_FieldIndex.Reference,
                         errorMask: errorMask));
@@ -1383,7 +1383,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.ScriptObjectReference");
                     }
-                    RawFormIDXmlTranslation.Instance.Write(
+                    FormIDXmlTranslation.Instance.Write(
                         writer: writer,
                         name: nameof(item.Reference),
                         item: item.Reference?.FormID,
@@ -1447,7 +1447,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter recordTypeConverter,
             Func<ScriptObjectReference_ErrorMask> errorMask)
         {
-            Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Reference_Property,
                 fieldIndex: (int)ScriptObjectReference_FieldIndex.Reference,

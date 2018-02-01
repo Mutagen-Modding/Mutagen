@@ -8,7 +8,7 @@ using Loqui.Generation;
 
 namespace Mutagen.Bethesda.Generation
 {
-    public class FormIDLinkBinaryTranslationGeneration : PrimitiveBinaryTranslationGeneration<RawFormID>
+    public class FormIDLinkBinaryTranslationGeneration : PrimitiveBinaryTranslationGeneration<FormID>
     {
         public override string Typename(TypeGeneration typeGen)
         {

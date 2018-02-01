@@ -64,11 +64,11 @@ namespace Mutagen.Bethesda
             return lhs.FormID.GetHashCode();
         }
 
-        public static RawFormID GetFormID<T>(IFormIDLink<T> link)
+        public static FormID GetFormID<T>(IFormIDLink<T> link)
             where T : MajorRecord
         {
-            RawFormID? ret = link.Item?.FormID ?? link.UnlinkedForm;
-            return ret ?? RawFormID.NULL;
+            FormID? ret = link.Item?.FormID ?? link.UnlinkedForm;
+            return ret ?? FormID.NULL;
         }
     }
 }

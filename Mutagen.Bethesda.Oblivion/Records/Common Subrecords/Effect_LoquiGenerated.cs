@@ -481,7 +481,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "MagicEffect":
-                    item.MagicEffect_Property.SetIfSucceeded(RawFormIDXmlTranslation.Instance.ParseNonNull(
+                    item.MagicEffect_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Effect_FieldIndex.MagicEffect,
                         errorMask: errorMask));
@@ -1906,7 +1906,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.Effect");
                     }
-                    RawFormIDXmlTranslation.Instance.Write(
+                    FormIDXmlTranslation.Instance.Write(
                         writer: writer,
                         name: nameof(item.MagicEffect),
                         item: item.MagicEffect?.FormID,

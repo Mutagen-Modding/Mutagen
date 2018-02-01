@@ -7,40 +7,40 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda
 {
-    public struct RawFormID : IEquatable<RawFormID>
+    public struct FormID : IEquatable<FormID>
     {
-        public static readonly RawFormID NULL = new RawFormID();
+        public static readonly FormID NULL = new FormID();
         public readonly ModID ModID;
         public readonly uint ID;
 
-        public RawFormID(ModID modID, uint id)
+        public FormID(ModID modID, uint id)
         {
             this.ModID = modID;
             this.ID = id;
         }
 
-        public static bool TryFactory(string hexString, out RawFormID id)
+        public static bool TryFactory(string hexString, out FormID id)
         {
-            if (TryFactory(hexString, out RawFormID? idNull))
+            if (TryFactory(hexString, out FormID? idNull))
             {
-                id = idNull ?? default(RawFormID);
+                id = idNull ?? default(FormID);
                 return true;
             }
 
-            id = default(RawFormID);
+            id = default(FormID);
             return false;
         }
 
-        public static RawFormID Factory(string hexString)
+        public static FormID Factory(string hexString)
         {
-            if (!TryFactory(hexString, out RawFormID result))
+            if (!TryFactory(hexString, out FormID result))
             {
                 throw new ArgumentException($"Invalid formID hex: {hexString}");
             }
             return result;
         }
 
-        public static bool TryFactory(string hexString, out RawFormID? id)
+        public static bool TryFactory(string hexString, out FormID? id)
         {
             if (hexString.StartsWith("0x"))
             {
@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda
 
             try
             {
-                id = new RawFormID(
+                id = new FormID(
                     new ModID(Convert.ToByte(hexString.Substring(0, 2), 16)),
                     Convert.ToUInt32(hexString.Substring(2, 6), 16));
                 return true;
@@ -67,12 +67,12 @@ namespace Mutagen.Bethesda
             }
         }
 
-        public static RawFormID Factory(byte[] bytes)
+        public static FormID Factory(byte[] bytes)
         {
             byte[] arr = new byte[4];
             Array.Copy(bytes, 0, arr, 0, 3);
             var i = BitConverter.ToUInt32(arr, 0);
-            return new RawFormID(
+            return new FormID(
                 new ModID(bytes[3]),
                 i);
         }
@@ -103,11 +103,11 @@ namespace Mutagen.Bethesda
 
         public override bool Equals(object obj)
         {
-            if (!(obj is RawFormID formID)) return false;
+            if (!(obj is FormID formID)) return false;
             return Equals(formID);
         }
 
-        public bool Equals(RawFormID other)
+        public bool Equals(FormID other)
         {
             return this.ModID.Equals(other.ModID)
                 && this.ID == other.ID;
@@ -119,13 +119,13 @@ namespace Mutagen.Bethesda
                 .CombineHashCode(this.ID.GetHashCode());
         }
 
-        public static bool operator ==(RawFormID a, RawFormID b)
+        public static bool operator ==(FormID a, FormID b)
         {
             return a.ModID == b.ModID
                 && a.ID == b.ID;
         }
 
-        public static bool operator !=(RawFormID a, RawFormID b)
+        public static bool operator !=(FormID a, FormID b)
         {
             return !(a == b);
         }

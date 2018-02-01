@@ -159,9 +159,9 @@ namespace Mutagen.Bethesda.Tests
         private async Task OblivionESM_Typical(
             OblivionMod mod,
             BinaryProcessorInstructions instructions,
-            OblivionMod_ErrorMask inputErrMask, Task<Dictionary<RawFormID, FileSection>> fileLocationsTask)
+            OblivionMod_ErrorMask inputErrMask, Task<Dictionary<FormID, FileSection>> fileLocationsTask)
         {
-            Dictionary<RawFormID, FileSection> fileLocs = await fileLocationsTask;
+            Dictionary<FormID, FileSection> fileLocs = await fileLocationsTask;
 
             foreach (var rec in mod.MajorRecords)
             {
@@ -209,9 +209,9 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
-        private Dictionary<RawFormID, FileSection> OblivionESM_FileLocs()
+        private Dictionary<FormID, FileSection> OblivionESM_FileLocs()
         {
-            Dictionary<RawFormID, FileSection> fileLocs;
+            Dictionary<FormID, FileSection> fileLocs;
             using (var stream = new FileStream(Properties.Settings.Default.OblivionESM, FileMode.Open, FileAccess.Read))
             {
                 fileLocs = MajorRecordLocator.GetFileLocations(
@@ -221,9 +221,9 @@ namespace Mutagen.Bethesda.Tests
             return fileLocs;
         }
 
-        private async Task OblivionESM_Compression(OblivionMod mod, BinaryProcessorInstructions instructions, Task<Dictionary<RawFormID, FileSection>> fileLocationsTasks)
+        private async Task OblivionESM_Compression(OblivionMod mod, BinaryProcessorInstructions instructions, Task<Dictionary<FormID, FileSection>> fileLocationsTasks)
         {
-            Dictionary<RawFormID, FileSection> fileLocs = await fileLocationsTasks;
+            Dictionary<FormID, FileSection> fileLocs = await fileLocationsTasks;
 
             using (var tmp = new TempFolder(new DirectoryInfo(Path.Combine(Path.GetTempPath(), "Mutagen_Oblivion_Binary_CompressionTests"))))
             {

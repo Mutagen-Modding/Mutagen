@@ -405,13 +405,13 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Male":
-                    item.Male_Property.SetIfSucceeded(RawFormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Male_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)RaceHair_FieldIndex.Male,
                         errorMask: errorMask));
                     break;
                 case "Female":
-                    item.Female_Property.SetIfSucceeded(RawFormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Female_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)RaceHair_FieldIndex.Female,
                         errorMask: errorMask));
@@ -711,11 +711,11 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<RaceHair_ErrorMask> errorMask)
         {
-            item.Male_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
+            item.Male_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)RaceHair_FieldIndex.Male,
                 errorMask: errorMask));
-            item.Female_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
+            item.Female_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)RaceHair_FieldIndex.Female,
                 errorMask: errorMask));
@@ -1378,13 +1378,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.RaceHair");
                     }
-                    RawFormIDXmlTranslation.Instance.Write(
+                    FormIDXmlTranslation.Instance.Write(
                         writer: writer,
                         name: nameof(item.Male),
                         item: item.Male?.FormID,
                         fieldIndex: (int)RaceHair_FieldIndex.Male,
                         errorMask: errorMask);
-                    RawFormIDXmlTranslation.Instance.Write(
+                    FormIDXmlTranslation.Instance.Write(
                         writer: writer,
                         name: nameof(item.Female),
                         item: item.Female?.FormID,
@@ -1452,12 +1452,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             Func<RaceHair_ErrorMask> errorMask)
         {
-            Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Male_Property,
                 fieldIndex: (int)RaceHair_FieldIndex.Male,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Female_Property,
                 fieldIndex: (int)RaceHair_FieldIndex.Female,

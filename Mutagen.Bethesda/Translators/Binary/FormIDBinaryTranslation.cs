@@ -5,17 +5,17 @@ using System.IO;
 
 namespace Mutagen.Bethesda.Binary
 {
-    public class RawFormIDBinaryTranslation : PrimitiveBinaryTranslation<RawFormID>
+    public class FormIDBinaryTranslation : PrimitiveBinaryTranslation<FormID>
     {
-        public readonly static RawFormIDBinaryTranslation Instance = new RawFormIDBinaryTranslation();
+        public readonly static FormIDBinaryTranslation Instance = new FormIDBinaryTranslation();
         public override ContentLength? ExpectedLength => new ContentLength(4);
 
-        protected override RawFormID ParseValue(MutagenFrame reader)
+        protected override FormID ParseValue(MutagenFrame reader)
         {
-            return RawFormID.Factory(reader.Reader.ReadBytes(ExpectedLength.Value));
+            return FormID.Factory(reader.Reader.ReadBytes(ExpectedLength.Value));
         }
 
-        protected override void WriteValue(MutagenWriter writer, RawFormID item)
+        protected override void WriteValue(MutagenWriter writer, FormID item)
         {
             writer.Write(item.ToBytes());
         }

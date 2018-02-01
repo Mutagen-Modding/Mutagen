@@ -13,15 +13,15 @@ namespace Mutagen.Bethesda
        where T : MajorRecord
     {
         public bool Linked => this.Item != null;
-        public RawFormID? UnlinkedForm { get; private set; }
-        public RawFormID FormID => LinkExt.GetFormID(this);
+        public FormID? UnlinkedForm { get; private set; }
+        public FormID FormID => LinkExt.GetFormID(this);
 
         public FormIDLink()
         {
             this.Subscribe(UpdateUnlinkedForm);
         }
 
-        public FormIDLink(RawFormID unlinkedForm)
+        public FormIDLink(FormID unlinkedForm)
         {
             this.UnlinkedForm = unlinkedForm;
             this.Subscribe(UpdateUnlinkedForm);
@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda
             this.UnlinkedForm = change.New?.FormID ?? UnlinkedForm;
         }
 
-        public void SetIfSucceeded(TryGet<RawFormID> formID)
+        public void SetIfSucceeded(TryGet<FormID> formID)
         {
             if (formID.Failed) return;
             this.UnlinkedForm = formID.Value;

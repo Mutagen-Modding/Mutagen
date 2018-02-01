@@ -590,7 +590,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 case "Enchantment":
-                    item.Enchantment_Property.SetIfSucceeded(RawFormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Enchantment_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Ammo_FieldIndex.Enchantment,
                         errorMask: errorMask));
@@ -985,7 +985,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<Ammo_FieldIndex?>.Succeed(Ammo_FieldIndex.Icon);
                 case "ENAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Enchantment_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
+                    item.Enchantment_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)Ammo_FieldIndex.Enchantment,
                         errorMask: errorMask));
@@ -2311,7 +2311,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.Enchantment_Property.HasBeenSet)
                     {
-                        RawFormIDXmlTranslation.Instance.Write(
+                        FormIDXmlTranslation.Instance.Write(
                             writer: writer,
                             name: nameof(item.Enchantment),
                             item: item.Enchantment?.FormID,
@@ -2449,7 +2449,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(Ammo_Registration.ICON_HEADER),
                 nullable: false);
-            Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Enchantment_Property,
                 fieldIndex: (int)Ammo_FieldIndex.Enchantment,

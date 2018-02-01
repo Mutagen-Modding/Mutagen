@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda
 
         public override bool Equals(object obj)
         {
-            if (!(obj is RawFormID formID)) return false;
+            if (!(obj is FormID formID)) return false;
             return Equals(formID);
         }
 

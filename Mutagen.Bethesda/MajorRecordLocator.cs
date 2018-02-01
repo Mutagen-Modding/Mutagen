@@ -13,14 +13,14 @@ namespace Mutagen.Bethesda
     {
         private readonly static RecordType GRUP = new RecordType("GRUP");
 
-        public static Dictionary<RawFormID, FileSection> GetFileLocations(
+        public static Dictionary<FormID, FileSection> GetFileLocations(
             Stream stream,
             params RecordType[] interestingTypes)
         {
             return GetFileLocations(stream, (IEnumerable<RecordType>)interestingTypes);
         }
 
-        public static Dictionary<RawFormID, FileSection> GetFileLocations(
+        public static Dictionary<FormID, FileSection> GetFileLocations(
             Stream stream,
             IEnumerable<RecordType> interestingTypes = null,
             IEnumerable<RecordType> uninterestingTypes = null)
@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda
                 uninterestingSet = null;
             }
 
-            Dictionary<RawFormID, FileSection> ret = new Dictionary<RawFormID, FileSection>();
+            Dictionary<FormID, FileSection> ret = new Dictionary<FormID, FileSection>();
             using (var reader = new MutagenReader(stream))
             {
                 // Skip header
@@ -92,7 +92,7 @@ namespace Mutagen.Bethesda
                                 throw new ArgumentException($"Target Record {targetRec} did not match its containing GRUP: {grupRec}");
                             }
                             reader.Position += new ContentLength(4); // Skip flags
-                            var formID = RawFormID.Factory(reader.ReadBytes(4));
+                            var formID = FormID.Factory(reader.ReadBytes(4));
                             ret[formID] = new FileSection(recordLocation, recordLocation + recLength - 1);
                             reader.Position += new ContentLength(4);
                             reader.Position += recLength;

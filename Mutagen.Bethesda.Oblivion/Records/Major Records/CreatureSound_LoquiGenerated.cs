@@ -452,7 +452,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "Sound":
-                    item.Sound_Property.SetIfSucceeded(RawFormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Sound_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)CreatureSound_FieldIndex.Sound,
                         errorMask: errorMask));
@@ -793,7 +793,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "CSDI":
                     if (lastParsed.HasValue && lastParsed.Value >= CreatureSound_FieldIndex.Sound) return TryGet<CreatureSound_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Sound_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
+                    item.Sound_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)CreatureSound_FieldIndex.Sound,
                         errorMask: errorMask));
@@ -1565,7 +1565,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.Sound_Property.HasBeenSet)
                     {
-                        RawFormIDXmlTranslation.Instance.Write(
+                        FormIDXmlTranslation.Instance.Write(
                             writer: writer,
                             name: nameof(item.Sound),
                             item: item.Sound?.FormID,
@@ -1647,7 +1647,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(CreatureSound_Registration.CSDT_HEADER),
                 nullable: false);
-            Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Sound_Property,
                 fieldIndex: (int)CreatureSound_FieldIndex.Sound,

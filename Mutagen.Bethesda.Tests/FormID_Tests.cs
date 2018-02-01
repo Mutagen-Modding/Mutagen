@@ -7,13 +7,13 @@ using Xunit;
 
 namespace Mutagen.Bethesda.Tests
 {
-    public class RawFormID_Tests
+    public class FormID_Tests
     {
         [Fact]
         public void Import_Zero()
         {
             byte[] bytes = new byte[4];
-            RawFormID id = RawFormID.Factory(bytes);
+            FormID id = FormID.Factory(bytes);
             Assert.Equal(0, id.ModID.ID);
             Assert.Equal(uint.MinValue, id.ID);
         }
@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda.Tests
                 0,
                 5,
             };
-            RawFormID id = RawFormID.Factory(bytes);
+            FormID id = FormID.Factory(bytes);
             Assert.Equal(5, id.ModID.ID);
             bool i = 52184 == id.ID;
             Assert.True(i);
@@ -38,9 +38,9 @@ namespace Mutagen.Bethesda.Tests
         public void Import_String()
         {
             Assert.True(
-                RawFormID.TryFactory("0100C51A", out RawFormID id));
+                FormID.TryFactory("0100C51A", out FormID id));
             Assert.Equal(
-                new RawFormID(modID: new ModID(1), id: 0x00C51A),
+                new FormID(modID: new ModID(1), id: 0x00C51A),
                 id);
         }
 
@@ -48,9 +48,9 @@ namespace Mutagen.Bethesda.Tests
         public void Import_String0x()
         {
             Assert.True(
-                RawFormID.TryFactory("0x0100C51A", out RawFormID id));
+                FormID.TryFactory("0x0100C51A", out FormID id));
             Assert.Equal(
-                new RawFormID(modID: new ModID(1), id: 0x00C51A),
+                new FormID(modID: new ModID(1), id: 0x00C51A),
                 id);
         }
     }

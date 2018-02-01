@@ -452,31 +452,31 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "EnchantEffect":
-                    item.EnchantEffect_Property.SetIfSucceeded(RawFormIDXmlTranslation.Instance.ParseNonNull(
+                    item.EnchantEffect_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)MagicEffectSubData_FieldIndex.EnchantEffect,
                         errorMask: errorMask));
                     break;
                 case "CastingSound":
-                    item.CastingSound_Property.SetIfSucceeded(RawFormIDXmlTranslation.Instance.ParseNonNull(
+                    item.CastingSound_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)MagicEffectSubData_FieldIndex.CastingSound,
                         errorMask: errorMask));
                     break;
                 case "BoltSound":
-                    item.BoltSound_Property.SetIfSucceeded(RawFormIDXmlTranslation.Instance.ParseNonNull(
+                    item.BoltSound_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)MagicEffectSubData_FieldIndex.BoltSound,
                         errorMask: errorMask));
                     break;
                 case "HitSound":
-                    item.HitSound_Property.SetIfSucceeded(RawFormIDXmlTranslation.Instance.ParseNonNull(
+                    item.HitSound_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)MagicEffectSubData_FieldIndex.HitSound,
                         errorMask: errorMask));
                     break;
                 case "AreaSound":
-                    item.AreaSound_Property.SetIfSucceeded(RawFormIDXmlTranslation.Instance.ParseNonNull(
+                    item.AreaSound_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)MagicEffectSubData_FieldIndex.AreaSound,
                         errorMask: errorMask));
@@ -785,23 +785,23 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<MagicEffectSubData_ErrorMask> errorMask)
         {
-            item.EnchantEffect_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
+            item.EnchantEffect_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)MagicEffectSubData_FieldIndex.EnchantEffect,
                 errorMask: errorMask));
-            item.CastingSound_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
+            item.CastingSound_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)MagicEffectSubData_FieldIndex.CastingSound,
                 errorMask: errorMask));
-            item.BoltSound_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
+            item.BoltSound_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)MagicEffectSubData_FieldIndex.BoltSound,
                 errorMask: errorMask));
-            item.HitSound_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
+            item.HitSound_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)MagicEffectSubData_FieldIndex.HitSound,
                 errorMask: errorMask));
-            item.AreaSound_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
+            item.AreaSound_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)MagicEffectSubData_FieldIndex.AreaSound,
                 errorMask: errorMask));
@@ -1754,31 +1754,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.MagicEffectSubData");
                     }
-                    RawFormIDXmlTranslation.Instance.Write(
+                    FormIDXmlTranslation.Instance.Write(
                         writer: writer,
                         name: nameof(item.EnchantEffect),
                         item: item.EnchantEffect?.FormID,
                         fieldIndex: (int)MagicEffectSubData_FieldIndex.EnchantEffect,
                         errorMask: errorMask);
-                    RawFormIDXmlTranslation.Instance.Write(
+                    FormIDXmlTranslation.Instance.Write(
                         writer: writer,
                         name: nameof(item.CastingSound),
                         item: item.CastingSound?.FormID,
                         fieldIndex: (int)MagicEffectSubData_FieldIndex.CastingSound,
                         errorMask: errorMask);
-                    RawFormIDXmlTranslation.Instance.Write(
+                    FormIDXmlTranslation.Instance.Write(
                         writer: writer,
                         name: nameof(item.BoltSound),
                         item: item.BoltSound?.FormID,
                         fieldIndex: (int)MagicEffectSubData_FieldIndex.BoltSound,
                         errorMask: errorMask);
-                    RawFormIDXmlTranslation.Instance.Write(
+                    FormIDXmlTranslation.Instance.Write(
                         writer: writer,
                         name: nameof(item.HitSound),
                         item: item.HitSound?.FormID,
                         fieldIndex: (int)MagicEffectSubData_FieldIndex.HitSound,
                         errorMask: errorMask);
-                    RawFormIDXmlTranslation.Instance.Write(
+                    FormIDXmlTranslation.Instance.Write(
                         writer: writer,
                         name: nameof(item.AreaSound),
                         item: item.AreaSound?.FormID,
@@ -1852,27 +1852,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             Func<MagicEffectSubData_ErrorMask> errorMask)
         {
-            Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.EnchantEffect_Property,
                 fieldIndex: (int)MagicEffectSubData_FieldIndex.EnchantEffect,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.CastingSound_Property,
                 fieldIndex: (int)MagicEffectSubData_FieldIndex.CastingSound,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.BoltSound_Property,
                 fieldIndex: (int)MagicEffectSubData_FieldIndex.BoltSound,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.HitSound_Property,
                 fieldIndex: (int)MagicEffectSubData_FieldIndex.HitSound,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.AreaSound_Property,
                 fieldIndex: (int)MagicEffectSubData_FieldIndex.AreaSound,

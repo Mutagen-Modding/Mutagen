@@ -27,12 +27,12 @@ namespace Mutagen.Bethesda.Generation
             };
             gen.XmlTranslation.ShouldGenerateXSD = false;
             gen.XmlTranslation.AddTypeAssociation<FormIDLinkType>(new FormIDLinkXmlTranslationGeneration());
-            gen.XmlTranslation.AddTypeAssociation<RawFormIDType>(new PrimitiveXmlTranslationGeneration<RawFormID>());
+            gen.XmlTranslation.AddTypeAssociation<FormIDType>(new PrimitiveXmlTranslationGeneration<FormID>());
             gen.MaskModule.AddTypeAssociation<FormIDLinkType>(MaskModule.TypicalField);
             gen.GenerationModules.Add(new MutagenModule());
             gen.Add(new BinaryTranslationModule(gen));
             gen.AddTypeAssociation<FormIDLinkType>("FormIDLink");
-            gen.AddTypeAssociation<RawFormIDType>("RawFormID");
+            gen.AddTypeAssociation<FormIDType>("FormID");
             gen.AddTypeAssociation<BufferType>("Buffer");
             gen.AddTypeAssociation<DataType>("Data");
             gen.AddTypeAssociation<ZeroType>("Zero");
@@ -77,8 +77,8 @@ namespace Mutagen.Bethesda.Generation
                 HasBeenSetDefault = false
             };
             gen.XmlTranslation.ShouldGenerateXSD = false;
-            gen.XmlTranslation.AddTypeAssociation<RawFormIDType>(new PrimitiveXmlTranslationGeneration<RawFormID>());
-            gen.AddTypeAssociation<RawFormIDType>("RawFormID");
+            gen.XmlTranslation.AddTypeAssociation<FormIDType>(new PrimitiveXmlTranslationGeneration<FormID>());
+            gen.AddTypeAssociation<FormIDType>("FormID");
             var testerProto = gen.AddProtocol(
                 new ProtocolGeneration(
                     gen,

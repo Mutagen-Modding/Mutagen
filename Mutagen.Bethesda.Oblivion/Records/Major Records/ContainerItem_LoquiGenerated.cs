@@ -411,7 +411,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Item":
-                    item.Item_Property.SetIfSucceeded(RawFormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Item_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)ContainerItem_FieldIndex.Item,
                         errorMask: errorMask));
@@ -717,7 +717,7 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<ContainerItem_ErrorMask> errorMask)
         {
-            item.Item_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
+            item.Item_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)ContainerItem_FieldIndex.Item,
                 errorMask: errorMask));
@@ -1386,7 +1386,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.ContainerItem");
                     }
-                    RawFormIDXmlTranslation.Instance.Write(
+                    FormIDXmlTranslation.Instance.Write(
                         writer: writer,
                         name: nameof(item.Item),
                         item: item.Item?.FormID,
@@ -1460,7 +1460,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             Func<ContainerItem_ErrorMask> errorMask)
         {
-            Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Item_Property,
                 fieldIndex: (int)ContainerItem_FieldIndex.Item,
