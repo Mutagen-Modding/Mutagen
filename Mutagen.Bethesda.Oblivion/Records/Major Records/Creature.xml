@@ -12,7 +12,7 @@
       <List name="Models" recordType="NIFZ">
         <String />
       </List>
-      <ByteArray name="NIFT" recordType="NIFT"  />
+      <ByteArray name="NIFT" recordType="NIFT" />
       <Data recordType="ACBS">
         <Fields>
           <Enum name="Flags" enumName="Creature.CreatureFlag" byteLength="4" />
@@ -74,11 +74,17 @@
       <FilePath name="BloodSpray" recordType="NAM0" />
       <FilePath name="BloodDecal" recordType="NAM1" />
       <FormID name="InheritsSoundFrom" recordType="CSCR" refName="Creature" />
+      <RefList name="Sounds" refName="CreatureSound" />
     </Fields>
   </Object>
   <Object name="CreatureSound" objType="Subrecord" GUID="f3d5081c-a137-4a9e-8dd9-c79a8bf94fc3" ID="90">
     <Fields>
       <Enum name="SoundType" enumName="CreatureSound.CreatureSoundType" byteLength="4" recordType="CSDT" />
+      <RefList name="Sounds" refName="SoundItem" />
+    </Fields>
+  </Object>
+  <Object name="SoundItem" objType="Subrecord" GUID="bed98725-1f58-4853-aba1-311221e7aa4e" ID="91">
+    <Fields>
       <FormID name="Sound" refName="Sound" recordType="CSDI" />
       <UInt8 name="Chance" recordType="CSDC" />
     </Fields>

@@ -547,6 +547,20 @@ namespace Mutagen.Bethesda.Oblivion
         public Creature InheritsSoundFrom { get => InheritsSoundFrom_Property.Item; set => InheritsSoundFrom_Property.Item = value; }
         FormIDSetLink<Creature> ICreatureGetter.InheritsSoundFrom_Property => this.InheritsSoundFrom_Property;
         #endregion
+        #region Sounds
+        private readonly INotifyingList<CreatureSound> _Sounds = new NotifyingList<CreatureSound>();
+        public INotifyingList<CreatureSound> Sounds => _Sounds;
+        public IEnumerable<CreatureSound> SoundsEnumerable
+        {
+            get => _Sounds;
+            set => _Sounds.SetTo(value);
+        }
+        #region Interface Members
+        INotifyingList<CreatureSound> ICreature.Sounds => _Sounds;
+        INotifyingListGetter<CreatureSound> ICreatureGetter.Sounds => _Sounds;
+        #endregion
+
+        #endregion
 
         #region Loqui Getter Interface
 
@@ -722,6 +736,11 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (InheritsSoundFrom != rhs.InheritsSoundFrom) return false;
             }
+            if (Sounds.HasBeenSet != rhs.Sounds.HasBeenSet) return false;
+            if (Sounds.HasBeenSet)
+            {
+                if (!Sounds.SequenceEqual(rhs.Sounds)) return false;
+            }
             return true;
         }
 
@@ -828,6 +847,10 @@ namespace Mutagen.Bethesda.Oblivion
             if (InheritsSoundFrom_Property.HasBeenSet)
             {
                 ret = HashHelper.GetHashCode(InheritsSoundFrom).CombineHashCode(ret);
+            }
+            if (Sounds.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Sounds).CombineHashCode(ret);
             }
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
@@ -1479,6 +1502,20 @@ namespace Mutagen.Bethesda.Oblivion
                         root,
                         fieldIndex: (int)Creature_FieldIndex.InheritsSoundFrom,
                         errorMask: errorMask));
+                    break;
+                case "Sounds":
+                    item._Sounds.SetIfSucceeded(ListXmlTranslation<CreatureSound, MaskItem<Exception, CreatureSound_ErrorMask>>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)Creature_FieldIndex.Sounds,
+                        errorMask: errorMask,
+                        transl: (XElement r, bool listDoMasks, out MaskItem<Exception, CreatureSound_ErrorMask> listSubMask) =>
+                        {
+                            return LoquiXmlTranslation<CreatureSound, CreatureSound_ErrorMask>.Instance.Parse(
+                                root: r,
+                                doMasks: listDoMasks,
+                                errorMask: out listSubMask);
+                        }
+                        ));
                     break;
                 default:
                     NamedMajorRecord.Fill_XML_Internal(
@@ -2133,6 +2170,25 @@ namespace Mutagen.Bethesda.Oblivion
                         fieldIndex: (int)Creature_FieldIndex.InheritsSoundFrom,
                         errorMask: errorMask));
                     return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.InheritsSoundFrom);
+                case "CSDT":
+                case "CSDI":
+                case "CSDC":
+                    var SoundstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<CreatureSound, MaskItem<Exception, CreatureSound_ErrorMask>>.Instance.ParseRepeatedItem(
+                        frame: frame,
+                        triggeringRecord: CreatureSound_Registration.TriggeringRecordTypes,
+                        fieldIndex: (int)Creature_FieldIndex.Sounds,
+                        objType: ObjectType.Subrecord,
+                        errorMask: errorMask,
+                        transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, CreatureSound_ErrorMask> listSubMask) =>
+                        {
+                            return LoquiBinaryTranslation<CreatureSound, CreatureSound_ErrorMask>.Instance.Parse(
+                                frame: r.Spawn(snapToFinalPosition: false),
+                                doMasks: listDoMasks,
+                                errorMask: out listSubMask);
+                        }
+                        );
+                    item._Sounds.SetIfSucceeded(SoundstryGet);
+                    return TryGet<Creature_FieldIndex?>.Succeed(Creature_FieldIndex.Sounds);
                 default:
                     return NamedMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
@@ -2448,6 +2504,9 @@ namespace Mutagen.Bethesda.Oblivion
                         (FormIDSetLink<Creature>)obj,
                         cmds);
                     break;
+                case Creature_FieldIndex.Sounds:
+                    this._Sounds.SetTo((IEnumerable<CreatureSound>)obj, cmds);
+                    break;
                 default:
                     base.SetNthObject(index, obj, cmds);
                     break;
@@ -2702,6 +2761,9 @@ namespace Mutagen.Bethesda.Oblivion
                         (FormIDSetLink<Creature>)pair.Value,
                         null);
                     break;
+                case Creature_FieldIndex.Sounds:
+                    obj._Sounds.SetTo((IEnumerable<CreatureSound>)pair.Value, null);
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -2838,6 +2900,7 @@ namespace Mutagen.Bethesda.Oblivion
         new INotifyingSetItem<FilePath> BloodDecal_Property { get; }
 
         new Creature InheritsSoundFrom { get; set; }
+        new INotifyingList<CreatureSound> Sounds { get; }
     }
 
     public interface ICreatureGetter : INamedMajorRecordGetter
@@ -3065,6 +3128,9 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDSetLink<Creature> InheritsSoundFrom_Property { get; }
 
         #endregion
+        #region Sounds
+        INotifyingListGetter<CreatureSound> Sounds { get; }
+        #endregion
 
     }
 
@@ -3130,6 +3196,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         BloodSpray = 50,
         BloodDecal = 51,
         InheritsSoundFrom = 52,
+        Sounds = 53,
     }
     #endregion
 
@@ -3147,7 +3214,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "9859ec12-21c5-4de8-9caa-404330da8b79";
 
-        public const ushort FieldCount = 47;
+        public const ushort FieldCount = 48;
 
         public static readonly Type MaskType = typeof(Creature_Mask<>);
 
@@ -3269,6 +3336,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)Creature_FieldIndex.BloodDecal;
                 case "INHERITSSOUNDFROM":
                     return (ushort)Creature_FieldIndex.InheritsSoundFrom;
+                case "SOUNDS":
+                    return (ushort)Creature_FieldIndex.Sounds;
                 default:
                     return null;
             }
@@ -3285,6 +3354,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.Factions:
                 case Creature_FieldIndex.AIPackages:
                 case Creature_FieldIndex.Animations:
+                case Creature_FieldIndex.Sounds:
                     return true;
                 case Creature_FieldIndex.Model:
                 case Creature_FieldIndex.NIFT:
@@ -3341,6 +3411,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.Model:
                 case Creature_FieldIndex.Items:
                 case Creature_FieldIndex.Factions:
+                case Creature_FieldIndex.Sounds:
                     return true;
                 case Creature_FieldIndex.Spells:
                 case Creature_FieldIndex.Models:
@@ -3444,6 +3515,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.BloodSpray:
                 case Creature_FieldIndex.BloodDecal:
                 case Creature_FieldIndex.InheritsSoundFrom:
+                case Creature_FieldIndex.Sounds:
                     return false;
                 default:
                     return NamedMajorRecord_Registration.GetNthIsSingleton(index);
@@ -3549,6 +3621,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "BloodDecal";
                 case Creature_FieldIndex.InheritsSoundFrom:
                     return "InheritsSoundFrom";
+                case Creature_FieldIndex.Sounds:
+                    return "Sounds";
                 default:
                     return NamedMajorRecord_Registration.GetNthName(index);
             }
@@ -3606,6 +3680,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.BloodSpray:
                 case Creature_FieldIndex.BloodDecal:
                 case Creature_FieldIndex.InheritsSoundFrom:
+                case Creature_FieldIndex.Sounds:
                     return false;
                 default:
                     return NamedMajorRecord_Registration.IsNthDerivative(index);
@@ -3664,6 +3739,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.BloodSpray:
                 case Creature_FieldIndex.BloodDecal:
                 case Creature_FieldIndex.InheritsSoundFrom:
+                case Creature_FieldIndex.Sounds:
                     return false;
                 default:
                     return NamedMajorRecord_Registration.IsProtected(index);
@@ -3769,6 +3845,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(FilePath);
                 case Creature_FieldIndex.InheritsSoundFrom:
                     return typeof(FormIDSetLink<Creature>);
+                case Creature_FieldIndex.Sounds:
+                    return typeof(NotifyingList<CreatureSound>);
                 default:
                     return NamedMajorRecord_Registration.GetNthType(index);
             }
@@ -3796,9 +3874,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType NAM0_HEADER = new RecordType("NAM0");
         public static readonly RecordType NAM1_HEADER = new RecordType("NAM1");
         public static readonly RecordType CSCR_HEADER = new RecordType("CSCR");
+        public static readonly RecordType CSDT_HEADER = new RecordType("CSDT");
+        public static readonly RecordType CSDI_HEADER = new RecordType("CSDI");
+        public static readonly RecordType CSDC_HEADER = new RecordType("CSDC");
         public static readonly RecordType TRIGGERING_RECORD_TYPE = CREA_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 18;
+        public const int NumTypedFields = 19;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -4659,6 +4740,38 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask().SetNthException((int)Creature_FieldIndex.InheritsSoundFrom, ex);
                 }
             }
+            if (copyMask?.Sounds.Overall != CopyOption.Skip)
+            {
+                try
+                {
+                    item.Sounds.SetToWithDefault(
+                        rhs: rhs.Sounds,
+                        def: def?.Sounds,
+                        cmds: cmds,
+                        converter: (r, d) =>
+                        {
+                            switch (copyMask?.Sounds.Overall ?? CopyOption.Reference)
+                            {
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(CreatureSound);
+                                    return CreatureSound.Copy(
+                                        r,
+                                        copyMask?.Sounds?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Sounds.Overall}. Cannot execute copy.");
+                            }
+                        }
+                        );
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Creature_FieldIndex.Sounds, ex);
+                }
+            }
         }
 
         #endregion
@@ -4756,6 +4869,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case Creature_FieldIndex.InheritsSoundFrom:
                     obj.InheritsSoundFrom_Property.HasBeenSet = on;
+                    break;
+                case Creature_FieldIndex.Sounds:
+                    obj.Sounds.HasBeenSet = on;
                     break;
                 default:
                     NamedMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
@@ -4912,6 +5028,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.InheritsSoundFrom:
                     obj.InheritsSoundFrom_Property.Unset(cmds);
                     break;
+                case Creature_FieldIndex.Sounds:
+                    obj.Sounds.Unset(cmds);
+                    break;
                 default:
                     NamedMajorRecordCommon.UnsetNthObject(index, obj);
                     break;
@@ -4991,6 +5110,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.BloodDecal_Property.HasBeenSet;
                 case Creature_FieldIndex.InheritsSoundFrom:
                     return obj.InheritsSoundFrom_Property.HasBeenSet;
+                case Creature_FieldIndex.Sounds:
+                    return obj.Sounds.HasBeenSet;
                 default:
                     return NamedMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -5097,6 +5218,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.BloodDecal;
                 case Creature_FieldIndex.InheritsSoundFrom:
                     return obj.InheritsSoundFrom;
+                case Creature_FieldIndex.Sounds:
+                    return obj.Sounds;
                 default:
                     return NamedMajorRecordCommon.GetNthObject(index, obj);
             }
@@ -5153,6 +5276,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.BloodSpray_Property.Unset(cmds.ToUnsetParams());
             item.BloodDecal_Property.Unset(cmds.ToUnsetParams());
             item.InheritsSoundFrom_Property.Unset(cmds.ToUnsetParams());
+            item.Sounds.Unset(cmds.ToUnsetParams());
         }
 
         public static Creature_Mask<bool> GetEqualsMask(
@@ -5337,6 +5461,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.BloodSpray = item.BloodSpray_Property.Equals(rhs.BloodSpray_Property, (l, r) => object.Equals(l, r));
             ret.BloodDecal = item.BloodDecal_Property.Equals(rhs.BloodDecal_Property, (l, r) => object.Equals(l, r));
             ret.InheritsSoundFrom = item.InheritsSoundFrom_Property.Equals(rhs.InheritsSoundFrom_Property, (l, r) => l == r);
+            if (item.Sounds.HasBeenSet == rhs.Sounds.HasBeenSet)
+            {
+                if (item.Sounds.HasBeenSet)
+                {
+                    ret.Sounds = new MaskItem<bool, IEnumerable<MaskItem<bool, CreatureSound_Mask<bool>>>>();
+                    ret.Sounds.Specific = item.Sounds.SelectAgainst<CreatureSound, MaskItem<bool, CreatureSound_Mask<bool>>>(rhs.Sounds, ((l, r) =>
+                    {
+                        MaskItem<bool, CreatureSound_Mask<bool>> itemRet;
+                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => CreatureSoundCommon.GetEqualsMask(loqLhs, loqRhs));
+                        return itemRet;
+                    }
+                    ), out ret.Sounds.Overall);
+                    ret.Sounds.Overall = ret.Sounds.Overall && ret.Sounds.Specific.All((b) => b.Overall);
+                }
+                else
+                {
+                    ret.Sounds = new MaskItem<bool, IEnumerable<MaskItem<bool, CreatureSound_Mask<bool>>>>();
+                    ret.Sounds.Overall = true;
+                }
+            }
+            else
+            {
+                ret.Sounds = new MaskItem<bool, IEnumerable<MaskItem<bool, CreatureSound_Mask<bool>>>>();
+                ret.Sounds.Overall = false;
+            }
             NamedMajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
@@ -5639,6 +5788,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"InheritsSoundFrom => {item.InheritsSoundFrom}");
                 }
+                if (printMask?.Sounds?.Overall ?? true)
+                {
+                    fg.AppendLine("Sounds =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        foreach (var subItem in item.Sounds)
+                        {
+                            fg.AppendLine("[");
+                            using (new DepthWrapper(fg))
+                            {
+                                subItem?.ToString(fg, "Item");
+                            }
+                            fg.AppendLine("]");
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
             }
             fg.AppendLine("]");
         }
@@ -5666,6 +5833,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (checkMask.BloodSpray.HasValue && checkMask.BloodSpray.Value != item.BloodSpray_Property.HasBeenSet) return false;
             if (checkMask.BloodDecal.HasValue && checkMask.BloodDecal.Value != item.BloodDecal_Property.HasBeenSet) return false;
             if (checkMask.InheritsSoundFrom.HasValue && checkMask.InheritsSoundFrom.Value != item.InheritsSoundFrom_Property.HasBeenSet) return false;
+            if (checkMask.Sounds.Overall.HasValue && checkMask.Sounds.Overall.Value != item.Sounds.HasBeenSet) return false;
             return true;
         }
 
@@ -5719,6 +5887,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.BloodSpray = item.BloodSpray_Property.HasBeenSet;
             ret.BloodDecal = item.BloodDecal_Property.HasBeenSet;
             ret.InheritsSoundFrom = item.InheritsSoundFrom_Property.HasBeenSet;
+            ret.Sounds = new MaskItem<bool, IEnumerable<MaskItem<bool, CreatureSound_Mask<bool>>>>(item.Sounds.HasBeenSet, item.Sounds.Select((i) => new MaskItem<bool, CreatureSound_Mask<bool>>(true, i.GetHasBeenSetMask())));
             return ret;
         }
 
@@ -6202,6 +6371,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             fieldIndex: (int)Creature_FieldIndex.InheritsSoundFrom,
                             errorMask: errorMask);
                     }
+                    if (item.Sounds.HasBeenSet)
+                    {
+                        ListXmlTranslation<CreatureSound, MaskItem<Exception, CreatureSound_ErrorMask>>.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Sounds),
+                            item: item.Sounds,
+                            fieldIndex: (int)Creature_FieldIndex.Sounds,
+                            errorMask: errorMask,
+                            transl: (CreatureSound subItem, bool listDoMasks, out MaskItem<Exception, CreatureSound_ErrorMask> listSubMask) =>
+                            {
+                                LoquiXmlTranslation<CreatureSound, CreatureSound_ErrorMask>.Instance.Write(
+                                    writer: writer,
+                                    item: subItem,
+                                    name: "Item",
+                                    doMasks: errorMask != null,
+                                    errorMask: out listSubMask);
+                            }
+                            );
+                    }
                 }
             }
             catch (Exception ex)
@@ -6607,6 +6795,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(Creature_Registration.CSCR_HEADER),
                 nullable: false);
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<CreatureSound, MaskItem<Exception, CreatureSound_ErrorMask>>.Instance.Write(
+                writer: writer,
+                item: item.Sounds,
+                fieldIndex: (int)Creature_FieldIndex.Sounds,
+                errorMask: errorMask,
+                transl: (CreatureSound subItem, bool listDoMasks, out MaskItem<Exception, CreatureSound_ErrorMask> listSubMask) =>
+                {
+                    LoquiBinaryTranslation<CreatureSound, CreatureSound_ErrorMask>.Instance.Write(
+                        writer: writer,
+                        item: subItem,
+                        doMasks: listDoMasks,
+                        errorMask: out listSubMask);
+                }
+                );
         }
 
         #endregion
@@ -6673,6 +6875,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.BloodSpray = initialValue;
             this.BloodDecal = initialValue;
             this.InheritsSoundFrom = initialValue;
+            this.Sounds = new MaskItem<T, IEnumerable<MaskItem<T, CreatureSound_Mask<T>>>>(initialValue, null);
         }
         #endregion
 
@@ -6724,6 +6927,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public T BloodSpray;
         public T BloodDecal;
         public T InheritsSoundFrom;
+        public MaskItem<T, IEnumerable<MaskItem<T, CreatureSound_Mask<T>>>> Sounds;
         #endregion
 
         #region Equals
@@ -6784,6 +6988,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.BloodSpray, rhs.BloodSpray)) return false;
             if (!object.Equals(this.BloodDecal, rhs.BloodDecal)) return false;
             if (!object.Equals(this.InheritsSoundFrom, rhs.InheritsSoundFrom)) return false;
+            if (!object.Equals(this.Sounds, rhs.Sounds)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -6836,6 +7041,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.BloodSpray?.GetHashCode());
             ret = ret.CombineHashCode(this.BloodDecal?.GetHashCode());
             ret = ret.CombineHashCode(this.InheritsSoundFrom?.GetHashCode());
+            ret = ret.CombineHashCode(this.Sounds?.GetHashCode());
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -6959,6 +7165,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!eval(this.BloodSpray)) return false;
             if (!eval(this.BloodDecal)) return false;
             if (!eval(this.InheritsSoundFrom)) return false;
+            if (this.Sounds != null)
+            {
+                if (!eval(this.Sounds.Overall)) return false;
+                if (this.Sounds.Specific != null)
+                {
+                    foreach (var item in this.Sounds.Specific)
+                    {
+                        if (!eval(item.Overall)) return false;
+                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                    }
+                }
+            }
             return true;
         }
         #endregion
@@ -7135,6 +7353,30 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.BloodSpray = eval(this.BloodSpray);
             obj.BloodDecal = eval(this.BloodDecal);
             obj.InheritsSoundFrom = eval(this.InheritsSoundFrom);
+            if (Sounds != null)
+            {
+                obj.Sounds = new MaskItem<R, IEnumerable<MaskItem<R, CreatureSound_Mask<R>>>>();
+                obj.Sounds.Overall = eval(this.Sounds.Overall);
+                if (Sounds.Specific != null)
+                {
+                    List<MaskItem<R, CreatureSound_Mask<R>>> l = new List<MaskItem<R, CreatureSound_Mask<R>>>();
+                    obj.Sounds.Specific = l;
+                    foreach (var item in Sounds.Specific)
+                    {
+                        MaskItem<R, CreatureSound_Mask<R>> mask = default(MaskItem<R, CreatureSound_Mask<R>>);
+                        if (item != null)
+                        {
+                            mask = new MaskItem<R, CreatureSound_Mask<R>>();
+                            mask.Overall = eval(item.Overall);
+                            if (item.Specific != null)
+                            {
+                                mask.Specific = item.Specific.Translate(eval);
+                            }
+                        }
+                        l.Add(mask);
+                    }
+                }
+            }
         }
         #endregion
 
@@ -7148,6 +7390,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Factions.Specific = null;
             this.AIPackages.Specific = null;
             this.Animations.Specific = null;
+            this.Sounds.Specific = null;
         }
         #endregion
 
@@ -7484,6 +7727,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"InheritsSoundFrom => {InheritsSoundFrom}");
                 }
+                if (printMask?.Sounds?.Overall ?? true)
+                {
+                    fg.AppendLine("Sounds =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        if (Sounds.Overall != null)
+                        {
+                            fg.AppendLine(Sounds.Overall.ToString());
+                        }
+                        if (Sounds.Specific != null)
+                        {
+                            foreach (var subItem in Sounds.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
             }
             fg.AppendLine("]");
         }
@@ -7541,6 +7809,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Exception BloodSpray;
         public Exception BloodDecal;
         public Exception InheritsSoundFrom;
+        public MaskItem<Exception, IEnumerable<MaskItem<Exception, CreatureSound_ErrorMask>>> Sounds;
         #endregion
 
         #region IErrorMask
@@ -7689,6 +7958,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case Creature_FieldIndex.InheritsSoundFrom:
                     this.InheritsSoundFrom = ex;
+                    break;
+                case Creature_FieldIndex.Sounds:
+                    this.Sounds = new MaskItem<Exception, IEnumerable<MaskItem<Exception, CreatureSound_ErrorMask>>>(ex, null);
                     break;
                 default:
                     base.SetNthException(index, ex);
@@ -7842,6 +8114,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case Creature_FieldIndex.InheritsSoundFrom:
                     this.InheritsSoundFrom = (Exception)obj;
                     break;
+                case Creature_FieldIndex.Sounds:
+                    this.Sounds = (MaskItem<Exception, IEnumerable<MaskItem<Exception, CreatureSound_ErrorMask>>>)obj;
+                    break;
                 default:
                     base.SetNthMask(index, obj);
                     break;
@@ -7898,6 +8173,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (BloodSpray != null) return true;
             if (BloodDecal != null) return true;
             if (InheritsSoundFrom != null) return true;
+            if (Sounds != null) return true;
             return false;
         }
         #endregion
@@ -8106,6 +8382,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             fg.AppendLine($"BloodSpray => {BloodSpray}");
             fg.AppendLine($"BloodDecal => {BloodDecal}");
             fg.AppendLine($"InheritsSoundFrom => {InheritsSoundFrom}");
+            fg.AppendLine("Sounds =>");
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                if (Sounds.Overall != null)
+                {
+                    fg.AppendLine(Sounds.Overall.ToString());
+                }
+                if (Sounds.Specific != null)
+                {
+                    foreach (var subItem in Sounds.Specific)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+            }
+            fg.AppendLine("]");
         }
         #endregion
 
@@ -8160,6 +8458,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.BloodSpray = this.BloodSpray.Combine(rhs.BloodSpray);
             ret.BloodDecal = this.BloodDecal.Combine(rhs.BloodDecal);
             ret.InheritsSoundFrom = this.InheritsSoundFrom.Combine(rhs.InheritsSoundFrom);
+            ret.Sounds = new MaskItem<Exception, IEnumerable<MaskItem<Exception, CreatureSound_ErrorMask>>>(this.Sounds.Overall.Combine(rhs.Sounds.Overall), new List<MaskItem<Exception, CreatureSound_ErrorMask>>(this.Sounds.Specific.And(rhs.Sounds.Specific)));
             return ret;
         }
         public static Creature_ErrorMask Combine(Creature_ErrorMask lhs, Creature_ErrorMask rhs)
@@ -8220,6 +8519,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public bool BloodSpray;
         public bool BloodDecal;
         public bool InheritsSoundFrom;
+        public MaskItem<CopyOption, CreatureSound_CopyMask> Sounds;
         #endregion
 
     }

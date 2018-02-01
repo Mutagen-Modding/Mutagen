@@ -413,6 +413,9 @@
     <Compile Include="Records\Major Records\CreatureSound_LoquiGenerated.cs">
       <DependentUpon>Creature.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\SoundItem_LoquiGenerated.cs">
+      <DependentUpon>Creature.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Records\Common Subrecords\Effect.xml">

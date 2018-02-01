@@ -70,6 +70,7 @@ namespace Mutagen.Bethesda.Oblivion
             _Weapons_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
             _Ammo_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
             _NPCs_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
+            _Creatures_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
             CustomCtor();
         }
         partial void CustomCtor();
@@ -215,6 +216,10 @@ namespace Mutagen.Bethesda.Oblivion
         private Group<NPC> _NPCs_Object = new Group<NPC>();
         public Group<NPC> NPCs => _NPCs_Object;
         #endregion
+        #region Creatures
+        private Group<Creature> _Creatures_Object = new Group<Creature>();
+        public Group<Creature> Creatures => _Creatures_Object;
+        #endregion
 
         #region Loqui Getter Interface
 
@@ -312,6 +317,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (!object.Equals(Weapons, rhs.Weapons)) return false;
             if (!object.Equals(Ammo, rhs.Ammo)) return false;
             if (!object.Equals(NPCs, rhs.NPCs)) return false;
+            if (!object.Equals(Creatures, rhs.Creatures)) return false;
             return true;
         }
 
@@ -355,6 +361,7 @@ namespace Mutagen.Bethesda.Oblivion
             ret = HashHelper.GetHashCode(Weapons).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Ammo).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(NPCs).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Creatures).CombineHashCode(ret);
             return ret;
         }
 
@@ -1256,6 +1263,24 @@ namespace Mutagen.Bethesda.Oblivion
                         index: (int)OblivionMod_FieldIndex.NPCs,
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<NPC_ErrorMask>>.WrapValue(Group_ErrorMask<NPC_ErrorMask>.Combine(NPCscreateMask, NPCscopyMask)));
                     break;
+                case "Creatures":
+                    GroupCommon.CopyFieldsFrom<Creature, Creature_ErrorMask, Creature_CopyMask>(
+                        item: item._Creatures_Object,
+                        rhs: Group<Creature>.Create_XML(
+                            root: root,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Creature_ErrorMask> CreaturescreateMask)
+                        ,
+                        def: null,
+                        cmds: null,
+                        copyMask: null,
+                        doMasks: errorMask != null,
+                        errorMask: out Group_ErrorMask<Creature_ErrorMask> CreaturescopyMask);
+                    ErrorMask.HandleErrorMask(
+                        errorMask,
+                        index: (int)OblivionMod_FieldIndex.Creatures,
+                        errMaskObj: MaskItem<Exception, Group_ErrorMask<Creature_ErrorMask>>.WrapValue(Group_ErrorMask<Creature_ErrorMask>.Combine(CreaturescreateMask, CreaturescopyMask)));
+                    break;
                 default:
                     break;
             }
@@ -1375,6 +1400,9 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case NPC npcs:
                     _NPCs_Object.Items.Add(npcs);
+                    break;
+                case Creature creatures:
+                    _Creatures_Object.Items.Add(creatures);
                     break;
                 default:
                     throw new ArgumentException("Unknown Major Record type: {record?.GetType()}");
@@ -2337,6 +2365,25 @@ namespace Mutagen.Bethesda.Oblivion
                         index: (int)OblivionMod_FieldIndex.NPCs,
                         errMaskObj: combinedNPCs == null ? null : new MaskItem<Exception, Group_ErrorMask<NPC_ErrorMask>>(null, combinedNPCs));
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.NPCs);
+                case "CREA":
+                    var tmpCreatures = Group<Creature>.Create_Binary(
+                        frame: frame,
+                        doMasks: errorMask != null,
+                        errorMask: out Group_ErrorMask<Creature_ErrorMask> CreaturescreateMask);
+                    GroupCommon.CopyFieldsFrom<Creature, Creature_ErrorMask, Creature_CopyMask>(
+                        item: item._Creatures_Object,
+                        rhs: tmpCreatures,
+                        def: null,
+                        cmds: null,
+                        copyMask: null,
+                        doMasks: errorMask != null,
+                        errorMask: out Group_ErrorMask<Creature_ErrorMask> CreatureserrorMask);
+                    var combinedCreatures = Group_ErrorMask<Creature_ErrorMask>.Combine(CreaturescreateMask, CreatureserrorMask);
+                    ErrorMask.HandleErrorMask(
+                        creator: errorMask,
+                        index: (int)OblivionMod_FieldIndex.Creatures,
+                        errMaskObj: combinedCreatures == null ? null : new MaskItem<Exception, Group_ErrorMask<Creature_ErrorMask>>(null, combinedCreatures));
+                    return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Creatures);
                 default:
                     errorMask().Warnings.Add($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength;
@@ -2531,6 +2578,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case OblivionMod_FieldIndex.NPCs:
                     this._NPCs_Object.CopyFieldsFrom<NPC, NPC_CopyMask>(rhs: (Group<NPC>)obj);
                     break;
+                case OblivionMod_FieldIndex.Creatures:
+                    this._Creatures_Object.CopyFieldsFrom<Creature, Creature_CopyMask>(rhs: (Group<Creature>)obj);
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2670,6 +2720,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case OblivionMod_FieldIndex.NPCs:
                     obj._NPCs_Object.CopyFieldsFrom<NPC, NPC_CopyMask>(rhs: (Group<NPC>)pair.Value);
                     break;
+                case OblivionMod_FieldIndex.Creatures:
+                    obj._Creatures_Object.CopyFieldsFrom<Creature, Creature_CopyMask>(rhs: (Group<Creature>)pair.Value);
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -2793,6 +2846,9 @@ namespace Mutagen.Bethesda.Oblivion
         #region NPCs
         Group<NPC> NPCs { get; }
         #endregion
+        #region Creatures
+        Group<Creature> Creatures { get; }
+        #endregion
 
     }
 
@@ -2839,6 +2895,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Weapons = 31,
         Ammo = 32,
         NPCs = 33,
+        Creatures = 34,
     }
     #endregion
 
@@ -2856,7 +2913,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "b6f626df-b164-466b-960a-1639d88f66bc";
 
-        public const ushort FieldCount = 34;
+        public const ushort FieldCount = 35;
 
         public static readonly Type MaskType = typeof(OblivionMod_Mask<>);
 
@@ -2952,6 +3009,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)OblivionMod_FieldIndex.Ammo;
                 case "NPCS":
                     return (ushort)OblivionMod_FieldIndex.NPCs;
+                case "CREATURES":
+                    return (ushort)OblivionMod_FieldIndex.Creatures;
                 default:
                     return null;
             }
@@ -2996,6 +3055,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Weapons:
                 case OblivionMod_FieldIndex.Ammo:
                 case OblivionMod_FieldIndex.NPCs:
+                case OblivionMod_FieldIndex.Creatures:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3041,6 +3101,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Weapons:
                 case OblivionMod_FieldIndex.Ammo:
                 case OblivionMod_FieldIndex.NPCs:
+                case OblivionMod_FieldIndex.Creatures:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3086,6 +3147,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Weapons:
                 case OblivionMod_FieldIndex.Ammo:
                 case OblivionMod_FieldIndex.NPCs:
+                case OblivionMod_FieldIndex.Creatures:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3165,6 +3227,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Ammo";
                 case OblivionMod_FieldIndex.NPCs:
                     return "NPCs";
+                case OblivionMod_FieldIndex.Creatures:
+                    return "Creatures";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -3209,6 +3273,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Weapons:
                 case OblivionMod_FieldIndex.Ammo:
                 case OblivionMod_FieldIndex.NPCs:
+                case OblivionMod_FieldIndex.Creatures:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3255,6 +3320,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Weapons:
                 case OblivionMod_FieldIndex.Ammo:
                 case OblivionMod_FieldIndex.NPCs:
+                case OblivionMod_FieldIndex.Creatures:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3334,6 +3400,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(Group<Ammo>);
                 case OblivionMod_FieldIndex.NPCs:
                     return typeof(Group<NPC>);
+                case OblivionMod_FieldIndex.Creatures:
+                    return typeof(Group<Creature>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -3373,6 +3441,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType WEAP_HEADER = new RecordType("WEAP");
         public static readonly RecordType AMMO_HEADER = new RecordType("AMMO");
         public static readonly RecordType NPC__HEADER = new RecordType("NPC_");
+        public static readonly RecordType CREA_HEADER = new RecordType("CREA");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -3386,7 +3455,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             );
         });
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 34;
+        public const int NumTypedFields = 35;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -4445,6 +4514,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask().SetNthException((int)OblivionMod_FieldIndex.NPCs, ex);
                 }
             }
+            if (copyMask?.Creatures.Overall ?? true)
+            {
+                try
+                {
+                    GroupCommon.CopyFieldsFrom<Creature, Creature_ErrorMask, Creature_CopyMask>(
+                        item: item.Creatures,
+                        rhs: rhs.Creatures,
+                        def: def?.Creatures,
+                        doMasks: doMasks,
+                        errorMask: (doMasks ? new Func<Group_ErrorMask<Creature_ErrorMask>>(() =>
+                        {
+                            var baseMask = errorMask();
+                            if (baseMask.Creatures.Specific == null)
+                            {
+                                baseMask.Creatures = new MaskItem<Exception, Group_ErrorMask<Creature_ErrorMask>>(null, new Group_ErrorMask<Creature_ErrorMask>());
+                            }
+                            return baseMask.Creatures.Specific;
+                        }
+                        ) : null),
+                        copyMask: copyMask?.Creatures.Specific,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)OblivionMod_FieldIndex.Creatures, ex);
+                }
+            }
         }
 
         #endregion
@@ -4491,6 +4588,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Weapons:
                 case OblivionMod_FieldIndex.Ammo:
                 case OblivionMod_FieldIndex.NPCs:
+                case OblivionMod_FieldIndex.Creatures:
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 case OblivionMod_FieldIndex.TES4:
@@ -4609,6 +4707,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.NPCs:
                     GroupCommon.Clear(obj.NPCs, cmds.ToUnsetParams());
                     break;
+                case OblivionMod_FieldIndex.Creatures:
+                    GroupCommon.Clear(obj.Creatures, cmds.ToUnsetParams());
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -4654,6 +4755,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Weapons:
                 case OblivionMod_FieldIndex.Ammo:
                 case OblivionMod_FieldIndex.NPCs:
+                case OblivionMod_FieldIndex.Creatures:
                     return true;
                 case OblivionMod_FieldIndex.TES4:
                     return obj.TES4_Property.HasBeenSet;
@@ -4737,6 +4839,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.Ammo;
                 case OblivionMod_FieldIndex.NPCs:
                     return obj.NPCs;
+                case OblivionMod_FieldIndex.Creatures:
+                    return obj.Creatures;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -4863,6 +4967,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.NPCs = new MaskItem<bool, Group_Mask<bool>>();
             ret.NPCs.Specific = GroupCommon.GetEqualsMask(item.NPCs, rhs.NPCs);
             ret.NPCs.Overall = ret.NPCs.Specific.AllEqual((b) => b);
+            ret.Creatures = new MaskItem<bool, Group_Mask<bool>>();
+            ret.Creatures.Specific = GroupCommon.GetEqualsMask(item.Creatures, rhs.Creatures);
+            ret.Creatures.Overall = ret.Creatures.Specific.AllEqual((b) => b);
         }
 
         public static string ToString(
@@ -5028,6 +5135,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.NPCs?.ToString(fg, "NPCs");
                 }
+                if (printMask?.Creatures?.Overall ?? true)
+                {
+                    item.Creatures?.ToString(fg, "Creatures");
+                }
             }
             fg.AppendLine("]");
         }
@@ -5078,6 +5189,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Weapons = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Weapons));
             ret.Ammo = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Ammo));
             ret.NPCs = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.NPCs));
+            ret.Creatures = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Creatures));
             return ret;
         }
 
@@ -5320,6 +5432,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         name: nameof(item.NPCs),
                         fieldIndex: (int)OblivionMod_FieldIndex.NPCs,
                         errorMask: errorMask);
+                    LoquiXmlTranslation<Group<Creature>, Group_ErrorMask<Creature_ErrorMask>>.Instance.Write(
+                        writer: writer,
+                        item: item.Creatures,
+                        name: nameof(item.Creatures),
+                        fieldIndex: (int)OblivionMod_FieldIndex.Creatures,
+                        errorMask: errorMask);
                 }
             }
             catch (Exception ex)
@@ -5548,6 +5666,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.NPCs,
                 fieldIndex: (int)OblivionMod_FieldIndex.NPCs,
                 errorMask: errorMask);
+            LoquiBinaryTranslation<Group<Creature>, Group_ErrorMask<Creature_ErrorMask>>.Instance.Write(
+                writer: writer,
+                item: item.Creatures,
+                fieldIndex: (int)OblivionMod_FieldIndex.Creatures,
+                errorMask: errorMask);
         }
 
         #endregion
@@ -5601,6 +5724,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Weapons = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.Ammo = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.NPCs = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
+            this.Creatures = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
         }
         #endregion
 
@@ -5639,6 +5763,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<T, Group_Mask<T>> Weapons { get; set; }
         public MaskItem<T, Group_Mask<T>> Ammo { get; set; }
         public MaskItem<T, Group_Mask<T>> NPCs { get; set; }
+        public MaskItem<T, Group_Mask<T>> Creatures { get; set; }
         #endregion
 
         #region Equals
@@ -5685,6 +5810,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.Weapons, rhs.Weapons)) return false;
             if (!object.Equals(this.Ammo, rhs.Ammo)) return false;
             if (!object.Equals(this.NPCs, rhs.NPCs)) return false;
+            if (!object.Equals(this.Creatures, rhs.Creatures)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -5724,6 +5850,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.Weapons?.GetHashCode());
             ret = ret.CombineHashCode(this.Ammo?.GetHashCode());
             ret = ret.CombineHashCode(this.NPCs?.GetHashCode());
+            ret = ret.CombineHashCode(this.Creatures?.GetHashCode());
             return ret;
         }
 
@@ -5901,6 +6028,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (!eval(this.NPCs.Overall)) return false;
                 if (this.NPCs.Specific != null && !this.NPCs.Specific.AllEqual(eval)) return false;
+            }
+            if (Creatures != null)
+            {
+                if (!eval(this.Creatures.Overall)) return false;
+                if (this.Creatures.Specific != null && !this.Creatures.Specific.AllEqual(eval)) return false;
             }
             return true;
         }
@@ -6222,6 +6354,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.NPCs.Specific = this.NPCs.Specific.Translate(eval);
                 }
             }
+            if (this.Creatures != null)
+            {
+                obj.Creatures = new MaskItem<R, Group_Mask<R>>();
+                obj.Creatures.Overall = eval(this.Creatures.Overall);
+                if (this.Creatures.Specific != null)
+                {
+                    obj.Creatures.Specific = this.Creatures.Specific.Translate(eval);
+                }
+            }
         }
         #endregion
 
@@ -6386,6 +6527,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     NPCs?.ToString(fg);
                 }
+                if (printMask?.Creatures?.Overall ?? true)
+                {
+                    Creatures?.ToString(fg);
+                }
             }
             fg.AppendLine("]");
         }
@@ -6443,6 +6588,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<Exception, Group_ErrorMask<Weapon_ErrorMask>> Weapons;
         public MaskItem<Exception, Group_ErrorMask<Ammo_ErrorMask>> Ammo;
         public MaskItem<Exception, Group_ErrorMask<NPC_ErrorMask>> NPCs;
+        public MaskItem<Exception, Group_ErrorMask<Creature_ErrorMask>> Creatures;
         #endregion
 
         #region IErrorMask
@@ -6552,6 +6698,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case OblivionMod_FieldIndex.NPCs:
                     this.NPCs = new MaskItem<Exception, Group_ErrorMask<NPC_ErrorMask>>(ex, null);
+                    break;
+                case OblivionMod_FieldIndex.Creatures:
+                    this.Creatures = new MaskItem<Exception, Group_ErrorMask<Creature_ErrorMask>>(ex, null);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -6665,6 +6814,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.NPCs:
                     this.NPCs = (MaskItem<Exception, Group_ErrorMask<NPC_ErrorMask>>)obj;
                     break;
+                case OblivionMod_FieldIndex.Creatures:
+                    this.Creatures = (MaskItem<Exception, Group_ErrorMask<Creature_ErrorMask>>)obj;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -6707,6 +6859,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Weapons != null) return true;
             if (Ammo != null) return true;
             if (NPCs != null) return true;
+            if (Creatures != null) return true;
             return false;
         }
         #endregion
@@ -6775,6 +6928,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Weapons?.ToString(fg);
             Ammo?.ToString(fg);
             NPCs?.ToString(fg);
+            Creatures?.ToString(fg);
         }
         #endregion
 
@@ -6816,6 +6970,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Weapons = new MaskItem<Exception, Group_ErrorMask<Weapon_ErrorMask>>(this.Weapons.Overall.Combine(rhs.Weapons.Overall), ((IErrorMask<Group_ErrorMask<Weapon_ErrorMask>>)this.Weapons.Specific).Combine(rhs.Weapons.Specific));
             ret.Ammo = new MaskItem<Exception, Group_ErrorMask<Ammo_ErrorMask>>(this.Ammo.Overall.Combine(rhs.Ammo.Overall), ((IErrorMask<Group_ErrorMask<Ammo_ErrorMask>>)this.Ammo.Specific).Combine(rhs.Ammo.Specific));
             ret.NPCs = new MaskItem<Exception, Group_ErrorMask<NPC_ErrorMask>>(this.NPCs.Overall.Combine(rhs.NPCs.Overall), ((IErrorMask<Group_ErrorMask<NPC_ErrorMask>>)this.NPCs.Specific).Combine(rhs.NPCs.Specific));
+            ret.Creatures = new MaskItem<Exception, Group_ErrorMask<Creature_ErrorMask>>(this.Creatures.Overall.Combine(rhs.Creatures.Overall), ((IErrorMask<Group_ErrorMask<Creature_ErrorMask>>)this.Creatures.Specific).Combine(rhs.Creatures.Specific));
             return ret;
         }
         public static OblivionMod_ErrorMask Combine(OblivionMod_ErrorMask lhs, OblivionMod_ErrorMask rhs)
@@ -6863,6 +7018,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<bool, Group_CopyMask<Weapon_CopyMask>> Weapons;
         public MaskItem<bool, Group_CopyMask<Ammo_CopyMask>> Ammo;
         public MaskItem<bool, Group_CopyMask<NPC_CopyMask>> NPCs;
+        public MaskItem<bool, Group_CopyMask<Creature_CopyMask>> Creatures;
         #endregion
 
     }
