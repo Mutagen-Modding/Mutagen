@@ -102,7 +102,7 @@
   <Object name="ItemEntry" objType="Subrecord" recordType="CNTO" GUID="c4622b63-e996-4d1d-b707-e75cba9c197d" ID="86">
     <Fields>
       <FormID name="Item" refName="ItemAbstract" />
-      <Int32 name="Count" />
+      <Int32 name="Count" hasBeenSet="True" />
     </Fields>
   </Object>
 </Loqui>

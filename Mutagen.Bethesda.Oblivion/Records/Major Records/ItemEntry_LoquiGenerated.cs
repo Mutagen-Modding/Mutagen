@@ -42,15 +42,15 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDLink<ItemAbstract> IItemEntryGetter.Item_Property => this.Item_Property;
         #endregion
         #region Count
-        protected readonly INotifyingItem<Int32> _Count = NotifyingItem.Factory<Int32>();
-        public INotifyingItem<Int32> Count_Property => _Count;
+        protected readonly INotifyingSetItem<Int32> _Count = NotifyingSetItem.Factory<Int32>(markAsSet: false);
+        public INotifyingSetItem<Int32> Count_Property => _Count;
         public Int32 Count
         {
             get => this._Count.Item;
             set => this._Count.Set(value);
         }
-        INotifyingItem<Int32> IItemEntry.Count_Property => this.Count_Property;
-        INotifyingItemGetter<Int32> IItemEntryGetter.Count_Property => this.Count_Property;
+        INotifyingSetItem<Int32> IItemEntry.Count_Property => this.Count_Property;
+        INotifyingSetItemGetter<Int32> IItemEntryGetter.Count_Property => this.Count_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -112,7 +112,11 @@ namespace Mutagen.Bethesda.Oblivion
         {
             if (rhs == null) return false;
             if (Item != rhs.Item) return false;
-            if (Count != rhs.Count) return false;
+            if (Count_Property.HasBeenSet != rhs.Count_Property.HasBeenSet) return false;
+            if (Count_Property.HasBeenSet)
+            {
+                if (Count != rhs.Count) return false;
+            }
             return true;
         }
 
@@ -120,7 +124,10 @@ namespace Mutagen.Bethesda.Oblivion
         {
             int ret = 0;
             ret = HashHelper.GetHashCode(Item).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Count).CombineHashCode(ret);
+            if (Count_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Count).CombineHashCode(ret);
+            }
             return ret;
         }
 
@@ -721,6 +728,7 @@ namespace Mutagen.Bethesda.Oblivion
                 frame: frame,
                 fieldIndex: (int)ItemEntry_FieldIndex.Item,
                 errorMask: errorMask));
+            if (frame.Complete) return;
             item._Count.SetIfSucceeded(Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)ItemEntry_FieldIndex.Count,
@@ -886,7 +894,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new ItemAbstract Item { get; set; }
         new Int32 Count { get; set; }
-        new INotifyingItem<Int32> Count_Property { get; }
+        new INotifyingSetItem<Int32> Count_Property { get; }
 
     }
 
@@ -899,7 +907,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Count
         Int32 Count { get; }
-        INotifyingItemGetter<Int32> Count_Property { get; }
+        INotifyingSetItemGetter<Int32> Count_Property { get; }
 
         #endregion
 
@@ -1191,8 +1199,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Count_Property.Set(
-                        value: rhs.Count,
+                    item.Count_Property.SetToWithDefault(
+                        rhs: rhs.Count_Property,
+                        def: def?.Count_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1215,9 +1224,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case ItemEntry_FieldIndex.Item:
-                case ItemEntry_FieldIndex.Count:
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
+                case ItemEntry_FieldIndex.Count:
+                    obj.Count_Property.HasBeenSet = on;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1235,7 +1246,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Item = default(FormIDLink<ItemAbstract>);
                     break;
                 case ItemEntry_FieldIndex.Count:
-                    obj.Count = default(Int32);
+                    obj.Count_Property.Unset(cmds);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1250,8 +1261,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (enu)
             {
                 case ItemEntry_FieldIndex.Item:
-                case ItemEntry_FieldIndex.Count:
                     return true;
+                case ItemEntry_FieldIndex.Count:
+                    return obj.Count_Property.HasBeenSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1278,7 +1290,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             NotifyingUnsetParameters cmds = null)
         {
             item.Item = default(FormIDLink<ItemAbstract>);
-            item.Count = default(Int32);
+            item.Count_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static ItemEntry_Mask<bool> GetEqualsMask(
@@ -1297,7 +1309,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (rhs == null) return;
             ret.Item = item.Item == rhs.Item;
-            ret.Count = item.Count == rhs.Count;
+            ret.Count = item.Count_Property.Equals(rhs.Count_Property, (l, r) => l == r);
         }
 
         public static string ToString(
@@ -1343,6 +1355,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this IItemEntryGetter item,
             ItemEntry_Mask<bool?> checkMask)
         {
+            if (checkMask.Count.HasValue && checkMask.Count.Value != item.Count_Property.HasBeenSet) return false;
             return true;
         }
 
@@ -1350,7 +1363,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             var ret = new ItemEntry_Mask<bool>();
             ret.Item = true;
-            ret.Count = true;
+            ret.Count = item.Count_Property.HasBeenSet;
             return ret;
         }
 
@@ -1392,12 +1405,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item: item.Item?.FormID,
                         fieldIndex: (int)ItemEntry_FieldIndex.Item,
                         errorMask: errorMask);
-                    Int32XmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Count),
-                        item: item.Count_Property,
-                        fieldIndex: (int)ItemEntry_FieldIndex.Count,
-                        errorMask: errorMask);
+                    if (item.Count_Property.HasBeenSet)
+                    {
+                        Int32XmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Count),
+                            item: item.Count_Property,
+                            fieldIndex: (int)ItemEntry_FieldIndex.Count,
+                            errorMask: errorMask);
+                    }
                 }
             }
             catch (Exception ex)
