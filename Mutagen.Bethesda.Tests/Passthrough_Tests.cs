@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Tests
 {
     public class Passthrough_Tests
     {
-        public static IEnumerable<(RangeInt64 Source, RangeInt64? Output)> ConstructRanges<T>(
+        public static IEnumerable<(FileSection Source, FileSection? Output)> ConstructRanges<T>(
             IEnumerable<(long Source, long Output, T Item)> items,
             Func<T, bool> eval)
         {
@@ -39,12 +39,12 @@ namespace Mutagen.Bethesda.Tests
                 {
                     if (inRange)
                     {
-                        var sourceRange = new RangeInt64(startRange, item.Source - 1);
-                        RangeInt64? outputRange = null;
+                        var sourceRange = new FileSection(startRange, item.Source - 1);
+                        FileSection? outputRange = null;
                         if (startRange != outputStartRange
                             || item.Source != item.Output)
                         {
-                            outputRange = new RangeInt64(outputStartRange, item.Output - 1);
+                            outputRange = new FileSection(outputStartRange, item.Output - 1);
                         }
                         yield return (sourceRange, outputRange);
                         inRange = false;
@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Tests
             }
         }
 
-        public static Exception AssertFilesEqual(
+        public static (Exception Exception, IEnumerable<(FileSection Source, FileSection? Output)> Sections) AssertFilesEqual(
             Stream stream,
             string path2,
             RangeCollection ignoreList = null,
@@ -72,25 +72,25 @@ namespace Mutagen.Bethesda.Tests
                     {
                         if (r.Output == null)
                         {
-                            return r.Source.ToString("X");
+                            return r.Source.Range.ToString("X");
                         }
                         else
                         {
-                            return $"[{r.Source.ToString("X")} --- {r.Output.Value.ToString("X")}]";
+                            return $"[{r.Source.Range.ToString("X")} --- {r.Output.Value.Range.ToString("X")}]";
                         }
                     }));
-                    throw new ArgumentException($"{path2} Bytes did not match at positions: {posStr}");
+                    return (new ArgumentException($"{path2} Bytes did not match at positions: {posStr}"), errs);
                 }
                 if (stream.Position != stream.Length)
                 {
-                    return new ArgumentException($"{path2} Stream had more data past position 0x{stream.Position} than {path2}");
+                    return (new ArgumentException($"{path2} Stream had more data past position 0x{stream.Position} than {path2}"), errs);
                 }
                 if (reader2.Position != reader2.Length)
                 {
-                    return new ArgumentException($"{path2} Stream {path2} had more data past position 0x{reader2.Position} than source stream.");
+                    return (new ArgumentException($"{path2} Stream {path2} had more data past position 0x{reader2.Position} than source stream."), errs);
                 }
+                return (null, errs);
             }
-            return null;
         }
 
         public static bool TestSub(

@@ -149,7 +149,12 @@ namespace Mutagen.Bethesda.Tests
             var instructions = GetOblivionInstructions();
 
             // Test compressions separately
-            var fileLocations = Task.Run(() => OblivionESM_FileLocs());
+            var fileLocations = Task.Run(() =>
+            {
+                return MajorRecordLocator.GetFileLocations(
+                    filePath: Properties.Settings.Default.OblivionESM,
+                    uninterestingTypes: OblivionMod.NonTypeGroups);
+            });
             var compressionTest = Task.Run(() => OblivionESM_Compression(mod, instructions, fileLocations));
             var test = Task.Run(() => OblivionESM_Typical(mod, instructions, inputErrMask: inputErrMask, fileLocationsTask: fileLocations));
             await compressionTest;
@@ -159,9 +164,9 @@ namespace Mutagen.Bethesda.Tests
         private async Task OblivionESM_Typical(
             OblivionMod mod,
             BinaryProcessorInstructions instructions,
-            OblivionMod_ErrorMask inputErrMask, Task<Dictionary<RawFormID, FileSection>> fileLocationsTask)
+            OblivionMod_ErrorMask inputErrMask, Task<MajorRecordLocator.FileLocations> fileLocationsTask)
         {
-            Dictionary<RawFormID, FileSection> fileLocs = await fileLocationsTask;
+            MajorRecordLocator.FileLocations fileLocs = await fileLocationsTask;
 
             foreach (var rec in mod.MajorRecords)
             {
@@ -193,7 +198,7 @@ namespace Mutagen.Bethesda.Tests
                 mod.Write_Binary(oblivionOutputPath, out var outputErrMask);
                 using (var stream = new FileStream(processedPath, FileMode.Open, FileAccess.Read))
                 {
-                    var lowPrioEx = Passthrough_Tests.AssertFilesEqual(
+                    var ret = Passthrough_Tests.AssertFilesEqual(
                         stream,
                         oblivionOutputPath,
                         ignoreList: new RangeCollection(instructions.IgnoreDifferenceSections),
@@ -201,29 +206,78 @@ namespace Mutagen.Bethesda.Tests
                         targetSkips: new RangeCollection(instructions.SkipOutputSections));
                     Assert.False(inputErrMask?.IsInError() ?? false);
                     Assert.False(outputErrMask?.IsInError() ?? false);
-                    if (lowPrioEx != null)
+                    CopyOverOffendingRecords(
+                        mod: mod,
+                        sections: ret.Sections,
+                        tmpFolder: tmp.Dir.FullName,
+                        origPath: Properties.Settings.Default.OblivionESM,
+                        processedPath: processedPath,
+                        outputPath: oblivionOutputPath,
+                        originalFileLocs: fileLocs);
+                    if (ret.Exception != null)
                     {
-                        throw lowPrioEx;
+                        throw ret.Exception;
                     }
                 }
             }
         }
 
-        private Dictionary<RawFormID, FileSection> OblivionESM_FileLocs()
+        private void CopyOverOffendingRecords(
+            OblivionMod mod,
+            IEnumerable<(FileSection Source, FileSection? Output)> sections,
+            string tmpFolder,
+            string origPath,
+            string processedPath,
+            string outputPath,
+            MajorRecordLocator.FileLocations originalFileLocs)
         {
-            Dictionary<RawFormID, FileSection> fileLocs;
-            using (var stream = new FileStream(Properties.Settings.Default.OblivionESM, FileMode.Open, FileAccess.Read))
+            if (!sections.Any()) return;
+
+            var outputFileLocs = MajorRecordLocator.GetFileLocations(outputPath, uninterestingTypes: OblivionMod.NonTypeGroups);
+
+            HashSet<RawFormID> ids = new HashSet<RawFormID>();
+            foreach (var (Source, Output) in sections)
             {
-                fileLocs = MajorRecordLocator.GetFileLocations(
-                    stream: stream,
-                    uninterestingTypes: OblivionMod.NonTypeGroups);
+                if (!originalFileLocs.TryGetRecords(Source, out var foundIDs)) continue;
+                foreach (var id in foundIDs)
+                {
+                    if (!ids.Add(id)) continue;
+                    var majorRec = mod[id];
+                    var origRecOutputPath = Path.Combine(tmpFolder, majorRec.TitleString);
+                    if (!originalFileLocs.TryGetSection(id, out var sourceLoc))
+                    {
+                        throw new NotImplementedException();
+                    }
+                    using (var inStream = new MutagenReader(processedPath))
+                    {
+                        inStream.Position = sourceLoc.Min;
+                        using (var outStream = new MutagenWriter(origRecOutputPath))
+                        {
+                            outStream.Write(inStream.ReadBytes(sourceLoc.Width));
+                        }
+                    }
+                    if (!Output.HasValue) continue;
+
+                    if (!outputFileLocs.TryGetSection(id, out var outputLoc))
+                    {
+                        throw new NotImplementedException();
+                    }
+                    var outputRecOutputPath = Path.Combine(tmpFolder, $"{majorRec.TitleString} - Output");
+                    using (var inStream = new MutagenReader(outputPath))
+                    {
+                        inStream.Position = outputLoc.Min;
+                        using (var outStream = new MutagenWriter(outputRecOutputPath))
+                        {
+                            outStream.Write(inStream.ReadBytes(outputLoc.Width));
+                        }
+                    }
+                }
             }
-            return fileLocs;
         }
 
-        private async Task OblivionESM_Compression(OblivionMod mod, BinaryProcessorInstructions instructions, Task<Dictionary<RawFormID, FileSection>> fileLocationsTasks)
+        private async Task OblivionESM_Compression(OblivionMod mod, BinaryProcessorInstructions instructions, Task<MajorRecordLocator.FileLocations> fileLocationsTasks)
         {
-            Dictionary<RawFormID, FileSection> fileLocs = await fileLocationsTasks;
+            MajorRecordLocator.FileLocations fileLocs = await fileLocationsTasks;
 
             using (var tmp = new TempFolder(new DirectoryInfo(Path.Combine(Path.GetTempPath(), "Mutagen_Oblivion_Binary_CompressionTests"))))
             {
@@ -252,7 +306,7 @@ namespace Mutagen.Bethesda.Tests
                             {
                                 majorRec.Write_Binary(outputPath);
 
-                                if (!fileLocs.TryGetValue(majorRec.FormID, out var majorLoc))
+                                if (!fileLocs.TryGetSection(majorRec.FormID, out var majorLoc))
                                 {
                                     throw new ArgumentException($"Trying to process a compressed major record that is not in the locations dictionary: {majorRec}");
                                 }

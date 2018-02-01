@@ -1,5 +1,6 @@
 ﻿using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,14 +14,110 @@ namespace Mutagen.Bethesda
     {
         private readonly static RecordType GRUP = new RecordType("GRUP");
 
-        public static Dictionary<RawFormID, FileSection> GetFileLocations(
-            Stream stream,
+        public class FileLocations
+        {
+            private Dictionary<RawFormID, FileSection> _fromFormIDs = new Dictionary<RawFormID, FileSection>();
+            private SortedList<FileLocation, RawFormID> _fromStart = new SortedList<FileLocation, RawFormID>();
+            private SortedList<FileLocation, RawFormID> _fromEnd = new SortedList<FileLocation, RawFormID>();
+
+            public FileSection this[RawFormID id]
+            {
+                get => _fromFormIDs[id];
+            }
+
+            public void Add(RawFormID id, FileSection section)
+            {
+                this._fromFormIDs[id] = section;
+                this._fromStart[section.Min] = id;
+                this._fromEnd[section.Max] = id;
+            }
+
+            public bool TryGetSection(RawFormID id, out FileSection section)
+            {
+                return this._fromFormIDs.TryGetValue(id, out section);
+            }
+
+            public bool TryGetRecord(FileLocation loc, out RawFormID id)
+            {
+                if (!_fromStart.TryGetInDirection(
+                    key: loc,
+                    higher: false,
+                    result: out var lowerID))
+                {
+                    id = default(RawFormID);
+                    return false;
+                }
+                if (!_fromEnd.TryGetInDirection(
+                    key: loc,
+                    higher: true,
+                    result: out var higherID))
+                {
+                    id = default(RawFormID);
+                    return false;
+                }
+                if (lowerID.Value != higherID.Value)
+                {
+                    id = default(RawFormID);
+                    return false;
+                }
+                id = lowerID.Value;
+                return true;
+            }
+
+            public bool TryGetRecords(FileSection section, out IEnumerable<RawFormID> ids)
+            {
+                var gotStart = _fromStart.TryGetInDirectionIndex(
+                    key: section.Min,
+                    higher: false,
+                    result: out var start);
+                var gotEnd = _fromEnd.TryGetInDirectionIndex(
+                    key: section.Max,
+                    higher: true,
+                    result: out var end);
+                if (!gotStart && !gotEnd)
+                {
+                    ids = null;
+                    return false;
+                }
+                var ret = new HashSet<RawFormID>();
+                for (int i = start; i <= end; i++)
+                {
+                    ret.Add(_fromStart.Values[i]);
+                }
+                ids = ret;
+                return true;
+            }
+        }
+
+        public static FileLocations GetFileLocations(
+            string filePath,
             params RecordType[] interestingTypes)
+        {
+            using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            {
+                return GetFileLocations(stream, (IEnumerable<RecordType>)interestingTypes);
+            }
+        }
+
+        public static FileLocations GetFileLocations(
+            string filePath,
+            IEnumerable<RecordType> interestingTypes = null,
+            IEnumerable<RecordType> uninterestingTypes = null)
+        {
+            using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            {
+                return GetFileLocations(stream, interestingTypes, uninterestingTypes);
+            }
+        }
+
+        public static FileLocations GetFileLocations(
+        Stream stream,
+        params RecordType[] interestingTypes)
         {
             return GetFileLocations(stream, (IEnumerable<RecordType>)interestingTypes);
         }
 
-        public static Dictionary<RawFormID, FileSection> GetFileLocations(
+        public static FileLocations GetFileLocations(
             Stream stream,
             IEnumerable<RecordType> interestingTypes = null,
             IEnumerable<RecordType> uninterestingTypes = null)
@@ -47,7 +144,7 @@ namespace Mutagen.Bethesda
                 uninterestingSet = null;
             }
 
-            Dictionary<RawFormID, FileSection> ret = new Dictionary<RawFormID, FileSection>();
+            FileLocations ret = new FileLocations();
             using (var reader = new MutagenReader(stream))
             {
                 // Skip header
@@ -66,8 +163,8 @@ namespace Mutagen.Bethesda
                     }
                     var grupLength = new ContentLength(reader.ReadUInt32());
                     var grupRec = HeaderTranslation.ReadNextRecordType(reader);
-                    var grupType = EnumBinaryTranslation<GroupTypeEnum>.Instance.ParseValue(new MutagenFrame(reader, new ContentLength(4))); 
-                    
+                    var grupType = EnumBinaryTranslation<GroupTypeEnum>.Instance.ParseValue(new MutagenFrame(reader, new ContentLength(4)));
+
                     if ((!interestingSet?.Contains(grupRec) ?? false)
                         || (uninterestingSet?.Contains(grupRec) ?? false))
                     { // Skip
@@ -93,7 +190,7 @@ namespace Mutagen.Bethesda
                             }
                             reader.Position += new ContentLength(4); // Skip flags
                             var formID = RawFormID.Factory(reader.ReadBytes(4));
-                            ret[formID] = new FileSection(recordLocation, recordLocation + recLength - 1);
+                            ret.Add(formID, new FileSection(recordLocation, recordLocation + recLength - 1));
                             reader.Position += new ContentLength(4);
                             reader.Position += recLength;
                         }
