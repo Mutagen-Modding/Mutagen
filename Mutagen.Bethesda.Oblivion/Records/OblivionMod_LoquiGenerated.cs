@@ -37,6 +37,39 @@ namespace Mutagen.Bethesda.Oblivion
             _TES4 = NotifyingSetItem.Factory<TES4>(
                 defaultVal: _TES4_Object,
                 markAsSet: true);
+            _GameSettings_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
+            _Globals_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
+            _Classes_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
+            _Factions_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
+            _Hairs_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
+            _Eyes_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
+            _Races_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
+            _Sounds_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
+            _Skills_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
+            _MagicEffects_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
+            _Scripts_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
+            _LandTextures_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
+            _Enchantments_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
+            _Spells_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
+            _Birthsigns_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
+            _Activators_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
+            _AlchemicalApparatus_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
+            _Armors_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
+            _Books_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
+            _Clothes_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
+            _Containers_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
+            _Doors_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
+            _Ingredients_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
+            _Lights_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
+            _Miscellaneous_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
+            _Statics_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
+            _Grasses_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
+            _Trees_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
+            _Flora_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
+            _Furnature_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
+            _Weapons_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
+            _Ammo_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
+            _NPCs_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
             CustomCtor();
         }
         partial void CustomCtor();
@@ -1231,142 +1264,123 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public IEnumerable<MajorRecord> MajorRecords => GetMajorRecords();
-        private IEnumerable<MajorRecord> GetMajorRecords()
+        private Dictionary<RawFormID, MajorRecord> _majorRecords = new Dictionary<RawFormID, MajorRecord>();
+        public IEnumerable<MajorRecord> MajorRecords => _majorRecords.Values;
+        public MajorRecord this[RawFormID id]
         {
-            foreach (var rec in GameSettings.Items)
+            get => _majorRecords[id];
+            set => SetMajorRecord(id, value);
+        }
+        protected void SetMajorRecord(
+            RawFormID id,
+            MajorRecord record)
+        {
+            switch (record)
             {
-                yield return rec;
-            }
-            foreach (var rec in Globals.Items)
-            {
-                yield return rec;
-            }
-            foreach (var rec in Classes.Items)
-            {
-                yield return rec;
-            }
-            foreach (var rec in Factions.Items)
-            {
-                yield return rec;
-            }
-            foreach (var rec in Hairs.Items)
-            {
-                yield return rec;
-            }
-            foreach (var rec in Eyes.Items)
-            {
-                yield return rec;
-            }
-            foreach (var rec in Races.Items)
-            {
-                yield return rec;
-            }
-            foreach (var rec in Sounds.Items)
-            {
-                yield return rec;
-            }
-            foreach (var rec in Skills.Items)
-            {
-                yield return rec;
-            }
-            foreach (var rec in MagicEffects.Items)
-            {
-                yield return rec;
-            }
-            foreach (var rec in Scripts.Items)
-            {
-                yield return rec;
-            }
-            foreach (var rec in LandTextures.Items)
-            {
-                yield return rec;
-            }
-            foreach (var rec in Enchantments.Items)
-            {
-                yield return rec;
-            }
-            foreach (var rec in Spells.Items)
-            {
-                yield return rec;
-            }
-            foreach (var rec in Birthsigns.Items)
-            {
-                yield return rec;
-            }
-            foreach (var rec in Activators.Items)
-            {
-                yield return rec;
-            }
-            foreach (var rec in AlchemicalApparatus.Items)
-            {
-                yield return rec;
-            }
-            foreach (var rec in Armors.Items)
-            {
-                yield return rec;
-            }
-            foreach (var rec in Books.Items)
-            {
-                yield return rec;
-            }
-            foreach (var rec in Clothes.Items)
-            {
-                yield return rec;
-            }
-            foreach (var rec in Containers.Items)
-            {
-                yield return rec;
-            }
-            foreach (var rec in Doors.Items)
-            {
-                yield return rec;
-            }
-            foreach (var rec in Ingredients.Items)
-            {
-                yield return rec;
-            }
-            foreach (var rec in Lights.Items)
-            {
-                yield return rec;
-            }
-            foreach (var rec in Miscellaneous.Items)
-            {
-                yield return rec;
-            }
-            foreach (var rec in Statics.Items)
-            {
-                yield return rec;
-            }
-            foreach (var rec in Grasses.Items)
-            {
-                yield return rec;
-            }
-            foreach (var rec in Trees.Items)
-            {
-                yield return rec;
-            }
-            foreach (var rec in Flora.Items)
-            {
-                yield return rec;
-            }
-            foreach (var rec in Furnature.Items)
-            {
-                yield return rec;
-            }
-            foreach (var rec in Weapons.Items)
-            {
-                yield return rec;
-            }
-            foreach (var rec in Ammo.Items)
-            {
-                yield return rec;
-            }
-            foreach (var rec in NPCs.Items)
-            {
-                yield return rec;
+                case GameSetting gamesettings:
+                    _GameSettings_Object.Items.Add(gamesettings);
+                    break;
+                case Global globals:
+                    _Globals_Object.Items.Add(globals);
+                    break;
+                case Class classes:
+                    _Classes_Object.Items.Add(classes);
+                    break;
+                case Faction factions:
+                    _Factions_Object.Items.Add(factions);
+                    break;
+                case Hair hairs:
+                    _Hairs_Object.Items.Add(hairs);
+                    break;
+                case Eye eyes:
+                    _Eyes_Object.Items.Add(eyes);
+                    break;
+                case Race races:
+                    _Races_Object.Items.Add(races);
+                    break;
+                case Sound sounds:
+                    _Sounds_Object.Items.Add(sounds);
+                    break;
+                case SkillRecord skills:
+                    _Skills_Object.Items.Add(skills);
+                    break;
+                case MagicEffect magiceffects:
+                    _MagicEffects_Object.Items.Add(magiceffects);
+                    break;
+                case Script scripts:
+                    _Scripts_Object.Items.Add(scripts);
+                    break;
+                case LandTexture landtextures:
+                    _LandTextures_Object.Items.Add(landtextures);
+                    break;
+                case Enchantment enchantments:
+                    _Enchantments_Object.Items.Add(enchantments);
+                    break;
+                case SpellUnleveled spells:
+                    _Spells_Object.Items.Add(spells);
+                    break;
+                case Birthsign birthsigns:
+                    _Birthsigns_Object.Items.Add(birthsigns);
+                    break;
+                case Activator activators:
+                    _Activators_Object.Items.Add(activators);
+                    break;
+                case AlchemicalApparatus alchemicalapparatus:
+                    _AlchemicalApparatus_Object.Items.Add(alchemicalapparatus);
+                    break;
+                case Armor armors:
+                    _Armors_Object.Items.Add(armors);
+                    break;
+                case Book books:
+                    _Books_Object.Items.Add(books);
+                    break;
+                case Clothing clothes:
+                    _Clothes_Object.Items.Add(clothes);
+                    break;
+                case Container containers:
+                    _Containers_Object.Items.Add(containers);
+                    break;
+                case Door doors:
+                    _Doors_Object.Items.Add(doors);
+                    break;
+                case Ingredient ingredients:
+                    _Ingredients_Object.Items.Add(ingredients);
+                    break;
+                case Light lights:
+                    _Lights_Object.Items.Add(lights);
+                    break;
+                case Miscellaneous miscellaneous:
+                    _Miscellaneous_Object.Items.Add(miscellaneous);
+                    break;
+                case Static statics:
+                    _Statics_Object.Items.Add(statics);
+                    break;
+                case Grass grasses:
+                    _Grasses_Object.Items.Add(grasses);
+                    break;
+                case Tree trees:
+                    _Trees_Object.Items.Add(trees);
+                    break;
+                case Flora flora:
+                    _Flora_Object.Items.Add(flora);
+                    break;
+                case Furnature furnature:
+                    _Furnature_Object.Items.Add(furnature);
+                    break;
+                case Weapon weapons:
+                    _Weapons_Object.Items.Add(weapons);
+                    break;
+                case Ammo ammo:
+                    _Ammo_Object.Items.Add(ammo);
+                    break;
+                case NPC npcs:
+                    _NPCs_Object.Items.Add(npcs);
+                    break;
+                default:
+                    throw new ArgumentException("Unknown Major Record type: {record?.GetType()}");
             }
         }
+
         #endregion
 
         #region Binary Translation

@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>2d2f3b43e6b12f3dcbec63e313985b205b1ffecf</Sha>
+         <Sha>6f7dedd5e52114e39cd8141a65f903b63d1c9110</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>01-30-2018 22:47:31</CommitDate>
-         <Description>Missing cmd null check in NotifyingSetItem</Description>
+         <CommitDate>01-31-2018 19:47:08</CommitDate>
+         <Description>Added missing NotifyingCollection.Subscribe_Enumerable_Single convenience function</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>ebc2c90dd2458745a649c104e94c4d94018f0682</Sha>
+         <Sha>3393c8c8dee8490bc5bd14596a688ec4c0413d08</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>01-30-2018 22:03:46</CommitDate>
-         <Description>More generic singleton fixes</Description>
+         <CommitDate>01-31-2018 19:47:27</CommitDate>
+         <Description>LoquiType.TryGetSpecificationAsObject</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>
