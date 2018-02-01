@@ -3,7 +3,7 @@
   <Object name="Furnature" baseClass="Bethesda.NamedMajorRecord" recordType="FURN" objType="Record" GUID="05555eb3-61f6-4609-a88f-6f61f0bf001a" ID="81">
     <Fields>
       <RefDirect name="Model" refName="Model" />
-      <FormID name="Script" refName="Script" recordType="SCRI" />
+      <FormIDLink name="Script" refName="Script" recordType="SCRI" />
       <ByteArray name="MarkerFlags" recordType="MNAM" length="4" nullable="NotNull" />
     </Fields>
   </Object>

@@ -4,7 +4,7 @@
     <Fields>
       <RefDirect name="Model" refName="Model" />
       <FilePath name="Icon" recordType="ICON" />
-      <FormID name="Script" refName="Script" recordType="SCRI" />
+      <FormIDLink name="Script" refName="Script" recordType="SCRI" />
       <Float name="Weight" recordType="DATA" />
       <Data recordType="ENIT">
         <Fields>

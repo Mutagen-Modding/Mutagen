@@ -4,7 +4,7 @@
     <Fields>
       <String name="Description" recordType="DESC" hasBeenSet="True" />
       <List name="Spells">
-        <FormID recordType="SPLO" refName="Spell" />
+        <FormIDLink recordType="SPLO" refName="Spell" />
       </List>
       <RefList name="Relations" refName="Relation" />
       <Data>
@@ -27,10 +27,10 @@
       <RefList name="FaceData" refName="FacePart" markerType="NAM0" />
       <RefDirect name="BodyData" refName="GenderedBodyData" markerType="NAM1" />
       <List name="Hairs" recordType="HNAM">
-        <FormID refName="Hair" />
+        <FormIDLink refName="Hair" />
       </List>
       <List name="Eyes" recordType="ENAM">
-        <FormID refName="Eye" />
+        <FormIDLink refName="Eye" />
       </List>
       <RefDirect name="FaceGenData" refName="FaceGenData" />
       <ByteArray name="Unknown" recordType="SNAM" length="2" nullable="NotNull" />
@@ -44,14 +44,14 @@
   </Object>
   <Object name="RaceVoices" objType="Subrecord" recordType="VNAM" GUID="b13f8f98-6699-43f8-b900-51ecba9fa467" ID="32">
     <Fields>
-      <FormID name="Male" refName="Race" />
-      <FormID name="Female" refName="Race" />
+      <FormIDLink name="Male" refName="Race" />
+      <FormIDLink name="Female" refName="Race" />
     </Fields>
   </Object>
   <Object name="RaceHair" objType="Subrecord" recordType="DNAM" GUID="9061ff50-b8b8-429c-9b68-4eb0adf42740" ID="33">
     <Fields>
-      <FormID name="Male" refName="Hair" />
-      <FormID name="Female" refName="Hair" />
+      <FormIDLink name="Male" refName="Hair" />
+      <FormIDLink name="Female" refName="Hair" />
     </Fields>
   </Object>
   <Object name="RaceStatsGendered" objType="Subrecord" recordType="ATTR" GUID="f6f95fe6-ec9c-4ddd-9713-820547d6c485" ID="30">

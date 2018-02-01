@@ -17,12 +17,12 @@
       <List name="Factions">
         <RefDirect refName="RankPlacement" />
       </List>
-      <FormID name="DeathItem" refName="ItemAbstract" recordType="INAM" />
-      <FormID name="Race" refName="Race" recordType="RNAM" />
+      <FormIDLink name="DeathItem" refName="ItemAbstract" recordType="INAM" />
+      <FormIDLink name="Race" refName="Race" recordType="RNAM" />
       <List name="Spells">
-        <FormID refName="Spell" recordType="SPLO" />
+        <FormIDLink refName="Spell" recordType="SPLO" />
       </List>
-      <FormID name="Script" refName="Script" recordType="SCRI" />
+      <FormIDLink name="Script" refName="Script" recordType="SCRI" />
       <List name="Items">
         <RefDirect refName="ItemEntry" />
       </List>
@@ -39,12 +39,12 @@
         </Fields>
       </Data>
       <List name="AIPackages">
-        <FormID refName="AIPackage" recordType="PKID" />
+        <FormIDLink refName="AIPackage" recordType="PKID" />
       </List>
       <List name="Animations" recordType="KFFZ">
         <String />
       </List>
-      <FormID name="Class" recordType="CNAM" refName="Class" />
+      <FormIDLink name="Class" recordType="CNAM" refName="Class" />
       <Data>
         <Fields>
           <UInt8 name="Armorer" />
@@ -79,13 +79,13 @@
           <UInt8 name="Luck" />
         </Fields>
       </Data>
-      <FormID name="Hair" recordType="HNAM" refName="Hair" />
+      <FormIDLink name="Hair" recordType="HNAM" refName="Hair" />
       <Float name="HairLength" recordType="LNAM" />
       <List name="Eyes" recordType="ENAM">
-        <FormID refName="Eye" />
+        <FormIDLink refName="Eye" />
       </List>
       <Color name="HairColor" recordType="HCLR" />
-      <FormID name="CombatStyle" refName="CombatStyle" recordType="ZNAM" />
+      <FormIDLink name="CombatStyle" refName="CombatStyle" recordType="ZNAM" />
       <ByteArray name="FaceGenGeometrySymmetric" recordType="FGGS" />
       <ByteArray name="FaceGenGeometryAsymmetric" recordType="FGGA" />
       <ByteArray name="FaceGenTextureSymmetric" recordType="FGTS" />
@@ -94,14 +94,14 @@
   </Object>
   <Object name="RankPlacement" objType="Subrecord" recordType="SNAM" GUID="825729c0-9865-4e99-87a2-ea87f3fc373a" ID="85">
     <Fields>
-      <FormID name="Faction" refName="Faction" />
+      <FormIDLink name="Faction" refName="Faction" />
       <UInt8 name="Rank" />
       <ByteArray name="Fluff" length="3" nullable="NotNull" />
     </Fields>
   </Object>
   <Object name="ItemEntry" objType="Subrecord" recordType="CNTO" GUID="c4622b63-e996-4d1d-b707-e75cba9c197d" ID="86">
     <Fields>
-      <FormID name="Item" refName="ItemAbstract" />
+      <FormIDLink name="Item" refName="ItemAbstract" />
       <Int32 name="Count" />
     </Fields>
   </Object>

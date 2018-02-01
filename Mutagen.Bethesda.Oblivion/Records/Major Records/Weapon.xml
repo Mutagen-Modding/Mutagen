@@ -4,8 +4,8 @@
     <Fields>
       <RefDirect name="Model" refName="Model" />
       <FilePath name="Icon" recordType="ICON" />
-      <FormID name="Script" refName="Script" recordType="SCRI" />
-      <FormID name="Enchantment" refName="Enchantment" recordType="ENAM" />
+      <FormIDLink name="Script" refName="Script" recordType="SCRI" />
+      <FormIDLink name="Enchantment" refName="Enchantment" recordType="ENAM" />
       <UInt16 name="EnchantmentPoints" recordType="ANAM" />
       <Data>
         <Fields>

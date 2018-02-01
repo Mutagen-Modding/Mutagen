@@ -3,8 +3,8 @@
   <Object name="Flora" objType="Record" baseClass="Bethesda.NamedMajorRecord" recordType="FLOR" GUID="5cc7a37a-95ea-4486-8c4c-02c55c3a4566" ID="80">
     <Fields>
       <RefDirect name="Model" refName="Model" />
-      <FormID name="Script" refName="Script" recordType="SCRI" />
-      <FormID name="Ingredient" refName="Ingredient" recordType="PFIG" />
+      <FormIDLink name="Script" refName="Script" recordType="SCRI" />
+      <FormIDLink name="Ingredient" refName="Ingredient" recordType="PFIG" />
       <Data recordType="PFPC">
         <Fields>
           <UInt8 name="Spring" />

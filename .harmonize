@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>2d2f3b43e6b12f3dcbec63e313985b205b1ffecf</Sha>
+         <Sha>43ee48765abf6ad729042df2709b4d8a2bff60b3</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>01-30-2018 22:47:31</CommitDate>
-         <Description>Missing cmd null check in NotifyingSetItem</Description>
+         <CommitDate>01-31-2018 17:49:14</CommitDate>
+         <Description>Change convert functions</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

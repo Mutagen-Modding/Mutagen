@@ -5,7 +5,7 @@
       <FilePath name="Icon" recordType="ICON" />
       <String name="Description" recordType="DESC" />
       <List name="Spells">
-        <FormID recordType="SPLO" refName="Spell" />
+        <FormIDLink recordType="SPLO" refName="Spell" />
       </List>
     </Fields>
   </Object>
