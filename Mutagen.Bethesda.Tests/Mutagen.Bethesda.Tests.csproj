@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BinaryProcessor_Tests.cs" />
     <Compile Include="Generated\Instruction.cs">
       <DependentUpon>BinaryProcessorInstructions.xml</DependentUpon>
     </Compile>

@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>6f7dedd5e52114e39cd8141a65f903b63d1c9110</Sha>
+         <Sha>020ae6f84946adbf8ece15eebb391efe8a6bbb14</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>01-31-2018 19:47:08</CommitDate>
-         <Description>Added missing NotifyingCollection.Subscribe_Enumerable_Single convenience function</Description>
+         <CommitDate>02-02-2018 23:58:29</CommitDate>
+         <Description>TempFolder.DeleteAfter</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

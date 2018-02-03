@@ -77,7 +77,7 @@ namespace Mutagen.Bethesda.Tests
         {
             if (!(rec is Creature)) return;
             if (compressed != rec.MajorRecordFlags.HasFlag(MajorRecord.MajorRecordFlag.Compressed)) return;
-            this.DynamicMove(
+            if (this.DynamicMove(
                 instr,
                 filePath,
                 loc,
@@ -87,25 +87,26 @@ namespace Mutagen.Bethesda.Tests
                     new RecordType("NIFZ"),
                     new RecordType("ACBS"),
                     new RecordType("SNAM"),
+                    new RecordType("INAM"),
+                    new RecordType("SCRI"),
                 },
                 offendingLimits: new RecordType[]
                 {
-                    new RecordType("INAM"),
-                    new RecordType("SCRI"),
                     new RecordType("AIDT"),
                     new RecordType("PKID"),
                     new RecordType("CNTO"),
                 },
                 locationsToMove: new RecordType[]
                 {
-                    new RecordType("INAM"),
-                    new RecordType("SCRI"),
                     new RecordType("AIDT"),
                     new RecordType("PKID"),
-                });
+                }))
+            {
+                return;
+            }
         }
 
-        private void DynamicMove(
+        private bool DynamicMove(
             Instruction instr,
             string filePath,
             FileSection loc,
@@ -120,7 +121,7 @@ namespace Mutagen.Bethesda.Tests
                 var offender = LocateFirstOf(str, loc.Min, offendingIndices);
                 var limit = LocateFirstOf(str, loc.Min, offendingLimits);
                 var locToMove = LocateFirstOf(str, loc.Min, locationsToMove);
-                if (limit == locToMove) return;
+                if (limit == locToMove) return false;
                 if (offender < limit)
                 {
                     instr.Moves.Add(
@@ -129,8 +130,10 @@ namespace Mutagen.Bethesda.Tests
                             SectionToMove = new RangeInt64(offender, limit - 1),
                             LocationToMove = locToMove
                         });
+                    return true;
                 }
             }
+            return false;
         }
 
         private FileLocation LocateFirstOf(string str, FileLocation offset, IEnumerable<RecordType> types)
@@ -248,10 +251,20 @@ namespace Mutagen.Bethesda.Tests
                     {
                         throw new NotImplementedException();
                     }
-                    using (var inStream = new MutagenReader(processedPath))
+                    var output = Path.Combine(tmpFolder, $"{majorRec.TitleString} - Original");
+                    using (var inStream = new MutagenReader(origPath))
                     {
                         inStream.Position = sourceLoc.Min;
                         using (var outStream = new MutagenWriter(origRecOutputPath))
+                        {
+                            outStream.Write(inStream.ReadBytes(sourceLoc.Width));
+                        }
+                    }
+                    output = Path.Combine(tmpFolder, $"{majorRec.TitleString} - Processed");
+                    using (var inStream = new MutagenReader(processedPath))
+                    {
+                        inStream.Position = sourceLoc.Min;
+                        using (var outStream = new MutagenWriter(output))
                         {
                             outStream.Write(inStream.ReadBytes(sourceLoc.Width));
                         }
@@ -262,11 +275,11 @@ namespace Mutagen.Bethesda.Tests
                     {
                         throw new NotImplementedException();
                     }
-                    var outputRecOutputPath = Path.Combine(tmpFolder, $"{majorRec.TitleString} - Output");
+                    output = Path.Combine(tmpFolder, $"{majorRec.TitleString} - Output");
                     using (var inStream = new MutagenReader(outputPath))
                     {
                         inStream.Position = outputLoc.Min;
-                        using (var outStream = new MutagenWriter(outputRecOutputPath))
+                        using (var outStream = new MutagenWriter(output))
                         {
                             outStream.Write(inStream.ReadBytes(outputLoc.Width));
                         }

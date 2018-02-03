@@ -1,5 +1,7 @@
-﻿using Mutagen.Bethesda.Internals;
+﻿using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Internals;
 using Noggog;
+using Noggog.Utility;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,9 +16,9 @@ namespace Mutagen.Bethesda
         #region Config
         public class Config
         {
-            public SortedList<FileLocation, byte> _substitutions;
-            private RangeCollection _moveRanges;
-            public Dictionary<FileSection, FileLocation> _moves;
+            internal SortedList<FileLocation, byte> _substitutions;
+            internal RangeCollection _moveRanges;
+            internal Dictionary<FileSection, FileLocation> _moves;
             public bool HasProcessing => this._moves?.Count > 0
                 || this._substitutions?.Count > 0;
 
@@ -61,7 +63,7 @@ namespace Mutagen.Bethesda
                 _moves[move] = loc;
                 if (_moveRanges.IsEncapsulated(loc))
                 {
-                    throw new ArgumentException($"Cannot move to a section that is marked to be moved.");
+                    throw new ArgumentException($"Cannot move to a section that is marked to be moved: {loc}");
                 }
             }
         }
@@ -73,6 +75,7 @@ namespace Mutagen.Bethesda
         private readonly List<byte> _expandableBuffer = new List<byte>();
         private int bufferPos;
         private int bufferEnd;
+        private int extraRead;
         private FileLocation _position;
         private bool done;
         private SortedList<FileLocation, byte[]> _activeMoves;
@@ -123,17 +126,13 @@ namespace Mutagen.Bethesda
             }
             if (bufferEnd != 0)
             {
-                if (ExpandableBufferActive)
-                {
-                    this._position += this._expandableBuffer.Count;
-                }
-                else
-                {
-                    this._position += this._buffer.Length;
-                }
+                this._position += this._buffer.Length + extraRead;
             }
             bufferPos = 0;
+            var prevExtraRead = extraRead;
+            extraRead = 0;
             bufferEnd = this.source.Read(this._buffer, 0, this._buffer.Length);
+            this._expandableBuffer.Clear();
             if (bufferEnd == 0)
             {
                 done = true;
@@ -141,7 +140,7 @@ namespace Mutagen.Bethesda
             }
 
             DoSubstitutions();
-            DoMoves();
+            DoMoves(prevExtraRead);
         }
 
         private void DoSubstitutions()
@@ -156,18 +155,11 @@ namespace Mutagen.Bethesda
                 var targetPos = config._substitutions.Keys[i];
                 var bufferPos = targetPos - _position;
                 var sub = config._substitutions.Values[i];
-                if (ExpandableBufferActive)
-                {
-                    _expandableBuffer[bufferPos] = sub;
-                }
-                else
-                {
-                    _buffer[bufferPos] = sub;
-                }
+                _buffer[bufferPos] = sub;
             }
         }
 
-        private void DoMoves()
+        private void DoMoves(int prevExtraRead)
         {
             if (config._moves == null) return;
 
@@ -199,7 +191,7 @@ namespace Mutagen.Bethesda
 
             int moveFromIndex = 0;
             int moveToIndex = 0;
-
+            
             while ((moveFromIndex < moveFromKeys?.Length)
                 || moveToIndex < moveToKeys.Count)
             {
@@ -216,6 +208,10 @@ namespace Mutagen.Bethesda
 
                 if (moveToKey == null || moveFromKey < moveToKey)
                 {
+                    //if (moveToIndex == 0 && moveFromIndex == 0)
+                    //{
+                    //    moveDeletions = prevExtraRead;
+                    //}
                     // Delete out move
                     var moveRange = _sortedMoves[moveFromKey.Value];
                     var moveLocBufStart = new FileLocation(moveRange.Min - this._position - moveDeletions);
@@ -223,10 +219,14 @@ namespace Mutagen.Bethesda
 
                     // Copy to move cache
                     byte[] moveContents = new byte[moveRange.Width];
-                    Array.Copy(this._buffer, moveLocBufStart, moveContents, 0, len);
+                    CopyOver(
+                        sourceIndex: (int)moveLocBufStart,
+                        destinationArray: moveContents,
+                        destinationIndex: 0,
+                        length: len);
                     if (len < moveRange.Width)
                     {
-                        this.source.Read(moveContents, len, (int)(moveRange.Width - len));
+                        extraRead += this.source.Read(moveContents, len, (int)(moveRange.Width - len));
                     }
 
                     var moveLoc = config._moves[moveRange];
@@ -239,16 +239,26 @@ namespace Mutagen.Bethesda
                     // Delete moved snippet
                     if (len == moveRange.Width)
                     {
+                        var sourceIndex = moveRange.Max + 1 - this._position - moveDeletions;
+                        var moveAmount = (this.ExpandableBufferActive ? this._expandableBuffer.Count : this._buffer.Length) - sourceIndex;
+                        var destination = moveRange.Min - this._position - moveDeletions;
+                        if (ExpandableBufferActive)
+                        {
+                            for (int i = 0; i < moveAmount; i++)
+                            {
+                                this._expandableBuffer[i + destination] = this._expandableBuffer[i + sourceIndex];
+                            }
+                        }
+                        else
+                        {
+                            Array.Copy(
+                                sourceArray: this._buffer,
+                                sourceIndex: sourceIndex,
+                                destinationArray: this._buffer,
+                                destinationIndex: destination,
+                                length: moveAmount);
+                        }
                         moveDeletions += len;
-                        var sourceIndex = moveRange.Max + 1 - this._position;
-                        var moveAmount = this._buffer.Length - sourceIndex;
-                        var destination = moveRange.Min - this._position;
-                        Array.Copy(
-                            sourceArray: this._buffer,
-                            sourceIndex: sourceIndex,
-                            destinationArray: this._buffer,
-                            destinationIndex: destination,
-                            length: moveAmount);
                     }
                     bufferEnd -= len;
                     moveFromIndex++;
@@ -267,7 +277,30 @@ namespace Mutagen.Bethesda
 
                     this._activeMoves.Remove(moveToKey.Value);
                     moveToIndex++;
+                    moveDeletions -= moveToPaste.Length;
+                    bufferEnd += moveToPaste.Length;
                 }
+            }
+        }
+
+        private void CopyOver(int sourceIndex, byte[] destinationArray, int destinationIndex, int length)
+        {
+            if (ExpandableBufferActive)
+            {
+                _expandableBuffer.CopyTo(
+                    index: sourceIndex,
+                    array: destinationArray,
+                    arrayIndex: 0,
+                    count: length);
+            }
+            else
+            {
+                Array.Copy(
+                    sourceArray: this._buffer,
+                    sourceIndex: sourceIndex,
+                    destinationArray: destinationArray,
+                    destinationIndex: 0,
+                    length: length);
             }
         }
 
