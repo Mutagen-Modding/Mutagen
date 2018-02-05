@@ -3511,7 +3511,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<GameSetting, GameSetting_ErrorMask, GameSetting_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.GameSettings,
                         rhs: rhs.GameSettings,
                         def: def?.GameSettings,
@@ -3539,7 +3539,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Global, Global_ErrorMask, Global_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Globals,
                         rhs: rhs.Globals,
                         def: def?.Globals,
@@ -3567,7 +3567,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Class, Class_ErrorMask, Class_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Classes,
                         rhs: rhs.Classes,
                         def: def?.Classes,
@@ -3595,7 +3595,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Faction, Faction_ErrorMask, Faction_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Factions,
                         rhs: rhs.Factions,
                         def: def?.Factions,
@@ -3623,7 +3623,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Hair, Hair_ErrorMask, Hair_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Hairs,
                         rhs: rhs.Hairs,
                         def: def?.Hairs,
@@ -3651,7 +3651,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Eye, Eye_ErrorMask, Eye_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Eyes,
                         rhs: rhs.Eyes,
                         def: def?.Eyes,
@@ -3679,7 +3679,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Race, Race_ErrorMask, Race_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Races,
                         rhs: rhs.Races,
                         def: def?.Races,
@@ -3707,7 +3707,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Sound, Sound_ErrorMask, Sound_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Sounds,
                         rhs: rhs.Sounds,
                         def: def?.Sounds,
@@ -3735,7 +3735,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<SkillRecord, SkillRecord_ErrorMask, SkillRecord_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Skills,
                         rhs: rhs.Skills,
                         def: def?.Skills,
@@ -3763,7 +3763,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<MagicEffect, MagicEffect_ErrorMask, MagicEffect_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.MagicEffects,
                         rhs: rhs.MagicEffects,
                         def: def?.MagicEffects,
@@ -3791,7 +3791,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Script, Script_ErrorMask, Script_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Scripts,
                         rhs: rhs.Scripts,
                         def: def?.Scripts,
@@ -3819,7 +3819,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<LandTexture, LandTexture_ErrorMask, LandTexture_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.LandTextures,
                         rhs: rhs.LandTextures,
                         def: def?.LandTextures,
@@ -3847,7 +3847,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Enchantment, Enchantment_ErrorMask, Enchantment_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Enchantments,
                         rhs: rhs.Enchantments,
                         def: def?.Enchantments,
@@ -3875,7 +3875,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<SpellUnleveled, SpellUnleveled_ErrorMask, SpellUnleveled_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Spells,
                         rhs: rhs.Spells,
                         def: def?.Spells,
@@ -3903,7 +3903,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Birthsign, Birthsign_ErrorMask, Birthsign_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Birthsigns,
                         rhs: rhs.Birthsigns,
                         def: def?.Birthsigns,
@@ -3931,7 +3931,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Activator, Activator_ErrorMask, Activator_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Activators,
                         rhs: rhs.Activators,
                         def: def?.Activators,
@@ -3959,7 +3959,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<AlchemicalApparatus, AlchemicalApparatus_ErrorMask, AlchemicalApparatus_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.AlchemicalApparatus,
                         rhs: rhs.AlchemicalApparatus,
                         def: def?.AlchemicalApparatus,
@@ -3987,7 +3987,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Armor, Armor_ErrorMask, Armor_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Armors,
                         rhs: rhs.Armors,
                         def: def?.Armors,
@@ -4015,7 +4015,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Book, Book_ErrorMask, Book_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Books,
                         rhs: rhs.Books,
                         def: def?.Books,
@@ -4043,7 +4043,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Clothing, Clothing_ErrorMask, Clothing_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Clothes,
                         rhs: rhs.Clothes,
                         def: def?.Clothes,
@@ -4071,7 +4071,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Container, Container_ErrorMask, Container_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Containers,
                         rhs: rhs.Containers,
                         def: def?.Containers,
@@ -4099,7 +4099,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Door, Door_ErrorMask, Door_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Doors,
                         rhs: rhs.Doors,
                         def: def?.Doors,
@@ -4127,7 +4127,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Ingredient, Ingredient_ErrorMask, Ingredient_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Ingredients,
                         rhs: rhs.Ingredients,
                         def: def?.Ingredients,
@@ -4155,7 +4155,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Light, Light_ErrorMask, Light_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Lights,
                         rhs: rhs.Lights,
                         def: def?.Lights,
@@ -4183,7 +4183,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Miscellaneous, Miscellaneous_ErrorMask, Miscellaneous_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Miscellaneous,
                         rhs: rhs.Miscellaneous,
                         def: def?.Miscellaneous,
@@ -4211,7 +4211,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Static, Static_ErrorMask, Static_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Statics,
                         rhs: rhs.Statics,
                         def: def?.Statics,
@@ -4239,7 +4239,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Grass, Grass_ErrorMask, Grass_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Grasses,
                         rhs: rhs.Grasses,
                         def: def?.Grasses,
@@ -4267,7 +4267,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Tree, Tree_ErrorMask, Tree_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Trees,
                         rhs: rhs.Trees,
                         def: def?.Trees,
@@ -4295,7 +4295,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Flora, Flora_ErrorMask, Flora_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Flora,
                         rhs: rhs.Flora,
                         def: def?.Flora,
@@ -4323,7 +4323,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Furnature, Furnature_ErrorMask, Furnature_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Furnature,
                         rhs: rhs.Furnature,
                         def: def?.Furnature,
@@ -4351,7 +4351,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Weapon, Weapon_ErrorMask, Weapon_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Weapons,
                         rhs: rhs.Weapons,
                         def: def?.Weapons,
@@ -4379,7 +4379,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Ammo, Ammo_ErrorMask, Ammo_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Ammo,
                         rhs: rhs.Ammo,
                         def: def?.Ammo,
@@ -4407,7 +4407,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<NPC, NPC_ErrorMask, NPC_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.NPCs,
                         rhs: rhs.NPCs,
                         def: def?.NPCs,

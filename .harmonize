@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>43ee48765abf6ad729042df2709b4d8a2bff60b3</Sha>
+         <Sha>7b7f749c462776488ecfc57f3cf31c8de58768e1</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>01-31-2018 17:49:14</CommitDate>
-         <Description>Change convert functions</Description>
+         <CommitDate>02-04-2018 19:21:18</CommitDate>
+         <Description>SortedListExt.TryCreate</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>ebc2c90dd2458745a649c104e94c4d94018f0682</Sha>
+         <Sha>a035109b86e2ca0ca8301bf54768a557aede18d0</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>01-30-2018 22:03:46</CommitDate>
-         <Description>More generic singleton fixes</Description>
+         <CommitDate>02-05-2018 17:22:25</CommitDate>
+         <Description>DictKeyedValue's resolved logic moved to load</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>
