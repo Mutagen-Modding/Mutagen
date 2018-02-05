@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>020ae6f84946adbf8ece15eebb391efe8a6bbb14</Sha>
+         <Sha>7b7f749c462776488ecfc57f3cf31c8de58768e1</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>02-02-2018 23:58:29</CommitDate>
-         <Description>TempFolder.DeleteAfter</Description>
+         <CommitDate>02-04-2018 19:21:18</CommitDate>
+         <Description>SortedListExt.TryCreate</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

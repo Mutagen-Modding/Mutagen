@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda.Tests
             Assert.Equal(sourceBuf, outputBuf);
         }
 
-        #region Substitutions
+        #region Single Substitutions
         [Fact]
         public void Substitutions_FirstPass()
         {
@@ -132,6 +132,46 @@ namespace Mutagen.Bethesda.Tests
         public void Substitutions_OnExtraRead()
         {
             throw new NotImplementedException();
+        }
+        #endregion
+
+        #region Section Substitutions
+        [Fact]
+        public void Substitutions_Section_Typical()
+        {
+            var loc = new FileLocation(6);
+            byte[] val = new byte[] { 75, 76, 77 };
+            var sourceBuf = GetBuffer((int)(BUFFER_SIZE));
+            var expectedBuf = GetBuffer((int)(BUFFER_SIZE));
+            for (int i = 0; i < val.Length; i++)
+            {
+                expectedBuf[loc.Offset + i] = val[i];
+            }
+            BinaryFileProcessor.Config config = new BinaryFileProcessor.Config();
+            config.SetSubstitution(loc, val);
+            var outputBuf = GetBytes(
+                config,
+                sourceBuf);
+            Assert.Equal(expectedBuf, outputBuf);
+        }
+
+        [Fact]
+        public void Substitutions_Section_Overlap()
+        {
+            var loc = new FileLocation(15);
+            byte[] val = new byte[] { 75, 76, 77, 78 };
+            var sourceBuf = GetBuffer((int)(BUFFER_SIZE * 2));
+            var expectedBuf = GetBuffer((int)(BUFFER_SIZE * 2));
+            for (int i = 0; i < val.Length; i++)
+            {
+                expectedBuf[loc.Offset + i] = val[i];
+            }
+            BinaryFileProcessor.Config config = new BinaryFileProcessor.Config();
+            config.SetSubstitution(loc, val);
+            var outputBuf = GetBytes(
+                config,
+                sourceBuf);
+            Assert.Equal(expectedBuf, outputBuf);
         }
         #endregion
 
@@ -297,6 +337,113 @@ namespace Mutagen.Bethesda.Tests
                 expectedBuf,
                 section2,
                 loc2);
+            BinaryFileProcessor.Config config = new BinaryFileProcessor.Config();
+            config.SetMove(section, loc);
+            config.SetMove(section2, loc2);
+            var outputBuf = GetBytes(
+                config,
+                sourceBuf);
+            Assert.Equal(expectedBuf, outputBuf);
+        }
+        [Fact]
+        public void Move_SameLocation()
+        {
+            var section = new FileSection(2, 3);
+            FileLocation loc = new FileLocation(12);
+            var section2 = new FileSection(7, 9);
+            FileLocation loc2 = new FileLocation(12);
+            var sourceBuf = GetBuffer((int)(BUFFER_SIZE));
+            var expectedBuf = new byte[]
+            {
+                0,
+                1,
+                4,
+                5,
+                6,
+                10,
+                11,
+                7,
+                8,
+                9,
+                2,
+                3,
+                12,
+                13,
+                14,
+                15
+            };
+            BinaryFileProcessor.Config config = new BinaryFileProcessor.Config();
+            config.SetMove(section, loc);
+            config.SetMove(section2, loc2);
+            var outputBuf = GetBytes(
+                config,
+                sourceBuf);
+            Assert.Equal(expectedBuf, outputBuf);
+        }
+
+        [Fact]
+        public void Move_SameLocation_Flip()
+        {
+            var section = new FileSection(2, 3);
+            FileLocation loc = new FileLocation(12);
+            var section2 = new FileSection(7, 9);
+            FileLocation loc2 = new FileLocation(12);
+            var sourceBuf = GetBuffer((int)(BUFFER_SIZE));
+            var expectedBuf = new byte[]
+            {
+                0,
+                1,
+                4,
+                5,
+                6,
+                10,
+                11,
+                2,
+                3,
+                7,
+                8,
+                9,
+                12,
+                13,
+                14,
+                15
+            };
+            BinaryFileProcessor.Config config = new BinaryFileProcessor.Config();
+            config.SetMove(section2, loc2);
+            config.SetMove(section, loc);
+            var outputBuf = GetBytes(
+                config,
+                sourceBuf);
+            Assert.Equal(expectedBuf, outputBuf);
+        }
+
+        [Fact]
+        public void Move_Cross()
+        {
+            var section = new FileSection(2, 3);
+            FileLocation loc = new FileLocation(12);
+            var section2 = new FileSection(6, 8);
+            FileLocation loc2 = new FileLocation(10);
+            var sourceBuf = GetBuffer((int)(BUFFER_SIZE));
+            var expectedBuf = new byte[]
+            {
+                0,
+                1,
+                4,
+                5,
+                9,
+                6,
+                7,
+                8,
+                10,
+                11,
+                2,
+                3,
+                12,
+                13,
+                14,
+                15
+            };
             BinaryFileProcessor.Config config = new BinaryFileProcessor.Config();
             config.SetMove(section, loc);
             config.SetMove(section2, loc2);

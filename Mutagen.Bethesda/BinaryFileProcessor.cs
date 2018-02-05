@@ -19,6 +19,7 @@ namespace Mutagen.Bethesda
             internal SortedList<FileLocation, byte> _substitutions;
             internal RangeCollection _moveRanges;
             internal Dictionary<FileSection, FileLocation> _moves;
+            internal Dictionary<FileLocation, List<FileSection>> _sameLocMoves;
             public bool HasProcessing => this._moves?.Count > 0
                 || this._substitutions?.Count > 0;
 
@@ -45,6 +46,7 @@ namespace Mutagen.Bethesda
 
             public void SetMove(FileSection move, FileLocation loc)
             {
+                if (move.Width == 0) return;
                 if (loc == move.Min) return;
                 if (loc < move.Min)
                 {
@@ -54,6 +56,7 @@ namespace Mutagen.Bethesda
                 {
                     _moveRanges = new RangeCollection();
                     _moves = new Dictionary<FileSection, FileLocation>();
+                    _sameLocMoves = new Dictionary<FileLocation, List<FileSection>>();
                 }
                 if (_moveRanges.Collides(move.Range))
                 {
@@ -61,6 +64,7 @@ namespace Mutagen.Bethesda
                 }
                 _moveRanges.Add(move.Range);
                 _moves[move] = loc;
+                _sameLocMoves.TryCreateValue(loc).Add(move);
                 if (_moveRanges.IsEncapsulated(loc))
                 {
                     throw new ArgumentException($"Cannot move to a section that is marked to be moved: {loc}");
@@ -78,7 +82,7 @@ namespace Mutagen.Bethesda
         private int extraRead;
         private FileLocation _position;
         private bool done;
-        private SortedList<FileLocation, byte[]> _activeMoves;
+        private SortedList<FileLocation, List<(FileSection Section, byte[] Data)>> _activeMoves;
         private SortedList<FileLocation, FileSection> _sortedMoves;
         private bool ExpandableBufferActive => _expandableBuffer.Count > 0;
         public bool HasProcessing { get; private set; }
@@ -103,7 +107,7 @@ namespace Mutagen.Bethesda
             this.config = config;
             if (this.config._moves != null)
             {
-                this._activeMoves = new SortedList<FileLocation, byte[]>();
+                this._activeMoves = new SortedList<FileLocation, List<(FileSection Section, byte[] Data)>>();
                 this._sortedMoves = new SortedList<FileLocation, FileSection>();
                 this._sortedMoves.Add(
                     this.config._moves.Select((m) => new KeyValuePair<FileLocation, FileSection>(m.Key.Min, m.Key)));
@@ -148,7 +152,7 @@ namespace Mutagen.Bethesda
             if (config._substitutions == null) return;
             if (!config._substitutions.TryGetEncapsulatedIndices<FileLocation, byte>(
                 lowerKey: new FileLocation(_position + bufferPos),
-                higherKey: new FileLocation(_position + bufferEnd),
+                higherKey: new FileLocation(_position + bufferEnd - 1),
                 result: out var substitutionRange)) return;
             for (int i = substitutionRange.Min; i <= substitutionRange.Max; i++)
             {
@@ -187,6 +191,7 @@ namespace Mutagen.Bethesda
                 result: out var activeMoves))
             {
                 moveToKeys.AddRange(activeMoves.Select((i) => _activeMoves.Keys[i]));
+                moveToKeys.Sort();
             }
 
             int moveFromIndex = 0;
@@ -208,10 +213,6 @@ namespace Mutagen.Bethesda
 
                 if (moveToKey == null || moveFromKey < moveToKey)
                 {
-                    //if (moveToIndex == 0 && moveFromIndex == 0)
-                    //{
-                    //    moveDeletions = prevExtraRead;
-                    //}
                     // Delete out move
                     var moveRange = _sortedMoves[moveFromKey.Value];
                     var moveLocBufStart = new FileLocation(moveRange.Min - this._position - moveDeletions);
@@ -230,10 +231,10 @@ namespace Mutagen.Bethesda
                     }
 
                     var moveLoc = config._moves[moveRange];
-                    this._activeMoves[moveLoc] = moveContents;
+                    this._activeMoves.TryCreate(moveLoc).Add((moveRange, moveContents));
                     if (targetSection.Range.IsInRange(moveLoc))
                     {
-                        moveToKeys.Add(moveLoc);
+                        moveToKeys.InsertSorted(moveLoc, replaceDuplicate: true);
                     }
 
                     // Delete moved snippet
@@ -270,15 +271,18 @@ namespace Mutagen.Bethesda
                         _expandableBuffer.AddRange(_buffer);
                     }
 
-                    var moveToPaste = _activeMoves[moveToKey.Value];
+                    var movesToPaste = _activeMoves[moveToKey.Value];
                     var adjustedMoveLoc = new ContentLength(moveToKey.Value - _position);
                     var adjustedMoveLoc2 = new ContentLength(adjustedMoveLoc - moveDeletions);
-                    _expandableBuffer.InsertRange(adjustedMoveLoc2, moveToPaste);
+                    foreach (var moveToPaste in movesToPaste.OrderBy((i) => config._sameLocMoves[moveToKey.Value].IndexOf(i.Section)))
+                    {
+                        _expandableBuffer.InsertRange(adjustedMoveLoc2, moveToPaste.Data);
+                        moveDeletions -= moveToPaste.Data.Length;
+                        bufferEnd += moveToPaste.Data.Length;
+                    }
 
                     this._activeMoves.Remove(moveToKey.Value);
                     moveToIndex++;
-                    moveDeletions -= moveToPaste.Length;
-                    bufferEnd += moveToPaste.Length;
                 }
             }
         }
