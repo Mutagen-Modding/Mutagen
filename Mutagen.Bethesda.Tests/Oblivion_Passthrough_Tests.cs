@@ -77,33 +77,36 @@ namespace Mutagen.Bethesda.Tests
         {
             if (!(rec is Creature)) return;
             if (compressed != rec.MajorRecordFlags.HasFlag(MajorRecord.MajorRecordFlag.Compressed)) return;
-            if (this.DynamicMove(
+            this.AlignRecords(
                 instr,
                 filePath,
                 loc,
-                offendingIndices: new RecordType[]
+                new RecordType[]
                 {
+                    new RecordType("EDID"),
+                    new RecordType("FULL"),
+                    new RecordType("MODL"),
+                    new RecordType("CNTO"),
                     new RecordType("SPLO"),
                     new RecordType("NIFZ"),
                     new RecordType("ACBS"),
                     new RecordType("SNAM"),
                     new RecordType("INAM"),
                     new RecordType("SCRI"),
-                },
-                offendingLimits: new RecordType[]
-                {
                     new RecordType("AIDT"),
                     new RecordType("PKID"),
-                    new RecordType("CNTO"),
-                },
-                locationsToMove: new RecordType[]
-                {
-                    new RecordType("AIDT"),
-                    new RecordType("PKID"),
-                }))
-            {
-                return;
-            }
+                    new RecordType("KFFZ"),
+                    new RecordType("DATA"),
+                    new RecordType("RNAM"),
+                    new RecordType("ZNAM"),
+                    new RecordType("TNAM"),
+                    new RecordType("BNAM"),
+                    new RecordType("WNAM"),
+                    new RecordType("NAM0"),
+                    new RecordType("NAM1"),
+                    new RecordType("CSCR"),
+                    new RecordType("CSDT"),
+                });
         }
 
         private bool DynamicMove(
@@ -134,6 +137,64 @@ namespace Mutagen.Bethesda.Tests
                 }
             }
             return false;
+        }
+
+        private void AlignRecords(
+            Instruction instr,
+            string filePath,
+            FileSection loc,
+            IEnumerable<RecordType> rectypes)
+        {
+            using (var stream = new MutagenReader(filePath))
+            {
+                stream.Position = loc.Min;
+                var bytes = stream.ReadBytes((int)loc.Range.Width);
+                var str = MutagenReader.BytesToString(bytes);
+                List<(RecordType rec, int sourceIndex, int loc)> list = new List<(RecordType rec, int sourceIndex, int loc)>();
+                int recTypeIndex = -1;
+                foreach (var rec in rectypes)
+                {
+                    recTypeIndex++;
+                    var index = str.IndexOf(rec.Type);
+                    if (index == -1) continue;
+                    list.Add((rec, recTypeIndex, index));
+                }
+                if (list.Count == 0) return;
+                List<int> locs = new List<int>(list.OrderBy((l) => l.loc).Select((l) => l.loc));
+                var orderedList = list.OrderBy((l) => l.loc).ToList();
+                if (list.Select(i => i.rec).SequenceEqual(orderedList.Select(i => i.rec))) return;
+                int start = orderedList[0].loc;
+                foreach (var item in list)
+                {
+                    var locIndex = locs.IndexOf(item.loc);
+                    int len;
+                    if (locIndex == locs.Count - 1)
+                    {
+                        len = str.Length - item.loc;
+                    }
+                    else
+                    {
+                        len = locs[locIndex + 1] - item.loc;
+                    }
+                    if (item.loc == start)
+                    {
+                        start += len;
+                        continue;
+                    }
+                    var data = new byte[len];
+                    for (int index = 0; index < len; index++)
+                    {
+                        data[index] = bytes[item.loc + index];
+                    }
+                    instr.Substitutions.Add(
+                        new Substitution()
+                        {
+                            Location = start + loc.Min,
+                            Data = data
+                        });
+                    start += len;
+                }
+            }
         }
 
         private FileLocation LocateFirstOf(string str, FileLocation offset, IEnumerable<RecordType> types)
@@ -194,7 +255,7 @@ namespace Mutagen.Bethesda.Tests
                 {
                     using (var outStream = new FileStream(processedPath, FileMode.Create, FileAccess.Write))
                     {
-                         processor.CopyTo(outStream);
+                        processor.CopyTo(outStream);
                     }
                 }
 
