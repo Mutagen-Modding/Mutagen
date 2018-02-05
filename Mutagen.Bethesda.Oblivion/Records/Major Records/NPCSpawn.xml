@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="NPCSpawn" baseClass="Bethesda.MajorRecord" objType="Record" abstract="true" GUID="85b66f0a-7526-41d9-b6a5-292dafc16405" ID="95">
+    <Fields>
+    </Fields>
+  </Object>
+</Loqui>

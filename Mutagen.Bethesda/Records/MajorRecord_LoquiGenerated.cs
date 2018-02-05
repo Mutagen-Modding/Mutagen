@@ -982,6 +982,7 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType LVSP_HEADER = new RecordType("LVSP");
         public static readonly RecordType SPEL_HEADER = new RecordType("SPEL");
         public static readonly RecordType AMMO_HEADER = new RecordType("AMMO");
+        public static readonly RecordType LVLC_HEADER = new RecordType("LVLC");
         public static readonly RecordType EDID_HEADER = new RecordType("EDID");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
@@ -1033,7 +1034,8 @@ namespace Mutagen.Bethesda.Internals
                         CLOT_HEADER,
                         LVSP_HEADER,
                         SPEL_HEADER,
-                        AMMO_HEADER
+                        AMMO_HEADER,
+                        LVLC_HEADER
                     })
             );
         });

@@ -200,6 +200,9 @@
     <Compile Include="Records\Major Records\Ingredient.cs">
       <DependentUpon>Ingredient.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\LeveledCreature.cs">
+      <DependentUpon>LeveledCreature.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Light.cs">
       <DependentUpon>Light.xml</DependentUpon>
     </Compile>
@@ -416,6 +419,18 @@
     <Compile Include="Records\Major Records\SoundItem_LoquiGenerated.cs">
       <DependentUpon>Creature.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\LeveledCreature_LoquiGenerated.cs">
+      <DependentUpon>LeveledCreature.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LeveledCreatureEntry_LoquiGenerated.cs">
+      <DependentUpon>LeveledCreature.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NPCAbstract_LoquiGenerated.cs">
+      <DependentUpon>NPCAbstract.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\NPCSpawn_LoquiGenerated.cs">
+      <DependentUpon>NPCSpawn.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Records\Common Subrecords\Effect.xml">
@@ -512,6 +527,9 @@
     <Content Include="Records\Major Records\LandTexture.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Records\Major Records\LeveledCreature.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Records\Major Records\Light.xml">
       <SubType>Designer</SubType>
     </Content>
@@ -522,6 +540,12 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\NPC.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\NPCAbstract.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\NPCSpawn.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Race.xml">

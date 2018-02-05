@@ -90,6 +90,10 @@ namespace Loqui
             LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.Creature_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.CreatureSound_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.SoundItem_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.LeveledCreatureEntry_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.LeveledCreature_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.NPCAbstract_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.NPCSpawn_Registration.Instance);
         }
     }
 }
