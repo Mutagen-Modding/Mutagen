@@ -21,7 +21,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     if (!(field is LoquiType loqui)) continue;
                     if (loqui.TargetObjectGeneration?.GetObjectData().ObjectType != ObjectType.Group) continue;
-                    fg.AppendLine($"foreach (var rec in {field.Name}.Items)");
+                    fg.AppendLine($"foreach (var rec in {field.Name}.Items.Values)");
                     using (new BraceWrapper(fg))
                     {
                         fg.AppendLine("yield return rec;");

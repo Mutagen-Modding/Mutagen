@@ -1061,7 +1061,11 @@ namespace Mutagen.Bethesda.Tests.Internals
                                 case CopyOption.Reference:
                                     return r;
                                 case CopyOption.MakeCopy:
-                                    return r.Copy(copyMask?.CompressionInstructions.Specific, d);
+                                    if (r == null) return default(RecordInstruction);
+                                    return RecordInstruction.Copy(
+                                        r,
+                                        copyMask?.CompressionInstructions?.Specific,
+                                        def: d);
                                 default:
                                     throw new NotImplementedException($"Unknown CopyOption {copyMask?.CompressionInstructions.Overall}. Cannot execute copy.");
                             }

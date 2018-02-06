@@ -72,6 +72,7 @@
     <Compile Include="Modules\Binary\EnumBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\FilePathBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\FormIDLinkBinaryTranslationGeneration.cs" />
+    <Compile Include="Modules\Binary\DictBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\ListBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\LoquiBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\BufferBinaryTranslationGeneration.cs" />

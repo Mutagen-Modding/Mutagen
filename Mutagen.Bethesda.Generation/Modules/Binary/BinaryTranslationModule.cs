@@ -56,6 +56,7 @@ namespace Mutagen.Bethesda.Generation
             this._typeGenerations[typeof(FormIDType)] = new PrimitiveBinaryTranslationGeneration<FormID>();
             this._typeGenerations[typeof(FormIDLinkType)] = new FormIDLinkBinaryTranslationGeneration();
             this._typeGenerations[typeof(ListType)] = new ListBinaryTranslationGeneration();
+            this._typeGenerations[typeof(DictType)] = new DictBinaryTranslationGeneration();
             this._typeGenerations[typeof(ByteArrayType)] = new ByteArrayTranslationGeneration();
             this._typeGenerations[typeof(BufferType)] = new BufferBinaryTranslationGeneration();
             this._typeGenerations[typeof(DataType)] = new DataBinaryTranslationModule();

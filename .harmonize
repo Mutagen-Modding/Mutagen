@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>a035109b86e2ca0ca8301bf54768a557aede18d0</Sha>
+         <Sha>12ca64d0fdc1ae4f173aaceeea1c80983ef1be49</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>02-05-2018 17:22:25</CommitDate>
-         <Description>DictKeyedValue's resolved logic moved to load</Description>
+         <CommitDate>02-06-2018 07:47:14</CommitDate>
+         <Description>DictType keyed value generic work</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

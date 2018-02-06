@@ -1234,135 +1234,135 @@ namespace Mutagen.Bethesda.Oblivion
         public IEnumerable<MajorRecord> MajorRecords => GetMajorRecords();
         private IEnumerable<MajorRecord> GetMajorRecords()
         {
-            foreach (var rec in GameSettings.Items)
+            foreach (var rec in GameSettings.Items.Values)
             {
                 yield return rec;
             }
-            foreach (var rec in Globals.Items)
+            foreach (var rec in Globals.Items.Values)
             {
                 yield return rec;
             }
-            foreach (var rec in Classes.Items)
+            foreach (var rec in Classes.Items.Values)
             {
                 yield return rec;
             }
-            foreach (var rec in Factions.Items)
+            foreach (var rec in Factions.Items.Values)
             {
                 yield return rec;
             }
-            foreach (var rec in Hairs.Items)
+            foreach (var rec in Hairs.Items.Values)
             {
                 yield return rec;
             }
-            foreach (var rec in Eyes.Items)
+            foreach (var rec in Eyes.Items.Values)
             {
                 yield return rec;
             }
-            foreach (var rec in Races.Items)
+            foreach (var rec in Races.Items.Values)
             {
                 yield return rec;
             }
-            foreach (var rec in Sounds.Items)
+            foreach (var rec in Sounds.Items.Values)
             {
                 yield return rec;
             }
-            foreach (var rec in Skills.Items)
+            foreach (var rec in Skills.Items.Values)
             {
                 yield return rec;
             }
-            foreach (var rec in MagicEffects.Items)
+            foreach (var rec in MagicEffects.Items.Values)
             {
                 yield return rec;
             }
-            foreach (var rec in Scripts.Items)
+            foreach (var rec in Scripts.Items.Values)
             {
                 yield return rec;
             }
-            foreach (var rec in LandTextures.Items)
+            foreach (var rec in LandTextures.Items.Values)
             {
                 yield return rec;
             }
-            foreach (var rec in Enchantments.Items)
+            foreach (var rec in Enchantments.Items.Values)
             {
                 yield return rec;
             }
-            foreach (var rec in Spells.Items)
+            foreach (var rec in Spells.Items.Values)
             {
                 yield return rec;
             }
-            foreach (var rec in Birthsigns.Items)
+            foreach (var rec in Birthsigns.Items.Values)
             {
                 yield return rec;
             }
-            foreach (var rec in Activators.Items)
+            foreach (var rec in Activators.Items.Values)
             {
                 yield return rec;
             }
-            foreach (var rec in AlchemicalApparatus.Items)
+            foreach (var rec in AlchemicalApparatus.Items.Values)
             {
                 yield return rec;
             }
-            foreach (var rec in Armors.Items)
+            foreach (var rec in Armors.Items.Values)
             {
                 yield return rec;
             }
-            foreach (var rec in Books.Items)
+            foreach (var rec in Books.Items.Values)
             {
                 yield return rec;
             }
-            foreach (var rec in Clothes.Items)
+            foreach (var rec in Clothes.Items.Values)
             {
                 yield return rec;
             }
-            foreach (var rec in Containers.Items)
+            foreach (var rec in Containers.Items.Values)
             {
                 yield return rec;
             }
-            foreach (var rec in Doors.Items)
+            foreach (var rec in Doors.Items.Values)
             {
                 yield return rec;
             }
-            foreach (var rec in Ingredients.Items)
+            foreach (var rec in Ingredients.Items.Values)
             {
                 yield return rec;
             }
-            foreach (var rec in Lights.Items)
+            foreach (var rec in Lights.Items.Values)
             {
                 yield return rec;
             }
-            foreach (var rec in Miscellaneous.Items)
+            foreach (var rec in Miscellaneous.Items.Values)
             {
                 yield return rec;
             }
-            foreach (var rec in Statics.Items)
+            foreach (var rec in Statics.Items.Values)
             {
                 yield return rec;
             }
-            foreach (var rec in Grasses.Items)
+            foreach (var rec in Grasses.Items.Values)
             {
                 yield return rec;
             }
-            foreach (var rec in Trees.Items)
+            foreach (var rec in Trees.Items.Values)
             {
                 yield return rec;
             }
-            foreach (var rec in Flora.Items)
+            foreach (var rec in Flora.Items.Values)
             {
                 yield return rec;
             }
-            foreach (var rec in Furnature.Items)
+            foreach (var rec in Furnature.Items.Values)
             {
                 yield return rec;
             }
-            foreach (var rec in Weapons.Items)
+            foreach (var rec in Weapons.Items.Values)
             {
                 yield return rec;
             }
-            foreach (var rec in Ammo.Items)
+            foreach (var rec in Ammo.Items.Values)
             {
                 yield return rec;
             }
-            foreach (var rec in NPCs.Items)
+            foreach (var rec in NPCs.Items.Values)
             {
                 yield return rec;
             }

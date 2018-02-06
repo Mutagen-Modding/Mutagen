@@ -32,8 +32,8 @@ namespace Mutagen.Bethesda.Generation
             }
             if (obj.Name.Equals("Group") && (field.Name?.Equals("Items") ?? false))
             {
-                ListType list = field as ListType;
-                LoquiType loqui = list.SubTypeGeneration as LoquiType;
+                DictType dict = field as DictType;
+                LoquiType loqui = dict.ValueTypeGen as LoquiType;
                 data.TriggeringRecordAccessors.Add($"T_RecordType");
             }
             return base.PostFieldLoad(obj, field, node);
@@ -114,6 +114,20 @@ namespace Mutagen.Bethesda.Generation
                     if (!subData.HasTrigger) continue;
                     recordTypes.Add(subData.TriggeringRecordTypes);
                 }
+                else if (field is DictType dict)
+                {
+                    switch (dict.Mode)
+                    {
+                        case DictMode.KeyedValue:
+                            if (!dict.ValueTypeGen.TryGetFieldData(out var subData)) continue;
+                            if (!subData.HasTrigger) continue;
+                            recordTypes.Add(subData.TriggeringRecordTypes);
+                            break;
+                        case DictMode.KeyValue:
+                        default:
+                            throw new NotImplementedException();
+                    }
+                }
             }
             foreach (var type in recordTypes)
             {
@@ -168,6 +182,25 @@ namespace Mutagen.Bethesda.Generation
                     obj,
                     contLoqui,
                     subData);
+            }
+            else if (field is DictType dictType)
+            {
+                switch (dictType.Mode)
+                {
+                    case DictMode.KeyedValue:
+                        if (dictType.ValueTypeGen is LoquiType dictLoqui)
+                        {
+                            var subData = dictLoqui.CustomData.TryCreateValue(Constants.DATA_KEY, () => new MutagenFieldData(dictLoqui)) as MutagenFieldData;
+                            await SetRecordTrigger(
+                                obj,
+                                dictLoqui,
+                                subData);
+                        }
+                        break;
+                    case DictMode.KeyValue:
+                    default:
+                        throw new NotImplementedException();
+                }
             }
 
             if (field is LoquiType loqui
