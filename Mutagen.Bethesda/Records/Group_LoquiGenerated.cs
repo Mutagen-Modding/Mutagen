@@ -12,7 +12,6 @@ using Loqui;
 using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Internals;
-using Mutagen.Bethesda;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -78,16 +77,11 @@ namespace Mutagen.Bethesda
         INotifyingItemGetter<Byte[]> IGroupGetter<T>.LastModified_Property => this.LastModified_Property;
         #endregion
         #region Items
-        private readonly INotifyingList<T> _Items = new NotifyingList<T>();
-        public INotifyingList<T> Items => _Items;
-        public IEnumerable<T> ItemsEnumerable
-        {
-            get => _Items;
-            set => _Items.SetTo(value);
-        }
+        private readonly INotifyingKeyedCollection<FormID, T> _Items = new NotifyingKeyedCollection<FormID, T>((item) => item.FormID);
+        public INotifyingKeyedCollection<FormID, T> Items => _Items;
         #region Interface Members
-        INotifyingList<T> IGroup<T>.Items => _Items;
-        INotifyingListGetter<T> IGroupGetter<T>.Items => _Items;
+        INotifyingKeyedCollection<FormID, T> IGroup<T>.Items => _Items;
+        INotifyingKeyedCollectionGetter<FormID, T> IGroupGetter<T>.Items => _Items;
         #endregion
 
         #endregion
@@ -524,16 +518,16 @@ namespace Mutagen.Bethesda
                         errorMask: errorMask));
                     break;
                 case "Items":
-                    item._Items.SetIfSucceeded(ListXmlTranslation<T, MaskItem<Exception, T_ErrMask>>.Instance.Parse(
+                    item._Items.SetIfSucceeded(KeyedDictXmlTranslation<FormID, T, MaskItem<Exception, T_ErrMask>>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Group_FieldIndex.Items,
                         errorMask: errorMask,
-                        transl: (XElement r, bool listDoMasks, out MaskItem<Exception, T_ErrMask> listSubMask) =>
+                        valTransl: (XElement r, bool dictDoMasks, out MaskItem<Exception, T_ErrMask> dictSubMask) =>
                         {
                             return LoquiXmlTranslation<T, T_ErrMask>.Instance.Parse(
                                 root: r,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask);
+                                doMasks: dictDoMasks,
+                                errorMask: out dictSubMask);
                         }
                         ));
                     break;
@@ -1060,7 +1054,9 @@ namespace Mutagen.Bethesda
                         cmds);
                     break;
                 case Group_FieldIndex.Items:
-                    this._Items.SetTo((IEnumerable<T>)obj, cmds);
+                    this.Items.SetTo(
+                        ((IEnumerable<T>)(NotifyingDictionary<FormID, T>)obj),
+                        cmds);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1110,7 +1106,9 @@ namespace Mutagen.Bethesda
                         null);
                     break;
                 case Group_FieldIndex.Items:
-                    obj._Items.SetTo((IEnumerable<T>)pair.Value, null);
+                    obj.Items.SetTo(
+                        ((IEnumerable<T>)(NotifyingDictionary<FormID, T>)pair.Value),
+                        null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -1134,7 +1132,7 @@ namespace Mutagen.Bethesda
         new Byte[] LastModified { get; set; }
         new INotifyingItem<Byte[]> LastModified_Property { get; }
 
-        new INotifyingList<T> Items { get; }
+        new INotifyingKeyedCollection<FormID, T> Items { get; }
     }
 
     public interface IGroupGetter<T> : ILoquiObject
@@ -1156,7 +1154,7 @@ namespace Mutagen.Bethesda
 
         #endregion
         #region Items
-        INotifyingListGetter<T> Items { get; }
+        INotifyingKeyedCollectionGetter<FormID, T> Items { get; }
         #endregion
 
     }
@@ -1237,11 +1235,10 @@ namespace Mutagen.Bethesda.Internals
             Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
             {
-                case Group_FieldIndex.Items:
-                    return true;
                 case Group_FieldIndex.ContainedRecordType:
                 case Group_FieldIndex.GroupType:
                 case Group_FieldIndex.LastModified:
+                case Group_FieldIndex.Items:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1253,11 +1250,10 @@ namespace Mutagen.Bethesda.Internals
             Group_FieldIndex enu = (Group_FieldIndex)index;
             switch (enu)
             {
-                case Group_FieldIndex.Items:
-                    return true;
                 case Group_FieldIndex.ContainedRecordType:
                 case Group_FieldIndex.GroupType:
                 case Group_FieldIndex.LastModified:
+                case Group_FieldIndex.Items:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1380,7 +1376,7 @@ namespace Mutagen.Bethesda.Internals
                 case Group_FieldIndex.LastModified:
                     return typeof(Byte[]);
                 case Group_FieldIndex.Items:
-                    return typeof(NotifyingList<T>);
+                    return typeof(NotifyingDictionary<FormID, T>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1510,10 +1506,10 @@ namespace Mutagen.Bethesda.Internals
                 try
                 {
                     item.Items.SetToWithDefault(
-                        rhs: rhs.Items,
-                        def: def?.Items,
-                        cmds: cmds,
-                        converter: (r, d) =>
+                        rhs.Items,
+                        def?.Items,
+                        cmds,
+                        (r, d) =>
                         {
                             switch (copyMask?.Items.Overall ?? CopyOption.Reference)
                             {
@@ -1658,31 +1654,15 @@ namespace Mutagen.Bethesda.Internals
             ret.ContainedRecordType = object.Equals(item.ContainedRecordType, rhs.ContainedRecordType);
             ret.GroupType = item.GroupType == rhs.GroupType;
             ret.LastModified = item.LastModified.EqualsFast(rhs.LastModified);
-            if (item.Items.HasBeenSet == rhs.Items.HasBeenSet)
+            ret.Items = new MaskItem<bool, IEnumerable<MaskItem<bool, MajorRecord_Mask<bool>>>>();
+            ret.Items.Specific = item.Items.Values.SelectAgainst<T, MaskItem<bool, MajorRecord_Mask<bool>>>(rhs.Items.Values, ((l, r) =>
             {
-                if (item.Items.HasBeenSet)
-                {
-                    ret.Items = new MaskItem<bool, IEnumerable<MaskItem<bool, MajorRecord_Mask<bool>>>>();
-                    ret.Items.Specific = item.Items.SelectAgainst<T, MaskItem<bool, MajorRecord_Mask<bool>>>(rhs.Items, ((l, r) =>
-                    {
-                        MaskItem<bool, MajorRecord_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => MajorRecordCommon.GetEqualsMask(loqLhs, loqRhs));
-                        return itemRet;
-                    }
-                    ), out ret.Items.Overall);
-                    ret.Items.Overall = ret.Items.Overall && ret.Items.Specific.All((b) => b.Overall);
-                }
-                else
-                {
-                    ret.Items = new MaskItem<bool, IEnumerable<MaskItem<bool, MajorRecord_Mask<bool>>>>();
-                    ret.Items.Overall = true;
-                }
+                MaskItem<bool, MajorRecord_Mask<bool>> itemRet;
+                itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => MajorRecordCommon.GetEqualsMask(loqLhs, loqRhs));
+                return itemRet;
             }
-            else
-            {
-                ret.Items = new MaskItem<bool, IEnumerable<MaskItem<bool, MajorRecord_Mask<bool>>>>();
-                ret.Items.Overall = false;
-            }
+            ), out ret.Items.Overall);
+            ret.Items.Overall = ret.Items.Overall && ret.Items.Specific.All((b) => b.Overall);
         }
 
         public static string ToString<T>(
@@ -1732,7 +1712,7 @@ namespace Mutagen.Bethesda.Internals
                     fg.AppendLine("[");
                     using (new DepthWrapper(fg))
                     {
-                        foreach (var subItem in item.Items)
+                        foreach (var subItem in item.Items.Values)
                         {
                             fg.AppendLine("[");
                             using (new DepthWrapper(fg))
@@ -1764,7 +1744,7 @@ namespace Mutagen.Bethesda.Internals
             ret.ContainedRecordType = true;
             ret.GroupType = true;
             ret.LastModified = true;
-            ret.Items = new MaskItem<bool, IEnumerable<MaskItem<bool, MajorRecord_Mask<bool>>>>(item.Items.HasBeenSet, item.Items.Select((i) => new MaskItem<bool, MajorRecord_Mask<bool>>(true, i.GetHasBeenSetMask())));
+            ret.Items = new MaskItem<bool, IEnumerable<MaskItem<bool, MajorRecord_Mask<bool>>>>(item.Items.HasBeenSet, item.Items.Values.Select((i) => new MaskItem<bool, MajorRecord_Mask<bool>>(true, i.GetHasBeenSetMask())));
             return ret;
         }
 
@@ -1818,20 +1798,20 @@ namespace Mutagen.Bethesda.Internals
                         errorMask: errorMask);
                     if (item.Items.HasBeenSet)
                     {
-                        ListXmlTranslation<T, MaskItem<Exception, T_ErrMask>>.Instance.Write(
+                        KeyedDictXmlTranslation<FormID, T, MaskItem<Exception, T_ErrMask>>.Instance.Write(
                             writer: writer,
                             name: nameof(item.Items),
-                            item: item.Items,
+                            items: item.Items.Values,
                             fieldIndex: (int)Group_FieldIndex.Items,
                             errorMask: errorMask,
-                            transl: (T subItem, bool listDoMasks, out MaskItem<Exception, T_ErrMask> listSubMask) =>
+                            valTransl: (T subItem, bool dictDoMask, out MaskItem<Exception, T_ErrMask> dictSubMask) =>
                             {
                                 LoquiXmlTranslation<T, T_ErrMask>.Instance.Write(
                                     writer: writer,
                                     item: subItem,
                                     name: "Item",
-                                    doMasks: errorMask != null,
-                                    errorMask: out listSubMask);
+                                    doMasks: dictDoMask,
+                                    errorMask: out dictSubMask);
                             }
                             );
                     }
@@ -1936,7 +1916,7 @@ namespace Mutagen.Bethesda.Internals
         {
             Mutagen.Bethesda.Binary.ListBinaryTranslation<T, MaskItem<Exception, T_ErrMask>>.Instance.Write(
                 writer: writer,
-                item: item.Items,
+                item: item.Items.Values,
                 fieldIndex: (int)Group_FieldIndex.Items,
                 errorMask: errorMask,
                 transl: (T subItem, bool listDoMasks, out MaskItem<Exception, T_ErrMask> listSubMask) =>
@@ -2023,7 +2003,7 @@ namespace Mutagen.Bethesda.Internals
                     foreach (var item in this.Items.Specific)
                     {
                         if (!eval(item.Overall)) return false;
-                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                        if (!item.Specific?.AllEqual(eval) ?? false) return false;
                     }
                 }
             }
@@ -2126,7 +2106,7 @@ namespace Mutagen.Bethesda.Internals
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
                                 {
-                                    subItem?.ToString(fg);
+                                    fg.AppendLine($" => {subItem}");
                                 }
                                 fg.AppendLine("]");
                             }
@@ -2161,7 +2141,7 @@ namespace Mutagen.Bethesda.Internals
         public Exception ContainedRecordType;
         public Exception GroupType;
         public Exception LastModified;
-        public MaskItem<Exception, IEnumerable<MaskItem<Exception, T_ErrMask>>> Items;
+        public MaskItem<Exception, IEnumerable<MaskItem<Exception, MajorRecord_ErrorMask>>> Items;
         #endregion
 
         #region IErrorMask
@@ -2180,7 +2160,7 @@ namespace Mutagen.Bethesda.Internals
                     this.LastModified = ex;
                     break;
                 case Group_FieldIndex.Items:
-                    this.Items = new MaskItem<Exception, IEnumerable<MaskItem<Exception, T_ErrMask>>>(ex, null);
+                    this.Items = new MaskItem<Exception, IEnumerable<MaskItem<Exception, MajorRecord_ErrorMask>>>(ex, null);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2202,7 +2182,7 @@ namespace Mutagen.Bethesda.Internals
                     this.LastModified = (Exception)obj;
                     break;
                 case Group_FieldIndex.Items:
-                    this.Items = (MaskItem<Exception, IEnumerable<MaskItem<Exception, T_ErrMask>>>)obj;
+                    this.Items = (MaskItem<Exception, IEnumerable<MaskItem<Exception, MajorRecord_ErrorMask>>>)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2268,7 +2248,7 @@ namespace Mutagen.Bethesda.Internals
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
                         {
-                            subItem?.ToString(fg);
+                            fg.AppendLine($" => {subItem}");
                         }
                         fg.AppendLine("]");
                     }
@@ -2285,7 +2265,7 @@ namespace Mutagen.Bethesda.Internals
             ret.ContainedRecordType = this.ContainedRecordType.Combine(rhs.ContainedRecordType);
             ret.GroupType = this.GroupType.Combine(rhs.GroupType);
             ret.LastModified = this.LastModified.Combine(rhs.LastModified);
-            ret.Items = new MaskItem<Exception, IEnumerable<MaskItem<Exception, T_ErrMask>>>(this.Items.Overall.Combine(rhs.Items.Overall), new List<MaskItem<Exception, T_ErrMask>>(this.Items.Specific.And(rhs.Items.Specific)));
+            ret.Items = new MaskItem<Exception, IEnumerable<MaskItem<Exception, MajorRecord_ErrorMask>>>(this.Items.Overall.Combine(rhs.Items.Overall), new List<MaskItem<Exception, MajorRecord_ErrorMask>>(this.Items.Specific.And(rhs.Items.Specific)));
             return ret;
         }
         public static Group_ErrorMask<T_ErrMask> Combine(Group_ErrorMask<T_ErrMask> lhs, Group_ErrorMask<T_ErrMask> rhs)
@@ -2303,7 +2283,7 @@ namespace Mutagen.Bethesda.Internals
         public bool ContainedRecordType;
         public bool GroupType;
         public bool LastModified;
-        public MaskItem<CopyOption, T_CopyMask> Items;
+        public MaskItem<CopyOption, MajorRecord_CopyMask> Items;
         #endregion
 
     }

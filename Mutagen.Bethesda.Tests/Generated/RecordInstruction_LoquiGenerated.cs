@@ -37,7 +37,7 @@ namespace Mutagen.Bethesda.Tests
         #endregion
 
         #region Record
-        public RawFormID Record { get; set; }
+        public FormID Record { get; set; }
         #endregion
 
         #region Loqui Getter Interface
@@ -407,7 +407,7 @@ namespace Mutagen.Bethesda.Tests
             switch (name)
             {
                 case "Record":
-                    item.Record = RawFormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Record = FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)RecordInstruction_FieldIndex.Record,
                         errorMask: errorMask).GetOrDefault(item.Record);
@@ -507,7 +507,7 @@ namespace Mutagen.Bethesda.Tests
             switch (enu)
             {
                 case RecordInstruction_FieldIndex.Record:
-                    this.Record = (RawFormID)obj;
+                    this.Record = (FormID)obj;
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -541,7 +541,7 @@ namespace Mutagen.Bethesda.Tests
             switch (enu)
             {
                 case RecordInstruction_FieldIndex.Record:
-                    obj.Record = (RawFormID)pair.Value;
+                    obj.Record = (FormID)pair.Value;
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -558,14 +558,14 @@ namespace Mutagen.Bethesda.Tests
     #region Interface
     public interface IRecordInstruction : IRecordInstructionGetter, IInstruction, ILoquiClass<IRecordInstruction, IRecordInstructionGetter>, ILoquiClass<RecordInstruction, IRecordInstructionGetter>
     {
-        new RawFormID Record { get; set; }
+        new FormID Record { get; set; }
 
     }
 
     public interface IRecordInstructionGetter : IInstructionGetter
     {
         #region Record
-        RawFormID Record { get; }
+        FormID Record { get; }
 
         #endregion
 
@@ -713,7 +713,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             switch (enu)
             {
                 case RecordInstruction_FieldIndex.Record:
-                    return typeof(RawFormID);
+                    return typeof(FormID);
                 default:
                     return Instruction_Registration.GetNthType(index);
             }
@@ -868,7 +868,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             switch (enu)
             {
                 case RecordInstruction_FieldIndex.Record:
-                    obj.Record = default(RawFormID);
+                    obj.Record = default(FormID);
                     break;
                 default:
                     InstructionCommon.UnsetNthObject(index, obj);
@@ -908,7 +908,7 @@ namespace Mutagen.Bethesda.Tests.Internals
             IRecordInstruction item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Record = default(RawFormID);
+            item.Record = default(FormID);
         }
 
         public static RecordInstruction_Mask<bool> GetEqualsMask(
@@ -1030,7 +1030,7 @@ namespace Mutagen.Bethesda.Tests.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Tests.RecordInstruction");
                     }
-                    RawFormIDXmlTranslation.Instance.Write(
+                    FormIDXmlTranslation.Instance.Write(
                         writer: writer,
                         name: nameof(item.Record),
                         item: item.Record,

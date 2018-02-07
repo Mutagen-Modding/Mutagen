@@ -424,7 +424,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Faction":
-                    item.Faction_Property.SetIfSucceeded(RawFormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Faction_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)RankPlacement_FieldIndex.Faction,
                         errorMask: errorMask));
@@ -736,7 +736,7 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             Func<RankPlacement_ErrorMask> errorMask)
         {
-            item.Faction_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
+            item.Faction_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)RankPlacement_FieldIndex.Faction,
                 errorMask: errorMask));
@@ -1468,7 +1468,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.RankPlacement");
                     }
-                    RawFormIDXmlTranslation.Instance.Write(
+                    FormIDXmlTranslation.Instance.Write(
                         writer: writer,
                         name: nameof(item.Faction),
                         item: item.Faction?.FormID,
@@ -1548,7 +1548,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             Func<RankPlacement_ErrorMask> errorMask)
         {
-            Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Faction_Property,
                 fieldIndex: (int)RankPlacement_FieldIndex.Faction,

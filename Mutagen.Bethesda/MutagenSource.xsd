@@ -127,8 +127,8 @@
     <xs:group name="NamedFieldOptions">
       <xs:choice>
         <xs:group ref="NamedFieldOptions"/>
+        <xs:element name="FormIDLink" type="NFormIDLink"/>
         <xs:element name="FormID" type="NFormID"/>
-        <xs:element name="RawFormID" type="NRawFormID"/>
         <xs:element name="Buffer" type="NBuffer"/>
         <xs:element name="Data" type="DataType" />
         <xs:element name="SpecialParse" type="NSpecialParse"/>
@@ -141,8 +141,8 @@
     <xs:group name="FieldOptions">
       <xs:choice>
         <xs:group ref="FieldOptions"/>
+        <xs:element name="FormIDLink" type="FormIDLink"/>
         <xs:element name="FormID" type="FormID"/>
-        <xs:element name="RawFormID" type="RawFormID"/>
         <xs:element name="Buffer" type="Buffer"/>
         <xs:element name="SpecialParse" type="SpecialParse"/>
         <xs:element name="Zero" type="ZeroType"/>
@@ -204,7 +204,7 @@
     </xs:restriction>
   </xs:simpleType>
 
-  <xs:complexType name="FormID" >
+  <xs:complexType name="FormIDLink" >
     <xs:complexContent>
       <xs:extension base="RefDirectField">
         <xs:attribute name="type" type="FormIDType" >
@@ -218,23 +218,23 @@
     </xs:complexContent>
   </xs:complexType>
 
-  <xs:complexType name="NFormID" >
+  <xs:complexType name="NFormIDLink" >
     <xs:complexContent>
-      <xs:extension base="FormID">
+      <xs:extension base="FormIDLink">
         <xs:attribute name="name" type="xs:string" use="required" />
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
 
-  <xs:complexType name="RawFormID" >
+  <xs:complexType name="FormID" >
     <xs:complexContent>
       <xs:extension base="Field" />
     </xs:complexContent>
   </xs:complexType>
 
-  <xs:complexType name="NRawFormID" >
+  <xs:complexType name="NFormID" >
     <xs:complexContent>
-      <xs:extension base="RawFormID">
+      <xs:extension base="FormID">
         <xs:attribute name="name" type="xs:string" use="required" />
       </xs:extension>
     </xs:complexContent>

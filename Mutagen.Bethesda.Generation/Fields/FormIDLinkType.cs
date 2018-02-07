@@ -19,13 +19,13 @@ namespace Mutagen.Bethesda.Generation
 
         public override string ProtectedProperty => base.Property;
         public override string ProtectedName => base.ProtectedName;
-        private RawFormIDType RawFormID = new RawFormIDType();
+        private FormIDType _rawFormID = new FormIDType();
         private LoquiType loquiType = new LoquiType();
         public FormIDTypeEnum FormIDType;
 
         public override string TypeName => $"{(this.FormIDType == FormIDTypeEnum.Normal ? "FormID" : "EDID")}{(this.HasBeenSet ? "Set" : string.Empty)}Link<{loquiType.TypeName}>";
 
-        public override Type Type => typeof(RawFormID);
+        public override Type Type => typeof(FormID);
 
         public override async Task Load(XElement node, bool requireName = true)
         {
@@ -34,11 +34,11 @@ namespace Mutagen.Bethesda.Generation
             loquiType.SetObjectGeneration(this.ObjectGen, setDefaults: true);
             loquiType.ParseRefNode(node);
             loquiType.Name = this.Name;
-            RawFormID.Name = this.Name;
+            _rawFormID.Name = this.Name;
             this.NotifyingProperty.Forward(loquiType.NotifyingProperty);
-            this.NotifyingProperty.Forward(RawFormID.NotifyingProperty);
+            this.NotifyingProperty.Forward(_rawFormID.NotifyingProperty);
             this.HasBeenSetProperty.Forward(loquiType.HasBeenSetProperty);
-            this.HasBeenSetProperty.Forward(RawFormID.HasBeenSetProperty);
+            this.HasBeenSetProperty.Forward(_rawFormID.HasBeenSetProperty);
             this.FormIDType = node.GetAttribute<FormIDTypeEnum>("type", defaultVal: FormIDTypeEnum.Normal);
         }
 
@@ -77,12 +77,12 @@ namespace Mutagen.Bethesda.Generation
 
         public override string SkipCheck(string copyMaskAccessor)
         {
-            return RawFormID.SkipCheck(copyMaskAccessor);
+            return _rawFormID.SkipCheck(copyMaskAccessor);
         }
 
         public override void GenerateForHasBeenSetMaskGetter(FileGeneration fg, string accessor, string retAccessor)
         {
-            RawFormID.GenerateForHasBeenSetMaskGetter(
+            _rawFormID.GenerateForHasBeenSetMaskGetter(
                 fg: fg,
                 accessor: accessor,
                 retAccessor: retAccessor);
@@ -90,7 +90,7 @@ namespace Mutagen.Bethesda.Generation
 
         public override void GenerateForHasBeenSetCheck(FileGeneration fg, string accessor, string checkMaskAccessor)
         {
-            RawFormID.GenerateForHasBeenSetCheck(
+            _rawFormID.GenerateForHasBeenSetCheck(
                 fg: fg,
                 accessor: accessor,
                 checkMaskAccessor: checkMaskAccessor);
@@ -98,7 +98,7 @@ namespace Mutagen.Bethesda.Generation
 
         public override void GenerateForEqualsMask(FileGeneration fg, Accessor accessor, Accessor rhsAccessor, string retAccessor)
         {
-            RawFormID.GenerateForEqualsMask(
+            _rawFormID.GenerateForEqualsMask(
                 fg: fg,
                 accessor: accessor,
                 rhsAccessor: rhsAccessor,
@@ -107,7 +107,7 @@ namespace Mutagen.Bethesda.Generation
 
         public override void GenerateForCopy(FileGeneration fg, string accessorPrefix, string rhsAccessorPrefix, string copyMaskAccessor, string defaultFallbackAccessor, string cmdsAccessor, bool protectedMembers)
         {
-            RawFormID.GenerateForCopy(
+            _rawFormID.GenerateForCopy(
                 fg: fg,
                 accessorPrefix: accessorPrefix,
                 rhsAccessorPrefix: rhsAccessorPrefix,

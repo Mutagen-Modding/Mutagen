@@ -54,7 +54,7 @@
     <Compile Include="Links\ILink.cs" />
     <Compile Include="Links\LinkExt.cs" />
     <Compile Include="Links\NamedFormID.cs" />
-    <Compile Include="Links\RawFormID.cs" />
+    <Compile Include="FormID.cs" />
     <Compile Include="Links\FormIDLink.cs" />
     <Compile Include="IMod.cs" />
     <Compile Include="MajorRecordLocator.cs" />
@@ -90,7 +90,7 @@
     <Compile Include="Translators\Binary\FilePathBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\FloatBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\RecordTypeBinaryTranslation.cs" />
-    <Compile Include="Translators\Binary\RawFormIDBinaryTranslation.cs" />
+    <Compile Include="Translators\Binary\FormIDBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\HeaderExport.cs" />
     <Compile Include="Translators\Binary\HeaderTranslation.cs" />
     <Compile Include="Translators\Binary\IBinaryTranslation.cs" />
@@ -109,7 +109,7 @@
     <Compile Include="Translators\Binary\UInt16BinaryTranslation.cs" />
     <Compile Include="Translators\Binary\UInt32BinaryTranslation.cs" />
     <Compile Include="Translators\Binary\UInt64BinaryTranslation.cs" />
-    <Compile Include="Translators\XML\RawFormIDXmlTranslation.cs" />
+    <Compile Include="Translators\XML\FormIDXmlTranslation.cs" />
     <Compile Include="Records\MajorRecord_LoquiGenerated.cs">
       <DependentUpon>MajorRecord.xml</DependentUpon>
     </Compile>

@@ -8,11 +8,13 @@
       <String name="ContainedRecordType" derivative="true" customBinary="true" />
       <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
       <ByteArray name="LastModified" length="4" nullable="NotNull" />
-      <List name="Items">
-        <Ref>
-          <Generic>T</Generic>
-        </Ref>
-      </List>
+      <Dict name="Items">
+        <KeyedValue keyAccessor="FormID" keyType="FormID" >
+          <Ref>
+            <Generic>T</Generic>
+          </Ref>
+        </KeyedValue>
+      </Dict>
     </Fields>
   </Object>
 </Loqui>

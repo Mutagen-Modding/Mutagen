@@ -10,7 +10,7 @@ namespace Mutagen.Bethesda
     public interface ILink
     {
         bool Linked { get; }
-        RawFormID FormID { get; }
+        FormID FormID { get; }
     }
 
     public interface ILink<T> : ILink, INotifyingItem<T>

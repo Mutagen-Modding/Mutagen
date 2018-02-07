@@ -8,7 +8,7 @@ using Loqui.Generation;
 
 namespace Mutagen.Bethesda.Generation
 {
-    public class FormIDLinkXmlTranslationGeneration : PrimitiveXmlTranslationGeneration<RawFormID>
+    public class FormIDLinkXmlTranslationGeneration : PrimitiveXmlTranslationGeneration<FormID>
     {
         protected override string ItemWriteAccess(Accessor itemAccessor)
         {

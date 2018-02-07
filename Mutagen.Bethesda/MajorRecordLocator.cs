@@ -189,7 +189,7 @@ namespace Mutagen.Bethesda
                                 throw new ArgumentException($"Target Record {targetRec} did not match its containing GRUP: {grupRec}");
                             }
                             reader.Position += new ContentLength(4); // Skip flags
-                            var formID = RawFormID.Factory(reader.ReadBytes(4));
+                            var formID = FormID.Factory(reader.ReadBytes(4));
                             ret.Add(formID, new FileSection(recordLocation, recordLocation + recLength - 1));
                             reader.Position += new ContentLength(4);
                             reader.Position += recLength;

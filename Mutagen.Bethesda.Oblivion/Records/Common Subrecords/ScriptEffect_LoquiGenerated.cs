@@ -451,7 +451,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Script":
-                    item.Script_Property.SetIfSucceeded(RawFormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Script_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)ScriptEffect_FieldIndex.Script,
                         errorMask: errorMask));
@@ -464,7 +464,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "VisualEffect":
-                    item.VisualEffect_Property.SetIfSucceeded(RawFormIDXmlTranslation.Instance.ParseNonNull(
+                    item.VisualEffect_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)ScriptEffect_FieldIndex.VisualEffect,
                         errorMask: errorMask));
@@ -839,7 +839,7 @@ namespace Mutagen.Bethesda.Oblivion
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.Spawn(contentLength))
                     {
-                        item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
+                        item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)ScriptEffect_FieldIndex.Script,
                             errorMask: errorMask));
@@ -1717,7 +1717,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.ScriptEffect");
                     }
-                    RawFormIDXmlTranslation.Instance.Write(
+                    FormIDXmlTranslation.Instance.Write(
                         writer: writer,
                         name: nameof(item.Script),
                         item: item.Script?.FormID,
@@ -1729,7 +1729,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item: item.MagicSchool_Property,
                         fieldIndex: (int)ScriptEffect_FieldIndex.MagicSchool,
                         errorMask: errorMask);
-                    RawFormIDXmlTranslation.Instance.Write(
+                    FormIDXmlTranslation.Instance.Write(
                         writer: writer,
                         name: nameof(item.VisualEffect),
                         item: item.VisualEffect?.FormID,
@@ -1810,7 +1810,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             using (HeaderExport.ExportSubRecordHeader(writer, ScriptEffect_Registration.SCIT_HEADER))
             {
-                Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Script_Property,
                     fieldIndex: (int)ScriptEffect_FieldIndex.Script,

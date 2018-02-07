@@ -4,7 +4,7 @@
     <Fields>
       <RefDirect name="Model" refName="Model" />
       <FilePath name="Icon" recordType="ICON" />
-      <FormID name="Script" refName="Script" recordType="SCRI" />
+      <FormIDLink name="Script" refName="Script" recordType="SCRI" />
       <Data>
         <Fields>
           <Enum name="Type" enumName="AlchemicalApparatus.ApparatusType" byteLength="1" />

@@ -45,7 +45,8 @@ namespace Mutagen.Bethesda.Generation
                 && !data.RecordType.HasValue
                 && !(field is NothingType)
                 && !(field is PrimitiveType)
-                && !(field is ContainerType))
+                && !(field is ContainerType)
+                && !(field is DictType))
             {
                 throw new ArgumentException($"{obj.Name} {field.Name} have to define either length or record type.");
             }

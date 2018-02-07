@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Generation
 {
-    public class RawFormIDType : PrimitiveType
+    public class FormIDType : PrimitiveType
     {
-        public override Type Type => typeof(RawFormID);
+        public override Type Type => typeof(FormID);
     }
 }

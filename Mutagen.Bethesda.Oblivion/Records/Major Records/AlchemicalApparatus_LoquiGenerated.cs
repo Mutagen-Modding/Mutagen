@@ -532,7 +532,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 case "Script":
-                    item.Script_Property.SetIfSucceeded(RawFormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Script_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)AlchemicalApparatus_FieldIndex.Script,
                         errorMask: errorMask));
@@ -907,7 +907,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<AlchemicalApparatus_FieldIndex?>.Succeed(AlchemicalApparatus_FieldIndex.Icon);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
+                    item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)AlchemicalApparatus_FieldIndex.Script,
                         errorMask: errorMask));
@@ -2030,7 +2030,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.Script_Property.HasBeenSet)
                     {
-                        RawFormIDXmlTranslation.Instance.Write(
+                        FormIDXmlTranslation.Instance.Write(
                             writer: writer,
                             name: nameof(item.Script),
                             item: item.Script?.FormID,
@@ -2146,7 +2146,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(AlchemicalApparatus_Registration.ICON_HEADER),
                 nullable: false);
-            Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Script_Property,
                 fieldIndex: (int)AlchemicalApparatus_FieldIndex.Script,

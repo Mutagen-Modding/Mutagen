@@ -26,7 +26,7 @@ namespace Mutagen.Bethesda
             this.Subscribe(HandleItemChange, cmds: NotifyingSubscribeParameters.NoFire);
         }
 
-        public EDIDSetLink(RawFormID unlinkedForm)
+        public EDIDSetLink(FormID unlinkedForm)
             : base(unlinkedForm)
         {
             this.Subscribe(HandleItemChange, cmds: NotifyingSubscribeParameters.NoFire);

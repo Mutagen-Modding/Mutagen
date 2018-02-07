@@ -5,7 +5,7 @@
       <String name="Name" recordType="FULL" />
       <RefDirect name="Model" refName="Model" />
       <FilePath name="Icon" recordType="ICON" />
-      <FormID name="Enchantment" refName="Enchantment" recordType="ENAM" />
+      <FormIDLink name="Enchantment" refName="Enchantment" recordType="ENAM" />
       <UInt16 name="EnchantmentPoints" recordType="ANAM" />
       <Data>
         <Fields>

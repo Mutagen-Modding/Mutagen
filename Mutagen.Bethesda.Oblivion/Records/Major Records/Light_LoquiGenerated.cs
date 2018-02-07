@@ -620,7 +620,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 case "Script":
-                    item.Script_Property.SetIfSucceeded(RawFormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Script_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Light_FieldIndex.Script,
                         errorMask: errorMask));
@@ -693,7 +693,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 case "Sound":
-                    item.Sound_Property.SetIfSucceeded(RawFormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Sound_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Light_FieldIndex.Sound,
                         errorMask: errorMask));
@@ -1034,7 +1034,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<Light_FieldIndex?>.Succeed(Light_FieldIndex.Model);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
+                    item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)Light_FieldIndex.Script,
                         errorMask: errorMask));
@@ -1105,7 +1105,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<Light_FieldIndex?>.Succeed(Light_FieldIndex.Fade);
                 case "SNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Sound_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
+                    item.Sound_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)Light_FieldIndex.Sound,
                         errorMask: errorMask));
@@ -2591,7 +2591,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.Script_Property.HasBeenSet)
                     {
-                        RawFormIDXmlTranslation.Instance.Write(
+                        FormIDXmlTranslation.Instance.Write(
                             writer: writer,
                             name: nameof(item.Script),
                             item: item.Script?.FormID,
@@ -2675,7 +2675,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.Sound_Property.HasBeenSet)
                     {
-                        RawFormIDXmlTranslation.Instance.Write(
+                        FormIDXmlTranslation.Instance.Write(
                             writer: writer,
                             name: nameof(item.Sound),
                             item: item.Sound?.FormID,
@@ -2760,7 +2760,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Model_Property,
                 fieldIndex: (int)Light_FieldIndex.Model,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Script_Property,
                 fieldIndex: (int)Light_FieldIndex.Script,
@@ -2835,7 +2835,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(Light_Registration.FNAM_HEADER),
                 nullable: false);
-            Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Sound_Property,
                 fieldIndex: (int)Light_FieldIndex.Sound,

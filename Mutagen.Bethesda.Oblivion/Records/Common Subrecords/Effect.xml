@@ -5,7 +5,7 @@
       <SpecialParse name="EffectInitial" recordType="EFID" />
       <Data recordType="EFIT">
         <Fields>
-          <FormID name="MagicEffect" type="EDIDChars" refName="MagicEffect" />
+          <FormIDLink name="MagicEffect" type="EDIDChars" refName="MagicEffect" />
           <UInt32 name="Magnitude" />
           <UInt32 name="Area" />
           <UInt32 name="Duration" />
@@ -20,10 +20,10 @@
     <Fields>
       <Data recordType="SCIT">
         <Fields>
-          <FormID name="Script" refName="Script" />
+          <FormIDLink name="Script" refName="Script" />
           <Break />
           <Enum name="MagicSchool" enumName="MagicSchool" byteLength="4" />
-          <FormID name="VisualEffect" type="EDIDChars" refName="MagicEffect" />
+          <FormIDLink name="VisualEffect" type="EDIDChars" refName="MagicEffect" />
           <Break />
           <Enum name="Flags" enumName="ScriptEffect.Flag" byteLength="4" />
         </Fields>

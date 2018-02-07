@@ -15,17 +15,30 @@ namespace Mutagen.Bethesda.Generation
             HashSet<string> genericNames = new HashSet<string>();
             foreach (var field in obj.IterateFields())
             {
-                if (!(field is LoquiType loquiType))
+                LoquiType loquiType;
+                switch (field)
                 {
-                    if ((field is ContainerType container)
-                        && container.SubTypeGeneration is LoquiType contLoquiType)
-                    {
+                    case LoquiType l:
+                        loquiType = l;
+                        break;
+                    case ContainerType container:
+                        if (!(container.SubTypeGeneration is LoquiType contLoquiType)) continue;
                         loquiType = contLoquiType;
-                    }
-                    else
-                    {
+                        break;
+                    case DictType dict:
+                        switch (dict.Mode)
+                        {
+                            case DictMode.KeyedValue:
+                                if (!(dict.ValueTypeGen is LoquiType keyLoqui)) continue;
+                                loquiType = keyLoqui;
+                                break;
+                            case DictMode.KeyValue:
+                            default:
+                                throw new NotImplementedException();
+                        }
+                        break;
+                    default:
                         continue;
-                    }
                 }
                 if (loquiType.GenericDef == null) continue;
                 genericNames.Add(loquiType.GenericDef.Name);

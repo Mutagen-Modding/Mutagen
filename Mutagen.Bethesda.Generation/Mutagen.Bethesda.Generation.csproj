@@ -58,7 +58,7 @@
     <Compile Include="Fields\DataType.cs" />
     <Compile Include="Fields\EnumType.cs" />
     <Compile Include="Fields\GroupType.cs" />
-    <Compile Include="Fields\RawFormIDType.cs" />
+    <Compile Include="Fields\FormIDType.cs" />
     <Compile Include="Fields\FormIDLinkType.cs" />
     <Compile Include="Custom Data\MutagenFieldData.cs" />
     <Compile Include="Fields\BufferType.cs" />
@@ -72,6 +72,7 @@
     <Compile Include="Modules\Binary\EnumBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\FilePathBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\FormIDLinkBinaryTranslationGeneration.cs" />
+    <Compile Include="Modules\Binary\DictBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\ListBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\LoquiBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\BufferBinaryTranslationGeneration.cs" />

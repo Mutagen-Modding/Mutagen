@@ -530,7 +530,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 case "Script":
-                    item.Script_Property.SetIfSucceeded(RawFormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Script_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Container_FieldIndex.Script,
                         errorMask: errorMask));
@@ -563,13 +563,13 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 case "OpenSound":
-                    item.OpenSound_Property.SetIfSucceeded(RawFormIDXmlTranslation.Instance.ParseNonNull(
+                    item.OpenSound_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Container_FieldIndex.OpenSound,
                         errorMask: errorMask));
                     break;
                 case "CloseSound":
-                    item.CloseSound_Property.SetIfSucceeded(RawFormIDXmlTranslation.Instance.ParseNonNull(
+                    item.CloseSound_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)Container_FieldIndex.CloseSound,
                         errorMask: errorMask));
@@ -912,7 +912,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<Container_FieldIndex?>.Succeed(Container_FieldIndex.Model);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
+                    item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)Container_FieldIndex.Script,
                         errorMask: errorMask));
@@ -950,14 +950,14 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<Container_FieldIndex?>.Succeed(Container_FieldIndex.Weight);
                 case "SNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.OpenSound_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
+                    item.OpenSound_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)Container_FieldIndex.OpenSound,
                         errorMask: errorMask));
                     return TryGet<Container_FieldIndex?>.Succeed(Container_FieldIndex.OpenSound);
                 case "QNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.CloseSound_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
+                    item.CloseSound_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)Container_FieldIndex.CloseSound,
                         errorMask: errorMask));
@@ -2105,7 +2105,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.Script_Property.HasBeenSet)
                     {
-                        RawFormIDXmlTranslation.Instance.Write(
+                        FormIDXmlTranslation.Instance.Write(
                             writer: writer,
                             name: nameof(item.Script),
                             item: item.Script?.FormID,
@@ -2145,7 +2145,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: errorMask);
                     if (item.OpenSound_Property.HasBeenSet)
                     {
-                        RawFormIDXmlTranslation.Instance.Write(
+                        FormIDXmlTranslation.Instance.Write(
                             writer: writer,
                             name: nameof(item.OpenSound),
                             item: item.OpenSound?.FormID,
@@ -2154,7 +2154,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.CloseSound_Property.HasBeenSet)
                     {
-                        RawFormIDXmlTranslation.Instance.Write(
+                        FormIDXmlTranslation.Instance.Write(
                             writer: writer,
                             name: nameof(item.CloseSound),
                             item: item.CloseSound?.FormID,
@@ -2239,7 +2239,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Model_Property,
                 fieldIndex: (int)Container_FieldIndex.Model,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Script_Property,
                 fieldIndex: (int)Container_FieldIndex.Script,
@@ -2274,14 +2274,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     fieldIndex: (int)Container_FieldIndex.Weight,
                     errorMask: errorMask);
             }
-            Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.OpenSound_Property,
                 fieldIndex: (int)Container_FieldIndex.OpenSound,
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(Container_Registration.SNAM_HEADER),
                 nullable: false);
-            Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.CloseSound_Property,
                 fieldIndex: (int)Container_FieldIndex.CloseSound,
