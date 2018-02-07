@@ -16,35 +16,35 @@ namespace Mutagen.Bethesda
 
         public class FileLocations
         {
-            private Dictionary<RawFormID, FileSection> _fromFormIDs = new Dictionary<RawFormID, FileSection>();
-            private SortedList<FileLocation, RawFormID> _fromStart = new SortedList<FileLocation, RawFormID>();
-            private SortedList<FileLocation, RawFormID> _fromEnd = new SortedList<FileLocation, RawFormID>();
+            private Dictionary<FormID, FileSection> _fromFormIDs = new Dictionary<FormID, FileSection>();
+            private SortedList<FileLocation, FormID> _fromStart = new SortedList<FileLocation, FormID>();
+            private SortedList<FileLocation, FormID> _fromEnd = new SortedList<FileLocation, FormID>();
 
-            public FileSection this[RawFormID id]
+            public FileSection this[FormID id]
             {
                 get => _fromFormIDs[id];
             }
 
-            public void Add(RawFormID id, FileSection section)
+            public void Add(FormID id, FileSection section)
             {
                 this._fromFormIDs[id] = section;
                 this._fromStart[section.Min] = id;
                 this._fromEnd[section.Max] = id;
             }
 
-            public bool TryGetSection(RawFormID id, out FileSection section)
+            public bool TryGetSection(FormID id, out FileSection section)
             {
                 return this._fromFormIDs.TryGetValue(id, out section);
             }
 
-            public bool TryGetRecord(FileLocation loc, out RawFormID id)
+            public bool TryGetRecord(FileLocation loc, out FormID id)
             {
                 if (!_fromStart.TryGetInDirection(
                     key: loc,
                     higher: false,
                     result: out var lowerID))
                 {
-                    id = default(RawFormID);
+                    id = default(FormID);
                     return false;
                 }
                 if (!_fromEnd.TryGetInDirection(
@@ -52,19 +52,19 @@ namespace Mutagen.Bethesda
                     higher: true,
                     result: out var higherID))
                 {
-                    id = default(RawFormID);
+                    id = default(FormID);
                     return false;
                 }
                 if (lowerID.Value != higherID.Value)
                 {
-                    id = default(RawFormID);
+                    id = default(FormID);
                     return false;
                 }
                 id = lowerID.Value;
                 return true;
             }
 
-            public bool TryGetRecords(FileSection section, out IEnumerable<RawFormID> ids)
+            public bool TryGetRecords(FileSection section, out IEnumerable<FormID> ids)
             {
                 var gotStart = _fromStart.TryGetInDirectionIndex(
                     key: section.Min,
@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda
                     ids = null;
                     return false;
                 }
-                var ret = new HashSet<RawFormID>();
+                var ret = new HashSet<FormID>();
                 for (int i = start; i <= end; i++)
                 {
                     ret.Add(_fromStart.Values[i]);

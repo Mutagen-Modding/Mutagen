@@ -13,9 +13,9 @@ namespace Mutagen.Bethesda.Generation
         public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
         {
             if (obj.GetObjectData().ObjectType != ObjectType.Mod) return;
-            fg.AppendLine($"private Dictionary<RawFormID, MajorRecord> _majorRecords = new Dictionary<RawFormID, MajorRecord>();");
+            fg.AppendLine($"private Dictionary<FormID, MajorRecord> _majorRecords = new Dictionary<FormID, MajorRecord>();");
             fg.AppendLine($"public IEnumerable<MajorRecord> MajorRecords => _majorRecords.Values;");
-            fg.AppendLine($"public MajorRecord this[RawFormID id]");
+            fg.AppendLine($"public MajorRecord this[FormID id]");
             using (new BraceWrapper(fg))
             {
                 fg.AppendLine("get => _majorRecords[id];");
@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda.Generation
             using (var args = new FunctionWrapper(fg,
                 "protected void SetMajorRecord"))
             {
-                args.Add("RawFormID id");
+                args.Add("FormID id");
                 args.Add("MajorRecord record");
             }
             using (new BraceWrapper(fg))
@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Generation
                         fg.AppendLine($"case {subObj.Name} {field.Name.ToLower()}:");
                         using (new DepthWrapper(fg))
                         {
-                            fg.AppendLine($"{loqui.ProtectedName}.Items.Add({field.Name.ToLower()});");
+                            fg.AppendLine($"{loqui.ProtectedName}.Items.Set({field.Name.ToLower()});");
                             fg.AppendLine($"break;");
                         }
                     }
@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 if (!(field is LoquiType loqui)) continue;
                 if (loqui.TargetObjectGeneration?.GetObjectData().ObjectType != ObjectType.Group) continue;
-                fg.AppendLine($"{field.ProtectedName}.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));");
+                fg.AppendLine($"{field.ProtectedName}.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));");
             }
             return base.GenerateInCtor(obj, fg);
         }

@@ -75,8 +75,6 @@
       <FilePath name="BloodDecal" recordType="NAM1" />
       <FormIDLink name="InheritsSoundFrom" recordType="CSCR" refName="Creature" />
       <RefList name="Sounds" refName="CreatureSound" />
-      <FormIDLink name="InheritsSoundFrom" recordType="CSCR" refName="Creature" />
-      <RefList name="Sounds" refName="CreatureSound" />
     </Fields>
   </Object>
   <Object name="CreatureSound" objType="Subrecord" GUID="f3d5081c-a137-4a9e-8dd9-c79a8bf94fc3" ID="90">

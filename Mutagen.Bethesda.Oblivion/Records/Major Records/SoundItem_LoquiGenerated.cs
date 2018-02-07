@@ -425,7 +425,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (name)
             {
                 case "Sound":
-                    item.Sound_Property.SetIfSucceeded(RawFormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Sound_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)SoundItem_FieldIndex.Sound,
                         errorMask: errorMask));
@@ -758,7 +758,7 @@ namespace Mutagen.Bethesda.Oblivion
                 case "CSDI":
                     if (lastParsed.HasValue && lastParsed.Value >= SoundItem_FieldIndex.Sound) return TryGet<SoundItem_FieldIndex?>.Failure;
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Sound_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
+                    item.Sound_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)SoundItem_FieldIndex.Sound,
                         errorMask: errorMask));
@@ -1456,7 +1456,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.Sound_Property.HasBeenSet)
                     {
-                        RawFormIDXmlTranslation.Instance.Write(
+                        FormIDXmlTranslation.Instance.Write(
                             writer: writer,
                             name: nameof(item.Sound),
                             item: item.Sound?.FormID,
@@ -1530,7 +1530,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter recordTypeConverter,
             Func<SoundItem_ErrorMask> errorMask)
         {
-            Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Sound_Property,
                 fieldIndex: (int)SoundItem_FieldIndex.Sound,

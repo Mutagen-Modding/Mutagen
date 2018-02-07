@@ -534,13 +534,13 @@ namespace Mutagen.Bethesda.Oblivion
                         ));
                     break;
                 case "Script":
-                    item.Script_Property.SetIfSucceeded(RawFormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Script_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)LeveledCreature_FieldIndex.Script,
                         errorMask: errorMask));
                     break;
                 case "Template":
-                    item.Template_Property.SetIfSucceeded(RawFormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Template_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)LeveledCreature_FieldIndex.Template,
                         errorMask: errorMask));
@@ -908,14 +908,14 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<LeveledCreature_FieldIndex?>.Succeed(LeveledCreature_FieldIndex.Entries);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
+                    item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)LeveledCreature_FieldIndex.Script,
                         errorMask: errorMask));
                     return TryGet<LeveledCreature_FieldIndex?>.Succeed(LeveledCreature_FieldIndex.Script);
                 case "TNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item.Template_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
+                    item.Template_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)LeveledCreature_FieldIndex.Template,
                         errorMask: errorMask));
@@ -1933,7 +1933,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.Script_Property.HasBeenSet)
                     {
-                        RawFormIDXmlTranslation.Instance.Write(
+                        FormIDXmlTranslation.Instance.Write(
                             writer: writer,
                             name: nameof(item.Script),
                             item: item.Script?.FormID,
@@ -1942,7 +1942,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.Template_Property.HasBeenSet)
                     {
-                        RawFormIDXmlTranslation.Instance.Write(
+                        FormIDXmlTranslation.Instance.Write(
                             writer: writer,
                             name: nameof(item.Template),
                             item: item.Template?.FormID,
@@ -2051,14 +2051,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         errorMask: out listSubMask);
                 }
                 );
-            Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Script_Property,
                 fieldIndex: (int)LeveledCreature_FieldIndex.Script,
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(LeveledCreature_Registration.SCRI_HEADER),
                 nullable: false);
-            Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Template_Property,
                 fieldIndex: (int)LeveledCreature_FieldIndex.Template,

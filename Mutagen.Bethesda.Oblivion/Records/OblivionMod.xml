@@ -37,7 +37,7 @@
       <Group name="Ammo" refName="Ammo" />
       <Group name="NPCs" refName="NPC" />
       <Group name="Creatures" refName="Creature" />
-      <Group name="LeveledCreatures" refName="LeveledCreature" />
+      <!--<Group name="LeveledCreatures" refName="LeveledCreature" />-->
     </Fields>
   </Object>
 </Loqui>

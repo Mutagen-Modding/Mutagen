@@ -462,7 +462,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 case "Reference":
-                    item.Reference_Property.SetIfSucceeded(RawFormIDXmlTranslation.Instance.ParseNonNull(
+                    item.Reference_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
                         fieldIndex: (int)LeveledCreatureEntry_FieldIndex.Reference,
                         errorMask: errorMask));
@@ -783,7 +783,7 @@ namespace Mutagen.Bethesda.Oblivion
                 fieldIndex: (int)LeveledCreatureEntry_FieldIndex.Fluff,
                 errorMask: errorMask);
             item._Fluff.SetIfSucceeded(FlufftryGet);
-            item.Reference_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Parse(
+            item.Reference_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)LeveledCreatureEntry_FieldIndex.Reference,
                 errorMask: errorMask));
@@ -1643,7 +1643,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item: item.Fluff_Property,
                         fieldIndex: (int)LeveledCreatureEntry_FieldIndex.Fluff,
                         errorMask: errorMask);
-                    RawFormIDXmlTranslation.Instance.Write(
+                    FormIDXmlTranslation.Instance.Write(
                         writer: writer,
                         name: nameof(item.Reference),
                         item: item.Reference?.FormID,
@@ -1733,7 +1733,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Fluff_Property,
                 fieldIndex: (int)LeveledCreatureEntry_FieldIndex.Fluff,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.RawFormIDBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Reference_Property,
                 fieldIndex: (int)LeveledCreatureEntry_FieldIndex.Reference,

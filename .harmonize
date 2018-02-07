@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>7b7f749c462776488ecfc57f3cf31c8de58768e1</Sha>
+         <Sha>941a49c3f547e1bbdc0094480019eaffc996f7f1</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>02-04-2018 19:21:18</CommitDate>
-         <Description>SortedListExt.TryCreate</Description>
+         <CommitDate>02-06-2018 21:18:05</CommitDate>
+         <Description>NotifyingDictionary null ref fire errors</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

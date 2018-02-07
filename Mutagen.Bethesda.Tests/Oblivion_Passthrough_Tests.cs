@@ -299,7 +299,7 @@ namespace Mutagen.Bethesda.Tests
 
             var outputFileLocs = MajorRecordLocator.GetFileLocations(outputPath, uninterestingTypes: OblivionMod.NonTypeGroups);
 
-            HashSet<RawFormID> ids = new HashSet<RawFormID>();
+            HashSet<FormID> ids = new HashSet<FormID>();
             foreach (var (Source, Output) in sections)
             {
                 if (!originalFileLocs.TryGetRecords(Source, out var foundIDs)) continue;

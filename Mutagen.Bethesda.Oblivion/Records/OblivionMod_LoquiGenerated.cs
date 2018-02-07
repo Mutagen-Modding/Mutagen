@@ -37,41 +37,40 @@ namespace Mutagen.Bethesda.Oblivion
             _TES4 = NotifyingSetItem.Factory<TES4>(
                 defaultVal: _TES4_Object,
                 markAsSet: true);
-            _GameSettings_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
-            _Globals_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
-            _Classes_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
-            _Factions_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
-            _Hairs_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
-            _Eyes_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
-            _Races_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
-            _Sounds_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
-            _Skills_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
-            _MagicEffects_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
-            _Scripts_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
-            _LandTextures_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
-            _Enchantments_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
-            _Spells_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
-            _Birthsigns_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
-            _Activators_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
-            _AlchemicalApparatus_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
-            _Armors_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
-            _Books_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
-            _Clothes_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
-            _Containers_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
-            _Doors_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
-            _Ingredients_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
-            _Lights_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
-            _Miscellaneous_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
-            _Statics_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
-            _Grasses_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
-            _Trees_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
-            _Flora_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
-            _Furnature_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
-            _Weapons_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
-            _Ammo_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
-            _NPCs_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
-            _Creatures_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
-            _LeveledCreatures_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.FormID, change.Item, change.AddRem));
+            _GameSettings_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
+            _Globals_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
+            _Classes_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
+            _Factions_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
+            _Hairs_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
+            _Eyes_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
+            _Races_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
+            _Sounds_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
+            _Skills_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
+            _MagicEffects_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
+            _Scripts_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
+            _LandTextures_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
+            _Enchantments_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
+            _Spells_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
+            _Birthsigns_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
+            _Activators_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
+            _AlchemicalApparatus_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
+            _Armors_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
+            _Books_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
+            _Clothes_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
+            _Containers_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
+            _Doors_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
+            _Ingredients_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
+            _Lights_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
+            _Miscellaneous_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
+            _Statics_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
+            _Grasses_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
+            _Trees_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
+            _Flora_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
+            _Furnature_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
+            _Weapons_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
+            _Ammo_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
+            _NPCs_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
+            _Creatures_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
             CustomCtor();
         }
         partial void CustomCtor();
@@ -221,10 +220,6 @@ namespace Mutagen.Bethesda.Oblivion
         private Group<Creature> _Creatures_Object = new Group<Creature>();
         public Group<Creature> Creatures => _Creatures_Object;
         #endregion
-        #region LeveledCreatures
-        private Group<LeveledCreature> _LeveledCreatures_Object = new Group<LeveledCreature>();
-        public Group<LeveledCreature> LeveledCreatures => _LeveledCreatures_Object;
-        #endregion
 
         #region Loqui Getter Interface
 
@@ -323,7 +318,6 @@ namespace Mutagen.Bethesda.Oblivion
             if (!object.Equals(Ammo, rhs.Ammo)) return false;
             if (!object.Equals(NPCs, rhs.NPCs)) return false;
             if (!object.Equals(Creatures, rhs.Creatures)) return false;
-            if (!object.Equals(LeveledCreatures, rhs.LeveledCreatures)) return false;
             return true;
         }
 
@@ -368,7 +362,6 @@ namespace Mutagen.Bethesda.Oblivion
             ret = HashHelper.GetHashCode(Ammo).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(NPCs).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Creatures).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(LeveledCreatures).CombineHashCode(ret);
             return ret;
         }
 
@@ -1288,24 +1281,6 @@ namespace Mutagen.Bethesda.Oblivion
                         index: (int)OblivionMod_FieldIndex.Creatures,
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<Creature_ErrorMask>>.WrapValue(Group_ErrorMask<Creature_ErrorMask>.Combine(CreaturescreateMask, CreaturescopyMask)));
                     break;
-                case "LeveledCreatures":
-                    GroupCommon.CopyFieldsFrom<LeveledCreature, LeveledCreature_ErrorMask, LeveledCreature_CopyMask>(
-                        item: item._LeveledCreatures_Object,
-                        rhs: Group<LeveledCreature>.Create_XML(
-                            root: root,
-                            doMasks: errorMask != null,
-                            errorMask: out Group_ErrorMask<LeveledCreature_ErrorMask> LeveledCreaturescreateMask)
-                        ,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<LeveledCreature_ErrorMask> LeveledCreaturescopyMask);
-                    ErrorMask.HandleErrorMask(
-                        errorMask,
-                        index: (int)OblivionMod_FieldIndex.LeveledCreatures,
-                        errMaskObj: MaskItem<Exception, Group_ErrorMask<LeveledCreature_ErrorMask>>.WrapValue(Group_ErrorMask<LeveledCreature_ErrorMask>.Combine(LeveledCreaturescreateMask, LeveledCreaturescopyMask)));
-                    break;
                 default:
                     break;
             }
@@ -1314,123 +1289,120 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        private Dictionary<RawFormID, MajorRecord> _majorRecords = new Dictionary<RawFormID, MajorRecord>();
+        private Dictionary<FormID, MajorRecord> _majorRecords = new Dictionary<FormID, MajorRecord>();
         public IEnumerable<MajorRecord> MajorRecords => _majorRecords.Values;
-        public MajorRecord this[RawFormID id]
+        public MajorRecord this[FormID id]
         {
             get => _majorRecords[id];
             set => SetMajorRecord(id, value);
         }
         protected void SetMajorRecord(
-            RawFormID id,
+            FormID id,
             MajorRecord record)
         {
             switch (record)
             {
                 case GameSetting gamesettings:
-                    _GameSettings_Object.Items.Add(gamesettings);
+                    _GameSettings_Object.Items.Set(gamesettings);
                     break;
                 case Global globals:
-                    _Globals_Object.Items.Add(globals);
+                    _Globals_Object.Items.Set(globals);
                     break;
                 case Class classes:
-                    _Classes_Object.Items.Add(classes);
+                    _Classes_Object.Items.Set(classes);
                     break;
                 case Faction factions:
-                    _Factions_Object.Items.Add(factions);
+                    _Factions_Object.Items.Set(factions);
                     break;
                 case Hair hairs:
-                    _Hairs_Object.Items.Add(hairs);
+                    _Hairs_Object.Items.Set(hairs);
                     break;
                 case Eye eyes:
-                    _Eyes_Object.Items.Add(eyes);
+                    _Eyes_Object.Items.Set(eyes);
                     break;
                 case Race races:
-                    _Races_Object.Items.Add(races);
+                    _Races_Object.Items.Set(races);
                     break;
                 case Sound sounds:
-                    _Sounds_Object.Items.Add(sounds);
+                    _Sounds_Object.Items.Set(sounds);
                     break;
                 case SkillRecord skills:
-                    _Skills_Object.Items.Add(skills);
+                    _Skills_Object.Items.Set(skills);
                     break;
                 case MagicEffect magiceffects:
-                    _MagicEffects_Object.Items.Add(magiceffects);
+                    _MagicEffects_Object.Items.Set(magiceffects);
                     break;
                 case Script scripts:
-                    _Scripts_Object.Items.Add(scripts);
+                    _Scripts_Object.Items.Set(scripts);
                     break;
                 case LandTexture landtextures:
-                    _LandTextures_Object.Items.Add(landtextures);
+                    _LandTextures_Object.Items.Set(landtextures);
                     break;
                 case Enchantment enchantments:
-                    _Enchantments_Object.Items.Add(enchantments);
+                    _Enchantments_Object.Items.Set(enchantments);
                     break;
                 case SpellUnleveled spells:
-                    _Spells_Object.Items.Add(spells);
+                    _Spells_Object.Items.Set(spells);
                     break;
                 case Birthsign birthsigns:
-                    _Birthsigns_Object.Items.Add(birthsigns);
+                    _Birthsigns_Object.Items.Set(birthsigns);
                     break;
                 case Activator activators:
-                    _Activators_Object.Items.Add(activators);
+                    _Activators_Object.Items.Set(activators);
                     break;
                 case AlchemicalApparatus alchemicalapparatus:
-                    _AlchemicalApparatus_Object.Items.Add(alchemicalapparatus);
+                    _AlchemicalApparatus_Object.Items.Set(alchemicalapparatus);
                     break;
                 case Armor armors:
-                    _Armors_Object.Items.Add(armors);
+                    _Armors_Object.Items.Set(armors);
                     break;
                 case Book books:
-                    _Books_Object.Items.Add(books);
+                    _Books_Object.Items.Set(books);
                     break;
                 case Clothing clothes:
-                    _Clothes_Object.Items.Add(clothes);
+                    _Clothes_Object.Items.Set(clothes);
                     break;
                 case Container containers:
-                    _Containers_Object.Items.Add(containers);
+                    _Containers_Object.Items.Set(containers);
                     break;
                 case Door doors:
-                    _Doors_Object.Items.Add(doors);
+                    _Doors_Object.Items.Set(doors);
                     break;
                 case Ingredient ingredients:
-                    _Ingredients_Object.Items.Add(ingredients);
+                    _Ingredients_Object.Items.Set(ingredients);
                     break;
                 case Light lights:
-                    _Lights_Object.Items.Add(lights);
+                    _Lights_Object.Items.Set(lights);
                     break;
                 case Miscellaneous miscellaneous:
-                    _Miscellaneous_Object.Items.Add(miscellaneous);
+                    _Miscellaneous_Object.Items.Set(miscellaneous);
                     break;
                 case Static statics:
-                    _Statics_Object.Items.Add(statics);
+                    _Statics_Object.Items.Set(statics);
                     break;
                 case Grass grasses:
-                    _Grasses_Object.Items.Add(grasses);
+                    _Grasses_Object.Items.Set(grasses);
                     break;
                 case Tree trees:
-                    _Trees_Object.Items.Add(trees);
+                    _Trees_Object.Items.Set(trees);
                     break;
                 case Flora flora:
-                    _Flora_Object.Items.Add(flora);
+                    _Flora_Object.Items.Set(flora);
                     break;
                 case Furnature furnature:
-                    _Furnature_Object.Items.Add(furnature);
+                    _Furnature_Object.Items.Set(furnature);
                     break;
                 case Weapon weapons:
-                    _Weapons_Object.Items.Add(weapons);
+                    _Weapons_Object.Items.Set(weapons);
                     break;
                 case Ammo ammo:
-                    _Ammo_Object.Items.Add(ammo);
+                    _Ammo_Object.Items.Set(ammo);
                     break;
                 case NPC npcs:
-                    _NPCs_Object.Items.Add(npcs);
+                    _NPCs_Object.Items.Set(npcs);
                     break;
                 case Creature creatures:
-                    _Creatures_Object.Items.Add(creatures);
-                    break;
-                case LeveledCreature leveledcreatures:
-                    _LeveledCreatures_Object.Items.Add(leveledcreatures);
+                    _Creatures_Object.Items.Set(creatures);
                     break;
                 default:
                     throw new ArgumentException("Unknown Major Record type: {record?.GetType()}");
@@ -2412,25 +2384,6 @@ namespace Mutagen.Bethesda.Oblivion
                         index: (int)OblivionMod_FieldIndex.Creatures,
                         errMaskObj: combinedCreatures == null ? null : new MaskItem<Exception, Group_ErrorMask<Creature_ErrorMask>>(null, combinedCreatures));
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Creatures);
-                case "LVLC":
-                    var tmpLeveledCreatures = Group<LeveledCreature>.Create_Binary(
-                        frame: frame,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<LeveledCreature_ErrorMask> LeveledCreaturescreateMask);
-                    GroupCommon.CopyFieldsFrom<LeveledCreature, LeveledCreature_ErrorMask, LeveledCreature_CopyMask>(
-                        item: item._LeveledCreatures_Object,
-                        rhs: tmpLeveledCreatures,
-                        def: null,
-                        cmds: null,
-                        copyMask: null,
-                        doMasks: errorMask != null,
-                        errorMask: out Group_ErrorMask<LeveledCreature_ErrorMask> LeveledCreatureserrorMask);
-                    var combinedLeveledCreatures = Group_ErrorMask<LeveledCreature_ErrorMask>.Combine(LeveledCreaturescreateMask, LeveledCreatureserrorMask);
-                    ErrorMask.HandleErrorMask(
-                        creator: errorMask,
-                        index: (int)OblivionMod_FieldIndex.LeveledCreatures,
-                        errMaskObj: combinedLeveledCreatures == null ? null : new MaskItem<Exception, Group_ErrorMask<LeveledCreature_ErrorMask>>(null, combinedLeveledCreatures));
-                    return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.LeveledCreatures);
                 default:
                     errorMask().Warnings.Add($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength;
@@ -2628,9 +2581,6 @@ namespace Mutagen.Bethesda.Oblivion
                 case OblivionMod_FieldIndex.Creatures:
                     this._Creatures_Object.CopyFieldsFrom<Creature, Creature_CopyMask>(rhs: (Group<Creature>)obj);
                     break;
-                case OblivionMod_FieldIndex.LeveledCreatures:
-                    this._LeveledCreatures_Object.CopyFieldsFrom<LeveledCreature, LeveledCreature_CopyMask>(rhs: (Group<LeveledCreature>)obj);
-                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2773,9 +2723,6 @@ namespace Mutagen.Bethesda.Oblivion
                 case OblivionMod_FieldIndex.Creatures:
                     obj._Creatures_Object.CopyFieldsFrom<Creature, Creature_CopyMask>(rhs: (Group<Creature>)pair.Value);
                     break;
-                case OblivionMod_FieldIndex.LeveledCreatures:
-                    obj._LeveledCreatures_Object.CopyFieldsFrom<LeveledCreature, LeveledCreature_CopyMask>(rhs: (Group<LeveledCreature>)pair.Value);
-                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -2902,9 +2849,6 @@ namespace Mutagen.Bethesda.Oblivion
         #region Creatures
         Group<Creature> Creatures { get; }
         #endregion
-        #region LeveledCreatures
-        Group<LeveledCreature> LeveledCreatures { get; }
-        #endregion
 
     }
 
@@ -2952,7 +2896,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Ammo = 32,
         NPCs = 33,
         Creatures = 34,
-        LeveledCreatures = 35,
     }
     #endregion
 
@@ -2970,7 +2913,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "b6f626df-b164-466b-960a-1639d88f66bc";
 
-        public const ushort FieldCount = 36;
+        public const ushort FieldCount = 35;
 
         public static readonly Type MaskType = typeof(OblivionMod_Mask<>);
 
@@ -3068,8 +3011,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)OblivionMod_FieldIndex.NPCs;
                 case "CREATURES":
                     return (ushort)OblivionMod_FieldIndex.Creatures;
-                case "LEVELEDCREATURES":
-                    return (ushort)OblivionMod_FieldIndex.LeveledCreatures;
                 default:
                     return null;
             }
@@ -3115,7 +3056,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Ammo:
                 case OblivionMod_FieldIndex.NPCs:
                 case OblivionMod_FieldIndex.Creatures:
-                case OblivionMod_FieldIndex.LeveledCreatures:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3162,7 +3102,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Ammo:
                 case OblivionMod_FieldIndex.NPCs:
                 case OblivionMod_FieldIndex.Creatures:
-                case OblivionMod_FieldIndex.LeveledCreatures:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3209,7 +3148,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Ammo:
                 case OblivionMod_FieldIndex.NPCs:
                 case OblivionMod_FieldIndex.Creatures:
-                case OblivionMod_FieldIndex.LeveledCreatures:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3291,8 +3229,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "NPCs";
                 case OblivionMod_FieldIndex.Creatures:
                     return "Creatures";
-                case OblivionMod_FieldIndex.LeveledCreatures:
-                    return "LeveledCreatures";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -3338,7 +3274,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Ammo:
                 case OblivionMod_FieldIndex.NPCs:
                 case OblivionMod_FieldIndex.Creatures:
-                case OblivionMod_FieldIndex.LeveledCreatures:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3386,7 +3321,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Ammo:
                 case OblivionMod_FieldIndex.NPCs:
                 case OblivionMod_FieldIndex.Creatures:
-                case OblivionMod_FieldIndex.LeveledCreatures:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3468,8 +3402,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(Group<NPC>);
                 case OblivionMod_FieldIndex.Creatures:
                     return typeof(Group<Creature>);
-                case OblivionMod_FieldIndex.LeveledCreatures:
-                    return typeof(Group<LeveledCreature>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -3510,7 +3442,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType AMMO_HEADER = new RecordType("AMMO");
         public static readonly RecordType NPC__HEADER = new RecordType("NPC_");
         public static readonly RecordType CREA_HEADER = new RecordType("CREA");
-        public static readonly RecordType LVLC_HEADER = new RecordType("LVLC");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -3524,7 +3455,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             );
         });
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 36;
+        public const int NumTypedFields = 35;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -3663,7 +3594,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<GameSetting, GameSetting_ErrorMask, GameSetting_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.GameSettings,
                         rhs: rhs.GameSettings,
                         def: def?.GameSettings,
@@ -3691,7 +3622,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Global, Global_ErrorMask, Global_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Globals,
                         rhs: rhs.Globals,
                         def: def?.Globals,
@@ -3719,7 +3650,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Class, Class_ErrorMask, Class_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Classes,
                         rhs: rhs.Classes,
                         def: def?.Classes,
@@ -3747,7 +3678,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Faction, Faction_ErrorMask, Faction_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Factions,
                         rhs: rhs.Factions,
                         def: def?.Factions,
@@ -3775,7 +3706,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Hair, Hair_ErrorMask, Hair_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Hairs,
                         rhs: rhs.Hairs,
                         def: def?.Hairs,
@@ -3803,7 +3734,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Eye, Eye_ErrorMask, Eye_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Eyes,
                         rhs: rhs.Eyes,
                         def: def?.Eyes,
@@ -3831,7 +3762,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Race, Race_ErrorMask, Race_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Races,
                         rhs: rhs.Races,
                         def: def?.Races,
@@ -3859,7 +3790,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Sound, Sound_ErrorMask, Sound_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Sounds,
                         rhs: rhs.Sounds,
                         def: def?.Sounds,
@@ -3887,7 +3818,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<SkillRecord, SkillRecord_ErrorMask, SkillRecord_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Skills,
                         rhs: rhs.Skills,
                         def: def?.Skills,
@@ -3915,7 +3846,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<MagicEffect, MagicEffect_ErrorMask, MagicEffect_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.MagicEffects,
                         rhs: rhs.MagicEffects,
                         def: def?.MagicEffects,
@@ -3943,7 +3874,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Script, Script_ErrorMask, Script_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Scripts,
                         rhs: rhs.Scripts,
                         def: def?.Scripts,
@@ -3971,7 +3902,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<LandTexture, LandTexture_ErrorMask, LandTexture_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.LandTextures,
                         rhs: rhs.LandTextures,
                         def: def?.LandTextures,
@@ -3999,7 +3930,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Enchantment, Enchantment_ErrorMask, Enchantment_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Enchantments,
                         rhs: rhs.Enchantments,
                         def: def?.Enchantments,
@@ -4027,7 +3958,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<SpellUnleveled, SpellUnleveled_ErrorMask, SpellUnleveled_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Spells,
                         rhs: rhs.Spells,
                         def: def?.Spells,
@@ -4055,7 +3986,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Birthsign, Birthsign_ErrorMask, Birthsign_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Birthsigns,
                         rhs: rhs.Birthsigns,
                         def: def?.Birthsigns,
@@ -4083,7 +4014,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Activator, Activator_ErrorMask, Activator_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Activators,
                         rhs: rhs.Activators,
                         def: def?.Activators,
@@ -4111,7 +4042,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<AlchemicalApparatus, AlchemicalApparatus_ErrorMask, AlchemicalApparatus_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.AlchemicalApparatus,
                         rhs: rhs.AlchemicalApparatus,
                         def: def?.AlchemicalApparatus,
@@ -4139,7 +4070,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Armor, Armor_ErrorMask, Armor_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Armors,
                         rhs: rhs.Armors,
                         def: def?.Armors,
@@ -4167,7 +4098,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Book, Book_ErrorMask, Book_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Books,
                         rhs: rhs.Books,
                         def: def?.Books,
@@ -4195,7 +4126,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Clothing, Clothing_ErrorMask, Clothing_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Clothes,
                         rhs: rhs.Clothes,
                         def: def?.Clothes,
@@ -4223,7 +4154,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Container, Container_ErrorMask, Container_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Containers,
                         rhs: rhs.Containers,
                         def: def?.Containers,
@@ -4251,7 +4182,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Door, Door_ErrorMask, Door_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Doors,
                         rhs: rhs.Doors,
                         def: def?.Doors,
@@ -4279,7 +4210,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Ingredient, Ingredient_ErrorMask, Ingredient_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Ingredients,
                         rhs: rhs.Ingredients,
                         def: def?.Ingredients,
@@ -4307,7 +4238,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Light, Light_ErrorMask, Light_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Lights,
                         rhs: rhs.Lights,
                         def: def?.Lights,
@@ -4335,7 +4266,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Miscellaneous, Miscellaneous_ErrorMask, Miscellaneous_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Miscellaneous,
                         rhs: rhs.Miscellaneous,
                         def: def?.Miscellaneous,
@@ -4363,7 +4294,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Static, Static_ErrorMask, Static_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Statics,
                         rhs: rhs.Statics,
                         def: def?.Statics,
@@ -4391,7 +4322,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Grass, Grass_ErrorMask, Grass_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Grasses,
                         rhs: rhs.Grasses,
                         def: def?.Grasses,
@@ -4419,7 +4350,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Tree, Tree_ErrorMask, Tree_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Trees,
                         rhs: rhs.Trees,
                         def: def?.Trees,
@@ -4447,7 +4378,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Flora, Flora_ErrorMask, Flora_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Flora,
                         rhs: rhs.Flora,
                         def: def?.Flora,
@@ -4475,7 +4406,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Furnature, Furnature_ErrorMask, Furnature_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Furnature,
                         rhs: rhs.Furnature,
                         def: def?.Furnature,
@@ -4503,7 +4434,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Weapon, Weapon_ErrorMask, Weapon_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Weapons,
                         rhs: rhs.Weapons,
                         def: def?.Weapons,
@@ -4531,7 +4462,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Ammo, Ammo_ErrorMask, Ammo_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Ammo,
                         rhs: rhs.Ammo,
                         def: def?.Ammo,
@@ -4559,7 +4490,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<NPC, NPC_ErrorMask, NPC_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.NPCs,
                         rhs: rhs.NPCs,
                         def: def?.NPCs,
@@ -4587,7 +4518,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    GroupCommon.CopyFieldsFrom<Creature, Creature_ErrorMask, Creature_CopyMask>(
+                    GroupCommon.CopyFieldsFrom(
                         item: item.Creatures,
                         rhs: rhs.Creatures,
                         def: def?.Creatures,
@@ -4609,34 +4540,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 when (doMasks)
                 {
                     errorMask().SetNthException((int)OblivionMod_FieldIndex.Creatures, ex);
-                }
-            }
-            if (copyMask?.LeveledCreatures.Overall ?? true)
-            {
-                try
-                {
-                    GroupCommon.CopyFieldsFrom<LeveledCreature, LeveledCreature_ErrorMask, LeveledCreature_CopyMask>(
-                        item: item.LeveledCreatures,
-                        rhs: rhs.LeveledCreatures,
-                        def: def?.LeveledCreatures,
-                        doMasks: doMasks,
-                        errorMask: (doMasks ? new Func<Group_ErrorMask<LeveledCreature_ErrorMask>>(() =>
-                        {
-                            var baseMask = errorMask();
-                            if (baseMask.LeveledCreatures.Specific == null)
-                            {
-                                baseMask.LeveledCreatures = new MaskItem<Exception, Group_ErrorMask<LeveledCreature_ErrorMask>>(null, new Group_ErrorMask<LeveledCreature_ErrorMask>());
-                            }
-                            return baseMask.LeveledCreatures.Specific;
-                        }
-                        ) : null),
-                        copyMask: copyMask?.LeveledCreatures.Specific,
-                        cmds: cmds);
-                }
-                catch (Exception ex)
-                when (doMasks)
-                {
-                    errorMask().SetNthException((int)OblivionMod_FieldIndex.LeveledCreatures, ex);
                 }
             }
         }
@@ -4686,7 +4589,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Ammo:
                 case OblivionMod_FieldIndex.NPCs:
                 case OblivionMod_FieldIndex.Creatures:
-                case OblivionMod_FieldIndex.LeveledCreatures:
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 case OblivionMod_FieldIndex.TES4:
@@ -4808,9 +4710,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Creatures:
                     GroupCommon.Clear(obj.Creatures, cmds.ToUnsetParams());
                     break;
-                case OblivionMod_FieldIndex.LeveledCreatures:
-                    GroupCommon.Clear(obj.LeveledCreatures, cmds.ToUnsetParams());
-                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -4857,7 +4756,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Ammo:
                 case OblivionMod_FieldIndex.NPCs:
                 case OblivionMod_FieldIndex.Creatures:
-                case OblivionMod_FieldIndex.LeveledCreatures:
                     return true;
                 case OblivionMod_FieldIndex.TES4:
                     return obj.TES4_Property.HasBeenSet;
@@ -4943,8 +4841,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.NPCs;
                 case OblivionMod_FieldIndex.Creatures:
                     return obj.Creatures;
-                case OblivionMod_FieldIndex.LeveledCreatures:
-                    return obj.LeveledCreatures;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -5074,9 +4970,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Creatures = new MaskItem<bool, Group_Mask<bool>>();
             ret.Creatures.Specific = GroupCommon.GetEqualsMask(item.Creatures, rhs.Creatures);
             ret.Creatures.Overall = ret.Creatures.Specific.AllEqual((b) => b);
-            ret.LeveledCreatures = new MaskItem<bool, Group_Mask<bool>>();
-            ret.LeveledCreatures.Specific = GroupCommon.GetEqualsMask(item.LeveledCreatures, rhs.LeveledCreatures);
-            ret.LeveledCreatures.Overall = ret.LeveledCreatures.Specific.AllEqual((b) => b);
         }
 
         public static string ToString(
@@ -5246,10 +5139,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Creatures?.ToString(fg, "Creatures");
                 }
-                if (printMask?.LeveledCreatures?.Overall ?? true)
-                {
-                    item.LeveledCreatures?.ToString(fg, "LeveledCreatures");
-                }
             }
             fg.AppendLine("]");
         }
@@ -5301,7 +5190,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Ammo = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Ammo));
             ret.NPCs = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.NPCs));
             ret.Creatures = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Creatures));
-            ret.LeveledCreatures = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.LeveledCreatures));
             return ret;
         }
 
@@ -5550,12 +5438,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         name: nameof(item.Creatures),
                         fieldIndex: (int)OblivionMod_FieldIndex.Creatures,
                         errorMask: errorMask);
-                    LoquiXmlTranslation<Group<LeveledCreature>, Group_ErrorMask<LeveledCreature_ErrorMask>>.Instance.Write(
-                        writer: writer,
-                        item: item.LeveledCreatures,
-                        name: nameof(item.LeveledCreatures),
-                        fieldIndex: (int)OblivionMod_FieldIndex.LeveledCreatures,
-                        errorMask: errorMask);
                 }
             }
             catch (Exception ex)
@@ -5789,11 +5671,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Creatures,
                 fieldIndex: (int)OblivionMod_FieldIndex.Creatures,
                 errorMask: errorMask);
-            LoquiBinaryTranslation<Group<LeveledCreature>, Group_ErrorMask<LeveledCreature_ErrorMask>>.Instance.Write(
-                writer: writer,
-                item: item.LeveledCreatures,
-                fieldIndex: (int)OblivionMod_FieldIndex.LeveledCreatures,
-                errorMask: errorMask);
         }
 
         #endregion
@@ -5848,7 +5725,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Ammo = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.NPCs = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.Creatures = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
-            this.LeveledCreatures = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
         }
         #endregion
 
@@ -5888,7 +5764,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<T, Group_Mask<T>> Ammo { get; set; }
         public MaskItem<T, Group_Mask<T>> NPCs { get; set; }
         public MaskItem<T, Group_Mask<T>> Creatures { get; set; }
-        public MaskItem<T, Group_Mask<T>> LeveledCreatures { get; set; }
         #endregion
 
         #region Equals
@@ -5936,7 +5811,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.Ammo, rhs.Ammo)) return false;
             if (!object.Equals(this.NPCs, rhs.NPCs)) return false;
             if (!object.Equals(this.Creatures, rhs.Creatures)) return false;
-            if (!object.Equals(this.LeveledCreatures, rhs.LeveledCreatures)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -5977,7 +5851,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.Ammo?.GetHashCode());
             ret = ret.CombineHashCode(this.NPCs?.GetHashCode());
             ret = ret.CombineHashCode(this.Creatures?.GetHashCode());
-            ret = ret.CombineHashCode(this.LeveledCreatures?.GetHashCode());
             return ret;
         }
 
@@ -6160,11 +6033,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (!eval(this.Creatures.Overall)) return false;
                 if (this.Creatures.Specific != null && !this.Creatures.Specific.AllEqual(eval)) return false;
-            }
-            if (LeveledCreatures != null)
-            {
-                if (!eval(this.LeveledCreatures.Overall)) return false;
-                if (this.LeveledCreatures.Specific != null && !this.LeveledCreatures.Specific.AllEqual(eval)) return false;
             }
             return true;
         }
@@ -6495,15 +6363,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Creatures.Specific = this.Creatures.Specific.Translate(eval);
                 }
             }
-            if (this.LeveledCreatures != null)
-            {
-                obj.LeveledCreatures = new MaskItem<R, Group_Mask<R>>();
-                obj.LeveledCreatures.Overall = eval(this.LeveledCreatures.Overall);
-                if (this.LeveledCreatures.Specific != null)
-                {
-                    obj.LeveledCreatures.Specific = this.LeveledCreatures.Specific.Translate(eval);
-                }
-            }
         }
         #endregion
 
@@ -6672,10 +6531,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     Creatures?.ToString(fg);
                 }
-                if (printMask?.LeveledCreatures?.Overall ?? true)
-                {
-                    LeveledCreatures?.ToString(fg);
-                }
             }
             fg.AppendLine("]");
         }
@@ -6734,7 +6589,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<Exception, Group_ErrorMask<Ammo_ErrorMask>> Ammo;
         public MaskItem<Exception, Group_ErrorMask<NPC_ErrorMask>> NPCs;
         public MaskItem<Exception, Group_ErrorMask<Creature_ErrorMask>> Creatures;
-        public MaskItem<Exception, Group_ErrorMask<LeveledCreature_ErrorMask>> LeveledCreatures;
         #endregion
 
         #region IErrorMask
@@ -6847,9 +6701,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case OblivionMod_FieldIndex.Creatures:
                     this.Creatures = new MaskItem<Exception, Group_ErrorMask<Creature_ErrorMask>>(ex, null);
-                    break;
-                case OblivionMod_FieldIndex.LeveledCreatures:
-                    this.LeveledCreatures = new MaskItem<Exception, Group_ErrorMask<LeveledCreature_ErrorMask>>(ex, null);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -6966,9 +6817,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Creatures:
                     this.Creatures = (MaskItem<Exception, Group_ErrorMask<Creature_ErrorMask>>)obj;
                     break;
-                case OblivionMod_FieldIndex.LeveledCreatures:
-                    this.LeveledCreatures = (MaskItem<Exception, Group_ErrorMask<LeveledCreature_ErrorMask>>)obj;
-                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -7012,7 +6860,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Ammo != null) return true;
             if (NPCs != null) return true;
             if (Creatures != null) return true;
-            if (LeveledCreatures != null) return true;
             return false;
         }
         #endregion
@@ -7082,7 +6929,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Ammo?.ToString(fg);
             NPCs?.ToString(fg);
             Creatures?.ToString(fg);
-            LeveledCreatures?.ToString(fg);
         }
         #endregion
 
@@ -7125,7 +6971,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Ammo = new MaskItem<Exception, Group_ErrorMask<Ammo_ErrorMask>>(this.Ammo.Overall.Combine(rhs.Ammo.Overall), ((IErrorMask<Group_ErrorMask<Ammo_ErrorMask>>)this.Ammo.Specific).Combine(rhs.Ammo.Specific));
             ret.NPCs = new MaskItem<Exception, Group_ErrorMask<NPC_ErrorMask>>(this.NPCs.Overall.Combine(rhs.NPCs.Overall), ((IErrorMask<Group_ErrorMask<NPC_ErrorMask>>)this.NPCs.Specific).Combine(rhs.NPCs.Specific));
             ret.Creatures = new MaskItem<Exception, Group_ErrorMask<Creature_ErrorMask>>(this.Creatures.Overall.Combine(rhs.Creatures.Overall), ((IErrorMask<Group_ErrorMask<Creature_ErrorMask>>)this.Creatures.Specific).Combine(rhs.Creatures.Specific));
-            ret.LeveledCreatures = new MaskItem<Exception, Group_ErrorMask<LeveledCreature_ErrorMask>>(this.LeveledCreatures.Overall.Combine(rhs.LeveledCreatures.Overall), ((IErrorMask<Group_ErrorMask<LeveledCreature_ErrorMask>>)this.LeveledCreatures.Specific).Combine(rhs.LeveledCreatures.Specific));
             return ret;
         }
         public static OblivionMod_ErrorMask Combine(OblivionMod_ErrorMask lhs, OblivionMod_ErrorMask rhs)
@@ -7174,7 +7019,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<bool, Group_CopyMask<Ammo_CopyMask>> Ammo;
         public MaskItem<bool, Group_CopyMask<NPC_CopyMask>> NPCs;
         public MaskItem<bool, Group_CopyMask<Creature_CopyMask>> Creatures;
-        public MaskItem<bool, Group_CopyMask<LeveledCreature_CopyMask>> LeveledCreatures;
         #endregion
 
     }
