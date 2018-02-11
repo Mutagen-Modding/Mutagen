@@ -32,6 +32,7 @@ namespace Mutagen.Bethesda
             CantWait = 0x00080000,
         }
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public string TitleString => $"{this.EditorID} - {this.FormID.IDString()}";
         
         public static M TypicalParsing<M, E, I>(

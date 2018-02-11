@@ -28,6 +28,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class LandTexture : MajorRecord, ILandTexture, ILoquiObjectSetter, IEquatable<LandTexture>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LandTexture_Registration.Instance;
         public new static LandTexture_Registration Registration => LandTexture_Registration.Instance;
 
@@ -40,45 +41,63 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Icon
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
         public INotifyingSetItem<FilePath> Icon_Property => _Icon;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public FilePath Icon
         {
             get => this._Icon.Item;
             set => this._Icon.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<FilePath> ILandTexture.Icon_Property => this.Icon_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<FilePath> ILandTextureGetter.Icon_Property => this.Icon_Property;
         #endregion
         #region Havok
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingSetItem<HavokData> _Havok = new NotifyingSetItem<HavokData>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItem<HavokData> Havok_Property => this._Havok;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         HavokData ILandTextureGetter.Havok => this.Havok;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public HavokData Havok { get => _Havok.Item; set => _Havok.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<HavokData> ILandTexture.Havok_Property => this.Havok_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<HavokData> ILandTextureGetter.Havok_Property => this.Havok_Property;
         #endregion
         #region TextureSpecularExponent
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Byte> _TextureSpecularExponent = NotifyingSetItem.Factory<Byte>(markAsSet: false);
         public INotifyingSetItem<Byte> TextureSpecularExponent_Property => _TextureSpecularExponent;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte TextureSpecularExponent
         {
             get => this._TextureSpecularExponent.Item;
             set => this._TextureSpecularExponent.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte> ILandTexture.TextureSpecularExponent_Property => this.TextureSpecularExponent_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Byte> ILandTextureGetter.TextureSpecularExponent_Property => this.TextureSpecularExponent_Property;
         #endregion
         #region PotentialGrass
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingList<FormIDSetLink<Grass>> _PotentialGrass = new NotifyingList<FormIDSetLink<Grass>>();
         public INotifyingList<FormIDSetLink<Grass>> PotentialGrass => _PotentialGrass;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<FormIDSetLink<Grass>> PotentialGrassEnumerable
         {
             get => _PotentialGrass;
             set => _PotentialGrass.SetTo(value);
         }
         #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingList<FormIDSetLink<Grass>> ILandTexture.PotentialGrass => _PotentialGrass;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingListGetter<FormIDSetLink<Grass>> ILandTextureGetter.PotentialGrass => _PotentialGrass;
         #endregion
 

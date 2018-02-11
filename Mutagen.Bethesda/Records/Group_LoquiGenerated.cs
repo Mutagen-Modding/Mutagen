@@ -26,6 +26,7 @@ namespace Mutagen.Bethesda
     public partial class Group<T> : IGroup<T>, ILoquiObjectSetter, IEquatable<Group<T>>
         where T : MajorRecord, ILoquiObjectGetter
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Group_Registration.Instance;
         public static Group_Registration Registration => Group_Registration.Instance;
 
@@ -45,35 +46,46 @@ namespace Mutagen.Bethesda
         }
 
         #region ContainedRecordType
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<String> _ContainedRecordType = NotifyingItem.Factory<String>();
         public INotifyingItemGetter<String> ContainedRecordType_Property => _ContainedRecordType;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String ContainedRecordType
         {
             get => this._ContainedRecordType.Item;
             protected set => this._ContainedRecordType.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<String> IGroupGetter<T>.ContainedRecordType_Property => this.ContainedRecordType_Property;
         #endregion
         #region GroupType
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<GroupTypeEnum> _GroupType = NotifyingItem.Factory<GroupTypeEnum>();
         public INotifyingItem<GroupTypeEnum> GroupType_Property => _GroupType;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public GroupTypeEnum GroupType
         {
             get => this._GroupType.Item;
             set => this._GroupType.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<GroupTypeEnum> IGroup<T>.GroupType_Property => this.GroupType_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<GroupTypeEnum> IGroupGetter<T>.GroupType_Property => this.GroupType_Property;
         #endregion
         #region LastModified
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte[]> _LastModified = NotifyingItem.Factory<Byte[]>(noNullFallback: () => new byte[4]);
         public INotifyingItem<Byte[]> LastModified_Property => _LastModified;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] LastModified
         {
             get => this._LastModified.Item;
             set => this._LastModified.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte[]> IGroup<T>.LastModified_Property => this.LastModified_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte[]> IGroupGetter<T>.LastModified_Property => this.LastModified_Property;
         #endregion
         #region Items

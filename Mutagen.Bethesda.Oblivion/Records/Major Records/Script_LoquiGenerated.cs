@@ -28,6 +28,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Script : MajorRecord, IScript, ILoquiObjectSetter, IEquatable<Script>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Script_Registration.Instance;
         public new static Script_Registration Registration => Script_Registration.Instance;
 
@@ -43,59 +44,80 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region MetadataSummary
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ScriptMetaSummary _MetadataSummary_Object = new ScriptMetaSummary();
         protected readonly INotifyingSetItem<ScriptMetaSummary> _MetadataSummary;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItemGetter<ScriptMetaSummary> MetadataSummary_Property => this._MetadataSummary;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ScriptMetaSummary IScriptGetter.MetadataSummary => this.MetadataSummary;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ScriptMetaSummary MetadataSummary { get => _MetadataSummary.Item; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<ScriptMetaSummary> IScriptGetter.MetadataSummary_Property => this.MetadataSummary_Property;
         #endregion
         #region CompiledScript
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Byte[]> _CompiledScript = NotifyingSetItem.Factory<Byte[]>(markAsSet: false);
         public INotifyingSetItem<Byte[]> CompiledScript_Property => _CompiledScript;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] CompiledScript
         {
             get => this._CompiledScript.Item;
             set => this._CompiledScript.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> IScript.CompiledScript_Property => this.CompiledScript_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Byte[]> IScriptGetter.CompiledScript_Property => this.CompiledScript_Property;
         #endregion
         #region SourceCode
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<String> _SourceCode = NotifyingSetItem.Factory<String>(markAsSet: false);
         public INotifyingSetItem<String> SourceCode_Property => _SourceCode;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String SourceCode
         {
             get => this._SourceCode.Item;
             set => this._SourceCode.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> IScript.SourceCode_Property => this.SourceCode_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<String> IScriptGetter.SourceCode_Property => this.SourceCode_Property;
         #endregion
         #region LocalVariables
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingList<LocalVariable> _LocalVariables = new NotifyingList<LocalVariable>();
         public INotifyingList<LocalVariable> LocalVariables => _LocalVariables;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<LocalVariable> LocalVariablesEnumerable
         {
             get => _LocalVariables;
             set => _LocalVariables.SetTo(value);
         }
         #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingList<LocalVariable> IScript.LocalVariables => _LocalVariables;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingListGetter<LocalVariable> IScriptGetter.LocalVariables => _LocalVariables;
         #endregion
 
         #endregion
         #region References
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingList<ScriptReference> _References = new NotifyingList<ScriptReference>();
         public INotifyingList<ScriptReference> References => _References;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<ScriptReference> ReferencesEnumerable
         {
             get => _References;
             set => _References.SetTo(value);
         }
         #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingList<ScriptReference> IScript.References => _References;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingListGetter<ScriptReference> IScriptGetter.References => _References;
         #endregion
 

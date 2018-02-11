@@ -25,6 +25,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class SoundData : ISoundData, ILoquiObjectSetter, IEquatable<SoundData>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundData_Registration.Instance;
         public static SoundData_Registration Registration => SoundData_Registration.Instance;
 
@@ -37,47 +38,63 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region MinimumAttenuationDistance
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt16> _MinimumAttenuationDistance = NotifyingItem.Factory<UInt16>();
         public INotifyingItem<UInt16> MinimumAttenuationDistance_Property => _MinimumAttenuationDistance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt16 MinimumAttenuationDistance
         {
             get => this._MinimumAttenuationDistance.Item;
             set => this._MinimumAttenuationDistance.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt16> ISoundData.MinimumAttenuationDistance_Property => this.MinimumAttenuationDistance_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<UInt16> ISoundDataGetter.MinimumAttenuationDistance_Property => this.MinimumAttenuationDistance_Property;
         #endregion
         #region MaximumAttenuationDistance
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt16> _MaximumAttenuationDistance = NotifyingItem.Factory<UInt16>();
         public INotifyingItem<UInt16> MaximumAttenuationDistance_Property => _MaximumAttenuationDistance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt16 MaximumAttenuationDistance
         {
             get => this._MaximumAttenuationDistance.Item;
             set => this._MaximumAttenuationDistance.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt16> ISoundData.MaximumAttenuationDistance_Property => this.MaximumAttenuationDistance_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<UInt16> ISoundDataGetter.MaximumAttenuationDistance_Property => this.MaximumAttenuationDistance_Property;
         #endregion
         #region FrequencyAdjustment
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<SByte> _FrequencyAdjustment = NotifyingItem.Factory<SByte>();
         public INotifyingItem<SByte> FrequencyAdjustment_Property => _FrequencyAdjustment;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public SByte FrequencyAdjustment
         {
             get => this._FrequencyAdjustment.Item;
             set => this._FrequencyAdjustment.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<SByte> ISoundData.FrequencyAdjustment_Property => this.FrequencyAdjustment_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<SByte> ISoundDataGetter.FrequencyAdjustment_Property => this.FrequencyAdjustment_Property;
         #endregion
         #region Flags
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<SoundData.Flag> _Flags = NotifyingItem.Factory<SoundData.Flag>();
         public INotifyingItem<SoundData.Flag> Flags_Property => _Flags;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public SoundData.Flag Flags
         {
             get => this._Flags.Item;
             set => this._Flags.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<SoundData.Flag> ISoundData.Flags_Property => this.Flags_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<SoundData.Flag> ISoundDataGetter.Flags_Property => this.Flags_Property;
         #endregion
 

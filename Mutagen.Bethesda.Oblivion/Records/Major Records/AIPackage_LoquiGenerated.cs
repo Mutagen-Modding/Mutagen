@@ -27,6 +27,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class AIPackage : MajorRecord, IAIPackage, ILoquiObjectSetter, IEquatable<AIPackage>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => AIPackage_Registration.Instance;
         public new static AIPackage_Registration Registration => AIPackage_Registration.Instance;
 

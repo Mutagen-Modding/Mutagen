@@ -25,6 +25,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Rank : IRank, ILoquiObjectSetter, IEquatable<Rank>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Rank_Registration.Instance;
         public static Rank_Registration Registration => Rank_Registration.Instance;
 
@@ -37,47 +38,63 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region RankNumber
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Int32> _RankNumber = NotifyingSetItem.Factory<Int32>(markAsSet: false);
         public INotifyingSetItem<Int32> RankNumber_Property => _RankNumber;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Int32 RankNumber
         {
             get => this._RankNumber.Item;
             set => this._RankNumber.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Int32> IRank.RankNumber_Property => this.RankNumber_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Int32> IRankGetter.RankNumber_Property => this.RankNumber_Property;
         #endregion
         #region MaleName
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<String> _MaleName = NotifyingSetItem.Factory<String>(markAsSet: false);
         public INotifyingSetItem<String> MaleName_Property => _MaleName;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String MaleName
         {
             get => this._MaleName.Item;
             set => this._MaleName.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> IRank.MaleName_Property => this.MaleName_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<String> IRankGetter.MaleName_Property => this.MaleName_Property;
         #endregion
         #region FemaleName
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<String> _FemaleName = NotifyingSetItem.Factory<String>(markAsSet: false);
         public INotifyingSetItem<String> FemaleName_Property => _FemaleName;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String FemaleName
         {
             get => this._FemaleName.Item;
             set => this._FemaleName.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> IRank.FemaleName_Property => this.FemaleName_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<String> IRankGetter.FemaleName_Property => this.FemaleName_Property;
         #endregion
         #region Insignia
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<FilePath> _Insignia = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
         public INotifyingSetItem<FilePath> Insignia_Property => _Insignia;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public FilePath Insignia
         {
             get => this._Insignia.Item;
             set => this._Insignia.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<FilePath> IRank.Insignia_Property => this.Insignia_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<FilePath> IRankGetter.Insignia_Property => this.Insignia_Property;
         #endregion
 

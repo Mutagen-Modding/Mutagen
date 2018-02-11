@@ -27,6 +27,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public abstract partial class GameSetting : MajorRecord, IGameSetting, ILoquiObjectSetter, IEquatable<GameSetting>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GameSetting_Registration.Instance;
         public new static GameSetting_Registration Registration => GameSetting_Registration.Instance;
 

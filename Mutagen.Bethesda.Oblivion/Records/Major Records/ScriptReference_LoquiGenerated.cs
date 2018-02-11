@@ -25,6 +25,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public abstract partial class ScriptReference : IScriptReference, ILoquiObjectSetter, IEquatable<ScriptReference>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptReference_Registration.Instance;
         public static ScriptReference_Registration Registration => ScriptReference_Registration.Instance;
 

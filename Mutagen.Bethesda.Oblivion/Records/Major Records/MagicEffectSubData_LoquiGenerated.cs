@@ -25,6 +25,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class MagicEffectSubData : IMagicEffectSubData, ILoquiObjectSetter, IEquatable<MagicEffectSubData>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffectSubData_Registration.Instance;
         public static MagicEffectSubData_Registration Registration => MagicEffectSubData_Registration.Instance;
 
@@ -38,49 +39,67 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region EnchantEffect
         public FormIDLink<EffectShader> EnchantEffect_Property { get; } = new FormIDLink<EffectShader>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public EffectShader EnchantEffect { get => EnchantEffect_Property.Item; set => EnchantEffect_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDLink<EffectShader> IMagicEffectSubDataGetter.EnchantEffect_Property => this.EnchantEffect_Property;
         #endregion
         #region CastingSound
         public FormIDLink<Sound> CastingSound_Property { get; } = new FormIDLink<Sound>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Sound CastingSound { get => CastingSound_Property.Item; set => CastingSound_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDLink<Sound> IMagicEffectSubDataGetter.CastingSound_Property => this.CastingSound_Property;
         #endregion
         #region BoltSound
         public FormIDLink<Sound> BoltSound_Property { get; } = new FormIDLink<Sound>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Sound BoltSound { get => BoltSound_Property.Item; set => BoltSound_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDLink<Sound> IMagicEffectSubDataGetter.BoltSound_Property => this.BoltSound_Property;
         #endregion
         #region HitSound
         public FormIDLink<Sound> HitSound_Property { get; } = new FormIDLink<Sound>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Sound HitSound { get => HitSound_Property.Item; set => HitSound_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDLink<Sound> IMagicEffectSubDataGetter.HitSound_Property => this.HitSound_Property;
         #endregion
         #region AreaSound
         public FormIDLink<Sound> AreaSound_Property { get; } = new FormIDLink<Sound>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Sound AreaSound { get => AreaSound_Property.Item; set => AreaSound_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDLink<Sound> IMagicEffectSubDataGetter.AreaSound_Property => this.AreaSound_Property;
         #endregion
         #region ConstantEffectEnchantmentFactor
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _ConstantEffectEnchantmentFactor = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> ConstantEffectEnchantmentFactor_Property => _ConstantEffectEnchantmentFactor;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single ConstantEffectEnchantmentFactor
         {
             get => this._ConstantEffectEnchantmentFactor.Item;
             set => this._ConstantEffectEnchantmentFactor.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IMagicEffectSubData.ConstantEffectEnchantmentFactor_Property => this.ConstantEffectEnchantmentFactor_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Single> IMagicEffectSubDataGetter.ConstantEffectEnchantmentFactor_Property => this.ConstantEffectEnchantmentFactor_Property;
         #endregion
         #region ConstantEffectBarterFactor
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _ConstantEffectBarterFactor = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> ConstantEffectBarterFactor_Property => _ConstantEffectBarterFactor;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single ConstantEffectBarterFactor
         {
             get => this._ConstantEffectBarterFactor.Item;
             set => this._ConstantEffectBarterFactor.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IMagicEffectSubData.ConstantEffectBarterFactor_Property => this.ConstantEffectBarterFactor_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Single> IMagicEffectSubDataGetter.ConstantEffectBarterFactor_Property => this.ConstantEffectBarterFactor_Property;
         #endregion
 

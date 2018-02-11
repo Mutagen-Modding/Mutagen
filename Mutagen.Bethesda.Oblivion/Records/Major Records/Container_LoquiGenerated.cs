@@ -28,6 +28,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Container : NamedMajorRecord, IContainer, ILoquiObjectSetter, IEquatable<Container>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Container_Registration.Instance;
         public new static Container_Registration Registration => Container_Registration.Instance;
 
@@ -40,62 +41,86 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingSetItem<Model> _Model = new NotifyingSetItem<Model>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItem<Model> Model_Property => this._Model;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Model IContainerGetter.Model => this.Model;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Model Model { get => _Model.Item; set => _Model.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Model> IContainer.Model_Property => this.Model_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Model> IContainerGetter.Model_Property => this.Model_Property;
         #endregion
         #region Script
         public FormIDSetLink<Script> Script_Property { get; } = new FormIDSetLink<Script>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Script Script { get => Script_Property.Item; set => Script_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Script> IContainerGetter.Script_Property => this.Script_Property;
         #endregion
         #region Items
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingList<ContainerItem> _Items = new NotifyingList<ContainerItem>();
         public INotifyingList<ContainerItem> Items => _Items;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<ContainerItem> ItemsEnumerable
         {
             get => _Items;
             set => _Items.SetTo(value);
         }
         #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingList<ContainerItem> IContainer.Items => _Items;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingListGetter<ContainerItem> IContainerGetter.Items => _Items;
         #endregion
 
         #endregion
         #region Flags
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Container.ContainerFlag> _Flags = NotifyingItem.Factory<Container.ContainerFlag>();
         public INotifyingItem<Container.ContainerFlag> Flags_Property => _Flags;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Container.ContainerFlag Flags
         {
             get => this._Flags.Item;
             set => this._Flags.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Container.ContainerFlag> IContainer.Flags_Property => this.Flags_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Container.ContainerFlag> IContainerGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region Weight
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _Weight = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> Weight_Property => _Weight;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single Weight
         {
             get => this._Weight.Item;
             set => this._Weight.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IContainer.Weight_Property => this.Weight_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Single> IContainerGetter.Weight_Property => this.Weight_Property;
         #endregion
         #region OpenSound
         public FormIDSetLink<Sound> OpenSound_Property { get; } = new FormIDSetLink<Sound>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Sound OpenSound { get => OpenSound_Property.Item; set => OpenSound_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Sound> IContainerGetter.OpenSound_Property => this.OpenSound_Property;
         #endregion
         #region CloseSound
         public FormIDSetLink<Sound> CloseSound_Property { get; } = new FormIDSetLink<Sound>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Sound CloseSound { get => CloseSound_Property.Item; set => CloseSound_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Sound> IContainerGetter.CloseSound_Property => this.CloseSound_Property;
         #endregion
 

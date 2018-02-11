@@ -27,6 +27,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public abstract partial class ItemAbstract : MajorRecord, IItemAbstract, ILoquiObjectSetter, IEquatable<ItemAbstract>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ItemAbstract_Registration.Instance;
         public new static ItemAbstract_Registration Registration => ItemAbstract_Registration.Instance;
 

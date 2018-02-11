@@ -25,6 +25,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class HavokData : IHavokData, ILoquiObjectSetter, IEquatable<HavokData>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => HavokData_Registration.Instance;
         public static HavokData_Registration Registration => HavokData_Registration.Instance;
 
@@ -37,36 +38,48 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Material
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<HavokData.MaterialType> _Material = NotifyingItem.Factory<HavokData.MaterialType>();
         public INotifyingItem<HavokData.MaterialType> Material_Property => _Material;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public HavokData.MaterialType Material
         {
             get => this._Material.Item;
             set => this._Material.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<HavokData.MaterialType> IHavokData.Material_Property => this.Material_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<HavokData.MaterialType> IHavokDataGetter.Material_Property => this.Material_Property;
         #endregion
         #region Friction
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Friction = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Friction_Property => _Friction;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Friction
         {
             get => this._Friction.Item;
             set => this._Friction.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> IHavokData.Friction_Property => this.Friction_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> IHavokDataGetter.Friction_Property => this.Friction_Property;
         #endregion
         #region Restitution
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Restitution = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Restitution_Property => _Restitution;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Restitution
         {
             get => this._Restitution.Item;
             set => this._Restitution.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> IHavokData.Restitution_Property => this.Restitution_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> IHavokDataGetter.Restitution_Property => this.Restitution_Property;
         #endregion
 

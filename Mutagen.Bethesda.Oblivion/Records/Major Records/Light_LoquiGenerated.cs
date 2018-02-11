@@ -29,6 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Light : MajorRecord, ILight, ILoquiObjectSetter, IEquatable<Light>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Light_Registration.Instance;
         public new static Light_Registration Registration => Light_Registration.Instance;
 
@@ -41,142 +42,196 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingSetItem<Model> _Model = new NotifyingSetItem<Model>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItem<Model> Model_Property => this._Model;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Model ILightGetter.Model => this.Model;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Model Model { get => _Model.Item; set => _Model.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Model> ILight.Model_Property => this.Model_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Model> ILightGetter.Model_Property => this.Model_Property;
         #endregion
         #region Script
         public FormIDSetLink<Script> Script_Property { get; } = new FormIDSetLink<Script>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Script Script { get => Script_Property.Item; set => Script_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Script> ILightGetter.Script_Property => this.Script_Property;
         #endregion
         #region Name
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<String> _Name = NotifyingSetItem.Factory<String>(markAsSet: false);
         public INotifyingSetItem<String> Name_Property => _Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Name
         {
             get => this._Name.Item;
             set => this._Name.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> ILight.Name_Property => this.Name_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<String> ILightGetter.Name_Property => this.Name_Property;
         #endregion
         #region Icon
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
         public INotifyingSetItem<FilePath> Icon_Property => _Icon;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public FilePath Icon
         {
             get => this._Icon.Item;
             set => this._Icon.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<FilePath> ILight.Icon_Property => this.Icon_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<FilePath> ILightGetter.Icon_Property => this.Icon_Property;
         #endregion
         #region Time
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Int32> _Time = NotifyingItem.Factory<Int32>(defaultVal: -1);
         public INotifyingItem<Int32> Time_Property => _Time;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Int32 Time
         {
             get => this._Time.Item;
             set => this._Time.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Int32> ILight.Time_Property => this.Time_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Int32> ILightGetter.Time_Property => this.Time_Property;
         #endregion
         #region Radius
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt32> _Radius = NotifyingItem.Factory<UInt32>();
         public INotifyingItem<UInt32> Radius_Property => _Radius;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 Radius
         {
             get => this._Radius.Item;
             set => this._Radius.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt32> ILight.Radius_Property => this.Radius_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<UInt32> ILightGetter.Radius_Property => this.Radius_Property;
         #endregion
         #region Color
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Color> _Color = NotifyingItem.Factory<Color>();
         public INotifyingItem<Color> Color_Property => _Color;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Color Color
         {
             get => this._Color.Item;
             set => this._Color.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Color> ILight.Color_Property => this.Color_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Color> ILightGetter.Color_Property => this.Color_Property;
         #endregion
         #region Flags
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Light.LightFlag> _Flags = NotifyingItem.Factory<Light.LightFlag>();
         public INotifyingItem<Light.LightFlag> Flags_Property => _Flags;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Light.LightFlag Flags
         {
             get => this._Flags.Item;
             set => this._Flags.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Light.LightFlag> ILight.Flags_Property => this.Flags_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Light.LightFlag> ILightGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region FalloffExponent
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _FalloffExponent = NotifyingItem.Factory<Single>(defaultVal: 1);
         public INotifyingItem<Single> FalloffExponent_Property => _FalloffExponent;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single FalloffExponent
         {
             get => this._FalloffExponent.Item;
             set => this._FalloffExponent.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> ILight.FalloffExponent_Property => this.FalloffExponent_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Single> ILightGetter.FalloffExponent_Property => this.FalloffExponent_Property;
         #endregion
         #region FOV
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _FOV = NotifyingItem.Factory<Single>(defaultVal: 90);
         public INotifyingItem<Single> FOV_Property => _FOV;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single FOV
         {
             get => this._FOV.Item;
             set => this._FOV.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> ILight.FOV_Property => this.FOV_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Single> ILightGetter.FOV_Property => this.FOV_Property;
         #endregion
         #region Value
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt32> _Value = NotifyingItem.Factory<UInt32>();
         public INotifyingItem<UInt32> Value_Property => _Value;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 Value
         {
             get => this._Value.Item;
             set => this._Value.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt32> ILight.Value_Property => this.Value_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<UInt32> ILightGetter.Value_Property => this.Value_Property;
         #endregion
         #region Weight
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _Weight = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> Weight_Property => _Weight;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single Weight
         {
             get => this._Weight.Item;
             set => this._Weight.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> ILight.Weight_Property => this.Weight_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Single> ILightGetter.Weight_Property => this.Weight_Property;
         #endregion
         #region Fade
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Single> _Fade = NotifyingSetItem.Factory<Single>(markAsSet: false);
         public INotifyingSetItem<Single> Fade_Property => _Fade;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single Fade
         {
             get => this._Fade.Item;
             set => this._Fade.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Single> ILight.Fade_Property => this.Fade_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Single> ILightGetter.Fade_Property => this.Fade_Property;
         #endregion
         #region Sound
         public FormIDSetLink<Sound> Sound_Property { get; } = new FormIDSetLink<Sound>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Sound Sound { get => Sound_Property.Item; set => Sound_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Sound> ILightGetter.Sound_Property => this.Sound_Property;
         #endregion
 

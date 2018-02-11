@@ -28,6 +28,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class LeveledCreature : NPCSpawn, ILeveledCreature, ILoquiObjectSetter, IEquatable<LeveledCreature>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledCreature_Registration.Instance;
         public new static LeveledCreature_Registration Registration => LeveledCreature_Registration.Instance;
 
@@ -40,49 +41,65 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region ChanceNone
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Byte> _ChanceNone = NotifyingSetItem.Factory<Byte>(markAsSet: false);
         public INotifyingSetItem<Byte> ChanceNone_Property => _ChanceNone;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte ChanceNone
         {
             get => this._ChanceNone.Item;
             set => this._ChanceNone.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte> ILeveledCreature.ChanceNone_Property => this.ChanceNone_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Byte> ILeveledCreatureGetter.ChanceNone_Property => this.ChanceNone_Property;
         #endregion
         #region Flags
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<LeveledCreature.Flag> _Flags = NotifyingSetItem.Factory<LeveledCreature.Flag>(markAsSet: false);
         public INotifyingSetItem<LeveledCreature.Flag> Flags_Property => _Flags;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public LeveledCreature.Flag Flags
         {
             get => this._Flags.Item;
             set => this._Flags.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<LeveledCreature.Flag> ILeveledCreature.Flags_Property => this.Flags_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<LeveledCreature.Flag> ILeveledCreatureGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region Entries
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingList<LeveledCreatureEntry> _Entries = new NotifyingList<LeveledCreatureEntry>();
         public INotifyingList<LeveledCreatureEntry> Entries => _Entries;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<LeveledCreatureEntry> EntriesEnumerable
         {
             get => _Entries;
             set => _Entries.SetTo(value);
         }
         #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingList<LeveledCreatureEntry> ILeveledCreature.Entries => _Entries;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingListGetter<LeveledCreatureEntry> ILeveledCreatureGetter.Entries => _Entries;
         #endregion
 
         #endregion
         #region Script
         public FormIDSetLink<Script> Script_Property { get; } = new FormIDSetLink<Script>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Script Script { get => Script_Property.Item; set => Script_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Script> ILeveledCreatureGetter.Script_Property => this.Script_Property;
         #endregion
         #region Template
         public FormIDSetLink<NPCAbstract> Template_Property { get; } = new FormIDSetLink<NPCAbstract>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public NPCAbstract Template { get => Template_Property.Item; set => Template_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<NPCAbstract> ILeveledCreatureGetter.Template_Property => this.Template_Property;
         #endregion
 

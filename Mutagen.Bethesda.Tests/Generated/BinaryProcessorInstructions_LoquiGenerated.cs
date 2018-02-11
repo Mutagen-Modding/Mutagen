@@ -25,6 +25,7 @@ namespace Mutagen.Bethesda.Tests
     #region Class
     public partial class BinaryProcessorInstructions : IBinaryProcessorInstructions, ILoquiObjectSetter, IEquatable<BinaryProcessorInstructions>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BinaryProcessorInstructions_Registration.Instance;
         public static BinaryProcessorInstructions_Registration Registration => BinaryProcessorInstructions_Registration.Instance;
 
@@ -46,6 +47,7 @@ namespace Mutagen.Bethesda.Tests
 
         #endregion
         #region Instruction
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Instruction _Instruction = new Instruction();
         public Instruction Instruction
         {
@@ -54,43 +56,55 @@ namespace Mutagen.Bethesda.Tests
         }
         #endregion
         #region SkipSourceSections
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingList<RangeInt64> _SkipSourceSections = new NotifyingList<RangeInt64>();
         public INotifyingList<RangeInt64> SkipSourceSections => _SkipSourceSections;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<RangeInt64> SkipSourceSectionsEnumerable
         {
             get => _SkipSourceSections;
             set => _SkipSourceSections.SetTo(value);
         }
         #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingList<RangeInt64> IBinaryProcessorInstructions.SkipSourceSections => _SkipSourceSections;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingListGetter<RangeInt64> IBinaryProcessorInstructionsGetter.SkipSourceSections => _SkipSourceSections;
         #endregion
 
         #endregion
         #region SkipOutputSections
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingList<RangeInt64> _SkipOutputSections = new NotifyingList<RangeInt64>();
         public INotifyingList<RangeInt64> SkipOutputSections => _SkipOutputSections;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<RangeInt64> SkipOutputSectionsEnumerable
         {
             get => _SkipOutputSections;
             set => _SkipOutputSections.SetTo(value);
         }
         #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingList<RangeInt64> IBinaryProcessorInstructions.SkipOutputSections => _SkipOutputSections;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingListGetter<RangeInt64> IBinaryProcessorInstructionsGetter.SkipOutputSections => _SkipOutputSections;
         #endregion
 
         #endregion
         #region IgnoreDifferenceSections
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingList<RangeInt64> _IgnoreDifferenceSections = new NotifyingList<RangeInt64>();
         public INotifyingList<RangeInt64> IgnoreDifferenceSections => _IgnoreDifferenceSections;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<RangeInt64> IgnoreDifferenceSectionsEnumerable
         {
             get => _IgnoreDifferenceSections;
             set => _IgnoreDifferenceSections.SetTo(value);
         }
         #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingList<RangeInt64> IBinaryProcessorInstructions.IgnoreDifferenceSections => _IgnoreDifferenceSections;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingListGetter<RangeInt64> IBinaryProcessorInstructionsGetter.IgnoreDifferenceSections => _IgnoreDifferenceSections;
         #endregion
 

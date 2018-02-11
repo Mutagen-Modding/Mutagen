@@ -25,6 +25,7 @@ namespace Mutagen.Bethesda
     #region Class
     public abstract partial class MajorRecord : IMajorRecord, ILoquiObjectSetter, IEquatable<MajorRecord>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MajorRecord_Registration.Instance;
         public static MajorRecord_Registration Registration => MajorRecord_Registration.Instance;
 
@@ -37,56 +38,74 @@ namespace Mutagen.Bethesda
         #endregion
 
         #region MajorRecordFlags
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<MajorRecord.MajorRecordFlag> _MajorRecordFlags = NotifyingItem.Factory<MajorRecord.MajorRecordFlag>();
         public INotifyingItem<MajorRecord.MajorRecordFlag> MajorRecordFlags_Property => _MajorRecordFlags;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public MajorRecord.MajorRecordFlag MajorRecordFlags
         {
             get => this._MajorRecordFlags.Item;
             set => this._MajorRecordFlags.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<MajorRecord.MajorRecordFlag> IMajorRecord.MajorRecordFlags_Property => this.MajorRecordFlags_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<MajorRecord.MajorRecordFlag> IMajorRecordGetter.MajorRecordFlags_Property => this.MajorRecordFlags_Property;
         #endregion
         #region FormID
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<FormID> _FormID = NotifyingItem.Factory<FormID>();
         public INotifyingItemGetter<FormID> FormID_Property => _FormID;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public FormID FormID
         {
             get => this._FormID.Item;
             protected set => this._FormID.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<FormID> IMajorRecordGetter.FormID_Property => this.FormID_Property;
         #endregion
         #region Version
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte[]> _Version = NotifyingItem.Factory<Byte[]>(noNullFallback: () => new byte[4]);
         public INotifyingItem<Byte[]> Version_Property => _Version;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] Version
         {
             get => this._Version.Item;
             set => this._Version.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte[]> IMajorRecord.Version_Property => this.Version_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte[]> IMajorRecordGetter.Version_Property => this.Version_Property;
         #endregion
         #region EditorID
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<String> _EditorID = NotifyingSetItem.Factory<String>(markAsSet: false);
         public INotifyingSetItem<String> EditorID_Property => _EditorID;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String EditorID
         {
             get => this._EditorID.Item;
             set => this._EditorID.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> IMajorRecord.EditorID_Property => this.EditorID_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<String> IMajorRecordGetter.EditorID_Property => this.EditorID_Property;
         #endregion
         #region RecordType
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<RecordType> _RecordType = NotifyingItem.Factory<RecordType>();
         public INotifyingItemGetter<RecordType> RecordType_Property => _RecordType;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public RecordType RecordType
         {
             get => this._RecordType.Item;
             protected set => this._RecordType.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<RecordType> IMajorRecordGetter.RecordType_Property => this.RecordType_Property;
         #endregion
 

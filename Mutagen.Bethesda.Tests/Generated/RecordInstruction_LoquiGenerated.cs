@@ -25,6 +25,7 @@ namespace Mutagen.Bethesda.Tests
     #region Class
     public partial class RecordInstruction : Instruction, IRecordInstruction, ILoquiObjectSetter, IEquatable<RecordInstruction>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RecordInstruction_Registration.Instance;
         public new static RecordInstruction_Registration Registration => RecordInstruction_Registration.Instance;
 

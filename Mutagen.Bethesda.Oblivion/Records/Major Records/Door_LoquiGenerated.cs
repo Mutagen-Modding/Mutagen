@@ -28,6 +28,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Door : NamedMajorRecord, IDoor, ILoquiObjectSetter, IEquatable<Door>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Door_Registration.Instance;
         public new static Door_Registration Registration => Door_Registration.Instance;
 
@@ -40,54 +41,76 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingSetItem<Model> _Model = new NotifyingSetItem<Model>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItem<Model> Model_Property => this._Model;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Model IDoorGetter.Model => this.Model;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Model Model { get => _Model.Item; set => _Model.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Model> IDoor.Model_Property => this.Model_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Model> IDoorGetter.Model_Property => this.Model_Property;
         #endregion
         #region Script
         public FormIDSetLink<Script> Script_Property { get; } = new FormIDSetLink<Script>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Script Script { get => Script_Property.Item; set => Script_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Script> IDoorGetter.Script_Property => this.Script_Property;
         #endregion
         #region OpenSound
         public FormIDSetLink<Sound> OpenSound_Property { get; } = new FormIDSetLink<Sound>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Sound OpenSound { get => OpenSound_Property.Item; set => OpenSound_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Sound> IDoorGetter.OpenSound_Property => this.OpenSound_Property;
         #endregion
         #region CloseSound
         public FormIDSetLink<Sound> CloseSound_Property { get; } = new FormIDSetLink<Sound>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Sound CloseSound { get => CloseSound_Property.Item; set => CloseSound_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Sound> IDoorGetter.CloseSound_Property => this.CloseSound_Property;
         #endregion
         #region LoopSound
         public FormIDSetLink<Sound> LoopSound_Property { get; } = new FormIDSetLink<Sound>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Sound LoopSound { get => LoopSound_Property.Item; set => LoopSound_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Sound> IDoorGetter.LoopSound_Property => this.LoopSound_Property;
         #endregion
         #region Flags
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Door.DoorFlag> _Flags = NotifyingSetItem.Factory<Door.DoorFlag>(markAsSet: false);
         public INotifyingSetItem<Door.DoorFlag> Flags_Property => _Flags;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Door.DoorFlag Flags
         {
             get => this._Flags.Item;
             set => this._Flags.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Door.DoorFlag> IDoor.Flags_Property => this.Flags_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Door.DoorFlag> IDoorGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region RandomTeleportDestinations
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingList<FormIDSetLink<Worldspace>> _RandomTeleportDestinations = new NotifyingList<FormIDSetLink<Worldspace>>();
         public INotifyingList<FormIDSetLink<Worldspace>> RandomTeleportDestinations => _RandomTeleportDestinations;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<FormIDSetLink<Worldspace>> RandomTeleportDestinationsEnumerable
         {
             get => _RandomTeleportDestinations;
             set => _RandomTeleportDestinations.SetTo(value);
         }
         #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingList<FormIDSetLink<Worldspace>> IDoor.RandomTeleportDestinations => _RandomTeleportDestinations;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingListGetter<FormIDSetLink<Worldspace>> IDoorGetter.RandomTeleportDestinations => _RandomTeleportDestinations;
         #endregion
 

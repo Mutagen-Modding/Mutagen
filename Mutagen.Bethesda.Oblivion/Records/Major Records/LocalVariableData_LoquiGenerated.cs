@@ -25,6 +25,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class LocalVariableData : ILocalVariableData, ILoquiObjectSetter, IEquatable<LocalVariableData>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocalVariableData_Registration.Instance;
         public static LocalVariableData_Registration Registration => LocalVariableData_Registration.Instance;
 
@@ -37,14 +38,18 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Data
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte[]> _Data = NotifyingItem.Factory<Byte[]>(noNullFallback: () => new byte[24]);
         public INotifyingItem<Byte[]> Data_Property => _Data;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] Data
         {
             get => this._Data.Item;
             set => this._Data.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte[]> ILocalVariableData.Data_Property => this.Data_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte[]> ILocalVariableDataGetter.Data_Property => this.Data_Property;
         #endregion
 

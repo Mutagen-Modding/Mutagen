@@ -27,6 +27,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class CombatStyle : MajorRecord, ICombatStyle, ILoquiObjectSetter, IEquatable<CombatStyle>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CombatStyle_Registration.Instance;
         public new static CombatStyle_Registration Registration => CombatStyle_Registration.Instance;
 

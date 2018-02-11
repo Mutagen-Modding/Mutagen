@@ -24,6 +24,7 @@ namespace Mutagen.Bethesda.Tests
     #region Class
     public partial class Substitution : ISubstitution, ILoquiObjectSetter, IEquatable<Substitution>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Substitution_Registration.Instance;
         public static Substitution_Registration Registration => Substitution_Registration.Instance;
 

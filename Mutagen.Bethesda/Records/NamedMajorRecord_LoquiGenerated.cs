@@ -26,6 +26,7 @@ namespace Mutagen.Bethesda
     #region Class
     public abstract partial class NamedMajorRecord : MajorRecord, INamedMajorRecord, ILoquiObjectSetter, IEquatable<NamedMajorRecord>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NamedMajorRecord_Registration.Instance;
         public new static NamedMajorRecord_Registration Registration => NamedMajorRecord_Registration.Instance;
 
@@ -38,14 +39,18 @@ namespace Mutagen.Bethesda
         #endregion
 
         #region Name
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<String> _Name = NotifyingSetItem.Factory<String>(markAsSet: false);
         public INotifyingSetItem<String> Name_Property => _Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Name
         {
             get => this._Name.Item;
             set => this._Name.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> INamedMajorRecord.Name_Property => this.Name_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<String> INamedMajorRecordGetter.Name_Property => this.Name_Property;
         #endregion
 

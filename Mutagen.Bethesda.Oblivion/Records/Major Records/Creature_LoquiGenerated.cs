@@ -28,6 +28,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Creature : NamedMajorRecord, ICreature, ILoquiObjectSetter, IEquatable<Creature>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Creature_Registration.Instance;
         public new static Creature_Registration Registration => Creature_Registration.Instance;
 
@@ -40,523 +41,709 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingSetItem<Model> _Model = new NotifyingSetItem<Model>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItem<Model> Model_Property => this._Model;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Model ICreatureGetter.Model => this.Model;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Model Model { get => _Model.Item; set => _Model.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Model> ICreature.Model_Property => this.Model_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Model> ICreatureGetter.Model_Property => this.Model_Property;
         #endregion
         #region Items
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingList<ItemEntry> _Items = new NotifyingList<ItemEntry>();
         public INotifyingList<ItemEntry> Items => _Items;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<ItemEntry> ItemsEnumerable
         {
             get => _Items;
             set => _Items.SetTo(value);
         }
         #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingList<ItemEntry> ICreature.Items => _Items;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingListGetter<ItemEntry> ICreatureGetter.Items => _Items;
         #endregion
 
         #endregion
         #region Spells
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingList<FormIDSetLink<Spell>> _Spells = new NotifyingList<FormIDSetLink<Spell>>();
         public INotifyingList<FormIDSetLink<Spell>> Spells => _Spells;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<FormIDSetLink<Spell>> SpellsEnumerable
         {
             get => _Spells;
             set => _Spells.SetTo(value);
         }
         #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingList<FormIDSetLink<Spell>> ICreature.Spells => _Spells;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingListGetter<FormIDSetLink<Spell>> ICreatureGetter.Spells => _Spells;
         #endregion
 
         #endregion
         #region Models
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingList<String> _Models = new NotifyingList<String>();
         public INotifyingList<String> Models => _Models;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<String> ModelsEnumerable
         {
             get => _Models;
             set => _Models.SetTo(value);
         }
         #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingList<String> ICreature.Models => _Models;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingListGetter<String> ICreatureGetter.Models => _Models;
         #endregion
 
         #endregion
         #region NIFT
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Byte[]> _NIFT = NotifyingSetItem.Factory<Byte[]>(markAsSet: false);
         public INotifyingSetItem<Byte[]> NIFT_Property => _NIFT;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] NIFT
         {
             get => this._NIFT.Item;
             set => this._NIFT.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> ICreature.NIFT_Property => this.NIFT_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Byte[]> ICreatureGetter.NIFT_Property => this.NIFT_Property;
         #endregion
         #region Flags
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Creature.CreatureFlag> _Flags = NotifyingItem.Factory<Creature.CreatureFlag>();
         public INotifyingItem<Creature.CreatureFlag> Flags_Property => _Flags;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Creature.CreatureFlag Flags
         {
             get => this._Flags.Item;
             set => this._Flags.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Creature.CreatureFlag> ICreature.Flags_Property => this.Flags_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Creature.CreatureFlag> ICreatureGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region BaseSpellPoints
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt16> _BaseSpellPoints = NotifyingItem.Factory<UInt16>();
         public INotifyingItem<UInt16> BaseSpellPoints_Property => _BaseSpellPoints;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt16 BaseSpellPoints
         {
             get => this._BaseSpellPoints.Item;
             set => this._BaseSpellPoints.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt16> ICreature.BaseSpellPoints_Property => this.BaseSpellPoints_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<UInt16> ICreatureGetter.BaseSpellPoints_Property => this.BaseSpellPoints_Property;
         #endregion
         #region Fatigue
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt16> _Fatigue = NotifyingItem.Factory<UInt16>();
         public INotifyingItem<UInt16> Fatigue_Property => _Fatigue;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt16 Fatigue
         {
             get => this._Fatigue.Item;
             set => this._Fatigue.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt16> ICreature.Fatigue_Property => this.Fatigue_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<UInt16> ICreatureGetter.Fatigue_Property => this.Fatigue_Property;
         #endregion
         #region BarterGold
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt16> _BarterGold = NotifyingItem.Factory<UInt16>();
         public INotifyingItem<UInt16> BarterGold_Property => _BarterGold;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt16 BarterGold
         {
             get => this._BarterGold.Item;
             set => this._BarterGold.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt16> ICreature.BarterGold_Property => this.BarterGold_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<UInt16> ICreatureGetter.BarterGold_Property => this.BarterGold_Property;
         #endregion
         #region LevelOffset
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Int16> _LevelOffset = NotifyingItem.Factory<Int16>();
         public INotifyingItem<Int16> LevelOffset_Property => _LevelOffset;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Int16 LevelOffset
         {
             get => this._LevelOffset.Item;
             set => this._LevelOffset.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Int16> ICreature.LevelOffset_Property => this.LevelOffset_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Int16> ICreatureGetter.LevelOffset_Property => this.LevelOffset_Property;
         #endregion
         #region CalcMin
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt16> _CalcMin = NotifyingItem.Factory<UInt16>();
         public INotifyingItem<UInt16> CalcMin_Property => _CalcMin;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt16 CalcMin
         {
             get => this._CalcMin.Item;
             set => this._CalcMin.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt16> ICreature.CalcMin_Property => this.CalcMin_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<UInt16> ICreatureGetter.CalcMin_Property => this.CalcMin_Property;
         #endregion
         #region CalcMax
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt16> _CalcMax = NotifyingItem.Factory<UInt16>();
         public INotifyingItem<UInt16> CalcMax_Property => _CalcMax;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt16 CalcMax
         {
             get => this._CalcMax.Item;
             set => this._CalcMax.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt16> ICreature.CalcMax_Property => this.CalcMax_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<UInt16> ICreatureGetter.CalcMax_Property => this.CalcMax_Property;
         #endregion
         #region Factions
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingList<RankPlacement> _Factions = new NotifyingList<RankPlacement>();
         public INotifyingList<RankPlacement> Factions => _Factions;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<RankPlacement> FactionsEnumerable
         {
             get => _Factions;
             set => _Factions.SetTo(value);
         }
         #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingList<RankPlacement> ICreature.Factions => _Factions;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingListGetter<RankPlacement> ICreatureGetter.Factions => _Factions;
         #endregion
 
         #endregion
         #region DeathItem
         public FormIDSetLink<ItemAbstract> DeathItem_Property { get; } = new FormIDSetLink<ItemAbstract>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ItemAbstract DeathItem { get => DeathItem_Property.Item; set => DeathItem_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<ItemAbstract> ICreatureGetter.DeathItem_Property => this.DeathItem_Property;
         #endregion
         #region Script
         public FormIDSetLink<Script> Script_Property { get; } = new FormIDSetLink<Script>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Script Script { get => Script_Property.Item; set => Script_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Script> ICreatureGetter.Script_Property => this.Script_Property;
         #endregion
         #region Aggression
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Aggression = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Aggression_Property => _Aggression;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Aggression
         {
             get => this._Aggression.Item;
             set => this._Aggression.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> ICreature.Aggression_Property => this.Aggression_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> ICreatureGetter.Aggression_Property => this.Aggression_Property;
         #endregion
         #region Confidence
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Confidence = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Confidence_Property => _Confidence;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Confidence
         {
             get => this._Confidence.Item;
             set => this._Confidence.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> ICreature.Confidence_Property => this.Confidence_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> ICreatureGetter.Confidence_Property => this.Confidence_Property;
         #endregion
         #region EnergyLevel
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _EnergyLevel = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> EnergyLevel_Property => _EnergyLevel;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte EnergyLevel
         {
             get => this._EnergyLevel.Item;
             set => this._EnergyLevel.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> ICreature.EnergyLevel_Property => this.EnergyLevel_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> ICreatureGetter.EnergyLevel_Property => this.EnergyLevel_Property;
         #endregion
         #region Responsibility
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Responsibility = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Responsibility_Property => _Responsibility;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Responsibility
         {
             get => this._Responsibility.Item;
             set => this._Responsibility.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> ICreature.Responsibility_Property => this.Responsibility_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> ICreatureGetter.Responsibility_Property => this.Responsibility_Property;
         #endregion
         #region BuySellServices
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<NPC.BuySellServiceFlag> _BuySellServices = NotifyingItem.Factory<NPC.BuySellServiceFlag>();
         public INotifyingItem<NPC.BuySellServiceFlag> BuySellServices_Property => _BuySellServices;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public NPC.BuySellServiceFlag BuySellServices
         {
             get => this._BuySellServices.Item;
             set => this._BuySellServices.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<NPC.BuySellServiceFlag> ICreature.BuySellServices_Property => this.BuySellServices_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<NPC.BuySellServiceFlag> ICreatureGetter.BuySellServices_Property => this.BuySellServices_Property;
         #endregion
         #region Teaches
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Skill> _Teaches = NotifyingItem.Factory<Skill>();
         public INotifyingItem<Skill> Teaches_Property => _Teaches;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Skill Teaches
         {
             get => this._Teaches.Item;
             set => this._Teaches.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Skill> ICreature.Teaches_Property => this.Teaches_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Skill> ICreatureGetter.Teaches_Property => this.Teaches_Property;
         #endregion
         #region MaximumTrainingLevel
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _MaximumTrainingLevel = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> MaximumTrainingLevel_Property => _MaximumTrainingLevel;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte MaximumTrainingLevel
         {
             get => this._MaximumTrainingLevel.Item;
             set => this._MaximumTrainingLevel.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> ICreature.MaximumTrainingLevel_Property => this.MaximumTrainingLevel_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> ICreatureGetter.MaximumTrainingLevel_Property => this.MaximumTrainingLevel_Property;
         #endregion
         #region AIPackages
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingList<FormIDSetLink<AIPackage>> _AIPackages = new NotifyingList<FormIDSetLink<AIPackage>>();
         public INotifyingList<FormIDSetLink<AIPackage>> AIPackages => _AIPackages;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<FormIDSetLink<AIPackage>> AIPackagesEnumerable
         {
             get => _AIPackages;
             set => _AIPackages.SetTo(value);
         }
         #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingList<FormIDSetLink<AIPackage>> ICreature.AIPackages => _AIPackages;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingListGetter<FormIDSetLink<AIPackage>> ICreatureGetter.AIPackages => _AIPackages;
         #endregion
 
         #endregion
         #region Animations
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingList<String> _Animations = new NotifyingList<String>();
         public INotifyingList<String> Animations => _Animations;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<String> AnimationsEnumerable
         {
             get => _Animations;
             set => _Animations.SetTo(value);
         }
         #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingList<String> ICreature.Animations => _Animations;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingListGetter<String> ICreatureGetter.Animations => _Animations;
         #endregion
 
         #endregion
         #region CreatureType
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Creature.CreatureTypeEnum> _CreatureType = NotifyingItem.Factory<Creature.CreatureTypeEnum>();
         public INotifyingItem<Creature.CreatureTypeEnum> CreatureType_Property => _CreatureType;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Creature.CreatureTypeEnum CreatureType
         {
             get => this._CreatureType.Item;
             set => this._CreatureType.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Creature.CreatureTypeEnum> ICreature.CreatureType_Property => this.CreatureType_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Creature.CreatureTypeEnum> ICreatureGetter.CreatureType_Property => this.CreatureType_Property;
         #endregion
         #region CombatSKill
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _CombatSKill = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> CombatSKill_Property => _CombatSKill;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte CombatSKill
         {
             get => this._CombatSKill.Item;
             set => this._CombatSKill.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> ICreature.CombatSKill_Property => this.CombatSKill_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> ICreatureGetter.CombatSKill_Property => this.CombatSKill_Property;
         #endregion
         #region MagicSKill
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _MagicSKill = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> MagicSKill_Property => _MagicSKill;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte MagicSKill
         {
             get => this._MagicSKill.Item;
             set => this._MagicSKill.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> ICreature.MagicSKill_Property => this.MagicSKill_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> ICreatureGetter.MagicSKill_Property => this.MagicSKill_Property;
         #endregion
         #region StealthSKill
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _StealthSKill = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> StealthSKill_Property => _StealthSKill;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte StealthSKill
         {
             get => this._StealthSKill.Item;
             set => this._StealthSKill.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> ICreature.StealthSKill_Property => this.StealthSKill_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> ICreatureGetter.StealthSKill_Property => this.StealthSKill_Property;
         #endregion
         #region SoulLevel
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<SoulLevel> _SoulLevel = NotifyingItem.Factory<SoulLevel>();
         public INotifyingItem<SoulLevel> SoulLevel_Property => _SoulLevel;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public SoulLevel SoulLevel
         {
             get => this._SoulLevel.Item;
             set => this._SoulLevel.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<SoulLevel> ICreature.SoulLevel_Property => this.SoulLevel_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<SoulLevel> ICreatureGetter.SoulLevel_Property => this.SoulLevel_Property;
         #endregion
         #region Health
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt32> _Health = NotifyingItem.Factory<UInt32>();
         public INotifyingItem<UInt32> Health_Property => _Health;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 Health
         {
             get => this._Health.Item;
             set => this._Health.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt32> ICreature.Health_Property => this.Health_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<UInt32> ICreatureGetter.Health_Property => this.Health_Property;
         #endregion
         #region AttackDamage
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt16> _AttackDamage = NotifyingItem.Factory<UInt16>();
         public INotifyingItem<UInt16> AttackDamage_Property => _AttackDamage;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt16 AttackDamage
         {
             get => this._AttackDamage.Item;
             set => this._AttackDamage.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt16> ICreature.AttackDamage_Property => this.AttackDamage_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<UInt16> ICreatureGetter.AttackDamage_Property => this.AttackDamage_Property;
         #endregion
         #region Strength
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Strength = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Strength_Property => _Strength;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Strength
         {
             get => this._Strength.Item;
             set => this._Strength.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> ICreature.Strength_Property => this.Strength_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> ICreatureGetter.Strength_Property => this.Strength_Property;
         #endregion
         #region Intelligence
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Intelligence = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Intelligence_Property => _Intelligence;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Intelligence
         {
             get => this._Intelligence.Item;
             set => this._Intelligence.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> ICreature.Intelligence_Property => this.Intelligence_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> ICreatureGetter.Intelligence_Property => this.Intelligence_Property;
         #endregion
         #region Willpower
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Willpower = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Willpower_Property => _Willpower;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Willpower
         {
             get => this._Willpower.Item;
             set => this._Willpower.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> ICreature.Willpower_Property => this.Willpower_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> ICreatureGetter.Willpower_Property => this.Willpower_Property;
         #endregion
         #region Agility
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Agility = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Agility_Property => _Agility;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Agility
         {
             get => this._Agility.Item;
             set => this._Agility.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> ICreature.Agility_Property => this.Agility_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> ICreatureGetter.Agility_Property => this.Agility_Property;
         #endregion
         #region Speed
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Speed = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Speed_Property => _Speed;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Speed
         {
             get => this._Speed.Item;
             set => this._Speed.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> ICreature.Speed_Property => this.Speed_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> ICreatureGetter.Speed_Property => this.Speed_Property;
         #endregion
         #region Endurance
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Endurance = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Endurance_Property => _Endurance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Endurance
         {
             get => this._Endurance.Item;
             set => this._Endurance.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> ICreature.Endurance_Property => this.Endurance_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> ICreatureGetter.Endurance_Property => this.Endurance_Property;
         #endregion
         #region Personality
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Personality = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Personality_Property => _Personality;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Personality
         {
             get => this._Personality.Item;
             set => this._Personality.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> ICreature.Personality_Property => this.Personality_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> ICreatureGetter.Personality_Property => this.Personality_Property;
         #endregion
         #region Luck
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Luck = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Luck_Property => _Luck;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Luck
         {
             get => this._Luck.Item;
             set => this._Luck.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> ICreature.Luck_Property => this.Luck_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> ICreatureGetter.Luck_Property => this.Luck_Property;
         #endregion
         #region AttackReach
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Byte> _AttackReach = NotifyingSetItem.Factory<Byte>(markAsSet: false);
         public INotifyingSetItem<Byte> AttackReach_Property => _AttackReach;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte AttackReach
         {
             get => this._AttackReach.Item;
             set => this._AttackReach.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte> ICreature.AttackReach_Property => this.AttackReach_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Byte> ICreatureGetter.AttackReach_Property => this.AttackReach_Property;
         #endregion
         #region CombatStyle
         public FormIDSetLink<CombatStyle> CombatStyle_Property { get; } = new FormIDSetLink<CombatStyle>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public CombatStyle CombatStyle { get => CombatStyle_Property.Item; set => CombatStyle_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<CombatStyle> ICreatureGetter.CombatStyle_Property => this.CombatStyle_Property;
         #endregion
         #region TurningSpeed
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Single> _TurningSpeed = NotifyingSetItem.Factory<Single>(markAsSet: false);
         public INotifyingSetItem<Single> TurningSpeed_Property => _TurningSpeed;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single TurningSpeed
         {
             get => this._TurningSpeed.Item;
             set => this._TurningSpeed.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Single> ICreature.TurningSpeed_Property => this.TurningSpeed_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Single> ICreatureGetter.TurningSpeed_Property => this.TurningSpeed_Property;
         #endregion
         #region BaseScale
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Single> _BaseScale = NotifyingSetItem.Factory<Single>(markAsSet: false);
         public INotifyingSetItem<Single> BaseScale_Property => _BaseScale;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single BaseScale
         {
             get => this._BaseScale.Item;
             set => this._BaseScale.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Single> ICreature.BaseScale_Property => this.BaseScale_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Single> ICreatureGetter.BaseScale_Property => this.BaseScale_Property;
         #endregion
         #region FootWeight
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Single> _FootWeight = NotifyingSetItem.Factory<Single>(markAsSet: false);
         public INotifyingSetItem<Single> FootWeight_Property => _FootWeight;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single FootWeight
         {
             get => this._FootWeight.Item;
             set => this._FootWeight.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Single> ICreature.FootWeight_Property => this.FootWeight_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Single> ICreatureGetter.FootWeight_Property => this.FootWeight_Property;
         #endregion
         #region BloodSpray
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<FilePath> _BloodSpray = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
         public INotifyingSetItem<FilePath> BloodSpray_Property => _BloodSpray;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public FilePath BloodSpray
         {
             get => this._BloodSpray.Item;
             set => this._BloodSpray.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<FilePath> ICreature.BloodSpray_Property => this.BloodSpray_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<FilePath> ICreatureGetter.BloodSpray_Property => this.BloodSpray_Property;
         #endregion
         #region BloodDecal
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<FilePath> _BloodDecal = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
         public INotifyingSetItem<FilePath> BloodDecal_Property => _BloodDecal;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public FilePath BloodDecal
         {
             get => this._BloodDecal.Item;
             set => this._BloodDecal.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<FilePath> ICreature.BloodDecal_Property => this.BloodDecal_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<FilePath> ICreatureGetter.BloodDecal_Property => this.BloodDecal_Property;
         #endregion
         #region InheritsSoundFrom
         public FormIDSetLink<Creature> InheritsSoundFrom_Property { get; } = new FormIDSetLink<Creature>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Creature InheritsSoundFrom { get => InheritsSoundFrom_Property.Item; set => InheritsSoundFrom_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Creature> ICreatureGetter.InheritsSoundFrom_Property => this.InheritsSoundFrom_Property;
         #endregion
         #region Sounds
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingList<CreatureSound> _Sounds = new NotifyingList<CreatureSound>();
         public INotifyingList<CreatureSound> Sounds => _Sounds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<CreatureSound> SoundsEnumerable
         {
             get => _Sounds;
             set => _Sounds.SetTo(value);
         }
         #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingList<CreatureSound> ICreature.Sounds => _Sounds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingListGetter<CreatureSound> ICreatureGetter.Sounds => _Sounds;
         #endregion
 

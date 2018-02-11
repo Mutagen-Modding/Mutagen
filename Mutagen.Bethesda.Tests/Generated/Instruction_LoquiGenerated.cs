@@ -25,6 +25,7 @@ namespace Mutagen.Bethesda.Tests
     #region Class
     public partial class Instruction : IInstruction, ILoquiObjectSetter, IEquatable<Instruction>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Instruction_Registration.Instance;
         public static Instruction_Registration Registration => Instruction_Registration.Instance;
 
@@ -37,29 +38,37 @@ namespace Mutagen.Bethesda.Tests
         #endregion
 
         #region Moves
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingList<Move> _Moves = new NotifyingList<Move>();
         public INotifyingList<Move> Moves => _Moves;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<Move> MovesEnumerable
         {
             get => _Moves;
             set => _Moves.SetTo(value);
         }
         #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingList<Move> IInstruction.Moves => _Moves;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingListGetter<Move> IInstructionGetter.Moves => _Moves;
         #endregion
 
         #endregion
         #region Substitutions
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingList<Substitution> _Substitutions = new NotifyingList<Substitution>();
         public INotifyingList<Substitution> Substitutions => _Substitutions;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<Substitution> SubstitutionsEnumerable
         {
             get => _Substitutions;
             set => _Substitutions.SetTo(value);
         }
         #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingList<Substitution> IInstruction.Substitutions => _Substitutions;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingListGetter<Substitution> IInstructionGetter.Substitutions => _Substitutions;
         #endregion
 

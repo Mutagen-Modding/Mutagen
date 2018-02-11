@@ -27,6 +27,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public abstract partial class Global : MajorRecord, IGlobal, ILoquiObjectSetter, IEquatable<Global>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Global_Registration.Instance;
         public new static Global_Registration Registration => Global_Registration.Instance;
 
@@ -39,24 +40,31 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region TypeChar
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Char> _TypeChar = NotifyingSetItem.Factory<Char>(markAsSet: false);
         public INotifyingSetItemGetter<Char> TypeChar_Property => _TypeChar;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Char TypeChar
         {
             get => this._TypeChar.Item;
             protected set => this._TypeChar.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Char> IGlobalGetter.TypeChar_Property => this.TypeChar_Property;
         #endregion
         #region RawFloat
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Single> _RawFloat = NotifyingSetItem.Factory<Single>(markAsSet: false);
         public INotifyingSetItem<Single> RawFloat_Property => _RawFloat;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single RawFloat
         {
             get => this._RawFloat.Item;
             set => this._RawFloat.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Single> IGlobal.RawFloat_Property => this.RawFloat_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Single> IGlobalGetter.RawFloat_Property => this.RawFloat_Property;
         #endregion
 

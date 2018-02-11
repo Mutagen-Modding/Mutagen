@@ -28,6 +28,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Tree : MajorRecord, ITree, ILoquiObjectSetter, IEquatable<Tree>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Tree_Registration.Instance;
         public new static Tree_Registration Registration => Tree_Registration.Instance;
 
@@ -40,146 +41,200 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingSetItem<Model> _Model = new NotifyingSetItem<Model>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItem<Model> Model_Property => this._Model;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Model ITreeGetter.Model => this.Model;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Model Model { get => _Model.Item; set => _Model.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Model> ITree.Model_Property => this.Model_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Model> ITreeGetter.Model_Property => this.Model_Property;
         #endregion
         #region Icon
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
         public INotifyingSetItem<FilePath> Icon_Property => _Icon;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public FilePath Icon
         {
             get => this._Icon.Item;
             set => this._Icon.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<FilePath> ITree.Icon_Property => this.Icon_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<FilePath> ITreeGetter.Icon_Property => this.Icon_Property;
         #endregion
         #region SpeedTreeSeeds
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingList<UInt32> _SpeedTreeSeeds = new NotifyingList<UInt32>();
         public INotifyingList<UInt32> SpeedTreeSeeds => _SpeedTreeSeeds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<UInt32> SpeedTreeSeedsEnumerable
         {
             get => _SpeedTreeSeeds;
             set => _SpeedTreeSeeds.SetTo(value);
         }
         #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingList<UInt32> ITree.SpeedTreeSeeds => _SpeedTreeSeeds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingListGetter<UInt32> ITreeGetter.SpeedTreeSeeds => _SpeedTreeSeeds;
         #endregion
 
         #endregion
         #region LeafCurvature
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _LeafCurvature = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> LeafCurvature_Property => _LeafCurvature;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single LeafCurvature
         {
             get => this._LeafCurvature.Item;
             set => this._LeafCurvature.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> ITree.LeafCurvature_Property => this.LeafCurvature_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Single> ITreeGetter.LeafCurvature_Property => this.LeafCurvature_Property;
         #endregion
         #region MinimumLeafAngle
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _MinimumLeafAngle = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> MinimumLeafAngle_Property => _MinimumLeafAngle;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single MinimumLeafAngle
         {
             get => this._MinimumLeafAngle.Item;
             set => this._MinimumLeafAngle.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> ITree.MinimumLeafAngle_Property => this.MinimumLeafAngle_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Single> ITreeGetter.MinimumLeafAngle_Property => this.MinimumLeafAngle_Property;
         #endregion
         #region MaximumLeafAngle
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _MaximumLeafAngle = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> MaximumLeafAngle_Property => _MaximumLeafAngle;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single MaximumLeafAngle
         {
             get => this._MaximumLeafAngle.Item;
             set => this._MaximumLeafAngle.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> ITree.MaximumLeafAngle_Property => this.MaximumLeafAngle_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Single> ITreeGetter.MaximumLeafAngle_Property => this.MaximumLeafAngle_Property;
         #endregion
         #region BranchDimmingValue
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _BranchDimmingValue = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> BranchDimmingValue_Property => _BranchDimmingValue;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single BranchDimmingValue
         {
             get => this._BranchDimmingValue.Item;
             set => this._BranchDimmingValue.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> ITree.BranchDimmingValue_Property => this.BranchDimmingValue_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Single> ITreeGetter.BranchDimmingValue_Property => this.BranchDimmingValue_Property;
         #endregion
         #region LeafDimmingValue
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _LeafDimmingValue = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> LeafDimmingValue_Property => _LeafDimmingValue;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single LeafDimmingValue
         {
             get => this._LeafDimmingValue.Item;
             set => this._LeafDimmingValue.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> ITree.LeafDimmingValue_Property => this.LeafDimmingValue_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Single> ITreeGetter.LeafDimmingValue_Property => this.LeafDimmingValue_Property;
         #endregion
         #region ShadowRadius
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Int32> _ShadowRadius = NotifyingItem.Factory<Int32>();
         public INotifyingItem<Int32> ShadowRadius_Property => _ShadowRadius;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Int32 ShadowRadius
         {
             get => this._ShadowRadius.Item;
             set => this._ShadowRadius.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Int32> ITree.ShadowRadius_Property => this.ShadowRadius_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Int32> ITreeGetter.ShadowRadius_Property => this.ShadowRadius_Property;
         #endregion
         #region RockingSpeed
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _RockingSpeed = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> RockingSpeed_Property => _RockingSpeed;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single RockingSpeed
         {
             get => this._RockingSpeed.Item;
             set => this._RockingSpeed.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> ITree.RockingSpeed_Property => this.RockingSpeed_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Single> ITreeGetter.RockingSpeed_Property => this.RockingSpeed_Property;
         #endregion
         #region RustleSpeed
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _RustleSpeed = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> RustleSpeed_Property => _RustleSpeed;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single RustleSpeed
         {
             get => this._RustleSpeed.Item;
             set => this._RustleSpeed.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> ITree.RustleSpeed_Property => this.RustleSpeed_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Single> ITreeGetter.RustleSpeed_Property => this.RustleSpeed_Property;
         #endregion
         #region BillboardWidth
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _BillboardWidth = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> BillboardWidth_Property => _BillboardWidth;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single BillboardWidth
         {
             get => this._BillboardWidth.Item;
             set => this._BillboardWidth.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> ITree.BillboardWidth_Property => this.BillboardWidth_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Single> ITreeGetter.BillboardWidth_Property => this.BillboardWidth_Property;
         #endregion
         #region BillboardHeight
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _BillboardHeight = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> BillboardHeight_Property => _BillboardHeight;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single BillboardHeight
         {
             get => this._BillboardHeight.Item;
             set => this._BillboardHeight.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> ITree.BillboardHeight_Property => this.BillboardHeight_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Single> ITreeGetter.BillboardHeight_Property => this.BillboardHeight_Property;
         #endregion
 

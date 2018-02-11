@@ -25,6 +25,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Header : IHeader, ILoquiObjectSetter, IEquatable<Header>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Header_Registration.Instance;
         public static Header_Registration Registration => Header_Registration.Instance;
 
@@ -37,36 +38,48 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Version
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _Version = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> Version_Property => _Version;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single Version
         {
             get => this._Version.Item;
             set => this._Version.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IHeader.Version_Property => this.Version_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Single> IHeaderGetter.Version_Property => this.Version_Property;
         #endregion
         #region NumRecords
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Int32> _NumRecords = NotifyingItem.Factory<Int32>();
         public INotifyingItem<Int32> NumRecords_Property => _NumRecords;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Int32 NumRecords
         {
             get => this._NumRecords.Item;
             set => this._NumRecords.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Int32> IHeader.NumRecords_Property => this.NumRecords_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Int32> IHeaderGetter.NumRecords_Property => this.NumRecords_Property;
         #endregion
         #region NextObjectID
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt32> _NextObjectID = NotifyingItem.Factory<UInt32>();
         public INotifyingItem<UInt32> NextObjectID_Property => _NextObjectID;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 NextObjectID
         {
             get => this._NextObjectID.Item;
             set => this._NextObjectID.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt32> IHeader.NextObjectID_Property => this.NextObjectID_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<UInt32> IHeaderGetter.NextObjectID_Property => this.NextObjectID_Property;
         #endregion
 

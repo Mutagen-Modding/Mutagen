@@ -26,6 +26,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class ScriptVariableReference : ScriptReference, IScriptVariableReference, ILoquiObjectSetter, IEquatable<ScriptVariableReference>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptVariableReference_Registration.Instance;
         public new static ScriptVariableReference_Registration Registration => ScriptVariableReference_Registration.Instance;
 
@@ -38,14 +39,18 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region VariableIndex
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Int32> _VariableIndex = NotifyingItem.Factory<Int32>();
         public INotifyingItem<Int32> VariableIndex_Property => _VariableIndex;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Int32 VariableIndex
         {
             get => this._VariableIndex.Item;
             set => this._VariableIndex.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Int32> IScriptVariableReference.VariableIndex_Property => this.VariableIndex_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Int32> IScriptVariableReferenceGetter.VariableIndex_Property => this.VariableIndex_Property;
         #endregion
 
