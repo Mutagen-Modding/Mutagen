@@ -730,7 +730,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<GlobalFloat_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return MajorRecord.TypicalParsing<GlobalFloat, GlobalFloat_ErrorMask, GlobalFloat_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<GlobalFloat, GlobalFloat_ErrorMask, GlobalFloat_FieldIndex>(
                 record: new GlobalFloat(),
                 frame: frame,
                 errorMask: errorMask,

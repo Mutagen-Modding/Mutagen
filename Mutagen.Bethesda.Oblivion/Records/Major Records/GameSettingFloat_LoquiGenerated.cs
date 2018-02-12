@@ -738,7 +738,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<GameSettingFloat_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return MajorRecord.TypicalParsing<GameSettingFloat, GameSettingFloat_ErrorMask, GameSettingFloat_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<GameSettingFloat, GameSettingFloat_ErrorMask, GameSettingFloat_FieldIndex>(
                 record: new GameSettingFloat(),
                 frame: frame,
                 errorMask: errorMask,

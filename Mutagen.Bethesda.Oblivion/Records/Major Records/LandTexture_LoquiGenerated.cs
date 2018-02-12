@@ -801,7 +801,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<LandTexture_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return MajorRecord.TypicalParsing<LandTexture, LandTexture_ErrorMask, LandTexture_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<LandTexture, LandTexture_ErrorMask, LandTexture_FieldIndex>(
                 record: new LandTexture(),
                 frame: frame,
                 errorMask: errorMask,

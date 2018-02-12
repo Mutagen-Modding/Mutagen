@@ -953,7 +953,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Grass_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return MajorRecord.TypicalParsing<Grass, Grass_ErrorMask, Grass_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Grass, Grass_ErrorMask, Grass_FieldIndex>(
                 record: new Grass(),
                 frame: frame,
                 errorMask: errorMask,

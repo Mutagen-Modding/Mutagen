@@ -737,7 +737,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Sound_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return MajorRecord.TypicalParsing<Sound, Sound_ErrorMask, Sound_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Sound, Sound_ErrorMask, Sound_FieldIndex>(
                 record: new Sound(),
                 frame: frame,
                 errorMask: errorMask,

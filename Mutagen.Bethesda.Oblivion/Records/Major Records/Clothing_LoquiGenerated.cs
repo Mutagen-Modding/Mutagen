@@ -774,7 +774,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Clothing_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return MajorRecord.TypicalParsing<Clothing, Clothing_ErrorMask, Clothing_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Clothing, Clothing_ErrorMask, Clothing_FieldIndex>(
                 record: new Clothing(),
                 frame: frame,
                 errorMask: errorMask,

@@ -819,7 +819,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Miscellaneous_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return MajorRecord.TypicalParsing<Miscellaneous, Miscellaneous_ErrorMask, Miscellaneous_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Miscellaneous, Miscellaneous_ErrorMask, Miscellaneous_FieldIndex>(
                 record: new Miscellaneous(),
                 frame: frame,
                 errorMask: errorMask,

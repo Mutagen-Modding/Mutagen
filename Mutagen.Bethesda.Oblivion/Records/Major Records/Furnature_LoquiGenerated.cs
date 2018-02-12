@@ -783,7 +783,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Furnature_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return MajorRecord.TypicalParsing<Furnature, Furnature_ErrorMask, Furnature_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Furnature, Furnature_ErrorMask, Furnature_FieldIndex>(
                 record: new Furnature(),
                 frame: frame,
                 errorMask: errorMask,

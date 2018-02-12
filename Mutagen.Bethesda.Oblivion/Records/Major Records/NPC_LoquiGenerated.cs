@@ -2095,7 +2095,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<NPC_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return MajorRecord.TypicalParsing<NPC, NPC_ErrorMask, NPC_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<NPC, NPC_ErrorMask, NPC_FieldIndex>(
                 record: new NPC(),
                 frame: frame,
                 errorMask: errorMask,

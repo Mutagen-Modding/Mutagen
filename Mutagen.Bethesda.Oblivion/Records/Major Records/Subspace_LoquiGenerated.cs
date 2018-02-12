@@ -744,7 +744,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Subspace_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return MajorRecord.TypicalParsing<Subspace, Subspace_ErrorMask, Subspace_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Subspace, Subspace_ErrorMask, Subspace_FieldIndex>(
                 record: new Subspace(),
                 frame: frame,
                 errorMask: errorMask,

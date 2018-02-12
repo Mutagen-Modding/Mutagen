@@ -842,7 +842,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<LeveledCreature_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return MajorRecord.TypicalParsing<LeveledCreature, LeveledCreature_ErrorMask, LeveledCreature_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<LeveledCreature, LeveledCreature_ErrorMask, LeveledCreature_FieldIndex>(
                 record: new LeveledCreature(),
                 frame: frame,
                 errorMask: errorMask,

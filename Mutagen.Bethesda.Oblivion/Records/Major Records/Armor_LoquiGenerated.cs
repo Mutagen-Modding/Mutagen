@@ -837,7 +837,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Armor_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return MajorRecord.TypicalParsing<Armor, Armor_ErrorMask, Armor_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Armor, Armor_ErrorMask, Armor_FieldIndex>(
                 record: new Armor(),
                 frame: frame,
                 errorMask: errorMask,

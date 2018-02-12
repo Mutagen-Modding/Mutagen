@@ -859,7 +859,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<AlchemicalApparatus_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return MajorRecord.TypicalParsing<AlchemicalApparatus, AlchemicalApparatus_ErrorMask, AlchemicalApparatus_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<AlchemicalApparatus, AlchemicalApparatus_ErrorMask, AlchemicalApparatus_FieldIndex>(
                 record: new AlchemicalApparatus(),
                 frame: frame,
                 errorMask: errorMask,

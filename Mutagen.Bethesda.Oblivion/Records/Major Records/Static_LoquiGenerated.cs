@@ -711,7 +711,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Static_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return MajorRecord.TypicalParsing<Static, Static_ErrorMask, Static_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Static, Static_ErrorMask, Static_FieldIndex>(
                 record: new Static(),
                 frame: frame,
                 errorMask: errorMask,

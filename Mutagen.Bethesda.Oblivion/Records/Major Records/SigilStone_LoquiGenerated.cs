@@ -875,7 +875,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<SigilStone_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return MajorRecord.TypicalParsing<SigilStone, SigilStone_ErrorMask, SigilStone_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<SigilStone, SigilStone_ErrorMask, SigilStone_FieldIndex>(
                 record: new SigilStone(),
                 frame: frame,
                 errorMask: errorMask,

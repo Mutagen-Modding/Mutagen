@@ -1012,7 +1012,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<MagicEffect_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return MajorRecord.TypicalParsing<MagicEffect, MagicEffect_ErrorMask, MagicEffect_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<MagicEffect, MagicEffect_ErrorMask, MagicEffect_FieldIndex>(
                 record: new MagicEffect(),
                 frame: frame,
                 errorMask: errorMask,

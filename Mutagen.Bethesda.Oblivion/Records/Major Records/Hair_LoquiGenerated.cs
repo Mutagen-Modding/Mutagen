@@ -788,7 +788,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Hair_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return MajorRecord.TypicalParsing<Hair, Hair_ErrorMask, Hair_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Hair, Hair_ErrorMask, Hair_FieldIndex>(
                 record: new Hair(),
                 frame: frame,
                 errorMask: errorMask,

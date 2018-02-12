@@ -871,7 +871,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Container_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return MajorRecord.TypicalParsing<Container, Container_ErrorMask, Container_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Container, Container_ErrorMask, Container_FieldIndex>(
                 record: new Container(),
                 frame: frame,
                 errorMask: errorMask,

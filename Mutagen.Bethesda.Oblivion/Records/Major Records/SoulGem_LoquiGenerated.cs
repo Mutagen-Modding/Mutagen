@@ -873,7 +873,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<SoulGem_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return MajorRecord.TypicalParsing<SoulGem, SoulGem_ErrorMask, SoulGem_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<SoulGem, SoulGem_ErrorMask, SoulGem_FieldIndex>(
                 record: new SoulGem(),
                 frame: frame,
                 errorMask: errorMask,

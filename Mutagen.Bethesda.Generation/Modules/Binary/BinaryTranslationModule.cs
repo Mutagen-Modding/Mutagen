@@ -270,7 +270,7 @@ namespace Mutagen.Bethesda.Generation
                     if (obj.BaseClassTrail().Any((b) => b.Name == "MajorRecord"))
                     {
                         using (var args = new ArgsWrapper(fg,
-                            $"return MajorRecord.TypicalParsing<{obj.Name}, {obj.Mask(MaskType.Error)}, {obj.FieldIndexName}>"))
+                            $"return UtilityTranslation.MajorRecordParse<{obj.Name}, {obj.Mask(MaskType.Error)}, {obj.FieldIndexName}>"))
                         {
                             args.Add($"record: new {obj.Name}()");
                             args.Add($"frame: frame");

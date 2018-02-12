@@ -801,7 +801,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Birthsign_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return MajorRecord.TypicalParsing<Birthsign, Birthsign_ErrorMask, Birthsign_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Birthsign, Birthsign_ErrorMask, Birthsign_FieldIndex>(
                 record: new Birthsign(),
                 frame: frame,
                 errorMask: errorMask,

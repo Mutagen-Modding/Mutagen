@@ -775,7 +775,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Activator_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return MajorRecord.TypicalParsing<Activator, Activator_ErrorMask, Activator_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Activator, Activator_ErrorMask, Activator_FieldIndex>(
                 record: new Activator(),
                 frame: frame,
                 errorMask: errorMask,

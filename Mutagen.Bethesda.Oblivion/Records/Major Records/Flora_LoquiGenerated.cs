@@ -851,7 +851,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Flora_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return MajorRecord.TypicalParsing<Flora, Flora_ErrorMask, Flora_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Flora, Flora_ErrorMask, Flora_FieldIndex>(
                 record: new Flora(),
                 frame: frame,
                 errorMask: errorMask,

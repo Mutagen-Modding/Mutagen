@@ -929,7 +929,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Ammo_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return MajorRecord.TypicalParsing<Ammo, Ammo_ErrorMask, Ammo_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Ammo, Ammo_ErrorMask, Ammo_FieldIndex>(
                 record: new Ammo(),
                 frame: frame,
                 errorMask: errorMask,

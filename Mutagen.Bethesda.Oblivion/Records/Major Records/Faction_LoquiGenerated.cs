@@ -839,7 +839,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Faction_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return MajorRecord.TypicalParsing<Faction, Faction_ErrorMask, Faction_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Faction, Faction_ErrorMask, Faction_FieldIndex>(
                 record: new Faction(),
                 frame: frame,
                 errorMask: errorMask,

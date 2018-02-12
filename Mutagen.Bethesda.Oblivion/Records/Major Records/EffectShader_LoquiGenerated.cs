@@ -687,7 +687,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<EffectShader_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return MajorRecord.TypicalParsing<EffectShader, EffectShader_ErrorMask, EffectShader_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<EffectShader, EffectShader_ErrorMask, EffectShader_FieldIndex>(
                 record: new EffectShader(),
                 frame: frame,
                 errorMask: errorMask,

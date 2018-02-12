@@ -764,7 +764,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Eye_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return MajorRecord.TypicalParsing<Eye, Eye_ErrorMask, Eye_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Eye, Eye_ErrorMask, Eye_FieldIndex>(
                 record: new Eye(),
                 frame: frame,
                 errorMask: errorMask,

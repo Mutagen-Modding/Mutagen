@@ -883,7 +883,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Potion_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return MajorRecord.TypicalParsing<Potion, Potion_ErrorMask, Potion_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Potion, Potion_ErrorMask, Potion_FieldIndex>(
                 record: new Potion(),
                 frame: frame,
                 errorMask: errorMask,

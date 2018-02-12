@@ -880,7 +880,7 @@ namespace Mutagen.Bethesda.Oblivion
             Func<Door_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return MajorRecord.TypicalParsing<Door, Door_ErrorMask, Door_FieldIndex>(
+            return UtilityTranslation.MajorRecordParse<Door, Door_ErrorMask, Door_FieldIndex>(
                 record: new Door(),
                 frame: frame,
                 errorMask: errorMask,
