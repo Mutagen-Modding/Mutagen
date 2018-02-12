@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>2abc8b4c7ef3832d1c41b95b01c11b2a1ebb2afb</Sha>
+         <Sha>c07386bf85128a6b621edb71b78bed790f3afd66</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>02-06-2018 07:48:44</CommitDate>
-         <Description>Merge branch 'Dev' into HarmonizeGit</Description>
+         <CommitDate>02-11-2018 18:59:49</CommitDate>
+         <Description>Refactored LoquiType refname parsing</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>
