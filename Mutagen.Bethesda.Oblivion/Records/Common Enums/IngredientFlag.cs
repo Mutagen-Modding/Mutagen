@@ -6,13 +6,10 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class Ingredient
+    [Flags]
+    public enum IngredientFlag
     {
-        [Flags]
-        public enum IngredientFlag
-        {
-            ManualValue = 0x01,
-            FoodItem = 0x02
-        }
+        ManualValue = 0x01,
+        FoodItem = 0x02
     }
 }

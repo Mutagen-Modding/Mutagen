@@ -39,6 +39,9 @@
       <Group name="Creatures" refName="Creature" />
       <Group name="LeveledCreatures" refName="LeveledCreature" />
       <Group name="SoulGems" refName="SoulGem" />
+      <Group name="Keys" refName="Key" />
+      <Group name="Potions" refName="Potion" />
+      <Group name="Subspaces" refName="Subspace" />
     </Fields>
   </Object>
 </Loqui>

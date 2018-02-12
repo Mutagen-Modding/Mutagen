@@ -73,6 +73,9 @@ namespace Mutagen.Bethesda.Oblivion
             _Creatures_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
             _LeveledCreatures_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
             _SoulGems_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
+            _Keys_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
+            _Potions_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
+            _Subspaces_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
             CustomCtor();
         }
         partial void CustomCtor();
@@ -230,6 +233,18 @@ namespace Mutagen.Bethesda.Oblivion
         private Group<SoulGem> _SoulGems_Object = new Group<SoulGem>();
         public Group<SoulGem> SoulGems => _SoulGems_Object;
         #endregion
+        #region Keys
+        private Group<Key> _Keys_Object = new Group<Key>();
+        public Group<Key> Keys => _Keys_Object;
+        #endregion
+        #region Potions
+        private Group<Potion> _Potions_Object = new Group<Potion>();
+        public Group<Potion> Potions => _Potions_Object;
+        #endregion
+        #region Subspaces
+        private Group<Subspace> _Subspaces_Object = new Group<Subspace>();
+        public Group<Subspace> Subspaces => _Subspaces_Object;
+        #endregion
 
         #region Loqui Getter Interface
 
@@ -330,6 +345,9 @@ namespace Mutagen.Bethesda.Oblivion
             if (!object.Equals(Creatures, rhs.Creatures)) return false;
             if (!object.Equals(LeveledCreatures, rhs.LeveledCreatures)) return false;
             if (!object.Equals(SoulGems, rhs.SoulGems)) return false;
+            if (!object.Equals(Keys, rhs.Keys)) return false;
+            if (!object.Equals(Potions, rhs.Potions)) return false;
+            if (!object.Equals(Subspaces, rhs.Subspaces)) return false;
             return true;
         }
 
@@ -376,6 +394,9 @@ namespace Mutagen.Bethesda.Oblivion
             ret = HashHelper.GetHashCode(Creatures).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(LeveledCreatures).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(SoulGems).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Keys).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Potions).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Subspaces).CombineHashCode(ret);
             return ret;
         }
 
@@ -1331,6 +1352,60 @@ namespace Mutagen.Bethesda.Oblivion
                         index: (int)OblivionMod_FieldIndex.SoulGems,
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<SoulGem_ErrorMask>>.WrapValue(Group_ErrorMask<SoulGem_ErrorMask>.Combine(SoulGemscreateMask, SoulGemscopyMask)));
                     break;
+                case "Keys":
+                    GroupCommon.CopyFieldsFrom<Key, Key_ErrorMask, Key_CopyMask>(
+                        item: item._Keys_Object,
+                        rhs: Group<Key>.Create_XML(
+                            root: root,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Key_ErrorMask> KeyscreateMask)
+                        ,
+                        def: null,
+                        cmds: null,
+                        copyMask: null,
+                        doMasks: errorMask != null,
+                        errorMask: out Group_ErrorMask<Key_ErrorMask> KeyscopyMask);
+                    ErrorMask.HandleErrorMask(
+                        errorMask,
+                        index: (int)OblivionMod_FieldIndex.Keys,
+                        errMaskObj: MaskItem<Exception, Group_ErrorMask<Key_ErrorMask>>.WrapValue(Group_ErrorMask<Key_ErrorMask>.Combine(KeyscreateMask, KeyscopyMask)));
+                    break;
+                case "Potions":
+                    GroupCommon.CopyFieldsFrom<Potion, Potion_ErrorMask, Potion_CopyMask>(
+                        item: item._Potions_Object,
+                        rhs: Group<Potion>.Create_XML(
+                            root: root,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Potion_ErrorMask> PotionscreateMask)
+                        ,
+                        def: null,
+                        cmds: null,
+                        copyMask: null,
+                        doMasks: errorMask != null,
+                        errorMask: out Group_ErrorMask<Potion_ErrorMask> PotionscopyMask);
+                    ErrorMask.HandleErrorMask(
+                        errorMask,
+                        index: (int)OblivionMod_FieldIndex.Potions,
+                        errMaskObj: MaskItem<Exception, Group_ErrorMask<Potion_ErrorMask>>.WrapValue(Group_ErrorMask<Potion_ErrorMask>.Combine(PotionscreateMask, PotionscopyMask)));
+                    break;
+                case "Subspaces":
+                    GroupCommon.CopyFieldsFrom<Subspace, Subspace_ErrorMask, Subspace_CopyMask>(
+                        item: item._Subspaces_Object,
+                        rhs: Group<Subspace>.Create_XML(
+                            root: root,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Subspace_ErrorMask> SubspacescreateMask)
+                        ,
+                        def: null,
+                        cmds: null,
+                        copyMask: null,
+                        doMasks: errorMask != null,
+                        errorMask: out Group_ErrorMask<Subspace_ErrorMask> SubspacescopyMask);
+                    ErrorMask.HandleErrorMask(
+                        errorMask,
+                        index: (int)OblivionMod_FieldIndex.Subspaces,
+                        errMaskObj: MaskItem<Exception, Group_ErrorMask<Subspace_ErrorMask>>.WrapValue(Group_ErrorMask<Subspace_ErrorMask>.Combine(SubspacescreateMask, SubspacescopyMask)));
+                    break;
                 default:
                     break;
             }
@@ -1459,6 +1534,15 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case SoulGem soulgems:
                     _SoulGems_Object.Items.Set(soulgems);
+                    break;
+                case Key keys:
+                    _Keys_Object.Items.Set(keys);
+                    break;
+                case Potion potions:
+                    _Potions_Object.Items.Set(potions);
+                    break;
+                case Subspace subspaces:
+                    _Subspaces_Object.Items.Set(subspaces);
                     break;
                 default:
                     throw new ArgumentException("Unknown Major Record type: {record?.GetType()}");
@@ -2478,6 +2562,63 @@ namespace Mutagen.Bethesda.Oblivion
                         index: (int)OblivionMod_FieldIndex.SoulGems,
                         errMaskObj: combinedSoulGems == null ? null : new MaskItem<Exception, Group_ErrorMask<SoulGem_ErrorMask>>(null, combinedSoulGems));
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.SoulGems);
+                case "KEYM":
+                    var tmpKeys = Group<Key>.Create_Binary(
+                        frame: frame,
+                        doMasks: errorMask != null,
+                        errorMask: out Group_ErrorMask<Key_ErrorMask> KeyscreateMask);
+                    GroupCommon.CopyFieldsFrom<Key, Key_ErrorMask, Key_CopyMask>(
+                        item: item._Keys_Object,
+                        rhs: tmpKeys,
+                        def: null,
+                        cmds: null,
+                        copyMask: null,
+                        doMasks: errorMask != null,
+                        errorMask: out Group_ErrorMask<Key_ErrorMask> KeyserrorMask);
+                    var combinedKeys = Group_ErrorMask<Key_ErrorMask>.Combine(KeyscreateMask, KeyserrorMask);
+                    ErrorMask.HandleErrorMask(
+                        creator: errorMask,
+                        index: (int)OblivionMod_FieldIndex.Keys,
+                        errMaskObj: combinedKeys == null ? null : new MaskItem<Exception, Group_ErrorMask<Key_ErrorMask>>(null, combinedKeys));
+                    return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Keys);
+                case "ALCH":
+                    var tmpPotions = Group<Potion>.Create_Binary(
+                        frame: frame,
+                        doMasks: errorMask != null,
+                        errorMask: out Group_ErrorMask<Potion_ErrorMask> PotionscreateMask);
+                    GroupCommon.CopyFieldsFrom<Potion, Potion_ErrorMask, Potion_CopyMask>(
+                        item: item._Potions_Object,
+                        rhs: tmpPotions,
+                        def: null,
+                        cmds: null,
+                        copyMask: null,
+                        doMasks: errorMask != null,
+                        errorMask: out Group_ErrorMask<Potion_ErrorMask> PotionserrorMask);
+                    var combinedPotions = Group_ErrorMask<Potion_ErrorMask>.Combine(PotionscreateMask, PotionserrorMask);
+                    ErrorMask.HandleErrorMask(
+                        creator: errorMask,
+                        index: (int)OblivionMod_FieldIndex.Potions,
+                        errMaskObj: combinedPotions == null ? null : new MaskItem<Exception, Group_ErrorMask<Potion_ErrorMask>>(null, combinedPotions));
+                    return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Potions);
+                case "SBSP":
+                    var tmpSubspaces = Group<Subspace>.Create_Binary(
+                        frame: frame,
+                        doMasks: errorMask != null,
+                        errorMask: out Group_ErrorMask<Subspace_ErrorMask> SubspacescreateMask);
+                    GroupCommon.CopyFieldsFrom<Subspace, Subspace_ErrorMask, Subspace_CopyMask>(
+                        item: item._Subspaces_Object,
+                        rhs: tmpSubspaces,
+                        def: null,
+                        cmds: null,
+                        copyMask: null,
+                        doMasks: errorMask != null,
+                        errorMask: out Group_ErrorMask<Subspace_ErrorMask> SubspaceserrorMask);
+                    var combinedSubspaces = Group_ErrorMask<Subspace_ErrorMask>.Combine(SubspacescreateMask, SubspaceserrorMask);
+                    ErrorMask.HandleErrorMask(
+                        creator: errorMask,
+                        index: (int)OblivionMod_FieldIndex.Subspaces,
+                        errMaskObj: combinedSubspaces == null ? null : new MaskItem<Exception, Group_ErrorMask<Subspace_ErrorMask>>(null, combinedSubspaces));
+                    return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Subspaces);
                 default:
                     errorMask().Warnings.Add($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength;
@@ -2681,6 +2822,15 @@ namespace Mutagen.Bethesda.Oblivion
                 case OblivionMod_FieldIndex.SoulGems:
                     this._SoulGems_Object.CopyFieldsFrom<SoulGem, SoulGem_CopyMask>(rhs: (Group<SoulGem>)obj);
                     break;
+                case OblivionMod_FieldIndex.Keys:
+                    this._Keys_Object.CopyFieldsFrom<Key, Key_CopyMask>(rhs: (Group<Key>)obj);
+                    break;
+                case OblivionMod_FieldIndex.Potions:
+                    this._Potions_Object.CopyFieldsFrom<Potion, Potion_CopyMask>(rhs: (Group<Potion>)obj);
+                    break;
+                case OblivionMod_FieldIndex.Subspaces:
+                    this._Subspaces_Object.CopyFieldsFrom<Subspace, Subspace_CopyMask>(rhs: (Group<Subspace>)obj);
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2829,6 +2979,15 @@ namespace Mutagen.Bethesda.Oblivion
                 case OblivionMod_FieldIndex.SoulGems:
                     obj._SoulGems_Object.CopyFieldsFrom<SoulGem, SoulGem_CopyMask>(rhs: (Group<SoulGem>)pair.Value);
                     break;
+                case OblivionMod_FieldIndex.Keys:
+                    obj._Keys_Object.CopyFieldsFrom<Key, Key_CopyMask>(rhs: (Group<Key>)pair.Value);
+                    break;
+                case OblivionMod_FieldIndex.Potions:
+                    obj._Potions_Object.CopyFieldsFrom<Potion, Potion_CopyMask>(rhs: (Group<Potion>)pair.Value);
+                    break;
+                case OblivionMod_FieldIndex.Subspaces:
+                    obj._Subspaces_Object.CopyFieldsFrom<Subspace, Subspace_CopyMask>(rhs: (Group<Subspace>)pair.Value);
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -2961,6 +3120,15 @@ namespace Mutagen.Bethesda.Oblivion
         #region SoulGems
         Group<SoulGem> SoulGems { get; }
         #endregion
+        #region Keys
+        Group<Key> Keys { get; }
+        #endregion
+        #region Potions
+        Group<Potion> Potions { get; }
+        #endregion
+        #region Subspaces
+        Group<Subspace> Subspaces { get; }
+        #endregion
 
     }
 
@@ -3010,6 +3178,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Creatures = 34,
         LeveledCreatures = 35,
         SoulGems = 36,
+        Keys = 37,
+        Potions = 38,
+        Subspaces = 39,
     }
     #endregion
 
@@ -3027,7 +3198,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "b6f626df-b164-466b-960a-1639d88f66bc";
 
-        public const ushort FieldCount = 37;
+        public const ushort FieldCount = 40;
 
         public static readonly Type MaskType = typeof(OblivionMod_Mask<>);
 
@@ -3129,6 +3300,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)OblivionMod_FieldIndex.LeveledCreatures;
                 case "SOULGEMS":
                     return (ushort)OblivionMod_FieldIndex.SoulGems;
+                case "KEYS":
+                    return (ushort)OblivionMod_FieldIndex.Keys;
+                case "POTIONS":
+                    return (ushort)OblivionMod_FieldIndex.Potions;
+                case "SUBSPACES":
+                    return (ushort)OblivionMod_FieldIndex.Subspaces;
                 default:
                     return null;
             }
@@ -3176,6 +3353,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Creatures:
                 case OblivionMod_FieldIndex.LeveledCreatures:
                 case OblivionMod_FieldIndex.SoulGems:
+                case OblivionMod_FieldIndex.Keys:
+                case OblivionMod_FieldIndex.Potions:
+                case OblivionMod_FieldIndex.Subspaces:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3224,6 +3404,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Creatures:
                 case OblivionMod_FieldIndex.LeveledCreatures:
                 case OblivionMod_FieldIndex.SoulGems:
+                case OblivionMod_FieldIndex.Keys:
+                case OblivionMod_FieldIndex.Potions:
+                case OblivionMod_FieldIndex.Subspaces:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3272,6 +3455,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Creatures:
                 case OblivionMod_FieldIndex.LeveledCreatures:
                 case OblivionMod_FieldIndex.SoulGems:
+                case OblivionMod_FieldIndex.Keys:
+                case OblivionMod_FieldIndex.Potions:
+                case OblivionMod_FieldIndex.Subspaces:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3357,6 +3543,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "LeveledCreatures";
                 case OblivionMod_FieldIndex.SoulGems:
                     return "SoulGems";
+                case OblivionMod_FieldIndex.Keys:
+                    return "Keys";
+                case OblivionMod_FieldIndex.Potions:
+                    return "Potions";
+                case OblivionMod_FieldIndex.Subspaces:
+                    return "Subspaces";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -3404,6 +3596,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Creatures:
                 case OblivionMod_FieldIndex.LeveledCreatures:
                 case OblivionMod_FieldIndex.SoulGems:
+                case OblivionMod_FieldIndex.Keys:
+                case OblivionMod_FieldIndex.Potions:
+                case OblivionMod_FieldIndex.Subspaces:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3453,6 +3648,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Creatures:
                 case OblivionMod_FieldIndex.LeveledCreatures:
                 case OblivionMod_FieldIndex.SoulGems:
+                case OblivionMod_FieldIndex.Keys:
+                case OblivionMod_FieldIndex.Potions:
+                case OblivionMod_FieldIndex.Subspaces:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3538,6 +3736,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(Group<LeveledCreature>);
                 case OblivionMod_FieldIndex.SoulGems:
                     return typeof(Group<SoulGem>);
+                case OblivionMod_FieldIndex.Keys:
+                    return typeof(Group<Key>);
+                case OblivionMod_FieldIndex.Potions:
+                    return typeof(Group<Potion>);
+                case OblivionMod_FieldIndex.Subspaces:
+                    return typeof(Group<Subspace>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -3580,6 +3784,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType CREA_HEADER = new RecordType("CREA");
         public static readonly RecordType LVLC_HEADER = new RecordType("LVLC");
         public static readonly RecordType SLGM_HEADER = new RecordType("SLGM");
+        public static readonly RecordType KEYM_HEADER = new RecordType("KEYM");
+        public static readonly RecordType ALCH_HEADER = new RecordType("ALCH");
+        public static readonly RecordType SBSP_HEADER = new RecordType("SBSP");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -3593,7 +3800,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             );
         });
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 37;
+        public const int NumTypedFields = 40;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -4736,6 +4943,90 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask().SetNthException((int)OblivionMod_FieldIndex.SoulGems, ex);
                 }
             }
+            if (copyMask?.Keys.Overall ?? true)
+            {
+                try
+                {
+                    GroupCommon.CopyFieldsFrom(
+                        item: item.Keys,
+                        rhs: rhs.Keys,
+                        def: def?.Keys,
+                        doMasks: doMasks,
+                        errorMask: (doMasks ? new Func<Group_ErrorMask<Key_ErrorMask>>(() =>
+                        {
+                            var baseMask = errorMask();
+                            if (baseMask.Keys.Specific == null)
+                            {
+                                baseMask.Keys = new MaskItem<Exception, Group_ErrorMask<Key_ErrorMask>>(null, new Group_ErrorMask<Key_ErrorMask>());
+                            }
+                            return baseMask.Keys.Specific;
+                        }
+                        ) : null),
+                        copyMask: copyMask?.Keys.Specific,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)OblivionMod_FieldIndex.Keys, ex);
+                }
+            }
+            if (copyMask?.Potions.Overall ?? true)
+            {
+                try
+                {
+                    GroupCommon.CopyFieldsFrom(
+                        item: item.Potions,
+                        rhs: rhs.Potions,
+                        def: def?.Potions,
+                        doMasks: doMasks,
+                        errorMask: (doMasks ? new Func<Group_ErrorMask<Potion_ErrorMask>>(() =>
+                        {
+                            var baseMask = errorMask();
+                            if (baseMask.Potions.Specific == null)
+                            {
+                                baseMask.Potions = new MaskItem<Exception, Group_ErrorMask<Potion_ErrorMask>>(null, new Group_ErrorMask<Potion_ErrorMask>());
+                            }
+                            return baseMask.Potions.Specific;
+                        }
+                        ) : null),
+                        copyMask: copyMask?.Potions.Specific,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)OblivionMod_FieldIndex.Potions, ex);
+                }
+            }
+            if (copyMask?.Subspaces.Overall ?? true)
+            {
+                try
+                {
+                    GroupCommon.CopyFieldsFrom(
+                        item: item.Subspaces,
+                        rhs: rhs.Subspaces,
+                        def: def?.Subspaces,
+                        doMasks: doMasks,
+                        errorMask: (doMasks ? new Func<Group_ErrorMask<Subspace_ErrorMask>>(() =>
+                        {
+                            var baseMask = errorMask();
+                            if (baseMask.Subspaces.Specific == null)
+                            {
+                                baseMask.Subspaces = new MaskItem<Exception, Group_ErrorMask<Subspace_ErrorMask>>(null, new Group_ErrorMask<Subspace_ErrorMask>());
+                            }
+                            return baseMask.Subspaces.Specific;
+                        }
+                        ) : null),
+                        copyMask: copyMask?.Subspaces.Specific,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)OblivionMod_FieldIndex.Subspaces, ex);
+                }
+            }
         }
 
         #endregion
@@ -4785,6 +5076,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Creatures:
                 case OblivionMod_FieldIndex.LeveledCreatures:
                 case OblivionMod_FieldIndex.SoulGems:
+                case OblivionMod_FieldIndex.Keys:
+                case OblivionMod_FieldIndex.Potions:
+                case OblivionMod_FieldIndex.Subspaces:
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 case OblivionMod_FieldIndex.TES4:
@@ -4912,6 +5206,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.SoulGems:
                     GroupCommon.Clear(obj.SoulGems, cmds.ToUnsetParams());
                     break;
+                case OblivionMod_FieldIndex.Keys:
+                    GroupCommon.Clear(obj.Keys, cmds.ToUnsetParams());
+                    break;
+                case OblivionMod_FieldIndex.Potions:
+                    GroupCommon.Clear(obj.Potions, cmds.ToUnsetParams());
+                    break;
+                case OblivionMod_FieldIndex.Subspaces:
+                    GroupCommon.Clear(obj.Subspaces, cmds.ToUnsetParams());
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -4960,6 +5263,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Creatures:
                 case OblivionMod_FieldIndex.LeveledCreatures:
                 case OblivionMod_FieldIndex.SoulGems:
+                case OblivionMod_FieldIndex.Keys:
+                case OblivionMod_FieldIndex.Potions:
+                case OblivionMod_FieldIndex.Subspaces:
                     return true;
                 case OblivionMod_FieldIndex.TES4:
                     return obj.TES4_Property.HasBeenSet;
@@ -5049,6 +5355,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.LeveledCreatures;
                 case OblivionMod_FieldIndex.SoulGems:
                     return obj.SoulGems;
+                case OblivionMod_FieldIndex.Keys:
+                    return obj.Keys;
+                case OblivionMod_FieldIndex.Potions:
+                    return obj.Potions;
+                case OblivionMod_FieldIndex.Subspaces:
+                    return obj.Subspaces;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -5184,6 +5496,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.SoulGems = new MaskItem<bool, Group_Mask<bool>>();
             ret.SoulGems.Specific = GroupCommon.GetEqualsMask(item.SoulGems, rhs.SoulGems);
             ret.SoulGems.Overall = ret.SoulGems.Specific.AllEqual((b) => b);
+            ret.Keys = new MaskItem<bool, Group_Mask<bool>>();
+            ret.Keys.Specific = GroupCommon.GetEqualsMask(item.Keys, rhs.Keys);
+            ret.Keys.Overall = ret.Keys.Specific.AllEqual((b) => b);
+            ret.Potions = new MaskItem<bool, Group_Mask<bool>>();
+            ret.Potions.Specific = GroupCommon.GetEqualsMask(item.Potions, rhs.Potions);
+            ret.Potions.Overall = ret.Potions.Specific.AllEqual((b) => b);
+            ret.Subspaces = new MaskItem<bool, Group_Mask<bool>>();
+            ret.Subspaces.Specific = GroupCommon.GetEqualsMask(item.Subspaces, rhs.Subspaces);
+            ret.Subspaces.Overall = ret.Subspaces.Specific.AllEqual((b) => b);
         }
 
         public static string ToString(
@@ -5361,6 +5682,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.SoulGems?.ToString(fg, "SoulGems");
                 }
+                if (printMask?.Keys?.Overall ?? true)
+                {
+                    item.Keys?.ToString(fg, "Keys");
+                }
+                if (printMask?.Potions?.Overall ?? true)
+                {
+                    item.Potions?.ToString(fg, "Potions");
+                }
+                if (printMask?.Subspaces?.Overall ?? true)
+                {
+                    item.Subspaces?.ToString(fg, "Subspaces");
+                }
             }
             fg.AppendLine("]");
         }
@@ -5414,6 +5747,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Creatures = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Creatures));
             ret.LeveledCreatures = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.LeveledCreatures));
             ret.SoulGems = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.SoulGems));
+            ret.Keys = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Keys));
+            ret.Potions = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Potions));
+            ret.Subspaces = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Subspaces));
             return ret;
         }
 
@@ -5674,6 +6010,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         name: nameof(item.SoulGems),
                         fieldIndex: (int)OblivionMod_FieldIndex.SoulGems,
                         errorMask: errorMask);
+                    LoquiXmlTranslation<Group<Key>, Group_ErrorMask<Key_ErrorMask>>.Instance.Write(
+                        writer: writer,
+                        item: item.Keys,
+                        name: nameof(item.Keys),
+                        fieldIndex: (int)OblivionMod_FieldIndex.Keys,
+                        errorMask: errorMask);
+                    LoquiXmlTranslation<Group<Potion>, Group_ErrorMask<Potion_ErrorMask>>.Instance.Write(
+                        writer: writer,
+                        item: item.Potions,
+                        name: nameof(item.Potions),
+                        fieldIndex: (int)OblivionMod_FieldIndex.Potions,
+                        errorMask: errorMask);
+                    LoquiXmlTranslation<Group<Subspace>, Group_ErrorMask<Subspace_ErrorMask>>.Instance.Write(
+                        writer: writer,
+                        item: item.Subspaces,
+                        name: nameof(item.Subspaces),
+                        fieldIndex: (int)OblivionMod_FieldIndex.Subspaces,
+                        errorMask: errorMask);
                 }
             }
             catch (Exception ex)
@@ -5917,6 +6271,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.SoulGems,
                 fieldIndex: (int)OblivionMod_FieldIndex.SoulGems,
                 errorMask: errorMask);
+            LoquiBinaryTranslation<Group<Key>, Group_ErrorMask<Key_ErrorMask>>.Instance.Write(
+                writer: writer,
+                item: item.Keys,
+                fieldIndex: (int)OblivionMod_FieldIndex.Keys,
+                errorMask: errorMask);
+            LoquiBinaryTranslation<Group<Potion>, Group_ErrorMask<Potion_ErrorMask>>.Instance.Write(
+                writer: writer,
+                item: item.Potions,
+                fieldIndex: (int)OblivionMod_FieldIndex.Potions,
+                errorMask: errorMask);
+            LoquiBinaryTranslation<Group<Subspace>, Group_ErrorMask<Subspace_ErrorMask>>.Instance.Write(
+                writer: writer,
+                item: item.Subspaces,
+                fieldIndex: (int)OblivionMod_FieldIndex.Subspaces,
+                errorMask: errorMask);
         }
 
         #endregion
@@ -5973,6 +6342,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Creatures = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.LeveledCreatures = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.SoulGems = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
+            this.Keys = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
+            this.Potions = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
+            this.Subspaces = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
         }
         #endregion
 
@@ -6014,6 +6386,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<T, Group_Mask<T>> Creatures { get; set; }
         public MaskItem<T, Group_Mask<T>> LeveledCreatures { get; set; }
         public MaskItem<T, Group_Mask<T>> SoulGems { get; set; }
+        public MaskItem<T, Group_Mask<T>> Keys { get; set; }
+        public MaskItem<T, Group_Mask<T>> Potions { get; set; }
+        public MaskItem<T, Group_Mask<T>> Subspaces { get; set; }
         #endregion
 
         #region Equals
@@ -6063,6 +6438,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.Creatures, rhs.Creatures)) return false;
             if (!object.Equals(this.LeveledCreatures, rhs.LeveledCreatures)) return false;
             if (!object.Equals(this.SoulGems, rhs.SoulGems)) return false;
+            if (!object.Equals(this.Keys, rhs.Keys)) return false;
+            if (!object.Equals(this.Potions, rhs.Potions)) return false;
+            if (!object.Equals(this.Subspaces, rhs.Subspaces)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -6105,6 +6483,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.Creatures?.GetHashCode());
             ret = ret.CombineHashCode(this.LeveledCreatures?.GetHashCode());
             ret = ret.CombineHashCode(this.SoulGems?.GetHashCode());
+            ret = ret.CombineHashCode(this.Keys?.GetHashCode());
+            ret = ret.CombineHashCode(this.Potions?.GetHashCode());
+            ret = ret.CombineHashCode(this.Subspaces?.GetHashCode());
             return ret;
         }
 
@@ -6297,6 +6678,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (!eval(this.SoulGems.Overall)) return false;
                 if (this.SoulGems.Specific != null && !this.SoulGems.Specific.AllEqual(eval)) return false;
+            }
+            if (Keys != null)
+            {
+                if (!eval(this.Keys.Overall)) return false;
+                if (this.Keys.Specific != null && !this.Keys.Specific.AllEqual(eval)) return false;
+            }
+            if (Potions != null)
+            {
+                if (!eval(this.Potions.Overall)) return false;
+                if (this.Potions.Specific != null && !this.Potions.Specific.AllEqual(eval)) return false;
+            }
+            if (Subspaces != null)
+            {
+                if (!eval(this.Subspaces.Overall)) return false;
+                if (this.Subspaces.Specific != null && !this.Subspaces.Specific.AllEqual(eval)) return false;
             }
             return true;
         }
@@ -6645,6 +7041,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.SoulGems.Specific = this.SoulGems.Specific.Translate(eval);
                 }
             }
+            if (this.Keys != null)
+            {
+                obj.Keys = new MaskItem<R, Group_Mask<R>>();
+                obj.Keys.Overall = eval(this.Keys.Overall);
+                if (this.Keys.Specific != null)
+                {
+                    obj.Keys.Specific = this.Keys.Specific.Translate(eval);
+                }
+            }
+            if (this.Potions != null)
+            {
+                obj.Potions = new MaskItem<R, Group_Mask<R>>();
+                obj.Potions.Overall = eval(this.Potions.Overall);
+                if (this.Potions.Specific != null)
+                {
+                    obj.Potions.Specific = this.Potions.Specific.Translate(eval);
+                }
+            }
+            if (this.Subspaces != null)
+            {
+                obj.Subspaces = new MaskItem<R, Group_Mask<R>>();
+                obj.Subspaces.Overall = eval(this.Subspaces.Overall);
+                if (this.Subspaces.Specific != null)
+                {
+                    obj.Subspaces.Specific = this.Subspaces.Specific.Translate(eval);
+                }
+            }
         }
         #endregion
 
@@ -6821,6 +7244,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     SoulGems?.ToString(fg);
                 }
+                if (printMask?.Keys?.Overall ?? true)
+                {
+                    Keys?.ToString(fg);
+                }
+                if (printMask?.Potions?.Overall ?? true)
+                {
+                    Potions?.ToString(fg);
+                }
+                if (printMask?.Subspaces?.Overall ?? true)
+                {
+                    Subspaces?.ToString(fg);
+                }
             }
             fg.AppendLine("]");
         }
@@ -6881,6 +7316,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<Exception, Group_ErrorMask<Creature_ErrorMask>> Creatures;
         public MaskItem<Exception, Group_ErrorMask<LeveledCreature_ErrorMask>> LeveledCreatures;
         public MaskItem<Exception, Group_ErrorMask<SoulGem_ErrorMask>> SoulGems;
+        public MaskItem<Exception, Group_ErrorMask<Key_ErrorMask>> Keys;
+        public MaskItem<Exception, Group_ErrorMask<Potion_ErrorMask>> Potions;
+        public MaskItem<Exception, Group_ErrorMask<Subspace_ErrorMask>> Subspaces;
         #endregion
 
         #region IErrorMask
@@ -6999,6 +7437,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case OblivionMod_FieldIndex.SoulGems:
                     this.SoulGems = new MaskItem<Exception, Group_ErrorMask<SoulGem_ErrorMask>>(ex, null);
+                    break;
+                case OblivionMod_FieldIndex.Keys:
+                    this.Keys = new MaskItem<Exception, Group_ErrorMask<Key_ErrorMask>>(ex, null);
+                    break;
+                case OblivionMod_FieldIndex.Potions:
+                    this.Potions = new MaskItem<Exception, Group_ErrorMask<Potion_ErrorMask>>(ex, null);
+                    break;
+                case OblivionMod_FieldIndex.Subspaces:
+                    this.Subspaces = new MaskItem<Exception, Group_ErrorMask<Subspace_ErrorMask>>(ex, null);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -7121,6 +7568,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.SoulGems:
                     this.SoulGems = (MaskItem<Exception, Group_ErrorMask<SoulGem_ErrorMask>>)obj;
                     break;
+                case OblivionMod_FieldIndex.Keys:
+                    this.Keys = (MaskItem<Exception, Group_ErrorMask<Key_ErrorMask>>)obj;
+                    break;
+                case OblivionMod_FieldIndex.Potions:
+                    this.Potions = (MaskItem<Exception, Group_ErrorMask<Potion_ErrorMask>>)obj;
+                    break;
+                case OblivionMod_FieldIndex.Subspaces:
+                    this.Subspaces = (MaskItem<Exception, Group_ErrorMask<Subspace_ErrorMask>>)obj;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -7166,6 +7622,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Creatures != null) return true;
             if (LeveledCreatures != null) return true;
             if (SoulGems != null) return true;
+            if (Keys != null) return true;
+            if (Potions != null) return true;
+            if (Subspaces != null) return true;
             return false;
         }
         #endregion
@@ -7237,6 +7696,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Creatures?.ToString(fg);
             LeveledCreatures?.ToString(fg);
             SoulGems?.ToString(fg);
+            Keys?.ToString(fg);
+            Potions?.ToString(fg);
+            Subspaces?.ToString(fg);
         }
         #endregion
 
@@ -7281,6 +7743,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Creatures = new MaskItem<Exception, Group_ErrorMask<Creature_ErrorMask>>(this.Creatures.Overall.Combine(rhs.Creatures.Overall), ((IErrorMask<Group_ErrorMask<Creature_ErrorMask>>)this.Creatures.Specific).Combine(rhs.Creatures.Specific));
             ret.LeveledCreatures = new MaskItem<Exception, Group_ErrorMask<LeveledCreature_ErrorMask>>(this.LeveledCreatures.Overall.Combine(rhs.LeveledCreatures.Overall), ((IErrorMask<Group_ErrorMask<LeveledCreature_ErrorMask>>)this.LeveledCreatures.Specific).Combine(rhs.LeveledCreatures.Specific));
             ret.SoulGems = new MaskItem<Exception, Group_ErrorMask<SoulGem_ErrorMask>>(this.SoulGems.Overall.Combine(rhs.SoulGems.Overall), ((IErrorMask<Group_ErrorMask<SoulGem_ErrorMask>>)this.SoulGems.Specific).Combine(rhs.SoulGems.Specific));
+            ret.Keys = new MaskItem<Exception, Group_ErrorMask<Key_ErrorMask>>(this.Keys.Overall.Combine(rhs.Keys.Overall), ((IErrorMask<Group_ErrorMask<Key_ErrorMask>>)this.Keys.Specific).Combine(rhs.Keys.Specific));
+            ret.Potions = new MaskItem<Exception, Group_ErrorMask<Potion_ErrorMask>>(this.Potions.Overall.Combine(rhs.Potions.Overall), ((IErrorMask<Group_ErrorMask<Potion_ErrorMask>>)this.Potions.Specific).Combine(rhs.Potions.Specific));
+            ret.Subspaces = new MaskItem<Exception, Group_ErrorMask<Subspace_ErrorMask>>(this.Subspaces.Overall.Combine(rhs.Subspaces.Overall), ((IErrorMask<Group_ErrorMask<Subspace_ErrorMask>>)this.Subspaces.Specific).Combine(rhs.Subspaces.Specific));
             return ret;
         }
         public static OblivionMod_ErrorMask Combine(OblivionMod_ErrorMask lhs, OblivionMod_ErrorMask rhs)
@@ -7331,6 +7796,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<bool, Group_CopyMask<Creature_CopyMask>> Creatures;
         public MaskItem<bool, Group_CopyMask<LeveledCreature_CopyMask>> LeveledCreatures;
         public MaskItem<bool, Group_CopyMask<SoulGem_CopyMask>> SoulGems;
+        public MaskItem<bool, Group_CopyMask<Key_CopyMask>> Keys;
+        public MaskItem<bool, Group_CopyMask<Potion_CopyMask>> Potions;
+        public MaskItem<bool, Group_CopyMask<Subspace_CopyMask>> Subspaces;
         #endregion
 
     }

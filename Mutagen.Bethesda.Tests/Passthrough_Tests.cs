@@ -83,11 +83,11 @@ namespace Mutagen.Bethesda.Tests
                 }
                 if (stream.Position != stream.Length)
                 {
-                    return (new ArgumentException($"{path2} Stream had more data past position 0x{stream.Position} than {path2}"), errs);
+                    return (new ArgumentException($"{path2} Stream had more data past position 0x{new FileLocation(stream.Position)} than {path2}"), errs);
                 }
                 if (reader2.Position != reader2.Length)
                 {
-                    return (new ArgumentException($"{path2} Stream {path2} had more data past position 0x{reader2.Position} than source stream."), errs);
+                    return (new ArgumentException($"{path2} Stream {path2} had more data past position 0x{new FileLocation(reader2.Position)} than source stream."), errs);
                 }
                 return (null, errs);
             }

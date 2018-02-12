@@ -45,6 +45,7 @@
     <Compile Include="Records\Common Enums\Attribute.cs" />
     <Compile Include="Records\Common Enums\BipedFlag.cs" />
     <Compile Include="Records\Common Enums\EquipmentFlag.cs" />
+    <Compile Include="Records\Common Enums\IngredientFlag.cs" />
     <Compile Include="Records\Common Enums\MagicSchool.cs" />
     <Compile Include="Records\Common Enums\Resistance.cs" />
     <Compile Include="Records\Common Enums\Skill.cs" />
@@ -196,9 +197,6 @@
     </Compile>
     <Compile Include="Records\Major Records\HavokData.cs">
       <DependentUpon>LandTexture.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\Ingredient.cs">
-      <DependentUpon>Ingredient.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\LeveledCreature.cs">
       <DependentUpon>LeveledCreature.xml</DependentUpon>
@@ -434,6 +432,15 @@
     <Compile Include="Records\Major Records\SoulGem_LoquiGenerated.cs">
       <DependentUpon>SoulGem.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Key_LoquiGenerated.cs">
+      <DependentUpon>Key.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Potion_LoquiGenerated.cs">
+      <DependentUpon>Potion.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Subspace_LoquiGenerated.cs">
+      <DependentUpon>Subspace.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Records\Common Subrecords\Effect.xml">
@@ -527,6 +534,9 @@
     <Content Include="Records\Major Records\ItemAbstract.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Records\Major Records\Key.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Records\Major Records\LandTexture.xml">
       <SubType>Designer</SubType>
     </Content>
@@ -549,6 +559,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\NPCSpawn.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\Potion.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Race.xml">
@@ -576,6 +589,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Static.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\Subspace.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Tree.xml">

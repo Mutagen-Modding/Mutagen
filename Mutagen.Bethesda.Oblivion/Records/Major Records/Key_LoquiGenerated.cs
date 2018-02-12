@@ -26,13 +26,13 @@ using Mutagen.Bethesda.Binary;
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class Ingredient : NamedMajorRecord, IIngredient, ILoquiObjectSetter, IEquatable<Ingredient>
+    public partial class Key : NamedMajorRecord, IKey, ILoquiObjectSetter, IEquatable<Key>
     {
-        ILoquiRegistration ILoquiObject.Registration => Ingredient_Registration.Instance;
-        public new static Ingredient_Registration Registration => Ingredient_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Key_Registration.Instance;
+        public new static Key_Registration Registration => Key_Registration.Instance;
 
         #region Ctor
-        public Ingredient()
+        public Key()
         {
             CustomCtor();
         }
@@ -42,10 +42,10 @@ namespace Mutagen.Bethesda.Oblivion
         #region Model
         private readonly INotifyingSetItem<Model> _Model = new NotifyingSetItem<Model>();
         public INotifyingSetItem<Model> Model_Property => this._Model;
-        Model IIngredientGetter.Model => this.Model;
+        Model IKeyGetter.Model => this.Model;
         public Model Model { get => _Model.Item; set => _Model.Item = value; }
-        INotifyingSetItem<Model> IIngredient.Model_Property => this.Model_Property;
-        INotifyingSetItemGetter<Model> IIngredientGetter.Model_Property => this.Model_Property;
+        INotifyingSetItem<Model> IKey.Model_Property => this.Model_Property;
+        INotifyingSetItemGetter<Model> IKeyGetter.Model_Property => this.Model_Property;
         #endregion
         #region Icon
         protected readonly INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
@@ -55,24 +55,13 @@ namespace Mutagen.Bethesda.Oblivion
             get => this._Icon.Item;
             set => this._Icon.Set(value);
         }
-        INotifyingSetItem<FilePath> IIngredient.Icon_Property => this.Icon_Property;
-        INotifyingSetItemGetter<FilePath> IIngredientGetter.Icon_Property => this.Icon_Property;
+        INotifyingSetItem<FilePath> IKey.Icon_Property => this.Icon_Property;
+        INotifyingSetItemGetter<FilePath> IKeyGetter.Icon_Property => this.Icon_Property;
         #endregion
         #region Script
         public FormIDSetLink<Script> Script_Property { get; } = new FormIDSetLink<Script>();
         public Script Script { get => Script_Property.Item; set => Script_Property.Item = value; }
-        FormIDSetLink<Script> IIngredientGetter.Script_Property => this.Script_Property;
-        #endregion
-        #region Weight
-        protected readonly INotifyingSetItem<Single> _Weight = NotifyingSetItem.Factory<Single>(markAsSet: false);
-        public INotifyingSetItem<Single> Weight_Property => _Weight;
-        public Single Weight
-        {
-            get => this._Weight.Item;
-            set => this._Weight.Set(value);
-        }
-        INotifyingSetItem<Single> IIngredient.Weight_Property => this.Weight_Property;
-        INotifyingSetItemGetter<Single> IIngredientGetter.Weight_Property => this.Weight_Property;
+        FormIDSetLink<Script> IKeyGetter.Script_Property => this.Script_Property;
         #endregion
         #region Value
         protected readonly INotifyingItem<UInt32> _Value = NotifyingItem.Factory<UInt32>();
@@ -82,49 +71,35 @@ namespace Mutagen.Bethesda.Oblivion
             get => this._Value.Item;
             set => this._Value.Set(value);
         }
-        INotifyingItem<UInt32> IIngredient.Value_Property => this.Value_Property;
-        INotifyingItemGetter<UInt32> IIngredientGetter.Value_Property => this.Value_Property;
+        INotifyingItem<UInt32> IKey.Value_Property => this.Value_Property;
+        INotifyingItemGetter<UInt32> IKeyGetter.Value_Property => this.Value_Property;
         #endregion
-        #region Flags
-        protected readonly INotifyingItem<IngredientFlag> _Flags = NotifyingItem.Factory<IngredientFlag>();
-        public INotifyingItem<IngredientFlag> Flags_Property => _Flags;
-        public IngredientFlag Flags
+        #region Weight
+        protected readonly INotifyingItem<Single> _Weight = NotifyingItem.Factory<Single>();
+        public INotifyingItem<Single> Weight_Property => _Weight;
+        public Single Weight
         {
-            get => this._Flags.Item;
-            set => this._Flags.Set(value);
+            get => this._Weight.Item;
+            set => this._Weight.Set(value);
         }
-        INotifyingItem<IngredientFlag> IIngredient.Flags_Property => this.Flags_Property;
-        INotifyingItemGetter<IngredientFlag> IIngredientGetter.Flags_Property => this.Flags_Property;
-        #endregion
-        #region Effects
-        private readonly INotifyingList<Effect> _Effects = new NotifyingList<Effect>();
-        public INotifyingList<Effect> Effects => _Effects;
-        public IEnumerable<Effect> EffectsEnumerable
-        {
-            get => _Effects;
-            set => _Effects.SetTo(value);
-        }
-        #region Interface Members
-        INotifyingList<Effect> IIngredient.Effects => _Effects;
-        INotifyingListGetter<Effect> IIngredientGetter.Effects => _Effects;
-        #endregion
-
+        INotifyingItem<Single> IKey.Weight_Property => this.Weight_Property;
+        INotifyingItemGetter<Single> IKeyGetter.Weight_Property => this.Weight_Property;
         #endregion
 
         #region Loqui Getter Interface
 
-        protected override object GetNthObject(ushort index) => IngredientCommon.GetNthObject(index, this);
+        protected override object GetNthObject(ushort index) => KeyCommon.GetNthObject(index, this);
 
-        protected override bool GetNthObjectHasBeenSet(ushort index) => IngredientCommon.GetNthObjectHasBeenSet(index, this);
+        protected override bool GetNthObjectHasBeenSet(ushort index) => KeyCommon.GetNthObjectHasBeenSet(index, this);
 
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => IngredientCommon.UnsetNthObject(index, this, cmds);
+        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => KeyCommon.UnsetNthObject(index, this, cmds);
 
         #endregion
 
         #region Loqui Interface
         protected override void SetNthObjectHasBeenSet(ushort index, bool on)
         {
-            IngredientCommon.SetNthObjectHasBeenSet(index, on, this);
+            KeyCommon.SetNthObjectHasBeenSet(index, on, this);
         }
 
         #endregion
@@ -132,37 +107,37 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
         public override string ToString()
         {
-            return IngredientCommon.ToString(this, printMask: null);
+            return KeyCommon.ToString(this, printMask: null);
         }
 
         public string ToString(
             string name = null,
-            Ingredient_Mask<bool> printMask = null)
+            Key_Mask<bool> printMask = null)
         {
-            return IngredientCommon.ToString(this, name: name, printMask: printMask);
+            return KeyCommon.ToString(this, name: name, printMask: printMask);
         }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            IngredientCommon.ToString(this, fg, name: name, printMask: null);
+            KeyCommon.ToString(this, fg, name: name, printMask: null);
         }
 
         #endregion
 
-        public new Ingredient_Mask<bool> GetHasBeenSetMask()
+        public new Key_Mask<bool> GetHasBeenSetMask()
         {
-            return IngredientCommon.GetHasBeenSetMask(this);
+            return KeyCommon.GetHasBeenSetMask(this);
         }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is Ingredient rhs)) return false;
+            if (!(obj is Key rhs)) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(Ingredient rhs)
+        public bool Equals(Key rhs)
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
@@ -181,18 +156,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (Script != rhs.Script) return false;
             }
-            if (Weight_Property.HasBeenSet != rhs.Weight_Property.HasBeenSet) return false;
-            if (Weight_Property.HasBeenSet)
-            {
-                if (Weight != rhs.Weight) return false;
-            }
             if (Value != rhs.Value) return false;
-            if (Flags != rhs.Flags) return false;
-            if (Effects.HasBeenSet != rhs.Effects.HasBeenSet) return false;
-            if (Effects.HasBeenSet)
-            {
-                if (!Effects.SequenceEqual(rhs.Effects)) return false;
-            }
+            if (Weight != rhs.Weight) return false;
             return true;
         }
 
@@ -211,16 +176,8 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 ret = HashHelper.GetHashCode(Script).CombineHashCode(ret);
             }
-            if (Weight_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Weight).CombineHashCode(ret);
-            }
             ret = HashHelper.GetHashCode(Value).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Flags).CombineHashCode(ret);
-            if (Effects.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Effects).CombineHashCode(ret);
-            }
+            ret = HashHelper.GetHashCode(Weight).CombineHashCode(ret);
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -231,7 +188,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region XML Translation
         #region XML Create
         [DebuggerStepThrough]
-        public new static Ingredient Create_XML(XElement root)
+        public new static Key Create_XML(XElement root)
         {
             return Create_XML(
                 root: root,
@@ -240,9 +197,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static Ingredient Create_XML(
+        public static Key Create_XML(
             XElement root,
-            out Ingredient_ErrorMask errorMask)
+            out Key_ErrorMask errorMask)
         {
             return Create_XML(
                 root: root,
@@ -251,10 +208,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static Ingredient Create_XML(
+        public static Key Create_XML(
             XElement root,
             bool doMasks,
-            out Ingredient_ErrorMask errorMask)
+            out Key_ErrorMask errorMask)
         {
             var ret = Create_XML(
                 root: root,
@@ -264,26 +221,26 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static (Ingredient Object, Ingredient_ErrorMask ErrorMask) Create_XML(
+        public static (Key Object, Key_ErrorMask ErrorMask) Create_XML(
             XElement root,
             bool doMasks)
         {
-            Ingredient_ErrorMask errMaskRet = null;
+            Key_ErrorMask errMaskRet = null;
             var ret = Create_XML_Internal(
                 root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Ingredient_ErrorMask()) : default(Func<Ingredient_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Key_ErrorMask()) : default(Func<Key_ErrorMask>));
             return (ret, errMaskRet);
         }
 
-        public static Ingredient Create_XML(string path)
+        public static Key Create_XML(string path)
         {
             var root = XDocument.Load(path).Root;
             return Create_XML(root: root);
         }
 
-        public static Ingredient Create_XML(
+        public static Key Create_XML(
             string path,
-            out Ingredient_ErrorMask errorMask)
+            out Key_ErrorMask errorMask)
         {
             var root = XDocument.Load(path).Root;
             return Create_XML(
@@ -291,15 +248,15 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: out errorMask);
         }
 
-        public static Ingredient Create_XML(Stream stream)
+        public static Key Create_XML(Stream stream)
         {
             var root = XDocument.Load(stream).Root;
             return Create_XML(root: root);
         }
 
-        public static Ingredient Create_XML(
+        public static Key Create_XML(
             Stream stream,
-            out Ingredient_ErrorMask errorMask)
+            out Key_ErrorMask errorMask)
         {
             var root = XDocument.Load(stream).Root;
             return Create_XML(
@@ -314,7 +271,7 @@ namespace Mutagen.Bethesda.Oblivion
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<Ingredient, Ingredient_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<Key, Key_ErrorMask>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
@@ -325,10 +282,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void CopyIn_XML(
             XElement root,
-            out Ingredient_ErrorMask errorMask,
+            out Key_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<Ingredient, Ingredient_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<Key, Key_ErrorMask>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
@@ -349,7 +306,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_XML(
             string path,
-            out Ingredient_ErrorMask errorMask,
+            out Key_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(path).Root;
@@ -371,7 +328,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_XML(
             Stream stream,
-            out Ingredient_ErrorMask errorMask,
+            out Key_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(stream).Root;
@@ -388,7 +345,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.CopyIn_XML(
                 root: root,
-                errorMask: out Ingredient_ErrorMask errMask,
+                errorMask: out Key_ErrorMask errMask,
                 cmds: cmds);
             errorMask = errMask;
         }
@@ -400,7 +357,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.CopyIn_XML(
                 root: root,
-                errorMask: out Ingredient_ErrorMask errMask,
+                errorMask: out Key_ErrorMask errMask,
                 cmds: cmds);
             errorMask = errMask;
         }
@@ -410,10 +367,10 @@ namespace Mutagen.Bethesda.Oblivion
         #region XML Write
         public virtual void Write_XML(
             XmlWriter writer,
-            out Ingredient_ErrorMask errorMask,
+            out Key_ErrorMask errorMask,
             string name = null)
         {
-            errorMask = (Ingredient_ErrorMask)this.Write_XML_Internal(
+            errorMask = (Key_ErrorMask)this.Write_XML_Internal(
                 writer: writer,
                 name: name,
                 doMasks: true);
@@ -421,7 +378,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_XML(
             string path,
-            out Ingredient_ErrorMask errorMask,
+            out Key_ErrorMask errorMask,
             string name = null)
         {
             using (var writer = new XmlTextWriter(path, Encoding.ASCII))
@@ -437,7 +394,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_XML(
             Stream stream,
-            out Ingredient_ErrorMask errorMask,
+            out Key_ErrorMask errorMask,
             string name = null)
         {
             using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
@@ -494,7 +451,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks,
             string name = null)
         {
-            IngredientCommon.Write_XML(
+            KeyCommon.Write_XML(
                 writer: writer,
                 item: this,
                 doMasks: doMasks,
@@ -503,11 +460,11 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static Ingredient Create_XML_Internal(
+        private static Key Create_XML_Internal(
             XElement root,
-            Func<Ingredient_ErrorMask> errorMask)
+            Func<Key_ErrorMask> errorMask)
         {
-            var ret = new Ingredient();
+            var ret = new Key();
             try
             {
                 foreach (var elem in root.Elements())
@@ -528,63 +485,42 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static void Fill_XML_Internal(
-            Ingredient item,
+            Key item,
             XElement root,
             string name,
-            Func<Ingredient_ErrorMask> errorMask)
+            Func<Key_ErrorMask> errorMask)
         {
             switch (name)
             {
                 case "Model":
                     item._Model.SetIfSucceeded(LoquiXmlTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         root: root,
-                        fieldIndex: (int)Ingredient_FieldIndex.Model,
+                        fieldIndex: (int)Key_FieldIndex.Model,
                         errorMask: errorMask));
                     break;
                 case "Icon":
                     item._Icon.SetIfSucceeded(FilePathXmlTranslation.Instance.ParseNonNull(
                         root,
-                        fieldIndex: (int)Ingredient_FieldIndex.Icon,
+                        fieldIndex: (int)Key_FieldIndex.Icon,
                         errorMask: errorMask));
                     break;
                 case "Script":
                     item.Script_Property.SetIfSucceeded(FormIDXmlTranslation.Instance.ParseNonNull(
                         root,
-                        fieldIndex: (int)Ingredient_FieldIndex.Script,
-                        errorMask: errorMask));
-                    break;
-                case "Weight":
-                    item._Weight.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
-                        root,
-                        fieldIndex: (int)Ingredient_FieldIndex.Weight,
+                        fieldIndex: (int)Key_FieldIndex.Script,
                         errorMask: errorMask));
                     break;
                 case "Value":
                     item._Value.SetIfSucceeded(UInt32XmlTranslation.Instance.ParseNonNull(
                         root,
-                        fieldIndex: (int)Ingredient_FieldIndex.Value,
+                        fieldIndex: (int)Key_FieldIndex.Value,
                         errorMask: errorMask));
                     break;
-                case "Flags":
-                    item._Flags.SetIfSucceeded(EnumXmlTranslation<IngredientFlag>.Instance.Parse(
+                case "Weight":
+                    item._Weight.SetIfSucceeded(FloatXmlTranslation.Instance.ParseNonNull(
                         root,
-                        nullable: false,
-                        fieldIndex: (int)Ingredient_FieldIndex.Flags,
-                        errorMask: errorMask).Bubble((o) => o.Value));
-                    break;
-                case "Effects":
-                    item._Effects.SetIfSucceeded(ListXmlTranslation<Effect, MaskItem<Exception, Effect_ErrorMask>>.Instance.Parse(
-                        root: root,
-                        fieldIndex: (int)Ingredient_FieldIndex.Effects,
-                        errorMask: errorMask,
-                        transl: (XElement r, bool listDoMasks, out MaskItem<Exception, Effect_ErrorMask> listSubMask) =>
-                        {
-                            return LoquiXmlTranslation<Effect, Effect_ErrorMask>.Instance.Parse(
-                                root: r,
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask);
-                        }
-                        ));
+                        fieldIndex: (int)Key_FieldIndex.Weight,
+                        errorMask: errorMask));
                     break;
                 default:
                     NamedMajorRecord.Fill_XML_Internal(
@@ -601,7 +537,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public new static Ingredient Create_Binary(MutagenFrame frame)
+        public new static Key Create_Binary(MutagenFrame frame)
         {
             return Create_Binary(
                 frame: frame,
@@ -610,9 +546,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static Ingredient Create_Binary(
+        public static Key Create_Binary(
             MutagenFrame frame,
-            out Ingredient_ErrorMask errorMask)
+            out Key_ErrorMask errorMask)
         {
             return Create_Binary(
                 frame: frame,
@@ -621,10 +557,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static Ingredient Create_Binary(
+        public static Key Create_Binary(
             MutagenFrame frame,
             bool doMasks,
-            out Ingredient_ErrorMask errorMask)
+            out Key_ErrorMask errorMask)
         {
             var ret = Create_Binary(
                 frame: frame,
@@ -635,20 +571,20 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static (Ingredient Object, Ingredient_ErrorMask ErrorMask) Create_Binary(
+        public static (Key Object, Key_ErrorMask ErrorMask) Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
             bool doMasks)
         {
-            Ingredient_ErrorMask errMaskRet = null;
+            Key_ErrorMask errMaskRet = null;
             var ret = Create_Binary_Internal(
                 frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Ingredient_ErrorMask()) : default(Func<Ingredient_ErrorMask>),
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Key_ErrorMask()) : default(Func<Key_ErrorMask>),
                 recordTypeConverter: recordTypeConverter);
             return (ret, errMaskRet);
         }
 
-        public static Ingredient Create_Binary(string path)
+        public static Key Create_Binary(string path)
         {
             using (var reader = new MutagenReader(path))
             {
@@ -657,9 +593,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public static Ingredient Create_Binary(
+        public static Key Create_Binary(
             string path,
-            out Ingredient_ErrorMask errorMask)
+            out Key_ErrorMask errorMask)
         {
             using (var reader = new MutagenReader(path))
             {
@@ -670,7 +606,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public static Ingredient Create_Binary(Stream stream)
+        public static Key Create_Binary(Stream stream)
         {
             using (var reader = new MutagenReader(stream))
             {
@@ -679,9 +615,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public static Ingredient Create_Binary(
+        public static Key Create_Binary(
             Stream stream,
-            out Ingredient_ErrorMask errorMask)
+            out Key_ErrorMask errorMask)
         {
             using (var reader = new MutagenReader(stream))
             {
@@ -699,7 +635,7 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             NotifyingFireParameters cmds = null)
         {
-            LoquiBinaryTranslation<Ingredient, Ingredient_ErrorMask>.Instance.CopyIn(
+            LoquiBinaryTranslation<Key, Key_ErrorMask>.Instance.CopyIn(
                 frame: frame,
                 item: this,
                 skipProtected: true,
@@ -710,10 +646,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void CopyIn_Binary(
             MutagenFrame frame,
-            out Ingredient_ErrorMask errorMask,
+            out Key_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiBinaryTranslation<Ingredient, Ingredient_ErrorMask>.Instance.CopyIn(
+            LoquiBinaryTranslation<Key, Key_ErrorMask>.Instance.CopyIn(
                 frame: frame,
                 item: this,
                 skipProtected: true,
@@ -737,7 +673,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_Binary(
             string path,
-            out Ingredient_ErrorMask errorMask,
+            out Key_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
             using (var reader = new MutagenReader(path))
@@ -765,7 +701,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_Binary(
             Stream stream,
-            out Ingredient_ErrorMask errorMask,
+            out Key_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
             using (var reader = new MutagenReader(stream))
@@ -785,7 +721,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.CopyIn_Binary(
                 frame: frame,
-                errorMask: out Ingredient_ErrorMask errMask,
+                errorMask: out Key_ErrorMask errMask,
                 cmds: cmds);
             errorMask = errMask;
         }
@@ -797,7 +733,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.CopyIn_Binary(
                 frame: frame,
-                errorMask: out Ingredient_ErrorMask errMask,
+                errorMask: out Key_ErrorMask errMask,
                 cmds: cmds);
             errorMask = errMask;
         }
@@ -807,9 +743,9 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
-            out Ingredient_ErrorMask errorMask)
+            out Key_ErrorMask errorMask)
         {
-            errorMask = (Ingredient_ErrorMask)this.Write_Binary_Internal(
+            errorMask = (Key_ErrorMask)this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
                 doMasks: true);
@@ -817,7 +753,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             string path,
-            out Ingredient_ErrorMask errorMask)
+            out Key_ErrorMask errorMask)
         {
             using (var writer = new MutagenWriter(path))
             {
@@ -829,7 +765,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             Stream stream,
-            out Ingredient_ErrorMask errorMask)
+            out Key_ErrorMask errorMask)
         {
             using (var writer = new MutagenWriter(stream))
             {
@@ -868,7 +804,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             bool doMasks)
         {
-            IngredientCommon.Write_Binary(
+            KeyCommon.Write_Binary(
                 writer: writer,
                 item: this,
                 doMasks: doMasks,
@@ -878,25 +814,25 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static Ingredient Create_Binary_Internal(
+        private static Key Create_Binary_Internal(
             MutagenFrame frame,
-            Func<Ingredient_ErrorMask> errorMask,
+            Func<Key_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            return MajorRecord.TypicalParsing<Ingredient, Ingredient_ErrorMask, Ingredient_FieldIndex>(
-                record: new Ingredient(),
+            return MajorRecord.TypicalParsing<Key, Key_ErrorMask, Key_FieldIndex>(
+                record: new Key(),
                 frame: frame,
                 errorMask: errorMask,
-                recType: Ingredient_Registration.INGR_HEADER,
+                recType: Key_Registration.KEYM_HEADER,
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: Fill_Binary_Structs,
                 fillTyped: Fill_Binary_RecordTypes);
         }
 
         protected static void Fill_Binary_Structs(
-            Ingredient item,
+            Key item,
             MutagenFrame frame,
-            Func<Ingredient_ErrorMask> errorMask)
+            Func<Key_ErrorMask> errorMask)
         {
             NamedMajorRecord.Fill_Binary_Structs(
                 item: item,
@@ -904,10 +840,10 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: errorMask);
         }
 
-        protected static TryGet<Ingredient_FieldIndex?> Fill_Binary_RecordTypes(
-            Ingredient item,
+        protected static TryGet<Key_FieldIndex?> Fill_Binary_RecordTypes(
+            Key item,
             MutagenFrame frame,
-            Func<Ingredient_ErrorMask> errorMask,
+            Func<Key_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -919,94 +855,70 @@ namespace Mutagen.Bethesda.Oblivion
                 case "MODL":
                     item._Model.SetIfSucceeded(LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Parse(
                         frame: frame.Spawn(snapToFinalPosition: false),
-                        fieldIndex: (int)Ingredient_FieldIndex.Model,
+                        fieldIndex: (int)Key_FieldIndex.Model,
                         errorMask: errorMask));
-                    return TryGet<Ingredient_FieldIndex?>.Succeed(Ingredient_FieldIndex.Model);
+                    return TryGet<Key_FieldIndex?>.Succeed(Key_FieldIndex.Model);
                 case "ICON":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item._Icon.SetIfSucceeded(Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
-                        fieldIndex: (int)Ingredient_FieldIndex.Icon,
+                        fieldIndex: (int)Key_FieldIndex.Icon,
                         errorMask: errorMask));
-                    return TryGet<Ingredient_FieldIndex?>.Succeed(Ingredient_FieldIndex.Icon);
+                    return TryGet<Key_FieldIndex?>.Succeed(Key_FieldIndex.Icon);
                 case "SCRI":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     item.Script_Property.SetIfSucceeded(Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
-                        fieldIndex: (int)Ingredient_FieldIndex.Script,
+                        fieldIndex: (int)Key_FieldIndex.Script,
                         errorMask: errorMask));
-                    return TryGet<Ingredient_FieldIndex?>.Succeed(Ingredient_FieldIndex.Script);
+                    return TryGet<Key_FieldIndex?>.Succeed(Key_FieldIndex.Script);
                 case "DATA":
-                    frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Weight.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
-                        fieldIndex: (int)Ingredient_FieldIndex.Weight,
-                        errorMask: errorMask));
-                    return TryGet<Ingredient_FieldIndex?>.Succeed(Ingredient_FieldIndex.Weight);
-                case "ENIT":
                     frame.Position += Constants.SUBRECORD_LENGTH;
                     using (var dataFrame = frame.Spawn(contentLength))
                     {
                         item._Value.SetIfSucceeded(Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Parse(
                             frame: dataFrame,
-                            fieldIndex: (int)Ingredient_FieldIndex.Value,
+                            fieldIndex: (int)Key_FieldIndex.Value,
                             errorMask: errorMask));
-                        item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<IngredientFlag>.Instance.Parse(
-                            frame: dataFrame.Spawn(new ContentLength(4)),
-                            fieldIndex: (int)Ingredient_FieldIndex.Flags,
+                        item._Weight.SetIfSucceeded(Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                            frame: dataFrame,
+                            fieldIndex: (int)Key_FieldIndex.Weight,
                             errorMask: errorMask));
                     }
-                    return TryGet<Ingredient_FieldIndex?>.Succeed(Ingredient_FieldIndex.Flags);
-                case "EFID":
-                    var EffectstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect, MaskItem<Exception, Effect_ErrorMask>>.Instance.ParseRepeatedItem(
-                        frame: frame,
-                        triggeringRecord: Ingredient_Registration.EFID_HEADER,
-                        fieldIndex: (int)Ingredient_FieldIndex.Effects,
-                        objType: ObjectType.Subrecord,
-                        errorMask: errorMask,
-                        transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, Effect_ErrorMask> listSubMask) =>
-                        {
-                            return LoquiBinaryTranslation<Effect, Effect_ErrorMask>.Instance.Parse(
-                                frame: r.Spawn(snapToFinalPosition: false),
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                    item._Effects.SetIfSucceeded(EffectstryGet);
-                    return TryGet<Ingredient_FieldIndex?>.Succeed(Ingredient_FieldIndex.Effects);
+                    return TryGet<Key_FieldIndex?>.Succeed(Key_FieldIndex.Weight);
                 default:
                     return NamedMajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
-                        errorMask: errorMask).Bubble((i) => IngredientCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask).Bubble((i) => KeyCommon.ConvertFieldIndex(i));
             }
         }
 
         #endregion
 
-        public Ingredient Copy(
-            Ingredient_CopyMask copyMask = null,
-            IIngredientGetter def = null)
+        public Key Copy(
+            Key_CopyMask copyMask = null,
+            IKeyGetter def = null)
         {
-            return Ingredient.Copy(
+            return Key.Copy(
                 this,
                 copyMask: copyMask,
                 def: def);
         }
 
-        public static Ingredient Copy(
-            IIngredient item,
-            Ingredient_CopyMask copyMask = null,
-            IIngredientGetter def = null)
+        public static Key Copy(
+            IKey item,
+            Key_CopyMask copyMask = null,
+            IKeyGetter def = null)
         {
-            Ingredient ret;
-            if (item.GetType().Equals(typeof(Ingredient)))
+            Key ret;
+            if (item.GetType().Equals(typeof(Key)))
             {
-                ret = new Ingredient();
+                ret = new Key();
             }
             else
             {
-                ret = (Ingredient)System.Activator.CreateInstance(item.GetType());
+                ret = (Key)System.Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom(
                 item,
@@ -1017,14 +929,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static CopyType CopyGeneric<CopyType>(
             CopyType item,
-            Ingredient_CopyMask copyMask = null,
-            IIngredientGetter def = null)
-            where CopyType : class, IIngredient
+            Key_CopyMask copyMask = null,
+            IKeyGetter def = null)
+            where CopyType : class, IKey
         {
             CopyType ret;
-            if (item.GetType().Equals(typeof(Ingredient)))
+            if (item.GetType().Equals(typeof(Key)))
             {
-                ret = new Ingredient() as CopyType;
+                ret = new Key() as CopyType;
             }
             else
             {
@@ -1040,19 +952,19 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static Ingredient Copy_ToLoqui(
-            IIngredientGetter item,
-            Ingredient_CopyMask copyMask = null,
-            IIngredientGetter def = null)
+        public static Key Copy_ToLoqui(
+            IKeyGetter item,
+            Key_CopyMask copyMask = null,
+            IKeyGetter def = null)
         {
-            Ingredient ret;
-            if (item.GetType().Equals(typeof(Ingredient)))
+            Key ret;
+            if (item.GetType().Equals(typeof(Key)))
             {
-                ret = new Ingredient() as Ingredient;
+                ret = new Key() as Key;
             }
             else
             {
-                ret = (Ingredient)System.Activator.CreateInstance(item.GetType());
+                ret = (Key)System.Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom(
                 item,
@@ -1063,41 +975,33 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
-            Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
+            Key_FieldIndex enu = (Key_FieldIndex)index;
             switch (enu)
             {
-                case Ingredient_FieldIndex.Model:
+                case Key_FieldIndex.Model:
                     this._Model.Set(
                         (Model)obj,
                         cmds);
                     break;
-                case Ingredient_FieldIndex.Icon:
+                case Key_FieldIndex.Icon:
                     this._Icon.Set(
                         (FilePath)obj,
                         cmds);
                     break;
-                case Ingredient_FieldIndex.Script:
+                case Key_FieldIndex.Script:
                     this.Script_Property.Set(
                         (FormIDSetLink<Script>)obj,
                         cmds);
                     break;
-                case Ingredient_FieldIndex.Weight:
-                    this._Weight.Set(
-                        (Single)obj,
-                        cmds);
-                    break;
-                case Ingredient_FieldIndex.Value:
+                case Key_FieldIndex.Value:
                     this._Value.Set(
                         (UInt32)obj,
                         cmds);
                     break;
-                case Ingredient_FieldIndex.Flags:
-                    this._Flags.Set(
-                        (IngredientFlag)obj,
+                case Key_FieldIndex.Weight:
+                    this._Weight.Set(
+                        (Single)obj,
                         cmds);
-                    break;
-                case Ingredient_FieldIndex.Effects:
-                    this._Effects.SetTo((IEnumerable<Effect>)obj, cmds);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -1108,66 +1012,58 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Clear(NotifyingUnsetParameters cmds = null)
         {
             CallClearPartial_Internal(cmds);
-            IngredientCommon.Clear(this, cmds);
+            KeyCommon.Clear(this, cmds);
         }
 
 
-        public new static Ingredient Create(IEnumerable<KeyValuePair<ushort, object>> fields)
+        public new static Key Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
-            var ret = new Ingredient();
+            var ret = new Key();
             foreach (var pair in fields)
             {
-                CopyInInternal_Ingredient(ret, pair);
+                CopyInInternal_Key(ret, pair);
             }
             return ret;
         }
 
-        protected new static void CopyInInternal_Ingredient(Ingredient obj, KeyValuePair<ushort, object> pair)
+        protected new static void CopyInInternal_Key(Key obj, KeyValuePair<ushort, object> pair)
         {
-            if (!EnumExt.TryParse(pair.Key, out Ingredient_FieldIndex enu))
+            if (!EnumExt.TryParse(pair.Key, out Key_FieldIndex enu))
             {
                 CopyInInternal_NamedMajorRecord(obj, pair);
             }
             switch (enu)
             {
-                case Ingredient_FieldIndex.Model:
+                case Key_FieldIndex.Model:
                     obj._Model.Set(
                         (Model)pair.Value,
                         null);
                     break;
-                case Ingredient_FieldIndex.Icon:
+                case Key_FieldIndex.Icon:
                     obj._Icon.Set(
                         (FilePath)pair.Value,
                         null);
                     break;
-                case Ingredient_FieldIndex.Script:
+                case Key_FieldIndex.Script:
                     obj.Script_Property.Set(
                         (FormIDSetLink<Script>)pair.Value,
                         null);
                     break;
-                case Ingredient_FieldIndex.Weight:
-                    obj._Weight.Set(
-                        (Single)pair.Value,
-                        null);
-                    break;
-                case Ingredient_FieldIndex.Value:
+                case Key_FieldIndex.Value:
                     obj._Value.Set(
                         (UInt32)pair.Value,
                         null);
                     break;
-                case Ingredient_FieldIndex.Flags:
-                    obj._Flags.Set(
-                        (IngredientFlag)pair.Value,
+                case Key_FieldIndex.Weight:
+                    obj._Weight.Set(
+                        (Single)pair.Value,
                         null);
-                    break;
-                case Ingredient_FieldIndex.Effects:
-                    obj._Effects.SetTo((IEnumerable<Effect>)pair.Value, null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Ingredient obj)
+        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Key obj)
         {
             ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
         }
@@ -1176,7 +1072,7 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IIngredient : IIngredientGetter, INamedMajorRecord, ILoquiClass<IIngredient, IIngredientGetter>, ILoquiClass<Ingredient, IIngredientGetter>
+    public interface IKey : IKeyGetter, INamedMajorRecord, ILoquiClass<IKey, IKeyGetter>, ILoquiClass<Key, IKeyGetter>
     {
         new Model Model { get; set; }
         new INotifyingSetItem<Model> Model_Property { get; }
@@ -1185,19 +1081,15 @@ namespace Mutagen.Bethesda.Oblivion
         new INotifyingSetItem<FilePath> Icon_Property { get; }
 
         new Script Script { get; set; }
-        new Single Weight { get; set; }
-        new INotifyingSetItem<Single> Weight_Property { get; }
-
         new UInt32 Value { get; set; }
         new INotifyingItem<UInt32> Value_Property { get; }
 
-        new IngredientFlag Flags { get; set; }
-        new INotifyingItem<IngredientFlag> Flags_Property { get; }
+        new Single Weight { get; set; }
+        new INotifyingItem<Single> Weight_Property { get; }
 
-        new INotifyingList<Effect> Effects { get; }
     }
 
-    public interface IIngredientGetter : INamedMajorRecordGetter
+    public interface IKeyGetter : INamedMajorRecordGetter
     {
         #region Model
         Model Model { get; }
@@ -1214,23 +1106,15 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDSetLink<Script> Script_Property { get; }
 
         #endregion
-        #region Weight
-        Single Weight { get; }
-        INotifyingSetItemGetter<Single> Weight_Property { get; }
-
-        #endregion
         #region Value
         UInt32 Value { get; }
         INotifyingItemGetter<UInt32> Value_Property { get; }
 
         #endregion
-        #region Flags
-        IngredientFlag Flags { get; }
-        INotifyingItemGetter<IngredientFlag> Flags_Property { get; }
+        #region Weight
+        Single Weight { get; }
+        INotifyingItemGetter<Single> Weight_Property { get; }
 
-        #endregion
-        #region Effects
-        INotifyingListGetter<Effect> Effects { get; }
         #endregion
 
     }
@@ -1242,7 +1126,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     #region Field Index
-    public enum Ingredient_FieldIndex
+    public enum Key_FieldIndex
     {
         MajorRecordFlags = 0,
         FormID = 1,
@@ -1253,44 +1137,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Model = 6,
         Icon = 7,
         Script = 8,
-        Weight = 9,
-        Value = 10,
-        Flags = 11,
-        Effects = 12,
+        Value = 9,
+        Weight = 10,
     }
     #endregion
 
     #region Registration
-    public class Ingredient_Registration : ILoquiRegistration
+    public class Key_Registration : ILoquiRegistration
     {
-        public static readonly Ingredient_Registration Instance = new Ingredient_Registration();
+        public static readonly Key_Registration Instance = new Key_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 76,
+            msgID: 97,
             version: 0);
 
-        public const string GUID = "b617ece0-1ff6-475d-af9d-265d2f55af37";
+        public const string GUID = "1eca627f-f4df-487b-ad18-a02862d90658";
 
-        public const ushort FieldCount = 7;
+        public const ushort FieldCount = 5;
 
-        public static readonly Type MaskType = typeof(Ingredient_Mask<>);
+        public static readonly Type MaskType = typeof(Key_Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(Ingredient_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Key_ErrorMask);
 
-        public static readonly Type ClassType = typeof(Ingredient);
+        public static readonly Type ClassType = typeof(Key);
 
-        public static readonly Type GetterType = typeof(IIngredientGetter);
+        public static readonly Type GetterType = typeof(IKeyGetter);
 
-        public static readonly Type SetterType = typeof(IIngredient);
+        public static readonly Type SetterType = typeof(IKey);
 
-        public static readonly Type CommonType = typeof(IngredientCommon);
+        public static readonly Type CommonType = typeof(KeyCommon);
 
-        public const string FullName = "Mutagen.Bethesda.Oblivion.Ingredient";
+        public const string FullName = "Mutagen.Bethesda.Oblivion.Key";
 
-        public const string Name = "Ingredient";
+        public const string Name = "Key";
 
         public const string Namespace = "Mutagen.Bethesda.Oblivion";
 
@@ -1303,19 +1185,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             switch (str.Upper)
             {
                 case "MODEL":
-                    return (ushort)Ingredient_FieldIndex.Model;
+                    return (ushort)Key_FieldIndex.Model;
                 case "ICON":
-                    return (ushort)Ingredient_FieldIndex.Icon;
+                    return (ushort)Key_FieldIndex.Icon;
                 case "SCRIPT":
-                    return (ushort)Ingredient_FieldIndex.Script;
-                case "WEIGHT":
-                    return (ushort)Ingredient_FieldIndex.Weight;
+                    return (ushort)Key_FieldIndex.Script;
                 case "VALUE":
-                    return (ushort)Ingredient_FieldIndex.Value;
-                case "FLAGS":
-                    return (ushort)Ingredient_FieldIndex.Flags;
-                case "EFFECTS":
-                    return (ushort)Ingredient_FieldIndex.Effects;
+                    return (ushort)Key_FieldIndex.Value;
+                case "WEIGHT":
+                    return (ushort)Key_FieldIndex.Weight;
                 default:
                     return null;
             }
@@ -1323,17 +1201,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
+            Key_FieldIndex enu = (Key_FieldIndex)index;
             switch (enu)
             {
-                case Ingredient_FieldIndex.Effects:
-                    return true;
-                case Ingredient_FieldIndex.Model:
-                case Ingredient_FieldIndex.Icon:
-                case Ingredient_FieldIndex.Script:
-                case Ingredient_FieldIndex.Weight:
-                case Ingredient_FieldIndex.Value:
-                case Ingredient_FieldIndex.Flags:
+                case Key_FieldIndex.Model:
+                case Key_FieldIndex.Icon:
+                case Key_FieldIndex.Script:
+                case Key_FieldIndex.Value:
+                case Key_FieldIndex.Weight:
                     return false;
                 default:
                     return NamedMajorRecord_Registration.GetNthIsEnumerable(index);
@@ -1342,17 +1217,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
+            Key_FieldIndex enu = (Key_FieldIndex)index;
             switch (enu)
             {
-                case Ingredient_FieldIndex.Model:
-                case Ingredient_FieldIndex.Effects:
+                case Key_FieldIndex.Model:
                     return true;
-                case Ingredient_FieldIndex.Icon:
-                case Ingredient_FieldIndex.Script:
-                case Ingredient_FieldIndex.Weight:
-                case Ingredient_FieldIndex.Value:
-                case Ingredient_FieldIndex.Flags:
+                case Key_FieldIndex.Icon:
+                case Key_FieldIndex.Script:
+                case Key_FieldIndex.Value:
+                case Key_FieldIndex.Weight:
                     return false;
                 default:
                     return NamedMajorRecord_Registration.GetNthIsLoqui(index);
@@ -1361,16 +1234,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
+            Key_FieldIndex enu = (Key_FieldIndex)index;
             switch (enu)
             {
-                case Ingredient_FieldIndex.Model:
-                case Ingredient_FieldIndex.Icon:
-                case Ingredient_FieldIndex.Script:
-                case Ingredient_FieldIndex.Weight:
-                case Ingredient_FieldIndex.Value:
-                case Ingredient_FieldIndex.Flags:
-                case Ingredient_FieldIndex.Effects:
+                case Key_FieldIndex.Model:
+                case Key_FieldIndex.Icon:
+                case Key_FieldIndex.Script:
+                case Key_FieldIndex.Value:
+                case Key_FieldIndex.Weight:
                     return false;
                 default:
                     return NamedMajorRecord_Registration.GetNthIsSingleton(index);
@@ -1379,23 +1250,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static string GetNthName(ushort index)
         {
-            Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
+            Key_FieldIndex enu = (Key_FieldIndex)index;
             switch (enu)
             {
-                case Ingredient_FieldIndex.Model:
+                case Key_FieldIndex.Model:
                     return "Model";
-                case Ingredient_FieldIndex.Icon:
+                case Key_FieldIndex.Icon:
                     return "Icon";
-                case Ingredient_FieldIndex.Script:
+                case Key_FieldIndex.Script:
                     return "Script";
-                case Ingredient_FieldIndex.Weight:
-                    return "Weight";
-                case Ingredient_FieldIndex.Value:
+                case Key_FieldIndex.Value:
                     return "Value";
-                case Ingredient_FieldIndex.Flags:
-                    return "Flags";
-                case Ingredient_FieldIndex.Effects:
-                    return "Effects";
+                case Key_FieldIndex.Weight:
+                    return "Weight";
                 default:
                     return NamedMajorRecord_Registration.GetNthName(index);
             }
@@ -1403,16 +1270,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
+            Key_FieldIndex enu = (Key_FieldIndex)index;
             switch (enu)
             {
-                case Ingredient_FieldIndex.Model:
-                case Ingredient_FieldIndex.Icon:
-                case Ingredient_FieldIndex.Script:
-                case Ingredient_FieldIndex.Weight:
-                case Ingredient_FieldIndex.Value:
-                case Ingredient_FieldIndex.Flags:
-                case Ingredient_FieldIndex.Effects:
+                case Key_FieldIndex.Model:
+                case Key_FieldIndex.Icon:
+                case Key_FieldIndex.Script:
+                case Key_FieldIndex.Value:
+                case Key_FieldIndex.Weight:
                     return false;
                 default:
                     return NamedMajorRecord_Registration.IsNthDerivative(index);
@@ -1421,16 +1286,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool IsProtected(ushort index)
         {
-            Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
+            Key_FieldIndex enu = (Key_FieldIndex)index;
             switch (enu)
             {
-                case Ingredient_FieldIndex.Model:
-                case Ingredient_FieldIndex.Icon:
-                case Ingredient_FieldIndex.Script:
-                case Ingredient_FieldIndex.Weight:
-                case Ingredient_FieldIndex.Value:
-                case Ingredient_FieldIndex.Flags:
-                case Ingredient_FieldIndex.Effects:
+                case Key_FieldIndex.Model:
+                case Key_FieldIndex.Icon:
+                case Key_FieldIndex.Script:
+                case Key_FieldIndex.Value:
+                case Key_FieldIndex.Weight:
                     return false;
                 default:
                     return NamedMajorRecord_Registration.IsProtected(index);
@@ -1439,38 +1302,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static Type GetNthType(ushort index)
         {
-            Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
+            Key_FieldIndex enu = (Key_FieldIndex)index;
             switch (enu)
             {
-                case Ingredient_FieldIndex.Model:
+                case Key_FieldIndex.Model:
                     return typeof(Model);
-                case Ingredient_FieldIndex.Icon:
+                case Key_FieldIndex.Icon:
                     return typeof(FilePath);
-                case Ingredient_FieldIndex.Script:
+                case Key_FieldIndex.Script:
                     return typeof(FormIDSetLink<Script>);
-                case Ingredient_FieldIndex.Weight:
-                    return typeof(Single);
-                case Ingredient_FieldIndex.Value:
+                case Key_FieldIndex.Value:
                     return typeof(UInt32);
-                case Ingredient_FieldIndex.Flags:
-                    return typeof(IngredientFlag);
-                case Ingredient_FieldIndex.Effects:
-                    return typeof(NotifyingList<Effect>);
+                case Key_FieldIndex.Weight:
+                    return typeof(Single);
                 default:
                     return NamedMajorRecord_Registration.GetNthType(index);
             }
         }
 
-        public static readonly RecordType INGR_HEADER = new RecordType("INGR");
+        public static readonly RecordType KEYM_HEADER = new RecordType("KEYM");
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
         public static readonly RecordType ICON_HEADER = new RecordType("ICON");
         public static readonly RecordType SCRI_HEADER = new RecordType("SCRI");
         public static readonly RecordType DATA_HEADER = new RecordType("DATA");
-        public static readonly RecordType ENIT_HEADER = new RecordType("ENIT");
-        public static readonly RecordType EFID_HEADER = new RecordType("EFID");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = INGR_HEADER;
+        public static readonly RecordType TRIGGERING_RECORD_TYPE = KEYM_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 5;
+        public const int NumTypedFields = 3;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -1501,17 +1358,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Extensions
-    public static partial class IngredientCommon
+    public static partial class KeyCommon
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IIngredient item,
-            IIngredientGetter rhs,
-            Ingredient_CopyMask copyMask = null,
-            IIngredientGetter def = null,
+            this IKey item,
+            IKeyGetter rhs,
+            Key_CopyMask copyMask = null,
+            IKeyGetter def = null,
             NotifyingFireParameters cmds = null)
         {
-            IngredientCommon.CopyFieldsFrom(
+            KeyCommon.CopyFieldsFrom(
                 item: item,
                 rhs: rhs,
                 def: def,
@@ -1522,14 +1379,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void CopyFieldsFrom(
-            this IIngredient item,
-            IIngredientGetter rhs,
-            out Ingredient_ErrorMask errorMask,
-            Ingredient_CopyMask copyMask = null,
-            IIngredientGetter def = null,
+            this IKey item,
+            IKeyGetter rhs,
+            out Key_ErrorMask errorMask,
+            Key_CopyMask copyMask = null,
+            IKeyGetter def = null,
             NotifyingFireParameters cmds = null)
         {
-            IngredientCommon.CopyFieldsFrom(
+            KeyCommon.CopyFieldsFrom(
                 item: item,
                 rhs: rhs,
                 def: def,
@@ -1540,20 +1397,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void CopyFieldsFrom(
-            this IIngredient item,
-            IIngredientGetter rhs,
-            IIngredientGetter def,
+            this IKey item,
+            IKeyGetter rhs,
+            IKeyGetter def,
             bool doMasks,
-            out Ingredient_ErrorMask errorMask,
-            Ingredient_CopyMask copyMask,
+            out Key_ErrorMask errorMask,
+            Key_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            Ingredient_ErrorMask retErrorMask = null;
-            Func<Ingredient_ErrorMask> maskGetter = () =>
+            Key_ErrorMask retErrorMask = null;
+            Func<Key_ErrorMask> maskGetter = () =>
             {
                 if (retErrorMask == null)
                 {
-                    retErrorMask = new Ingredient_ErrorMask();
+                    retErrorMask = new Key_ErrorMask();
                 }
                 return retErrorMask;
             };
@@ -1569,12 +1426,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void CopyFieldsFrom(
-            this IIngredient item,
-            IIngredientGetter rhs,
-            IIngredientGetter def,
+            this IKey item,
+            IKeyGetter rhs,
+            IKeyGetter def,
             bool doMasks,
-            Func<Ingredient_ErrorMask> errorMask,
-            Ingredient_CopyMask copyMask,
+            Func<Key_ErrorMask> errorMask,
+            Key_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
             NamedMajorRecordCommon.CopyFieldsFrom(
@@ -1633,7 +1490,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 catch (Exception ex)
                 when (doMasks)
                 {
-                    errorMask().SetNthException((int)Ingredient_FieldIndex.Model, ex);
+                    errorMask().SetNthException((int)Key_FieldIndex.Model, ex);
                 }
             }
             if (copyMask?.Icon ?? true)
@@ -1648,7 +1505,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 catch (Exception ex)
                 when (doMasks)
                 {
-                    errorMask().SetNthException((int)Ingredient_FieldIndex.Icon, ex);
+                    errorMask().SetNthException((int)Key_FieldIndex.Icon, ex);
                 }
             }
             if (copyMask?.Script ?? true)
@@ -1663,22 +1520,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 catch (Exception ex)
                 when (doMasks)
                 {
-                    errorMask().SetNthException((int)Ingredient_FieldIndex.Script, ex);
-                }
-            }
-            if (copyMask?.Weight ?? true)
-            {
-                try
-                {
-                    item.Weight_Property.SetToWithDefault(
-                        rhs: rhs.Weight_Property,
-                        def: def?.Weight_Property,
-                        cmds: cmds);
-                }
-                catch (Exception ex)
-                when (doMasks)
-                {
-                    errorMask().SetNthException((int)Ingredient_FieldIndex.Weight, ex);
+                    errorMask().SetNthException((int)Key_FieldIndex.Script, ex);
                 }
             }
             if (copyMask?.Value ?? true)
@@ -1692,53 +1534,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 catch (Exception ex)
                 when (doMasks)
                 {
-                    errorMask().SetNthException((int)Ingredient_FieldIndex.Value, ex);
+                    errorMask().SetNthException((int)Key_FieldIndex.Value, ex);
                 }
             }
-            if (copyMask?.Flags ?? true)
+            if (copyMask?.Weight ?? true)
             {
                 try
                 {
-                    item.Flags_Property.Set(
-                        value: rhs.Flags,
+                    item.Weight_Property.Set(
+                        value: rhs.Weight,
                         cmds: cmds);
                 }
                 catch (Exception ex)
                 when (doMasks)
                 {
-                    errorMask().SetNthException((int)Ingredient_FieldIndex.Flags, ex);
-                }
-            }
-            if (copyMask?.Effects.Overall != CopyOption.Skip)
-            {
-                try
-                {
-                    item.Effects.SetToWithDefault(
-                        rhs: rhs.Effects,
-                        def: def?.Effects,
-                        cmds: cmds,
-                        converter: (r, d) =>
-                        {
-                            switch (copyMask?.Effects.Overall ?? CopyOption.Reference)
-                            {
-                                case CopyOption.Reference:
-                                    return r;
-                                case CopyOption.MakeCopy:
-                                    if (r == null) return default(Effect);
-                                    return Effect.Copy(
-                                        r,
-                                        copyMask?.Effects?.Specific,
-                                        def: d);
-                                default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Effects.Overall}. Cannot execute copy.");
-                            }
-                        }
-                        );
-                }
-                catch (Exception ex)
-                when (doMasks)
-                {
-                    errorMask().SetNthException((int)Ingredient_FieldIndex.Effects, ex);
+                    errorMask().SetNthException((int)Key_FieldIndex.Weight, ex);
                 }
             }
         }
@@ -1748,30 +1558,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void SetNthObjectHasBeenSet(
             ushort index,
             bool on,
-            IIngredient obj,
+            IKey obj,
             NotifyingFireParameters cmds = null)
         {
-            Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
+            Key_FieldIndex enu = (Key_FieldIndex)index;
             switch (enu)
             {
-                case Ingredient_FieldIndex.Value:
-                case Ingredient_FieldIndex.Flags:
+                case Key_FieldIndex.Value:
+                case Key_FieldIndex.Weight:
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
-                case Ingredient_FieldIndex.Model:
+                case Key_FieldIndex.Model:
                     obj.Model_Property.HasBeenSet = on;
                     break;
-                case Ingredient_FieldIndex.Icon:
+                case Key_FieldIndex.Icon:
                     obj.Icon_Property.HasBeenSet = on;
                     break;
-                case Ingredient_FieldIndex.Script:
+                case Key_FieldIndex.Script:
                     obj.Script_Property.HasBeenSet = on;
-                    break;
-                case Ingredient_FieldIndex.Weight:
-                    obj.Weight_Property.HasBeenSet = on;
-                    break;
-                case Ingredient_FieldIndex.Effects:
-                    obj.Effects.HasBeenSet = on;
                     break;
                 default:
                     NamedMajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
@@ -1781,32 +1585,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static void UnsetNthObject(
             ushort index,
-            IIngredient obj,
+            IKey obj,
             NotifyingUnsetParameters cmds = null)
         {
-            Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
+            Key_FieldIndex enu = (Key_FieldIndex)index;
             switch (enu)
             {
-                case Ingredient_FieldIndex.Model:
+                case Key_FieldIndex.Model:
                     obj.Model_Property.Unset(cmds);
                     break;
-                case Ingredient_FieldIndex.Icon:
+                case Key_FieldIndex.Icon:
                     obj.Icon_Property.Unset(cmds);
                     break;
-                case Ingredient_FieldIndex.Script:
+                case Key_FieldIndex.Script:
                     obj.Script_Property.Unset(cmds);
                     break;
-                case Ingredient_FieldIndex.Weight:
-                    obj.Weight_Property.Unset(cmds);
-                    break;
-                case Ingredient_FieldIndex.Value:
+                case Key_FieldIndex.Value:
                     obj.Value = default(UInt32);
                     break;
-                case Ingredient_FieldIndex.Flags:
-                    obj.Flags = default(IngredientFlag);
-                    break;
-                case Ingredient_FieldIndex.Effects:
-                    obj.Effects.Unset(cmds);
+                case Key_FieldIndex.Weight:
+                    obj.Weight = default(Single);
                     break;
                 default:
                     NamedMajorRecordCommon.UnsetNthObject(index, obj);
@@ -1816,24 +1614,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthObjectHasBeenSet(
             ushort index,
-            IIngredient obj)
+            IKey obj)
         {
-            Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
+            Key_FieldIndex enu = (Key_FieldIndex)index;
             switch (enu)
             {
-                case Ingredient_FieldIndex.Value:
-                case Ingredient_FieldIndex.Flags:
+                case Key_FieldIndex.Value:
+                case Key_FieldIndex.Weight:
                     return true;
-                case Ingredient_FieldIndex.Model:
+                case Key_FieldIndex.Model:
                     return obj.Model_Property.HasBeenSet;
-                case Ingredient_FieldIndex.Icon:
+                case Key_FieldIndex.Icon:
                     return obj.Icon_Property.HasBeenSet;
-                case Ingredient_FieldIndex.Script:
+                case Key_FieldIndex.Script:
                     return obj.Script_Property.HasBeenSet;
-                case Ingredient_FieldIndex.Weight:
-                    return obj.Weight_Property.HasBeenSet;
-                case Ingredient_FieldIndex.Effects:
-                    return obj.Effects.HasBeenSet;
                 default:
                     return NamedMajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -1841,96 +1635,64 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static object GetNthObject(
             ushort index,
-            IIngredientGetter obj)
+            IKeyGetter obj)
         {
-            Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
+            Key_FieldIndex enu = (Key_FieldIndex)index;
             switch (enu)
             {
-                case Ingredient_FieldIndex.Model:
+                case Key_FieldIndex.Model:
                     return obj.Model;
-                case Ingredient_FieldIndex.Icon:
+                case Key_FieldIndex.Icon:
                     return obj.Icon;
-                case Ingredient_FieldIndex.Script:
+                case Key_FieldIndex.Script:
                     return obj.Script;
-                case Ingredient_FieldIndex.Weight:
-                    return obj.Weight;
-                case Ingredient_FieldIndex.Value:
+                case Key_FieldIndex.Value:
                     return obj.Value;
-                case Ingredient_FieldIndex.Flags:
-                    return obj.Flags;
-                case Ingredient_FieldIndex.Effects:
-                    return obj.Effects;
+                case Key_FieldIndex.Weight:
+                    return obj.Weight;
                 default:
                     return NamedMajorRecordCommon.GetNthObject(index, obj);
             }
         }
 
         public static void Clear(
-            IIngredient item,
+            IKey item,
             NotifyingUnsetParameters cmds = null)
         {
             item.Model_Property.Unset(cmds.ToUnsetParams());
             item.Icon_Property.Unset(cmds.ToUnsetParams());
             item.Script_Property.Unset(cmds.ToUnsetParams());
-            item.Weight_Property.Unset(cmds.ToUnsetParams());
             item.Value = default(UInt32);
-            item.Flags = default(IngredientFlag);
-            item.Effects.Unset(cmds.ToUnsetParams());
+            item.Weight = default(Single);
         }
 
-        public static Ingredient_Mask<bool> GetEqualsMask(
-            this IIngredientGetter item,
-            IIngredientGetter rhs)
+        public static Key_Mask<bool> GetEqualsMask(
+            this IKeyGetter item,
+            IKeyGetter rhs)
         {
-            var ret = new Ingredient_Mask<bool>();
+            var ret = new Key_Mask<bool>();
             FillEqualsMask(item, rhs, ret);
             return ret;
         }
 
         public static void FillEqualsMask(
-            IIngredientGetter item,
-            IIngredientGetter rhs,
-            Ingredient_Mask<bool> ret)
+            IKeyGetter item,
+            IKeyGetter rhs,
+            Key_Mask<bool> ret)
         {
             if (rhs == null) return;
             ret.Model = item.Model_Property.LoquiEqualsHelper(rhs.Model_Property, (loqLhs, loqRhs) => ModelCommon.GetEqualsMask(loqLhs, loqRhs));
             ret.Icon = item.Icon_Property.Equals(rhs.Icon_Property, (l, r) => object.Equals(l, r));
             ret.Script = item.Script_Property.Equals(rhs.Script_Property, (l, r) => l == r);
-            ret.Weight = item.Weight_Property.Equals(rhs.Weight_Property, (l, r) => l == r);
             ret.Value = item.Value == rhs.Value;
-            ret.Flags = item.Flags == rhs.Flags;
-            if (item.Effects.HasBeenSet == rhs.Effects.HasBeenSet)
-            {
-                if (item.Effects.HasBeenSet)
-                {
-                    ret.Effects = new MaskItem<bool, IEnumerable<MaskItem<bool, Effect_Mask<bool>>>>();
-                    ret.Effects.Specific = item.Effects.SelectAgainst<Effect, MaskItem<bool, Effect_Mask<bool>>>(rhs.Effects, ((l, r) =>
-                    {
-                        MaskItem<bool, Effect_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => EffectCommon.GetEqualsMask(loqLhs, loqRhs));
-                        return itemRet;
-                    }
-                    ), out ret.Effects.Overall);
-                    ret.Effects.Overall = ret.Effects.Overall && ret.Effects.Specific.All((b) => b.Overall);
-                }
-                else
-                {
-                    ret.Effects = new MaskItem<bool, IEnumerable<MaskItem<bool, Effect_Mask<bool>>>>();
-                    ret.Effects.Overall = true;
-                }
-            }
-            else
-            {
-                ret.Effects = new MaskItem<bool, IEnumerable<MaskItem<bool, Effect_Mask<bool>>>>();
-                ret.Effects.Overall = false;
-            }
+            ret.Weight = item.Weight == rhs.Weight;
             NamedMajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
-            this IIngredientGetter item,
+            this IKeyGetter item,
             string name = null,
-            Ingredient_Mask<bool> printMask = null)
+            Key_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             item.ToString(fg, name, printMask);
@@ -1938,18 +1700,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void ToString(
-            this IIngredientGetter item,
+            this IKeyGetter item,
             FileGeneration fg,
             string name = null,
-            Ingredient_Mask<bool> printMask = null)
+            Key_Mask<bool> printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(Ingredient)} =>");
+                fg.AppendLine($"{nameof(Key)} =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(Ingredient)}) =>");
+                fg.AppendLine($"{name} ({nameof(Key)}) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
@@ -1966,113 +1728,87 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"Script => {item.Script}");
                 }
-                if (printMask?.Weight ?? true)
-                {
-                    fg.AppendLine($"Weight => {item.Weight}");
-                }
                 if (printMask?.Value ?? true)
                 {
                     fg.AppendLine($"Value => {item.Value}");
                 }
-                if (printMask?.Flags ?? true)
+                if (printMask?.Weight ?? true)
                 {
-                    fg.AppendLine($"Flags => {item.Flags}");
-                }
-                if (printMask?.Effects?.Overall ?? true)
-                {
-                    fg.AppendLine("Effects =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        foreach (var subItem in item.Effects)
-                        {
-                            fg.AppendLine("[");
-                            using (new DepthWrapper(fg))
-                            {
-                                subItem?.ToString(fg, "Item");
-                            }
-                            fg.AppendLine("]");
-                        }
-                    }
-                    fg.AppendLine("]");
+                    fg.AppendLine($"Weight => {item.Weight}");
                 }
             }
             fg.AppendLine("]");
         }
 
         public static bool HasBeenSet(
-            this IIngredientGetter item,
-            Ingredient_Mask<bool?> checkMask)
+            this IKeyGetter item,
+            Key_Mask<bool?> checkMask)
         {
             if (checkMask.Model.Overall.HasValue && checkMask.Model.Overall.Value != item.Model_Property.HasBeenSet) return false;
             if (checkMask.Model.Specific != null && (item.Model_Property.Item == null || !item.Model_Property.Item.HasBeenSet(checkMask.Model.Specific))) return false;
             if (checkMask.Icon.HasValue && checkMask.Icon.Value != item.Icon_Property.HasBeenSet) return false;
             if (checkMask.Script.HasValue && checkMask.Script.Value != item.Script_Property.HasBeenSet) return false;
-            if (checkMask.Weight.HasValue && checkMask.Weight.Value != item.Weight_Property.HasBeenSet) return false;
-            if (checkMask.Effects.Overall.HasValue && checkMask.Effects.Overall.Value != item.Effects.HasBeenSet) return false;
             return true;
         }
 
-        public static Ingredient_Mask<bool> GetHasBeenSetMask(IIngredientGetter item)
+        public static Key_Mask<bool> GetHasBeenSetMask(IKeyGetter item)
         {
-            var ret = new Ingredient_Mask<bool>();
+            var ret = new Key_Mask<bool>();
             ret.Model = new MaskItem<bool, Model_Mask<bool>>(item.Model_Property.HasBeenSet, ModelCommon.GetHasBeenSetMask(item.Model_Property.Item));
             ret.Icon = item.Icon_Property.HasBeenSet;
             ret.Script = item.Script_Property.HasBeenSet;
-            ret.Weight = item.Weight_Property.HasBeenSet;
             ret.Value = true;
-            ret.Flags = true;
-            ret.Effects = new MaskItem<bool, IEnumerable<MaskItem<bool, Effect_Mask<bool>>>>(item.Effects.HasBeenSet, item.Effects.Select((i) => new MaskItem<bool, Effect_Mask<bool>>(true, i.GetHasBeenSetMask())));
+            ret.Weight = true;
             return ret;
         }
 
-        public static Ingredient_FieldIndex? ConvertFieldIndex(NamedMajorRecord_FieldIndex? index)
+        public static Key_FieldIndex? ConvertFieldIndex(NamedMajorRecord_FieldIndex? index)
         {
             if (!index.HasValue) return null;
             return ConvertFieldIndex(index: index.Value);
         }
 
-        public static Ingredient_FieldIndex ConvertFieldIndex(NamedMajorRecord_FieldIndex index)
+        public static Key_FieldIndex ConvertFieldIndex(NamedMajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case NamedMajorRecord_FieldIndex.MajorRecordFlags:
-                    return (Ingredient_FieldIndex)((int)index);
+                    return (Key_FieldIndex)((int)index);
                 case NamedMajorRecord_FieldIndex.FormID:
-                    return (Ingredient_FieldIndex)((int)index);
+                    return (Key_FieldIndex)((int)index);
                 case NamedMajorRecord_FieldIndex.Version:
-                    return (Ingredient_FieldIndex)((int)index);
+                    return (Key_FieldIndex)((int)index);
                 case NamedMajorRecord_FieldIndex.EditorID:
-                    return (Ingredient_FieldIndex)((int)index);
+                    return (Key_FieldIndex)((int)index);
                 case NamedMajorRecord_FieldIndex.RecordType:
-                    return (Ingredient_FieldIndex)((int)index);
+                    return (Key_FieldIndex)((int)index);
                 case NamedMajorRecord_FieldIndex.Name:
-                    return (Ingredient_FieldIndex)((int)index);
+                    return (Key_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
         }
 
-        public static Ingredient_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
+        public static Key_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
         {
             if (!index.HasValue) return null;
             return ConvertFieldIndex(index: index.Value);
         }
 
-        public static Ingredient_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static Key_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlags:
-                    return (Ingredient_FieldIndex)((int)index);
+                    return (Key_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormID:
-                    return (Ingredient_FieldIndex)((int)index);
+                    return (Key_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
-                    return (Ingredient_FieldIndex)((int)index);
+                    return (Key_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (Ingredient_FieldIndex)((int)index);
+                    return (Key_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.RecordType:
-                    return (Ingredient_FieldIndex)((int)index);
+                    return (Key_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -2082,33 +1818,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region XML Write
         public static void Write_XML(
             XmlWriter writer,
-            IIngredientGetter item,
+            IKeyGetter item,
             bool doMasks,
-            out Ingredient_ErrorMask errorMask,
+            out Key_ErrorMask errorMask,
             string name = null)
         {
-            Ingredient_ErrorMask errMaskRet = null;
+            Key_ErrorMask errMaskRet = null;
             Write_XML_Internal(
                 writer: writer,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Ingredient_ErrorMask()) : default(Func<Ingredient_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Key_ErrorMask()) : default(Func<Key_ErrorMask>));
             errorMask = errMaskRet;
         }
 
         private static void Write_XML_Internal(
             XmlWriter writer,
-            IIngredientGetter item,
-            Func<Ingredient_ErrorMask> errorMask,
+            IKeyGetter item,
+            Func<Key_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.Ingredient"))
+                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.Key"))
                 {
                     if (name != null)
                     {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.Ingredient");
+                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.Key");
                     }
                     if (item.Model_Property.HasBeenSet)
                     {
@@ -2116,7 +1852,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             writer: writer,
                             item: item.Model_Property,
                             name: nameof(item.Model),
-                            fieldIndex: (int)Ingredient_FieldIndex.Model,
+                            fieldIndex: (int)Key_FieldIndex.Model,
                             errorMask: errorMask);
                     }
                     if (item.Icon_Property.HasBeenSet)
@@ -2125,7 +1861,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             writer: writer,
                             name: nameof(item.Icon),
                             item: item.Icon_Property,
-                            fieldIndex: (int)Ingredient_FieldIndex.Icon,
+                            fieldIndex: (int)Key_FieldIndex.Icon,
                             errorMask: errorMask);
                     }
                     if (item.Script_Property.HasBeenSet)
@@ -2134,49 +1870,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             writer: writer,
                             name: nameof(item.Script),
                             item: item.Script?.FormID,
-                            fieldIndex: (int)Ingredient_FieldIndex.Script,
-                            errorMask: errorMask);
-                    }
-                    if (item.Weight_Property.HasBeenSet)
-                    {
-                        FloatXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Weight),
-                            item: item.Weight_Property,
-                            fieldIndex: (int)Ingredient_FieldIndex.Weight,
+                            fieldIndex: (int)Key_FieldIndex.Script,
                             errorMask: errorMask);
                     }
                     UInt32XmlTranslation.Instance.Write(
                         writer: writer,
                         name: nameof(item.Value),
                         item: item.Value_Property,
-                        fieldIndex: (int)Ingredient_FieldIndex.Value,
+                        fieldIndex: (int)Key_FieldIndex.Value,
                         errorMask: errorMask);
-                    EnumXmlTranslation<IngredientFlag>.Instance.Write(
+                    FloatXmlTranslation.Instance.Write(
                         writer: writer,
-                        name: nameof(item.Flags),
-                        item: item.Flags_Property,
-                        fieldIndex: (int)Ingredient_FieldIndex.Flags,
+                        name: nameof(item.Weight),
+                        item: item.Weight_Property,
+                        fieldIndex: (int)Key_FieldIndex.Weight,
                         errorMask: errorMask);
-                    if (item.Effects.HasBeenSet)
-                    {
-                        ListXmlTranslation<Effect, MaskItem<Exception, Effect_ErrorMask>>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Effects),
-                            item: item.Effects,
-                            fieldIndex: (int)Ingredient_FieldIndex.Effects,
-                            errorMask: errorMask,
-                            transl: (Effect subItem, bool listDoMasks, out MaskItem<Exception, Effect_ErrorMask> listSubMask) =>
-                            {
-                                LoquiXmlTranslation<Effect, Effect_ErrorMask>.Instance.Write(
-                                    writer: writer,
-                                    item: subItem,
-                                    name: "Item",
-                                    doMasks: errorMask != null,
-                                    errorMask: out listSubMask);
-                            }
-                            );
-                    }
                 }
             }
             catch (Exception ex)
@@ -2193,31 +1901,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Binary Write
         public static void Write_Binary(
             MutagenWriter writer,
-            Ingredient item,
+            Key item,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
-            out Ingredient_ErrorMask errorMask)
+            out Key_ErrorMask errorMask)
         {
-            Ingredient_ErrorMask errMaskRet = null;
+            Key_ErrorMask errMaskRet = null;
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Ingredient_ErrorMask()) : default(Func<Ingredient_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Key_ErrorMask()) : default(Func<Key_ErrorMask>));
             errorMask = errMaskRet;
         }
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
-            Ingredient item,
+            Key item,
             RecordTypeConverter recordTypeConverter,
-            Func<Ingredient_ErrorMask> errorMask)
+            Func<Key_ErrorMask> errorMask)
         {
             try
             {
                 using (HeaderExport.ExportHeader(
                     writer: writer,
-                    record: Ingredient_Registration.INGR_HEADER,
+                    record: Key_Registration.KEYM_HEADER,
                     type: ObjectType.Record))
                 {
                     MajorRecordCommon.Write_Binary_Embedded(
@@ -2240,10 +1948,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void Write_Binary_RecordTypes(
-            Ingredient item,
+            Key item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            Func<Ingredient_ErrorMask> errorMask)
+            Func<Key_ErrorMask> errorMask)
         {
             NamedMajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
@@ -2253,57 +1961,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             LoquiBinaryTranslation<Model, Model_ErrorMask>.Instance.Write(
                 writer: writer,
                 item: item.Model_Property,
-                fieldIndex: (int)Ingredient_FieldIndex.Model,
+                fieldIndex: (int)Key_FieldIndex.Model,
                 errorMask: errorMask);
             Mutagen.Bethesda.Binary.FilePathBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Icon_Property,
-                fieldIndex: (int)Ingredient_FieldIndex.Icon,
+                fieldIndex: (int)Key_FieldIndex.Icon,
                 errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Ingredient_Registration.ICON_HEADER),
+                header: recordTypeConverter.ConvertToCustom(Key_Registration.ICON_HEADER),
                 nullable: false);
             Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Script_Property,
-                fieldIndex: (int)Ingredient_FieldIndex.Script,
+                fieldIndex: (int)Key_FieldIndex.Script,
                 errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Ingredient_Registration.SCRI_HEADER),
+                header: recordTypeConverter.ConvertToCustom(Key_Registration.SCRI_HEADER),
                 nullable: false);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Weight_Property,
-                fieldIndex: (int)Ingredient_FieldIndex.Weight,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(Ingredient_Registration.DATA_HEADER),
-                nullable: false);
-            using (HeaderExport.ExportSubRecordHeader(writer, Ingredient_Registration.ENIT_HEADER))
+            using (HeaderExport.ExportSubRecordHeader(writer, Key_Registration.DATA_HEADER))
             {
                 Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Value_Property,
-                    fieldIndex: (int)Ingredient_FieldIndex.Value,
+                    fieldIndex: (int)Key_FieldIndex.Value,
                     errorMask: errorMask);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<IngredientFlag>.Instance.Write(
-                    writer,
-                    item.Flags_Property,
-                    length: new ContentLength(4),
-                    fieldIndex: (int)Ingredient_FieldIndex.Flags,
+                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    writer: writer,
+                    item: item.Weight_Property,
+                    fieldIndex: (int)Key_FieldIndex.Weight,
                     errorMask: errorMask);
             }
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect, MaskItem<Exception, Effect_ErrorMask>>.Instance.Write(
-                writer: writer,
-                item: item.Effects,
-                fieldIndex: (int)Ingredient_FieldIndex.Effects,
-                errorMask: errorMask,
-                transl: (Effect subItem, bool listDoMasks, out MaskItem<Exception, Effect_ErrorMask> listSubMask) =>
-                {
-                    LoquiBinaryTranslation<Effect, Effect_ErrorMask>.Instance.Write(
-                        writer: writer,
-                        item: subItem,
-                        doMasks: listDoMasks,
-                        errorMask: out listSubMask);
-                }
-                );
         }
 
         #endregion
@@ -2314,22 +2000,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Modules
 
     #region Mask
-    public class Ingredient_Mask<T> : NamedMajorRecord_Mask<T>, IMask<T>, IEquatable<Ingredient_Mask<T>>
+    public class Key_Mask<T> : NamedMajorRecord_Mask<T>, IMask<T>, IEquatable<Key_Mask<T>>
     {
         #region Ctors
-        public Ingredient_Mask()
+        public Key_Mask()
         {
         }
 
-        public Ingredient_Mask(T initialValue)
+        public Key_Mask(T initialValue)
         {
             this.Model = new MaskItem<T, Model_Mask<T>>(initialValue, new Model_Mask<T>(initialValue));
             this.Icon = initialValue;
             this.Script = initialValue;
-            this.Weight = initialValue;
             this.Value = initialValue;
-            this.Flags = initialValue;
-            this.Effects = new MaskItem<T, IEnumerable<MaskItem<T, Effect_Mask<T>>>>(initialValue, null);
+            this.Weight = initialValue;
         }
         #endregion
 
@@ -2337,30 +2021,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<T, Model_Mask<T>> Model { get; set; }
         public T Icon;
         public T Script;
-        public T Weight;
         public T Value;
-        public T Flags;
-        public MaskItem<T, IEnumerable<MaskItem<T, Effect_Mask<T>>>> Effects;
+        public T Weight;
         #endregion
 
         #region Equals
         public override bool Equals(object obj)
         {
-            if (!(obj is Ingredient_Mask<T> rhs)) return false;
+            if (!(obj is Key_Mask<T> rhs)) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(Ingredient_Mask<T> rhs)
+        public bool Equals(Key_Mask<T> rhs)
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
             if (!object.Equals(this.Model, rhs.Model)) return false;
             if (!object.Equals(this.Icon, rhs.Icon)) return false;
             if (!object.Equals(this.Script, rhs.Script)) return false;
-            if (!object.Equals(this.Weight, rhs.Weight)) return false;
             if (!object.Equals(this.Value, rhs.Value)) return false;
-            if (!object.Equals(this.Flags, rhs.Flags)) return false;
-            if (!object.Equals(this.Effects, rhs.Effects)) return false;
+            if (!object.Equals(this.Weight, rhs.Weight)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -2369,10 +2049,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.Model?.GetHashCode());
             ret = ret.CombineHashCode(this.Icon?.GetHashCode());
             ret = ret.CombineHashCode(this.Script?.GetHashCode());
-            ret = ret.CombineHashCode(this.Weight?.GetHashCode());
             ret = ret.CombineHashCode(this.Value?.GetHashCode());
-            ret = ret.CombineHashCode(this.Flags?.GetHashCode());
-            ret = ret.CombineHashCode(this.Effects?.GetHashCode());
+            ret = ret.CombineHashCode(this.Weight?.GetHashCode());
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -2390,34 +2068,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if (!eval(this.Icon)) return false;
             if (!eval(this.Script)) return false;
-            if (!eval(this.Weight)) return false;
             if (!eval(this.Value)) return false;
-            if (!eval(this.Flags)) return false;
-            if (this.Effects != null)
-            {
-                if (!eval(this.Effects.Overall)) return false;
-                if (this.Effects.Specific != null)
-                {
-                    foreach (var item in this.Effects.Specific)
-                    {
-                        if (!eval(item.Overall)) return false;
-                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
-                    }
-                }
-            }
+            if (!eval(this.Weight)) return false;
             return true;
         }
         #endregion
 
         #region Translate
-        public new Ingredient_Mask<R> Translate<R>(Func<T, R> eval)
+        public new Key_Mask<R> Translate<R>(Func<T, R> eval)
         {
-            var ret = new Ingredient_Mask<R>();
+            var ret = new Key_Mask<R>();
             this.Translate_InternalFill(ret, eval);
             return ret;
         }
 
-        protected void Translate_InternalFill<R>(Ingredient_Mask<R> obj, Func<T, R> eval)
+        protected void Translate_InternalFill<R>(Key_Mask<R> obj, Func<T, R> eval)
         {
             base.Translate_InternalFill(obj, eval);
             if (this.Model != null)
@@ -2431,33 +2096,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             obj.Icon = eval(this.Icon);
             obj.Script = eval(this.Script);
-            obj.Weight = eval(this.Weight);
             obj.Value = eval(this.Value);
-            obj.Flags = eval(this.Flags);
-            if (Effects != null)
-            {
-                obj.Effects = new MaskItem<R, IEnumerable<MaskItem<R, Effect_Mask<R>>>>();
-                obj.Effects.Overall = eval(this.Effects.Overall);
-                if (Effects.Specific != null)
-                {
-                    List<MaskItem<R, Effect_Mask<R>>> l = new List<MaskItem<R, Effect_Mask<R>>>();
-                    obj.Effects.Specific = l;
-                    foreach (var item in Effects.Specific)
-                    {
-                        MaskItem<R, Effect_Mask<R>> mask = default(MaskItem<R, Effect_Mask<R>>);
-                        if (item != null)
-                        {
-                            mask = new MaskItem<R, Effect_Mask<R>>();
-                            mask.Overall = eval(item.Overall);
-                            if (item.Specific != null)
-                            {
-                                mask.Specific = item.Specific.Translate(eval);
-                            }
-                        }
-                        l.Add(mask);
-                    }
-                }
-            }
+            obj.Weight = eval(this.Weight);
         }
         #endregion
 
@@ -2465,7 +2105,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void ClearEnumerables()
         {
             base.ClearEnumerables();
-            this.Effects.Specific = null;
         }
         #endregion
 
@@ -2475,16 +2114,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(Ingredient_Mask<bool> printMask = null)
+        public string ToString(Key_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, Ingredient_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, Key_Mask<bool> printMask = null)
         {
-            fg.AppendLine($"{nameof(Ingredient_Mask<T>)} =>");
+            fg.AppendLine($"{nameof(Key_Mask<T>)} =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
@@ -2500,42 +2139,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     fg.AppendLine($"Script => {Script}");
                 }
-                if (printMask?.Weight ?? true)
-                {
-                    fg.AppendLine($"Weight => {Weight}");
-                }
                 if (printMask?.Value ?? true)
                 {
                     fg.AppendLine($"Value => {Value}");
                 }
-                if (printMask?.Flags ?? true)
+                if (printMask?.Weight ?? true)
                 {
-                    fg.AppendLine($"Flags => {Flags}");
-                }
-                if (printMask?.Effects?.Overall ?? true)
-                {
-                    fg.AppendLine("Effects =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        if (Effects.Overall != null)
-                        {
-                            fg.AppendLine(Effects.Overall.ToString());
-                        }
-                        if (Effects.Specific != null)
-                        {
-                            foreach (var subItem in Effects.Specific)
-                            {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
-                                {
-                                    subItem?.ToString(fg);
-                                }
-                                fg.AppendLine("]");
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
+                    fg.AppendLine($"Weight => {Weight}");
                 }
             }
             fg.AppendLine("]");
@@ -2544,44 +2154,36 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class Ingredient_ErrorMask : NamedMajorRecord_ErrorMask, IErrorMask<Ingredient_ErrorMask>
+    public class Key_ErrorMask : NamedMajorRecord_ErrorMask, IErrorMask<Key_ErrorMask>
     {
         #region Members
         public MaskItem<Exception, Model_ErrorMask> Model;
         public Exception Icon;
         public Exception Script;
-        public Exception Weight;
         public Exception Value;
-        public Exception Flags;
-        public MaskItem<Exception, IEnumerable<MaskItem<Exception, Effect_ErrorMask>>> Effects;
+        public Exception Weight;
         #endregion
 
         #region IErrorMask
         public override void SetNthException(int index, Exception ex)
         {
-            Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
+            Key_FieldIndex enu = (Key_FieldIndex)index;
             switch (enu)
             {
-                case Ingredient_FieldIndex.Model:
+                case Key_FieldIndex.Model:
                     this.Model = new MaskItem<Exception, Model_ErrorMask>(ex, null);
                     break;
-                case Ingredient_FieldIndex.Icon:
+                case Key_FieldIndex.Icon:
                     this.Icon = ex;
                     break;
-                case Ingredient_FieldIndex.Script:
+                case Key_FieldIndex.Script:
                     this.Script = ex;
                     break;
-                case Ingredient_FieldIndex.Weight:
-                    this.Weight = ex;
-                    break;
-                case Ingredient_FieldIndex.Value:
+                case Key_FieldIndex.Value:
                     this.Value = ex;
                     break;
-                case Ingredient_FieldIndex.Flags:
-                    this.Flags = ex;
-                    break;
-                case Ingredient_FieldIndex.Effects:
-                    this.Effects = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Effect_ErrorMask>>>(ex, null);
+                case Key_FieldIndex.Weight:
+                    this.Weight = ex;
                     break;
                 default:
                     base.SetNthException(index, ex);
@@ -2591,29 +2193,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void SetNthMask(int index, object obj)
         {
-            Ingredient_FieldIndex enu = (Ingredient_FieldIndex)index;
+            Key_FieldIndex enu = (Key_FieldIndex)index;
             switch (enu)
             {
-                case Ingredient_FieldIndex.Model:
+                case Key_FieldIndex.Model:
                     this.Model = (MaskItem<Exception, Model_ErrorMask>)obj;
                     break;
-                case Ingredient_FieldIndex.Icon:
+                case Key_FieldIndex.Icon:
                     this.Icon = (Exception)obj;
                     break;
-                case Ingredient_FieldIndex.Script:
+                case Key_FieldIndex.Script:
                     this.Script = (Exception)obj;
                     break;
-                case Ingredient_FieldIndex.Weight:
-                    this.Weight = (Exception)obj;
-                    break;
-                case Ingredient_FieldIndex.Value:
+                case Key_FieldIndex.Value:
                     this.Value = (Exception)obj;
                     break;
-                case Ingredient_FieldIndex.Flags:
-                    this.Flags = (Exception)obj;
-                    break;
-                case Ingredient_FieldIndex.Effects:
-                    this.Effects = (MaskItem<Exception, IEnumerable<MaskItem<Exception, Effect_ErrorMask>>>)obj;
+                case Key_FieldIndex.Weight:
+                    this.Weight = (Exception)obj;
                     break;
                 default:
                     base.SetNthMask(index, obj);
@@ -2627,10 +2223,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Model != null) return true;
             if (Icon != null) return true;
             if (Script != null) return true;
-            if (Weight != null) return true;
             if (Value != null) return true;
-            if (Flags != null) return true;
-            if (Effects != null) return true;
+            if (Weight != null) return true;
             return false;
         }
         #endregion
@@ -2645,7 +2239,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void ToString(FileGeneration fg)
         {
-            fg.AppendLine("Ingredient_ErrorMask =>");
+            fg.AppendLine("Key_ErrorMask =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
@@ -2669,48 +2263,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Model?.ToString(fg);
             fg.AppendLine($"Icon => {Icon}");
             fg.AppendLine($"Script => {Script}");
-            fg.AppendLine($"Weight => {Weight}");
             fg.AppendLine($"Value => {Value}");
-            fg.AppendLine($"Flags => {Flags}");
-            fg.AppendLine("Effects =>");
-            fg.AppendLine("[");
-            using (new DepthWrapper(fg))
-            {
-                if (Effects.Overall != null)
-                {
-                    fg.AppendLine(Effects.Overall.ToString());
-                }
-                if (Effects.Specific != null)
-                {
-                    foreach (var subItem in Effects.Specific)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            subItem?.ToString(fg);
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-            }
-            fg.AppendLine("]");
+            fg.AppendLine($"Weight => {Weight}");
         }
         #endregion
 
         #region Combine
-        public Ingredient_ErrorMask Combine(Ingredient_ErrorMask rhs)
+        public Key_ErrorMask Combine(Key_ErrorMask rhs)
         {
-            var ret = new Ingredient_ErrorMask();
+            var ret = new Key_ErrorMask();
             ret.Model = new MaskItem<Exception, Model_ErrorMask>(this.Model.Overall.Combine(rhs.Model.Overall), ((IErrorMask<Model_ErrorMask>)this.Model.Specific).Combine(rhs.Model.Specific));
             ret.Icon = this.Icon.Combine(rhs.Icon);
             ret.Script = this.Script.Combine(rhs.Script);
-            ret.Weight = this.Weight.Combine(rhs.Weight);
             ret.Value = this.Value.Combine(rhs.Value);
-            ret.Flags = this.Flags.Combine(rhs.Flags);
-            ret.Effects = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Effect_ErrorMask>>>(this.Effects.Overall.Combine(rhs.Effects.Overall), new List<MaskItem<Exception, Effect_ErrorMask>>(this.Effects.Specific.And(rhs.Effects.Specific)));
+            ret.Weight = this.Weight.Combine(rhs.Weight);
             return ret;
         }
-        public static Ingredient_ErrorMask Combine(Ingredient_ErrorMask lhs, Ingredient_ErrorMask rhs)
+        public static Key_ErrorMask Combine(Key_ErrorMask lhs, Key_ErrorMask rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -2718,16 +2287,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class Ingredient_CopyMask : NamedMajorRecord_CopyMask
+    public class Key_CopyMask : NamedMajorRecord_CopyMask
     {
         #region Members
         public MaskItem<CopyOption, Model_CopyMask> Model;
         public bool Icon;
         public bool Script;
-        public bool Weight;
         public bool Value;
-        public bool Flags;
-        public MaskItem<CopyOption, Effect_CopyMask> Effects;
+        public bool Weight;
         #endregion
 
     }

@@ -768,9 +768,11 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType FURN_HEADER = new RecordType("FURN");
         public static readonly RecordType HAIR_HEADER = new RecordType("HAIR");
         public static readonly RecordType INGR_HEADER = new RecordType("INGR");
+        public static readonly RecordType KEYM_HEADER = new RecordType("KEYM");
         public static readonly RecordType MGEF_HEADER = new RecordType("MGEF");
         public static readonly RecordType MISC_HEADER = new RecordType("MISC");
         public static readonly RecordType NPC__HEADER = new RecordType("NPC_");
+        public static readonly RecordType ALCH_HEADER = new RecordType("ALCH");
         public static readonly RecordType RACE_HEADER = new RecordType("RACE");
         public static readonly RecordType SLGM_HEADER = new RecordType("SLGM");
         public static readonly RecordType WEAP_HEADER = new RecordType("WEAP");
@@ -806,9 +808,11 @@ namespace Mutagen.Bethesda.Internals
                         FURN_HEADER,
                         HAIR_HEADER,
                         INGR_HEADER,
+                        KEYM_HEADER,
                         MGEF_HEADER,
                         MISC_HEADER,
                         NPC__HEADER,
+                        ALCH_HEADER,
                         RACE_HEADER,
                         SLGM_HEADER,
                         WEAP_HEADER,
