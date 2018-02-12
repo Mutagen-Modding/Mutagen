@@ -53,6 +53,7 @@
     <Compile Include="Generated\Substitution.cs">
       <DependentUpon>BinaryProcessorInstructions.xml</DependentUpon>
     </Compile>
+    <Compile Include="Misc_Tests.cs" />
     <Compile Include="Oblivion_Passthrough_Tests.cs" />
     <Compile Include="FormID_Tests.cs" />
     <Compile Include="Passthrough_Tests.cs" />
