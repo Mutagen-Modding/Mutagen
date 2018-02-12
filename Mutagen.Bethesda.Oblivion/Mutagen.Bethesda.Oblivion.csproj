@@ -444,9 +444,15 @@
     <Compile Include="Records\Major Records\SigilStone_LoquiGenerated.cs">
       <DependentUpon>SigilStone.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\LeveledEntry_LoquiGenerated.cs">
+      <DependentUpon>LeveledEntry.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Records\Common Subrecords\Effect.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Common Subrecords\LeveledEntry.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Common Subrecords\Model.xml">

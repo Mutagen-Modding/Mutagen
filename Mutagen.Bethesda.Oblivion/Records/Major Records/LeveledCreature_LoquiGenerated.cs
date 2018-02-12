@@ -62,16 +62,16 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<LeveledCreature.Flag> ILeveledCreatureGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region Entries
-        private readonly INotifyingList<LeveledCreatureEntry> _Entries = new NotifyingList<LeveledCreatureEntry>();
-        public INotifyingList<LeveledCreatureEntry> Entries => _Entries;
-        public IEnumerable<LeveledCreatureEntry> EntriesEnumerable
+        private readonly INotifyingList<LeveledEntry<NPCSpawn>> _Entries = new NotifyingList<LeveledEntry<NPCSpawn>>();
+        public INotifyingList<LeveledEntry<NPCSpawn>> Entries => _Entries;
+        public IEnumerable<LeveledEntry<NPCSpawn>> EntriesEnumerable
         {
             get => _Entries;
             set => _Entries.SetTo(value);
         }
         #region Interface Members
-        INotifyingList<LeveledCreatureEntry> ILeveledCreature.Entries => _Entries;
-        INotifyingListGetter<LeveledCreatureEntry> ILeveledCreatureGetter.Entries => _Entries;
+        INotifyingList<LeveledEntry<NPCSpawn>> ILeveledCreature.Entries => _Entries;
+        INotifyingListGetter<LeveledEntry<NPCSpawn>> ILeveledCreatureGetter.Entries => _Entries;
         #endregion
 
         #endregion
@@ -520,13 +520,13 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask).Bubble((o) => o.Value));
                     break;
                 case "Entries":
-                    item._Entries.SetIfSucceeded(ListXmlTranslation<LeveledCreatureEntry, MaskItem<Exception, LeveledCreatureEntry_ErrorMask>>.Instance.Parse(
+                    item._Entries.SetIfSucceeded(ListXmlTranslation<LeveledEntry<NPCSpawn>, MaskItem<Exception, LeveledEntry_ErrorMask<NPCSpawn_ErrorMask>>>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)LeveledCreature_FieldIndex.Entries,
                         errorMask: errorMask,
-                        transl: (XElement r, bool listDoMasks, out MaskItem<Exception, LeveledCreatureEntry_ErrorMask> listSubMask) =>
+                        transl: (XElement r, bool listDoMasks, out MaskItem<Exception, LeveledEntry_ErrorMask<NPCSpawn_ErrorMask>> listSubMask) =>
                         {
-                            return LoquiXmlTranslation<LeveledCreatureEntry, LeveledCreatureEntry_ErrorMask>.Instance.Parse(
+                            return LoquiXmlTranslation<LeveledEntry<NPCSpawn>, LeveledEntry_ErrorMask<NPCSpawn_ErrorMask>>.Instance.Parse(
                                 root: r,
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask);
@@ -890,15 +890,15 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     return TryGet<LeveledCreature_FieldIndex?>.Succeed(LeveledCreature_FieldIndex.Flags);
                 case "LVLO":
-                    var EntriestryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<LeveledCreatureEntry, MaskItem<Exception, LeveledCreatureEntry_ErrorMask>>.Instance.ParseRepeatedItem(
+                    var EntriestryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<LeveledEntry<NPCSpawn>, MaskItem<Exception, LeveledEntry_ErrorMask<NPCSpawn_ErrorMask>>>.Instance.ParseRepeatedItem(
                         frame: frame,
                         triggeringRecord: LeveledCreature_Registration.LVLO_HEADER,
                         fieldIndex: (int)LeveledCreature_FieldIndex.Entries,
                         objType: ObjectType.Subrecord,
                         errorMask: errorMask,
-                        transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, LeveledCreatureEntry_ErrorMask> listSubMask) =>
+                        transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, LeveledEntry_ErrorMask<NPCSpawn_ErrorMask>> listSubMask) =>
                         {
-                            return LoquiBinaryTranslation<LeveledCreatureEntry, LeveledCreatureEntry_ErrorMask>.Instance.Parse(
+                            return LoquiBinaryTranslation<LeveledEntry<NPCSpawn>, LeveledEntry_ErrorMask<NPCSpawn_ErrorMask>>.Instance.Parse(
                                 frame: r.Spawn(snapToFinalPosition: false),
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask);
@@ -1023,7 +1023,7 @@ namespace Mutagen.Bethesda.Oblivion
                         cmds);
                     break;
                 case LeveledCreature_FieldIndex.Entries:
-                    this._Entries.SetTo((IEnumerable<LeveledCreatureEntry>)obj, cmds);
+                    this._Entries.SetTo((IEnumerable<LeveledEntry<NPCSpawn>>)obj, cmds);
                     break;
                 case LeveledCreature_FieldIndex.Script:
                     this.Script_Property.Set(
@@ -1077,7 +1077,7 @@ namespace Mutagen.Bethesda.Oblivion
                         null);
                     break;
                 case LeveledCreature_FieldIndex.Entries:
-                    obj._Entries.SetTo((IEnumerable<LeveledCreatureEntry>)pair.Value, null);
+                    obj._Entries.SetTo((IEnumerable<LeveledEntry<NPCSpawn>>)pair.Value, null);
                     break;
                 case LeveledCreature_FieldIndex.Script:
                     obj.Script_Property.Set(
@@ -1110,7 +1110,7 @@ namespace Mutagen.Bethesda.Oblivion
         new LeveledCreature.Flag Flags { get; set; }
         new INotifyingSetItem<LeveledCreature.Flag> Flags_Property { get; }
 
-        new INotifyingList<LeveledCreatureEntry> Entries { get; }
+        new INotifyingList<LeveledEntry<NPCSpawn>> Entries { get; }
         new Script Script { get; set; }
         new NPCAbstract Template { get; set; }
     }
@@ -1128,7 +1128,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Entries
-        INotifyingListGetter<LeveledCreatureEntry> Entries { get; }
+        INotifyingListGetter<LeveledEntry<NPCSpawn>> Entries { get; }
         #endregion
         #region Script
         Script Script { get; }
@@ -1334,7 +1334,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LeveledCreature_FieldIndex.Flags:
                     return typeof(LeveledCreature.Flag);
                 case LeveledCreature_FieldIndex.Entries:
-                    return typeof(NotifyingList<LeveledCreatureEntry>);
+                    return typeof(NotifyingList<LeveledEntry<NPCSpawn>>);
                 case LeveledCreature_FieldIndex.Script:
                     return typeof(FormIDSetLink<Script>);
                 case LeveledCreature_FieldIndex.Template:
@@ -1512,8 +1512,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                 case CopyOption.Reference:
                                     return r;
                                 case CopyOption.MakeCopy:
-                                    if (r == null) return default(LeveledCreatureEntry);
-                                    return LeveledCreatureEntry.Copy(
+                                    if (r == null) return default(LeveledEntry<NPCSpawn>);
+                                    return LeveledEntry<NPCSpawn>.Copy(
                                         r,
                                         copyMask?.Entries?.Specific,
                                         def: d);
@@ -1698,11 +1698,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (item.Entries.HasBeenSet)
                 {
-                    ret.Entries = new MaskItem<bool, IEnumerable<MaskItem<bool, LeveledCreatureEntry_Mask<bool>>>>();
-                    ret.Entries.Specific = item.Entries.SelectAgainst<LeveledCreatureEntry, MaskItem<bool, LeveledCreatureEntry_Mask<bool>>>(rhs.Entries, ((l, r) =>
+                    ret.Entries = new MaskItem<bool, IEnumerable<MaskItem<bool, LeveledEntry_Mask<bool>>>>();
+                    ret.Entries.Specific = item.Entries.SelectAgainst<LeveledEntry<NPCSpawn>, MaskItem<bool, LeveledEntry_Mask<bool>>>(rhs.Entries, ((l, r) =>
                     {
-                        MaskItem<bool, LeveledCreatureEntry_Mask<bool>> itemRet;
-                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => LeveledCreatureEntryCommon.GetEqualsMask(loqLhs, loqRhs));
+                        MaskItem<bool, LeveledEntry_Mask<bool>> itemRet;
+                        itemRet = l.LoquiEqualsHelper(r, (loqLhs, loqRhs) => LeveledEntryCommon.GetEqualsMask(loqLhs, loqRhs));
                         return itemRet;
                     }
                     ), out ret.Entries.Overall);
@@ -1710,13 +1710,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 else
                 {
-                    ret.Entries = new MaskItem<bool, IEnumerable<MaskItem<bool, LeveledCreatureEntry_Mask<bool>>>>();
+                    ret.Entries = new MaskItem<bool, IEnumerable<MaskItem<bool, LeveledEntry_Mask<bool>>>>();
                     ret.Entries.Overall = true;
                 }
             }
             else
             {
-                ret.Entries = new MaskItem<bool, IEnumerable<MaskItem<bool, LeveledCreatureEntry_Mask<bool>>>>();
+                ret.Entries = new MaskItem<bool, IEnumerable<MaskItem<bool, LeveledEntry_Mask<bool>>>>();
                 ret.Entries.Overall = false;
             }
             ret.Script = item.Script_Property.Equals(rhs.Script_Property, (l, r) => l == r);
@@ -1806,7 +1806,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new LeveledCreature_Mask<bool>();
             ret.ChanceNone = item.ChanceNone_Property.HasBeenSet;
             ret.Flags = item.Flags_Property.HasBeenSet;
-            ret.Entries = new MaskItem<bool, IEnumerable<MaskItem<bool, LeveledCreatureEntry_Mask<bool>>>>(item.Entries.HasBeenSet, item.Entries.Select((i) => new MaskItem<bool, LeveledCreatureEntry_Mask<bool>>(true, i.GetHasBeenSetMask())));
+            ret.Entries = new MaskItem<bool, IEnumerable<MaskItem<bool, LeveledEntry_Mask<bool>>>>(item.Entries.HasBeenSet, item.Entries.Select((i) => new MaskItem<bool, LeveledEntry_Mask<bool>>(true, i.GetHasBeenSetMask())));
             ret.Script = item.Script_Property.HasBeenSet;
             ret.Template = item.Template_Property.HasBeenSet;
             return ret;
@@ -1914,15 +1914,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.Entries.HasBeenSet)
                     {
-                        ListXmlTranslation<LeveledCreatureEntry, MaskItem<Exception, LeveledCreatureEntry_ErrorMask>>.Instance.Write(
+                        ListXmlTranslation<LeveledEntry<NPCSpawn>, MaskItem<Exception, LeveledEntry_ErrorMask<NPCSpawn_ErrorMask>>>.Instance.Write(
                             writer: writer,
                             name: nameof(item.Entries),
                             item: item.Entries,
                             fieldIndex: (int)LeveledCreature_FieldIndex.Entries,
                             errorMask: errorMask,
-                            transl: (LeveledCreatureEntry subItem, bool listDoMasks, out MaskItem<Exception, LeveledCreatureEntry_ErrorMask> listSubMask) =>
+                            transl: (LeveledEntry<NPCSpawn> subItem, bool listDoMasks, out MaskItem<Exception, LeveledEntry_ErrorMask<NPCSpawn_ErrorMask>> listSubMask) =>
                             {
-                                LoquiXmlTranslation<LeveledCreatureEntry, LeveledCreatureEntry_ErrorMask>.Instance.Write(
+                                LoquiXmlTranslation<LeveledEntry<NPCSpawn>, LeveledEntry_ErrorMask<NPCSpawn_ErrorMask>>.Instance.Write(
                                     writer: writer,
                                     item: subItem,
                                     name: "Item",
@@ -2037,14 +2037,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(LeveledCreature_Registration.LVLF_HEADER),
                 nullable: false);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<LeveledCreatureEntry, MaskItem<Exception, LeveledCreatureEntry_ErrorMask>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<LeveledEntry<NPCSpawn>, MaskItem<Exception, LeveledEntry_ErrorMask<NPCSpawn_ErrorMask>>>.Instance.Write(
                 writer: writer,
                 item: item.Entries,
                 fieldIndex: (int)LeveledCreature_FieldIndex.Entries,
                 errorMask: errorMask,
-                transl: (LeveledCreatureEntry subItem, bool listDoMasks, out MaskItem<Exception, LeveledCreatureEntry_ErrorMask> listSubMask) =>
+                transl: (LeveledEntry<NPCSpawn> subItem, bool listDoMasks, out MaskItem<Exception, LeveledEntry_ErrorMask<NPCSpawn_ErrorMask>> listSubMask) =>
                 {
-                    LoquiBinaryTranslation<LeveledCreatureEntry, LeveledCreatureEntry_ErrorMask>.Instance.Write(
+                    LoquiBinaryTranslation<LeveledEntry<NPCSpawn>, LeveledEntry_ErrorMask<NPCSpawn_ErrorMask>>.Instance.Write(
                         writer: writer,
                         item: subItem,
                         doMasks: listDoMasks,
@@ -2086,7 +2086,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             this.ChanceNone = initialValue;
             this.Flags = initialValue;
-            this.Entries = new MaskItem<T, IEnumerable<MaskItem<T, LeveledCreatureEntry_Mask<T>>>>(initialValue, null);
+            this.Entries = new MaskItem<T, IEnumerable<MaskItem<T, LeveledEntry_Mask<T>>>>(initialValue, null);
             this.Script = initialValue;
             this.Template = initialValue;
         }
@@ -2095,7 +2095,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Members
         public T ChanceNone;
         public T Flags;
-        public MaskItem<T, IEnumerable<MaskItem<T, LeveledCreatureEntry_Mask<T>>>> Entries;
+        public MaskItem<T, IEnumerable<MaskItem<T, LeveledEntry_Mask<T>>>> Entries;
         public T Script;
         public T Template;
         #endregion
@@ -2171,18 +2171,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Flags = eval(this.Flags);
             if (Entries != null)
             {
-                obj.Entries = new MaskItem<R, IEnumerable<MaskItem<R, LeveledCreatureEntry_Mask<R>>>>();
+                obj.Entries = new MaskItem<R, IEnumerable<MaskItem<R, LeveledEntry_Mask<R>>>>();
                 obj.Entries.Overall = eval(this.Entries.Overall);
                 if (Entries.Specific != null)
                 {
-                    List<MaskItem<R, LeveledCreatureEntry_Mask<R>>> l = new List<MaskItem<R, LeveledCreatureEntry_Mask<R>>>();
+                    List<MaskItem<R, LeveledEntry_Mask<R>>> l = new List<MaskItem<R, LeveledEntry_Mask<R>>>();
                     obj.Entries.Specific = l;
                     foreach (var item in Entries.Specific)
                     {
-                        MaskItem<R, LeveledCreatureEntry_Mask<R>> mask = default(MaskItem<R, LeveledCreatureEntry_Mask<R>>);
+                        MaskItem<R, LeveledEntry_Mask<R>> mask = default(MaskItem<R, LeveledEntry_Mask<R>>);
                         if (item != null)
                         {
-                            mask = new MaskItem<R, LeveledCreatureEntry_Mask<R>>();
+                            mask = new MaskItem<R, LeveledEntry_Mask<R>>();
                             mask.Overall = eval(item.Overall);
                             if (item.Specific != null)
                             {
@@ -2278,7 +2278,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Members
         public Exception ChanceNone;
         public Exception Flags;
-        public MaskItem<Exception, IEnumerable<MaskItem<Exception, LeveledCreatureEntry_ErrorMask>>> Entries;
+        public MaskItem<Exception, IEnumerable<MaskItem<Exception, LeveledEntry_ErrorMask<NPCSpawn_ErrorMask>>>> Entries;
         public Exception Script;
         public Exception Template;
         #endregion
@@ -2296,7 +2296,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Flags = ex;
                     break;
                 case LeveledCreature_FieldIndex.Entries:
-                    this.Entries = new MaskItem<Exception, IEnumerable<MaskItem<Exception, LeveledCreatureEntry_ErrorMask>>>(ex, null);
+                    this.Entries = new MaskItem<Exception, IEnumerable<MaskItem<Exception, LeveledEntry_ErrorMask<NPCSpawn_ErrorMask>>>>(ex, null);
                     break;
                 case LeveledCreature_FieldIndex.Script:
                     this.Script = ex;
@@ -2322,7 +2322,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     this.Flags = (Exception)obj;
                     break;
                 case LeveledCreature_FieldIndex.Entries:
-                    this.Entries = (MaskItem<Exception, IEnumerable<MaskItem<Exception, LeveledCreatureEntry_ErrorMask>>>)obj;
+                    this.Entries = (MaskItem<Exception, IEnumerable<MaskItem<Exception, LeveledEntry_ErrorMask<NPCSpawn_ErrorMask>>>>)obj;
                     break;
                 case LeveledCreature_FieldIndex.Script:
                     this.Script = (Exception)obj;
@@ -2414,7 +2414,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             var ret = new LeveledCreature_ErrorMask();
             ret.ChanceNone = this.ChanceNone.Combine(rhs.ChanceNone);
             ret.Flags = this.Flags.Combine(rhs.Flags);
-            ret.Entries = new MaskItem<Exception, IEnumerable<MaskItem<Exception, LeveledCreatureEntry_ErrorMask>>>(this.Entries.Overall.Combine(rhs.Entries.Overall), new List<MaskItem<Exception, LeveledCreatureEntry_ErrorMask>>(this.Entries.Specific.And(rhs.Entries.Specific)));
+            ret.Entries = new MaskItem<Exception, IEnumerable<MaskItem<Exception, LeveledEntry_ErrorMask<NPCSpawn_ErrorMask>>>>(this.Entries.Overall.Combine(rhs.Entries.Overall), new List<MaskItem<Exception, LeveledEntry_ErrorMask<NPCSpawn_ErrorMask>>>(this.Entries.Specific.And(rhs.Entries.Specific)));
             ret.Script = this.Script.Combine(rhs.Script);
             ret.Template = this.Template.Combine(rhs.Template);
             return ret;
@@ -2432,7 +2432,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Members
         public bool ChanceNone;
         public bool Flags;
-        public MaskItem<CopyOption, LeveledCreatureEntry_CopyMask> Entries;
+        public MaskItem<CopyOption, LeveledEntry_CopyMask<NPCSpawn_CopyMask>> Entries;
         public bool Script;
         public bool Template;
         #endregion
