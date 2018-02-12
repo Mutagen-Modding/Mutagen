@@ -38,6 +38,7 @@
       <Group name="NPCs" refName="NPC" />
       <Group name="Creatures" refName="Creature" />
       <Group name="LeveledCreatures" refName="LeveledCreature" />
+      <Group name="SoulGems" refName="SoulGem" />
     </Fields>
   </Object>
 </Loqui>
