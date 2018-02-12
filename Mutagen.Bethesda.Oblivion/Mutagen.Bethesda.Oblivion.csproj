@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="us-ascii"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -46,6 +46,7 @@
     <Compile Include="Records\Common Enums\BipedFlag.cs" />
     <Compile Include="Records\Common Enums\EquipmentFlag.cs" />
     <Compile Include="Records\Common Enums\IngredientFlag.cs" />
+    <Compile Include="Records\Common Enums\LeveledFlag.cs" />
     <Compile Include="Records\Common Enums\MagicSchool.cs" />
     <Compile Include="Records\Common Enums\Resistance.cs" />
     <Compile Include="Records\Common Enums\Skill.cs" />
@@ -197,9 +198,6 @@
     </Compile>
     <Compile Include="Records\Major Records\HavokData.cs">
       <DependentUpon>LandTexture.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\LeveledCreature.cs">
-      <DependentUpon>LeveledCreature.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Light.cs">
       <DependentUpon>Light.xml</DependentUpon>

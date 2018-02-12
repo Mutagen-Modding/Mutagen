@@ -51,15 +51,15 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Byte> ILeveledCreatureGetter.ChanceNone_Property => this.ChanceNone_Property;
         #endregion
         #region Flags
-        protected readonly INotifyingSetItem<LeveledCreature.Flag> _Flags = NotifyingSetItem.Factory<LeveledCreature.Flag>(markAsSet: false);
-        public INotifyingSetItem<LeveledCreature.Flag> Flags_Property => _Flags;
-        public LeveledCreature.Flag Flags
+        protected readonly INotifyingSetItem<LeveledFlag> _Flags = NotifyingSetItem.Factory<LeveledFlag>(markAsSet: false);
+        public INotifyingSetItem<LeveledFlag> Flags_Property => _Flags;
+        public LeveledFlag Flags
         {
             get => this._Flags.Item;
             set => this._Flags.Set(value);
         }
-        INotifyingSetItem<LeveledCreature.Flag> ILeveledCreature.Flags_Property => this.Flags_Property;
-        INotifyingSetItemGetter<LeveledCreature.Flag> ILeveledCreatureGetter.Flags_Property => this.Flags_Property;
+        INotifyingSetItem<LeveledFlag> ILeveledCreature.Flags_Property => this.Flags_Property;
+        INotifyingSetItemGetter<LeveledFlag> ILeveledCreatureGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region Entries
         private readonly INotifyingList<LeveledEntry<NPCSpawn>> _Entries = new NotifyingList<LeveledEntry<NPCSpawn>>();
@@ -513,7 +513,7 @@ namespace Mutagen.Bethesda.Oblivion
                         errorMask: errorMask));
                     break;
                 case "Flags":
-                    item._Flags.SetIfSucceeded(EnumXmlTranslation<LeveledCreature.Flag>.Instance.Parse(
+                    item._Flags.SetIfSucceeded(EnumXmlTranslation<LeveledFlag>.Instance.Parse(
                         root,
                         nullable: false,
                         fieldIndex: (int)LeveledCreature_FieldIndex.Flags,
@@ -884,7 +884,7 @@ namespace Mutagen.Bethesda.Oblivion
                     return TryGet<LeveledCreature_FieldIndex?>.Succeed(LeveledCreature_FieldIndex.ChanceNone);
                 case "LVLF":
                     frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<LeveledCreature.Flag>.Instance.Parse(
+                    item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<LeveledFlag>.Instance.Parse(
                         frame.Spawn(contentLength),
                         fieldIndex: (int)LeveledCreature_FieldIndex.Flags,
                         errorMask: errorMask));
@@ -1019,7 +1019,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case LeveledCreature_FieldIndex.Flags:
                     this._Flags.Set(
-                        (LeveledCreature.Flag)obj,
+                        (LeveledFlag)obj,
                         cmds);
                     break;
                 case LeveledCreature_FieldIndex.Entries:
@@ -1073,7 +1073,7 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case LeveledCreature_FieldIndex.Flags:
                     obj._Flags.Set(
-                        (LeveledCreature.Flag)pair.Value,
+                        (LeveledFlag)pair.Value,
                         null);
                     break;
                 case LeveledCreature_FieldIndex.Entries:
@@ -1107,8 +1107,8 @@ namespace Mutagen.Bethesda.Oblivion
         new Byte ChanceNone { get; set; }
         new INotifyingSetItem<Byte> ChanceNone_Property { get; }
 
-        new LeveledCreature.Flag Flags { get; set; }
-        new INotifyingSetItem<LeveledCreature.Flag> Flags_Property { get; }
+        new LeveledFlag Flags { get; set; }
+        new INotifyingSetItem<LeveledFlag> Flags_Property { get; }
 
         new INotifyingList<LeveledEntry<NPCSpawn>> Entries { get; }
         new Script Script { get; set; }
@@ -1123,8 +1123,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Flags
-        LeveledCreature.Flag Flags { get; }
-        INotifyingSetItemGetter<LeveledCreature.Flag> Flags_Property { get; }
+        LeveledFlag Flags { get; }
+        INotifyingSetItemGetter<LeveledFlag> Flags_Property { get; }
 
         #endregion
         #region Entries
@@ -1332,7 +1332,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LeveledCreature_FieldIndex.ChanceNone:
                     return typeof(Byte);
                 case LeveledCreature_FieldIndex.Flags:
-                    return typeof(LeveledCreature.Flag);
+                    return typeof(LeveledFlag);
                 case LeveledCreature_FieldIndex.Entries:
                     return typeof(NotifyingList<LeveledEntry<NPCSpawn>>);
                 case LeveledCreature_FieldIndex.Script:
@@ -1905,7 +1905,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     if (item.Flags_Property.HasBeenSet)
                     {
-                        EnumXmlTranslation<LeveledCreature.Flag>.Instance.Write(
+                        EnumXmlTranslation<LeveledFlag>.Instance.Write(
                             writer: writer,
                             name: nameof(item.Flags),
                             item: item.Flags_Property,
@@ -2029,7 +2029,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(LeveledCreature_Registration.LVLD_HEADER),
                 nullable: false);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<LeveledCreature.Flag>.Instance.Write(
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<LeveledFlag>.Instance.Write(
                 writer,
                 item.Flags_Property,
                 length: new ContentLength(1),

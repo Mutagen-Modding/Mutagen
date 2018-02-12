@@ -3,7 +3,7 @@
   <Object name="LeveledCreature" objType="Record" recordType="LVLC" baseClass="NPCSpawn" GUID="3b7a7716-fb68-4925-94fc-7ec66bea9349" ID="93">
     <Fields>
       <UInt8 name="ChanceNone" recordType="LVLD" />
-      <Enum name="Flags" enumName="LeveledCreature.Flag" byteLength="1" recordType="LVLF" />
+      <Enum name="Flags" enumName="LeveledFlag" byteLength="1" recordType="LVLF" />
       <RefList name="Entries" refName="LeveledEntry">
         <GenericSpecification TypeToSpecify="T" Definition="NPCSpawn" />
       </RefList>
