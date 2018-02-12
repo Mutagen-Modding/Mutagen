@@ -19,6 +19,7 @@ using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Internals;
 
 namespace Mutagen.Bethesda.Oblivion
 {

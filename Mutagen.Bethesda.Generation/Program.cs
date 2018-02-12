@@ -25,6 +25,7 @@ namespace Mutagen.Bethesda.Generation
                 NotifyingDefault = true,
                 HasBeenSetDefault = true
             };
+            gen.Namespaces.Add("Mutagen.Bethesda.Internals");
             gen.XmlTranslation.ShouldGenerateXSD = false;
             gen.XmlTranslation.AddTypeAssociation<FormIDLinkType>(new FormIDLinkXmlTranslationGeneration());
             gen.XmlTranslation.AddTypeAssociation<FormIDType>(new PrimitiveXmlTranslationGeneration<FormID>());
