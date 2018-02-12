@@ -27,6 +27,7 @@ namespace Mutagen.Bethesda.Oblivion
     public partial class LeveledEntry<T> : ILeveledEntry<T>, ILoquiObjectSetter, IEquatable<LeveledEntry<T>>
         where T : Bethesda.MajorRecord, ILoquiObjectGetter
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LeveledEntry_Registration.Instance;
         public static LeveledEntry_Registration Registration => LeveledEntry_Registration.Instance;
 
@@ -39,54 +40,72 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Level
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Int16> _Level = NotifyingItem.Factory<Int16>();
         public INotifyingItem<Int16> Level_Property => _Level;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Int16 Level
         {
             get => this._Level.Item;
             set => this._Level.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Int16> ILeveledEntry<T>.Level_Property => this.Level_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Int16> ILeveledEntryGetter<T>.Level_Property => this.Level_Property;
         #endregion
         #region Fluff
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte[]> _Fluff = NotifyingItem.Factory<Byte[]>(noNullFallback: () => new byte[2]);
         public INotifyingItem<Byte[]> Fluff_Property => _Fluff;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] Fluff
         {
             get => this._Fluff.Item;
             set => this._Fluff.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte[]> ILeveledEntry<T>.Fluff_Property => this.Fluff_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte[]> ILeveledEntryGetter<T>.Fluff_Property => this.Fluff_Property;
         #endregion
         #region Reference
         public FormIDLink<T> Reference_Property { get; } = new FormIDLink<T>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public T Reference { get => Reference_Property.Item; set => Reference_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDLink<T> ILeveledEntryGetter<T>.Reference_Property => this.Reference_Property;
         #endregion
         #region Count
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Int16> _Count = NotifyingSetItem.Factory<Int16>(markAsSet: false);
         public INotifyingSetItem<Int16> Count_Property => _Count;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Int16 Count
         {
             get => this._Count.Item;
             set => this._Count.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Int16> ILeveledEntry<T>.Count_Property => this.Count_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Int16> ILeveledEntryGetter<T>.Count_Property => this.Count_Property;
         #endregion
         #region Fluff2
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Byte[]> _Fluff2 = NotifyingSetItem.Factory<Byte[]>(
             markAsSet: false,
             noNullFallback: () => new byte[2]);
         public INotifyingSetItem<Byte[]> Fluff2_Property => _Fluff2;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] Fluff2
         {
             get => this._Fluff2.Item;
             set => this._Fluff2.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> ILeveledEntry<T>.Fluff2_Property => this.Fluff2_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Byte[]> ILeveledEntryGetter<T>.Fluff2_Property => this.Fluff2_Property;
         #endregion
 

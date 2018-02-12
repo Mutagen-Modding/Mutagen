@@ -26,6 +26,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class BodyPart : IBodyPart, ILoquiObjectSetter, IEquatable<BodyPart>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BodyPart_Registration.Instance;
         public static BodyPart_Registration Registration => BodyPart_Registration.Instance;
 
@@ -38,25 +39,33 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Index
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Race.BodyIndex> _Index = NotifyingSetItem.Factory<Race.BodyIndex>(markAsSet: false);
         public INotifyingSetItem<Race.BodyIndex> Index_Property => _Index;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Race.BodyIndex Index
         {
             get => this._Index.Item;
             set => this._Index.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Race.BodyIndex> IBodyPart.Index_Property => this.Index_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Race.BodyIndex> IBodyPartGetter.Index_Property => this.Index_Property;
         #endregion
         #region Icon
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
         public INotifyingSetItem<FilePath> Icon_Property => _Icon;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public FilePath Icon
         {
             get => this._Icon.Item;
             set => this._Icon.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<FilePath> IBodyPart.Icon_Property => this.Icon_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<FilePath> IBodyPartGetter.Icon_Property => this.Icon_Property;
         #endregion
 

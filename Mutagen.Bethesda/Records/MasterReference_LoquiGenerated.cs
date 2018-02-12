@@ -25,6 +25,7 @@ namespace Mutagen.Bethesda
     #region Class
     public partial class MasterReference : IMasterReference, ILoquiObjectSetter, IEquatable<MasterReference>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MasterReference_Registration.Instance;
         public static MasterReference_Registration Registration => MasterReference_Registration.Instance;
 
@@ -37,25 +38,33 @@ namespace Mutagen.Bethesda
         #endregion
 
         #region Master
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<String> _Master = NotifyingSetItem.Factory<String>(markAsSet: false);
         public INotifyingSetItem<String> Master_Property => _Master;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Master
         {
             get => this._Master.Item;
             set => this._Master.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> IMasterReference.Master_Property => this.Master_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<String> IMasterReferenceGetter.Master_Property => this.Master_Property;
         #endregion
         #region FileSize
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<UInt64> _FileSize = NotifyingSetItem.Factory<UInt64>(markAsSet: false);
         public INotifyingSetItem<UInt64> FileSize_Property => _FileSize;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt64 FileSize
         {
             get => this._FileSize.Item;
             set => this._FileSize.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<UInt64> IMasterReference.FileSize_Property => this.FileSize_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<UInt64> IMasterReferenceGetter.FileSize_Property => this.FileSize_Property;
         #endregion
 

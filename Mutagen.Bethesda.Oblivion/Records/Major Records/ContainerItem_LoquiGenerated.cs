@@ -26,6 +26,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class ContainerItem : IContainerItem, ILoquiObjectSetter, IEquatable<ContainerItem>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ContainerItem_Registration.Instance;
         public static ContainerItem_Registration Registration => ContainerItem_Registration.Instance;
 
@@ -39,18 +40,24 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Item
         public FormIDLink<ItemAbstract> Item_Property { get; } = new FormIDLink<ItemAbstract>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ItemAbstract Item { get => Item_Property.Item; set => Item_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDLink<ItemAbstract> IContainerItemGetter.Item_Property => this.Item_Property;
         #endregion
         #region Count
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt32> _Count = NotifyingItem.Factory<UInt32>();
         public INotifyingItem<UInt32> Count_Property => _Count;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 Count
         {
             get => this._Count.Item;
             set => this._Count.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt32> IContainerItem.Count_Property => this.Count_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<UInt32> IContainerItemGetter.Count_Property => this.Count_Property;
         #endregion
 

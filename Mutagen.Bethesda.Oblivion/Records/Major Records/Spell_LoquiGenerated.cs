@@ -27,6 +27,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public abstract partial class Spell : NamedMajorRecord, ISpell, ILoquiObjectSetter, IEquatable<Spell>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Spell_Registration.Instance;
         public new static Spell_Registration Registration => Spell_Registration.Instance;
 

@@ -26,6 +26,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class RankPlacement : IRankPlacement, ILoquiObjectSetter, IEquatable<RankPlacement>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RankPlacement_Registration.Instance;
         public static RankPlacement_Registration Registration => RankPlacement_Registration.Instance;
 
@@ -39,29 +40,39 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Faction
         public FormIDLink<Faction> Faction_Property { get; } = new FormIDLink<Faction>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Faction Faction { get => Faction_Property.Item; set => Faction_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDLink<Faction> IRankPlacementGetter.Faction_Property => this.Faction_Property;
         #endregion
         #region Rank
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Rank = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Rank_Property => _Rank;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Rank
         {
             get => this._Rank.Item;
             set => this._Rank.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> IRankPlacement.Rank_Property => this.Rank_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> IRankPlacementGetter.Rank_Property => this.Rank_Property;
         #endregion
         #region Fluff
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte[]> _Fluff = NotifyingItem.Factory<Byte[]>(noNullFallback: () => new byte[3]);
         public INotifyingItem<Byte[]> Fluff_Property => _Fluff;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] Fluff
         {
             get => this._Fluff.Item;
             set => this._Fluff.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte[]> IRankPlacement.Fluff_Property => this.Fluff_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte[]> IRankPlacementGetter.Fluff_Property => this.Fluff_Property;
         #endregion
 

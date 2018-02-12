@@ -26,6 +26,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class SkillBoost : ISkillBoost, ILoquiObjectSetter, IEquatable<SkillBoost>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkillBoost_Registration.Instance;
         public static SkillBoost_Registration Registration => SkillBoost_Registration.Instance;
 
@@ -38,25 +39,33 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Skill
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<ActorValue> _Skill = NotifyingItem.Factory<ActorValue>();
         public INotifyingItem<ActorValue> Skill_Property => _Skill;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ActorValue Skill
         {
             get => this._Skill.Item;
             set => this._Skill.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<ActorValue> ISkillBoost.Skill_Property => this.Skill_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<ActorValue> ISkillBoostGetter.Skill_Property => this.Skill_Property;
         #endregion
         #region Boost
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<SByte> _Boost = NotifyingItem.Factory<SByte>();
         public INotifyingItem<SByte> Boost_Property => _Boost;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public SByte Boost
         {
             get => this._Boost.Item;
             set => this._Boost.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<SByte> ISkillBoost.Boost_Property => this.Boost_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<SByte> ISkillBoostGetter.Boost_Property => this.Boost_Property;
         #endregion
 

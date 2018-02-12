@@ -26,6 +26,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class ScriptEffect : IScriptEffect, ILoquiObjectSetter, IEquatable<ScriptEffect>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ScriptEffect_Registration.Instance;
         public static ScriptEffect_Registration Registration => ScriptEffect_Registration.Instance;
 
@@ -39,45 +40,61 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Script
         public FormIDLink<Script> Script_Property { get; } = new FormIDLink<Script>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Script Script { get => Script_Property.Item; set => Script_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDLink<Script> IScriptEffectGetter.Script_Property => this.Script_Property;
         #endregion
         #region MagicSchool
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<MagicSchool> _MagicSchool = NotifyingItem.Factory<MagicSchool>();
         public INotifyingItem<MagicSchool> MagicSchool_Property => _MagicSchool;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public MagicSchool MagicSchool
         {
             get => this._MagicSchool.Item;
             set => this._MagicSchool.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<MagicSchool> IScriptEffect.MagicSchool_Property => this.MagicSchool_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<MagicSchool> IScriptEffectGetter.MagicSchool_Property => this.MagicSchool_Property;
         #endregion
         #region VisualEffect
         public EDIDLink<MagicEffect> VisualEffect_Property { get; } = new EDIDLink<MagicEffect>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public MagicEffect VisualEffect { get => VisualEffect_Property.Item; set => VisualEffect_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         EDIDLink<MagicEffect> IScriptEffectGetter.VisualEffect_Property => this.VisualEffect_Property;
         #endregion
         #region Flags
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<ScriptEffect.Flag> _Flags = NotifyingItem.Factory<ScriptEffect.Flag>();
         public INotifyingItem<ScriptEffect.Flag> Flags_Property => _Flags;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ScriptEffect.Flag Flags
         {
             get => this._Flags.Item;
             set => this._Flags.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<ScriptEffect.Flag> IScriptEffect.Flags_Property => this.Flags_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<ScriptEffect.Flag> IScriptEffectGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region Name
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<String> _Name = NotifyingSetItem.Factory<String>(markAsSet: false);
         public INotifyingSetItem<String> Name_Property => _Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Name
         {
             get => this._Name.Item;
             set => this._Name.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> IScriptEffect.Name_Property => this.Name_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<String> IScriptEffectGetter.Name_Property => this.Name_Property;
         #endregion
 

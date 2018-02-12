@@ -27,6 +27,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class RaceStatsGendered : IRaceStatsGendered, ILoquiObjectSetter, IEquatable<RaceStatsGendered>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RaceStatsGendered_Registration.Instance;
         public static RaceStatsGendered_Registration Registration => RaceStatsGendered_Registration.Instance;
 
@@ -40,7 +41,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Male
         private readonly INotifyingItem<RaceStats> _Male = new NotifyingItem<RaceStats>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingItem<RaceStats> Male_Property => this._Male;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         RaceStats IRaceStatsGenderedGetter.Male => this.Male;
         public RaceStats Male { get => _Male.Item; set => _Male.Item = value; }
         INotifyingItem<RaceStats> IRaceStatsGendered.Male_Property => this.Male_Property;
@@ -48,7 +51,9 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Female
         private readonly INotifyingItem<RaceStats> _Female = new NotifyingItem<RaceStats>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingItem<RaceStats> Female_Property => this._Female;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         RaceStats IRaceStatsGenderedGetter.Female => this.Female;
         public RaceStats Female { get => _Female.Item; set => _Female.Item = value; }
         INotifyingItem<RaceStats> IRaceStatsGendered.Female_Property => this.Female_Property;

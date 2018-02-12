@@ -28,6 +28,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Flora : NamedMajorRecord, IFlora, ILoquiObjectSetter, IEquatable<Flora>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Flora_Registration.Instance;
         public new static Flora_Registration Registration => Flora_Registration.Instance;
 
@@ -40,65 +41,91 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingSetItem<Model> _Model = new NotifyingSetItem<Model>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItem<Model> Model_Property => this._Model;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Model IFloraGetter.Model => this.Model;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Model Model { get => _Model.Item; set => _Model.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Model> IFlora.Model_Property => this.Model_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Model> IFloraGetter.Model_Property => this.Model_Property;
         #endregion
         #region Script
         public FormIDSetLink<Script> Script_Property { get; } = new FormIDSetLink<Script>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Script Script { get => Script_Property.Item; set => Script_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Script> IFloraGetter.Script_Property => this.Script_Property;
         #endregion
         #region Ingredient
         public FormIDSetLink<Ingredient> Ingredient_Property { get; } = new FormIDSetLink<Ingredient>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Ingredient Ingredient { get => Ingredient_Property.Item; set => Ingredient_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Ingredient> IFloraGetter.Ingredient_Property => this.Ingredient_Property;
         #endregion
         #region Spring
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Spring = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Spring_Property => _Spring;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Spring
         {
             get => this._Spring.Item;
             set => this._Spring.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> IFlora.Spring_Property => this.Spring_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> IFloraGetter.Spring_Property => this.Spring_Property;
         #endregion
         #region Summer
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Summer = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Summer_Property => _Summer;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Summer
         {
             get => this._Summer.Item;
             set => this._Summer.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> IFlora.Summer_Property => this.Summer_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> IFloraGetter.Summer_Property => this.Summer_Property;
         #endregion
         #region Fall
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Fall = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Fall_Property => _Fall;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Fall
         {
             get => this._Fall.Item;
             set => this._Fall.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> IFlora.Fall_Property => this.Fall_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> IFloraGetter.Fall_Property => this.Fall_Property;
         #endregion
         #region Winter
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Winter = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Winter_Property => _Winter;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Winter
         {
             get => this._Winter.Item;
             set => this._Winter.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> IFlora.Winter_Property => this.Winter_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> IFloraGetter.Winter_Property => this.Winter_Property;
         #endregion
 

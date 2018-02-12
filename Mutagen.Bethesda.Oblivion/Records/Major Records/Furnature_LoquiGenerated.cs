@@ -28,6 +28,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Furnature : NamedMajorRecord, IFurnature, ILoquiObjectSetter, IEquatable<Furnature>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Furnature_Registration.Instance;
         public new static Furnature_Registration Registration => Furnature_Registration.Instance;
 
@@ -40,29 +41,41 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingSetItem<Model> _Model = new NotifyingSetItem<Model>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItem<Model> Model_Property => this._Model;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Model IFurnatureGetter.Model => this.Model;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Model Model { get => _Model.Item; set => _Model.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Model> IFurnature.Model_Property => this.Model_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Model> IFurnatureGetter.Model_Property => this.Model_Property;
         #endregion
         #region Script
         public FormIDSetLink<Script> Script_Property { get; } = new FormIDSetLink<Script>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Script Script { get => Script_Property.Item; set => Script_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Script> IFurnatureGetter.Script_Property => this.Script_Property;
         #endregion
         #region MarkerFlags
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Byte[]> _MarkerFlags = NotifyingSetItem.Factory<Byte[]>(
             markAsSet: false,
             noNullFallback: () => new byte[4]);
         public INotifyingSetItem<Byte[]> MarkerFlags_Property => _MarkerFlags;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] MarkerFlags
         {
             get => this._MarkerFlags.Item;
             set => this._MarkerFlags.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> IFurnature.MarkerFlags_Property => this.MarkerFlags_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Byte[]> IFurnatureGetter.MarkerFlags_Property => this.MarkerFlags_Property;
         #endregion
 

@@ -27,6 +27,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class BodyData : IBodyData, ILoquiObjectSetter, IEquatable<BodyData>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => BodyData_Registration.Instance;
         public static BodyData_Registration Registration => BodyData_Registration.Instance;
 
@@ -39,23 +40,33 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingSetItem<Model> _Model = new NotifyingSetItem<Model>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItem<Model> Model_Property => this._Model;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Model IBodyDataGetter.Model => this.Model;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Model Model { get => _Model.Item; set => _Model.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Model> IBodyData.Model_Property => this.Model_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Model> IBodyDataGetter.Model_Property => this.Model_Property;
         #endregion
         #region BodyParts
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingList<BodyPart> _BodyParts = new NotifyingList<BodyPart>();
         public INotifyingList<BodyPart> BodyParts => _BodyParts;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<BodyPart> BodyPartsEnumerable
         {
             get => _BodyParts;
             set => _BodyParts.SetTo(value);
         }
         #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingList<BodyPart> IBodyData.BodyParts => _BodyParts;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingListGetter<BodyPart> IBodyDataGetter.BodyParts => _BodyParts;
         #endregion
 

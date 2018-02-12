@@ -26,6 +26,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class RaceHair : IRaceHair, ILoquiObjectSetter, IEquatable<RaceHair>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RaceHair_Registration.Instance;
         public static RaceHair_Registration Registration => RaceHair_Registration.Instance;
 
@@ -39,12 +40,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Male
         public FormIDLink<Hair> Male_Property { get; } = new FormIDLink<Hair>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Hair Male { get => Male_Property.Item; set => Male_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDLink<Hair> IRaceHairGetter.Male_Property => this.Male_Property;
         #endregion
         #region Female
         public FormIDLink<Hair> Female_Property { get; } = new FormIDLink<Hair>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Hair Female { get => Female_Property.Item; set => Female_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDLink<Hair> IRaceHairGetter.Female_Property => this.Female_Property;
         #endregion
 

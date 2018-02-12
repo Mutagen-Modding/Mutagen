@@ -28,6 +28,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Ingredient : NamedMajorRecord, IIngredient, ILoquiObjectSetter, IEquatable<Ingredient>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Ingredient_Registration.Instance;
         public new static Ingredient_Registration Registration => Ingredient_Registration.Instance;
 
@@ -40,72 +41,100 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingSetItem<Model> _Model = new NotifyingSetItem<Model>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItem<Model> Model_Property => this._Model;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Model IIngredientGetter.Model => this.Model;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Model Model { get => _Model.Item; set => _Model.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Model> IIngredient.Model_Property => this.Model_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Model> IIngredientGetter.Model_Property => this.Model_Property;
         #endregion
         #region Icon
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
         public INotifyingSetItem<FilePath> Icon_Property => _Icon;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public FilePath Icon
         {
             get => this._Icon.Item;
             set => this._Icon.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<FilePath> IIngredient.Icon_Property => this.Icon_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<FilePath> IIngredientGetter.Icon_Property => this.Icon_Property;
         #endregion
         #region Script
         public FormIDSetLink<Script> Script_Property { get; } = new FormIDSetLink<Script>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Script Script { get => Script_Property.Item; set => Script_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Script> IIngredientGetter.Script_Property => this.Script_Property;
         #endregion
         #region Weight
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Single> _Weight = NotifyingSetItem.Factory<Single>(markAsSet: false);
         public INotifyingSetItem<Single> Weight_Property => _Weight;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single Weight
         {
             get => this._Weight.Item;
             set => this._Weight.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Single> IIngredient.Weight_Property => this.Weight_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Single> IIngredientGetter.Weight_Property => this.Weight_Property;
         #endregion
         #region Value
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt32> _Value = NotifyingItem.Factory<UInt32>();
         public INotifyingItem<UInt32> Value_Property => _Value;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 Value
         {
             get => this._Value.Item;
             set => this._Value.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt32> IIngredient.Value_Property => this.Value_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<UInt32> IIngredientGetter.Value_Property => this.Value_Property;
         #endregion
         #region Flags
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<IngredientFlag> _Flags = NotifyingItem.Factory<IngredientFlag>();
         public INotifyingItem<IngredientFlag> Flags_Property => _Flags;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IngredientFlag Flags
         {
             get => this._Flags.Item;
             set => this._Flags.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<IngredientFlag> IIngredient.Flags_Property => this.Flags_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<IngredientFlag> IIngredientGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region Effects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingList<Effect> _Effects = new NotifyingList<Effect>();
         public INotifyingList<Effect> Effects => _Effects;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<Effect> EffectsEnumerable
         {
             get => _Effects;
             set => _Effects.SetTo(value);
         }
         #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingList<Effect> IIngredient.Effects => _Effects;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingListGetter<Effect> IIngredientGetter.Effects => _Effects;
         #endregion
 

@@ -24,6 +24,7 @@ namespace Mutagen.Bethesda.Tests
     #region Class
     public partial class Move : IMove, ILoquiObjectSetter, IEquatable<Move>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Move_Registration.Instance;
         public static Move_Registration Registration => Move_Registration.Instance;
 

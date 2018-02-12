@@ -26,6 +26,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Relation : IRelation, ILoquiObjectSetter, IEquatable<Relation>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Relation_Registration.Instance;
         public static Relation_Registration Registration => Relation_Registration.Instance;
 
@@ -39,18 +40,24 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Faction
         public FormIDLink<Faction> Faction_Property { get; } = new FormIDLink<Faction>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Faction Faction { get => Faction_Property.Item; set => Faction_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDLink<Faction> IRelationGetter.Faction_Property => this.Faction_Property;
         #endregion
         #region Modifier
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Int32> _Modifier = NotifyingItem.Factory<Int32>();
         public INotifyingItem<Int32> Modifier_Property => _Modifier;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Int32 Modifier
         {
             get => this._Modifier.Item;
             set => this._Modifier.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Int32> IRelation.Modifier_Property => this.Modifier_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Int32> IRelationGetter.Modifier_Property => this.Modifier_Property;
         #endregion
 

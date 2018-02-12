@@ -28,6 +28,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Armor : ClothingAbstract, IArmor, ILoquiObjectSetter, IEquatable<Armor>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Armor_Registration.Instance;
         public new static Armor_Registration Registration => Armor_Registration.Instance;
 
@@ -40,47 +41,63 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region ArmorValue
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _ArmorValue = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> ArmorValue_Property => _ArmorValue;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single ArmorValue
         {
             get => this._ArmorValue.Item;
             set => this._ArmorValue.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IArmor.ArmorValue_Property => this.ArmorValue_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Single> IArmorGetter.ArmorValue_Property => this.ArmorValue_Property;
         #endregion
         #region Value
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt32> _Value = NotifyingItem.Factory<UInt32>();
         public INotifyingItem<UInt32> Value_Property => _Value;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 Value
         {
             get => this._Value.Item;
             set => this._Value.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt32> IArmor.Value_Property => this.Value_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<UInt32> IArmorGetter.Value_Property => this.Value_Property;
         #endregion
         #region Health
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt32> _Health = NotifyingItem.Factory<UInt32>();
         public INotifyingItem<UInt32> Health_Property => _Health;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 Health
         {
             get => this._Health.Item;
             set => this._Health.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt32> IArmor.Health_Property => this.Health_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<UInt32> IArmorGetter.Health_Property => this.Health_Property;
         #endregion
         #region Weight
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _Weight = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> Weight_Property => _Weight;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single Weight
         {
             get => this._Weight.Item;
             set => this._Weight.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IArmor.Weight_Property => this.Weight_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Single> IArmorGetter.Weight_Property => this.Weight_Property;
         #endregion
 

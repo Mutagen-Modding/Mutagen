@@ -29,6 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class NPC : NamedMajorRecord, INPC, ILoquiObjectSetter, IEquatable<NPC>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NPC_Registration.Instance;
         public new static NPC_Registration Registration => NPC_Registration.Instance;
 
@@ -41,686 +42,932 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingSetItem<Model> _Model = new NotifyingSetItem<Model>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItem<Model> Model_Property => this._Model;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Model INPCGetter.Model => this.Model;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Model Model { get => _Model.Item; set => _Model.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Model> INPC.Model_Property => this.Model_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Model> INPCGetter.Model_Property => this.Model_Property;
         #endregion
         #region NPCFlags
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<NPC.NPCFlag> _NPCFlags = NotifyingItem.Factory<NPC.NPCFlag>();
         public INotifyingItem<NPC.NPCFlag> NPCFlags_Property => _NPCFlags;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public NPC.NPCFlag NPCFlags
         {
             get => this._NPCFlags.Item;
             set => this._NPCFlags.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<NPC.NPCFlag> INPC.NPCFlags_Property => this.NPCFlags_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<NPC.NPCFlag> INPCGetter.NPCFlags_Property => this.NPCFlags_Property;
         #endregion
         #region BaseSpellPoints
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt16> _BaseSpellPoints = NotifyingItem.Factory<UInt16>();
         public INotifyingItem<UInt16> BaseSpellPoints_Property => _BaseSpellPoints;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt16 BaseSpellPoints
         {
             get => this._BaseSpellPoints.Item;
             set => this._BaseSpellPoints.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt16> INPC.BaseSpellPoints_Property => this.BaseSpellPoints_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<UInt16> INPCGetter.BaseSpellPoints_Property => this.BaseSpellPoints_Property;
         #endregion
         #region Fatigue
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt16> _Fatigue = NotifyingItem.Factory<UInt16>();
         public INotifyingItem<UInt16> Fatigue_Property => _Fatigue;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt16 Fatigue
         {
             get => this._Fatigue.Item;
             set => this._Fatigue.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt16> INPC.Fatigue_Property => this.Fatigue_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<UInt16> INPCGetter.Fatigue_Property => this.Fatigue_Property;
         #endregion
         #region BarterGold
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt16> _BarterGold = NotifyingItem.Factory<UInt16>();
         public INotifyingItem<UInt16> BarterGold_Property => _BarterGold;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt16 BarterGold
         {
             get => this._BarterGold.Item;
             set => this._BarterGold.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt16> INPC.BarterGold_Property => this.BarterGold_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<UInt16> INPCGetter.BarterGold_Property => this.BarterGold_Property;
         #endregion
         #region LevelOffset
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Int16> _LevelOffset = NotifyingItem.Factory<Int16>();
         public INotifyingItem<Int16> LevelOffset_Property => _LevelOffset;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Int16 LevelOffset
         {
             get => this._LevelOffset.Item;
             set => this._LevelOffset.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Int16> INPC.LevelOffset_Property => this.LevelOffset_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Int16> INPCGetter.LevelOffset_Property => this.LevelOffset_Property;
         #endregion
         #region CalcMin
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt16> _CalcMin = NotifyingItem.Factory<UInt16>();
         public INotifyingItem<UInt16> CalcMin_Property => _CalcMin;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt16 CalcMin
         {
             get => this._CalcMin.Item;
             set => this._CalcMin.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt16> INPC.CalcMin_Property => this.CalcMin_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<UInt16> INPCGetter.CalcMin_Property => this.CalcMin_Property;
         #endregion
         #region CalcMax
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt16> _CalcMax = NotifyingItem.Factory<UInt16>();
         public INotifyingItem<UInt16> CalcMax_Property => _CalcMax;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt16 CalcMax
         {
             get => this._CalcMax.Item;
             set => this._CalcMax.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt16> INPC.CalcMax_Property => this.CalcMax_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<UInt16> INPCGetter.CalcMax_Property => this.CalcMax_Property;
         #endregion
         #region Factions
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingList<RankPlacement> _Factions = new NotifyingList<RankPlacement>();
         public INotifyingList<RankPlacement> Factions => _Factions;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<RankPlacement> FactionsEnumerable
         {
             get => _Factions;
             set => _Factions.SetTo(value);
         }
         #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingList<RankPlacement> INPC.Factions => _Factions;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingListGetter<RankPlacement> INPCGetter.Factions => _Factions;
         #endregion
 
         #endregion
         #region DeathItem
         public FormIDSetLink<ItemAbstract> DeathItem_Property { get; } = new FormIDSetLink<ItemAbstract>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ItemAbstract DeathItem { get => DeathItem_Property.Item; set => DeathItem_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<ItemAbstract> INPCGetter.DeathItem_Property => this.DeathItem_Property;
         #endregion
         #region Race
         public FormIDSetLink<Race> Race_Property { get; } = new FormIDSetLink<Race>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Race Race { get => Race_Property.Item; set => Race_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Race> INPCGetter.Race_Property => this.Race_Property;
         #endregion
         #region Spells
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingList<FormIDSetLink<Spell>> _Spells = new NotifyingList<FormIDSetLink<Spell>>();
         public INotifyingList<FormIDSetLink<Spell>> Spells => _Spells;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<FormIDSetLink<Spell>> SpellsEnumerable
         {
             get => _Spells;
             set => _Spells.SetTo(value);
         }
         #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingList<FormIDSetLink<Spell>> INPC.Spells => _Spells;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingListGetter<FormIDSetLink<Spell>> INPCGetter.Spells => _Spells;
         #endregion
 
         #endregion
         #region Script
         public FormIDSetLink<Script> Script_Property { get; } = new FormIDSetLink<Script>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Script Script { get => Script_Property.Item; set => Script_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Script> INPCGetter.Script_Property => this.Script_Property;
         #endregion
         #region Items
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingList<ItemEntry> _Items = new NotifyingList<ItemEntry>();
         public INotifyingList<ItemEntry> Items => _Items;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<ItemEntry> ItemsEnumerable
         {
             get => _Items;
             set => _Items.SetTo(value);
         }
         #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingList<ItemEntry> INPC.Items => _Items;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingListGetter<ItemEntry> INPCGetter.Items => _Items;
         #endregion
 
         #endregion
         #region Aggression
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Aggression = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Aggression_Property => _Aggression;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Aggression
         {
             get => this._Aggression.Item;
             set => this._Aggression.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Aggression_Property => this.Aggression_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> INPCGetter.Aggression_Property => this.Aggression_Property;
         #endregion
         #region Confidence
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Confidence = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Confidence_Property => _Confidence;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Confidence
         {
             get => this._Confidence.Item;
             set => this._Confidence.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Confidence_Property => this.Confidence_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> INPCGetter.Confidence_Property => this.Confidence_Property;
         #endregion
         #region EnergyLevel
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _EnergyLevel = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> EnergyLevel_Property => _EnergyLevel;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte EnergyLevel
         {
             get => this._EnergyLevel.Item;
             set => this._EnergyLevel.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.EnergyLevel_Property => this.EnergyLevel_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> INPCGetter.EnergyLevel_Property => this.EnergyLevel_Property;
         #endregion
         #region Responsibility
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Responsibility = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Responsibility_Property => _Responsibility;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Responsibility
         {
             get => this._Responsibility.Item;
             set => this._Responsibility.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Responsibility_Property => this.Responsibility_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> INPCGetter.Responsibility_Property => this.Responsibility_Property;
         #endregion
         #region BuySellServices
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<NPC.BuySellServiceFlag> _BuySellServices = NotifyingItem.Factory<NPC.BuySellServiceFlag>();
         public INotifyingItem<NPC.BuySellServiceFlag> BuySellServices_Property => _BuySellServices;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public NPC.BuySellServiceFlag BuySellServices
         {
             get => this._BuySellServices.Item;
             set => this._BuySellServices.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<NPC.BuySellServiceFlag> INPC.BuySellServices_Property => this.BuySellServices_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<NPC.BuySellServiceFlag> INPCGetter.BuySellServices_Property => this.BuySellServices_Property;
         #endregion
         #region Teaches
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Skill> _Teaches = NotifyingItem.Factory<Skill>();
         public INotifyingItem<Skill> Teaches_Property => _Teaches;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Skill Teaches
         {
             get => this._Teaches.Item;
             set => this._Teaches.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Skill> INPC.Teaches_Property => this.Teaches_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Skill> INPCGetter.Teaches_Property => this.Teaches_Property;
         #endregion
         #region MaximumTrainingLevel
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _MaximumTrainingLevel = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> MaximumTrainingLevel_Property => _MaximumTrainingLevel;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte MaximumTrainingLevel
         {
             get => this._MaximumTrainingLevel.Item;
             set => this._MaximumTrainingLevel.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.MaximumTrainingLevel_Property => this.MaximumTrainingLevel_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> INPCGetter.MaximumTrainingLevel_Property => this.MaximumTrainingLevel_Property;
         #endregion
         #region Fluff
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte[]> _Fluff = NotifyingItem.Factory<Byte[]>(noNullFallback: () => new byte[2]);
         public INotifyingItem<Byte[]> Fluff_Property => _Fluff;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] Fluff
         {
             get => this._Fluff.Item;
             set => this._Fluff.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte[]> INPC.Fluff_Property => this.Fluff_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte[]> INPCGetter.Fluff_Property => this.Fluff_Property;
         #endregion
         #region AIPackages
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingList<FormIDSetLink<AIPackage>> _AIPackages = new NotifyingList<FormIDSetLink<AIPackage>>();
         public INotifyingList<FormIDSetLink<AIPackage>> AIPackages => _AIPackages;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<FormIDSetLink<AIPackage>> AIPackagesEnumerable
         {
             get => _AIPackages;
             set => _AIPackages.SetTo(value);
         }
         #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingList<FormIDSetLink<AIPackage>> INPC.AIPackages => _AIPackages;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingListGetter<FormIDSetLink<AIPackage>> INPCGetter.AIPackages => _AIPackages;
         #endregion
 
         #endregion
         #region Animations
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingList<String> _Animations = new NotifyingList<String>();
         public INotifyingList<String> Animations => _Animations;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<String> AnimationsEnumerable
         {
             get => _Animations;
             set => _Animations.SetTo(value);
         }
         #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingList<String> INPC.Animations => _Animations;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingListGetter<String> INPCGetter.Animations => _Animations;
         #endregion
 
         #endregion
         #region Class
         public FormIDSetLink<Class> Class_Property { get; } = new FormIDSetLink<Class>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Class Class { get => Class_Property.Item; set => Class_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Class> INPCGetter.Class_Property => this.Class_Property;
         #endregion
         #region Armorer
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Armorer = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Armorer_Property => _Armorer;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Armorer
         {
             get => this._Armorer.Item;
             set => this._Armorer.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Armorer_Property => this.Armorer_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> INPCGetter.Armorer_Property => this.Armorer_Property;
         #endregion
         #region Athletics
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Athletics = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Athletics_Property => _Athletics;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Athletics
         {
             get => this._Athletics.Item;
             set => this._Athletics.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Athletics_Property => this.Athletics_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> INPCGetter.Athletics_Property => this.Athletics_Property;
         #endregion
         #region Blade
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Blade = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Blade_Property => _Blade;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Blade
         {
             get => this._Blade.Item;
             set => this._Blade.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Blade_Property => this.Blade_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> INPCGetter.Blade_Property => this.Blade_Property;
         #endregion
         #region Block
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Block = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Block_Property => _Block;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Block
         {
             get => this._Block.Item;
             set => this._Block.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Block_Property => this.Block_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> INPCGetter.Block_Property => this.Block_Property;
         #endregion
         #region Blunt
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Blunt = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Blunt_Property => _Blunt;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Blunt
         {
             get => this._Blunt.Item;
             set => this._Blunt.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Blunt_Property => this.Blunt_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> INPCGetter.Blunt_Property => this.Blunt_Property;
         #endregion
         #region HandToHand
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _HandToHand = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> HandToHand_Property => _HandToHand;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte HandToHand
         {
             get => this._HandToHand.Item;
             set => this._HandToHand.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.HandToHand_Property => this.HandToHand_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> INPCGetter.HandToHand_Property => this.HandToHand_Property;
         #endregion
         #region HeavyArmor
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _HeavyArmor = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> HeavyArmor_Property => _HeavyArmor;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte HeavyArmor
         {
             get => this._HeavyArmor.Item;
             set => this._HeavyArmor.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.HeavyArmor_Property => this.HeavyArmor_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> INPCGetter.HeavyArmor_Property => this.HeavyArmor_Property;
         #endregion
         #region Alchemy
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Alchemy = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Alchemy_Property => _Alchemy;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Alchemy
         {
             get => this._Alchemy.Item;
             set => this._Alchemy.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Alchemy_Property => this.Alchemy_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> INPCGetter.Alchemy_Property => this.Alchemy_Property;
         #endregion
         #region Alteration
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Alteration = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Alteration_Property => _Alteration;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Alteration
         {
             get => this._Alteration.Item;
             set => this._Alteration.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Alteration_Property => this.Alteration_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> INPCGetter.Alteration_Property => this.Alteration_Property;
         #endregion
         #region Conjuration
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Conjuration = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Conjuration_Property => _Conjuration;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Conjuration
         {
             get => this._Conjuration.Item;
             set => this._Conjuration.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Conjuration_Property => this.Conjuration_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> INPCGetter.Conjuration_Property => this.Conjuration_Property;
         #endregion
         #region Destruction
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Destruction = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Destruction_Property => _Destruction;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Destruction
         {
             get => this._Destruction.Item;
             set => this._Destruction.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Destruction_Property => this.Destruction_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> INPCGetter.Destruction_Property => this.Destruction_Property;
         #endregion
         #region Illusion
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Illusion = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Illusion_Property => _Illusion;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Illusion
         {
             get => this._Illusion.Item;
             set => this._Illusion.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Illusion_Property => this.Illusion_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> INPCGetter.Illusion_Property => this.Illusion_Property;
         #endregion
         #region Mysticism
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Mysticism = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Mysticism_Property => _Mysticism;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Mysticism
         {
             get => this._Mysticism.Item;
             set => this._Mysticism.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Mysticism_Property => this.Mysticism_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> INPCGetter.Mysticism_Property => this.Mysticism_Property;
         #endregion
         #region Restoration
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Restoration = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Restoration_Property => _Restoration;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Restoration
         {
             get => this._Restoration.Item;
             set => this._Restoration.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Restoration_Property => this.Restoration_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> INPCGetter.Restoration_Property => this.Restoration_Property;
         #endregion
         #region Acrobatics
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Acrobatics = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Acrobatics_Property => _Acrobatics;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Acrobatics
         {
             get => this._Acrobatics.Item;
             set => this._Acrobatics.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Acrobatics_Property => this.Acrobatics_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> INPCGetter.Acrobatics_Property => this.Acrobatics_Property;
         #endregion
         #region LightArmor
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _LightArmor = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> LightArmor_Property => _LightArmor;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte LightArmor
         {
             get => this._LightArmor.Item;
             set => this._LightArmor.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.LightArmor_Property => this.LightArmor_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> INPCGetter.LightArmor_Property => this.LightArmor_Property;
         #endregion
         #region Marksman
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Marksman = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Marksman_Property => _Marksman;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Marksman
         {
             get => this._Marksman.Item;
             set => this._Marksman.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Marksman_Property => this.Marksman_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> INPCGetter.Marksman_Property => this.Marksman_Property;
         #endregion
         #region Mercantile
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Mercantile = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Mercantile_Property => _Mercantile;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Mercantile
         {
             get => this._Mercantile.Item;
             set => this._Mercantile.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Mercantile_Property => this.Mercantile_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> INPCGetter.Mercantile_Property => this.Mercantile_Property;
         #endregion
         #region Security
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Security = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Security_Property => _Security;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Security
         {
             get => this._Security.Item;
             set => this._Security.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Security_Property => this.Security_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> INPCGetter.Security_Property => this.Security_Property;
         #endregion
         #region Sneak
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Sneak = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Sneak_Property => _Sneak;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Sneak
         {
             get => this._Sneak.Item;
             set => this._Sneak.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Sneak_Property => this.Sneak_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> INPCGetter.Sneak_Property => this.Sneak_Property;
         #endregion
         #region Speechcraft
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Speechcraft = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Speechcraft_Property => _Speechcraft;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Speechcraft
         {
             get => this._Speechcraft.Item;
             set => this._Speechcraft.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Speechcraft_Property => this.Speechcraft_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> INPCGetter.Speechcraft_Property => this.Speechcraft_Property;
         #endregion
         #region Health
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt32> _Health = NotifyingItem.Factory<UInt32>();
         public INotifyingItem<UInt32> Health_Property => _Health;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 Health
         {
             get => this._Health.Item;
             set => this._Health.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt32> INPC.Health_Property => this.Health_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<UInt32> INPCGetter.Health_Property => this.Health_Property;
         #endregion
         #region Strength
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Strength = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Strength_Property => _Strength;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Strength
         {
             get => this._Strength.Item;
             set => this._Strength.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Strength_Property => this.Strength_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> INPCGetter.Strength_Property => this.Strength_Property;
         #endregion
         #region Intelligence
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Intelligence = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Intelligence_Property => _Intelligence;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Intelligence
         {
             get => this._Intelligence.Item;
             set => this._Intelligence.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Intelligence_Property => this.Intelligence_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> INPCGetter.Intelligence_Property => this.Intelligence_Property;
         #endregion
         #region Willpower
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Willpower = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Willpower_Property => _Willpower;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Willpower
         {
             get => this._Willpower.Item;
             set => this._Willpower.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Willpower_Property => this.Willpower_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> INPCGetter.Willpower_Property => this.Willpower_Property;
         #endregion
         #region Agility
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Agility = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Agility_Property => _Agility;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Agility
         {
             get => this._Agility.Item;
             set => this._Agility.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Agility_Property => this.Agility_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> INPCGetter.Agility_Property => this.Agility_Property;
         #endregion
         #region Speed
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Speed = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Speed_Property => _Speed;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Speed
         {
             get => this._Speed.Item;
             set => this._Speed.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Speed_Property => this.Speed_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> INPCGetter.Speed_Property => this.Speed_Property;
         #endregion
         #region Endurance
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Endurance = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Endurance_Property => _Endurance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Endurance
         {
             get => this._Endurance.Item;
             set => this._Endurance.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Endurance_Property => this.Endurance_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> INPCGetter.Endurance_Property => this.Endurance_Property;
         #endregion
         #region Personality
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Personality = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Personality_Property => _Personality;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Personality
         {
             get => this._Personality.Item;
             set => this._Personality.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Personality_Property => this.Personality_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> INPCGetter.Personality_Property => this.Personality_Property;
         #endregion
         #region Luck
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Luck = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Luck_Property => _Luck;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Luck
         {
             get => this._Luck.Item;
             set => this._Luck.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> INPC.Luck_Property => this.Luck_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> INPCGetter.Luck_Property => this.Luck_Property;
         #endregion
         #region Hair
         public FormIDSetLink<Hair> Hair_Property { get; } = new FormIDSetLink<Hair>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Hair Hair { get => Hair_Property.Item; set => Hair_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Hair> INPCGetter.Hair_Property => this.Hair_Property;
         #endregion
         #region HairLength
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Single> _HairLength = NotifyingSetItem.Factory<Single>(markAsSet: false);
         public INotifyingSetItem<Single> HairLength_Property => _HairLength;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single HairLength
         {
             get => this._HairLength.Item;
             set => this._HairLength.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Single> INPC.HairLength_Property => this.HairLength_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Single> INPCGetter.HairLength_Property => this.HairLength_Property;
         #endregion
         #region Eyes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingList<FormIDLink<Eye>> _Eyes = new NotifyingList<FormIDLink<Eye>>();
         public INotifyingList<FormIDLink<Eye>> Eyes => _Eyes;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<FormIDLink<Eye>> EyesEnumerable
         {
             get => _Eyes;
             set => _Eyes.SetTo(value);
         }
         #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingList<FormIDLink<Eye>> INPC.Eyes => _Eyes;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingListGetter<FormIDLink<Eye>> INPCGetter.Eyes => _Eyes;
         #endregion
 
         #endregion
         #region HairColor
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Color> _HairColor = NotifyingSetItem.Factory<Color>(markAsSet: false);
         public INotifyingSetItem<Color> HairColor_Property => _HairColor;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Color HairColor
         {
             get => this._HairColor.Item;
             set => this._HairColor.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Color> INPC.HairColor_Property => this.HairColor_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Color> INPCGetter.HairColor_Property => this.HairColor_Property;
         #endregion
         #region CombatStyle
         public FormIDSetLink<CombatStyle> CombatStyle_Property { get; } = new FormIDSetLink<CombatStyle>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public CombatStyle CombatStyle { get => CombatStyle_Property.Item; set => CombatStyle_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<CombatStyle> INPCGetter.CombatStyle_Property => this.CombatStyle_Property;
         #endregion
         #region FaceGenGeometrySymmetric
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Byte[]> _FaceGenGeometrySymmetric = NotifyingSetItem.Factory<Byte[]>(markAsSet: false);
         public INotifyingSetItem<Byte[]> FaceGenGeometrySymmetric_Property => _FaceGenGeometrySymmetric;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] FaceGenGeometrySymmetric
         {
             get => this._FaceGenGeometrySymmetric.Item;
             set => this._FaceGenGeometrySymmetric.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> INPC.FaceGenGeometrySymmetric_Property => this.FaceGenGeometrySymmetric_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Byte[]> INPCGetter.FaceGenGeometrySymmetric_Property => this.FaceGenGeometrySymmetric_Property;
         #endregion
         #region FaceGenGeometryAsymmetric
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Byte[]> _FaceGenGeometryAsymmetric = NotifyingSetItem.Factory<Byte[]>(markAsSet: false);
         public INotifyingSetItem<Byte[]> FaceGenGeometryAsymmetric_Property => _FaceGenGeometryAsymmetric;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] FaceGenGeometryAsymmetric
         {
             get => this._FaceGenGeometryAsymmetric.Item;
             set => this._FaceGenGeometryAsymmetric.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> INPC.FaceGenGeometryAsymmetric_Property => this.FaceGenGeometryAsymmetric_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Byte[]> INPCGetter.FaceGenGeometryAsymmetric_Property => this.FaceGenGeometryAsymmetric_Property;
         #endregion
         #region FaceGenTextureSymmetric
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Byte[]> _FaceGenTextureSymmetric = NotifyingSetItem.Factory<Byte[]>(markAsSet: false);
         public INotifyingSetItem<Byte[]> FaceGenTextureSymmetric_Property => _FaceGenTextureSymmetric;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] FaceGenTextureSymmetric
         {
             get => this._FaceGenTextureSymmetric.Item;
             set => this._FaceGenTextureSymmetric.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> INPC.FaceGenTextureSymmetric_Property => this.FaceGenTextureSymmetric_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Byte[]> INPCGetter.FaceGenTextureSymmetric_Property => this.FaceGenTextureSymmetric_Property;
         #endregion
         #region Unknown
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Byte[]> _Unknown = NotifyingSetItem.Factory<Byte[]>(markAsSet: false);
         public INotifyingSetItem<Byte[]> Unknown_Property => _Unknown;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] Unknown
         {
             get => this._Unknown.Item;
             set => this._Unknown.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> INPC.Unknown_Property => this.Unknown_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Byte[]> INPCGetter.Unknown_Property => this.Unknown_Property;
         #endregion
 

@@ -28,6 +28,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class GlobalFloat : Global, IGlobalFloat, ILoquiObjectSetter, IEquatable<GlobalFloat>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GlobalFloat_Registration.Instance;
         public new static GlobalFloat_Registration Registration => GlobalFloat_Registration.Instance;
 
@@ -40,13 +41,16 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Data
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _Data = NotifyingItem.Factory<Single>();
         public INotifyingItemGetter<Single> Data_Property => _Data;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single Data
         {
             get => this._Data.Item;
             protected set => this._Data.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Single> IGlobalFloatGetter.Data_Property => this.Data_Property;
         #endregion
 

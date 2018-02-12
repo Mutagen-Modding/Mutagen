@@ -28,6 +28,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class GlobalShort : Global, IGlobalShort, ILoquiObjectSetter, IEquatable<GlobalShort>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GlobalShort_Registration.Instance;
         public new static GlobalShort_Registration Registration => GlobalShort_Registration.Instance;
 
@@ -40,13 +41,16 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Data
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Int16> _Data = NotifyingItem.Factory<Int16>();
         public INotifyingItemGetter<Int16> Data_Property => _Data;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Int16 Data
         {
             get => this._Data.Item;
             protected set => this._Data.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Int16> IGlobalShortGetter.Data_Property => this.Data_Property;
         #endregion
 

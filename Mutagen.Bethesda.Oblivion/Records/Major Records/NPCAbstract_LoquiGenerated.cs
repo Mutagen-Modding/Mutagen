@@ -28,6 +28,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public abstract partial class NPCAbstract : NPCSpawn, INPCAbstract, ILoquiObjectSetter, IEquatable<NPCAbstract>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => NPCAbstract_Registration.Instance;
         public new static NPCAbstract_Registration Registration => NPCAbstract_Registration.Instance;
 

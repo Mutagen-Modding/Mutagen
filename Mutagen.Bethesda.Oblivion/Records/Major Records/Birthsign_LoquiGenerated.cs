@@ -27,6 +27,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Birthsign : NamedMajorRecord, IBirthsign, ILoquiObjectSetter, IEquatable<Birthsign>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Birthsign_Registration.Instance;
         public new static Birthsign_Registration Registration => Birthsign_Registration.Instance;
 
@@ -39,37 +40,49 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Icon
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
         public INotifyingSetItem<FilePath> Icon_Property => _Icon;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public FilePath Icon
         {
             get => this._Icon.Item;
             set => this._Icon.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<FilePath> IBirthsign.Icon_Property => this.Icon_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<FilePath> IBirthsignGetter.Icon_Property => this.Icon_Property;
         #endregion
         #region Description
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<String> _Description = NotifyingSetItem.Factory<String>(markAsSet: false);
         public INotifyingSetItem<String> Description_Property => _Description;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Description
         {
             get => this._Description.Item;
             set => this._Description.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> IBirthsign.Description_Property => this.Description_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<String> IBirthsignGetter.Description_Property => this.Description_Property;
         #endregion
         #region Spells
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingList<FormIDSetLink<Spell>> _Spells = new NotifyingList<FormIDSetLink<Spell>>();
         public INotifyingList<FormIDSetLink<Spell>> Spells => _Spells;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<FormIDSetLink<Spell>> SpellsEnumerable
         {
             get => _Spells;
             set => _Spells.SetTo(value);
         }
         #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingList<FormIDSetLink<Spell>> IBirthsign.Spells => _Spells;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingListGetter<FormIDSetLink<Spell>> IBirthsignGetter.Spells => _Spells;
         #endregion
 

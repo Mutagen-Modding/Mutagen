@@ -26,6 +26,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Model : IModel, ILoquiObjectSetter, IEquatable<Model>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Model_Registration.Instance;
         public static Model_Registration Registration => Model_Registration.Instance;
 
@@ -38,36 +39,48 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region File
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<FilePath> _File = NotifyingItem.Factory<FilePath>();
         public INotifyingItem<FilePath> File_Property => _File;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public FilePath File
         {
             get => this._File.Item;
             set => this._File.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<FilePath> IModel.File_Property => this.File_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<FilePath> IModelGetter.File_Property => this.File_Property;
         #endregion
         #region BoundRadius
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _BoundRadius = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> BoundRadius_Property => _BoundRadius;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single BoundRadius
         {
             get => this._BoundRadius.Item;
             set => this._BoundRadius.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IModel.BoundRadius_Property => this.BoundRadius_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Single> IModelGetter.BoundRadius_Property => this.BoundRadius_Property;
         #endregion
         #region Hashes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Byte[]> _Hashes = NotifyingSetItem.Factory<Byte[]>(markAsSet: false);
         public INotifyingSetItem<Byte[]> Hashes_Property => _Hashes;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] Hashes
         {
             get => this._Hashes.Item;
             set => this._Hashes.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> IModel.Hashes_Property => this.Hashes_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Byte[]> IModelGetter.Hashes_Property => this.Hashes_Property;
         #endregion
 

@@ -27,6 +27,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class LocalVariable : ILocalVariable, ILoquiObjectSetter, IEquatable<LocalVariable>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => LocalVariable_Registration.Instance;
         public static LocalVariable_Registration Registration => LocalVariable_Registration.Instance;
 
@@ -39,22 +40,32 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Data
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingSetItem<LocalVariableData> _Data = new NotifyingSetItem<LocalVariableData>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItem<LocalVariableData> Data_Property => this._Data;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         LocalVariableData ILocalVariableGetter.Data => this.Data;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public LocalVariableData Data { get => _Data.Item; set => _Data.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<LocalVariableData> ILocalVariable.Data_Property => this.Data_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<LocalVariableData> ILocalVariableGetter.Data_Property => this.Data_Property;
         #endregion
         #region Name
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<String> _Name = NotifyingSetItem.Factory<String>(markAsSet: false);
         public INotifyingSetItem<String> Name_Property => _Name;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Name
         {
             get => this._Name.Item;
             set => this._Name.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> ILocalVariable.Name_Property => this.Name_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<String> ILocalVariableGetter.Name_Property => this.Name_Property;
         #endregion
 

@@ -26,6 +26,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class RaceVoices : IRaceVoices, ILoquiObjectSetter, IEquatable<RaceVoices>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => RaceVoices_Registration.Instance;
         public static RaceVoices_Registration Registration => RaceVoices_Registration.Instance;
 
@@ -39,12 +40,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Male
         public FormIDLink<Race> Male_Property { get; } = new FormIDLink<Race>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Race Male { get => Male_Property.Item; set => Male_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDLink<Race> IRaceVoicesGetter.Male_Property => this.Male_Property;
         #endregion
         #region Female
         public FormIDLink<Race> Female_Property { get; } = new FormIDLink<Race>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Race Female { get => Female_Property.Item; set => Female_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDLink<Race> IRaceVoicesGetter.Female_Property => this.Female_Property;
         #endregion
 

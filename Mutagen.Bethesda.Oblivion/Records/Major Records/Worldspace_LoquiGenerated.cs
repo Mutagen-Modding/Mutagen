@@ -27,6 +27,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Worldspace : NamedMajorRecord, IWorldspace, ILoquiObjectSetter, IEquatable<Worldspace>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Worldspace_Registration.Instance;
         public new static Worldspace_Registration Registration => Worldspace_Registration.Instance;
 

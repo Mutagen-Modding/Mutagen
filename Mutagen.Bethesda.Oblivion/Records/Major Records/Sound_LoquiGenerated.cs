@@ -28,6 +28,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Sound : MajorRecord, ISound, ILoquiObjectSetter, IEquatable<Sound>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Sound_Registration.Instance;
         public new static Sound_Registration Registration => Sound_Registration.Instance;
 
@@ -40,22 +41,32 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region File
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<FilePath> _File = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
         public INotifyingSetItem<FilePath> File_Property => _File;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public FilePath File
         {
             get => this._File.Item;
             set => this._File.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<FilePath> ISound.File_Property => this.File_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<FilePath> ISoundGetter.File_Property => this.File_Property;
         #endregion
         #region Data
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingSetItem<SoundData> _Data = new NotifyingSetItem<SoundData>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItem<SoundData> Data_Property => this._Data;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         SoundData ISoundGetter.Data => this.Data;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public SoundData Data { get => _Data.Item; set => _Data.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<SoundData> ISound.Data_Property => this.Data_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<SoundData> ISoundGetter.Data_Property => this.Data_Property;
         #endregion
 

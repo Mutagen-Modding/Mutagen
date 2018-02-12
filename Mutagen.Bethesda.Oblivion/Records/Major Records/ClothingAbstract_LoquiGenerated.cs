@@ -28,6 +28,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public abstract partial class ClothingAbstract : NamedMajorRecord, IClothingAbstract, ILoquiObjectSetter, IEquatable<ClothingAbstract>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => ClothingAbstract_Registration.Instance;
         public new static ClothingAbstract_Registration Registration => ClothingAbstract_Registration.Instance;
 
@@ -41,99 +42,147 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Script
         public FormIDSetLink<Script> Script_Property { get; } = new FormIDSetLink<Script>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Script Script { get => Script_Property.Item; set => Script_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Script> IClothingAbstractGetter.Script_Property => this.Script_Property;
         #endregion
         #region Enchantment
         public FormIDSetLink<Enchantment> Enchantment_Property { get; } = new FormIDSetLink<Enchantment>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Enchantment Enchantment { get => Enchantment_Property.Item; set => Enchantment_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Enchantment> IClothingAbstractGetter.Enchantment_Property => this.Enchantment_Property;
         #endregion
         #region EnchantmentPoints
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<UInt16> _EnchantmentPoints = NotifyingSetItem.Factory<UInt16>(markAsSet: false);
         public INotifyingSetItem<UInt16> EnchantmentPoints_Property => _EnchantmentPoints;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt16 EnchantmentPoints
         {
             get => this._EnchantmentPoints.Item;
             set => this._EnchantmentPoints.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<UInt16> IClothingAbstract.EnchantmentPoints_Property => this.EnchantmentPoints_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<UInt16> IClothingAbstractGetter.EnchantmentPoints_Property => this.EnchantmentPoints_Property;
         #endregion
         #region BipedFlags
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<BipedFlag> _BipedFlags = NotifyingItem.Factory<BipedFlag>();
         public INotifyingItem<BipedFlag> BipedFlags_Property => _BipedFlags;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public BipedFlag BipedFlags
         {
             get => this._BipedFlags.Item;
             set => this._BipedFlags.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<BipedFlag> IClothingAbstract.BipedFlags_Property => this.BipedFlags_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<BipedFlag> IClothingAbstractGetter.BipedFlags_Property => this.BipedFlags_Property;
         #endregion
         #region Flags
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<EquipmentFlag> _Flags = NotifyingItem.Factory<EquipmentFlag>();
         public INotifyingItem<EquipmentFlag> Flags_Property => _Flags;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public EquipmentFlag Flags
         {
             get => this._Flags.Item;
             set => this._Flags.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<EquipmentFlag> IClothingAbstract.Flags_Property => this.Flags_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<EquipmentFlag> IClothingAbstractGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region MaleBipedModel
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingSetItem<Model> _MaleBipedModel = new NotifyingSetItem<Model>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItem<Model> MaleBipedModel_Property => this._MaleBipedModel;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Model IClothingAbstractGetter.MaleBipedModel => this.MaleBipedModel;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Model MaleBipedModel { get => _MaleBipedModel.Item; set => _MaleBipedModel.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Model> IClothingAbstract.MaleBipedModel_Property => this.MaleBipedModel_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Model> IClothingAbstractGetter.MaleBipedModel_Property => this.MaleBipedModel_Property;
         #endregion
         #region MaleWorldModel
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingSetItem<Model> _MaleWorldModel = new NotifyingSetItem<Model>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItem<Model> MaleWorldModel_Property => this._MaleWorldModel;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Model IClothingAbstractGetter.MaleWorldModel => this.MaleWorldModel;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Model MaleWorldModel { get => _MaleWorldModel.Item; set => _MaleWorldModel.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Model> IClothingAbstract.MaleWorldModel_Property => this.MaleWorldModel_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Model> IClothingAbstractGetter.MaleWorldModel_Property => this.MaleWorldModel_Property;
         #endregion
         #region MaleIcon
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<FilePath> _MaleIcon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
         public INotifyingSetItem<FilePath> MaleIcon_Property => _MaleIcon;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public FilePath MaleIcon
         {
             get => this._MaleIcon.Item;
             set => this._MaleIcon.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<FilePath> IClothingAbstract.MaleIcon_Property => this.MaleIcon_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<FilePath> IClothingAbstractGetter.MaleIcon_Property => this.MaleIcon_Property;
         #endregion
         #region FemaleBipedModel
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingSetItem<Model> _FemaleBipedModel = new NotifyingSetItem<Model>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItem<Model> FemaleBipedModel_Property => this._FemaleBipedModel;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Model IClothingAbstractGetter.FemaleBipedModel => this.FemaleBipedModel;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Model FemaleBipedModel { get => _FemaleBipedModel.Item; set => _FemaleBipedModel.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Model> IClothingAbstract.FemaleBipedModel_Property => this.FemaleBipedModel_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Model> IClothingAbstractGetter.FemaleBipedModel_Property => this.FemaleBipedModel_Property;
         #endregion
         #region FemaleWorldModel
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingSetItem<Model> _FemaleWorldModel = new NotifyingSetItem<Model>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItem<Model> FemaleWorldModel_Property => this._FemaleWorldModel;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Model IClothingAbstractGetter.FemaleWorldModel => this.FemaleWorldModel;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Model FemaleWorldModel { get => _FemaleWorldModel.Item; set => _FemaleWorldModel.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Model> IClothingAbstract.FemaleWorldModel_Property => this.FemaleWorldModel_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Model> IClothingAbstractGetter.FemaleWorldModel_Property => this.FemaleWorldModel_Property;
         #endregion
         #region FemaleIcon
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<FilePath> _FemaleIcon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
         public INotifyingSetItem<FilePath> FemaleIcon_Property => _FemaleIcon;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public FilePath FemaleIcon
         {
             get => this._FemaleIcon.Item;
             set => this._FemaleIcon.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<FilePath> IClothingAbstract.FemaleIcon_Property => this.FemaleIcon_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<FilePath> IClothingAbstractGetter.FemaleIcon_Property => this.FemaleIcon_Property;
         #endregion
 

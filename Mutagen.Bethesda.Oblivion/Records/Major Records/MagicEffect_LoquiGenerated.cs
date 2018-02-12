@@ -28,6 +28,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class MagicEffect : NamedMajorRecord, IMagicEffect, ILoquiObjectSetter, IEquatable<MagicEffect>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => MagicEffect_Registration.Instance;
         public new static MagicEffect_Registration Registration => MagicEffect_Registration.Instance;
 
@@ -40,140 +41,192 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Description
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<String> _Description = NotifyingSetItem.Factory<String>(markAsSet: false);
         public INotifyingSetItem<String> Description_Property => _Description;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Description
         {
             get => this._Description.Item;
             set => this._Description.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> IMagicEffect.Description_Property => this.Description_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<String> IMagicEffectGetter.Description_Property => this.Description_Property;
         #endregion
         #region Icon
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
         public INotifyingSetItem<FilePath> Icon_Property => _Icon;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public FilePath Icon
         {
             get => this._Icon.Item;
             set => this._Icon.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<FilePath> IMagicEffect.Icon_Property => this.Icon_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<FilePath> IMagicEffectGetter.Icon_Property => this.Icon_Property;
         #endregion
         #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingSetItem<Model> _Model = new NotifyingSetItem<Model>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItem<Model> Model_Property => this._Model;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Model IMagicEffectGetter.Model => this.Model;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Model Model { get => _Model.Item; set => _Model.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Model> IMagicEffect.Model_Property => this.Model_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Model> IMagicEffectGetter.Model_Property => this.Model_Property;
         #endregion
         #region Flags
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<MagicEffect.MagicFlag> _Flags = NotifyingItem.Factory<MagicEffect.MagicFlag>();
         public INotifyingItem<MagicEffect.MagicFlag> Flags_Property => _Flags;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public MagicEffect.MagicFlag Flags
         {
             get => this._Flags.Item;
             set => this._Flags.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<MagicEffect.MagicFlag> IMagicEffect.Flags_Property => this.Flags_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<MagicEffect.MagicFlag> IMagicEffectGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region BaseCost
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _BaseCost = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> BaseCost_Property => _BaseCost;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single BaseCost
         {
             get => this._BaseCost.Item;
             set => this._BaseCost.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IMagicEffect.BaseCost_Property => this.BaseCost_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Single> IMagicEffectGetter.BaseCost_Property => this.BaseCost_Property;
         #endregion
         #region Unused
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte[]> _Unused = NotifyingItem.Factory<Byte[]>(noNullFallback: () => new byte[4]);
         public INotifyingItem<Byte[]> Unused_Property => _Unused;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] Unused
         {
             get => this._Unused.Item;
             set => this._Unused.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte[]> IMagicEffect.Unused_Property => this.Unused_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte[]> IMagicEffectGetter.Unused_Property => this.Unused_Property;
         #endregion
         #region MagicSchool
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<MagicSchool> _MagicSchool = NotifyingItem.Factory<MagicSchool>();
         public INotifyingItem<MagicSchool> MagicSchool_Property => _MagicSchool;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public MagicSchool MagicSchool
         {
             get => this._MagicSchool.Item;
             set => this._MagicSchool.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<MagicSchool> IMagicEffect.MagicSchool_Property => this.MagicSchool_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<MagicSchool> IMagicEffectGetter.MagicSchool_Property => this.MagicSchool_Property;
         #endregion
         #region Resistance
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Resistance> _Resistance = NotifyingItem.Factory<Resistance>();
         public INotifyingItem<Resistance> Resistance_Property => _Resistance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Resistance Resistance
         {
             get => this._Resistance.Item;
             set => this._Resistance.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Resistance> IMagicEffect.Resistance_Property => this.Resistance_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Resistance> IMagicEffectGetter.Resistance_Property => this.Resistance_Property;
         #endregion
         #region CounterEffectCount
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt32> _CounterEffectCount = NotifyingItem.Factory<UInt32>();
         public INotifyingItem<UInt32> CounterEffectCount_Property => _CounterEffectCount;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 CounterEffectCount
         {
             get => this._CounterEffectCount.Item;
             set => this._CounterEffectCount.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt32> IMagicEffect.CounterEffectCount_Property => this.CounterEffectCount_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<UInt32> IMagicEffectGetter.CounterEffectCount_Property => this.CounterEffectCount_Property;
         #endregion
         #region Light
         public FormIDLink<Light> Light_Property { get; } = new FormIDLink<Light>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Light Light { get => Light_Property.Item; set => Light_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDLink<Light> IMagicEffectGetter.Light_Property => this.Light_Property;
         #endregion
         #region ProjectileSpeed
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _ProjectileSpeed = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> ProjectileSpeed_Property => _ProjectileSpeed;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single ProjectileSpeed
         {
             get => this._ProjectileSpeed.Item;
             set => this._ProjectileSpeed.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IMagicEffect.ProjectileSpeed_Property => this.ProjectileSpeed_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Single> IMagicEffectGetter.ProjectileSpeed_Property => this.ProjectileSpeed_Property;
         #endregion
         #region EffectShader
         public FormIDLink<EffectShader> EffectShader_Property { get; } = new FormIDLink<EffectShader>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public EffectShader EffectShader { get => EffectShader_Property.Item; set => EffectShader_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDLink<EffectShader> IMagicEffectGetter.EffectShader_Property => this.EffectShader_Property;
         #endregion
         #region SubData
         private readonly INotifyingItem<MagicEffectSubData> _SubData = new NotifyingItem<MagicEffectSubData>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingItem<MagicEffectSubData> SubData_Property => this._SubData;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         MagicEffectSubData IMagicEffectGetter.SubData => this.SubData;
         public MagicEffectSubData SubData { get => _SubData.Item; set => _SubData.Item = value; }
         INotifyingItem<MagicEffectSubData> IMagicEffect.SubData_Property => this.SubData_Property;
         INotifyingItemGetter<MagicEffectSubData> IMagicEffectGetter.SubData_Property => this.SubData_Property;
         #endregion
         #region CounterEffects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingList<EDIDLink<MagicEffect>> _CounterEffects = new NotifyingList<EDIDLink<MagicEffect>>();
         public INotifyingList<EDIDLink<MagicEffect>> CounterEffects => _CounterEffects;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<EDIDLink<MagicEffect>> CounterEffectsEnumerable
         {
             get => _CounterEffects;
             set => _CounterEffects.SetTo(value);
         }
         #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingList<EDIDLink<MagicEffect>> IMagicEffect.CounterEffects => _CounterEffects;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingListGetter<EDIDLink<MagicEffect>> IMagicEffectGetter.CounterEffects => _CounterEffects;
         #endregion
 

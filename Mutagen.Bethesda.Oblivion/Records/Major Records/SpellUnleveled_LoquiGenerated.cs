@@ -28,6 +28,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class SpellUnleveled : Spell, ISpellUnleveled, ILoquiObjectSetter, IEquatable<SpellUnleveled>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SpellUnleveled_Registration.Instance;
         public new static SpellUnleveled_Registration Registration => SpellUnleveled_Registration.Instance;
 
@@ -40,59 +41,79 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Type
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Spell.SpellType> _Type = NotifyingItem.Factory<Spell.SpellType>();
         public INotifyingItem<Spell.SpellType> Type_Property => _Type;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Spell.SpellType Type
         {
             get => this._Type.Item;
             set => this._Type.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Spell.SpellType> ISpellUnleveled.Type_Property => this.Type_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Spell.SpellType> ISpellUnleveledGetter.Type_Property => this.Type_Property;
         #endregion
         #region Cost
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt32> _Cost = NotifyingItem.Factory<UInt32>();
         public INotifyingItem<UInt32> Cost_Property => _Cost;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 Cost
         {
             get => this._Cost.Item;
             set => this._Cost.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt32> ISpellUnleveled.Cost_Property => this.Cost_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<UInt32> ISpellUnleveledGetter.Cost_Property => this.Cost_Property;
         #endregion
         #region Level
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Spell.SpellLevel> _Level = NotifyingItem.Factory<Spell.SpellLevel>();
         public INotifyingItem<Spell.SpellLevel> Level_Property => _Level;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Spell.SpellLevel Level
         {
             get => this._Level.Item;
             set => this._Level.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Spell.SpellLevel> ISpellUnleveled.Level_Property => this.Level_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Spell.SpellLevel> ISpellUnleveledGetter.Level_Property => this.Level_Property;
         #endregion
         #region Flag
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Spell.SpellFlag> _Flag = NotifyingItem.Factory<Spell.SpellFlag>();
         public INotifyingItem<Spell.SpellFlag> Flag_Property => _Flag;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Spell.SpellFlag Flag
         {
             get => this._Flag.Item;
             set => this._Flag.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Spell.SpellFlag> ISpellUnleveled.Flag_Property => this.Flag_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Spell.SpellFlag> ISpellUnleveledGetter.Flag_Property => this.Flag_Property;
         #endregion
         #region Effects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingList<Effect> _Effects = new NotifyingList<Effect>();
         public INotifyingList<Effect> Effects => _Effects;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<Effect> EffectsEnumerable
         {
             get => _Effects;
             set => _Effects.SetTo(value);
         }
         #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingList<Effect> ISpellUnleveled.Effects => _Effects;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingListGetter<Effect> ISpellUnleveledGetter.Effects => _Effects;
         #endregion
 

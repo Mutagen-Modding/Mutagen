@@ -27,6 +27,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class CreatureSound : ICreatureSound, ILoquiObjectSetter, IEquatable<CreatureSound>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => CreatureSound_Registration.Instance;
         public static CreatureSound_Registration Registration => CreatureSound_Registration.Instance;
 
@@ -39,26 +40,34 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region SoundType
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<CreatureSound.CreatureSoundType> _SoundType = NotifyingSetItem.Factory<CreatureSound.CreatureSoundType>(markAsSet: false);
         public INotifyingSetItem<CreatureSound.CreatureSoundType> SoundType_Property => _SoundType;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public CreatureSound.CreatureSoundType SoundType
         {
             get => this._SoundType.Item;
             set => this._SoundType.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<CreatureSound.CreatureSoundType> ICreatureSound.SoundType_Property => this.SoundType_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<CreatureSound.CreatureSoundType> ICreatureSoundGetter.SoundType_Property => this.SoundType_Property;
         #endregion
         #region Sounds
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingList<SoundItem> _Sounds = new NotifyingList<SoundItem>();
         public INotifyingList<SoundItem> Sounds => _Sounds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<SoundItem> SoundsEnumerable
         {
             get => _Sounds;
             set => _Sounds.SetTo(value);
         }
         #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingList<SoundItem> ICreatureSound.Sounds => _Sounds;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingListGetter<SoundItem> ICreatureSoundGetter.Sounds => _Sounds;
         #endregion
 

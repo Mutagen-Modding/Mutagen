@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>941a49c3f547e1bbdc0094480019eaffc996f7f1</Sha>
+         <Sha>42c96be002292fef5e5e54c744744c8bee34bf3c</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>02-06-2018 21:18:05</CommitDate>
-         <Description>NotifyingDictionary null ref fire errors</Description>
+         <CommitDate>02-12-2018 16:44:01</CommitDate>
+         <Description>Subscribe wiring refactoring to make better use of internal callback and avoid unnecessary casts</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>c07386bf85128a6b621edb71b78bed790f3afd66</Sha>
+         <Sha>b971d30fbb3fccfcb9930cd6e9f8a06921159246</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>02-11-2018 18:59:49</CommitDate>
-         <Description>Refactored LoquiType refname parsing</Description>
+         <CommitDate>02-12-2018 16:45:33</CommitDate>
+         <Description>Merge remote-tracking branch 'origin/Dev' into Laptop</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

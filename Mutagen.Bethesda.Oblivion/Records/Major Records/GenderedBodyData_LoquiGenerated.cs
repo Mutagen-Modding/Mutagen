@@ -27,6 +27,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class GenderedBodyData : IGenderedBodyData, ILoquiObjectSetter, IEquatable<GenderedBodyData>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GenderedBodyData_Registration.Instance;
         public static GenderedBodyData_Registration Registration => GenderedBodyData_Registration.Instance;
 
@@ -39,19 +40,31 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Male
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingSetItem<BodyData> _Male = new NotifyingSetItem<BodyData>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItem<BodyData> Male_Property => this._Male;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         BodyData IGenderedBodyDataGetter.Male => this.Male;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public BodyData Male { get => _Male.Item; set => _Male.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<BodyData> IGenderedBodyData.Male_Property => this.Male_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<BodyData> IGenderedBodyDataGetter.Male_Property => this.Male_Property;
         #endregion
         #region Female
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingSetItem<BodyData> _Female = new NotifyingSetItem<BodyData>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItem<BodyData> Female_Property => this._Female;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         BodyData IGenderedBodyDataGetter.Female => this.Female;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public BodyData Female { get => _Female.Item; set => _Female.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<BodyData> IGenderedBodyData.Female_Property => this.Female_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<BodyData> IGenderedBodyDataGetter.Female_Property => this.Female_Property;
         #endregion
 

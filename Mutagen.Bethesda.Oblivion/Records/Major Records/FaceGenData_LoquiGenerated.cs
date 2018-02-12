@@ -26,6 +26,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class FaceGenData : IFaceGenData, ILoquiObjectSetter, IEquatable<FaceGenData>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => FaceGenData_Registration.Instance;
         public static FaceGenData_Registration Registration => FaceGenData_Registration.Instance;
 
@@ -38,36 +39,48 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region SymmetricGeometry
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Byte[]> _SymmetricGeometry = NotifyingSetItem.Factory<Byte[]>(markAsSet: false);
         public INotifyingSetItem<Byte[]> SymmetricGeometry_Property => _SymmetricGeometry;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] SymmetricGeometry
         {
             get => this._SymmetricGeometry.Item;
             set => this._SymmetricGeometry.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> IFaceGenData.SymmetricGeometry_Property => this.SymmetricGeometry_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Byte[]> IFaceGenDataGetter.SymmetricGeometry_Property => this.SymmetricGeometry_Property;
         #endregion
         #region AsymmetricGeometry
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Byte[]> _AsymmetricGeometry = NotifyingSetItem.Factory<Byte[]>(markAsSet: false);
         public INotifyingSetItem<Byte[]> AsymmetricGeometry_Property => _AsymmetricGeometry;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] AsymmetricGeometry
         {
             get => this._AsymmetricGeometry.Item;
             set => this._AsymmetricGeometry.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> IFaceGenData.AsymmetricGeometry_Property => this.AsymmetricGeometry_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Byte[]> IFaceGenDataGetter.AsymmetricGeometry_Property => this.AsymmetricGeometry_Property;
         #endregion
         #region SymmetricTexture
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Byte[]> _SymmetricTexture = NotifyingSetItem.Factory<Byte[]>(markAsSet: false);
         public INotifyingSetItem<Byte[]> SymmetricTexture_Property => _SymmetricTexture;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] SymmetricTexture
         {
             get => this._SymmetricTexture.Item;
             set => this._SymmetricTexture.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> IFaceGenData.SymmetricTexture_Property => this.SymmetricTexture_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Byte[]> IFaceGenDataGetter.SymmetricTexture_Property => this.SymmetricTexture_Property;
         #endregion
 

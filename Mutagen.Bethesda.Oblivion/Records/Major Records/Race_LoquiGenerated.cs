@@ -28,6 +28,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Race : NamedMajorRecord, IRace, ILoquiObjectSetter, IEquatable<Race>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Race_Registration.Instance;
         public new static Race_Registration Registration => Race_Registration.Instance;
 
@@ -40,250 +41,348 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Description
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<String> _Description = NotifyingSetItem.Factory<String>(markAsSet: false);
         public INotifyingSetItem<String> Description_Property => _Description;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Description
         {
             get => this._Description.Item;
             set => this._Description.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> IRace.Description_Property => this.Description_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<String> IRaceGetter.Description_Property => this.Description_Property;
         #endregion
         #region Spells
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingList<FormIDSetLink<Spell>> _Spells = new NotifyingList<FormIDSetLink<Spell>>();
         public INotifyingList<FormIDSetLink<Spell>> Spells => _Spells;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<FormIDSetLink<Spell>> SpellsEnumerable
         {
             get => _Spells;
             set => _Spells.SetTo(value);
         }
         #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingList<FormIDSetLink<Spell>> IRace.Spells => _Spells;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingListGetter<FormIDSetLink<Spell>> IRaceGetter.Spells => _Spells;
         #endregion
 
         #endregion
         #region Relations
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingList<Relation> _Relations = new NotifyingList<Relation>();
         public INotifyingList<Relation> Relations => _Relations;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<Relation> RelationsEnumerable
         {
             get => _Relations;
             set => _Relations.SetTo(value);
         }
         #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingList<Relation> IRace.Relations => _Relations;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingListGetter<Relation> IRaceGetter.Relations => _Relations;
         #endregion
 
         #endregion
         #region SkillBoosts
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingList<SkillBoost> _SkillBoosts = new NotifyingListBounded<SkillBoost>(max: 7);
         public INotifyingList<SkillBoost> SkillBoosts => _SkillBoosts;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<SkillBoost> SkillBoostsEnumerable
         {
             get => _SkillBoosts;
             set => _SkillBoosts.SetTo(value);
         }
         #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingList<SkillBoost> IRace.SkillBoosts => _SkillBoosts;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingListGetter<SkillBoost> IRaceGetter.SkillBoosts => _SkillBoosts;
         #endregion
 
         #endregion
         #region Fluff
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte[]> _Fluff = NotifyingItem.Factory<Byte[]>(noNullFallback: () => new byte[4]);
         public INotifyingItem<Byte[]> Fluff_Property => _Fluff;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] Fluff
         {
             get => this._Fluff.Item;
             set => this._Fluff.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte[]> IRace.Fluff_Property => this.Fluff_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte[]> IRaceGetter.Fluff_Property => this.Fluff_Property;
         #endregion
         #region MaleHeight
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _MaleHeight = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> MaleHeight_Property => _MaleHeight;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single MaleHeight
         {
             get => this._MaleHeight.Item;
             set => this._MaleHeight.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IRace.MaleHeight_Property => this.MaleHeight_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Single> IRaceGetter.MaleHeight_Property => this.MaleHeight_Property;
         #endregion
         #region FemaleHeight
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _FemaleHeight = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> FemaleHeight_Property => _FemaleHeight;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single FemaleHeight
         {
             get => this._FemaleHeight.Item;
             set => this._FemaleHeight.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IRace.FemaleHeight_Property => this.FemaleHeight_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Single> IRaceGetter.FemaleHeight_Property => this.FemaleHeight_Property;
         #endregion
         #region MaleWeight
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _MaleWeight = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> MaleWeight_Property => _MaleWeight;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single MaleWeight
         {
             get => this._MaleWeight.Item;
             set => this._MaleWeight.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IRace.MaleWeight_Property => this.MaleWeight_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Single> IRaceGetter.MaleWeight_Property => this.MaleWeight_Property;
         #endregion
         #region FemaleWeight
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _FemaleWeight = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> FemaleWeight_Property => _FemaleWeight;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single FemaleWeight
         {
             get => this._FemaleWeight.Item;
             set => this._FemaleWeight.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IRace.FemaleWeight_Property => this.FemaleWeight_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Single> IRaceGetter.FemaleWeight_Property => this.FemaleWeight_Property;
         #endregion
         #region Flags
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Race.Flag> _Flags = NotifyingItem.Factory<Race.Flag>();
         public INotifyingItem<Race.Flag> Flags_Property => _Flags;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Race.Flag Flags
         {
             get => this._Flags.Item;
             set => this._Flags.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Race.Flag> IRace.Flags_Property => this.Flags_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Race.Flag> IRaceGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region Voices
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingSetItem<RaceVoices> _Voices = new NotifyingSetItem<RaceVoices>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItem<RaceVoices> Voices_Property => this._Voices;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         RaceVoices IRaceGetter.Voices => this.Voices;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public RaceVoices Voices { get => _Voices.Item; set => _Voices.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<RaceVoices> IRace.Voices_Property => this.Voices_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<RaceVoices> IRaceGetter.Voices_Property => this.Voices_Property;
         #endregion
         #region DefaultHair
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingSetItem<RaceHair> _DefaultHair = new NotifyingSetItem<RaceHair>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItem<RaceHair> DefaultHair_Property => this._DefaultHair;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         RaceHair IRaceGetter.DefaultHair => this.DefaultHair;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public RaceHair DefaultHair { get => _DefaultHair.Item; set => _DefaultHair.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<RaceHair> IRace.DefaultHair_Property => this.DefaultHair_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<RaceHair> IRaceGetter.DefaultHair_Property => this.DefaultHair_Property;
         #endregion
         #region DefaultHairColor
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Byte> _DefaultHairColor = NotifyingSetItem.Factory<Byte>(markAsSet: false);
         public INotifyingSetItem<Byte> DefaultHairColor_Property => _DefaultHairColor;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte DefaultHairColor
         {
             get => this._DefaultHairColor.Item;
             set => this._DefaultHairColor.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte> IRace.DefaultHairColor_Property => this.DefaultHairColor_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Byte> IRaceGetter.DefaultHairColor_Property => this.DefaultHairColor_Property;
         #endregion
         #region FaceGenMainClamp
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Int32> _FaceGenMainClamp = NotifyingSetItem.Factory<Int32>(markAsSet: false);
         public INotifyingSetItem<Int32> FaceGenMainClamp_Property => _FaceGenMainClamp;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Int32 FaceGenMainClamp
         {
             get => this._FaceGenMainClamp.Item;
             set => this._FaceGenMainClamp.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Int32> IRace.FaceGenMainClamp_Property => this.FaceGenMainClamp_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Int32> IRaceGetter.FaceGenMainClamp_Property => this.FaceGenMainClamp_Property;
         #endregion
         #region FaceGenFaceClamp
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Int32> _FaceGenFaceClamp = NotifyingSetItem.Factory<Int32>(markAsSet: false);
         public INotifyingSetItem<Int32> FaceGenFaceClamp_Property => _FaceGenFaceClamp;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Int32 FaceGenFaceClamp
         {
             get => this._FaceGenFaceClamp.Item;
             set => this._FaceGenFaceClamp.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Int32> IRace.FaceGenFaceClamp_Property => this.FaceGenFaceClamp_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Int32> IRaceGetter.FaceGenFaceClamp_Property => this.FaceGenFaceClamp_Property;
         #endregion
         #region RaceStats
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingSetItem<RaceStatsGendered> _RaceStats = new NotifyingSetItem<RaceStatsGendered>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItem<RaceStatsGendered> RaceStats_Property => this._RaceStats;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         RaceStatsGendered IRaceGetter.RaceStats => this.RaceStats;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public RaceStatsGendered RaceStats { get => _RaceStats.Item; set => _RaceStats.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<RaceStatsGendered> IRace.RaceStats_Property => this.RaceStats_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<RaceStatsGendered> IRaceGetter.RaceStats_Property => this.RaceStats_Property;
         #endregion
         #region FaceData
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingList<FacePart> _FaceData = new NotifyingList<FacePart>();
         public INotifyingList<FacePart> FaceData => _FaceData;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<FacePart> FaceDataEnumerable
         {
             get => _FaceData;
             set => _FaceData.SetTo(value);
         }
         #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingList<FacePart> IRace.FaceData => _FaceData;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingListGetter<FacePart> IRaceGetter.FaceData => _FaceData;
         #endregion
 
         #endregion
         #region BodyData
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingSetItem<GenderedBodyData> _BodyData = new NotifyingSetItem<GenderedBodyData>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItem<GenderedBodyData> BodyData_Property => this._BodyData;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         GenderedBodyData IRaceGetter.BodyData => this.BodyData;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public GenderedBodyData BodyData { get => _BodyData.Item; set => _BodyData.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<GenderedBodyData> IRace.BodyData_Property => this.BodyData_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<GenderedBodyData> IRaceGetter.BodyData_Property => this.BodyData_Property;
         #endregion
         #region Hairs
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingList<FormIDLink<Hair>> _Hairs = new NotifyingList<FormIDLink<Hair>>();
         public INotifyingList<FormIDLink<Hair>> Hairs => _Hairs;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<FormIDLink<Hair>> HairsEnumerable
         {
             get => _Hairs;
             set => _Hairs.SetTo(value);
         }
         #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingList<FormIDLink<Hair>> IRace.Hairs => _Hairs;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingListGetter<FormIDLink<Hair>> IRaceGetter.Hairs => _Hairs;
         #endregion
 
         #endregion
         #region Eyes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingList<FormIDLink<Eye>> _Eyes = new NotifyingList<FormIDLink<Eye>>();
         public INotifyingList<FormIDLink<Eye>> Eyes => _Eyes;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<FormIDLink<Eye>> EyesEnumerable
         {
             get => _Eyes;
             set => _Eyes.SetTo(value);
         }
         #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingList<FormIDLink<Eye>> IRace.Eyes => _Eyes;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingListGetter<FormIDLink<Eye>> IRaceGetter.Eyes => _Eyes;
         #endregion
 
         #endregion
         #region FaceGenData
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingSetItem<FaceGenData> _FaceGenData = new NotifyingSetItem<FaceGenData>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItem<FaceGenData> FaceGenData_Property => this._FaceGenData;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FaceGenData IRaceGetter.FaceGenData => this.FaceGenData;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public FaceGenData FaceGenData { get => _FaceGenData.Item; set => _FaceGenData.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<FaceGenData> IRace.FaceGenData_Property => this.FaceGenData_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<FaceGenData> IRaceGetter.FaceGenData_Property => this.FaceGenData_Property;
         #endregion
         #region Unknown
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Byte[]> _Unknown = NotifyingSetItem.Factory<Byte[]>(
             markAsSet: false,
             noNullFallback: () => new byte[2]);
         public INotifyingSetItem<Byte[]> Unknown_Property => _Unknown;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] Unknown
         {
             get => this._Unknown.Item;
             set => this._Unknown.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> IRace.Unknown_Property => this.Unknown_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Byte[]> IRaceGetter.Unknown_Property => this.Unknown_Property;
         #endregion
 

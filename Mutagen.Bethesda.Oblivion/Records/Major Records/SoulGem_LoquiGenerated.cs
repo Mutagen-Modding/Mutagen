@@ -28,6 +28,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class SoulGem : NamedMajorRecord, ISoulGem, ILoquiObjectSetter, IEquatable<SoulGem>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoulGem_Registration.Instance;
         public new static SoulGem_Registration Registration => SoulGem_Registration.Instance;
 
@@ -40,71 +41,99 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingSetItem<Model> _Model = new NotifyingSetItem<Model>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItem<Model> Model_Property => this._Model;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Model ISoulGemGetter.Model => this.Model;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Model Model { get => _Model.Item; set => _Model.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Model> ISoulGem.Model_Property => this.Model_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Model> ISoulGemGetter.Model_Property => this.Model_Property;
         #endregion
         #region Icon
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
         public INotifyingSetItem<FilePath> Icon_Property => _Icon;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public FilePath Icon
         {
             get => this._Icon.Item;
             set => this._Icon.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<FilePath> ISoulGem.Icon_Property => this.Icon_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<FilePath> ISoulGemGetter.Icon_Property => this.Icon_Property;
         #endregion
         #region Script
         public FormIDSetLink<Script> Script_Property { get; } = new FormIDSetLink<Script>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Script Script { get => Script_Property.Item; set => Script_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Script> ISoulGemGetter.Script_Property => this.Script_Property;
         #endregion
         #region Value
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt32> _Value = NotifyingItem.Factory<UInt32>();
         public INotifyingItem<UInt32> Value_Property => _Value;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 Value
         {
             get => this._Value.Item;
             set => this._Value.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt32> ISoulGem.Value_Property => this.Value_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<UInt32> ISoulGemGetter.Value_Property => this.Value_Property;
         #endregion
         #region Weight
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _Weight = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> Weight_Property => _Weight;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single Weight
         {
             get => this._Weight.Item;
             set => this._Weight.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> ISoulGem.Weight_Property => this.Weight_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Single> ISoulGemGetter.Weight_Property => this.Weight_Property;
         #endregion
         #region ContainedSoul
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<SoulLevel> _ContainedSoul = NotifyingSetItem.Factory<SoulLevel>(markAsSet: false);
         public INotifyingSetItem<SoulLevel> ContainedSoul_Property => _ContainedSoul;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public SoulLevel ContainedSoul
         {
             get => this._ContainedSoul.Item;
             set => this._ContainedSoul.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<SoulLevel> ISoulGem.ContainedSoul_Property => this.ContainedSoul_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<SoulLevel> ISoulGemGetter.ContainedSoul_Property => this.ContainedSoul_Property;
         #endregion
         #region MaximumCapacity
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<SoulLevel> _MaximumCapacity = NotifyingSetItem.Factory<SoulLevel>(markAsSet: false);
         public INotifyingSetItem<SoulLevel> MaximumCapacity_Property => _MaximumCapacity;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public SoulLevel MaximumCapacity
         {
             get => this._MaximumCapacity.Item;
             set => this._MaximumCapacity.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<SoulLevel> ISoulGem.MaximumCapacity_Property => this.MaximumCapacity_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<SoulLevel> ISoulGemGetter.MaximumCapacity_Property => this.MaximumCapacity_Property;
         #endregion
 

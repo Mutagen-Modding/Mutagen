@@ -28,6 +28,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Weapon : NamedMajorRecord, IWeapon, ILoquiObjectSetter, IEquatable<Weapon>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Weapon_Registration.Instance;
         public new static Weapon_Registration Registration => Weapon_Registration.Instance;
 
@@ -40,131 +41,181 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingSetItem<Model> _Model = new NotifyingSetItem<Model>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItem<Model> Model_Property => this._Model;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Model IWeaponGetter.Model => this.Model;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Model Model { get => _Model.Item; set => _Model.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Model> IWeapon.Model_Property => this.Model_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Model> IWeaponGetter.Model_Property => this.Model_Property;
         #endregion
         #region Icon
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
         public INotifyingSetItem<FilePath> Icon_Property => _Icon;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public FilePath Icon
         {
             get => this._Icon.Item;
             set => this._Icon.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<FilePath> IWeapon.Icon_Property => this.Icon_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<FilePath> IWeaponGetter.Icon_Property => this.Icon_Property;
         #endregion
         #region Script
         public FormIDSetLink<Script> Script_Property { get; } = new FormIDSetLink<Script>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Script Script { get => Script_Property.Item; set => Script_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Script> IWeaponGetter.Script_Property => this.Script_Property;
         #endregion
         #region Enchantment
         public FormIDSetLink<Enchantment> Enchantment_Property { get; } = new FormIDSetLink<Enchantment>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Enchantment Enchantment { get => Enchantment_Property.Item; set => Enchantment_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Enchantment> IWeaponGetter.Enchantment_Property => this.Enchantment_Property;
         #endregion
         #region EnchantmentPoints
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<UInt16> _EnchantmentPoints = NotifyingSetItem.Factory<UInt16>(markAsSet: false);
         public INotifyingSetItem<UInt16> EnchantmentPoints_Property => _EnchantmentPoints;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt16 EnchantmentPoints
         {
             get => this._EnchantmentPoints.Item;
             set => this._EnchantmentPoints.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<UInt16> IWeapon.EnchantmentPoints_Property => this.EnchantmentPoints_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<UInt16> IWeaponGetter.EnchantmentPoints_Property => this.EnchantmentPoints_Property;
         #endregion
         #region Type
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Weapon.WeaponType> _Type = NotifyingItem.Factory<Weapon.WeaponType>();
         public INotifyingItem<Weapon.WeaponType> Type_Property => _Type;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Weapon.WeaponType Type
         {
             get => this._Type.Item;
             set => this._Type.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Weapon.WeaponType> IWeapon.Type_Property => this.Type_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Weapon.WeaponType> IWeaponGetter.Type_Property => this.Type_Property;
         #endregion
         #region Speed
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _Speed = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> Speed_Property => _Speed;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single Speed
         {
             get => this._Speed.Item;
             set => this._Speed.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IWeapon.Speed_Property => this.Speed_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Single> IWeaponGetter.Speed_Property => this.Speed_Property;
         #endregion
         #region Reach
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _Reach = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> Reach_Property => _Reach;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single Reach
         {
             get => this._Reach.Item;
             set => this._Reach.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IWeapon.Reach_Property => this.Reach_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Single> IWeaponGetter.Reach_Property => this.Reach_Property;
         #endregion
         #region Flags
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Weapon.WeaponFlag> _Flags = NotifyingItem.Factory<Weapon.WeaponFlag>();
         public INotifyingItem<Weapon.WeaponFlag> Flags_Property => _Flags;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Weapon.WeaponFlag Flags
         {
             get => this._Flags.Item;
             set => this._Flags.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Weapon.WeaponFlag> IWeapon.Flags_Property => this.Flags_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Weapon.WeaponFlag> IWeaponGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region Value
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt32> _Value = NotifyingItem.Factory<UInt32>();
         public INotifyingItem<UInt32> Value_Property => _Value;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 Value
         {
             get => this._Value.Item;
             set => this._Value.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt32> IWeapon.Value_Property => this.Value_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<UInt32> IWeaponGetter.Value_Property => this.Value_Property;
         #endregion
         #region Health
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt32> _Health = NotifyingItem.Factory<UInt32>();
         public INotifyingItem<UInt32> Health_Property => _Health;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 Health
         {
             get => this._Health.Item;
             set => this._Health.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt32> IWeapon.Health_Property => this.Health_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<UInt32> IWeaponGetter.Health_Property => this.Health_Property;
         #endregion
         #region Weight
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _Weight = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> Weight_Property => _Weight;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single Weight
         {
             get => this._Weight.Item;
             set => this._Weight.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IWeapon.Weight_Property => this.Weight_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Single> IWeaponGetter.Weight_Property => this.Weight_Property;
         #endregion
         #region Damage
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt16> _Damage = NotifyingItem.Factory<UInt16>();
         public INotifyingItem<UInt16> Damage_Property => _Damage;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt16 Damage
         {
             get => this._Damage.Item;
             set => this._Damage.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt16> IWeapon.Damage_Property => this.Damage_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<UInt16> IWeaponGetter.Damage_Property => this.Damage_Property;
         #endregion
 

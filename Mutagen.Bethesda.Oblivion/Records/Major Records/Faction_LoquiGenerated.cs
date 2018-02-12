@@ -28,6 +28,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Faction : NamedMajorRecord, IFaction, ILoquiObjectSetter, IEquatable<Faction>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Faction_Registration.Instance;
         public new static Faction_Registration Registration => Faction_Registration.Instance;
 
@@ -40,51 +41,67 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Relations
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingList<Relation> _Relations = new NotifyingList<Relation>();
         public INotifyingList<Relation> Relations => _Relations;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<Relation> RelationsEnumerable
         {
             get => _Relations;
             set => _Relations.SetTo(value);
         }
         #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingList<Relation> IFaction.Relations => _Relations;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingListGetter<Relation> IFactionGetter.Relations => _Relations;
         #endregion
 
         #endregion
         #region Flags
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Faction.FactionFlag> _Flags = NotifyingSetItem.Factory<Faction.FactionFlag>(markAsSet: false);
         public INotifyingSetItem<Faction.FactionFlag> Flags_Property => _Flags;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Faction.FactionFlag Flags
         {
             get => this._Flags.Item;
             set => this._Flags.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Faction.FactionFlag> IFaction.Flags_Property => this.Flags_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Faction.FactionFlag> IFactionGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region CrimeGoldMultiplier
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Single> _CrimeGoldMultiplier = NotifyingSetItem.Factory<Single>(markAsSet: false);
         public INotifyingSetItem<Single> CrimeGoldMultiplier_Property => _CrimeGoldMultiplier;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single CrimeGoldMultiplier
         {
             get => this._CrimeGoldMultiplier.Item;
             set => this._CrimeGoldMultiplier.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Single> IFaction.CrimeGoldMultiplier_Property => this.CrimeGoldMultiplier_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Single> IFactionGetter.CrimeGoldMultiplier_Property => this.CrimeGoldMultiplier_Property;
         #endregion
         #region Ranks
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingList<Rank> _Ranks = new NotifyingList<Rank>();
         public INotifyingList<Rank> Ranks => _Ranks;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<Rank> RanksEnumerable
         {
             get => _Ranks;
             set => _Ranks.SetTo(value);
         }
         #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingList<Rank> IFaction.Ranks => _Ranks;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingListGetter<Rank> IFactionGetter.Ranks => _Ranks;
         #endregion
 

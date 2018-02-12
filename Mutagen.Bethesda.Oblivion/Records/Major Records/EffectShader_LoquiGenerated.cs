@@ -27,6 +27,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class EffectShader : MajorRecord, IEffectShader, ILoquiObjectSetter, IEquatable<EffectShader>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => EffectShader_Registration.Instance;
         public new static EffectShader_Registration Registration => EffectShader_Registration.Instance;
 

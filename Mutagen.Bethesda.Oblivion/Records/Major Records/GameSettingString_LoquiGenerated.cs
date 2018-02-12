@@ -28,6 +28,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class GameSettingString : GameSetting, IGameSettingString, ILoquiObjectSetter, IEquatable<GameSettingString>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GameSettingString_Registration.Instance;
         public new static GameSettingString_Registration Registration => GameSettingString_Registration.Instance;
 
@@ -40,14 +41,18 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Data
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<String> _Data = NotifyingSetItem.Factory<String>(markAsSet: false);
         public INotifyingSetItem<String> Data_Property => _Data;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Data
         {
             get => this._Data.Item;
             set => this._Data.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> IGameSettingString.Data_Property => this.Data_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<String> IGameSettingStringGetter.Data_Property => this.Data_Property;
         #endregion
 

@@ -28,6 +28,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class GlobalInt : Global, IGlobalInt, ILoquiObjectSetter, IEquatable<GlobalInt>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => GlobalInt_Registration.Instance;
         public new static GlobalInt_Registration Registration => GlobalInt_Registration.Instance;
 
@@ -40,13 +41,16 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Data
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Int32> _Data = NotifyingItem.Factory<Int32>();
         public INotifyingItemGetter<Int32> Data_Property => _Data;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Int32 Data
         {
             get => this._Data.Item;
             protected set => this._Data.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Int32> IGlobalIntGetter.Data_Property => this.Data_Property;
         #endregion
 

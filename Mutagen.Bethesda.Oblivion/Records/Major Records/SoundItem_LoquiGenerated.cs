@@ -26,6 +26,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class SoundItem : ISoundItem, ILoquiObjectSetter, IEquatable<SoundItem>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SoundItem_Registration.Instance;
         public static SoundItem_Registration Registration => SoundItem_Registration.Instance;
 
@@ -39,18 +40,24 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Sound
         public FormIDSetLink<Sound> Sound_Property { get; } = new FormIDSetLink<Sound>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Sound Sound { get => Sound_Property.Item; set => Sound_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FormIDSetLink<Sound> ISoundItemGetter.Sound_Property => this.Sound_Property;
         #endregion
         #region Chance
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Byte> _Chance = NotifyingSetItem.Factory<Byte>(markAsSet: false);
         public INotifyingSetItem<Byte> Chance_Property => _Chance;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Chance
         {
             get => this._Chance.Item;
             set => this._Chance.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte> ISoundItem.Chance_Property => this.Chance_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Byte> ISoundItemGetter.Chance_Property => this.Chance_Property;
         #endregion
 

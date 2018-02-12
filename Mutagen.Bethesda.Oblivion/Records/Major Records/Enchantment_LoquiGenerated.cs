@@ -28,6 +28,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Enchantment : NamedMajorRecord, IEnchantment, ILoquiObjectSetter, IEquatable<Enchantment>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Enchantment_Registration.Instance;
         public new static Enchantment_Registration Registration => Enchantment_Registration.Instance;
 
@@ -40,59 +41,79 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Type
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Enchantment.EnchantmentType> _Type = NotifyingItem.Factory<Enchantment.EnchantmentType>();
         public INotifyingItem<Enchantment.EnchantmentType> Type_Property => _Type;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Enchantment.EnchantmentType Type
         {
             get => this._Type.Item;
             set => this._Type.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Enchantment.EnchantmentType> IEnchantment.Type_Property => this.Type_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Enchantment.EnchantmentType> IEnchantmentGetter.Type_Property => this.Type_Property;
         #endregion
         #region ChargeAmount
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt32> _ChargeAmount = NotifyingItem.Factory<UInt32>();
         public INotifyingItem<UInt32> ChargeAmount_Property => _ChargeAmount;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 ChargeAmount
         {
             get => this._ChargeAmount.Item;
             set => this._ChargeAmount.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt32> IEnchantment.ChargeAmount_Property => this.ChargeAmount_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<UInt32> IEnchantmentGetter.ChargeAmount_Property => this.ChargeAmount_Property;
         #endregion
         #region EnchantCost
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt32> _EnchantCost = NotifyingItem.Factory<UInt32>();
         public INotifyingItem<UInt32> EnchantCost_Property => _EnchantCost;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 EnchantCost
         {
             get => this._EnchantCost.Item;
             set => this._EnchantCost.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt32> IEnchantment.EnchantCost_Property => this.EnchantCost_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<UInt32> IEnchantmentGetter.EnchantCost_Property => this.EnchantCost_Property;
         #endregion
         #region Flags
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Enchantment.Flag> _Flags = NotifyingItem.Factory<Enchantment.Flag>();
         public INotifyingItem<Enchantment.Flag> Flags_Property => _Flags;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Enchantment.Flag Flags
         {
             get => this._Flags.Item;
             set => this._Flags.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Enchantment.Flag> IEnchantment.Flags_Property => this.Flags_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Enchantment.Flag> IEnchantmentGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region Effects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingList<Effect> _Effects = new NotifyingList<Effect>();
         public INotifyingList<Effect> Effects => _Effects;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<Effect> EffectsEnumerable
         {
             get => _Effects;
             set => _Effects.SetTo(value);
         }
         #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingList<Effect> IEnchantment.Effects => _Effects;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingListGetter<Effect> IEnchantmentGetter.Effects => _Effects;
         #endregion
 

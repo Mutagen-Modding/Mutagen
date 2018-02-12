@@ -27,6 +27,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Subspace : MajorRecord, ISubspace, ILoquiObjectSetter, IEquatable<Subspace>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Subspace_Registration.Instance;
         public new static Subspace_Registration Registration => Subspace_Registration.Instance;
 
@@ -39,36 +40,48 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region X
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _X = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> X_Property => _X;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single X
         {
             get => this._X.Item;
             set => this._X.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> ISubspace.X_Property => this.X_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Single> ISubspaceGetter.X_Property => this.X_Property;
         #endregion
         #region Y
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _Y = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> Y_Property => _Y;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single Y
         {
             get => this._Y.Item;
             set => this._Y.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> ISubspace.Y_Property => this.Y_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Single> ISubspaceGetter.Y_Property => this.Y_Property;
         #endregion
         #region Z
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _Z = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> Z_Property => _Z;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single Z
         {
             get => this._Z.Item;
             set => this._Z.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> ISubspace.Z_Property => this.Z_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Single> ISubspaceGetter.Z_Property => this.Z_Property;
         #endregion
 

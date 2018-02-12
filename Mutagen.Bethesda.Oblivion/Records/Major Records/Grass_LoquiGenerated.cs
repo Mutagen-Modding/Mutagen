@@ -28,6 +28,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Grass : MajorRecord, IGrass, ILoquiObjectSetter, IEquatable<Grass>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Grass_Registration.Instance;
         public new static Grass_Registration Registration => Grass_Registration.Instance;
 
@@ -40,121 +41,167 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Model
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingSetItem<Model> _Model = new NotifyingSetItem<Model>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItem<Model> Model_Property => this._Model;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Model IGrassGetter.Model => this.Model;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Model Model { get => _Model.Item; set => _Model.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Model> IGrass.Model_Property => this.Model_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Model> IGrassGetter.Model_Property => this.Model_Property;
         #endregion
         #region Density
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Density = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Density_Property => _Density;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Density
         {
             get => this._Density.Item;
             set => this._Density.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> IGrass.Density_Property => this.Density_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> IGrassGetter.Density_Property => this.Density_Property;
         #endregion
         #region MinSlope
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _MinSlope = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> MinSlope_Property => _MinSlope;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte MinSlope
         {
             get => this._MinSlope.Item;
             set => this._MinSlope.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> IGrass.MinSlope_Property => this.MinSlope_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> IGrassGetter.MinSlope_Property => this.MinSlope_Property;
         #endregion
         #region MaxSlope
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _MaxSlope = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> MaxSlope_Property => _MaxSlope;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte MaxSlope
         {
             get => this._MaxSlope.Item;
             set => this._MaxSlope.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte> IGrass.MaxSlope_Property => this.MaxSlope_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte> IGrassGetter.MaxSlope_Property => this.MaxSlope_Property;
         #endregion
         #region UnitFromWaterAmount
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt16> _UnitFromWaterAmount = NotifyingItem.Factory<UInt16>();
         public INotifyingItem<UInt16> UnitFromWaterAmount_Property => _UnitFromWaterAmount;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt16 UnitFromWaterAmount
         {
             get => this._UnitFromWaterAmount.Item;
             set => this._UnitFromWaterAmount.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt16> IGrass.UnitFromWaterAmount_Property => this.UnitFromWaterAmount_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<UInt16> IGrassGetter.UnitFromWaterAmount_Property => this.UnitFromWaterAmount_Property;
         #endregion
         #region UnitFromWaterMode
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Grass.UnitFromWaterType> _UnitFromWaterMode = NotifyingItem.Factory<Grass.UnitFromWaterType>();
         public INotifyingItem<Grass.UnitFromWaterType> UnitFromWaterMode_Property => _UnitFromWaterMode;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Grass.UnitFromWaterType UnitFromWaterMode
         {
             get => this._UnitFromWaterMode.Item;
             set => this._UnitFromWaterMode.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Grass.UnitFromWaterType> IGrass.UnitFromWaterMode_Property => this.UnitFromWaterMode_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Grass.UnitFromWaterType> IGrassGetter.UnitFromWaterMode_Property => this.UnitFromWaterMode_Property;
         #endregion
         #region PositionRange
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _PositionRange = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> PositionRange_Property => _PositionRange;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single PositionRange
         {
             get => this._PositionRange.Item;
             set => this._PositionRange.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IGrass.PositionRange_Property => this.PositionRange_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Single> IGrassGetter.PositionRange_Property => this.PositionRange_Property;
         #endregion
         #region HeightRange
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _HeightRange = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> HeightRange_Property => _HeightRange;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single HeightRange
         {
             get => this._HeightRange.Item;
             set => this._HeightRange.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IGrass.HeightRange_Property => this.HeightRange_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Single> IGrassGetter.HeightRange_Property => this.HeightRange_Property;
         #endregion
         #region ColorRange
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _ColorRange = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> ColorRange_Property => _ColorRange;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single ColorRange
         {
             get => this._ColorRange.Item;
             set => this._ColorRange.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IGrass.ColorRange_Property => this.ColorRange_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Single> IGrassGetter.ColorRange_Property => this.ColorRange_Property;
         #endregion
         #region WavePeriod
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _WavePeriod = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> WavePeriod_Property => _WavePeriod;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single WavePeriod
         {
             get => this._WavePeriod.Item;
             set => this._WavePeriod.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> IGrass.WavePeriod_Property => this.WavePeriod_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Single> IGrassGetter.WavePeriod_Property => this.WavePeriod_Property;
         #endregion
         #region Flags
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Grass.GrassFlag> _Flags = NotifyingItem.Factory<Grass.GrassFlag>();
         public INotifyingItem<Grass.GrassFlag> Flags_Property => _Flags;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Grass.GrassFlag Flags
         {
             get => this._Flags.Item;
             set => this._Flags.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Grass.GrassFlag> IGrass.Flags_Property => this.Flags_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Grass.GrassFlag> IGrassGetter.Flags_Property => this.Flags_Property;
         #endregion
 

@@ -27,6 +27,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class SkillRecord : MajorRecord, ISkillRecord, ILoquiObjectSetter, IEquatable<SkillRecord>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => SkillRecord_Registration.Instance;
         public new static SkillRecord_Registration Registration => SkillRecord_Registration.Instance;
 
@@ -39,135 +40,183 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Skill
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<ActorValue> _Skill = NotifyingSetItem.Factory<ActorValue>(markAsSet: false);
         public INotifyingSetItem<ActorValue> Skill_Property => _Skill;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ActorValue Skill
         {
             get => this._Skill.Item;
             set => this._Skill.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<ActorValue> ISkillRecord.Skill_Property => this.Skill_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<ActorValue> ISkillRecordGetter.Skill_Property => this.Skill_Property;
         #endregion
         #region Description
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<String> _Description = NotifyingSetItem.Factory<String>(markAsSet: false);
         public INotifyingSetItem<String> Description_Property => _Description;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Description
         {
             get => this._Description.Item;
             set => this._Description.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> ISkillRecord.Description_Property => this.Description_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<String> ISkillRecordGetter.Description_Property => this.Description_Property;
         #endregion
         #region Icon
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
         public INotifyingSetItem<FilePath> Icon_Property => _Icon;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public FilePath Icon
         {
             get => this._Icon.Item;
             set => this._Icon.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<FilePath> ISkillRecord.Icon_Property => this.Icon_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<FilePath> ISkillRecordGetter.Icon_Property => this.Icon_Property;
         #endregion
         #region Action
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<ActorValue> _Action = NotifyingItem.Factory<ActorValue>();
         public INotifyingItem<ActorValue> Action_Property => _Action;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ActorValue Action
         {
             get => this._Action.Item;
             set => this._Action.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<ActorValue> ISkillRecord.Action_Property => this.Action_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<ActorValue> ISkillRecordGetter.Action_Property => this.Action_Property;
         #endregion
         #region Attribute
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<ActorValue> _Attribute = NotifyingItem.Factory<ActorValue>();
         public INotifyingItem<ActorValue> Attribute_Property => _Attribute;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ActorValue Attribute
         {
             get => this._Attribute.Item;
             set => this._Attribute.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<ActorValue> ISkillRecord.Attribute_Property => this.Attribute_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<ActorValue> ISkillRecordGetter.Attribute_Property => this.Attribute_Property;
         #endregion
         #region Specialization
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Specialization> _Specialization = NotifyingItem.Factory<Specialization>();
         public INotifyingItem<Specialization> Specialization_Property => _Specialization;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Specialization Specialization
         {
             get => this._Specialization.Item;
             set => this._Specialization.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Specialization> ISkillRecord.Specialization_Property => this.Specialization_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Specialization> ISkillRecordGetter.Specialization_Property => this.Specialization_Property;
         #endregion
         #region UseValueFirst
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _UseValueFirst = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> UseValueFirst_Property => _UseValueFirst;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single UseValueFirst
         {
             get => this._UseValueFirst.Item;
             set => this._UseValueFirst.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> ISkillRecord.UseValueFirst_Property => this.UseValueFirst_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Single> ISkillRecordGetter.UseValueFirst_Property => this.UseValueFirst_Property;
         #endregion
         #region UseValueSecond
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _UseValueSecond = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> UseValueSecond_Property => _UseValueSecond;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single UseValueSecond
         {
             get => this._UseValueSecond.Item;
             set => this._UseValueSecond.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Single> ISkillRecord.UseValueSecond_Property => this.UseValueSecond_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Single> ISkillRecordGetter.UseValueSecond_Property => this.UseValueSecond_Property;
         #endregion
         #region ApprenticeText
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<String> _ApprenticeText = NotifyingSetItem.Factory<String>(markAsSet: false);
         public INotifyingSetItem<String> ApprenticeText_Property => _ApprenticeText;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String ApprenticeText
         {
             get => this._ApprenticeText.Item;
             set => this._ApprenticeText.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> ISkillRecord.ApprenticeText_Property => this.ApprenticeText_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<String> ISkillRecordGetter.ApprenticeText_Property => this.ApprenticeText_Property;
         #endregion
         #region JourneymanText
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<String> _JourneymanText = NotifyingSetItem.Factory<String>(markAsSet: false);
         public INotifyingSetItem<String> JourneymanText_Property => _JourneymanText;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String JourneymanText
         {
             get => this._JourneymanText.Item;
             set => this._JourneymanText.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> ISkillRecord.JourneymanText_Property => this.JourneymanText_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<String> ISkillRecordGetter.JourneymanText_Property => this.JourneymanText_Property;
         #endregion
         #region ExpertText
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<String> _ExpertText = NotifyingSetItem.Factory<String>(markAsSet: false);
         public INotifyingSetItem<String> ExpertText_Property => _ExpertText;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String ExpertText
         {
             get => this._ExpertText.Item;
             set => this._ExpertText.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> ISkillRecord.ExpertText_Property => this.ExpertText_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<String> ISkillRecordGetter.ExpertText_Property => this.ExpertText_Property;
         #endregion
         #region MasterText
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<String> _MasterText = NotifyingSetItem.Factory<String>(markAsSet: false);
         public INotifyingSetItem<String> MasterText_Property => _MasterText;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String MasterText
         {
             get => this._MasterText.Item;
             set => this._MasterText.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> ISkillRecord.MasterText_Property => this.MasterText_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<String> ISkillRecordGetter.MasterText_Property => this.MasterText_Property;
         #endregion
 

@@ -27,6 +27,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Effect : IEffect, ILoquiObjectSetter, IEquatable<Effect>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Effect_Registration.Instance;
         public static Effect_Registration Registration => Effect_Registration.Instance;
 
@@ -40,70 +41,98 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region MagicEffect
         public EDIDLink<MagicEffect> MagicEffect_Property { get; } = new EDIDLink<MagicEffect>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public MagicEffect MagicEffect { get => MagicEffect_Property.Item; set => MagicEffect_Property.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         EDIDLink<MagicEffect> IEffectGetter.MagicEffect_Property => this.MagicEffect_Property;
         #endregion
         #region Magnitude
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt32> _Magnitude = NotifyingItem.Factory<UInt32>();
         public INotifyingItem<UInt32> Magnitude_Property => _Magnitude;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 Magnitude
         {
             get => this._Magnitude.Item;
             set => this._Magnitude.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt32> IEffect.Magnitude_Property => this.Magnitude_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<UInt32> IEffectGetter.Magnitude_Property => this.Magnitude_Property;
         #endregion
         #region Area
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt32> _Area = NotifyingItem.Factory<UInt32>();
         public INotifyingItem<UInt32> Area_Property => _Area;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 Area
         {
             get => this._Area.Item;
             set => this._Area.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt32> IEffect.Area_Property => this.Area_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<UInt32> IEffectGetter.Area_Property => this.Area_Property;
         #endregion
         #region Duration
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt32> _Duration = NotifyingItem.Factory<UInt32>();
         public INotifyingItem<UInt32> Duration_Property => _Duration;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 Duration
         {
             get => this._Duration.Item;
             set => this._Duration.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<UInt32> IEffect.Duration_Property => this.Duration_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<UInt32> IEffectGetter.Duration_Property => this.Duration_Property;
         #endregion
         #region Type
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Effect.EffectType> _Type = NotifyingItem.Factory<Effect.EffectType>();
         public INotifyingItem<Effect.EffectType> Type_Property => _Type;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Effect.EffectType Type
         {
             get => this._Type.Item;
             set => this._Type.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Effect.EffectType> IEffect.Type_Property => this.Type_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Effect.EffectType> IEffectGetter.Type_Property => this.Type_Property;
         #endregion
         #region ActorValue
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<ActorValue> _ActorValue = NotifyingItem.Factory<ActorValue>();
         public INotifyingItem<ActorValue> ActorValue_Property => _ActorValue;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ActorValue ActorValue
         {
             get => this._ActorValue.Item;
             set => this._ActorValue.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<ActorValue> IEffect.ActorValue_Property => this.ActorValue_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<ActorValue> IEffectGetter.ActorValue_Property => this.ActorValue_Property;
         #endregion
         #region ScriptEffect
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingSetItem<ScriptEffect> _ScriptEffect = new NotifyingSetItem<ScriptEffect>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItem<ScriptEffect> ScriptEffect_Property => this._ScriptEffect;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ScriptEffect IEffectGetter.ScriptEffect => this.ScriptEffect;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ScriptEffect ScriptEffect { get => _ScriptEffect.Item; set => _ScriptEffect.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<ScriptEffect> IEffect.ScriptEffect_Property => this.ScriptEffect_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<ScriptEffect> IEffectGetter.ScriptEffect_Property => this.ScriptEffect_Property;
         #endregion
 

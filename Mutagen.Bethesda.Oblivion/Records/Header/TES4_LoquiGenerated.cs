@@ -28,6 +28,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class TES4 : ITES4, ILoquiObjectSetter, IEquatable<TES4>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => TES4_Registration.Instance;
         public static TES4_Registration Registration => TES4_Registration.Instance;
 
@@ -40,17 +41,22 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Fluff
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte[]> _Fluff = NotifyingItem.Factory<Byte[]>(noNullFallback: () => new byte[12]);
         public INotifyingItem<Byte[]> Fluff_Property => _Fluff;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] Fluff
         {
             get => this._Fluff.Item;
             set => this._Fluff.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Byte[]> ITES4.Fluff_Property => this.Fluff_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Byte[]> ITES4Getter.Fluff_Property => this.Fluff_Property;
         #endregion
         #region Header
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingSetItem<Header> _Header = new NotifyingSetItemConvertWrapper<Header>(
             defaultVal: new Header(),
             incomingConverter: (change) =>
@@ -62,66 +68,91 @@ namespace Mutagen.Bethesda.Oblivion
                 return TryGet<Header>.Succeed(change.New);
             }
         );
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItem<Header> Header_Property => this._Header;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Header ITES4Getter.Header => this.Header;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Header Header { get => _Header.Item; set => _Header.Item = value; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Header> ITES4.Header_Property => this.Header_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Header> ITES4Getter.Header_Property => this.Header_Property;
         #endregion
         #region TypeOffsets
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Byte[]> _TypeOffsets = NotifyingSetItem.Factory<Byte[]>(markAsSet: false);
         public INotifyingSetItem<Byte[]> TypeOffsets_Property => _TypeOffsets;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] TypeOffsets
         {
             get => this._TypeOffsets.Item;
             set => this._TypeOffsets.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> ITES4.TypeOffsets_Property => this.TypeOffsets_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Byte[]> ITES4Getter.TypeOffsets_Property => this.TypeOffsets_Property;
         #endregion
         #region Deleted
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Byte[]> _Deleted = NotifyingSetItem.Factory<Byte[]>(markAsSet: false);
         public INotifyingSetItem<Byte[]> Deleted_Property => _Deleted;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] Deleted
         {
             get => this._Deleted.Item;
             set => this._Deleted.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<Byte[]> ITES4.Deleted_Property => this.Deleted_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<Byte[]> ITES4Getter.Deleted_Property => this.Deleted_Property;
         #endregion
         #region Author
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<String> _Author = NotifyingSetItem.Factory<String>(markAsSet: false);
         public INotifyingSetItem<String> Author_Property => _Author;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Author
         {
             get => this._Author.Item;
             set => this._Author.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> ITES4.Author_Property => this.Author_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<String> ITES4Getter.Author_Property => this.Author_Property;
         #endregion
         #region Description
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<String> _Description = NotifyingSetItem.Factory<String>(markAsSet: false);
         public INotifyingSetItem<String> Description_Property => _Description;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Description
         {
             get => this._Description.Item;
             set => this._Description.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> ITES4.Description_Property => this.Description_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<String> ITES4Getter.Description_Property => this.Description_Property;
         #endregion
         #region MasterReferences
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingList<MasterReference> _MasterReferences = new NotifyingList<MasterReference>();
         public INotifyingList<MasterReference> MasterReferences => _MasterReferences;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<MasterReference> MasterReferencesEnumerable
         {
             get => _MasterReferences;
             set => _MasterReferences.SetTo(value);
         }
         #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingList<MasterReference> ITES4.MasterReferences => _MasterReferences;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingListGetter<MasterReference> ITES4Getter.MasterReferences => _MasterReferences;
         #endregion
 

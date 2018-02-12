@@ -28,6 +28,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class OblivionMod : IOblivionMod, ILoquiObjectSetter, IEquatable<OblivionMod>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => OblivionMod_Registration.Instance;
         public static OblivionMod_Registration Registration => OblivionMod_Registration.Instance;
 
@@ -83,170 +84,215 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region TES4
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private TES4 _TES4_Object = new TES4();
         protected readonly INotifyingSetItem<TES4> _TES4;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItemGetter<TES4> TES4_Property => this._TES4;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         TES4 IOblivionModGetter.TES4 => this.TES4;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public TES4 TES4 { get => _TES4.Item; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<TES4> IOblivionModGetter.TES4_Property => this.TES4_Property;
         #endregion
         #region GameSettings
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Group<GameSetting> _GameSettings_Object = new Group<GameSetting>();
         public Group<GameSetting> GameSettings => _GameSettings_Object;
         #endregion
         #region Globals
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Group<Global> _Globals_Object = new Group<Global>();
         public Group<Global> Globals => _Globals_Object;
         #endregion
         #region Classes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Group<Class> _Classes_Object = new Group<Class>();
         public Group<Class> Classes => _Classes_Object;
         #endregion
         #region Factions
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Group<Faction> _Factions_Object = new Group<Faction>();
         public Group<Faction> Factions => _Factions_Object;
         #endregion
         #region Hairs
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Group<Hair> _Hairs_Object = new Group<Hair>();
         public Group<Hair> Hairs => _Hairs_Object;
         #endregion
         #region Eyes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Group<Eye> _Eyes_Object = new Group<Eye>();
         public Group<Eye> Eyes => _Eyes_Object;
         #endregion
         #region Races
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Group<Race> _Races_Object = new Group<Race>();
         public Group<Race> Races => _Races_Object;
         #endregion
         #region Sounds
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Group<Sound> _Sounds_Object = new Group<Sound>();
         public Group<Sound> Sounds => _Sounds_Object;
         #endregion
         #region Skills
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Group<SkillRecord> _Skills_Object = new Group<SkillRecord>();
         public Group<SkillRecord> Skills => _Skills_Object;
         #endregion
         #region MagicEffects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Group<MagicEffect> _MagicEffects_Object = new Group<MagicEffect>();
         public Group<MagicEffect> MagicEffects => _MagicEffects_Object;
         #endregion
         #region Scripts
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Group<Script> _Scripts_Object = new Group<Script>();
         public Group<Script> Scripts => _Scripts_Object;
         #endregion
         #region LandTextures
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Group<LandTexture> _LandTextures_Object = new Group<LandTexture>();
         public Group<LandTexture> LandTextures => _LandTextures_Object;
         #endregion
         #region Enchantments
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Group<Enchantment> _Enchantments_Object = new Group<Enchantment>();
         public Group<Enchantment> Enchantments => _Enchantments_Object;
         #endregion
         #region Spells
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Group<SpellUnleveled> _Spells_Object = new Group<SpellUnleveled>();
         public Group<SpellUnleveled> Spells => _Spells_Object;
         #endregion
         #region Birthsigns
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Group<Birthsign> _Birthsigns_Object = new Group<Birthsign>();
         public Group<Birthsign> Birthsigns => _Birthsigns_Object;
         #endregion
         #region Activators
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Group<Activator> _Activators_Object = new Group<Activator>();
         public Group<Activator> Activators => _Activators_Object;
         #endregion
         #region AlchemicalApparatus
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Group<AlchemicalApparatus> _AlchemicalApparatus_Object = new Group<AlchemicalApparatus>();
         public Group<AlchemicalApparatus> AlchemicalApparatus => _AlchemicalApparatus_Object;
         #endregion
         #region Armors
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Group<Armor> _Armors_Object = new Group<Armor>();
         public Group<Armor> Armors => _Armors_Object;
         #endregion
         #region Books
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Group<Book> _Books_Object = new Group<Book>();
         public Group<Book> Books => _Books_Object;
         #endregion
         #region Clothes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Group<Clothing> _Clothes_Object = new Group<Clothing>();
         public Group<Clothing> Clothes => _Clothes_Object;
         #endregion
         #region Containers
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Group<Container> _Containers_Object = new Group<Container>();
         public Group<Container> Containers => _Containers_Object;
         #endregion
         #region Doors
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Group<Door> _Doors_Object = new Group<Door>();
         public Group<Door> Doors => _Doors_Object;
         #endregion
         #region Ingredients
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Group<Ingredient> _Ingredients_Object = new Group<Ingredient>();
         public Group<Ingredient> Ingredients => _Ingredients_Object;
         #endregion
         #region Lights
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Group<Light> _Lights_Object = new Group<Light>();
         public Group<Light> Lights => _Lights_Object;
         #endregion
         #region Miscellaneous
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Group<Miscellaneous> _Miscellaneous_Object = new Group<Miscellaneous>();
         public Group<Miscellaneous> Miscellaneous => _Miscellaneous_Object;
         #endregion
         #region Statics
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Group<Static> _Statics_Object = new Group<Static>();
         public Group<Static> Statics => _Statics_Object;
         #endregion
         #region Grasses
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Group<Grass> _Grasses_Object = new Group<Grass>();
         public Group<Grass> Grasses => _Grasses_Object;
         #endregion
         #region Trees
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Group<Tree> _Trees_Object = new Group<Tree>();
         public Group<Tree> Trees => _Trees_Object;
         #endregion
         #region Flora
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Group<Flora> _Flora_Object = new Group<Flora>();
         public Group<Flora> Flora => _Flora_Object;
         #endregion
         #region Furnature
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Group<Furnature> _Furnature_Object = new Group<Furnature>();
         public Group<Furnature> Furnature => _Furnature_Object;
         #endregion
         #region Weapons
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Group<Weapon> _Weapons_Object = new Group<Weapon>();
         public Group<Weapon> Weapons => _Weapons_Object;
         #endregion
         #region Ammo
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Group<Ammo> _Ammo_Object = new Group<Ammo>();
         public Group<Ammo> Ammo => _Ammo_Object;
         #endregion
         #region NPCs
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Group<NPC> _NPCs_Object = new Group<NPC>();
         public Group<NPC> NPCs => _NPCs_Object;
         #endregion
         #region Creatures
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Group<Creature> _Creatures_Object = new Group<Creature>();
         public Group<Creature> Creatures => _Creatures_Object;
         #endregion
         #region LeveledCreatures
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Group<LeveledCreature> _LeveledCreatures_Object = new Group<LeveledCreature>();
         public Group<LeveledCreature> LeveledCreatures => _LeveledCreatures_Object;
         #endregion
         #region SoulGems
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Group<SoulGem> _SoulGems_Object = new Group<SoulGem>();
         public Group<SoulGem> SoulGems => _SoulGems_Object;
         #endregion
         #region Keys
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Group<Key> _Keys_Object = new Group<Key>();
         public Group<Key> Keys => _Keys_Object;
         #endregion
         #region Potions
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Group<Potion> _Potions_Object = new Group<Potion>();
         public Group<Potion> Potions => _Potions_Object;
         #endregion
         #region Subspaces
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Group<Subspace> _Subspaces_Object = new Group<Subspace>();
         public Group<Subspace> Subspaces => _Subspaces_Object;
         #endregion
         #region SigilStones
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Group<SigilStone> _SigilStones_Object = new Group<SigilStone>();
         public Group<SigilStone> SigilStones => _SigilStones_Object;
         #endregion

@@ -28,6 +28,7 @@ namespace Mutagen.Bethesda.Oblivion
     #region Class
     public partial class Class : NamedMajorRecord, IClass, ILoquiObjectSetter, IEquatable<Class>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ILoquiRegistration ILoquiObject.Registration => Class_Registration.Instance;
         public new static Class_Registration Registration => Class_Registration.Instance;
 
@@ -40,91 +41,121 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Description
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<String> _Description = NotifyingSetItem.Factory<String>(markAsSet: false);
         public INotifyingSetItem<String> Description_Property => _Description;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Description
         {
             get => this._Description.Item;
             set => this._Description.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<String> IClass.Description_Property => this.Description_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<String> IClassGetter.Description_Property => this.Description_Property;
         #endregion
         #region Icon
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
         public INotifyingSetItem<FilePath> Icon_Property => _Icon;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public FilePath Icon
         {
             get => this._Icon.Item;
             set => this._Icon.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItem<FilePath> IClass.Icon_Property => this.Icon_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingSetItemGetter<FilePath> IClassGetter.Icon_Property => this.Icon_Property;
         #endregion
         #region PrimaryAttributes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingList<ActorValue> _PrimaryAttributes = new NotifyingListBounded<ActorValue>(max: 2);
         public INotifyingList<ActorValue> PrimaryAttributes => _PrimaryAttributes;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<ActorValue> PrimaryAttributesEnumerable
         {
             get => _PrimaryAttributes;
             set => _PrimaryAttributes.SetTo(value);
         }
         #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingList<ActorValue> IClass.PrimaryAttributes => _PrimaryAttributes;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingListGetter<ActorValue> IClassGetter.PrimaryAttributes => _PrimaryAttributes;
         #endregion
 
         #endregion
         #region Specialization
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Class.SpecializationFlag> _Specialization = NotifyingItem.Factory<Class.SpecializationFlag>();
         public INotifyingItem<Class.SpecializationFlag> Specialization_Property => _Specialization;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Class.SpecializationFlag Specialization
         {
             get => this._Specialization.Item;
             set => this._Specialization.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<Class.SpecializationFlag> IClass.Specialization_Property => this.Specialization_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<Class.SpecializationFlag> IClassGetter.Specialization_Property => this.Specialization_Property;
         #endregion
         #region SecondaryAttributes
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingList<ActorValue> _SecondaryAttributes = new NotifyingListBounded<ActorValue>(max: 7);
         public INotifyingList<ActorValue> SecondaryAttributes => _SecondaryAttributes;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public IEnumerable<ActorValue> SecondaryAttributesEnumerable
         {
             get => _SecondaryAttributes;
             set => _SecondaryAttributes.SetTo(value);
         }
         #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingList<ActorValue> IClass.SecondaryAttributes => _SecondaryAttributes;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingListGetter<ActorValue> IClassGetter.SecondaryAttributes => _SecondaryAttributes;
         #endregion
 
         #endregion
         #region Flags
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<ClassFlag> _Flags = NotifyingItem.Factory<ClassFlag>();
         public INotifyingItem<ClassFlag> Flags_Property => _Flags;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ClassFlag Flags
         {
             get => this._Flags.Item;
             set => this._Flags.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<ClassFlag> IClass.Flags_Property => this.Flags_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<ClassFlag> IClassGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region ClassServices
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<ClassService> _ClassServices = NotifyingItem.Factory<ClassService>();
         public INotifyingItem<ClassService> ClassServices_Property => _ClassServices;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ClassService ClassServices
         {
             get => this._ClassServices.Item;
             set => this._ClassServices.Set(value);
         }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItem<ClassService> IClass.ClassServices_Property => this.ClassServices_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         INotifyingItemGetter<ClassService> IClassGetter.ClassServices_Property => this.ClassServices_Property;
         #endregion
         #region Training
         private readonly INotifyingItem<ClassTraining> _Training = new NotifyingItem<ClassTraining>();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingItem<ClassTraining> Training_Property => this._Training;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ClassTraining IClassGetter.Training => this.Training;
         public ClassTraining Training { get => _Training.Item; set => _Training.Item = value; }
         INotifyingItem<ClassTraining> IClass.Training_Property => this.Training_Property;
