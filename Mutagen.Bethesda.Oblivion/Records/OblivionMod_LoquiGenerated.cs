@@ -76,6 +76,7 @@ namespace Mutagen.Bethesda.Oblivion
             _Keys_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
             _Potions_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
             _Subspaces_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
+            _SigilStones_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
             CustomCtor();
         }
         partial void CustomCtor();
@@ -245,6 +246,10 @@ namespace Mutagen.Bethesda.Oblivion
         private Group<Subspace> _Subspaces_Object = new Group<Subspace>();
         public Group<Subspace> Subspaces => _Subspaces_Object;
         #endregion
+        #region SigilStones
+        private Group<SigilStone> _SigilStones_Object = new Group<SigilStone>();
+        public Group<SigilStone> SigilStones => _SigilStones_Object;
+        #endregion
 
         #region Loqui Getter Interface
 
@@ -348,6 +353,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (!object.Equals(Keys, rhs.Keys)) return false;
             if (!object.Equals(Potions, rhs.Potions)) return false;
             if (!object.Equals(Subspaces, rhs.Subspaces)) return false;
+            if (!object.Equals(SigilStones, rhs.SigilStones)) return false;
             return true;
         }
 
@@ -397,6 +403,7 @@ namespace Mutagen.Bethesda.Oblivion
             ret = HashHelper.GetHashCode(Keys).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Potions).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Subspaces).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(SigilStones).CombineHashCode(ret);
             return ret;
         }
 
@@ -1406,6 +1413,24 @@ namespace Mutagen.Bethesda.Oblivion
                         index: (int)OblivionMod_FieldIndex.Subspaces,
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<Subspace_ErrorMask>>.WrapValue(Group_ErrorMask<Subspace_ErrorMask>.Combine(SubspacescreateMask, SubspacescopyMask)));
                     break;
+                case "SigilStones":
+                    GroupCommon.CopyFieldsFrom<SigilStone, SigilStone_ErrorMask, SigilStone_CopyMask>(
+                        item: item._SigilStones_Object,
+                        rhs: Group<SigilStone>.Create_XML(
+                            root: root,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<SigilStone_ErrorMask> SigilStonescreateMask)
+                        ,
+                        def: null,
+                        cmds: null,
+                        copyMask: null,
+                        doMasks: errorMask != null,
+                        errorMask: out Group_ErrorMask<SigilStone_ErrorMask> SigilStonescopyMask);
+                    ErrorMask.HandleErrorMask(
+                        errorMask,
+                        index: (int)OblivionMod_FieldIndex.SigilStones,
+                        errMaskObj: MaskItem<Exception, Group_ErrorMask<SigilStone_ErrorMask>>.WrapValue(Group_ErrorMask<SigilStone_ErrorMask>.Combine(SigilStonescreateMask, SigilStonescopyMask)));
+                    break;
                 default:
                     break;
             }
@@ -1543,6 +1568,9 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case Subspace subspaces:
                     _Subspaces_Object.Items.Set(subspaces);
+                    break;
+                case SigilStone sigilstones:
+                    _SigilStones_Object.Items.Set(sigilstones);
                     break;
                 default:
                     throw new ArgumentException("Unknown Major Record type: {record?.GetType()}");
@@ -2619,6 +2647,25 @@ namespace Mutagen.Bethesda.Oblivion
                         index: (int)OblivionMod_FieldIndex.Subspaces,
                         errMaskObj: combinedSubspaces == null ? null : new MaskItem<Exception, Group_ErrorMask<Subspace_ErrorMask>>(null, combinedSubspaces));
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Subspaces);
+                case "SGST":
+                    var tmpSigilStones = Group<SigilStone>.Create_Binary(
+                        frame: frame,
+                        doMasks: errorMask != null,
+                        errorMask: out Group_ErrorMask<SigilStone_ErrorMask> SigilStonescreateMask);
+                    GroupCommon.CopyFieldsFrom<SigilStone, SigilStone_ErrorMask, SigilStone_CopyMask>(
+                        item: item._SigilStones_Object,
+                        rhs: tmpSigilStones,
+                        def: null,
+                        cmds: null,
+                        copyMask: null,
+                        doMasks: errorMask != null,
+                        errorMask: out Group_ErrorMask<SigilStone_ErrorMask> SigilStoneserrorMask);
+                    var combinedSigilStones = Group_ErrorMask<SigilStone_ErrorMask>.Combine(SigilStonescreateMask, SigilStoneserrorMask);
+                    ErrorMask.HandleErrorMask(
+                        creator: errorMask,
+                        index: (int)OblivionMod_FieldIndex.SigilStones,
+                        errMaskObj: combinedSigilStones == null ? null : new MaskItem<Exception, Group_ErrorMask<SigilStone_ErrorMask>>(null, combinedSigilStones));
+                    return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.SigilStones);
                 default:
                     errorMask().Warnings.Add($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength;
@@ -2831,6 +2878,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case OblivionMod_FieldIndex.Subspaces:
                     this._Subspaces_Object.CopyFieldsFrom<Subspace, Subspace_CopyMask>(rhs: (Group<Subspace>)obj);
                     break;
+                case OblivionMod_FieldIndex.SigilStones:
+                    this._SigilStones_Object.CopyFieldsFrom<SigilStone, SigilStone_CopyMask>(rhs: (Group<SigilStone>)obj);
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -2988,6 +3038,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case OblivionMod_FieldIndex.Subspaces:
                     obj._Subspaces_Object.CopyFieldsFrom<Subspace, Subspace_CopyMask>(rhs: (Group<Subspace>)pair.Value);
                     break;
+                case OblivionMod_FieldIndex.SigilStones:
+                    obj._SigilStones_Object.CopyFieldsFrom<SigilStone, SigilStone_CopyMask>(rhs: (Group<SigilStone>)pair.Value);
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -3129,6 +3182,9 @@ namespace Mutagen.Bethesda.Oblivion
         #region Subspaces
         Group<Subspace> Subspaces { get; }
         #endregion
+        #region SigilStones
+        Group<SigilStone> SigilStones { get; }
+        #endregion
 
     }
 
@@ -3181,6 +3237,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Keys = 37,
         Potions = 38,
         Subspaces = 39,
+        SigilStones = 40,
     }
     #endregion
 
@@ -3198,7 +3255,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "b6f626df-b164-466b-960a-1639d88f66bc";
 
-        public const ushort FieldCount = 40;
+        public const ushort FieldCount = 41;
 
         public static readonly Type MaskType = typeof(OblivionMod_Mask<>);
 
@@ -3306,6 +3363,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)OblivionMod_FieldIndex.Potions;
                 case "SUBSPACES":
                     return (ushort)OblivionMod_FieldIndex.Subspaces;
+                case "SIGILSTONES":
+                    return (ushort)OblivionMod_FieldIndex.SigilStones;
                 default:
                     return null;
             }
@@ -3356,6 +3415,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Keys:
                 case OblivionMod_FieldIndex.Potions:
                 case OblivionMod_FieldIndex.Subspaces:
+                case OblivionMod_FieldIndex.SigilStones:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3407,6 +3467,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Keys:
                 case OblivionMod_FieldIndex.Potions:
                 case OblivionMod_FieldIndex.Subspaces:
+                case OblivionMod_FieldIndex.SigilStones:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3458,6 +3519,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Keys:
                 case OblivionMod_FieldIndex.Potions:
                 case OblivionMod_FieldIndex.Subspaces:
+                case OblivionMod_FieldIndex.SigilStones:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3549,6 +3611,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "Potions";
                 case OblivionMod_FieldIndex.Subspaces:
                     return "Subspaces";
+                case OblivionMod_FieldIndex.SigilStones:
+                    return "SigilStones";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -3599,6 +3663,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Keys:
                 case OblivionMod_FieldIndex.Potions:
                 case OblivionMod_FieldIndex.Subspaces:
+                case OblivionMod_FieldIndex.SigilStones:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3651,6 +3716,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Keys:
                 case OblivionMod_FieldIndex.Potions:
                 case OblivionMod_FieldIndex.Subspaces:
+                case OblivionMod_FieldIndex.SigilStones:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3742,6 +3808,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(Group<Potion>);
                 case OblivionMod_FieldIndex.Subspaces:
                     return typeof(Group<Subspace>);
+                case OblivionMod_FieldIndex.SigilStones:
+                    return typeof(Group<SigilStone>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -3787,6 +3855,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType KEYM_HEADER = new RecordType("KEYM");
         public static readonly RecordType ALCH_HEADER = new RecordType("ALCH");
         public static readonly RecordType SBSP_HEADER = new RecordType("SBSP");
+        public static readonly RecordType SGST_HEADER = new RecordType("SGST");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -3800,7 +3869,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             );
         });
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 40;
+        public const int NumTypedFields = 41;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -5027,6 +5096,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask().SetNthException((int)OblivionMod_FieldIndex.Subspaces, ex);
                 }
             }
+            if (copyMask?.SigilStones.Overall ?? true)
+            {
+                try
+                {
+                    GroupCommon.CopyFieldsFrom(
+                        item: item.SigilStones,
+                        rhs: rhs.SigilStones,
+                        def: def?.SigilStones,
+                        doMasks: doMasks,
+                        errorMask: (doMasks ? new Func<Group_ErrorMask<SigilStone_ErrorMask>>(() =>
+                        {
+                            var baseMask = errorMask();
+                            if (baseMask.SigilStones.Specific == null)
+                            {
+                                baseMask.SigilStones = new MaskItem<Exception, Group_ErrorMask<SigilStone_ErrorMask>>(null, new Group_ErrorMask<SigilStone_ErrorMask>());
+                            }
+                            return baseMask.SigilStones.Specific;
+                        }
+                        ) : null),
+                        copyMask: copyMask?.SigilStones.Specific,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)OblivionMod_FieldIndex.SigilStones, ex);
+                }
+            }
         }
 
         #endregion
@@ -5079,6 +5176,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Keys:
                 case OblivionMod_FieldIndex.Potions:
                 case OblivionMod_FieldIndex.Subspaces:
+                case OblivionMod_FieldIndex.SigilStones:
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 case OblivionMod_FieldIndex.TES4:
@@ -5215,6 +5313,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Subspaces:
                     GroupCommon.Clear(obj.Subspaces, cmds.ToUnsetParams());
                     break;
+                case OblivionMod_FieldIndex.SigilStones:
+                    GroupCommon.Clear(obj.SigilStones, cmds.ToUnsetParams());
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -5266,6 +5367,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Keys:
                 case OblivionMod_FieldIndex.Potions:
                 case OblivionMod_FieldIndex.Subspaces:
+                case OblivionMod_FieldIndex.SigilStones:
                     return true;
                 case OblivionMod_FieldIndex.TES4:
                     return obj.TES4_Property.HasBeenSet;
@@ -5361,6 +5463,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.Potions;
                 case OblivionMod_FieldIndex.Subspaces:
                     return obj.Subspaces;
+                case OblivionMod_FieldIndex.SigilStones:
+                    return obj.SigilStones;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -5505,6 +5609,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Subspaces = new MaskItem<bool, Group_Mask<bool>>();
             ret.Subspaces.Specific = GroupCommon.GetEqualsMask(item.Subspaces, rhs.Subspaces);
             ret.Subspaces.Overall = ret.Subspaces.Specific.AllEqual((b) => b);
+            ret.SigilStones = new MaskItem<bool, Group_Mask<bool>>();
+            ret.SigilStones.Specific = GroupCommon.GetEqualsMask(item.SigilStones, rhs.SigilStones);
+            ret.SigilStones.Overall = ret.SigilStones.Specific.AllEqual((b) => b);
         }
 
         public static string ToString(
@@ -5694,6 +5801,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Subspaces?.ToString(fg, "Subspaces");
                 }
+                if (printMask?.SigilStones?.Overall ?? true)
+                {
+                    item.SigilStones?.ToString(fg, "SigilStones");
+                }
             }
             fg.AppendLine("]");
         }
@@ -5750,6 +5861,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Keys = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Keys));
             ret.Potions = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Potions));
             ret.Subspaces = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Subspaces));
+            ret.SigilStones = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.SigilStones));
             return ret;
         }
 
@@ -6028,6 +6140,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         name: nameof(item.Subspaces),
                         fieldIndex: (int)OblivionMod_FieldIndex.Subspaces,
                         errorMask: errorMask);
+                    LoquiXmlTranslation<Group<SigilStone>, Group_ErrorMask<SigilStone_ErrorMask>>.Instance.Write(
+                        writer: writer,
+                        item: item.SigilStones,
+                        name: nameof(item.SigilStones),
+                        fieldIndex: (int)OblivionMod_FieldIndex.SigilStones,
+                        errorMask: errorMask);
                 }
             }
             catch (Exception ex)
@@ -6286,6 +6404,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Subspaces,
                 fieldIndex: (int)OblivionMod_FieldIndex.Subspaces,
                 errorMask: errorMask);
+            LoquiBinaryTranslation<Group<SigilStone>, Group_ErrorMask<SigilStone_ErrorMask>>.Instance.Write(
+                writer: writer,
+                item: item.SigilStones,
+                fieldIndex: (int)OblivionMod_FieldIndex.SigilStones,
+                errorMask: errorMask);
         }
 
         #endregion
@@ -6345,6 +6468,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Keys = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.Potions = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.Subspaces = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
+            this.SigilStones = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
         }
         #endregion
 
@@ -6389,6 +6513,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<T, Group_Mask<T>> Keys { get; set; }
         public MaskItem<T, Group_Mask<T>> Potions { get; set; }
         public MaskItem<T, Group_Mask<T>> Subspaces { get; set; }
+        public MaskItem<T, Group_Mask<T>> SigilStones { get; set; }
         #endregion
 
         #region Equals
@@ -6441,6 +6566,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.Keys, rhs.Keys)) return false;
             if (!object.Equals(this.Potions, rhs.Potions)) return false;
             if (!object.Equals(this.Subspaces, rhs.Subspaces)) return false;
+            if (!object.Equals(this.SigilStones, rhs.SigilStones)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -6486,6 +6612,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.Keys?.GetHashCode());
             ret = ret.CombineHashCode(this.Potions?.GetHashCode());
             ret = ret.CombineHashCode(this.Subspaces?.GetHashCode());
+            ret = ret.CombineHashCode(this.SigilStones?.GetHashCode());
             return ret;
         }
 
@@ -6693,6 +6820,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (!eval(this.Subspaces.Overall)) return false;
                 if (this.Subspaces.Specific != null && !this.Subspaces.Specific.AllEqual(eval)) return false;
+            }
+            if (SigilStones != null)
+            {
+                if (!eval(this.SigilStones.Overall)) return false;
+                if (this.SigilStones.Specific != null && !this.SigilStones.Specific.AllEqual(eval)) return false;
             }
             return true;
         }
@@ -7068,6 +7200,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Subspaces.Specific = this.Subspaces.Specific.Translate(eval);
                 }
             }
+            if (this.SigilStones != null)
+            {
+                obj.SigilStones = new MaskItem<R, Group_Mask<R>>();
+                obj.SigilStones.Overall = eval(this.SigilStones.Overall);
+                if (this.SigilStones.Specific != null)
+                {
+                    obj.SigilStones.Specific = this.SigilStones.Specific.Translate(eval);
+                }
+            }
         }
         #endregion
 
@@ -7256,6 +7397,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     Subspaces?.ToString(fg);
                 }
+                if (printMask?.SigilStones?.Overall ?? true)
+                {
+                    SigilStones?.ToString(fg);
+                }
             }
             fg.AppendLine("]");
         }
@@ -7319,6 +7464,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<Exception, Group_ErrorMask<Key_ErrorMask>> Keys;
         public MaskItem<Exception, Group_ErrorMask<Potion_ErrorMask>> Potions;
         public MaskItem<Exception, Group_ErrorMask<Subspace_ErrorMask>> Subspaces;
+        public MaskItem<Exception, Group_ErrorMask<SigilStone_ErrorMask>> SigilStones;
         #endregion
 
         #region IErrorMask
@@ -7446,6 +7592,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case OblivionMod_FieldIndex.Subspaces:
                     this.Subspaces = new MaskItem<Exception, Group_ErrorMask<Subspace_ErrorMask>>(ex, null);
+                    break;
+                case OblivionMod_FieldIndex.SigilStones:
+                    this.SigilStones = new MaskItem<Exception, Group_ErrorMask<SigilStone_ErrorMask>>(ex, null);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -7577,6 +7726,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Subspaces:
                     this.Subspaces = (MaskItem<Exception, Group_ErrorMask<Subspace_ErrorMask>>)obj;
                     break;
+                case OblivionMod_FieldIndex.SigilStones:
+                    this.SigilStones = (MaskItem<Exception, Group_ErrorMask<SigilStone_ErrorMask>>)obj;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -7625,6 +7777,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Keys != null) return true;
             if (Potions != null) return true;
             if (Subspaces != null) return true;
+            if (SigilStones != null) return true;
             return false;
         }
         #endregion
@@ -7699,6 +7852,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Keys?.ToString(fg);
             Potions?.ToString(fg);
             Subspaces?.ToString(fg);
+            SigilStones?.ToString(fg);
         }
         #endregion
 
@@ -7746,6 +7900,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Keys = new MaskItem<Exception, Group_ErrorMask<Key_ErrorMask>>(this.Keys.Overall.Combine(rhs.Keys.Overall), ((IErrorMask<Group_ErrorMask<Key_ErrorMask>>)this.Keys.Specific).Combine(rhs.Keys.Specific));
             ret.Potions = new MaskItem<Exception, Group_ErrorMask<Potion_ErrorMask>>(this.Potions.Overall.Combine(rhs.Potions.Overall), ((IErrorMask<Group_ErrorMask<Potion_ErrorMask>>)this.Potions.Specific).Combine(rhs.Potions.Specific));
             ret.Subspaces = new MaskItem<Exception, Group_ErrorMask<Subspace_ErrorMask>>(this.Subspaces.Overall.Combine(rhs.Subspaces.Overall), ((IErrorMask<Group_ErrorMask<Subspace_ErrorMask>>)this.Subspaces.Specific).Combine(rhs.Subspaces.Specific));
+            ret.SigilStones = new MaskItem<Exception, Group_ErrorMask<SigilStone_ErrorMask>>(this.SigilStones.Overall.Combine(rhs.SigilStones.Overall), ((IErrorMask<Group_ErrorMask<SigilStone_ErrorMask>>)this.SigilStones.Specific).Combine(rhs.SigilStones.Specific));
             return ret;
         }
         public static OblivionMod_ErrorMask Combine(OblivionMod_ErrorMask lhs, OblivionMod_ErrorMask rhs)
@@ -7799,6 +7954,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<bool, Group_CopyMask<Key_CopyMask>> Keys;
         public MaskItem<bool, Group_CopyMask<Potion_CopyMask>> Potions;
         public MaskItem<bool, Group_CopyMask<Subspace_CopyMask>> Subspaces;
+        public MaskItem<bool, Group_CopyMask<SigilStone_CopyMask>> SigilStones;
         #endregion
 
     }

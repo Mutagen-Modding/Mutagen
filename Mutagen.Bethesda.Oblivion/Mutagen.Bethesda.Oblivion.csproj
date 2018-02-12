@@ -441,6 +441,9 @@
     <Compile Include="Records\Major Records\Subspace_LoquiGenerated.cs">
       <DependentUpon>Subspace.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\SigilStone_LoquiGenerated.cs">
+      <DependentUpon>SigilStone.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Records\Common Subrecords\Effect.xml">
@@ -568,6 +571,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Script.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\SigilStone.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\SkillRecord.xml">
