@@ -436,6 +436,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #region Mutagen
+        public bool StructCustom;
+        #endregion
+
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
@@ -709,6 +713,19 @@ namespace Mutagen.Bethesda.Oblivion
                         item: ret,
                         frame: frame,
                         errorMask: errorMask);
+                }
+                if (ret.StructCustom)
+                {
+                    object structUnsubber = new object();
+                    Action unsubAction = () =>
+                    {
+                        ret.Count_Property.Unsubscribe(structUnsubber);
+                        ret.StructCustom = false;
+                    };
+                    ret.Count_Property.Subscribe(
+                        owner: structUnsubber,
+                        callback: unsubAction,
+                        cmds: NotifyingSubscribeParameters.NoFire);
                 }
             }
             catch (Exception ex)

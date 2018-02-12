@@ -725,7 +725,6 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Break0 = 1
         }
-        public static readonly object DataTypeStateSubber = new object();
         #endregion
 
         #region Binary Translation

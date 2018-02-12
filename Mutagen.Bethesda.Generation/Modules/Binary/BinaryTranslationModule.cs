@@ -367,44 +367,8 @@ namespace Mutagen.Bethesda.Generation
                                     }
                                 }
                             }
-                            foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.FalseAndInclude))
-                            {
-                                if (!(field is DataType dataType)) continue;
-                                List<TypeGeneration> affectedFields = new List<TypeGeneration>();
-                                foreach (var subField in dataType.IterateFieldsWithMeta())
-                                {
-                                    if (!subField.EncounteredBreaks.Any()
-                                        && subField.Range == null)
-                                    {
-                                        continue;
-                                    }
-                                    affectedFields.Add(subField.Field);
-                                }
-                                if (affectedFields.Count == 0) continue;
-                                fg.AppendLine($"if (ret.{dataType.StateName} != default({dataType.EnumName}))");
-                                using (new BraceWrapper(fg))
-                                {
-                                    fg.AppendLine("Action unsubAction = () =>");
-                                    using (new BraceWrapper(fg) { AppendSemicolon = true })
-                                    {
-                                        foreach (var subField in affectedFields)
-                                        {
-                                            fg.AppendLine($"ret.{subField.Property}.Unsubscribe(DataTypeStateSubber);");
-                                        }
-                                        fg.AppendLine($"ret.{dataType.StateName} = default({dataType.EnumName});");
-                                    }
-                                    foreach (var subField in affectedFields)
-                                    {
-                                        using (var args = new ArgsWrapper(fg,
-                                            $"ret.{subField.Property}.Subscribe"))
-                                        {
-                                            args.Add($"owner: DataTypeStateSubber");
-                                            args.Add("callback: unsubAction");
-                                            args.Add("cmds: NotifyingSubscribeParameters.NoFire");
-                                        }
-                                    }
-                                }
-                            }
+                            GenerateDataStateSubscriptions(obj, fg);
+                            GenerateStructStateSubscriptions(obj, fg);
                         }
                         fg.AppendLine("catch (Exception ex)");
                         fg.AppendLine("when (errorMask != null)");
@@ -659,6 +623,90 @@ namespace Mutagen.Bethesda.Generation
                     }
                 }
                 fg.AppendLine();
+            }
+        }
+
+        private void GenerateDataStateSubscriptions(ObjectGeneration obj, FileGeneration fg)
+        {
+            foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.FalseAndInclude))
+            {
+                if (!(field is DataType dataType)) continue;
+                List<TypeGeneration> affectedFields = new List<TypeGeneration>();
+                foreach (var subField in dataType.IterateFieldsWithMeta())
+                {
+                    if (!subField.EncounteredBreaks.Any()
+                        && subField.Range == null)
+                    {
+                        continue;
+                    }
+                    affectedFields.Add(subField.Field);
+                }
+                if (affectedFields.Count == 0) continue;
+                fg.AppendLine($"if (ret.{dataType.StateName} != default({dataType.EnumName}))");
+                using (new BraceWrapper(fg))
+                {
+                    fg.AppendLine("object dataTypeStateSubber = new object();");
+                    fg.AppendLine("Action unsubAction = () =>");
+                    using (new BraceWrapper(fg) { AppendSemicolon = true })
+                    {
+                        foreach (var subField in affectedFields)
+                        {
+                            fg.AppendLine($"ret.{subField.Property}.Unsubscribe(dataTypeStateSubber);");
+                        }
+                        fg.AppendLine($"ret.{dataType.StateName} = default({dataType.EnumName});");
+                    }
+                    foreach (var subField in affectedFields)
+                    {
+                        using (var args = new ArgsWrapper(fg,
+                            $"ret.{subField.Property}.Subscribe"))
+                        {
+                            args.Add($"owner: dataTypeStateSubber");
+                            args.Add("callback: unsubAction");
+                            args.Add("cmds: NotifyingSubscribeParameters.NoFire");
+                        }
+                    }
+                }
+            }
+        }
+
+        private void GenerateStructStateSubscriptions(ObjectGeneration obj, FileGeneration fg)
+        {
+            if (!obj.StructHasBeenSet()) return;
+            List<TypeGeneration> affectedFields = new List<TypeGeneration>();
+            foreach (var field in obj.IterateFields())
+            {
+                var data = field.GetFieldData();
+                if (data.HasTrigger) break;
+                if (field.HasBeenSet)
+                {
+                    affectedFields.Add(field);
+                    continue;
+                }
+            }
+            if (affectedFields.Count == 0) return;
+            fg.AppendLine($"if (ret.StructCustom)");
+            using (new BraceWrapper(fg))
+            {
+                fg.AppendLine("object structUnsubber = new object();");
+                fg.AppendLine("Action unsubAction = () =>");
+                using (new BraceWrapper(fg) { AppendSemicolon = true })
+                {
+                    foreach (var subField in affectedFields)
+                    {
+                        fg.AppendLine($"ret.{subField.Property}.Unsubscribe(structUnsubber);");
+                    }
+                    fg.AppendLine($"ret.StructCustom = false;");
+                }
+                foreach (var subField in affectedFields)
+                {
+                    using (var args = new ArgsWrapper(fg,
+                        $"ret.{subField.Property}.Subscribe"))
+                    {
+                        args.Add($"owner: structUnsubber");
+                        args.Add("callback: unsubAction");
+                        args.Add("cmds: NotifyingSubscribeParameters.NoFire");
+                    }
+                }
             }
         }
 

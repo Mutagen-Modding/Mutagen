@@ -88,6 +88,15 @@ namespace Mutagen.Bethesda.Generation
         {
             return $"{objGen.RegistrationName}.{recType.Type}_HEADER";
         }
+
+        public static bool StructHasBeenSet(this ObjectGeneration objGen)
+        {
+            return objGen.IterateFields().Any((f) =>
+            {
+                if (!f.HasBeenSet) return false;
+                var data = f.GetFieldData();
+                return !data.HasTrigger;
+            });
+        }
     }
 }
-

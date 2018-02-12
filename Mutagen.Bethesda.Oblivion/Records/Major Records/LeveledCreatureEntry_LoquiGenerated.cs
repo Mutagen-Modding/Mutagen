@@ -64,26 +64,28 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDLink<NPCSpawn> ILeveledCreatureEntryGetter.Reference_Property => this.Reference_Property;
         #endregion
         #region Count
-        protected readonly INotifyingItem<Int16> _Count = NotifyingItem.Factory<Int16>();
-        public INotifyingItem<Int16> Count_Property => _Count;
+        protected readonly INotifyingSetItem<Int16> _Count = NotifyingSetItem.Factory<Int16>(markAsSet: false);
+        public INotifyingSetItem<Int16> Count_Property => _Count;
         public Int16 Count
         {
             get => this._Count.Item;
             set => this._Count.Set(value);
         }
-        INotifyingItem<Int16> ILeveledCreatureEntry.Count_Property => this.Count_Property;
-        INotifyingItemGetter<Int16> ILeveledCreatureEntryGetter.Count_Property => this.Count_Property;
+        INotifyingSetItem<Int16> ILeveledCreatureEntry.Count_Property => this.Count_Property;
+        INotifyingSetItemGetter<Int16> ILeveledCreatureEntryGetter.Count_Property => this.Count_Property;
         #endregion
         #region Fluff2
-        protected readonly INotifyingItem<Byte[]> _Fluff2 = NotifyingItem.Factory<Byte[]>(noNullFallback: () => new byte[2]);
-        public INotifyingItem<Byte[]> Fluff2_Property => _Fluff2;
+        protected readonly INotifyingSetItem<Byte[]> _Fluff2 = NotifyingSetItem.Factory<Byte[]>(
+            markAsSet: false,
+            noNullFallback: () => new byte[2]);
+        public INotifyingSetItem<Byte[]> Fluff2_Property => _Fluff2;
         public Byte[] Fluff2
         {
             get => this._Fluff2.Item;
             set => this._Fluff2.Set(value);
         }
-        INotifyingItem<Byte[]> ILeveledCreatureEntry.Fluff2_Property => this.Fluff2_Property;
-        INotifyingItemGetter<Byte[]> ILeveledCreatureEntryGetter.Fluff2_Property => this.Fluff2_Property;
+        INotifyingSetItem<Byte[]> ILeveledCreatureEntry.Fluff2_Property => this.Fluff2_Property;
+        INotifyingSetItemGetter<Byte[]> ILeveledCreatureEntryGetter.Fluff2_Property => this.Fluff2_Property;
         #endregion
 
         #region Loqui Getter Interface
@@ -147,8 +149,16 @@ namespace Mutagen.Bethesda.Oblivion
             if (Level != rhs.Level) return false;
             if (!Fluff.EqualsFast(rhs.Fluff)) return false;
             if (Reference != rhs.Reference) return false;
-            if (Count != rhs.Count) return false;
-            if (!Fluff2.EqualsFast(rhs.Fluff2)) return false;
+            if (Count_Property.HasBeenSet != rhs.Count_Property.HasBeenSet) return false;
+            if (Count_Property.HasBeenSet)
+            {
+                if (Count != rhs.Count) return false;
+            }
+            if (Fluff2_Property.HasBeenSet != rhs.Fluff2_Property.HasBeenSet) return false;
+            if (Fluff2_Property.HasBeenSet)
+            {
+                if (!Fluff2.EqualsFast(rhs.Fluff2)) return false;
+            }
             return true;
         }
 
@@ -158,8 +168,14 @@ namespace Mutagen.Bethesda.Oblivion
             ret = HashHelper.GetHashCode(Level).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Fluff).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Reference).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Count).CombineHashCode(ret);
-            ret = HashHelper.GetHashCode(Fluff2).CombineHashCode(ret);
+            if (Count_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Count).CombineHashCode(ret);
+            }
+            if (Fluff2_Property.HasBeenSet)
+            {
+                ret = HashHelper.GetHashCode(Fluff2).CombineHashCode(ret);
+            }
             return ret;
         }
 
@@ -486,6 +502,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #region Mutagen
+        public bool StructCustom;
+        #endregion
+
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
@@ -760,6 +780,24 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         errorMask: errorMask);
                 }
+                if (ret.StructCustom)
+                {
+                    object structUnsubber = new object();
+                    Action unsubAction = () =>
+                    {
+                        ret.Count_Property.Unsubscribe(structUnsubber);
+                        ret.Fluff2_Property.Unsubscribe(structUnsubber);
+                        ret.StructCustom = false;
+                    };
+                    ret.Count_Property.Subscribe(
+                        owner: structUnsubber,
+                        callback: unsubAction,
+                        cmds: NotifyingSubscribeParameters.NoFire);
+                    ret.Fluff2_Property.Subscribe(
+                        owner: structUnsubber,
+                        callback: unsubAction,
+                        cmds: NotifyingSubscribeParameters.NoFire);
+                }
             }
             catch (Exception ex)
             when (errorMask != null)
@@ -787,10 +825,12 @@ namespace Mutagen.Bethesda.Oblivion
                 frame: frame,
                 fieldIndex: (int)LeveledCreatureEntry_FieldIndex.Reference,
                 errorMask: errorMask));
+            if (frame.Complete) return;
             item._Count.SetIfSucceeded(Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.Parse(
                 frame: frame,
                 fieldIndex: (int)LeveledCreatureEntry_FieldIndex.Count,
                 errorMask: errorMask));
+            if (frame.Complete) return;
             var Fluff2tryGet = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
                 frame: frame.Spawn(new ContentLength(2)),
                 fieldIndex: (int)LeveledCreatureEntry_FieldIndex.Fluff2,
@@ -993,10 +1033,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         new NPCSpawn Reference { get; set; }
         new Int16 Count { get; set; }
-        new INotifyingItem<Int16> Count_Property { get; }
+        new INotifyingSetItem<Int16> Count_Property { get; }
 
         new Byte[] Fluff2 { get; set; }
-        new INotifyingItem<Byte[]> Fluff2_Property { get; }
+        new INotifyingSetItem<Byte[]> Fluff2_Property { get; }
 
     }
 
@@ -1019,12 +1059,12 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Count
         Int16 Count { get; }
-        INotifyingItemGetter<Int16> Count_Property { get; }
+        INotifyingSetItemGetter<Int16> Count_Property { get; }
 
         #endregion
         #region Fluff2
         Byte[] Fluff2 { get; }
-        INotifyingItemGetter<Byte[]> Fluff2_Property { get; }
+        INotifyingSetItemGetter<Byte[]> Fluff2_Property { get; }
 
         #endregion
 
@@ -1380,8 +1420,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Count_Property.Set(
-                        value: rhs.Count,
+                    item.Count_Property.SetToWithDefault(
+                        rhs: rhs.Count_Property,
+                        def: def?.Count_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1394,8 +1435,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 try
                 {
-                    item.Fluff2_Property.Set(
-                        value: rhs.Fluff2,
+                    item.Fluff2_Property.SetToWithDefault(
+                        rhs: rhs.Fluff2_Property,
+                        def: def?.Fluff2_Property,
                         cmds: cmds);
                 }
                 catch (Exception ex)
@@ -1420,10 +1462,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LeveledCreatureEntry_FieldIndex.Level:
                 case LeveledCreatureEntry_FieldIndex.Fluff:
                 case LeveledCreatureEntry_FieldIndex.Reference:
-                case LeveledCreatureEntry_FieldIndex.Count:
-                case LeveledCreatureEntry_FieldIndex.Fluff2:
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
+                case LeveledCreatureEntry_FieldIndex.Count:
+                    obj.Count_Property.HasBeenSet = on;
+                    break;
+                case LeveledCreatureEntry_FieldIndex.Fluff2:
+                    obj.Fluff2_Property.HasBeenSet = on;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1447,10 +1493,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.Reference = default(FormIDLink<NPCSpawn>);
                     break;
                 case LeveledCreatureEntry_FieldIndex.Count:
-                    obj.Count = default(Int16);
+                    obj.Count_Property.Unset(cmds);
                     break;
                 case LeveledCreatureEntry_FieldIndex.Fluff2:
-                    obj.Fluff2 = default(Byte[]);
+                    obj.Fluff2_Property.Unset(cmds);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1467,9 +1513,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case LeveledCreatureEntry_FieldIndex.Level:
                 case LeveledCreatureEntry_FieldIndex.Fluff:
                 case LeveledCreatureEntry_FieldIndex.Reference:
-                case LeveledCreatureEntry_FieldIndex.Count:
-                case LeveledCreatureEntry_FieldIndex.Fluff2:
                     return true;
+                case LeveledCreatureEntry_FieldIndex.Count:
+                    return obj.Count_Property.HasBeenSet;
+                case LeveledCreatureEntry_FieldIndex.Fluff2:
+                    return obj.Fluff2_Property.HasBeenSet;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1504,8 +1552,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Level = default(Int16);
             item.Fluff = default(Byte[]);
             item.Reference = default(FormIDLink<NPCSpawn>);
-            item.Count = default(Int16);
-            item.Fluff2 = default(Byte[]);
+            item.Count_Property.Unset(cmds.ToUnsetParams());
+            item.Fluff2_Property.Unset(cmds.ToUnsetParams());
         }
 
         public static LeveledCreatureEntry_Mask<bool> GetEqualsMask(
@@ -1526,8 +1574,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Level = item.Level == rhs.Level;
             ret.Fluff = item.Fluff.EqualsFast(rhs.Fluff);
             ret.Reference = item.Reference == rhs.Reference;
-            ret.Count = item.Count == rhs.Count;
-            ret.Fluff2 = item.Fluff2.EqualsFast(rhs.Fluff2);
+            ret.Count = item.Count_Property.Equals(rhs.Count_Property, (l, r) => l == r);
+            ret.Fluff2 = item.Fluff2_Property.Equals(rhs.Fluff2_Property, (l, r) => l.EqualsFast(r));
         }
 
         public static string ToString(
@@ -1585,6 +1633,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this ILeveledCreatureEntryGetter item,
             LeveledCreatureEntry_Mask<bool?> checkMask)
         {
+            if (checkMask.Count.HasValue && checkMask.Count.Value != item.Count_Property.HasBeenSet) return false;
+            if (checkMask.Fluff2.HasValue && checkMask.Fluff2.Value != item.Fluff2_Property.HasBeenSet) return false;
             return true;
         }
 
@@ -1594,8 +1644,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Level = true;
             ret.Fluff = true;
             ret.Reference = true;
-            ret.Count = true;
-            ret.Fluff2 = true;
+            ret.Count = item.Count_Property.HasBeenSet;
+            ret.Fluff2 = item.Fluff2_Property.HasBeenSet;
             return ret;
         }
 
@@ -1649,18 +1699,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item: item.Reference?.FormID,
                         fieldIndex: (int)LeveledCreatureEntry_FieldIndex.Reference,
                         errorMask: errorMask);
-                    Int16XmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Count),
-                        item: item.Count_Property,
-                        fieldIndex: (int)LeveledCreatureEntry_FieldIndex.Count,
-                        errorMask: errorMask);
-                    ByteArrayXmlTranslation.Instance.Write(
-                        writer: writer,
-                        name: nameof(item.Fluff2),
-                        item: item.Fluff2_Property,
-                        fieldIndex: (int)LeveledCreatureEntry_FieldIndex.Fluff2,
-                        errorMask: errorMask);
+                    if (item.Count_Property.HasBeenSet)
+                    {
+                        Int16XmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Count),
+                            item: item.Count_Property,
+                            fieldIndex: (int)LeveledCreatureEntry_FieldIndex.Count,
+                            errorMask: errorMask);
+                    }
+                    if (item.Fluff2_Property.HasBeenSet)
+                    {
+                        ByteArrayXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Fluff2),
+                            item: item.Fluff2_Property,
+                            fieldIndex: (int)LeveledCreatureEntry_FieldIndex.Fluff2,
+                            errorMask: errorMask);
+                    }
                 }
             }
             catch (Exception ex)

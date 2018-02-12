@@ -14,8 +14,8 @@
       <Int16 name="Level" />
       <ByteArray name="Fluff" length="2" nullable="NotNull" />
       <FormIDLink name="Reference" refName="NPCSpawn" />
-      <Int16 name="Count" />
-      <ByteArray name="Fluff2" length="2" nullable="NotNull" />
+      <Int16 name="Count" hasBeenSet="True" />
+      <ByteArray name="Fluff2" length="2" nullable="NotNull" hasBeenSet="True" />
     </Fields>
   </Object>
 </Loqui>
