@@ -16,6 +16,7 @@ namespace Mutagen.Bethesda
         #region Config
         public class Config
         {
+            internal SortedList<FileLocation, byte[]> _additions;
             internal SortedList<FileLocation, byte> _substitutions;
             internal RangeCollection _moveRanges;
             internal Dictionary<FileSection, FileLocation> _moves;
@@ -42,6 +43,15 @@ namespace Mutagen.Bethesda
                 {
                     _substitutions[loc + i] = sub[i];
                 }
+            }
+
+            public void SetAddition(FileLocation loc, byte[] addition)
+            {
+                if (_additions == null)
+                {
+                    _additions = new SortedList<FileLocation, byte[]>();
+                }
+                _additions[loc] = addition;
             }
 
             public void SetMove(FileSection move, FileLocation loc)
@@ -143,11 +153,13 @@ namespace Mutagen.Bethesda
                 return;
             }
 
-            DoSubstitutions();
-            DoMoves(prevExtraRead);
+            FileSection targetSection = new FileSection(_position + bufferPos, _position + bufferEnd - 1);
+            
+            DoSubstitutions(targetSection);
+            DoMoves(prevExtraRead, targetSection);
         }
 
-        private void DoSubstitutions()
+        private void DoSubstitutions(FileSection targetSection)
         {
             if (config._substitutions == null) return;
             if (!config._substitutions.TryGetEncapsulatedIndices<FileLocation, byte>(
@@ -163,7 +175,7 @@ namespace Mutagen.Bethesda
             }
         }
 
-        private void DoMoves(int prevExtraRead)
+        private void DoMoves(int prevExtraRead, FileSection targetSection)
         {
             if (config._moves == null) return;
 
@@ -171,7 +183,7 @@ namespace Mutagen.Bethesda
 
             FileLocation[] moveFromKeys = null;
             List<FileLocation> moveToKeys = new List<FileLocation>();
-            FileSection targetSection = new FileSection(_position + bufferPos, _position + bufferEnd);
+            List<FileLocation> additionKeys = null;
 
             if (_sortedMoves.TryGetEncapsulatedIndices(
                 lowerKey: targetSection.Min,
@@ -180,25 +192,33 @@ namespace Mutagen.Bethesda
             {
                 moveFromKeys = moveIndices.Select((i) => _sortedMoves.Keys[i]).ToArray();
             }
-            else
-            {
-                moveFromKeys = null;
-            }
 
             if (_activeMoves.TryGetEncapsulatedIndices(
                 lowerKey: targetSection.Min,
                 higherKey: targetSection.Max,
                 result: out var activeMoves))
             {
-                moveToKeys.AddRange(activeMoves.Select((i) => _activeMoves.Keys[i]));
+                moveToKeys = activeMoves.Select((i) => _activeMoves.Keys[i]).ToList();
                 moveToKeys.Sort();
+            }
+
+            if (config._additions != null
+                && config._additions.TryGetEncapsulatedIndices(
+                    lowerKey: targetSection.Min,
+                    higherKey: targetSection.Max,
+                    result: out var activeAdditions))
+            {
+                additionKeys = activeAdditions.Select((i) => config._additions.Keys[i]).ToList();
+                additionKeys.Sort();
             }
 
             int moveFromIndex = 0;
             int moveToIndex = 0;
-            
+            int additionIndex = 0;
+
             while ((moveFromIndex < moveFromKeys?.Length)
-                || moveToIndex < moveToKeys.Count)
+                || moveToIndex < moveToKeys?.Count
+                || additionIndex < additionKeys?.Count)
             {
                 FileLocation? moveFromKey = null;
                 if (moveFromIndex < moveFromKeys?.Length)
@@ -210,8 +230,15 @@ namespace Mutagen.Bethesda
                 {
                     moveToKey = moveToKeys[moveToIndex];
                 }
+                FileLocation? additionKey = null;
+                if (additionIndex < additionKeys?.Count)
+                {
+                    additionKey = additionKeys[additionIndex];
+                }
 
-                if (moveToKey == null || moveFromKey < moveToKey)
+                if (moveFromKey != null
+                    && (moveToKey == null || moveFromKey < moveToKey)
+                    && (additionKey == null || moveFromKey < additionKey))
                 {
                     // Delete out move
                     var moveRange = _sortedMoves[moveFromKey.Value];
@@ -264,13 +291,10 @@ namespace Mutagen.Bethesda
                     bufferEnd -= len;
                     moveFromIndex++;
                 }
-                else
+                else if (moveToKey != null
+                    && (additionKey == null || moveToKey < additionKey))
                 {
-                    if (_expandableBuffer.Count == 0)
-                    {
-                        _expandableBuffer.AddRange(_buffer);
-                    }
-
+                    InitializeExpandableBuffer();
                     var movesToPaste = _activeMoves[moveToKey.Value];
                     var adjustedMoveLoc = new ContentLength(moveToKey.Value - _position);
                     var adjustedMoveLoc2 = new ContentLength(adjustedMoveLoc - moveDeletions);
@@ -284,6 +308,23 @@ namespace Mutagen.Bethesda
                     this._activeMoves.Remove(moveToKey.Value);
                     moveToIndex++;
                 }
+                else
+                {
+                    InitializeExpandableBuffer();
+                    var data = config._additions[additionKey.Value];
+                    var indexToAdd = (int)(additionKey.Value - _position - moveDeletions);
+                    _expandableBuffer.InsertRange(indexToAdd, data);
+                    moveDeletions -= data.Length;
+                    additionIndex++;
+                }
+            }
+        }
+
+        private void InitializeExpandableBuffer()
+        {
+            if (_expandableBuffer.Count == 0)
+            {
+                _expandableBuffer.AddRange(_buffer);
             }
         }
 

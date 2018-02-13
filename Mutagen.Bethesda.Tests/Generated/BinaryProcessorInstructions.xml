@@ -10,6 +10,25 @@
         </KeyedValue>
       </Dict>
       <RefDirect name="Instruction" refName="Instruction" nullable="NotNull" />
+    </Fields>
+  </Object>
+  <Object name="Move" GUID="226328fc-e330-4693-9377-5d70b7a70342" ID="2">
+    <Fields>
+      <RangeInt64 name="SectionToMove" />
+      <Int64 name="LocationToMove" />
+    </Fields>
+  </Object>
+  <Object name="DataTarget" GUID="501872cd-0ed9-4e48-a622-f5d43cbf8d4b" ID="3">
+    <Fields>
+      <Int64 name="Location" />
+      <ByteArray name="Data" />
+    </Fields>
+  </Object>
+  <Object name="Instruction" GUID="85d3bf63-316f-466e-98a8-35e8421b96a8" ID="4">
+    <Fields>
+      <RefList name="Moves" refName="Move" />
+      <RefList name="Substitutions" refName="DataTarget" />
+      <RefList name="Additions" refName="DataTarget" />
       <List name="SkipSourceSections">
         <RangeInt64 />
       </List>
@@ -19,24 +38,6 @@
       <List name="IgnoreDifferenceSections">
         <RangeInt64 />
       </List>
-    </Fields>
-  </Object>
-  <Object name="Move" GUID="226328fc-e330-4693-9377-5d70b7a70342" ID="2">
-    <Fields>
-      <RangeInt64 name="SectionToMove" />
-      <Int64 name="LocationToMove" />
-    </Fields>
-  </Object>
-  <Object name="Substitution" GUID="501872cd-0ed9-4e48-a622-f5d43cbf8d4b" ID="3">
-    <Fields>
-      <Int64 name="Location" />
-      <ByteArray name="Data" />
-    </Fields>
-  </Object>
-  <Object name="Instruction" GUID="85d3bf63-316f-466e-98a8-35e8421b96a8" ID="4">
-    <Fields>
-      <RefList name="Moves" refName="Move" />
-      <RefList name="Substitutions" refName="Substitution" />
     </Fields>
   </Object>
   <Object name="RecordInstruction" baseClass="Instruction" GUID="bf254321-e86f-49a5-9699-105f6b5d2457" ID="5">

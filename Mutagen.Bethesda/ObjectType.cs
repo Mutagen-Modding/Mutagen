@@ -43,7 +43,7 @@ namespace System
                 case ObjectType.Subrecord:
                     return Constants.SUBRECORD_HEADER_OFFSET;
                 case ObjectType.Record:
-                    return Constants.RECORD_HEADER_OFFSET;
+                    return Constants.RECORD_META_OFFSET;
                 case ObjectType.Group:
                     return Constants.GRUP_HEADER_OFFSET;
                 case ObjectType.Mod:

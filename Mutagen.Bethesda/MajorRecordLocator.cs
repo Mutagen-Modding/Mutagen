@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda
                     key: section.Max,
                     higher: true,
                     result: out var end);
-                if (!gotStart && !gotEnd)
+                if (!gotStart || !gotEnd)
                 {
                     ids = null;
                     return false;

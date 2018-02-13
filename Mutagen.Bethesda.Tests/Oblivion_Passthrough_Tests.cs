@@ -20,8 +20,9 @@ namespace Mutagen.Bethesda.Tests
         private BinaryProcessorInstructions GetOblivionInstructions()
         {
             var instructions = new BinaryProcessorInstructions();
-            instructions.SkipSourceSections.Add(new RangeInt64(0x93A648, 0xB44656));
-            instructions.SkipOutputSections.Add(new RangeInt64(0x93A648, 0xB8BA09));
+            instructions.Instruction.SkipSourceSections.Add(new RangeInt64(0x93A648, 0xB44656));
+            instructions.Instruction.SkipOutputSections.Add(new RangeInt64(0x93A648, 0xB8BA09));
+            instructions.Instruction.IgnoreDifferenceSections.Add(new RangeInt64(0xBFF2E2, 0xBFF2E5));
             return instructions;
         }
 
@@ -37,6 +38,7 @@ namespace Mutagen.Bethesda.Tests
         {
             ProcessNPC_Mismatch(rec, instr, filePath, loc, compressed);
             ProcessCreature_Mismatch(rec, instr, filePath, loc, compressed);
+            ProcessLeveledItemDataFields(rec, instr, filePath, loc);
         }
 
         private void ProcessNPC_Mismatch(
@@ -109,6 +111,69 @@ namespace Mutagen.Bethesda.Tests
                 });
         }
 
+        private void ProcessLeveledItemDataFields(
+            MajorRecord rec,
+            Instruction instr,
+            string filePath,
+            FileSection loc)
+        {
+            if (!(rec is LeveledItem)) return;
+            using (var stream = new MutagenReader(filePath))
+            {
+                stream.Position = loc.Min;
+                var str = stream.ReadString((int)loc.Range.Width + Constants.RECORD_HEADER_LENGTH);
+                var dataIndex = str.IndexOf("DATA");
+                if (dataIndex == -1) return;
+
+                var dataFlag = str[dataIndex + 6];
+                if (dataFlag == 1)
+                {
+                    var index = str.IndexOf("LVLD");
+                    index += 7;
+                    var addition = new DataTarget()
+                    {
+                        Location = index + loc.Min,
+                        Data = new byte[]
+                        {
+                            (byte)'L',
+                            (byte)'V',
+                            (byte)'L',
+                            (byte)'F',
+                            0x1,
+                            0x0,
+                            0x1
+                        }
+                    };
+                    instr.Additions.Add(addition);
+                }
+                else
+                {
+                    // Modify Length
+                    stream.Position = loc.Min + Constants.HEADER_LENGTH;
+                    var existingLen = stream.ReadUInt16();
+                    byte[] lenData = new byte[2];
+                    using (var writer = new MutagenWriter(new MemoryStream(lenData)))
+                    {
+                        writer.Write((ushort)(existingLen - 7));
+                    }
+                    instr.Substitutions.Add(
+                        new DataTarget()
+                        {
+                            Location = loc.Min + Constants.HEADER_LENGTH,
+                            Data = lenData
+                        });
+                }
+
+                // Remove DATA
+                var move = new Move()
+                {
+                    LocationToMove = long.MaxValue,
+                    SectionToMove = new RangeInt64(dataIndex + loc.Min, dataIndex + loc.Min + 7 - 1)
+                };
+                instr.Moves.Add(move);
+            }
+        }
+
         private bool DynamicMove(
             Instruction instr,
             string filePath,
@@ -120,7 +185,7 @@ namespace Mutagen.Bethesda.Tests
             using (var stream = new MutagenReader(filePath))
             {
                 stream.Position = loc.Min;
-                var str = stream.ReadString((int)loc.Range.Width);
+                var str = stream.ReadString((int)loc.Range.Width + Constants.RECORD_HEADER_LENGTH);
                 var offender = LocateFirstOf(str, loc.Min, offendingIndices);
                 var limit = LocateFirstOf(str, loc.Min, offendingLimits);
                 var locToMove = LocateFirstOf(str, loc.Min, locationsToMove);
@@ -148,7 +213,7 @@ namespace Mutagen.Bethesda.Tests
             using (var stream = new MutagenReader(filePath))
             {
                 stream.Position = loc.Min;
-                var bytes = stream.ReadBytes((int)loc.Range.Width);
+                var bytes = stream.ReadBytes((int)loc.Range.Width + Constants.RECORD_HEADER_LENGTH);
                 var str = MutagenReader.BytesToString(bytes);
                 List<(RecordType rec, int sourceIndex, int loc)> list = new List<(RecordType rec, int sourceIndex, int loc)>();
                 int recTypeIndex = -1;
@@ -187,7 +252,7 @@ namespace Mutagen.Bethesda.Tests
                         data[index] = bytes[item.loc + index];
                     }
                     instr.Substitutions.Add(
-                        new Substitution()
+                        new DataTarget()
                         {
                             Location = start + loc.Min,
                             Data = data
@@ -209,6 +274,7 @@ namespace Mutagen.Bethesda.Tests
             var mod = OblivionMod.Create_Binary(
                 Properties.Settings.Default.OblivionESM,
                 out var inputErrMask);
+            Assert.False(inputErrMask?.IsInError() ?? false);
 
             var instructions = GetOblivionInstructions();
 
@@ -265,10 +331,9 @@ namespace Mutagen.Bethesda.Tests
                     var ret = Passthrough_Tests.AssertFilesEqual(
                         stream,
                         oblivionOutputPath,
-                        ignoreList: new RangeCollection(instructions.IgnoreDifferenceSections),
-                        sourceSkips: new RangeCollection(instructions.SkipSourceSections),
-                        targetSkips: new RangeCollection(instructions.SkipOutputSections));
-                    Assert.False(inputErrMask?.IsInError() ?? false);
+                        ignoreList: new RangeCollection(instructions.Instruction.IgnoreDifferenceSections),
+                        sourceSkips: new RangeCollection(instructions.Instruction.SkipSourceSections),
+                        targetSkips: new RangeCollection(instructions.Instruction.SkipOutputSections));
                     Assert.False(outputErrMask?.IsInError() ?? false);
                     CopyOverOffendingRecords(
                         mod: mod,
@@ -396,7 +461,7 @@ namespace Mutagen.Bethesda.Tests
                                     using (HeaderExport.ExportRecordHeader(outputStream, new RecordType(recType)))
                                     {
                                         stream.Position += new ContentLength(4);
-                                        outputStream.Write(stream.ReadBytes(Constants.RECORD_HEADER_LENGTH - 4));
+                                        outputStream.Write(stream.ReadBytes(Constants.RECORD_META_LENGTH - 4));
                                         using (var frame = new MutagenFrame(stream, majorLen))
                                         {
                                             using (var decomp = frame.Decompress())

@@ -583,7 +583,11 @@ namespace Mutagen.Bethesda.Tests.Internals
     {
         Moves = 0,
         Substitutions = 1,
-        Record = 2,
+        Additions = 2,
+        SkipSourceSections = 3,
+        SkipOutputSections = 4,
+        IgnoreDifferenceSections = 5,
+        Record = 6,
     }
     #endregion
 
@@ -993,6 +997,14 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case Instruction_FieldIndex.Moves:
                     return (RecordInstruction_FieldIndex)((int)index);
                 case Instruction_FieldIndex.Substitutions:
+                    return (RecordInstruction_FieldIndex)((int)index);
+                case Instruction_FieldIndex.Additions:
+                    return (RecordInstruction_FieldIndex)((int)index);
+                case Instruction_FieldIndex.SkipSourceSections:
+                    return (RecordInstruction_FieldIndex)((int)index);
+                case Instruction_FieldIndex.SkipOutputSections:
+                    return (RecordInstruction_FieldIndex)((int)index);
+                case Instruction_FieldIndex.IgnoreDifferenceSections:
                     return (RecordInstruction_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");

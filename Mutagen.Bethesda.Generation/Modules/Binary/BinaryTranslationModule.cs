@@ -530,7 +530,7 @@ namespace Mutagen.Bethesda.Generation
                                     }
                                     else if (field.Field is SpecialParseType special)
                                     {
-                                        fg.AppendLine($"return TryGet<{obj.FieldIndexName}?>.Succeed(lastParsed);");
+                                        fg.AppendLine($"return TryGet<{obj.FieldIndexName}?>.Succeed({(typelessStruct ? "lastParsed" : "null")});");
                                     }
                                     else
                                     {

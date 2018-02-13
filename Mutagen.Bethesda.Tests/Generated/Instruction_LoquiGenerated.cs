@@ -57,19 +57,91 @@ namespace Mutagen.Bethesda.Tests
         #endregion
         #region Substitutions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<Substitution> _Substitutions = new NotifyingList<Substitution>();
-        public INotifyingList<Substitution> Substitutions => _Substitutions;
+        private readonly INotifyingList<DataTarget> _Substitutions = new NotifyingList<DataTarget>();
+        public INotifyingList<DataTarget> Substitutions => _Substitutions;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<Substitution> SubstitutionsEnumerable
+        public IEnumerable<DataTarget> SubstitutionsEnumerable
         {
             get => _Substitutions;
             set => _Substitutions.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<Substitution> IInstruction.Substitutions => _Substitutions;
+        INotifyingList<DataTarget> IInstruction.Substitutions => _Substitutions;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<Substitution> IInstructionGetter.Substitutions => _Substitutions;
+        INotifyingListGetter<DataTarget> IInstructionGetter.Substitutions => _Substitutions;
+        #endregion
+
+        #endregion
+        #region Additions
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private readonly INotifyingList<DataTarget> _Additions = new NotifyingList<DataTarget>();
+        public INotifyingList<DataTarget> Additions => _Additions;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public IEnumerable<DataTarget> AdditionsEnumerable
+        {
+            get => _Additions;
+            set => _Additions.SetTo(value);
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingList<DataTarget> IInstruction.Additions => _Additions;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingListGetter<DataTarget> IInstructionGetter.Additions => _Additions;
+        #endregion
+
+        #endregion
+        #region SkipSourceSections
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private readonly INotifyingList<RangeInt64> _SkipSourceSections = new NotifyingList<RangeInt64>();
+        public INotifyingList<RangeInt64> SkipSourceSections => _SkipSourceSections;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public IEnumerable<RangeInt64> SkipSourceSectionsEnumerable
+        {
+            get => _SkipSourceSections;
+            set => _SkipSourceSections.SetTo(value);
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingList<RangeInt64> IInstruction.SkipSourceSections => _SkipSourceSections;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingListGetter<RangeInt64> IInstructionGetter.SkipSourceSections => _SkipSourceSections;
+        #endregion
+
+        #endregion
+        #region SkipOutputSections
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private readonly INotifyingList<RangeInt64> _SkipOutputSections = new NotifyingList<RangeInt64>();
+        public INotifyingList<RangeInt64> SkipOutputSections => _SkipOutputSections;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public IEnumerable<RangeInt64> SkipOutputSectionsEnumerable
+        {
+            get => _SkipOutputSections;
+            set => _SkipOutputSections.SetTo(value);
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingList<RangeInt64> IInstruction.SkipOutputSections => _SkipOutputSections;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingListGetter<RangeInt64> IInstructionGetter.SkipOutputSections => _SkipOutputSections;
+        #endregion
+
+        #endregion
+        #region IgnoreDifferenceSections
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private readonly INotifyingList<RangeInt64> _IgnoreDifferenceSections = new NotifyingList<RangeInt64>();
+        public INotifyingList<RangeInt64> IgnoreDifferenceSections => _IgnoreDifferenceSections;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public IEnumerable<RangeInt64> IgnoreDifferenceSectionsEnumerable
+        {
+            get => _IgnoreDifferenceSections;
+            set => _IgnoreDifferenceSections.SetTo(value);
+        }
+        #region Interface Members
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingList<RangeInt64> IInstruction.IgnoreDifferenceSections => _IgnoreDifferenceSections;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingListGetter<RangeInt64> IInstructionGetter.IgnoreDifferenceSections => _IgnoreDifferenceSections;
         #endregion
 
         #endregion
@@ -134,6 +206,10 @@ namespace Mutagen.Bethesda.Tests
             if (rhs == null) return false;
             if (!Moves.SequenceEqual(rhs.Moves)) return false;
             if (!Substitutions.SequenceEqual(rhs.Substitutions)) return false;
+            if (!Additions.SequenceEqual(rhs.Additions)) return false;
+            if (!SkipSourceSections.SequenceEqual(rhs.SkipSourceSections)) return false;
+            if (!SkipOutputSections.SequenceEqual(rhs.SkipOutputSections)) return false;
+            if (!IgnoreDifferenceSections.SequenceEqual(rhs.IgnoreDifferenceSections)) return false;
             return true;
         }
 
@@ -142,6 +218,10 @@ namespace Mutagen.Bethesda.Tests
             int ret = 0;
             ret = HashHelper.GetHashCode(Moves).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(Substitutions).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Additions).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(SkipSourceSections).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(SkipOutputSections).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(IgnoreDifferenceSections).CombineHashCode(ret);
             return ret;
         }
 
@@ -450,13 +530,13 @@ namespace Mutagen.Bethesda.Tests
                     }
                     break;
                 case "Substitutions":
-                    var Substitutionslist = ListXmlTranslation<Substitution, MaskItem<Exception, Substitution_ErrorMask>>.Instance.Parse(
+                    var Substitutionslist = ListXmlTranslation<DataTarget, MaskItem<Exception, DataTarget_ErrorMask>>.Instance.Parse(
                         root: root,
                         fieldIndex: (int)Instruction_FieldIndex.Substitutions,
                         errorMask: errorMask,
-                        transl: (XElement r, bool listDoMasks, out MaskItem<Exception, Substitution_ErrorMask> listSubMask) =>
+                        transl: (XElement r, bool listDoMasks, out MaskItem<Exception, DataTarget_ErrorMask> listSubMask) =>
                         {
-                            return LoquiXmlTranslation<Substitution, Substitution_ErrorMask>.Instance.Parse(
+                            return LoquiXmlTranslation<DataTarget, DataTarget_ErrorMask>.Instance.Parse(
                                 root: r,
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask);
@@ -465,6 +545,81 @@ namespace Mutagen.Bethesda.Tests
                     if (Substitutionslist.Succeeded)
                     {
                         item._Substitutions.SetTo(Substitutionslist.Value);
+                    }
+                    break;
+                case "Additions":
+                    var Additionslist = ListXmlTranslation<DataTarget, MaskItem<Exception, DataTarget_ErrorMask>>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)Instruction_FieldIndex.Additions,
+                        errorMask: errorMask,
+                        transl: (XElement r, bool listDoMasks, out MaskItem<Exception, DataTarget_ErrorMask> listSubMask) =>
+                        {
+                            return LoquiXmlTranslation<DataTarget, DataTarget_ErrorMask>.Instance.Parse(
+                                root: r,
+                                doMasks: listDoMasks,
+                                errorMask: out listSubMask);
+                        }
+                        );
+                    if (Additionslist.Succeeded)
+                    {
+                        item._Additions.SetTo(Additionslist.Value);
+                    }
+                    break;
+                case "SkipSourceSections":
+                    var SkipSourceSectionslist = ListXmlTranslation<RangeInt64, Exception>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)Instruction_FieldIndex.SkipSourceSections,
+                        errorMask: errorMask,
+                        transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
+                        {
+                            return RangeInt64XmlTranslation.Instance.Parse(
+                                r,
+                                nullable: false,
+                                doMasks: listDoMasks,
+                                errorMask: out listSubMask).Bubble((o) => o.Value);
+                        }
+                        );
+                    if (SkipSourceSectionslist.Succeeded)
+                    {
+                        item._SkipSourceSections.SetTo(SkipSourceSectionslist.Value);
+                    }
+                    break;
+                case "SkipOutputSections":
+                    var SkipOutputSectionslist = ListXmlTranslation<RangeInt64, Exception>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)Instruction_FieldIndex.SkipOutputSections,
+                        errorMask: errorMask,
+                        transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
+                        {
+                            return RangeInt64XmlTranslation.Instance.Parse(
+                                r,
+                                nullable: false,
+                                doMasks: listDoMasks,
+                                errorMask: out listSubMask).Bubble((o) => o.Value);
+                        }
+                        );
+                    if (SkipOutputSectionslist.Succeeded)
+                    {
+                        item._SkipOutputSections.SetTo(SkipOutputSectionslist.Value);
+                    }
+                    break;
+                case "IgnoreDifferenceSections":
+                    var IgnoreDifferenceSectionslist = ListXmlTranslation<RangeInt64, Exception>.Instance.Parse(
+                        root: root,
+                        fieldIndex: (int)Instruction_FieldIndex.IgnoreDifferenceSections,
+                        errorMask: errorMask,
+                        transl: (XElement r, bool listDoMasks, out Exception listSubMask) =>
+                        {
+                            return RangeInt64XmlTranslation.Instance.Parse(
+                                r,
+                                nullable: false,
+                                doMasks: listDoMasks,
+                                errorMask: out listSubMask).Bubble((o) => o.Value);
+                        }
+                        );
+                    if (IgnoreDifferenceSectionslist.Succeeded)
+                    {
+                        item._IgnoreDifferenceSections.SetTo(IgnoreDifferenceSectionslist.Value);
                     }
                     break;
                 default:
@@ -561,7 +716,19 @@ namespace Mutagen.Bethesda.Tests
                     this._Moves.SetTo((IEnumerable<Move>)obj, cmds);
                     break;
                 case Instruction_FieldIndex.Substitutions:
-                    this._Substitutions.SetTo((IEnumerable<Substitution>)obj, cmds);
+                    this._Substitutions.SetTo((IEnumerable<DataTarget>)obj, cmds);
+                    break;
+                case Instruction_FieldIndex.Additions:
+                    this._Additions.SetTo((IEnumerable<DataTarget>)obj, cmds);
+                    break;
+                case Instruction_FieldIndex.SkipSourceSections:
+                    this._SkipSourceSections.SetTo((IEnumerable<RangeInt64>)obj, cmds);
+                    break;
+                case Instruction_FieldIndex.SkipOutputSections:
+                    this._SkipOutputSections.SetTo((IEnumerable<RangeInt64>)obj, cmds);
+                    break;
+                case Instruction_FieldIndex.IgnoreDifferenceSections:
+                    this._IgnoreDifferenceSections.SetTo((IEnumerable<RangeInt64>)obj, cmds);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -604,7 +771,19 @@ namespace Mutagen.Bethesda.Tests
                     obj._Moves.SetTo((IEnumerable<Move>)pair.Value, null);
                     break;
                 case Instruction_FieldIndex.Substitutions:
-                    obj._Substitutions.SetTo((IEnumerable<Substitution>)pair.Value, null);
+                    obj._Substitutions.SetTo((IEnumerable<DataTarget>)pair.Value, null);
+                    break;
+                case Instruction_FieldIndex.Additions:
+                    obj._Additions.SetTo((IEnumerable<DataTarget>)pair.Value, null);
+                    break;
+                case Instruction_FieldIndex.SkipSourceSections:
+                    obj._SkipSourceSections.SetTo((IEnumerable<RangeInt64>)pair.Value, null);
+                    break;
+                case Instruction_FieldIndex.SkipOutputSections:
+                    obj._SkipOutputSections.SetTo((IEnumerable<RangeInt64>)pair.Value, null);
+                    break;
+                case Instruction_FieldIndex.IgnoreDifferenceSections:
+                    obj._IgnoreDifferenceSections.SetTo((IEnumerable<RangeInt64>)pair.Value, null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
@@ -622,7 +801,11 @@ namespace Mutagen.Bethesda.Tests
     public interface IInstruction : IInstructionGetter, ILoquiClass<IInstruction, IInstructionGetter>, ILoquiClass<Instruction, IInstructionGetter>
     {
         new INotifyingList<Move> Moves { get; }
-        new INotifyingList<Substitution> Substitutions { get; }
+        new INotifyingList<DataTarget> Substitutions { get; }
+        new INotifyingList<DataTarget> Additions { get; }
+        new INotifyingList<RangeInt64> SkipSourceSections { get; }
+        new INotifyingList<RangeInt64> SkipOutputSections { get; }
+        new INotifyingList<RangeInt64> IgnoreDifferenceSections { get; }
     }
 
     public interface IInstructionGetter : ILoquiObject
@@ -631,7 +814,19 @@ namespace Mutagen.Bethesda.Tests
         INotifyingListGetter<Move> Moves { get; }
         #endregion
         #region Substitutions
-        INotifyingListGetter<Substitution> Substitutions { get; }
+        INotifyingListGetter<DataTarget> Substitutions { get; }
+        #endregion
+        #region Additions
+        INotifyingListGetter<DataTarget> Additions { get; }
+        #endregion
+        #region SkipSourceSections
+        INotifyingListGetter<RangeInt64> SkipSourceSections { get; }
+        #endregion
+        #region SkipOutputSections
+        INotifyingListGetter<RangeInt64> SkipOutputSections { get; }
+        #endregion
+        #region IgnoreDifferenceSections
+        INotifyingListGetter<RangeInt64> IgnoreDifferenceSections { get; }
         #endregion
 
     }
@@ -647,6 +842,10 @@ namespace Mutagen.Bethesda.Tests.Internals
     {
         Moves = 0,
         Substitutions = 1,
+        Additions = 2,
+        SkipSourceSections = 3,
+        SkipOutputSections = 4,
+        IgnoreDifferenceSections = 5,
     }
     #endregion
 
@@ -664,7 +863,7 @@ namespace Mutagen.Bethesda.Tests.Internals
 
         public const string GUID = "85d3bf63-316f-466e-98a8-35e8421b96a8";
 
-        public const ushort FieldCount = 2;
+        public const ushort FieldCount = 6;
 
         public static readonly Type MaskType = typeof(Instruction_Mask<>);
 
@@ -696,6 +895,14 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return (ushort)Instruction_FieldIndex.Moves;
                 case "SUBSTITUTIONS":
                     return (ushort)Instruction_FieldIndex.Substitutions;
+                case "ADDITIONS":
+                    return (ushort)Instruction_FieldIndex.Additions;
+                case "SKIPSOURCESECTIONS":
+                    return (ushort)Instruction_FieldIndex.SkipSourceSections;
+                case "SKIPOUTPUTSECTIONS":
+                    return (ushort)Instruction_FieldIndex.SkipOutputSections;
+                case "IGNOREDIFFERENCESECTIONS":
+                    return (ushort)Instruction_FieldIndex.IgnoreDifferenceSections;
                 default:
                     return null;
             }
@@ -708,6 +915,10 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 case Instruction_FieldIndex.Moves:
                 case Instruction_FieldIndex.Substitutions:
+                case Instruction_FieldIndex.Additions:
+                case Instruction_FieldIndex.SkipSourceSections:
+                case Instruction_FieldIndex.SkipOutputSections:
+                case Instruction_FieldIndex.IgnoreDifferenceSections:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -721,7 +932,12 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 case Instruction_FieldIndex.Moves:
                 case Instruction_FieldIndex.Substitutions:
+                case Instruction_FieldIndex.Additions:
                     return true;
+                case Instruction_FieldIndex.SkipSourceSections:
+                case Instruction_FieldIndex.SkipOutputSections:
+                case Instruction_FieldIndex.IgnoreDifferenceSections:
+                    return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -734,6 +950,10 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 case Instruction_FieldIndex.Moves:
                 case Instruction_FieldIndex.Substitutions:
+                case Instruction_FieldIndex.Additions:
+                case Instruction_FieldIndex.SkipSourceSections:
+                case Instruction_FieldIndex.SkipOutputSections:
+                case Instruction_FieldIndex.IgnoreDifferenceSections:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -749,6 +969,14 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return "Moves";
                 case Instruction_FieldIndex.Substitutions:
                     return "Substitutions";
+                case Instruction_FieldIndex.Additions:
+                    return "Additions";
+                case Instruction_FieldIndex.SkipSourceSections:
+                    return "SkipSourceSections";
+                case Instruction_FieldIndex.SkipOutputSections:
+                    return "SkipOutputSections";
+                case Instruction_FieldIndex.IgnoreDifferenceSections:
+                    return "IgnoreDifferenceSections";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -761,6 +989,10 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 case Instruction_FieldIndex.Moves:
                 case Instruction_FieldIndex.Substitutions:
+                case Instruction_FieldIndex.Additions:
+                case Instruction_FieldIndex.SkipSourceSections:
+                case Instruction_FieldIndex.SkipOutputSections:
+                case Instruction_FieldIndex.IgnoreDifferenceSections:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -774,6 +1006,10 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 case Instruction_FieldIndex.Moves:
                 case Instruction_FieldIndex.Substitutions:
+                case Instruction_FieldIndex.Additions:
+                case Instruction_FieldIndex.SkipSourceSections:
+                case Instruction_FieldIndex.SkipOutputSections:
+                case Instruction_FieldIndex.IgnoreDifferenceSections:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -788,7 +1024,15 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case Instruction_FieldIndex.Moves:
                     return typeof(NotifyingList<Move>);
                 case Instruction_FieldIndex.Substitutions:
-                    return typeof(NotifyingList<Substitution>);
+                    return typeof(NotifyingList<DataTarget>);
+                case Instruction_FieldIndex.Additions:
+                    return typeof(NotifyingList<DataTarget>);
+                case Instruction_FieldIndex.SkipSourceSections:
+                    return typeof(NotifyingList<RangeInt64>);
+                case Instruction_FieldIndex.SkipOutputSections:
+                    return typeof(NotifyingList<RangeInt64>);
+                case Instruction_FieldIndex.IgnoreDifferenceSections:
+                    return typeof(NotifyingList<RangeInt64>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -947,8 +1191,8 @@ namespace Mutagen.Bethesda.Tests.Internals
                                 case CopyOption.Reference:
                                     return r;
                                 case CopyOption.MakeCopy:
-                                    if (r == null) return default(Substitution);
-                                    return Substitution.Copy(
+                                    if (r == null) return default(DataTarget);
+                                    return DataTarget.Copy(
                                         r,
                                         copyMask?.Substitutions?.Specific,
                                         def: d);
@@ -962,6 +1206,83 @@ namespace Mutagen.Bethesda.Tests.Internals
                 when (doMasks)
                 {
                     errorMask().SetNthException((int)Instruction_FieldIndex.Substitutions, ex);
+                }
+            }
+            if (copyMask?.Additions.Overall != CopyOption.Skip)
+            {
+                try
+                {
+                    item.Additions.SetToWithDefault(
+                        rhs: rhs.Additions,
+                        def: def?.Additions,
+                        cmds: cmds,
+                        converter: (r, d) =>
+                        {
+                            switch (copyMask?.Additions.Overall ?? CopyOption.Reference)
+                            {
+                                case CopyOption.Reference:
+                                    return r;
+                                case CopyOption.MakeCopy:
+                                    if (r == null) return default(DataTarget);
+                                    return DataTarget.Copy(
+                                        r,
+                                        copyMask?.Additions?.Specific,
+                                        def: d);
+                                default:
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Additions.Overall}. Cannot execute copy.");
+                            }
+                        }
+                        );
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Instruction_FieldIndex.Additions, ex);
+                }
+            }
+            if (copyMask?.SkipSourceSections != CopyOption.Skip)
+            {
+                try
+                {
+                    item.SkipSourceSections.SetToWithDefault(
+                        rhs.SkipSourceSections,
+                        def?.SkipSourceSections,
+                        cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Instruction_FieldIndex.SkipSourceSections, ex);
+                }
+            }
+            if (copyMask?.SkipOutputSections != CopyOption.Skip)
+            {
+                try
+                {
+                    item.SkipOutputSections.SetToWithDefault(
+                        rhs.SkipOutputSections,
+                        def?.SkipOutputSections,
+                        cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Instruction_FieldIndex.SkipOutputSections, ex);
+                }
+            }
+            if (copyMask?.IgnoreDifferenceSections != CopyOption.Skip)
+            {
+                try
+                {
+                    item.IgnoreDifferenceSections.SetToWithDefault(
+                        rhs.IgnoreDifferenceSections,
+                        def?.IgnoreDifferenceSections,
+                        cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)Instruction_FieldIndex.IgnoreDifferenceSections, ex);
                 }
             }
         }
@@ -979,6 +1300,10 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 case Instruction_FieldIndex.Moves:
                 case Instruction_FieldIndex.Substitutions:
+                case Instruction_FieldIndex.Additions:
+                case Instruction_FieldIndex.SkipSourceSections:
+                case Instruction_FieldIndex.SkipOutputSections:
+                case Instruction_FieldIndex.IgnoreDifferenceSections:
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 default:
@@ -1000,6 +1325,18 @@ namespace Mutagen.Bethesda.Tests.Internals
                 case Instruction_FieldIndex.Substitutions:
                     obj.Substitutions.Unset(cmds);
                     break;
+                case Instruction_FieldIndex.Additions:
+                    obj.Additions.Unset(cmds);
+                    break;
+                case Instruction_FieldIndex.SkipSourceSections:
+                    obj.SkipSourceSections.Unset(cmds);
+                    break;
+                case Instruction_FieldIndex.SkipOutputSections:
+                    obj.SkipOutputSections.Unset(cmds);
+                    break;
+                case Instruction_FieldIndex.IgnoreDifferenceSections:
+                    obj.IgnoreDifferenceSections.Unset(cmds);
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1014,6 +1351,10 @@ namespace Mutagen.Bethesda.Tests.Internals
             {
                 case Instruction_FieldIndex.Moves:
                 case Instruction_FieldIndex.Substitutions:
+                case Instruction_FieldIndex.Additions:
+                case Instruction_FieldIndex.SkipSourceSections:
+                case Instruction_FieldIndex.SkipOutputSections:
+                case Instruction_FieldIndex.IgnoreDifferenceSections:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1031,6 +1372,14 @@ namespace Mutagen.Bethesda.Tests.Internals
                     return obj.Moves;
                 case Instruction_FieldIndex.Substitutions:
                     return obj.Substitutions;
+                case Instruction_FieldIndex.Additions:
+                    return obj.Additions;
+                case Instruction_FieldIndex.SkipSourceSections:
+                    return obj.SkipSourceSections;
+                case Instruction_FieldIndex.SkipOutputSections:
+                    return obj.SkipOutputSections;
+                case Instruction_FieldIndex.IgnoreDifferenceSections:
+                    return obj.IgnoreDifferenceSections;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -1042,6 +1391,10 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             item.Moves.Unset(cmds.ToUnsetParams());
             item.Substitutions.Unset(cmds.ToUnsetParams());
+            item.Additions.Unset(cmds.ToUnsetParams());
+            item.SkipSourceSections.Unset(cmds.ToUnsetParams());
+            item.SkipOutputSections.Unset(cmds.ToUnsetParams());
+            item.IgnoreDifferenceSections.Unset(cmds.ToUnsetParams());
         }
 
         public static Instruction_Mask<bool> GetEqualsMask(
@@ -1070,17 +1423,37 @@ namespace Mutagen.Bethesda.Tests.Internals
             }
             ), out ret.Moves.Overall);
             ret.Moves.Overall = ret.Moves.Overall && ret.Moves.Specific.All((b) => b.Overall);
-            ret.Substitutions = new MaskItem<bool, IEnumerable<MaskItem<bool, Substitution_Mask<bool>>>>();
-            ret.Substitutions.Specific = item.Substitutions.SelectAgainst<Substitution, MaskItem<bool, Substitution_Mask<bool>>>(rhs.Substitutions, ((l, r) =>
+            ret.Substitutions = new MaskItem<bool, IEnumerable<MaskItem<bool, DataTarget_Mask<bool>>>>();
+            ret.Substitutions.Specific = item.Substitutions.SelectAgainst<DataTarget, MaskItem<bool, DataTarget_Mask<bool>>>(rhs.Substitutions, ((l, r) =>
             {
-                MaskItem<bool, Substitution_Mask<bool>> itemRet;
-                itemRet = new MaskItem<bool, Substitution_Mask<bool>>();
-                itemRet.Specific = SubstitutionCommon.GetEqualsMask(l, r);
+                MaskItem<bool, DataTarget_Mask<bool>> itemRet;
+                itemRet = new MaskItem<bool, DataTarget_Mask<bool>>();
+                itemRet.Specific = DataTargetCommon.GetEqualsMask(l, r);
                 itemRet.Overall = itemRet.Specific.AllEqual((b) => b);
                 return itemRet;
             }
             ), out ret.Substitutions.Overall);
             ret.Substitutions.Overall = ret.Substitutions.Overall && ret.Substitutions.Specific.All((b) => b.Overall);
+            ret.Additions = new MaskItem<bool, IEnumerable<MaskItem<bool, DataTarget_Mask<bool>>>>();
+            ret.Additions.Specific = item.Additions.SelectAgainst<DataTarget, MaskItem<bool, DataTarget_Mask<bool>>>(rhs.Additions, ((l, r) =>
+            {
+                MaskItem<bool, DataTarget_Mask<bool>> itemRet;
+                itemRet = new MaskItem<bool, DataTarget_Mask<bool>>();
+                itemRet.Specific = DataTargetCommon.GetEqualsMask(l, r);
+                itemRet.Overall = itemRet.Specific.AllEqual((b) => b);
+                return itemRet;
+            }
+            ), out ret.Additions.Overall);
+            ret.Additions.Overall = ret.Additions.Overall && ret.Additions.Specific.All((b) => b.Overall);
+            ret.SkipSourceSections = new MaskItem<bool, IEnumerable<bool>>();
+            ret.SkipSourceSections.Specific = item.SkipSourceSections.SelectAgainst<RangeInt64, bool>(rhs.SkipSourceSections, ((l, r) => object.Equals(l, r)), out ret.SkipSourceSections.Overall);
+            ret.SkipSourceSections.Overall = ret.SkipSourceSections.Overall && ret.SkipSourceSections.Specific.All((b) => b);
+            ret.SkipOutputSections = new MaskItem<bool, IEnumerable<bool>>();
+            ret.SkipOutputSections.Specific = item.SkipOutputSections.SelectAgainst<RangeInt64, bool>(rhs.SkipOutputSections, ((l, r) => object.Equals(l, r)), out ret.SkipOutputSections.Overall);
+            ret.SkipOutputSections.Overall = ret.SkipOutputSections.Overall && ret.SkipOutputSections.Specific.All((b) => b);
+            ret.IgnoreDifferenceSections = new MaskItem<bool, IEnumerable<bool>>();
+            ret.IgnoreDifferenceSections.Specific = item.IgnoreDifferenceSections.SelectAgainst<RangeInt64, bool>(rhs.IgnoreDifferenceSections, ((l, r) => object.Equals(l, r)), out ret.IgnoreDifferenceSections.Overall);
+            ret.IgnoreDifferenceSections.Overall = ret.IgnoreDifferenceSections.Overall && ret.IgnoreDifferenceSections.Specific.All((b) => b);
         }
 
         public static string ToString(
@@ -1146,6 +1519,78 @@ namespace Mutagen.Bethesda.Tests.Internals
                     }
                     fg.AppendLine("]");
                 }
+                if (printMask?.Additions?.Overall ?? true)
+                {
+                    fg.AppendLine("Additions =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        foreach (var subItem in item.Additions)
+                        {
+                            fg.AppendLine("[");
+                            using (new DepthWrapper(fg))
+                            {
+                                subItem?.ToString(fg, "Item");
+                            }
+                            fg.AppendLine("]");
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (printMask?.SkipSourceSections?.Overall ?? true)
+                {
+                    fg.AppendLine("SkipSourceSections =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        foreach (var subItem in item.SkipSourceSections)
+                        {
+                            fg.AppendLine("[");
+                            using (new DepthWrapper(fg))
+                            {
+                                fg.AppendLine($"Item => {subItem}");
+                            }
+                            fg.AppendLine("]");
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (printMask?.SkipOutputSections?.Overall ?? true)
+                {
+                    fg.AppendLine("SkipOutputSections =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        foreach (var subItem in item.SkipOutputSections)
+                        {
+                            fg.AppendLine("[");
+                            using (new DepthWrapper(fg))
+                            {
+                                fg.AppendLine($"Item => {subItem}");
+                            }
+                            fg.AppendLine("]");
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (printMask?.IgnoreDifferenceSections?.Overall ?? true)
+                {
+                    fg.AppendLine("IgnoreDifferenceSections =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        foreach (var subItem in item.IgnoreDifferenceSections)
+                        {
+                            fg.AppendLine("[");
+                            using (new DepthWrapper(fg))
+                            {
+                                fg.AppendLine($"Item => {subItem}");
+                            }
+                            fg.AppendLine("]");
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
             }
             fg.AppendLine("]");
         }
@@ -1161,7 +1606,11 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             var ret = new Instruction_Mask<bool>();
             ret.Moves = new MaskItem<bool, IEnumerable<MaskItem<bool, Move_Mask<bool>>>>(item.Moves.HasBeenSet, item.Moves.Select((i) => new MaskItem<bool, Move_Mask<bool>>(true, i.GetHasBeenSetMask())));
-            ret.Substitutions = new MaskItem<bool, IEnumerable<MaskItem<bool, Substitution_Mask<bool>>>>(item.Substitutions.HasBeenSet, item.Substitutions.Select((i) => new MaskItem<bool, Substitution_Mask<bool>>(true, i.GetHasBeenSetMask())));
+            ret.Substitutions = new MaskItem<bool, IEnumerable<MaskItem<bool, DataTarget_Mask<bool>>>>(item.Substitutions.HasBeenSet, item.Substitutions.Select((i) => new MaskItem<bool, DataTarget_Mask<bool>>(true, i.GetHasBeenSetMask())));
+            ret.Additions = new MaskItem<bool, IEnumerable<MaskItem<bool, DataTarget_Mask<bool>>>>(item.Additions.HasBeenSet, item.Additions.Select((i) => new MaskItem<bool, DataTarget_Mask<bool>>(true, i.GetHasBeenSetMask())));
+            ret.SkipSourceSections = new MaskItem<bool, IEnumerable<bool>>(item.SkipSourceSections.HasBeenSet, null);
+            ret.SkipOutputSections = new MaskItem<bool, IEnumerable<bool>>(item.SkipOutputSections.HasBeenSet, null);
+            ret.IgnoreDifferenceSections = new MaskItem<bool, IEnumerable<bool>>(item.IgnoreDifferenceSections.HasBeenSet, null);
             return ret;
         }
 
@@ -1213,18 +1662,82 @@ namespace Mutagen.Bethesda.Tests.Internals
                                 errorMask: out listSubMask);
                         }
                         );
-                    ListXmlTranslation<Substitution, MaskItem<Exception, Substitution_ErrorMask>>.Instance.Write(
+                    ListXmlTranslation<DataTarget, MaskItem<Exception, DataTarget_ErrorMask>>.Instance.Write(
                         writer: writer,
                         name: nameof(item.Substitutions),
                         item: item.Substitutions,
                         fieldIndex: (int)Instruction_FieldIndex.Substitutions,
                         errorMask: errorMask,
-                        transl: (Substitution subItem, bool listDoMasks, out MaskItem<Exception, Substitution_ErrorMask> listSubMask) =>
+                        transl: (DataTarget subItem, bool listDoMasks, out MaskItem<Exception, DataTarget_ErrorMask> listSubMask) =>
                         {
-                            LoquiXmlTranslation<Substitution, Substitution_ErrorMask>.Instance.Write(
+                            LoquiXmlTranslation<DataTarget, DataTarget_ErrorMask>.Instance.Write(
                                 writer: writer,
                                 item: subItem,
                                 name: "Item",
+                                doMasks: errorMask != null,
+                                errorMask: out listSubMask);
+                        }
+                        );
+                    ListXmlTranslation<DataTarget, MaskItem<Exception, DataTarget_ErrorMask>>.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.Additions),
+                        item: item.Additions,
+                        fieldIndex: (int)Instruction_FieldIndex.Additions,
+                        errorMask: errorMask,
+                        transl: (DataTarget subItem, bool listDoMasks, out MaskItem<Exception, DataTarget_ErrorMask> listSubMask) =>
+                        {
+                            LoquiXmlTranslation<DataTarget, DataTarget_ErrorMask>.Instance.Write(
+                                writer: writer,
+                                item: subItem,
+                                name: "Item",
+                                doMasks: errorMask != null,
+                                errorMask: out listSubMask);
+                        }
+                        );
+                    ListXmlTranslation<RangeInt64, Exception>.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.SkipSourceSections),
+                        item: item.SkipSourceSections,
+                        fieldIndex: (int)Instruction_FieldIndex.SkipSourceSections,
+                        errorMask: errorMask,
+                        transl: (RangeInt64 subItem, bool listDoMasks, out Exception listSubMask) =>
+                        {
+                            RangeInt64XmlTranslation.Instance.Write(
+                                writer: writer,
+                                name: "Item",
+                                item: subItem,
+                                doMasks: errorMask != null,
+                                errorMask: out listSubMask);
+                        }
+                        );
+                    ListXmlTranslation<RangeInt64, Exception>.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.SkipOutputSections),
+                        item: item.SkipOutputSections,
+                        fieldIndex: (int)Instruction_FieldIndex.SkipOutputSections,
+                        errorMask: errorMask,
+                        transl: (RangeInt64 subItem, bool listDoMasks, out Exception listSubMask) =>
+                        {
+                            RangeInt64XmlTranslation.Instance.Write(
+                                writer: writer,
+                                name: "Item",
+                                item: subItem,
+                                doMasks: errorMask != null,
+                                errorMask: out listSubMask);
+                        }
+                        );
+                    ListXmlTranslation<RangeInt64, Exception>.Instance.Write(
+                        writer: writer,
+                        name: nameof(item.IgnoreDifferenceSections),
+                        item: item.IgnoreDifferenceSections,
+                        fieldIndex: (int)Instruction_FieldIndex.IgnoreDifferenceSections,
+                        errorMask: errorMask,
+                        transl: (RangeInt64 subItem, bool listDoMasks, out Exception listSubMask) =>
+                        {
+                            RangeInt64XmlTranslation.Instance.Write(
+                                writer: writer,
+                                name: "Item",
+                                item: subItem,
                                 doMasks: errorMask != null,
                                 errorMask: out listSubMask);
                         }
@@ -1257,13 +1770,21 @@ namespace Mutagen.Bethesda.Tests.Internals
         public Instruction_Mask(T initialValue)
         {
             this.Moves = new MaskItem<T, IEnumerable<MaskItem<T, Move_Mask<T>>>>(initialValue, null);
-            this.Substitutions = new MaskItem<T, IEnumerable<MaskItem<T, Substitution_Mask<T>>>>(initialValue, null);
+            this.Substitutions = new MaskItem<T, IEnumerable<MaskItem<T, DataTarget_Mask<T>>>>(initialValue, null);
+            this.Additions = new MaskItem<T, IEnumerable<MaskItem<T, DataTarget_Mask<T>>>>(initialValue, null);
+            this.SkipSourceSections = new MaskItem<T, IEnumerable<T>>(initialValue, null);
+            this.SkipOutputSections = new MaskItem<T, IEnumerable<T>>(initialValue, null);
+            this.IgnoreDifferenceSections = new MaskItem<T, IEnumerable<T>>(initialValue, null);
         }
         #endregion
 
         #region Members
         public MaskItem<T, IEnumerable<MaskItem<T, Move_Mask<T>>>> Moves;
-        public MaskItem<T, IEnumerable<MaskItem<T, Substitution_Mask<T>>>> Substitutions;
+        public MaskItem<T, IEnumerable<MaskItem<T, DataTarget_Mask<T>>>> Substitutions;
+        public MaskItem<T, IEnumerable<MaskItem<T, DataTarget_Mask<T>>>> Additions;
+        public MaskItem<T, IEnumerable<T>> SkipSourceSections;
+        public MaskItem<T, IEnumerable<T>> SkipOutputSections;
+        public MaskItem<T, IEnumerable<T>> IgnoreDifferenceSections;
         #endregion
 
         #region Equals
@@ -1278,6 +1799,10 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (rhs == null) return false;
             if (!object.Equals(this.Moves, rhs.Moves)) return false;
             if (!object.Equals(this.Substitutions, rhs.Substitutions)) return false;
+            if (!object.Equals(this.Additions, rhs.Additions)) return false;
+            if (!object.Equals(this.SkipSourceSections, rhs.SkipSourceSections)) return false;
+            if (!object.Equals(this.SkipOutputSections, rhs.SkipOutputSections)) return false;
+            if (!object.Equals(this.IgnoreDifferenceSections, rhs.IgnoreDifferenceSections)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -1285,6 +1810,10 @@ namespace Mutagen.Bethesda.Tests.Internals
             int ret = 0;
             ret = ret.CombineHashCode(this.Moves?.GetHashCode());
             ret = ret.CombineHashCode(this.Substitutions?.GetHashCode());
+            ret = ret.CombineHashCode(this.Additions?.GetHashCode());
+            ret = ret.CombineHashCode(this.SkipSourceSections?.GetHashCode());
+            ret = ret.CombineHashCode(this.SkipOutputSections?.GetHashCode());
+            ret = ret.CombineHashCode(this.IgnoreDifferenceSections?.GetHashCode());
             return ret;
         }
 
@@ -1314,6 +1843,51 @@ namespace Mutagen.Bethesda.Tests.Internals
                     {
                         if (!eval(item.Overall)) return false;
                         if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                    }
+                }
+            }
+            if (this.Additions != null)
+            {
+                if (!eval(this.Additions.Overall)) return false;
+                if (this.Additions.Specific != null)
+                {
+                    foreach (var item in this.Additions.Specific)
+                    {
+                        if (!eval(item.Overall)) return false;
+                        if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
+                    }
+                }
+            }
+            if (this.SkipSourceSections != null)
+            {
+                if (!eval(this.SkipSourceSections.Overall)) return false;
+                if (this.SkipSourceSections.Specific != null)
+                {
+                    foreach (var item in this.SkipSourceSections.Specific)
+                    {
+                        if (!eval(item)) return false;
+                    }
+                }
+            }
+            if (this.SkipOutputSections != null)
+            {
+                if (!eval(this.SkipOutputSections.Overall)) return false;
+                if (this.SkipOutputSections.Specific != null)
+                {
+                    foreach (var item in this.SkipOutputSections.Specific)
+                    {
+                        if (!eval(item)) return false;
+                    }
+                }
+            }
+            if (this.IgnoreDifferenceSections != null)
+            {
+                if (!eval(this.IgnoreDifferenceSections.Overall)) return false;
+                if (this.IgnoreDifferenceSections.Specific != null)
+                {
+                    foreach (var item in this.IgnoreDifferenceSections.Specific)
+                    {
+                        if (!eval(item)) return false;
                     }
                 }
             }
@@ -1357,24 +1931,96 @@ namespace Mutagen.Bethesda.Tests.Internals
             }
             if (Substitutions != null)
             {
-                obj.Substitutions = new MaskItem<R, IEnumerable<MaskItem<R, Substitution_Mask<R>>>>();
+                obj.Substitutions = new MaskItem<R, IEnumerable<MaskItem<R, DataTarget_Mask<R>>>>();
                 obj.Substitutions.Overall = eval(this.Substitutions.Overall);
                 if (Substitutions.Specific != null)
                 {
-                    List<MaskItem<R, Substitution_Mask<R>>> l = new List<MaskItem<R, Substitution_Mask<R>>>();
+                    List<MaskItem<R, DataTarget_Mask<R>>> l = new List<MaskItem<R, DataTarget_Mask<R>>>();
                     obj.Substitutions.Specific = l;
                     foreach (var item in Substitutions.Specific)
                     {
-                        MaskItem<R, Substitution_Mask<R>> mask = default(MaskItem<R, Substitution_Mask<R>>);
+                        MaskItem<R, DataTarget_Mask<R>> mask = default(MaskItem<R, DataTarget_Mask<R>>);
                         if (item != null)
                         {
-                            mask = new MaskItem<R, Substitution_Mask<R>>();
+                            mask = new MaskItem<R, DataTarget_Mask<R>>();
                             mask.Overall = eval(item.Overall);
                             if (item.Specific != null)
                             {
                                 mask.Specific = item.Specific.Translate(eval);
                             }
                         }
+                        l.Add(mask);
+                    }
+                }
+            }
+            if (Additions != null)
+            {
+                obj.Additions = new MaskItem<R, IEnumerable<MaskItem<R, DataTarget_Mask<R>>>>();
+                obj.Additions.Overall = eval(this.Additions.Overall);
+                if (Additions.Specific != null)
+                {
+                    List<MaskItem<R, DataTarget_Mask<R>>> l = new List<MaskItem<R, DataTarget_Mask<R>>>();
+                    obj.Additions.Specific = l;
+                    foreach (var item in Additions.Specific)
+                    {
+                        MaskItem<R, DataTarget_Mask<R>> mask = default(MaskItem<R, DataTarget_Mask<R>>);
+                        if (item != null)
+                        {
+                            mask = new MaskItem<R, DataTarget_Mask<R>>();
+                            mask.Overall = eval(item.Overall);
+                            if (item.Specific != null)
+                            {
+                                mask.Specific = item.Specific.Translate(eval);
+                            }
+                        }
+                        l.Add(mask);
+                    }
+                }
+            }
+            if (SkipSourceSections != null)
+            {
+                obj.SkipSourceSections = new MaskItem<R, IEnumerable<R>>();
+                obj.SkipSourceSections.Overall = eval(this.SkipSourceSections.Overall);
+                if (SkipSourceSections.Specific != null)
+                {
+                    List<R> l = new List<R>();
+                    obj.SkipSourceSections.Specific = l;
+                    foreach (var item in SkipSourceSections.Specific)
+                    {
+                        R mask = default(R);
+                        mask = eval(item);
+                        l.Add(mask);
+                    }
+                }
+            }
+            if (SkipOutputSections != null)
+            {
+                obj.SkipOutputSections = new MaskItem<R, IEnumerable<R>>();
+                obj.SkipOutputSections.Overall = eval(this.SkipOutputSections.Overall);
+                if (SkipOutputSections.Specific != null)
+                {
+                    List<R> l = new List<R>();
+                    obj.SkipOutputSections.Specific = l;
+                    foreach (var item in SkipOutputSections.Specific)
+                    {
+                        R mask = default(R);
+                        mask = eval(item);
+                        l.Add(mask);
+                    }
+                }
+            }
+            if (IgnoreDifferenceSections != null)
+            {
+                obj.IgnoreDifferenceSections = new MaskItem<R, IEnumerable<R>>();
+                obj.IgnoreDifferenceSections.Overall = eval(this.IgnoreDifferenceSections.Overall);
+                if (IgnoreDifferenceSections.Specific != null)
+                {
+                    List<R> l = new List<R>();
+                    obj.IgnoreDifferenceSections.Specific = l;
+                    foreach (var item in IgnoreDifferenceSections.Specific)
+                    {
+                        R mask = default(R);
+                        mask = eval(item);
                         l.Add(mask);
                     }
                 }
@@ -1387,6 +2033,10 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             this.Moves.Specific = null;
             this.Substitutions.Specific = null;
+            this.Additions.Specific = null;
+            this.SkipSourceSections.Specific = null;
+            this.SkipOutputSections.Specific = null;
+            this.IgnoreDifferenceSections.Specific = null;
         }
         #endregion
 
@@ -1459,6 +2109,106 @@ namespace Mutagen.Bethesda.Tests.Internals
                     }
                     fg.AppendLine("]");
                 }
+                if (printMask?.Additions?.Overall ?? true)
+                {
+                    fg.AppendLine("Additions =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        if (Additions.Overall != null)
+                        {
+                            fg.AppendLine(Additions.Overall.ToString());
+                        }
+                        if (Additions.Specific != null)
+                        {
+                            foreach (var subItem in Additions.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    subItem?.ToString(fg);
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (printMask?.SkipSourceSections?.Overall ?? true)
+                {
+                    fg.AppendLine("SkipSourceSections =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        if (SkipSourceSections.Overall != null)
+                        {
+                            fg.AppendLine(SkipSourceSections.Overall.ToString());
+                        }
+                        if (SkipSourceSections.Specific != null)
+                        {
+                            foreach (var subItem in SkipSourceSections.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLine($" => {subItem}");
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (printMask?.SkipOutputSections?.Overall ?? true)
+                {
+                    fg.AppendLine("SkipOutputSections =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        if (SkipOutputSections.Overall != null)
+                        {
+                            fg.AppendLine(SkipOutputSections.Overall.ToString());
+                        }
+                        if (SkipOutputSections.Specific != null)
+                        {
+                            foreach (var subItem in SkipOutputSections.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLine($" => {subItem}");
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
+                if (printMask?.IgnoreDifferenceSections?.Overall ?? true)
+                {
+                    fg.AppendLine("IgnoreDifferenceSections =>");
+                    fg.AppendLine("[");
+                    using (new DepthWrapper(fg))
+                    {
+                        if (IgnoreDifferenceSections.Overall != null)
+                        {
+                            fg.AppendLine(IgnoreDifferenceSections.Overall.ToString());
+                        }
+                        if (IgnoreDifferenceSections.Specific != null)
+                        {
+                            foreach (var subItem in IgnoreDifferenceSections.Specific)
+                            {
+                                fg.AppendLine("[");
+                                using (new DepthWrapper(fg))
+                                {
+                                    fg.AppendLine($" => {subItem}");
+                                }
+                                fg.AppendLine("]");
+                            }
+                        }
+                    }
+                    fg.AppendLine("]");
+                }
             }
             fg.AppendLine("]");
         }
@@ -1483,7 +2233,11 @@ namespace Mutagen.Bethesda.Tests.Internals
             }
         }
         public MaskItem<Exception, IEnumerable<MaskItem<Exception, Move_ErrorMask>>> Moves;
-        public MaskItem<Exception, IEnumerable<MaskItem<Exception, Substitution_ErrorMask>>> Substitutions;
+        public MaskItem<Exception, IEnumerable<MaskItem<Exception, DataTarget_ErrorMask>>> Substitutions;
+        public MaskItem<Exception, IEnumerable<MaskItem<Exception, DataTarget_ErrorMask>>> Additions;
+        public MaskItem<Exception, IEnumerable<Exception>> SkipSourceSections;
+        public MaskItem<Exception, IEnumerable<Exception>> SkipOutputSections;
+        public MaskItem<Exception, IEnumerable<Exception>> IgnoreDifferenceSections;
         #endregion
 
         #region IErrorMask
@@ -1496,7 +2250,19 @@ namespace Mutagen.Bethesda.Tests.Internals
                     this.Moves = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Move_ErrorMask>>>(ex, null);
                     break;
                 case Instruction_FieldIndex.Substitutions:
-                    this.Substitutions = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Substitution_ErrorMask>>>(ex, null);
+                    this.Substitutions = new MaskItem<Exception, IEnumerable<MaskItem<Exception, DataTarget_ErrorMask>>>(ex, null);
+                    break;
+                case Instruction_FieldIndex.Additions:
+                    this.Additions = new MaskItem<Exception, IEnumerable<MaskItem<Exception, DataTarget_ErrorMask>>>(ex, null);
+                    break;
+                case Instruction_FieldIndex.SkipSourceSections:
+                    this.SkipSourceSections = new MaskItem<Exception, IEnumerable<Exception>>(ex, null);
+                    break;
+                case Instruction_FieldIndex.SkipOutputSections:
+                    this.SkipOutputSections = new MaskItem<Exception, IEnumerable<Exception>>(ex, null);
+                    break;
+                case Instruction_FieldIndex.IgnoreDifferenceSections:
+                    this.IgnoreDifferenceSections = new MaskItem<Exception, IEnumerable<Exception>>(ex, null);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1512,7 +2278,19 @@ namespace Mutagen.Bethesda.Tests.Internals
                     this.Moves = (MaskItem<Exception, IEnumerable<MaskItem<Exception, Move_ErrorMask>>>)obj;
                     break;
                 case Instruction_FieldIndex.Substitutions:
-                    this.Substitutions = (MaskItem<Exception, IEnumerable<MaskItem<Exception, Substitution_ErrorMask>>>)obj;
+                    this.Substitutions = (MaskItem<Exception, IEnumerable<MaskItem<Exception, DataTarget_ErrorMask>>>)obj;
+                    break;
+                case Instruction_FieldIndex.Additions:
+                    this.Additions = (MaskItem<Exception, IEnumerable<MaskItem<Exception, DataTarget_ErrorMask>>>)obj;
+                    break;
+                case Instruction_FieldIndex.SkipSourceSections:
+                    this.SkipSourceSections = (MaskItem<Exception, IEnumerable<Exception>>)obj;
+                    break;
+                case Instruction_FieldIndex.SkipOutputSections:
+                    this.SkipOutputSections = (MaskItem<Exception, IEnumerable<Exception>>)obj;
+                    break;
+                case Instruction_FieldIndex.IgnoreDifferenceSections:
+                    this.IgnoreDifferenceSections = (MaskItem<Exception, IEnumerable<Exception>>)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -1524,6 +2302,10 @@ namespace Mutagen.Bethesda.Tests.Internals
             if (Overall != null) return true;
             if (Moves != null) return true;
             if (Substitutions != null) return true;
+            if (Additions != null) return true;
+            if (SkipSourceSections != null) return true;
+            if (SkipOutputSections != null) return true;
+            if (IgnoreDifferenceSections != null) return true;
             return false;
         }
         #endregion
@@ -1602,6 +2384,94 @@ namespace Mutagen.Bethesda.Tests.Internals
                 }
             }
             fg.AppendLine("]");
+            fg.AppendLine("Additions =>");
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                if (Additions.Overall != null)
+                {
+                    fg.AppendLine(Additions.Overall.ToString());
+                }
+                if (Additions.Specific != null)
+                {
+                    foreach (var subItem in Additions.Specific)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            subItem?.ToString(fg);
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+            }
+            fg.AppendLine("]");
+            fg.AppendLine("SkipSourceSections =>");
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                if (SkipSourceSections.Overall != null)
+                {
+                    fg.AppendLine(SkipSourceSections.Overall.ToString());
+                }
+                if (SkipSourceSections.Specific != null)
+                {
+                    foreach (var subItem in SkipSourceSections.Specific)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($" => {subItem}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+            }
+            fg.AppendLine("]");
+            fg.AppendLine("SkipOutputSections =>");
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                if (SkipOutputSections.Overall != null)
+                {
+                    fg.AppendLine(SkipOutputSections.Overall.ToString());
+                }
+                if (SkipOutputSections.Specific != null)
+                {
+                    foreach (var subItem in SkipOutputSections.Specific)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($" => {subItem}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+            }
+            fg.AppendLine("]");
+            fg.AppendLine("IgnoreDifferenceSections =>");
+            fg.AppendLine("[");
+            using (new DepthWrapper(fg))
+            {
+                if (IgnoreDifferenceSections.Overall != null)
+                {
+                    fg.AppendLine(IgnoreDifferenceSections.Overall.ToString());
+                }
+                if (IgnoreDifferenceSections.Specific != null)
+                {
+                    foreach (var subItem in IgnoreDifferenceSections.Specific)
+                    {
+                        fg.AppendLine("[");
+                        using (new DepthWrapper(fg))
+                        {
+                            fg.AppendLine($" => {subItem}");
+                        }
+                        fg.AppendLine("]");
+                    }
+                }
+            }
+            fg.AppendLine("]");
         }
         #endregion
 
@@ -1610,7 +2480,11 @@ namespace Mutagen.Bethesda.Tests.Internals
         {
             var ret = new Instruction_ErrorMask();
             ret.Moves = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Move_ErrorMask>>>(this.Moves.Overall.Combine(rhs.Moves.Overall), new List<MaskItem<Exception, Move_ErrorMask>>(this.Moves.Specific.And(rhs.Moves.Specific)));
-            ret.Substitutions = new MaskItem<Exception, IEnumerable<MaskItem<Exception, Substitution_ErrorMask>>>(this.Substitutions.Overall.Combine(rhs.Substitutions.Overall), new List<MaskItem<Exception, Substitution_ErrorMask>>(this.Substitutions.Specific.And(rhs.Substitutions.Specific)));
+            ret.Substitutions = new MaskItem<Exception, IEnumerable<MaskItem<Exception, DataTarget_ErrorMask>>>(this.Substitutions.Overall.Combine(rhs.Substitutions.Overall), new List<MaskItem<Exception, DataTarget_ErrorMask>>(this.Substitutions.Specific.And(rhs.Substitutions.Specific)));
+            ret.Additions = new MaskItem<Exception, IEnumerable<MaskItem<Exception, DataTarget_ErrorMask>>>(this.Additions.Overall.Combine(rhs.Additions.Overall), new List<MaskItem<Exception, DataTarget_ErrorMask>>(this.Additions.Specific.And(rhs.Additions.Specific)));
+            ret.SkipSourceSections = new MaskItem<Exception, IEnumerable<Exception>>(this.SkipSourceSections.Overall.Combine(rhs.SkipSourceSections.Overall), new List<Exception>(this.SkipSourceSections.Specific.And(rhs.SkipSourceSections.Specific)));
+            ret.SkipOutputSections = new MaskItem<Exception, IEnumerable<Exception>>(this.SkipOutputSections.Overall.Combine(rhs.SkipOutputSections.Overall), new List<Exception>(this.SkipOutputSections.Specific.And(rhs.SkipOutputSections.Specific)));
+            ret.IgnoreDifferenceSections = new MaskItem<Exception, IEnumerable<Exception>>(this.IgnoreDifferenceSections.Overall.Combine(rhs.IgnoreDifferenceSections.Overall), new List<Exception>(this.IgnoreDifferenceSections.Specific.And(rhs.IgnoreDifferenceSections.Specific)));
             return ret;
         }
         public static Instruction_ErrorMask Combine(Instruction_ErrorMask lhs, Instruction_ErrorMask rhs)
@@ -1625,7 +2499,11 @@ namespace Mutagen.Bethesda.Tests.Internals
     {
         #region Members
         public MaskItem<CopyOption, Move_CopyMask> Moves;
-        public MaskItem<CopyOption, Substitution_CopyMask> Substitutions;
+        public MaskItem<CopyOption, DataTarget_CopyMask> Substitutions;
+        public MaskItem<CopyOption, DataTarget_CopyMask> Additions;
+        public CopyOption SkipSourceSections;
+        public CopyOption SkipOutputSections;
+        public CopyOption IgnoreDifferenceSections;
         #endregion
 
     }

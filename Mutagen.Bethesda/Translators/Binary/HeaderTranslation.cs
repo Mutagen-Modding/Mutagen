@@ -93,7 +93,7 @@ namespace Mutagen.Bethesda.Binary
             {
                 throw new ArgumentException($"Expected header was not read in: {expectedHeader}");
             }
-            return reader.Position + contentLength + Constants.RECORD_HEADER_SKIP;
+            return reader.Position + contentLength + Constants.RECORD_META_SKIP;
         }
 
         public static FileLocation ParseSubrecord(

@@ -965,6 +965,7 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType GLOB_HEADER = new RecordType("GLOB");
         public static readonly RecordType GRAS_HEADER = new RecordType("GRAS");
         public static readonly RecordType LTEX_HEADER = new RecordType("LTEX");
+        public static readonly RecordType LVLI_HEADER = new RecordType("LVLI");
         public static readonly RecordType LIGH_HEADER = new RecordType("LIGH");
         public static readonly RecordType SCPT_HEADER = new RecordType("SCPT");
         public static readonly RecordType SKIL_HEADER = new RecordType("SKIL");
@@ -1023,6 +1024,7 @@ namespace Mutagen.Bethesda.Internals
                         GLOB_HEADER,
                         GRAS_HEADER,
                         LTEX_HEADER,
+                        LVLI_HEADER,
                         LIGH_HEADER,
                         SCPT_HEADER,
                         SKIL_HEADER,

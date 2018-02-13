@@ -43,6 +43,7 @@
       <Group name="Potions" refName="Potion" />
       <Group name="Subspaces" refName="Subspace" />
       <Group name="SigilStones" refName="SigilStone" />
+      <Group name="LeveledItems" refName="LeveledItem" />
     </Fields>
   </Object>
 </Loqui>

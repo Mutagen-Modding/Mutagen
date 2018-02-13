@@ -20,6 +20,10 @@ namespace Mutagen.Bethesda.Tests
             {
                 config.SetSubstitution(new FileLocation(sub.Location), sub.Data);
             }
+            foreach (var add in this.Additions)
+            {
+                config.SetAddition(new FileLocation(add.Location), add.Data);
+            }
             return config;
         }
     }

@@ -10,7 +10,7 @@ namespace Loqui
         {
             LoquiRegistration.Register(Mutagen.Bethesda.Tests.Internals.BinaryProcessorInstructions_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Tests.Internals.Move_Registration.Instance);
-            LoquiRegistration.Register(Mutagen.Bethesda.Tests.Internals.Substitution_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Tests.Internals.DataTarget_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Tests.Internals.Instruction_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Tests.Internals.RecordInstruction_Registration.Instance);
         }
