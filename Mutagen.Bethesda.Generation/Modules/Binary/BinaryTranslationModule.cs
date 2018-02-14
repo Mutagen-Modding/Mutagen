@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Generation
             this._typeGenerations[typeof(ByteArrayType)] = new ByteArrayTranslationGeneration();
             this._typeGenerations[typeof(BufferType)] = new BufferBinaryTranslationGeneration();
             this._typeGenerations[typeof(DataType)] = new DataBinaryTranslationModule();
-            this._typeGenerations[typeof(ColorType)] = new PrimitiveBinaryTranslationGeneration<Color>();
+            this._typeGenerations[typeof(ColorType)] = new ColorBinaryTranslationGeneration();
             this._typeGenerations[typeof(SpecialParseType)] = new SpecialParseTranslationGeneration();
             this._typeGenerations[typeof(ZeroType)] = new ZeroBinaryTranslationGeneration();
             this.MainAPI = new TranslationModuleAPI(

@@ -26,6 +26,7 @@ namespace Mutagen.Bethesda.Generation
             this.SubModules.Add(new CorrectnessModule());
             this.SubModules.Add(new ModModule());
             this.SubModules.Add(new BinaryStructModule());
+            this.SubModules.Add(new ColorTypeModule());
         }
 
         public override async Task PostFieldLoad(ObjectGeneration obj, TypeGeneration field, XElement node)

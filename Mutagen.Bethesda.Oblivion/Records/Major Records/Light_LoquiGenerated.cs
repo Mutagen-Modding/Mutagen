@@ -1123,7 +1123,8 @@ namespace Mutagen.Bethesda.Oblivion
                         item._Color.SetIfSucceeded(Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
                             frame: dataFrame,
                             fieldIndex: (int)Light_FieldIndex.Color,
-                            errorMask: errorMask));
+                            errorMask: errorMask,
+                            extraByte: true));
                         item._Flags.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<Light.LightFlag>.Instance.Parse(
                             frame: dataFrame.Spawn(new ContentLength(4)),
                             fieldIndex: (int)Light_FieldIndex.Flags,
@@ -2851,7 +2852,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     item: item.Color_Property,
                     fieldIndex: (int)Light_FieldIndex.Color,
-                    errorMask: errorMask);
+                    errorMask: errorMask,
+                    extraByte: true);
                 Mutagen.Bethesda.Binary.EnumBinaryTranslation<Light.LightFlag>.Instance.Write(
                     writer,
                     item.Flags_Property,

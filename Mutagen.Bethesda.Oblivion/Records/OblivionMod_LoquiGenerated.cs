@@ -79,6 +79,7 @@ namespace Mutagen.Bethesda.Oblivion
             _Subspaces_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
             _SigilStones_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
             _LeveledItems_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
+            _Weathers_Object.Items.Subscribe_Enumerable_Single((change) => _majorRecords.Modify(change.Item.Key, change.Item.Value, change.AddRem));
             CustomCtor();
         }
         partial void CustomCtor();
@@ -302,6 +303,11 @@ namespace Mutagen.Bethesda.Oblivion
         private Group<LeveledItem> _LeveledItems_Object = new Group<LeveledItem>();
         public Group<LeveledItem> LeveledItems => _LeveledItems_Object;
         #endregion
+        #region Weathers
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Group<Weather> _Weathers_Object = new Group<Weather>();
+        public Group<Weather> Weathers => _Weathers_Object;
+        #endregion
 
         #region Loqui Getter Interface
 
@@ -407,6 +413,7 @@ namespace Mutagen.Bethesda.Oblivion
             if (!object.Equals(Subspaces, rhs.Subspaces)) return false;
             if (!object.Equals(SigilStones, rhs.SigilStones)) return false;
             if (!object.Equals(LeveledItems, rhs.LeveledItems)) return false;
+            if (!object.Equals(Weathers, rhs.Weathers)) return false;
             return true;
         }
 
@@ -458,6 +465,7 @@ namespace Mutagen.Bethesda.Oblivion
             ret = HashHelper.GetHashCode(Subspaces).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(SigilStones).CombineHashCode(ret);
             ret = HashHelper.GetHashCode(LeveledItems).CombineHashCode(ret);
+            ret = HashHelper.GetHashCode(Weathers).CombineHashCode(ret);
             return ret;
         }
 
@@ -1503,6 +1511,24 @@ namespace Mutagen.Bethesda.Oblivion
                         index: (int)OblivionMod_FieldIndex.LeveledItems,
                         errMaskObj: MaskItem<Exception, Group_ErrorMask<LeveledItem_ErrorMask>>.WrapValue(Group_ErrorMask<LeveledItem_ErrorMask>.Combine(LeveledItemscreateMask, LeveledItemscopyMask)));
                     break;
+                case "Weathers":
+                    GroupCommon.CopyFieldsFrom<Weather, Weather_ErrorMask, Weather_CopyMask>(
+                        item: item._Weathers_Object,
+                        rhs: Group<Weather>.Create_XML(
+                            root: root,
+                            doMasks: errorMask != null,
+                            errorMask: out Group_ErrorMask<Weather_ErrorMask> WeatherscreateMask)
+                        ,
+                        def: null,
+                        cmds: null,
+                        copyMask: null,
+                        doMasks: errorMask != null,
+                        errorMask: out Group_ErrorMask<Weather_ErrorMask> WeatherscopyMask);
+                    ErrorMask.HandleErrorMask(
+                        errorMask,
+                        index: (int)OblivionMod_FieldIndex.Weathers,
+                        errMaskObj: MaskItem<Exception, Group_ErrorMask<Weather_ErrorMask>>.WrapValue(Group_ErrorMask<Weather_ErrorMask>.Combine(WeatherscreateMask, WeatherscopyMask)));
+                    break;
                 default:
                     break;
             }
@@ -1646,6 +1672,9 @@ namespace Mutagen.Bethesda.Oblivion
                     break;
                 case LeveledItem leveleditems:
                     _LeveledItems_Object.Items.Set(leveleditems);
+                    break;
+                case Weather weathers:
+                    _Weathers_Object.Items.Set(weathers);
                     break;
                 default:
                     throw new ArgumentException("Unknown Major Record type: {record?.GetType()}");
@@ -2760,6 +2789,25 @@ namespace Mutagen.Bethesda.Oblivion
                         index: (int)OblivionMod_FieldIndex.LeveledItems,
                         errMaskObj: combinedLeveledItems == null ? null : new MaskItem<Exception, Group_ErrorMask<LeveledItem_ErrorMask>>(null, combinedLeveledItems));
                     return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.LeveledItems);
+                case "WTHR":
+                    var tmpWeathers = Group<Weather>.Create_Binary(
+                        frame: frame,
+                        doMasks: errorMask != null,
+                        errorMask: out Group_ErrorMask<Weather_ErrorMask> WeatherscreateMask);
+                    GroupCommon.CopyFieldsFrom<Weather, Weather_ErrorMask, Weather_CopyMask>(
+                        item: item._Weathers_Object,
+                        rhs: tmpWeathers,
+                        def: null,
+                        cmds: null,
+                        copyMask: null,
+                        doMasks: errorMask != null,
+                        errorMask: out Group_ErrorMask<Weather_ErrorMask> WeatherserrorMask);
+                    var combinedWeathers = Group_ErrorMask<Weather_ErrorMask>.Combine(WeatherscreateMask, WeatherserrorMask);
+                    ErrorMask.HandleErrorMask(
+                        creator: errorMask,
+                        index: (int)OblivionMod_FieldIndex.Weathers,
+                        errMaskObj: combinedWeathers == null ? null : new MaskItem<Exception, Group_ErrorMask<Weather_ErrorMask>>(null, combinedWeathers));
+                    return TryGet<OblivionMod_FieldIndex?>.Succeed(OblivionMod_FieldIndex.Weathers);
                 default:
                     errorMask().Warnings.Add($"Unexpected header {nextRecordType.Type} at position {frame.Position}");
                     frame.Position += contentLength;
@@ -2978,6 +3026,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case OblivionMod_FieldIndex.LeveledItems:
                     this._LeveledItems_Object.CopyFieldsFrom<LeveledItem, LeveledItem_CopyMask>(rhs: (Group<LeveledItem>)obj);
                     break;
+                case OblivionMod_FieldIndex.Weathers:
+                    this._Weathers_Object.CopyFieldsFrom<Weather, Weather_CopyMask>(rhs: (Group<Weather>)obj);
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -3141,6 +3192,9 @@ namespace Mutagen.Bethesda.Oblivion
                 case OblivionMod_FieldIndex.LeveledItems:
                     obj._LeveledItems_Object.CopyFieldsFrom<LeveledItem, LeveledItem_CopyMask>(rhs: (Group<LeveledItem>)pair.Value);
                     break;
+                case OblivionMod_FieldIndex.Weathers:
+                    obj._Weathers_Object.CopyFieldsFrom<Weather, Weather_CopyMask>(rhs: (Group<Weather>)pair.Value);
+                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
@@ -3288,6 +3342,9 @@ namespace Mutagen.Bethesda.Oblivion
         #region LeveledItems
         Group<LeveledItem> LeveledItems { get; }
         #endregion
+        #region Weathers
+        Group<Weather> Weathers { get; }
+        #endregion
 
     }
 
@@ -3342,6 +3399,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         Subspaces = 39,
         SigilStones = 40,
         LeveledItems = 41,
+        Weathers = 42,
     }
     #endregion
 
@@ -3359,7 +3417,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "b6f626df-b164-466b-960a-1639d88f66bc";
 
-        public const ushort FieldCount = 42;
+        public const ushort FieldCount = 43;
 
         public static readonly Type MaskType = typeof(OblivionMod_Mask<>);
 
@@ -3471,6 +3529,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (ushort)OblivionMod_FieldIndex.SigilStones;
                 case "LEVELEDITEMS":
                     return (ushort)OblivionMod_FieldIndex.LeveledItems;
+                case "WEATHERS":
+                    return (ushort)OblivionMod_FieldIndex.Weathers;
                 default:
                     return null;
             }
@@ -3523,6 +3583,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Subspaces:
                 case OblivionMod_FieldIndex.SigilStones:
                 case OblivionMod_FieldIndex.LeveledItems:
+                case OblivionMod_FieldIndex.Weathers:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3576,6 +3637,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Subspaces:
                 case OblivionMod_FieldIndex.SigilStones:
                 case OblivionMod_FieldIndex.LeveledItems:
+                case OblivionMod_FieldIndex.Weathers:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3629,6 +3691,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Subspaces:
                 case OblivionMod_FieldIndex.SigilStones:
                 case OblivionMod_FieldIndex.LeveledItems:
+                case OblivionMod_FieldIndex.Weathers:
                     return true;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3724,6 +3787,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return "SigilStones";
                 case OblivionMod_FieldIndex.LeveledItems:
                     return "LeveledItems";
+                case OblivionMod_FieldIndex.Weathers:
+                    return "Weathers";
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -3776,6 +3841,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Subspaces:
                 case OblivionMod_FieldIndex.SigilStones:
                 case OblivionMod_FieldIndex.LeveledItems:
+                case OblivionMod_FieldIndex.Weathers:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3830,6 +3896,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Subspaces:
                 case OblivionMod_FieldIndex.SigilStones:
                 case OblivionMod_FieldIndex.LeveledItems:
+                case OblivionMod_FieldIndex.Weathers:
                     return false;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -3925,6 +3992,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return typeof(Group<SigilStone>);
                 case OblivionMod_FieldIndex.LeveledItems:
                     return typeof(Group<LeveledItem>);
+                case OblivionMod_FieldIndex.Weathers:
+                    return typeof(Group<Weather>);
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -3972,6 +4041,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType SBSP_HEADER = new RecordType("SBSP");
         public static readonly RecordType SGST_HEADER = new RecordType("SGST");
         public static readonly RecordType LVLI_HEADER = new RecordType("LVLI");
+        public static readonly RecordType WTHR_HEADER = new RecordType("WTHR");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
         private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
         {
@@ -3985,7 +4055,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             );
         });
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 42;
+        public const int NumTypedFields = 43;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -5268,6 +5338,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask().SetNthException((int)OblivionMod_FieldIndex.LeveledItems, ex);
                 }
             }
+            if (copyMask?.Weathers.Overall ?? true)
+            {
+                try
+                {
+                    GroupCommon.CopyFieldsFrom(
+                        item: item.Weathers,
+                        rhs: rhs.Weathers,
+                        def: def?.Weathers,
+                        doMasks: doMasks,
+                        errorMask: (doMasks ? new Func<Group_ErrorMask<Weather_ErrorMask>>(() =>
+                        {
+                            var baseMask = errorMask();
+                            if (baseMask.Weathers.Specific == null)
+                            {
+                                baseMask.Weathers = new MaskItem<Exception, Group_ErrorMask<Weather_ErrorMask>>(null, new Group_ErrorMask<Weather_ErrorMask>());
+                            }
+                            return baseMask.Weathers.Specific;
+                        }
+                        ) : null),
+                        copyMask: copyMask?.Weathers.Specific,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)OblivionMod_FieldIndex.Weathers, ex);
+                }
+            }
         }
 
         #endregion
@@ -5322,6 +5420,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Subspaces:
                 case OblivionMod_FieldIndex.SigilStones:
                 case OblivionMod_FieldIndex.LeveledItems:
+                case OblivionMod_FieldIndex.Weathers:
                     if (on) break;
                     throw new ArgumentException("Tried to unset a field which does not have this functionality." + index);
                 case OblivionMod_FieldIndex.TES4:
@@ -5464,6 +5563,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.LeveledItems:
                     GroupCommon.Clear(obj.LeveledItems, cmds.ToUnsetParams());
                     break;
+                case OblivionMod_FieldIndex.Weathers:
+                    GroupCommon.Clear(obj.Weathers, cmds.ToUnsetParams());
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -5517,6 +5619,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.Subspaces:
                 case OblivionMod_FieldIndex.SigilStones:
                 case OblivionMod_FieldIndex.LeveledItems:
+                case OblivionMod_FieldIndex.Weathers:
                     return true;
                 case OblivionMod_FieldIndex.TES4:
                     return obj.TES4_Property.HasBeenSet;
@@ -5616,6 +5719,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return obj.SigilStones;
                 case OblivionMod_FieldIndex.LeveledItems:
                     return obj.LeveledItems;
+                case OblivionMod_FieldIndex.Weathers:
+                    return obj.Weathers;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -5766,6 +5871,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.LeveledItems = new MaskItem<bool, Group_Mask<bool>>();
             ret.LeveledItems.Specific = GroupCommon.GetEqualsMask(item.LeveledItems, rhs.LeveledItems);
             ret.LeveledItems.Overall = ret.LeveledItems.Specific.AllEqual((b) => b);
+            ret.Weathers = new MaskItem<bool, Group_Mask<bool>>();
+            ret.Weathers.Specific = GroupCommon.GetEqualsMask(item.Weathers, rhs.Weathers);
+            ret.Weathers.Overall = ret.Weathers.Specific.AllEqual((b) => b);
         }
 
         public static string ToString(
@@ -5963,6 +6071,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.LeveledItems?.ToString(fg, "LeveledItems");
                 }
+                if (printMask?.Weathers?.Overall ?? true)
+                {
+                    item.Weathers?.ToString(fg, "Weathers");
+                }
             }
             fg.AppendLine("]");
         }
@@ -6021,6 +6133,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Subspaces = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Subspaces));
             ret.SigilStones = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.SigilStones));
             ret.LeveledItems = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.LeveledItems));
+            ret.Weathers = new MaskItem<bool, Group_Mask<bool>>(true, GroupCommon.GetHasBeenSetMask(item.Weathers));
             return ret;
         }
 
@@ -6311,6 +6424,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         name: nameof(item.LeveledItems),
                         fieldIndex: (int)OblivionMod_FieldIndex.LeveledItems,
                         errorMask: errorMask);
+                    LoquiXmlTranslation<Group<Weather>, Group_ErrorMask<Weather_ErrorMask>>.Instance.Write(
+                        writer: writer,
+                        item: item.Weathers,
+                        name: nameof(item.Weathers),
+                        fieldIndex: (int)OblivionMod_FieldIndex.Weathers,
+                        errorMask: errorMask);
                 }
             }
             catch (Exception ex)
@@ -6579,6 +6698,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.LeveledItems,
                 fieldIndex: (int)OblivionMod_FieldIndex.LeveledItems,
                 errorMask: errorMask);
+            LoquiBinaryTranslation<Group<Weather>, Group_ErrorMask<Weather_ErrorMask>>.Instance.Write(
+                writer: writer,
+                item: item.Weathers,
+                fieldIndex: (int)OblivionMod_FieldIndex.Weathers,
+                errorMask: errorMask);
         }
 
         #endregion
@@ -6640,6 +6764,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             this.Subspaces = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.SigilStones = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
             this.LeveledItems = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
+            this.Weathers = new MaskItem<T, Group_Mask<T>>(initialValue, new Group_Mask<T>(initialValue));
         }
         #endregion
 
@@ -6686,6 +6811,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<T, Group_Mask<T>> Subspaces { get; set; }
         public MaskItem<T, Group_Mask<T>> SigilStones { get; set; }
         public MaskItem<T, Group_Mask<T>> LeveledItems { get; set; }
+        public MaskItem<T, Group_Mask<T>> Weathers { get; set; }
         #endregion
 
         #region Equals
@@ -6740,6 +6866,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (!object.Equals(this.Subspaces, rhs.Subspaces)) return false;
             if (!object.Equals(this.SigilStones, rhs.SigilStones)) return false;
             if (!object.Equals(this.LeveledItems, rhs.LeveledItems)) return false;
+            if (!object.Equals(this.Weathers, rhs.Weathers)) return false;
             return true;
         }
         public override int GetHashCode()
@@ -6787,6 +6914,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret = ret.CombineHashCode(this.Subspaces?.GetHashCode());
             ret = ret.CombineHashCode(this.SigilStones?.GetHashCode());
             ret = ret.CombineHashCode(this.LeveledItems?.GetHashCode());
+            ret = ret.CombineHashCode(this.Weathers?.GetHashCode());
             return ret;
         }
 
@@ -7004,6 +7132,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 if (!eval(this.LeveledItems.Overall)) return false;
                 if (this.LeveledItems.Specific != null && !this.LeveledItems.Specific.AllEqual(eval)) return false;
+            }
+            if (Weathers != null)
+            {
+                if (!eval(this.Weathers.Overall)) return false;
+                if (this.Weathers.Specific != null && !this.Weathers.Specific.AllEqual(eval)) return false;
             }
             return true;
         }
@@ -7397,6 +7530,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     obj.LeveledItems.Specific = this.LeveledItems.Specific.Translate(eval);
                 }
             }
+            if (this.Weathers != null)
+            {
+                obj.Weathers = new MaskItem<R, Group_Mask<R>>();
+                obj.Weathers.Overall = eval(this.Weathers.Overall);
+                if (this.Weathers.Specific != null)
+                {
+                    obj.Weathers.Specific = this.Weathers.Specific.Translate(eval);
+                }
+            }
         }
         #endregion
 
@@ -7593,6 +7735,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     LeveledItems?.ToString(fg);
                 }
+                if (printMask?.Weathers?.Overall ?? true)
+                {
+                    Weathers?.ToString(fg);
+                }
             }
             fg.AppendLine("]");
         }
@@ -7658,6 +7804,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<Exception, Group_ErrorMask<Subspace_ErrorMask>> Subspaces;
         public MaskItem<Exception, Group_ErrorMask<SigilStone_ErrorMask>> SigilStones;
         public MaskItem<Exception, Group_ErrorMask<LeveledItem_ErrorMask>> LeveledItems;
+        public MaskItem<Exception, Group_ErrorMask<Weather_ErrorMask>> Weathers;
         #endregion
 
         #region IErrorMask
@@ -7791,6 +7938,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     break;
                 case OblivionMod_FieldIndex.LeveledItems:
                     this.LeveledItems = new MaskItem<Exception, Group_ErrorMask<LeveledItem_ErrorMask>>(ex, null);
+                    break;
+                case OblivionMod_FieldIndex.Weathers:
+                    this.Weathers = new MaskItem<Exception, Group_ErrorMask<Weather_ErrorMask>>(ex, null);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -7928,6 +8078,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case OblivionMod_FieldIndex.LeveledItems:
                     this.LeveledItems = (MaskItem<Exception, Group_ErrorMask<LeveledItem_ErrorMask>>)obj;
                     break;
+                case OblivionMod_FieldIndex.Weathers:
+                    this.Weathers = (MaskItem<Exception, Group_ErrorMask<Weather_ErrorMask>>)obj;
+                    break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
             }
@@ -7978,6 +8131,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             if (Subspaces != null) return true;
             if (SigilStones != null) return true;
             if (LeveledItems != null) return true;
+            if (Weathers != null) return true;
             return false;
         }
         #endregion
@@ -8054,6 +8208,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Subspaces?.ToString(fg);
             SigilStones?.ToString(fg);
             LeveledItems?.ToString(fg);
+            Weathers?.ToString(fg);
         }
         #endregion
 
@@ -8103,6 +8258,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ret.Subspaces = new MaskItem<Exception, Group_ErrorMask<Subspace_ErrorMask>>(this.Subspaces.Overall.Combine(rhs.Subspaces.Overall), ((IErrorMask<Group_ErrorMask<Subspace_ErrorMask>>)this.Subspaces.Specific).Combine(rhs.Subspaces.Specific));
             ret.SigilStones = new MaskItem<Exception, Group_ErrorMask<SigilStone_ErrorMask>>(this.SigilStones.Overall.Combine(rhs.SigilStones.Overall), ((IErrorMask<Group_ErrorMask<SigilStone_ErrorMask>>)this.SigilStones.Specific).Combine(rhs.SigilStones.Specific));
             ret.LeveledItems = new MaskItem<Exception, Group_ErrorMask<LeveledItem_ErrorMask>>(this.LeveledItems.Overall.Combine(rhs.LeveledItems.Overall), ((IErrorMask<Group_ErrorMask<LeveledItem_ErrorMask>>)this.LeveledItems.Specific).Combine(rhs.LeveledItems.Specific));
+            ret.Weathers = new MaskItem<Exception, Group_ErrorMask<Weather_ErrorMask>>(this.Weathers.Overall.Combine(rhs.Weathers.Overall), ((IErrorMask<Group_ErrorMask<Weather_ErrorMask>>)this.Weathers.Specific).Combine(rhs.Weathers.Specific));
             return ret;
         }
         public static OblivionMod_ErrorMask Combine(OblivionMod_ErrorMask lhs, OblivionMod_ErrorMask rhs)
@@ -8158,6 +8314,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public MaskItem<bool, Group_CopyMask<Subspace_CopyMask>> Subspaces;
         public MaskItem<bool, Group_CopyMask<SigilStone_CopyMask>> SigilStones;
         public MaskItem<bool, Group_CopyMask<LeveledItem_CopyMask>> LeveledItems;
+        public MaskItem<bool, Group_CopyMask<Weather_CopyMask>> Weathers;
         #endregion
 
     }

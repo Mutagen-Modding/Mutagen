@@ -44,6 +44,7 @@
       <Group name="Subspaces" refName="Subspace" />
       <Group name="SigilStones" refName="SigilStone" />
       <Group name="LeveledItems" refName="LeveledItem" />
+      <Group name="Weathers" refName="Weather" />
     </Fields>
   </Object>
 </Loqui>

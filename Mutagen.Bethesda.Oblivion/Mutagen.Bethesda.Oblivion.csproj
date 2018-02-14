@@ -281,6 +281,12 @@
     <Compile Include="Records\Major Records\Weapon.cs">
       <DependentUpon>Weapon.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Weather.cs">
+      <DependentUpon>Weather.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WeatherSound.cs">
+      <DependentUpon>Weather.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\OblivionMod.cs">
       <DependentUpon>OblivionMod.xml</DependentUpon>
     </Compile>
@@ -451,6 +457,15 @@
     <Compile Include="Records\Major Records\LeveledItem_LoquiGenerated.cs">
       <DependentUpon>LeveledItem.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Weather_LoquiGenerated.cs">
+      <DependentUpon>Weather.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WeatherType_LoquiGenerated.cs">
+      <DependentUpon>Weather.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WeatherSound_LoquiGenerated.cs">
+      <DependentUpon>Weather.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Records\Common Subrecords\Effect.xml">
@@ -617,6 +632,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Weapon.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\Weather.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Worldspace.xml">

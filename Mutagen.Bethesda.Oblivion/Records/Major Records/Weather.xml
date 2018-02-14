@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Weather" objType="Record" baseClass="Bethesda.MajorRecord" recordType="WTHR" GUID="c7183e23-4f2c-43f7-adcf-6c56458c94af" ID="102">
+    <Fields>
+      <FilePath name="TextureLowerLayer" recordType="CNAM" />
+      <FilePath name="TextureUpperLayer" recordType="DNAM" />
+      <RefDirect name="Model" refName="Model" />
+      <List name="WeatherTypes" recordType="NAM0">
+        <RefDirect refName="WeatherType" />
+      </List>
+      <Data recordType="FNAM">
+        <Fields>
+          <Float name="FogDayNear" />
+          <Float name="FogDayFar" />
+          <Float name="FogNightNear" />
+          <Float name="FogNightFar" />
+        </Fields>
+      </Data>
+      <Data recordType="HNAM">
+        <Fields>
+          <Float name="HdrEyeAdaptSpeed" />
+          <Float name="HdrBlurRadius" />
+          <Float name="HdrBlurPasses" />
+          <Float name="HdrEmissiveMult" />
+          <Float name="HdrTargetLum" />
+          <Float name="HdrUpperLumClamp" />
+          <Float name="HdrBrightScale" />
+          <Float name="HdrBrightClamp" />
+          <Float name="HdrLumRampNoTex" />
+          <Float name="HdrLumRampMin" />
+          <Float name="HdrLumRampMax" />
+          <Float name="HdrSunlightDimmer" />
+          <Float name="HdrGrassDimmer" />
+          <Float name="HdrTreeDimmer" />
+        </Fields>
+      </Data>
+      <Data>
+        <Fields>
+          <UInt8 name="WindSpeed" />
+          <UInt8 name="CloudSpeedLower" />
+          <UInt8 name="CloudSpeedUpper" />
+          <UInt8 name="TransDelta" />
+          <UInt8 name="SunGlare" />
+          <UInt8 name="SunDamage" />
+          <UInt8 name="PrecipitationBeginFadeIn" />
+          <UInt8 name="PrecipitationEndFadeOut" />
+          <UInt8 name="ThunderLightningBeginFadeIn" />
+          <UInt8 name="ThunderLightningEndFadeOut" />
+          <UInt8 name="ThunderLightningFrequency" />
+          <Enum name="Classification" enumName="Weather.WeatherClassification" byteLength="1" />
+          <Color name="LightningColor" extraByte="false" />
+        </Fields>
+      </Data>
+      <List name="Sounds" >
+        <RefDirect refName="WeatherSound" />
+      </List>
+    </Fields>
+  </Object>
+  <Object name="WeatherType" objType="Subrecord" GUID="8a3ac7e7-7e81-4f9c-b318-c1c40ed00f8c" ID="103">
+    <Fields>
+      <Color name="Sunrise" extraByte="true" />
+      <Color name="Day" extraByte="true" />
+      <Color name="Sunset" extraByte="true" />
+      <Color name="Night" extraByte="true" />
+    </Fields>
+  </Object>
+  <Object name="WeatherSound" objType="Subrecord" recordType="SNAM" GUID="eab0c38b-8b31-49b2-8d20-18576d520ca6" ID="104">
+    <Fields>
+      <FormIDLink name="Sound" refName="Sound" />
+      <Enum name="Type" enumName="WeatherSound.SoundType" byteLength="4" />
+    </Fields>
+  </Object>
+</Loqui>

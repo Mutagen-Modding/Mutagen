@@ -68,6 +68,7 @@
     <Compile Include="Fields\ZeroType.cs" />
     <Compile Include="Modules\Binary\BinaryTranslationModule.cs" />
     <Compile Include="Modules\Binary\ByteArrayTranslationGeneration.cs" />
+    <Compile Include="Modules\Binary\ColorBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\DataBinaryTranslationModule.cs" />
     <Compile Include="Modules\Binary\EnumBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\FilePathBinaryTranslationGeneration.cs" />
@@ -82,6 +83,7 @@
     <Compile Include="Modules\Binary\StringBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\ZeroBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Mutagen Module\BinaryStructModule.cs" />
+    <Compile Include="Modules\Mutagen Module\ColorTypeModule.cs" />
     <Compile Include="Modules\Mutagen Module\CorrectnessModule.cs" />
     <Compile Include="Modules\Mutagen Module\DataTypeModule.cs" />
     <Compile Include="Modules\Mutagen Module\GenericsModule.cs" />

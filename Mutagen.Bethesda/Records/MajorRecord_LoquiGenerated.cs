@@ -973,6 +973,7 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType STAT_HEADER = new RecordType("STAT");
         public static readonly RecordType SBSP_HEADER = new RecordType("SBSP");
         public static readonly RecordType TREE_HEADER = new RecordType("TREE");
+        public static readonly RecordType WTHR_HEADER = new RecordType("WTHR");
         public static readonly RecordType ACTI_HEADER = new RecordType("ACTI");
         public static readonly RecordType APPA_HEADER = new RecordType("APPA");
         public static readonly RecordType BSGN_HEADER = new RecordType("BSGN");
@@ -1032,6 +1033,7 @@ namespace Mutagen.Bethesda.Internals
                         STAT_HEADER,
                         SBSP_HEADER,
                         TREE_HEADER,
+                        WTHR_HEADER,
                         ACTI_HEADER,
                         APPA_HEADER,
                         BSGN_HEADER,

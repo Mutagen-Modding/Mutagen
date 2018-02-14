@@ -124,7 +124,6 @@ namespace Mutagen.Bethesda.Binary
                 this.reader.ReadByte(),
                 this.reader.ReadByte(),
                 this.reader.ReadByte());
-            this.reader.ReadByte();
             return ret;
         }
 

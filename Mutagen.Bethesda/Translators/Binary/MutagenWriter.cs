@@ -136,7 +136,6 @@ namespace Mutagen.Bethesda.Binary
             this.Writer.Write(color.R);
             this.Writer.Write(color.G);
             this.Writer.Write(color.B);
-            this.Writer.Write(byte.MinValue);
         }
 
         public void Dispose()

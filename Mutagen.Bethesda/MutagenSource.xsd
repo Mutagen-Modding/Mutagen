@@ -108,6 +108,14 @@
       </xs:complexContent>
     </xs:complexType>
 
+    <xs:complexType name="Color">
+      <xs:complexContent>
+        <xs:extension base="Color">
+          <xs:attribute name="extraByte" type="xs:boolean" />
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+
     <xs:complexType name="String">
       <xs:complexContent>
         <xs:extension base="String">

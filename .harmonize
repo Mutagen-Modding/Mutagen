@@ -10,10 +10,10 @@
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>b971d30fbb3fccfcb9930cd6e9f8a06921159246</Sha>
+         <Sha>90279e33d2da7320eee8289a534a6e84c92e8f52</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>02-12-2018 16:45:33</CommitDate>
-         <Description>Merge remote-tracking branch 'origin/Dev' into Laptop</Description>
+         <CommitDate>02-13-2018 21:03:23</CommitDate>
+         <Description>Color XSD refactoring</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

@@ -2731,7 +2731,8 @@ namespace Mutagen.Bethesda.Oblivion
                     item._HairColor.SetIfSucceeded(Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Parse(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)NPC_FieldIndex.HairColor,
-                        errorMask: errorMask));
+                        errorMask: errorMask,
+                        extraByte: true));
                     return TryGet<NPC_FieldIndex?>.Succeed(NPC_FieldIndex.HairColor);
                 case "ZNAM":
                     frame.Position += Constants.SUBRECORD_LENGTH;
@@ -8387,7 +8388,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 fieldIndex: (int)NPC_FieldIndex.HairColor,
                 errorMask: errorMask,
                 header: recordTypeConverter.ConvertToCustom(NPC_Registration.HCLR_HEADER),
-                nullable: false);
+                nullable: false,
+                extraByte: true);
             Mutagen.Bethesda.Binary.FormIDBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.CombatStyle_Property,

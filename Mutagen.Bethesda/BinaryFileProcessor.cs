@@ -179,6 +179,12 @@ namespace Mutagen.Bethesda
         {
             if (config._moves == null) return;
 
+            if (targetSection.Range.IsInRange(0xC5CF50))
+            {
+                int wer = 23;
+                wer++;
+            }
+
             int moveDeletions = 0;
 
             FileLocation[] moveFromKeys = null;
@@ -315,6 +321,7 @@ namespace Mutagen.Bethesda
                     var indexToAdd = (int)(additionKey.Value - _position - moveDeletions);
                     _expandableBuffer.InsertRange(indexToAdd, data);
                     moveDeletions -= data.Length;
+                    bufferEnd += data.Length;
                     additionIndex++;
                 }
             }
