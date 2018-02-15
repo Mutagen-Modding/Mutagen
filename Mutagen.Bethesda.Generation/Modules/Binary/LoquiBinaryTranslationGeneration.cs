@@ -35,7 +35,7 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine($"using (HeaderExport.ExportHeader(writer, {objGen.RegistrationName}.{data.MarkerType.Value.Type}_HEADER, ObjectType.Subrecord)) {{ }}");
                 }
                 using (var args = new ArgsWrapper(fg,
-                    $"LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}, {loquiGen.MaskItemString(MaskType.Error)}>.Instance.Write"))
+                    $"LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}, {loquiGen.Mask(MaskType.Error)}>.Instance.Write"))
                 {
                     args.Add($"writer: {writerAccessor}");
                     args.Add($"item: {itemAccessor.PropertyOrDirectAccess}");
@@ -94,7 +94,7 @@ namespace Mutagen.Bethesda.Generation
                     {
                         args.Add($"frame: {frameAccessor}");
                         args.Add($"doMasks: errorMask != null");
-                        args.Add($"errorMask: out {loquiGen.MaskItemString(MaskType.Error)} {loquiGen.Name}createMask");
+                        args.Add($"errorMask: out {loquiGen.Mask(MaskType.Error)} {loquiGen.Name}createMask");
                     }
                     using (var args = new ArgsWrapper(fg,
                         $"{loquiGen.TargetObjectGeneration.ExtCommonName}.CopyFieldsFrom{loquiGen.GetGenericTypes(MaskType.Normal, MaskType.Error, MaskType.Copy)}"))
@@ -105,15 +105,15 @@ namespace Mutagen.Bethesda.Generation
                         args.Add("cmds: null");
                         args.Add("copyMask: null");
                         args.Add("doMasks: errorMask != null");
-                        args.Add($"errorMask: out {loquiGen.MaskItemString(MaskType.Error)} {loquiGen.Name}errorMask");
+                        args.Add($"errorMask: out {loquiGen.Mask(MaskType.Error)} {loquiGen.Name}errorMask");
                     }
-                    fg.AppendLine($"var combined{typeGen.Name} = {loquiGen.MaskItemString(MaskType.Error)}.Combine({loquiGen.Name}createMask, {loquiGen.Name}errorMask);");
+                    fg.AppendLine($"var combined{typeGen.Name} = {loquiGen.Mask(MaskType.Error)}.Combine({loquiGen.Name}createMask, {loquiGen.Name}errorMask);");
                     using (var args = new ArgsWrapper(fg,
                         $"ErrorMask.HandleErrorMask"))
                     {
                         args.Add($"creator: {maskAccessor}");
                         args.Add($"index: (int){typeGen.IndexEnumName}");
-                        args.Add($"errMaskObj: combined{typeGen.Name} == null ? null : new MaskItem<Exception, {loquiGen.MaskItemString(MaskType.Error)}>(null, combined{typeGen.Name})");
+                        args.Add($"errMaskObj: combined{typeGen.Name} == null ? null : new MaskItem<Exception, {loquiGen.Mask(MaskType.Error)}>(null, combined{typeGen.Name})");
                     }
                 }
                 else
@@ -121,12 +121,12 @@ namespace Mutagen.Bethesda.Generation
                     ArgsWrapper args;
                     if (itemAccessor.PropertyAccess != null)
                     {
-                        args = new ArgsWrapper(fg, $"{itemAccessor.PropertyAccess}.{nameof(INotifyingCollectionExt.SetIfSucceeded)}(LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}, {loquiGen.MaskItemString(MaskType.Error)}>.Instance.Parse",
+                        args = new ArgsWrapper(fg, $"{itemAccessor.PropertyAccess}.{nameof(INotifyingCollectionExt.SetIfSucceeded)}(LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}, {loquiGen.Mask(MaskType.Error)}>.Instance.Parse",
                             suffixLine: ")");
                     }
                     else
                     {
-                        args = new ArgsWrapper(fg, $"var {typeGen.Name}tryGet = LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}, {loquiGen.MaskItemString(MaskType.Error)}>.Instance.Parse");
+                        args = new ArgsWrapper(fg, $"var {typeGen.Name}tryGet = LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}, {loquiGen.Mask(MaskType.Error)}>.Instance.Parse");
                     }
                     using (args)
                     {
@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 UnsafeXmlTranslationGeneration unsafeXml = new UnsafeXmlTranslationGeneration()
                 {
-                    ErrMaskString = $"MaskItem<Exception, {loquiGen.MaskItemString(MaskType.Error)}>"
+                    ErrMaskString = $"MaskItem<Exception, {loquiGen.Mask(MaskType.Error)}>"
                 };
                 unsafeXml.GenerateCopyIn(
                     fg: fg,
@@ -190,7 +190,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 var data = loquiGen.GetFieldData();
                 using (var args = new ArgsWrapper(fg,
-                    $"{retAccessor.DirectAccess}LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}, {loquiGen.MaskItemString(MaskType.Error)}>.Instance.Parse",
+                    $"{retAccessor.DirectAccess}LoquiBinaryTranslation<{loquiGen.ObjectTypeName}{loquiGen.GenericTypes}, {loquiGen.Mask(MaskType.Error)}>.Instance.Parse",
                     suffixLine: (targetGen == typeGen ? string.Empty : $".Bubble<{typeGen.TypeName}, {targetGen.TypeName}>()")))
                 {
                     args.Add($"frame: {readerAccessor}{(loquiGen.TargetObjectGeneration.GetObjectType() == ObjectType.Subrecord ? ".Spawn(snapToFinalPosition: false)" : null)}");
@@ -215,7 +215,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 UnsafeXmlTranslationGeneration unsafeXml = new UnsafeXmlTranslationGeneration()
                 {
-                    ErrMaskString = $"MaskItem<Exception, {loquiGen.MaskItemString(MaskType.Error)}>"
+                    ErrMaskString = $"MaskItem<Exception, {loquiGen.Mask(MaskType.Error)}>"
                 };
                 unsafeXml.GenerateCopyInRet(
                     fg: fg,
