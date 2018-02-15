@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Icon
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
+        protected INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
         public INotifyingSetItem<FilePath> Icon_Property => _Icon;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public FilePath Icon
@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Value
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<UInt32> _Value = NotifyingItem.Factory<UInt32>();
+        protected INotifyingItem<UInt32> _Value = NotifyingItem.Factory<UInt32>();
         public INotifyingItem<UInt32> Value_Property => _Value;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 Value
@@ -93,7 +93,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Weight
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Single> _Weight = NotifyingItem.Factory<Single>();
+        protected INotifyingItem<Single> _Weight = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> Weight_Property => _Weight;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single Weight

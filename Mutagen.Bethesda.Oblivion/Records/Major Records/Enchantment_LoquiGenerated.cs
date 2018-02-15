@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Type
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Enchantment.EnchantmentType> _Type = NotifyingItem.Factory<Enchantment.EnchantmentType>();
+        protected INotifyingItem<Enchantment.EnchantmentType> _Type = NotifyingItem.Factory<Enchantment.EnchantmentType>();
         public INotifyingItem<Enchantment.EnchantmentType> Type_Property => _Type;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Enchantment.EnchantmentType Type
@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region ChargeAmount
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<UInt32> _ChargeAmount = NotifyingItem.Factory<UInt32>();
+        protected INotifyingItem<UInt32> _ChargeAmount = NotifyingItem.Factory<UInt32>();
         public INotifyingItem<UInt32> ChargeAmount_Property => _ChargeAmount;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 ChargeAmount
@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region EnchantCost
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<UInt32> _EnchantCost = NotifyingItem.Factory<UInt32>();
+        protected INotifyingItem<UInt32> _EnchantCost = NotifyingItem.Factory<UInt32>();
         public INotifyingItem<UInt32> EnchantCost_Property => _EnchantCost;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 EnchantCost
@@ -87,7 +87,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Flags
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Enchantment.Flag> _Flags = NotifyingItem.Factory<Enchantment.Flag>();
+        protected INotifyingItem<Enchantment.Flag> _Flags = NotifyingItem.Factory<Enchantment.Flag>();
         public INotifyingItem<Enchantment.Flag> Flags_Property => _Flags;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Enchantment.Flag Flags

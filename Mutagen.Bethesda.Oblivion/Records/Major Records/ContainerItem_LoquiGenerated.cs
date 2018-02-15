@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Count
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<UInt32> _Count = NotifyingItem.Factory<UInt32>();
+        protected INotifyingItem<UInt32> _Count = NotifyingItem.Factory<UInt32>();
         public INotifyingItem<UInt32> Count_Property => _Count;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 Count

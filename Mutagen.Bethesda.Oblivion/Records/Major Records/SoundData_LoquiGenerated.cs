@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region MinimumAttenuationDistance
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<UInt16> _MinimumAttenuationDistance = NotifyingItem.Factory<UInt16>();
+        protected INotifyingItem<UInt16> _MinimumAttenuationDistance = NotifyingItem.Factory<UInt16>();
         public INotifyingItem<UInt16> MinimumAttenuationDistance_Property => _MinimumAttenuationDistance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt16 MinimumAttenuationDistance
@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region MaximumAttenuationDistance
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<UInt16> _MaximumAttenuationDistance = NotifyingItem.Factory<UInt16>();
+        protected INotifyingItem<UInt16> _MaximumAttenuationDistance = NotifyingItem.Factory<UInt16>();
         public INotifyingItem<UInt16> MaximumAttenuationDistance_Property => _MaximumAttenuationDistance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt16 MaximumAttenuationDistance
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region FrequencyAdjustment
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<SByte> _FrequencyAdjustment = NotifyingItem.Factory<SByte>();
+        protected INotifyingItem<SByte> _FrequencyAdjustment = NotifyingItem.Factory<SByte>();
         public INotifyingItem<SByte> FrequencyAdjustment_Property => _FrequencyAdjustment;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public SByte FrequencyAdjustment
@@ -85,7 +85,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Flags
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<SoundData.Flag> _Flags = NotifyingItem.Factory<SoundData.Flag>();
+        protected INotifyingItem<SoundData.Flag> _Flags = NotifyingItem.Factory<SoundData.Flag>();
         public INotifyingItem<SoundData.Flag> Flags_Property => _Flags;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public SoundData.Flag Flags

@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Icon
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
+        protected INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
         public INotifyingSetItem<FilePath> Icon_Property => _Icon;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public FilePath Icon
@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region TextureSpecularExponent
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<Byte> _TextureSpecularExponent = NotifyingSetItem.Factory<Byte>(markAsSet: false);
+        protected INotifyingSetItem<Byte> _TextureSpecularExponent = NotifyingSetItem.Factory<Byte>(markAsSet: false);
         public INotifyingSetItem<Byte> TextureSpecularExponent_Property => _TextureSpecularExponent;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte TextureSpecularExponent

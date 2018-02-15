@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Skill
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<ActorValue> _Skill = NotifyingSetItem.Factory<ActorValue>(markAsSet: false);
+        protected INotifyingSetItem<ActorValue> _Skill = NotifyingSetItem.Factory<ActorValue>(markAsSet: false);
         public INotifyingSetItem<ActorValue> Skill_Property => _Skill;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ActorValue Skill
@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Description
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<String> _Description = NotifyingSetItem.Factory<String>(markAsSet: false);
+        protected INotifyingSetItem<String> _Description = NotifyingSetItem.Factory<String>(markAsSet: false);
         public INotifyingSetItem<String> Description_Property => _Description;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Description
@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Icon
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
+        protected INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
         public INotifyingSetItem<FilePath> Icon_Property => _Icon;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public FilePath Icon
@@ -86,7 +86,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Action
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<ActorValue> _Action = NotifyingItem.Factory<ActorValue>();
+        protected INotifyingItem<ActorValue> _Action = NotifyingItem.Factory<ActorValue>();
         public INotifyingItem<ActorValue> Action_Property => _Action;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ActorValue Action
@@ -101,7 +101,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Attribute
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<ActorValue> _Attribute = NotifyingItem.Factory<ActorValue>();
+        protected INotifyingItem<ActorValue> _Attribute = NotifyingItem.Factory<ActorValue>();
         public INotifyingItem<ActorValue> Attribute_Property => _Attribute;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ActorValue Attribute
@@ -116,7 +116,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Specialization
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Specialization> _Specialization = NotifyingItem.Factory<Specialization>();
+        protected INotifyingItem<Specialization> _Specialization = NotifyingItem.Factory<Specialization>();
         public INotifyingItem<Specialization> Specialization_Property => _Specialization;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Specialization Specialization
@@ -131,7 +131,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region UseValueFirst
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Single> _UseValueFirst = NotifyingItem.Factory<Single>();
+        protected INotifyingItem<Single> _UseValueFirst = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> UseValueFirst_Property => _UseValueFirst;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single UseValueFirst
@@ -146,7 +146,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region UseValueSecond
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Single> _UseValueSecond = NotifyingItem.Factory<Single>();
+        protected INotifyingItem<Single> _UseValueSecond = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> UseValueSecond_Property => _UseValueSecond;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single UseValueSecond
@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region ApprenticeText
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<String> _ApprenticeText = NotifyingSetItem.Factory<String>(markAsSet: false);
+        protected INotifyingSetItem<String> _ApprenticeText = NotifyingSetItem.Factory<String>(markAsSet: false);
         public INotifyingSetItem<String> ApprenticeText_Property => _ApprenticeText;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String ApprenticeText
@@ -176,7 +176,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region JourneymanText
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<String> _JourneymanText = NotifyingSetItem.Factory<String>(markAsSet: false);
+        protected INotifyingSetItem<String> _JourneymanText = NotifyingSetItem.Factory<String>(markAsSet: false);
         public INotifyingSetItem<String> JourneymanText_Property => _JourneymanText;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String JourneymanText
@@ -191,7 +191,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region ExpertText
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<String> _ExpertText = NotifyingSetItem.Factory<String>(markAsSet: false);
+        protected INotifyingSetItem<String> _ExpertText = NotifyingSetItem.Factory<String>(markAsSet: false);
         public INotifyingSetItem<String> ExpertText_Property => _ExpertText;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String ExpertText
@@ -206,7 +206,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region MasterText
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<String> _MasterText = NotifyingSetItem.Factory<String>(markAsSet: false);
+        protected INotifyingSetItem<String> _MasterText = NotifyingSetItem.Factory<String>(markAsSet: false);
         public INotifyingSetItem<String> MasterText_Property => _MasterText;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String MasterText

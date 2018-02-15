@@ -109,8 +109,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region NIFT
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<Byte[]> _NIFT = NotifyingSetItem.Factory<Byte[]>(markAsSet: false);
+        protected INotifyingSetItem<Byte[]> _NIFT = NotifyingSetItem.Factory<Byte[]>(markAsSet: false);
         public INotifyingSetItem<Byte[]> NIFT_Property => _NIFT;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] NIFT
@@ -125,7 +124,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Flags
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Creature.CreatureFlag> _Flags = NotifyingItem.Factory<Creature.CreatureFlag>();
+        protected INotifyingItem<Creature.CreatureFlag> _Flags = NotifyingItem.Factory<Creature.CreatureFlag>();
         public INotifyingItem<Creature.CreatureFlag> Flags_Property => _Flags;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Creature.CreatureFlag Flags
@@ -140,7 +139,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region BaseSpellPoints
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<UInt16> _BaseSpellPoints = NotifyingItem.Factory<UInt16>();
+        protected INotifyingItem<UInt16> _BaseSpellPoints = NotifyingItem.Factory<UInt16>();
         public INotifyingItem<UInt16> BaseSpellPoints_Property => _BaseSpellPoints;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt16 BaseSpellPoints
@@ -155,7 +154,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Fatigue
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<UInt16> _Fatigue = NotifyingItem.Factory<UInt16>();
+        protected INotifyingItem<UInt16> _Fatigue = NotifyingItem.Factory<UInt16>();
         public INotifyingItem<UInt16> Fatigue_Property => _Fatigue;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt16 Fatigue
@@ -170,7 +169,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region BarterGold
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<UInt16> _BarterGold = NotifyingItem.Factory<UInt16>();
+        protected INotifyingItem<UInt16> _BarterGold = NotifyingItem.Factory<UInt16>();
         public INotifyingItem<UInt16> BarterGold_Property => _BarterGold;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt16 BarterGold
@@ -185,7 +184,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region LevelOffset
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Int16> _LevelOffset = NotifyingItem.Factory<Int16>();
+        protected INotifyingItem<Int16> _LevelOffset = NotifyingItem.Factory<Int16>();
         public INotifyingItem<Int16> LevelOffset_Property => _LevelOffset;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Int16 LevelOffset
@@ -200,7 +199,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region CalcMin
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<UInt16> _CalcMin = NotifyingItem.Factory<UInt16>();
+        protected INotifyingItem<UInt16> _CalcMin = NotifyingItem.Factory<UInt16>();
         public INotifyingItem<UInt16> CalcMin_Property => _CalcMin;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt16 CalcMin
@@ -215,7 +214,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region CalcMax
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<UInt16> _CalcMax = NotifyingItem.Factory<UInt16>();
+        protected INotifyingItem<UInt16> _CalcMax = NotifyingItem.Factory<UInt16>();
         public INotifyingItem<UInt16> CalcMax_Property => _CalcMax;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt16 CalcMax
@@ -262,7 +261,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Aggression
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Byte> _Aggression = NotifyingItem.Factory<Byte>();
+        protected INotifyingItem<Byte> _Aggression = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Aggression_Property => _Aggression;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Aggression
@@ -277,7 +276,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Confidence
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Byte> _Confidence = NotifyingItem.Factory<Byte>();
+        protected INotifyingItem<Byte> _Confidence = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Confidence_Property => _Confidence;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Confidence
@@ -292,7 +291,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region EnergyLevel
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Byte> _EnergyLevel = NotifyingItem.Factory<Byte>();
+        protected INotifyingItem<Byte> _EnergyLevel = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> EnergyLevel_Property => _EnergyLevel;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte EnergyLevel
@@ -307,7 +306,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Responsibility
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Byte> _Responsibility = NotifyingItem.Factory<Byte>();
+        protected INotifyingItem<Byte> _Responsibility = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Responsibility_Property => _Responsibility;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Responsibility
@@ -322,7 +321,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region BuySellServices
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<NPC.BuySellServiceFlag> _BuySellServices = NotifyingItem.Factory<NPC.BuySellServiceFlag>();
+        protected INotifyingItem<NPC.BuySellServiceFlag> _BuySellServices = NotifyingItem.Factory<NPC.BuySellServiceFlag>();
         public INotifyingItem<NPC.BuySellServiceFlag> BuySellServices_Property => _BuySellServices;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public NPC.BuySellServiceFlag BuySellServices
@@ -337,7 +336,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Teaches
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Skill> _Teaches = NotifyingItem.Factory<Skill>();
+        protected INotifyingItem<Skill> _Teaches = NotifyingItem.Factory<Skill>();
         public INotifyingItem<Skill> Teaches_Property => _Teaches;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Skill Teaches
@@ -352,7 +351,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region MaximumTrainingLevel
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Byte> _MaximumTrainingLevel = NotifyingItem.Factory<Byte>();
+        protected INotifyingItem<Byte> _MaximumTrainingLevel = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> MaximumTrainingLevel_Property => _MaximumTrainingLevel;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte MaximumTrainingLevel
@@ -403,7 +402,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region CreatureType
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Creature.CreatureTypeEnum> _CreatureType = NotifyingItem.Factory<Creature.CreatureTypeEnum>();
+        protected INotifyingItem<Creature.CreatureTypeEnum> _CreatureType = NotifyingItem.Factory<Creature.CreatureTypeEnum>();
         public INotifyingItem<Creature.CreatureTypeEnum> CreatureType_Property => _CreatureType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Creature.CreatureTypeEnum CreatureType
@@ -418,7 +417,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region CombatSKill
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Byte> _CombatSKill = NotifyingItem.Factory<Byte>();
+        protected INotifyingItem<Byte> _CombatSKill = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> CombatSKill_Property => _CombatSKill;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte CombatSKill
@@ -433,7 +432,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region MagicSKill
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Byte> _MagicSKill = NotifyingItem.Factory<Byte>();
+        protected INotifyingItem<Byte> _MagicSKill = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> MagicSKill_Property => _MagicSKill;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte MagicSKill
@@ -448,7 +447,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region StealthSKill
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Byte> _StealthSKill = NotifyingItem.Factory<Byte>();
+        protected INotifyingItem<Byte> _StealthSKill = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> StealthSKill_Property => _StealthSKill;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte StealthSKill
@@ -463,7 +462,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region SoulLevel
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<SoulLevel> _SoulLevel = NotifyingItem.Factory<SoulLevel>();
+        protected INotifyingItem<SoulLevel> _SoulLevel = NotifyingItem.Factory<SoulLevel>();
         public INotifyingItem<SoulLevel> SoulLevel_Property => _SoulLevel;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public SoulLevel SoulLevel
@@ -478,7 +477,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Health
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<UInt32> _Health = NotifyingItem.Factory<UInt32>();
+        protected INotifyingItem<UInt32> _Health = NotifyingItem.Factory<UInt32>();
         public INotifyingItem<UInt32> Health_Property => _Health;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 Health
@@ -493,7 +492,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region AttackDamage
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<UInt16> _AttackDamage = NotifyingItem.Factory<UInt16>();
+        protected INotifyingItem<UInt16> _AttackDamage = NotifyingItem.Factory<UInt16>();
         public INotifyingItem<UInt16> AttackDamage_Property => _AttackDamage;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt16 AttackDamage
@@ -508,7 +507,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Strength
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Byte> _Strength = NotifyingItem.Factory<Byte>();
+        protected INotifyingItem<Byte> _Strength = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Strength_Property => _Strength;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Strength
@@ -523,7 +522,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Intelligence
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Byte> _Intelligence = NotifyingItem.Factory<Byte>();
+        protected INotifyingItem<Byte> _Intelligence = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Intelligence_Property => _Intelligence;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Intelligence
@@ -538,7 +537,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Willpower
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Byte> _Willpower = NotifyingItem.Factory<Byte>();
+        protected INotifyingItem<Byte> _Willpower = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Willpower_Property => _Willpower;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Willpower
@@ -553,7 +552,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Agility
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Byte> _Agility = NotifyingItem.Factory<Byte>();
+        protected INotifyingItem<Byte> _Agility = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Agility_Property => _Agility;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Agility
@@ -568,7 +567,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Speed
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Byte> _Speed = NotifyingItem.Factory<Byte>();
+        protected INotifyingItem<Byte> _Speed = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Speed_Property => _Speed;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Speed
@@ -583,7 +582,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Endurance
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Byte> _Endurance = NotifyingItem.Factory<Byte>();
+        protected INotifyingItem<Byte> _Endurance = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Endurance_Property => _Endurance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Endurance
@@ -598,7 +597,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Personality
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Byte> _Personality = NotifyingItem.Factory<Byte>();
+        protected INotifyingItem<Byte> _Personality = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Personality_Property => _Personality;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Personality
@@ -613,7 +612,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Luck
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Byte> _Luck = NotifyingItem.Factory<Byte>();
+        protected INotifyingItem<Byte> _Luck = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Luck_Property => _Luck;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Luck
@@ -628,7 +627,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region AttackReach
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<Byte> _AttackReach = NotifyingSetItem.Factory<Byte>(markAsSet: false);
+        protected INotifyingSetItem<Byte> _AttackReach = NotifyingSetItem.Factory<Byte>(markAsSet: false);
         public INotifyingSetItem<Byte> AttackReach_Property => _AttackReach;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte AttackReach
@@ -650,7 +649,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region TurningSpeed
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<Single> _TurningSpeed = NotifyingSetItem.Factory<Single>(markAsSet: false);
+        protected INotifyingSetItem<Single> _TurningSpeed = NotifyingSetItem.Factory<Single>(markAsSet: false);
         public INotifyingSetItem<Single> TurningSpeed_Property => _TurningSpeed;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single TurningSpeed
@@ -665,7 +664,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region BaseScale
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<Single> _BaseScale = NotifyingSetItem.Factory<Single>(markAsSet: false);
+        protected INotifyingSetItem<Single> _BaseScale = NotifyingSetItem.Factory<Single>(markAsSet: false);
         public INotifyingSetItem<Single> BaseScale_Property => _BaseScale;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single BaseScale
@@ -680,7 +679,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region FootWeight
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<Single> _FootWeight = NotifyingSetItem.Factory<Single>(markAsSet: false);
+        protected INotifyingSetItem<Single> _FootWeight = NotifyingSetItem.Factory<Single>(markAsSet: false);
         public INotifyingSetItem<Single> FootWeight_Property => _FootWeight;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single FootWeight
@@ -695,7 +694,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region BloodSpray
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<FilePath> _BloodSpray = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
+        protected INotifyingSetItem<FilePath> _BloodSpray = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
         public INotifyingSetItem<FilePath> BloodSpray_Property => _BloodSpray;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public FilePath BloodSpray
@@ -710,7 +709,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region BloodDecal
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<FilePath> _BloodDecal = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
+        protected INotifyingSetItem<FilePath> _BloodDecal = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
         public INotifyingSetItem<FilePath> BloodDecal_Property => _BloodDecal;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public FilePath BloodDecal

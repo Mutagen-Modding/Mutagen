@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region X
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Single> _X = NotifyingItem.Factory<Single>();
+        protected INotifyingItem<Single> _X = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> X_Property => _X;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single X
@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Y
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Single> _Y = NotifyingItem.Factory<Single>();
+        protected INotifyingItem<Single> _Y = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> Y_Property => _Y;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single Y
@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Z
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Single> _Z = NotifyingItem.Factory<Single>();
+        protected INotifyingItem<Single> _Z = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> Z_Property => _Z;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single Z

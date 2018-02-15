@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region TextureLowerLayer
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<FilePath> _TextureLowerLayer = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
+        protected INotifyingSetItem<FilePath> _TextureLowerLayer = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
         public INotifyingSetItem<FilePath> TextureLowerLayer_Property => _TextureLowerLayer;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public FilePath TextureLowerLayer
@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region TextureUpperLayer
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<FilePath> _TextureUpperLayer = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
+        protected INotifyingSetItem<FilePath> _TextureUpperLayer = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
         public INotifyingSetItem<FilePath> TextureUpperLayer_Property => _TextureUpperLayer;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public FilePath TextureUpperLayer
@@ -105,7 +105,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region FogDayNear
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Single> _FogDayNear = NotifyingItem.Factory<Single>();
+        protected INotifyingItem<Single> _FogDayNear = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> FogDayNear_Property => _FogDayNear;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single FogDayNear
@@ -120,7 +120,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region FogDayFar
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Single> _FogDayFar = NotifyingItem.Factory<Single>();
+        protected INotifyingItem<Single> _FogDayFar = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> FogDayFar_Property => _FogDayFar;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single FogDayFar
@@ -135,7 +135,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region FogNightNear
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Single> _FogNightNear = NotifyingItem.Factory<Single>();
+        protected INotifyingItem<Single> _FogNightNear = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> FogNightNear_Property => _FogNightNear;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single FogNightNear
@@ -150,7 +150,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region FogNightFar
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Single> _FogNightFar = NotifyingItem.Factory<Single>();
+        protected INotifyingItem<Single> _FogNightFar = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> FogNightFar_Property => _FogNightFar;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single FogNightFar
@@ -165,7 +165,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region HdrEyeAdaptSpeed
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Single> _HdrEyeAdaptSpeed = NotifyingItem.Factory<Single>();
+        protected INotifyingItem<Single> _HdrEyeAdaptSpeed = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> HdrEyeAdaptSpeed_Property => _HdrEyeAdaptSpeed;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single HdrEyeAdaptSpeed
@@ -180,7 +180,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region HdrBlurRadius
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Single> _HdrBlurRadius = NotifyingItem.Factory<Single>();
+        protected INotifyingItem<Single> _HdrBlurRadius = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> HdrBlurRadius_Property => _HdrBlurRadius;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single HdrBlurRadius
@@ -195,7 +195,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region HdrBlurPasses
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Single> _HdrBlurPasses = NotifyingItem.Factory<Single>();
+        protected INotifyingItem<Single> _HdrBlurPasses = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> HdrBlurPasses_Property => _HdrBlurPasses;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single HdrBlurPasses
@@ -210,7 +210,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region HdrEmissiveMult
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Single> _HdrEmissiveMult = NotifyingItem.Factory<Single>();
+        protected INotifyingItem<Single> _HdrEmissiveMult = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> HdrEmissiveMult_Property => _HdrEmissiveMult;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single HdrEmissiveMult
@@ -225,7 +225,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region HdrTargetLum
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Single> _HdrTargetLum = NotifyingItem.Factory<Single>();
+        protected INotifyingItem<Single> _HdrTargetLum = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> HdrTargetLum_Property => _HdrTargetLum;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single HdrTargetLum
@@ -240,7 +240,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region HdrUpperLumClamp
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Single> _HdrUpperLumClamp = NotifyingItem.Factory<Single>();
+        protected INotifyingItem<Single> _HdrUpperLumClamp = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> HdrUpperLumClamp_Property => _HdrUpperLumClamp;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single HdrUpperLumClamp
@@ -255,7 +255,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region HdrBrightScale
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Single> _HdrBrightScale = NotifyingItem.Factory<Single>();
+        protected INotifyingItem<Single> _HdrBrightScale = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> HdrBrightScale_Property => _HdrBrightScale;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single HdrBrightScale
@@ -270,7 +270,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region HdrBrightClamp
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Single> _HdrBrightClamp = NotifyingItem.Factory<Single>();
+        protected INotifyingItem<Single> _HdrBrightClamp = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> HdrBrightClamp_Property => _HdrBrightClamp;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single HdrBrightClamp
@@ -285,7 +285,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region HdrLumRampNoTex
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Single> _HdrLumRampNoTex = NotifyingItem.Factory<Single>();
+        protected INotifyingItem<Single> _HdrLumRampNoTex = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> HdrLumRampNoTex_Property => _HdrLumRampNoTex;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single HdrLumRampNoTex
@@ -300,7 +300,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region HdrLumRampMin
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Single> _HdrLumRampMin = NotifyingItem.Factory<Single>();
+        protected INotifyingItem<Single> _HdrLumRampMin = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> HdrLumRampMin_Property => _HdrLumRampMin;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single HdrLumRampMin
@@ -315,7 +315,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region HdrLumRampMax
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Single> _HdrLumRampMax = NotifyingItem.Factory<Single>();
+        protected INotifyingItem<Single> _HdrLumRampMax = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> HdrLumRampMax_Property => _HdrLumRampMax;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single HdrLumRampMax
@@ -330,7 +330,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region HdrSunlightDimmer
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Single> _HdrSunlightDimmer = NotifyingItem.Factory<Single>();
+        protected INotifyingItem<Single> _HdrSunlightDimmer = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> HdrSunlightDimmer_Property => _HdrSunlightDimmer;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single HdrSunlightDimmer
@@ -345,7 +345,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region HdrGrassDimmer
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Single> _HdrGrassDimmer = NotifyingItem.Factory<Single>();
+        protected INotifyingItem<Single> _HdrGrassDimmer = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> HdrGrassDimmer_Property => _HdrGrassDimmer;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single HdrGrassDimmer
@@ -360,7 +360,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region HdrTreeDimmer
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Single> _HdrTreeDimmer = NotifyingItem.Factory<Single>();
+        protected INotifyingItem<Single> _HdrTreeDimmer = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> HdrTreeDimmer_Property => _HdrTreeDimmer;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single HdrTreeDimmer
@@ -375,7 +375,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region WindSpeed
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Byte> _WindSpeed = NotifyingItem.Factory<Byte>();
+        protected INotifyingItem<Byte> _WindSpeed = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> WindSpeed_Property => _WindSpeed;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte WindSpeed
@@ -390,7 +390,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region CloudSpeedLower
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Byte> _CloudSpeedLower = NotifyingItem.Factory<Byte>();
+        protected INotifyingItem<Byte> _CloudSpeedLower = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> CloudSpeedLower_Property => _CloudSpeedLower;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte CloudSpeedLower
@@ -405,7 +405,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region CloudSpeedUpper
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Byte> _CloudSpeedUpper = NotifyingItem.Factory<Byte>();
+        protected INotifyingItem<Byte> _CloudSpeedUpper = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> CloudSpeedUpper_Property => _CloudSpeedUpper;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte CloudSpeedUpper
@@ -420,7 +420,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region TransDelta
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Byte> _TransDelta = NotifyingItem.Factory<Byte>();
+        protected INotifyingItem<Byte> _TransDelta = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> TransDelta_Property => _TransDelta;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte TransDelta
@@ -435,7 +435,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region SunGlare
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Byte> _SunGlare = NotifyingItem.Factory<Byte>();
+        protected INotifyingItem<Byte> _SunGlare = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> SunGlare_Property => _SunGlare;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte SunGlare
@@ -450,7 +450,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region SunDamage
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Byte> _SunDamage = NotifyingItem.Factory<Byte>();
+        protected INotifyingItem<Byte> _SunDamage = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> SunDamage_Property => _SunDamage;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte SunDamage
@@ -465,7 +465,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region PrecipitationBeginFadeIn
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Byte> _PrecipitationBeginFadeIn = NotifyingItem.Factory<Byte>();
+        protected INotifyingItem<Byte> _PrecipitationBeginFadeIn = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> PrecipitationBeginFadeIn_Property => _PrecipitationBeginFadeIn;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte PrecipitationBeginFadeIn
@@ -480,7 +480,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region PrecipitationEndFadeOut
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Byte> _PrecipitationEndFadeOut = NotifyingItem.Factory<Byte>();
+        protected INotifyingItem<Byte> _PrecipitationEndFadeOut = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> PrecipitationEndFadeOut_Property => _PrecipitationEndFadeOut;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte PrecipitationEndFadeOut
@@ -495,7 +495,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region ThunderLightningBeginFadeIn
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Byte> _ThunderLightningBeginFadeIn = NotifyingItem.Factory<Byte>();
+        protected INotifyingItem<Byte> _ThunderLightningBeginFadeIn = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> ThunderLightningBeginFadeIn_Property => _ThunderLightningBeginFadeIn;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte ThunderLightningBeginFadeIn
@@ -510,7 +510,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region ThunderLightningEndFadeOut
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Byte> _ThunderLightningEndFadeOut = NotifyingItem.Factory<Byte>();
+        protected INotifyingItem<Byte> _ThunderLightningEndFadeOut = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> ThunderLightningEndFadeOut_Property => _ThunderLightningEndFadeOut;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte ThunderLightningEndFadeOut
@@ -525,7 +525,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region ThunderLightningFrequency
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Byte> _ThunderLightningFrequency = NotifyingItem.Factory<Byte>();
+        protected INotifyingItem<Byte> _ThunderLightningFrequency = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> ThunderLightningFrequency_Property => _ThunderLightningFrequency;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte ThunderLightningFrequency
@@ -540,7 +540,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Classification
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Weather.WeatherClassification> _Classification = NotifyingItem.Factory<Weather.WeatherClassification>();
+        protected INotifyingItem<Weather.WeatherClassification> _Classification = NotifyingItem.Factory<Weather.WeatherClassification>();
         public INotifyingItem<Weather.WeatherClassification> Classification_Property => _Classification;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Weather.WeatherClassification Classification
@@ -555,7 +555,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region LightningColor
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Color> _LightningColor = NotifyingItem.Factory<Color>();
+        protected INotifyingItem<Color> _LightningColor = NotifyingItem.Factory<Color>();
         public INotifyingItem<Color> LightningColor_Property => _LightningColor;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Color LightningColor

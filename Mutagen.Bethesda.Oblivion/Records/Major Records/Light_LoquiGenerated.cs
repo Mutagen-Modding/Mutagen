@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Name
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<String> _Name = NotifyingSetItem.Factory<String>(markAsSet: false);
+        protected INotifyingSetItem<String> _Name = NotifyingSetItem.Factory<String>(markAsSet: false);
         public INotifyingSetItem<String> Name_Property => _Name;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Name
@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Icon
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
+        protected INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
         public INotifyingSetItem<FilePath> Icon_Property => _Icon;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public FilePath Icon
@@ -94,7 +94,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Time
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Int32> _Time = NotifyingItem.Factory<Int32>(defaultVal: -1);
+        protected INotifyingItem<Int32> _Time = NotifyingItem.Factory<Int32>(defaultVal: -1);
         public INotifyingItem<Int32> Time_Property => _Time;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Int32 Time
@@ -109,7 +109,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Radius
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<UInt32> _Radius = NotifyingItem.Factory<UInt32>();
+        protected INotifyingItem<UInt32> _Radius = NotifyingItem.Factory<UInt32>();
         public INotifyingItem<UInt32> Radius_Property => _Radius;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 Radius
@@ -124,7 +124,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Color
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Color> _Color = NotifyingItem.Factory<Color>();
+        protected INotifyingItem<Color> _Color = NotifyingItem.Factory<Color>();
         public INotifyingItem<Color> Color_Property => _Color;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Color Color
@@ -139,7 +139,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Flags
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Light.LightFlag> _Flags = NotifyingItem.Factory<Light.LightFlag>();
+        protected INotifyingItem<Light.LightFlag> _Flags = NotifyingItem.Factory<Light.LightFlag>();
         public INotifyingItem<Light.LightFlag> Flags_Property => _Flags;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Light.LightFlag Flags
@@ -154,7 +154,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region FalloffExponent
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Single> _FalloffExponent = NotifyingItem.Factory<Single>(defaultVal: 1);
+        protected INotifyingItem<Single> _FalloffExponent = NotifyingItem.Factory<Single>(defaultVal: 1);
         public INotifyingItem<Single> FalloffExponent_Property => _FalloffExponent;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single FalloffExponent
@@ -169,7 +169,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region FOV
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Single> _FOV = NotifyingItem.Factory<Single>(defaultVal: 90);
+        protected INotifyingItem<Single> _FOV = NotifyingItem.Factory<Single>(defaultVal: 90);
         public INotifyingItem<Single> FOV_Property => _FOV;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single FOV
@@ -184,7 +184,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Value
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<UInt32> _Value = NotifyingItem.Factory<UInt32>();
+        protected INotifyingItem<UInt32> _Value = NotifyingItem.Factory<UInt32>();
         public INotifyingItem<UInt32> Value_Property => _Value;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 Value
@@ -199,7 +199,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Weight
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Single> _Weight = NotifyingItem.Factory<Single>();
+        protected INotifyingItem<Single> _Weight = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> Weight_Property => _Weight;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single Weight
@@ -214,7 +214,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Fade
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<Single> _Fade = NotifyingSetItem.Factory<Single>(markAsSet: false);
+        protected INotifyingSetItem<Single> _Fade = NotifyingSetItem.Factory<Single>(markAsSet: false);
         public INotifyingSetItem<Single> Fade_Property => _Fade;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single Fade

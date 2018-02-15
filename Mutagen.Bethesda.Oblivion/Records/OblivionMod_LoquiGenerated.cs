@@ -88,7 +88,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region TES4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private TES4 _TES4_Object = new TES4();
-        protected readonly INotifyingSetItem<TES4> _TES4;
+        protected INotifyingSetItem<TES4> _TES4;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItemGetter<TES4> TES4_Property => this._TES4;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

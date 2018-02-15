@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Version
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Single> _Version = NotifyingItem.Factory<Single>();
+        protected INotifyingItem<Single> _Version = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> Version_Property => _Version;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single Version
@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region NumRecords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Int32> _NumRecords = NotifyingItem.Factory<Int32>();
+        protected INotifyingItem<Int32> _NumRecords = NotifyingItem.Factory<Int32>();
         public INotifyingItem<Int32> NumRecords_Property => _NumRecords;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Int32 NumRecords
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region NextObjectID
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<UInt32> _NextObjectID = NotifyingItem.Factory<UInt32>();
+        protected INotifyingItem<UInt32> _NextObjectID = NotifyingItem.Factory<UInt32>();
         public INotifyingItem<UInt32> NextObjectID_Property => _NextObjectID;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 NextObjectID

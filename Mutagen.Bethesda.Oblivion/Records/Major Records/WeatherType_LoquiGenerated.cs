@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Sunrise
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Color> _Sunrise = NotifyingItem.Factory<Color>();
+        protected INotifyingItem<Color> _Sunrise = NotifyingItem.Factory<Color>();
         public INotifyingItem<Color> Sunrise_Property => _Sunrise;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Color Sunrise
@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Day
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Color> _Day = NotifyingItem.Factory<Color>();
+        protected INotifyingItem<Color> _Day = NotifyingItem.Factory<Color>();
         public INotifyingItem<Color> Day_Property => _Day;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Color Day
@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Sunset
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Color> _Sunset = NotifyingItem.Factory<Color>();
+        protected INotifyingItem<Color> _Sunset = NotifyingItem.Factory<Color>();
         public INotifyingItem<Color> Sunset_Property => _Sunset;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Color Sunset
@@ -86,7 +86,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Night
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Color> _Night = NotifyingItem.Factory<Color>();
+        protected INotifyingItem<Color> _Night = NotifyingItem.Factory<Color>();
         public INotifyingItem<Color> Night_Property => _Night;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Color Night

@@ -2,18 +2,18 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>42c96be002292fef5e5e54c744744c8bee34bf3c</Sha>
+         <Sha>179b77987b917ad38bdea616f25cd5567f1164b7</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>02-12-2018 16:44:01</CommitDate>
-         <Description>Subscribe wiring refactoring to make better use of internal callback and avoid unnecessary casts</Description>
+         <CommitDate>02-13-2018 16:41:49</CommitDate>
+         <Description>P2Float.  P2Double cleaning</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>
          <Nickname>Loqui</Nickname>
-         <Sha>90279e33d2da7320eee8289a534a6e84c92e8f52</Sha>
+         <Sha>c3b8b1ca1b2183e2d2913e51502b3de62e3d11a4</Sha>
          <Path>../Loqui</Path>
-         <CommitDate>02-13-2018 21:03:23</CommitDate>
-         <Description>Color XSD refactoring</Description>
+         <CommitDate>02-17-2018 14:54:36</CommitDate>
+         <Description>Made some protected notifying members not readonly, so custom user code can replace them if desired.</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
    </ParentRepos>

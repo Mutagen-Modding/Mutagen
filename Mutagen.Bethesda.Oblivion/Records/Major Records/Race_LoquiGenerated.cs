@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Description
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<String> _Description = NotifyingSetItem.Factory<String>(markAsSet: false);
+        protected INotifyingSetItem<String> _Description = NotifyingSetItem.Factory<String>(markAsSet: false);
         public INotifyingSetItem<String> Description_Property => _Description;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Description
@@ -110,8 +110,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Fluff
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Byte[]> _Fluff = NotifyingItem.Factory<Byte[]>(noNullFallback: () => new byte[4]);
+        protected INotifyingItem<Byte[]> _Fluff = NotifyingItem.Factory<Byte[]>(noNullFallback: () => new byte[4]);
         public INotifyingItem<Byte[]> Fluff_Property => _Fluff;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] Fluff
@@ -126,7 +125,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region MaleHeight
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Single> _MaleHeight = NotifyingItem.Factory<Single>();
+        protected INotifyingItem<Single> _MaleHeight = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> MaleHeight_Property => _MaleHeight;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single MaleHeight
@@ -141,7 +140,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region FemaleHeight
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Single> _FemaleHeight = NotifyingItem.Factory<Single>();
+        protected INotifyingItem<Single> _FemaleHeight = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> FemaleHeight_Property => _FemaleHeight;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single FemaleHeight
@@ -156,7 +155,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region MaleWeight
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Single> _MaleWeight = NotifyingItem.Factory<Single>();
+        protected INotifyingItem<Single> _MaleWeight = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> MaleWeight_Property => _MaleWeight;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single MaleWeight
@@ -171,7 +170,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region FemaleWeight
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Single> _FemaleWeight = NotifyingItem.Factory<Single>();
+        protected INotifyingItem<Single> _FemaleWeight = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> FemaleWeight_Property => _FemaleWeight;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single FemaleWeight
@@ -186,7 +185,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Flags
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Race.Flag> _Flags = NotifyingItem.Factory<Race.Flag>();
+        protected INotifyingItem<Race.Flag> _Flags = NotifyingItem.Factory<Race.Flag>();
         public INotifyingItem<Race.Flag> Flags_Property => _Flags;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Race.Flag Flags
@@ -229,7 +228,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region DefaultHairColor
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<Byte> _DefaultHairColor = NotifyingSetItem.Factory<Byte>(markAsSet: false);
+        protected INotifyingSetItem<Byte> _DefaultHairColor = NotifyingSetItem.Factory<Byte>(markAsSet: false);
         public INotifyingSetItem<Byte> DefaultHairColor_Property => _DefaultHairColor;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte DefaultHairColor
@@ -244,7 +243,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region FaceGenMainClamp
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<Int32> _FaceGenMainClamp = NotifyingSetItem.Factory<Int32>(markAsSet: false);
+        protected INotifyingSetItem<Int32> _FaceGenMainClamp = NotifyingSetItem.Factory<Int32>(markAsSet: false);
         public INotifyingSetItem<Int32> FaceGenMainClamp_Property => _FaceGenMainClamp;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Int32 FaceGenMainClamp
@@ -259,7 +258,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region FaceGenFaceClamp
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<Int32> _FaceGenFaceClamp = NotifyingSetItem.Factory<Int32>(markAsSet: false);
+        protected INotifyingSetItem<Int32> _FaceGenFaceClamp = NotifyingSetItem.Factory<Int32>(markAsSet: false);
         public INotifyingSetItem<Int32> FaceGenFaceClamp_Property => _FaceGenFaceClamp;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Int32 FaceGenFaceClamp
@@ -369,8 +368,7 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<FaceGenData> IRaceGetter.FaceGenData_Property => this.FaceGenData_Property;
         #endregion
         #region Unknown
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<Byte[]> _Unknown = NotifyingSetItem.Factory<Byte[]>(
+        protected INotifyingSetItem<Byte[]> _Unknown = NotifyingSetItem.Factory<Byte[]>(
             markAsSet: false,
             noNullFallback: () => new byte[2]);
         public INotifyingSetItem<Byte[]> Unknown_Property => _Unknown;

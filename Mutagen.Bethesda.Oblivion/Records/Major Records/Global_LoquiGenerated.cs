@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region TypeChar
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<Char> _TypeChar = NotifyingSetItem.Factory<Char>(markAsSet: false);
+        protected INotifyingSetItem<Char> _TypeChar = NotifyingSetItem.Factory<Char>(markAsSet: false);
         public INotifyingSetItemGetter<Char> TypeChar_Property => _TypeChar;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Char TypeChar
@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region RawFloat
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<Single> _RawFloat = NotifyingSetItem.Factory<Single>(markAsSet: false);
+        protected INotifyingSetItem<Single> _RawFloat = NotifyingSetItem.Factory<Single>(markAsSet: false);
         public INotifyingSetItem<Single> RawFloat_Property => _RawFloat;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single RawFloat

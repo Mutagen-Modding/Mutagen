@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Skill
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<ActorValue> _Skill = NotifyingItem.Factory<ActorValue>();
+        protected INotifyingItem<ActorValue> _Skill = NotifyingItem.Factory<ActorValue>();
         public INotifyingItem<ActorValue> Skill_Property => _Skill;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ActorValue Skill
@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Boost
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<SByte> _Boost = NotifyingItem.Factory<SByte>();
+        protected INotifyingItem<SByte> _Boost = NotifyingItem.Factory<SByte>();
         public INotifyingItem<SByte> Boost_Property => _Boost;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public SByte Boost

@@ -84,7 +84,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Flags
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<Door.DoorFlag> _Flags = NotifyingSetItem.Factory<Door.DoorFlag>(markAsSet: false);
+        protected INotifyingSetItem<Door.DoorFlag> _Flags = NotifyingSetItem.Factory<Door.DoorFlag>(markAsSet: false);
         public INotifyingSetItem<Door.DoorFlag> Flags_Property => _Flags;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Door.DoorFlag Flags

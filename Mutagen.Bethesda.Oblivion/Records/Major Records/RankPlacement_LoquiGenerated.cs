@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Rank
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Byte> _Rank = NotifyingItem.Factory<Byte>();
+        protected INotifyingItem<Byte> _Rank = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Rank_Property => _Rank;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Rank
@@ -61,8 +61,7 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> IRankPlacementGetter.Rank_Property => this.Rank_Property;
         #endregion
         #region Fluff
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Byte[]> _Fluff = NotifyingItem.Factory<Byte[]>(noNullFallback: () => new byte[3]);
+        protected INotifyingItem<Byte[]> _Fluff = NotifyingItem.Factory<Byte[]>(noNullFallback: () => new byte[3]);
         public INotifyingItem<Byte[]> Fluff_Property => _Fluff;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] Fluff

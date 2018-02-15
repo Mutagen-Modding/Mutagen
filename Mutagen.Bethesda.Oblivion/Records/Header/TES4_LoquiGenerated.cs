@@ -41,8 +41,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Fluff
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Byte[]> _Fluff = NotifyingItem.Factory<Byte[]>(noNullFallback: () => new byte[12]);
+        protected INotifyingItem<Byte[]> _Fluff = NotifyingItem.Factory<Byte[]>(noNullFallback: () => new byte[12]);
         public INotifyingItem<Byte[]> Fluff_Property => _Fluff;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] Fluff
@@ -80,8 +79,7 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Header> ITES4Getter.Header_Property => this.Header_Property;
         #endregion
         #region TypeOffsets
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<Byte[]> _TypeOffsets = NotifyingSetItem.Factory<Byte[]>(markAsSet: false);
+        protected INotifyingSetItem<Byte[]> _TypeOffsets = NotifyingSetItem.Factory<Byte[]>(markAsSet: false);
         public INotifyingSetItem<Byte[]> TypeOffsets_Property => _TypeOffsets;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] TypeOffsets
@@ -95,8 +93,7 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Byte[]> ITES4Getter.TypeOffsets_Property => this.TypeOffsets_Property;
         #endregion
         #region Deleted
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<Byte[]> _Deleted = NotifyingSetItem.Factory<Byte[]>(markAsSet: false);
+        protected INotifyingSetItem<Byte[]> _Deleted = NotifyingSetItem.Factory<Byte[]>(markAsSet: false);
         public INotifyingSetItem<Byte[]> Deleted_Property => _Deleted;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] Deleted
@@ -111,7 +108,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Author
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<String> _Author = NotifyingSetItem.Factory<String>(markAsSet: false);
+        protected INotifyingSetItem<String> _Author = NotifyingSetItem.Factory<String>(markAsSet: false);
         public INotifyingSetItem<String> Author_Property => _Author;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Author
@@ -126,7 +123,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Description
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<String> _Description = NotifyingSetItem.Factory<String>(markAsSet: false);
+        protected INotifyingSetItem<String> _Description = NotifyingSetItem.Factory<String>(markAsSet: false);
         public INotifyingSetItem<String> Description_Property => _Description;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Description

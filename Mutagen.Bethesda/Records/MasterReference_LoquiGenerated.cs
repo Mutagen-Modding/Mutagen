@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda
 
         #region Master
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<String> _Master = NotifyingSetItem.Factory<String>(markAsSet: false);
+        protected INotifyingSetItem<String> _Master = NotifyingSetItem.Factory<String>(markAsSet: false);
         public INotifyingSetItem<String> Master_Property => _Master;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Master
@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda
         #endregion
         #region FileSize
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<UInt64> _FileSize = NotifyingSetItem.Factory<UInt64>(markAsSet: false);
+        protected INotifyingSetItem<UInt64> _FileSize = NotifyingSetItem.Factory<UInt64>(markAsSet: false);
         public INotifyingSetItem<UInt64> FileSize_Property => _FileSize;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt64 FileSize

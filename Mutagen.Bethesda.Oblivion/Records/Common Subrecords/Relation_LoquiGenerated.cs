@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Modifier
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Int32> _Modifier = NotifyingItem.Factory<Int32>();
+        protected INotifyingItem<Int32> _Modifier = NotifyingItem.Factory<Int32>();
         public INotifyingItem<Int32> Modifier_Property => _Modifier;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Int32 Modifier

@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region File
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<FilePath> _File = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
+        protected INotifyingSetItem<FilePath> _File = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
         public INotifyingSetItem<FilePath> File_Property => _File;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public FilePath File

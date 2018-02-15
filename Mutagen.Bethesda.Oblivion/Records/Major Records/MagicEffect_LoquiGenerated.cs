@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Description
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<String> _Description = NotifyingSetItem.Factory<String>(markAsSet: false);
+        protected INotifyingSetItem<String> _Description = NotifyingSetItem.Factory<String>(markAsSet: false);
         public INotifyingSetItem<String> Description_Property => _Description;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Description
@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Icon
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
+        protected INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
         public INotifyingSetItem<FilePath> Icon_Property => _Icon;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public FilePath Icon
@@ -86,7 +86,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Flags
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<MagicEffect.MagicFlag> _Flags = NotifyingItem.Factory<MagicEffect.MagicFlag>();
+        protected INotifyingItem<MagicEffect.MagicFlag> _Flags = NotifyingItem.Factory<MagicEffect.MagicFlag>();
         public INotifyingItem<MagicEffect.MagicFlag> Flags_Property => _Flags;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public MagicEffect.MagicFlag Flags
@@ -101,7 +101,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region BaseCost
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Single> _BaseCost = NotifyingItem.Factory<Single>();
+        protected INotifyingItem<Single> _BaseCost = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> BaseCost_Property => _BaseCost;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single BaseCost
@@ -115,8 +115,7 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> IMagicEffectGetter.BaseCost_Property => this.BaseCost_Property;
         #endregion
         #region Unused
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Byte[]> _Unused = NotifyingItem.Factory<Byte[]>(noNullFallback: () => new byte[4]);
+        protected INotifyingItem<Byte[]> _Unused = NotifyingItem.Factory<Byte[]>(noNullFallback: () => new byte[4]);
         public INotifyingItem<Byte[]> Unused_Property => _Unused;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] Unused
@@ -131,7 +130,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region MagicSchool
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<MagicSchool> _MagicSchool = NotifyingItem.Factory<MagicSchool>();
+        protected INotifyingItem<MagicSchool> _MagicSchool = NotifyingItem.Factory<MagicSchool>();
         public INotifyingItem<MagicSchool> MagicSchool_Property => _MagicSchool;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public MagicSchool MagicSchool
@@ -146,7 +145,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Resistance
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Resistance> _Resistance = NotifyingItem.Factory<Resistance>();
+        protected INotifyingItem<Resistance> _Resistance = NotifyingItem.Factory<Resistance>();
         public INotifyingItem<Resistance> Resistance_Property => _Resistance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Resistance Resistance
@@ -161,7 +160,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region CounterEffectCount
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<UInt32> _CounterEffectCount = NotifyingItem.Factory<UInt32>();
+        protected INotifyingItem<UInt32> _CounterEffectCount = NotifyingItem.Factory<UInt32>();
         public INotifyingItem<UInt32> CounterEffectCount_Property => _CounterEffectCount;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 CounterEffectCount
@@ -183,7 +182,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region ProjectileSpeed
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Single> _ProjectileSpeed = NotifyingItem.Factory<Single>();
+        protected INotifyingItem<Single> _ProjectileSpeed = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> ProjectileSpeed_Property => _ProjectileSpeed;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single ProjectileSpeed

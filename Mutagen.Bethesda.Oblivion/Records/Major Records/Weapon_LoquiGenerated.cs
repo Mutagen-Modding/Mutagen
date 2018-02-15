@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Icon
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
+        protected INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
         public INotifyingSetItem<FilePath> Icon_Property => _Icon;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public FilePath Icon
@@ -85,7 +85,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region EnchantmentPoints
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<UInt16> _EnchantmentPoints = NotifyingSetItem.Factory<UInt16>(markAsSet: false);
+        protected INotifyingSetItem<UInt16> _EnchantmentPoints = NotifyingSetItem.Factory<UInt16>(markAsSet: false);
         public INotifyingSetItem<UInt16> EnchantmentPoints_Property => _EnchantmentPoints;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt16 EnchantmentPoints
@@ -100,7 +100,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Type
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Weapon.WeaponType> _Type = NotifyingItem.Factory<Weapon.WeaponType>();
+        protected INotifyingItem<Weapon.WeaponType> _Type = NotifyingItem.Factory<Weapon.WeaponType>();
         public INotifyingItem<Weapon.WeaponType> Type_Property => _Type;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Weapon.WeaponType Type
@@ -115,7 +115,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Speed
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Single> _Speed = NotifyingItem.Factory<Single>();
+        protected INotifyingItem<Single> _Speed = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> Speed_Property => _Speed;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single Speed
@@ -130,7 +130,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Reach
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Single> _Reach = NotifyingItem.Factory<Single>();
+        protected INotifyingItem<Single> _Reach = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> Reach_Property => _Reach;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single Reach
@@ -145,7 +145,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Flags
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Weapon.WeaponFlag> _Flags = NotifyingItem.Factory<Weapon.WeaponFlag>();
+        protected INotifyingItem<Weapon.WeaponFlag> _Flags = NotifyingItem.Factory<Weapon.WeaponFlag>();
         public INotifyingItem<Weapon.WeaponFlag> Flags_Property => _Flags;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Weapon.WeaponFlag Flags
@@ -160,7 +160,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Value
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<UInt32> _Value = NotifyingItem.Factory<UInt32>();
+        protected INotifyingItem<UInt32> _Value = NotifyingItem.Factory<UInt32>();
         public INotifyingItem<UInt32> Value_Property => _Value;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 Value
@@ -175,7 +175,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Health
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<UInt32> _Health = NotifyingItem.Factory<UInt32>();
+        protected INotifyingItem<UInt32> _Health = NotifyingItem.Factory<UInt32>();
         public INotifyingItem<UInt32> Health_Property => _Health;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 Health
@@ -190,7 +190,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Weight
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Single> _Weight = NotifyingItem.Factory<Single>();
+        protected INotifyingItem<Single> _Weight = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> Weight_Property => _Weight;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single Weight
@@ -205,7 +205,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Damage
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<UInt16> _Damage = NotifyingItem.Factory<UInt16>();
+        protected INotifyingItem<UInt16> _Damage = NotifyingItem.Factory<UInt16>();
         public INotifyingItem<UInt16> Damage_Property => _Damage;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt16 Damage

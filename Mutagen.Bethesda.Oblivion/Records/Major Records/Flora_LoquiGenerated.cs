@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Spring
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Byte> _Spring = NotifyingItem.Factory<Byte>();
+        protected INotifyingItem<Byte> _Spring = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Spring_Property => _Spring;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Spring
@@ -85,7 +85,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Summer
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Byte> _Summer = NotifyingItem.Factory<Byte>();
+        protected INotifyingItem<Byte> _Summer = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Summer_Property => _Summer;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Summer
@@ -100,7 +100,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Fall
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Byte> _Fall = NotifyingItem.Factory<Byte>();
+        protected INotifyingItem<Byte> _Fall = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Fall_Property => _Fall;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Fall
@@ -115,7 +115,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Winter
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Byte> _Winter = NotifyingItem.Factory<Byte>();
+        protected INotifyingItem<Byte> _Winter = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Winter_Property => _Winter;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Winter

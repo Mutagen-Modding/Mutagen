@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Icon
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
+        protected INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
         public INotifyingSetItem<FilePath> Icon_Property => _Icon;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public FilePath Icon
@@ -85,7 +85,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region EnchantmentPoints
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<UInt16> _EnchantmentPoints = NotifyingSetItem.Factory<UInt16>(markAsSet: false);
+        protected INotifyingSetItem<UInt16> _EnchantmentPoints = NotifyingSetItem.Factory<UInt16>(markAsSet: false);
         public INotifyingSetItem<UInt16> EnchantmentPoints_Property => _EnchantmentPoints;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt16 EnchantmentPoints
@@ -100,7 +100,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Description
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<String> _Description = NotifyingSetItem.Factory<String>(markAsSet: false);
+        protected INotifyingSetItem<String> _Description = NotifyingSetItem.Factory<String>(markAsSet: false);
         public INotifyingSetItem<String> Description_Property => _Description;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Description
@@ -115,7 +115,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Flags
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Book.BookFlag> _Flags = NotifyingItem.Factory<Book.BookFlag>();
+        protected INotifyingItem<Book.BookFlag> _Flags = NotifyingItem.Factory<Book.BookFlag>();
         public INotifyingItem<Book.BookFlag> Flags_Property => _Flags;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Book.BookFlag Flags
@@ -130,7 +130,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Teaches
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Skill> _Teaches = NotifyingItem.Factory<Skill>();
+        protected INotifyingItem<Skill> _Teaches = NotifyingItem.Factory<Skill>();
         public INotifyingItem<Skill> Teaches_Property => _Teaches;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Skill Teaches
@@ -145,7 +145,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Value
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Single> _Value = NotifyingItem.Factory<Single>();
+        protected INotifyingItem<Single> _Value = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> Value_Property => _Value;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single Value
@@ -160,7 +160,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Weight
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Single> _Weight = NotifyingItem.Factory<Single>();
+        protected INotifyingItem<Single> _Weight = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> Weight_Property => _Weight;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single Weight

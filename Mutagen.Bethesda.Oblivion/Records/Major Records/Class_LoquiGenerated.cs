@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Description
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<String> _Description = NotifyingSetItem.Factory<String>(markAsSet: false);
+        protected INotifyingSetItem<String> _Description = NotifyingSetItem.Factory<String>(markAsSet: false);
         public INotifyingSetItem<String> Description_Property => _Description;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Description
@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Icon
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
+        protected INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
         public INotifyingSetItem<FilePath> Icon_Property => _Icon;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public FilePath Icon
@@ -90,7 +90,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Specialization
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Class.SpecializationFlag> _Specialization = NotifyingItem.Factory<Class.SpecializationFlag>();
+        protected INotifyingItem<Class.SpecializationFlag> _Specialization = NotifyingItem.Factory<Class.SpecializationFlag>();
         public INotifyingItem<Class.SpecializationFlag> Specialization_Property => _Specialization;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Class.SpecializationFlag Specialization
@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Flags
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<ClassFlag> _Flags = NotifyingItem.Factory<ClassFlag>();
+        protected INotifyingItem<ClassFlag> _Flags = NotifyingItem.Factory<ClassFlag>();
         public INotifyingItem<ClassFlag> Flags_Property => _Flags;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ClassFlag Flags
@@ -138,7 +138,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region ClassServices
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<ClassService> _ClassServices = NotifyingItem.Factory<ClassService>();
+        protected INotifyingItem<ClassService> _ClassServices = NotifyingItem.Factory<ClassService>();
         public INotifyingItem<ClassService> ClassServices_Property => _ClassServices;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ClassService ClassServices

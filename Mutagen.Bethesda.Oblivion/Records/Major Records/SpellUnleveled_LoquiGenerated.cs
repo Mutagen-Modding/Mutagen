@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Type
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Spell.SpellType> _Type = NotifyingItem.Factory<Spell.SpellType>();
+        protected INotifyingItem<Spell.SpellType> _Type = NotifyingItem.Factory<Spell.SpellType>();
         public INotifyingItem<Spell.SpellType> Type_Property => _Type;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Spell.SpellType Type
@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Cost
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<UInt32> _Cost = NotifyingItem.Factory<UInt32>();
+        protected INotifyingItem<UInt32> _Cost = NotifyingItem.Factory<UInt32>();
         public INotifyingItem<UInt32> Cost_Property => _Cost;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public UInt32 Cost
@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Level
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Spell.SpellLevel> _Level = NotifyingItem.Factory<Spell.SpellLevel>();
+        protected INotifyingItem<Spell.SpellLevel> _Level = NotifyingItem.Factory<Spell.SpellLevel>();
         public INotifyingItem<Spell.SpellLevel> Level_Property => _Level;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Spell.SpellLevel Level
@@ -87,7 +87,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Flag
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Spell.SpellFlag> _Flag = NotifyingItem.Factory<Spell.SpellFlag>();
+        protected INotifyingItem<Spell.SpellFlag> _Flag = NotifyingItem.Factory<Spell.SpellFlag>();
         public INotifyingItem<Spell.SpellFlag> Flag_Property => _Flag;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Spell.SpellFlag Flag

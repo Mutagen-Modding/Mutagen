@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Chance
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<Byte> _Chance = NotifyingSetItem.Factory<Byte>(markAsSet: false);
+        protected INotifyingSetItem<Byte> _Chance = NotifyingSetItem.Factory<Byte>(markAsSet: false);
         public INotifyingSetItem<Byte> Chance_Property => _Chance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Chance

@@ -40,8 +40,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region StaticAttenuation
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Single> _StaticAttenuation = NotifyingItem.Factory<Single>();
+        protected INotifyingItem<Single> _StaticAttenuation = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> StaticAttenuation_Property => _StaticAttenuation;
         public Single StaticAttenuation
         {
@@ -53,8 +52,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RangeFloat StaticAttenuation_Range = new RangeFloat(0f, 655.35f);
         #endregion
         #region StopTime
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Single> _StopTime = NotifyingItem.Factory<Single>();
+        protected INotifyingItem<Single> _StopTime = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> StopTime_Property => _StopTime;
         public Single StopTime
         {
@@ -66,8 +64,7 @@ namespace Mutagen.Bethesda.Oblivion
         public static RangeFloat StopTime_Range = new RangeFloat(0f, 1434.375f);
         #endregion
         #region StartTime
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Single> _StartTime = NotifyingItem.Factory<Single>();
+        protected INotifyingItem<Single> _StartTime = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> StartTime_Property => _StartTime;
         public Single StartTime
         {

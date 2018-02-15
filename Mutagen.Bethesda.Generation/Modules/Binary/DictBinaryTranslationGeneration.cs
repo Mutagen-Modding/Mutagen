@@ -213,7 +213,7 @@ namespace Mutagen.Bethesda.Generation
                                             retAccessor: new Accessor("ret = "),
                                             doMaskAccessor: "listDoMasks",
                                             maskAccessor: $"var {submaskName}");
-                                        gen.AppendLine($"listSubMask = {submaskName}.Bubble<{specificLoqui.MaskItemString(MaskType.Error)}, {targetLoqui.MaskItemString(MaskType.Error)}>();");
+                                        gen.AppendLine($"listSubMask = {submaskName}.Bubble<{specificLoqui.Mask(MaskType.Error)}, {targetLoqui.Mask(MaskType.Error)}>();");
                                         gen.AppendLine($"break;");
                                     }
                                 }

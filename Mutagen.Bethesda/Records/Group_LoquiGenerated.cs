@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda
 
         #region ContainedRecordType
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<String> _ContainedRecordType = NotifyingItem.Factory<String>();
+        protected INotifyingItem<String> _ContainedRecordType = NotifyingItem.Factory<String>();
         public INotifyingItemGetter<String> ContainedRecordType_Property => _ContainedRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String ContainedRecordType
@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda
         #endregion
         #region GroupType
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<GroupTypeEnum> _GroupType = NotifyingItem.Factory<GroupTypeEnum>();
+        protected INotifyingItem<GroupTypeEnum> _GroupType = NotifyingItem.Factory<GroupTypeEnum>();
         public INotifyingItem<GroupTypeEnum> GroupType_Property => _GroupType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public GroupTypeEnum GroupType
@@ -74,8 +74,7 @@ namespace Mutagen.Bethesda
         INotifyingItemGetter<GroupTypeEnum> IGroupGetter<T>.GroupType_Property => this.GroupType_Property;
         #endregion
         #region LastModified
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Byte[]> _LastModified = NotifyingItem.Factory<Byte[]>(noNullFallback: () => new byte[4]);
+        protected INotifyingItem<Byte[]> _LastModified = NotifyingItem.Factory<Byte[]>(noNullFallback: () => new byte[4]);
         public INotifyingItem<Byte[]> LastModified_Property => _LastModified;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] LastModified
@@ -2153,7 +2152,7 @@ namespace Mutagen.Bethesda.Internals
         public Exception ContainedRecordType;
         public Exception GroupType;
         public Exception LastModified;
-        public MaskItem<Exception, IEnumerable<MaskItem<Exception, MajorRecord_ErrorMask>>> Items;
+        public MaskItem<Exception, IEnumerable<MaskItem<Exception, T_ErrMask>>> Items;
         #endregion
 
         #region IErrorMask
@@ -2172,7 +2171,7 @@ namespace Mutagen.Bethesda.Internals
                     this.LastModified = ex;
                     break;
                 case Group_FieldIndex.Items:
-                    this.Items = new MaskItem<Exception, IEnumerable<MaskItem<Exception, MajorRecord_ErrorMask>>>(ex, null);
+                    this.Items = new MaskItem<Exception, IEnumerable<MaskItem<Exception, T_ErrMask>>>(ex, null);
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2194,7 +2193,7 @@ namespace Mutagen.Bethesda.Internals
                     this.LastModified = (Exception)obj;
                     break;
                 case Group_FieldIndex.Items:
-                    this.Items = (MaskItem<Exception, IEnumerable<MaskItem<Exception, MajorRecord_ErrorMask>>>)obj;
+                    this.Items = (MaskItem<Exception, IEnumerable<MaskItem<Exception, T_ErrMask>>>)obj;
                     break;
                 default:
                     throw new ArgumentException($"Index is out of range: {index}");
@@ -2277,7 +2276,7 @@ namespace Mutagen.Bethesda.Internals
             ret.ContainedRecordType = this.ContainedRecordType.Combine(rhs.ContainedRecordType);
             ret.GroupType = this.GroupType.Combine(rhs.GroupType);
             ret.LastModified = this.LastModified.Combine(rhs.LastModified);
-            ret.Items = new MaskItem<Exception, IEnumerable<MaskItem<Exception, MajorRecord_ErrorMask>>>(this.Items.Overall.Combine(rhs.Items.Overall), new List<MaskItem<Exception, MajorRecord_ErrorMask>>(this.Items.Specific.And(rhs.Items.Specific)));
+            ret.Items = new MaskItem<Exception, IEnumerable<MaskItem<Exception, T_ErrMask>>>(this.Items.Overall.Combine(rhs.Items.Overall), new List<MaskItem<Exception, T_ErrMask>>(this.Items.Specific.And(rhs.Items.Specific)));
             return ret;
         }
         public static Group_ErrorMask<T_ErrMask> Combine(Group_ErrorMask<T_ErrMask> lhs, Group_ErrorMask<T_ErrMask> rhs)

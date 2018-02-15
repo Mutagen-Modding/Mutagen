@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Strength
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Byte> _Strength = NotifyingItem.Factory<Byte>();
+        protected INotifyingItem<Byte> _Strength = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Strength_Property => _Strength;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Strength
@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Intelligence
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Byte> _Intelligence = NotifyingItem.Factory<Byte>();
+        protected INotifyingItem<Byte> _Intelligence = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Intelligence_Property => _Intelligence;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Intelligence
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Willpower
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Byte> _Willpower = NotifyingItem.Factory<Byte>();
+        protected INotifyingItem<Byte> _Willpower = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Willpower_Property => _Willpower;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Willpower
@@ -85,7 +85,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Agility
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Byte> _Agility = NotifyingItem.Factory<Byte>();
+        protected INotifyingItem<Byte> _Agility = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Agility_Property => _Agility;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Agility
@@ -100,7 +100,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Speed
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Byte> _Speed = NotifyingItem.Factory<Byte>();
+        protected INotifyingItem<Byte> _Speed = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Speed_Property => _Speed;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Speed
@@ -115,7 +115,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Endurance
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Byte> _Endurance = NotifyingItem.Factory<Byte>();
+        protected INotifyingItem<Byte> _Endurance = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Endurance_Property => _Endurance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Endurance
@@ -130,7 +130,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Personality
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Byte> _Personality = NotifyingItem.Factory<Byte>();
+        protected INotifyingItem<Byte> _Personality = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Personality_Property => _Personality;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Personality
@@ -145,7 +145,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Luck
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Byte> _Luck = NotifyingItem.Factory<Byte>();
+        protected INotifyingItem<Byte> _Luck = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Luck_Property => _Luck;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte Luck

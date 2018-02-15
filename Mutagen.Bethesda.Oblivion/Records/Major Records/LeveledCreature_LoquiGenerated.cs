@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region ChanceNone
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<Byte> _ChanceNone = NotifyingSetItem.Factory<Byte>(markAsSet: false);
+        protected INotifyingSetItem<Byte> _ChanceNone = NotifyingSetItem.Factory<Byte>(markAsSet: false);
         public INotifyingSetItem<Byte> ChanceNone_Property => _ChanceNone;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte ChanceNone
@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Flags
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<LeveledFlag> _Flags = NotifyingSetItem.Factory<LeveledFlag>(markAsSet: false);
+        protected INotifyingSetItem<LeveledFlag> _Flags = NotifyingSetItem.Factory<LeveledFlag>(markAsSet: false);
         public INotifyingSetItem<LeveledFlag> Flags_Property => _Flags;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public LeveledFlag Flags

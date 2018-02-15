@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Icon
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
+        protected INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
         public INotifyingSetItem<FilePath> Icon_Property => _Icon;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public FilePath Icon
@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Flags
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<Eye.Flag> _Flags = NotifyingSetItem.Factory<Eye.Flag>(markAsSet: false);
+        protected INotifyingSetItem<Eye.Flag> _Flags = NotifyingSetItem.Factory<Eye.Flag>(markAsSet: false);
         public INotifyingSetItem<Eye.Flag> Flags_Property => _Flags;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Eye.Flag Flags

@@ -39,8 +39,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region SymmetricGeometry
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<Byte[]> _SymmetricGeometry = NotifyingSetItem.Factory<Byte[]>(markAsSet: false);
+        protected INotifyingSetItem<Byte[]> _SymmetricGeometry = NotifyingSetItem.Factory<Byte[]>(markAsSet: false);
         public INotifyingSetItem<Byte[]> SymmetricGeometry_Property => _SymmetricGeometry;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] SymmetricGeometry
@@ -54,8 +53,7 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Byte[]> IFaceGenDataGetter.SymmetricGeometry_Property => this.SymmetricGeometry_Property;
         #endregion
         #region AsymmetricGeometry
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<Byte[]> _AsymmetricGeometry = NotifyingSetItem.Factory<Byte[]>(markAsSet: false);
+        protected INotifyingSetItem<Byte[]> _AsymmetricGeometry = NotifyingSetItem.Factory<Byte[]>(markAsSet: false);
         public INotifyingSetItem<Byte[]> AsymmetricGeometry_Property => _AsymmetricGeometry;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] AsymmetricGeometry
@@ -69,8 +67,7 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Byte[]> IFaceGenDataGetter.AsymmetricGeometry_Property => this.AsymmetricGeometry_Property;
         #endregion
         #region SymmetricTexture
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<Byte[]> _SymmetricTexture = NotifyingSetItem.Factory<Byte[]>(markAsSet: false);
+        protected INotifyingSetItem<Byte[]> _SymmetricTexture = NotifyingSetItem.Factory<Byte[]>(markAsSet: false);
         public INotifyingSetItem<Byte[]> SymmetricTexture_Property => _SymmetricTexture;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] SymmetricTexture

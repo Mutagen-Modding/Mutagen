@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region ConstantEffectEnchantmentFactor
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Single> _ConstantEffectEnchantmentFactor = NotifyingItem.Factory<Single>();
+        protected INotifyingItem<Single> _ConstantEffectEnchantmentFactor = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> ConstantEffectEnchantmentFactor_Property => _ConstantEffectEnchantmentFactor;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single ConstantEffectEnchantmentFactor
@@ -90,7 +90,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region ConstantEffectBarterFactor
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Single> _ConstantEffectBarterFactor = NotifyingItem.Factory<Single>();
+        protected INotifyingItem<Single> _ConstantEffectBarterFactor = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> ConstantEffectBarterFactor_Property => _ConstantEffectBarterFactor;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Single ConstantEffectBarterFactor

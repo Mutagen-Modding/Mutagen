@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Level
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Int16> _Level = NotifyingItem.Factory<Int16>();
+        protected INotifyingItem<Int16> _Level = NotifyingItem.Factory<Int16>();
         public INotifyingItem<Int16> Level_Property => _Level;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Int16 Level
@@ -55,8 +55,7 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Int16> ILeveledEntryGetter<T>.Level_Property => this.Level_Property;
         #endregion
         #region Fluff
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<Byte[]> _Fluff = NotifyingItem.Factory<Byte[]>(noNullFallback: () => new byte[2]);
+        protected INotifyingItem<Byte[]> _Fluff = NotifyingItem.Factory<Byte[]>(noNullFallback: () => new byte[2]);
         public INotifyingItem<Byte[]> Fluff_Property => _Fluff;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Byte[] Fluff
@@ -78,7 +77,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Count
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<Int16> _Count = NotifyingSetItem.Factory<Int16>(markAsSet: false);
+        protected INotifyingSetItem<Int16> _Count = NotifyingSetItem.Factory<Int16>(markAsSet: false);
         public INotifyingSetItem<Int16> Count_Property => _Count;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public Int16 Count
@@ -92,8 +91,7 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Int16> ILeveledEntryGetter<T>.Count_Property => this.Count_Property;
         #endregion
         #region Fluff2
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<Byte[]> _Fluff2 = NotifyingSetItem.Factory<Byte[]>(
+        protected INotifyingSetItem<Byte[]> _Fluff2 = NotifyingSetItem.Factory<Byte[]>(
             markAsSet: false,
             noNullFallback: () => new byte[2]);
         public INotifyingSetItem<Byte[]> Fluff2_Property => _Fluff2;

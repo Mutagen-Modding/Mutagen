@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region MagicSchool
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<MagicSchool> _MagicSchool = NotifyingItem.Factory<MagicSchool>();
+        protected INotifyingItem<MagicSchool> _MagicSchool = NotifyingItem.Factory<MagicSchool>();
         public INotifyingItem<MagicSchool> MagicSchool_Property => _MagicSchool;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public MagicSchool MagicSchool
@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Flags
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingItem<ScriptEffect.Flag> _Flags = NotifyingItem.Factory<ScriptEffect.Flag>();
+        protected INotifyingItem<ScriptEffect.Flag> _Flags = NotifyingItem.Factory<ScriptEffect.Flag>();
         public INotifyingItem<ScriptEffect.Flag> Flags_Property => _Flags;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public ScriptEffect.Flag Flags
@@ -84,7 +84,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Name
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected readonly INotifyingSetItem<String> _Name = NotifyingSetItem.Factory<String>(markAsSet: false);
+        protected INotifyingSetItem<String> _Name = NotifyingSetItem.Factory<String>(markAsSet: false);
         public INotifyingSetItem<String> Name_Property => _Name;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public String Name
