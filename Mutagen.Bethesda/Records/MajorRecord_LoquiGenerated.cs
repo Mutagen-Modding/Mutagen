@@ -958,6 +958,7 @@ namespace Mutagen.Bethesda.Internals
         public const int NumTypedFields = 1;
         public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType PACK_HEADER = new RecordType("PACK");
+        public static readonly RecordType CLMT_HEADER = new RecordType("CLMT");
         public static readonly RecordType CSTY_HEADER = new RecordType("CSTY");
         public static readonly RecordType EFSH_HEADER = new RecordType("EFSH");
         public static readonly RecordType GMST_HEADER = new RecordType("GMST");
@@ -1018,6 +1019,7 @@ namespace Mutagen.Bethesda.Internals
                     {
                         FULL_HEADER,
                         PACK_HEADER,
+                        CLMT_HEADER,
                         CSTY_HEADER,
                         EFSH_HEADER,
                         GMST_HEADER,

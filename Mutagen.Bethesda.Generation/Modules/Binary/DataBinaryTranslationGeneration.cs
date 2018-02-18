@@ -8,7 +8,7 @@ using Loqui.Generation;
 
 namespace Mutagen.Bethesda.Generation
 {
-    public class DataBinaryTranslationModule : BinaryTranslationGeneration
+    public class DataBinaryTranslationGeneration : BinaryTranslationGeneration
     {
         public override bool ShouldGenerateCopyIn(TypeGeneration typeGen) => true;
         public override bool ShouldGenerateWrite(TypeGeneration typeGen) => true;

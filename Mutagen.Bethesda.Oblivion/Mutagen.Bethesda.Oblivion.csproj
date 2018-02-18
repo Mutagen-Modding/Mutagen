@@ -103,6 +103,9 @@
     <Compile Include="Records\Major Records\Class_LoquiGenerated.cs">
       <DependentUpon>Class.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Climate.cs">
+      <DependentUpon>Climate.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Container.cs">
       <DependentUpon>Container.xml</DependentUpon>
     </Compile>
@@ -466,6 +469,12 @@
     <Compile Include="Records\Major Records\WeatherSound_LoquiGenerated.cs">
       <DependentUpon>Weather.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Climate_LoquiGenerated.cs">
+      <DependentUpon>Climate.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\WeatherChance_LoquiGenerated.cs">
+      <DependentUpon>Climate.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Records\Common Subrecords\Effect.xml">
@@ -506,6 +515,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Class.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\Climate.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Clothing.xml">

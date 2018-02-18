@@ -45,6 +45,7 @@
       <Group name="SigilStones" refName="SigilStone" />
       <Group name="LeveledItems" refName="LeveledItem" />
       <Group name="Weathers" refName="Weather" />
+      <Group name="Climates" refName="Climate" />
     </Fields>
   </Object>
 </Loqui>

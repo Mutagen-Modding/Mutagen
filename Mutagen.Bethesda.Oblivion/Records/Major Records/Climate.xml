@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Climate" objType="Record" baseClass="Bethesda.MajorRecord" recordType="CLMT" GUID="25ca8fab-7f62-4f8b-9c32-d65a3261ac05" ID="105">
+    <Fields>
+      <List name="Weathers" recordType="WLST">
+        <RefDirect refName="WeatherChance" />
+      </List>
+      <FilePath name="SunTexture" recordType="FNAM" />
+      <FilePath name="SunGlareTexture" recordType="GNAM" />
+      <RefDirect name="Model" refName="Model" />
+      <Data recordType="TNAM">
+        <Fields>
+          <DateTime name="SunriseBegin" customBinary="true" />
+          <DateTime name="SunriseEnd" customBinary="true" />
+          <DateTime name="SunsetBegin" customBinary="true" />
+          <DateTime name="SunsetEnd" customBinary="true" />
+          <UInt8 name="Volatility" />
+          <Enum name="Phase" enumName="Climate.MoonPhase" customBinary="true" />
+          <UInt8 name="PhaseLength" customBinary="true" min="0" max="63" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+  
+  <Object name="WeatherChance" objType="Subrecord" GUID="6db15123-8d44-41b3-932f-cf3d904a2690" ID="106">
+    <Fields>
+      <FormIDLink name="Weather" refName="Weather" />
+      <Int32 name="Chance" />
+    </Fields>
+  </Object>
+</Loqui>
