@@ -46,7 +46,6 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDLink<Sound> IWeatherSoundGetter.Sound_Property => this.Sound_Property;
         #endregion
         #region Type
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<WeatherSound.SoundType> _Type = NotifyingItem.Factory<WeatherSound.SoundType>();
         public INotifyingItem<WeatherSound.SoundType> Type_Property => _Type;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

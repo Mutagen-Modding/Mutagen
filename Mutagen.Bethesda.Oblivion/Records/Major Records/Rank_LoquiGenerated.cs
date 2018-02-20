@@ -39,7 +39,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region RankNumber
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Int32> _RankNumber = NotifyingSetItem.Factory<Int32>(markAsSet: false);
         public INotifyingSetItem<Int32> RankNumber_Property => _RankNumber;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -54,7 +53,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Int32> IRankGetter.RankNumber_Property => this.RankNumber_Property;
         #endregion
         #region MaleName
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<String> _MaleName = NotifyingSetItem.Factory<String>(markAsSet: false);
         public INotifyingSetItem<String> MaleName_Property => _MaleName;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -69,7 +67,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<String> IRankGetter.MaleName_Property => this.MaleName_Property;
         #endregion
         #region FemaleName
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<String> _FemaleName = NotifyingSetItem.Factory<String>(markAsSet: false);
         public INotifyingSetItem<String> FemaleName_Property => _FemaleName;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -84,7 +81,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<String> IRankGetter.FemaleName_Property => this.FemaleName_Property;
         #endregion
         #region Insignia
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<FilePath> _Insignia = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
         public INotifyingSetItem<FilePath> Insignia_Property => _Insignia;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

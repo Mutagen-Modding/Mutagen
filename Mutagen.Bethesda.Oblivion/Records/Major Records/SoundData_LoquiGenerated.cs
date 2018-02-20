@@ -39,7 +39,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region MinimumAttenuationDistance
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt16> _MinimumAttenuationDistance = NotifyingItem.Factory<UInt16>();
         public INotifyingItem<UInt16> MinimumAttenuationDistance_Property => _MinimumAttenuationDistance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -54,7 +53,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<UInt16> ISoundDataGetter.MinimumAttenuationDistance_Property => this.MinimumAttenuationDistance_Property;
         #endregion
         #region MaximumAttenuationDistance
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt16> _MaximumAttenuationDistance = NotifyingItem.Factory<UInt16>();
         public INotifyingItem<UInt16> MaximumAttenuationDistance_Property => _MaximumAttenuationDistance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -69,7 +67,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<UInt16> ISoundDataGetter.MaximumAttenuationDistance_Property => this.MaximumAttenuationDistance_Property;
         #endregion
         #region FrequencyAdjustment
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<SByte> _FrequencyAdjustment = NotifyingItem.Factory<SByte>();
         public INotifyingItem<SByte> FrequencyAdjustment_Property => _FrequencyAdjustment;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -84,7 +81,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<SByte> ISoundDataGetter.FrequencyAdjustment_Property => this.FrequencyAdjustment_Property;
         #endregion
         #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<SoundData.Flag> _Flags = NotifyingItem.Factory<SoundData.Flag>();
         public INotifyingItem<SoundData.Flag> Flags_Property => _Flags;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

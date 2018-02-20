@@ -59,7 +59,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Faction.FactionFlag> _Flags = NotifyingSetItem.Factory<Faction.FactionFlag>(markAsSet: false);
         public INotifyingSetItem<Faction.FactionFlag> Flags_Property => _Flags;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -74,7 +73,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Faction.FactionFlag> IFactionGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region CrimeGoldMultiplier
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Single> _CrimeGoldMultiplier = NotifyingSetItem.Factory<Single>(markAsSet: false);
         public INotifyingSetItem<Single> CrimeGoldMultiplier_Property => _CrimeGoldMultiplier;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

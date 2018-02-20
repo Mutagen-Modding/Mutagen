@@ -40,7 +40,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Index
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Race.FaceIndex> _Index = NotifyingSetItem.Factory<Race.FaceIndex>(markAsSet: false);
         public INotifyingSetItem<Race.FaceIndex> Index_Property => _Index;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -69,7 +68,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Model> IFacePartGetter.Model_Property => this.Model_Property;
         #endregion
         #region Icon
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
         public INotifyingSetItem<FilePath> Icon_Property => _Icon;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

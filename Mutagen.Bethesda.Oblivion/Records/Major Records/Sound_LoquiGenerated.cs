@@ -41,7 +41,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region File
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<FilePath> _File = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
         public INotifyingSetItem<FilePath> File_Property => _File;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

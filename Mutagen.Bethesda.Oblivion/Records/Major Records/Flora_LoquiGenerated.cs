@@ -69,7 +69,6 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDSetLink<Ingredient> IFloraGetter.Ingredient_Property => this.Ingredient_Property;
         #endregion
         #region Spring
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Spring = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Spring_Property => _Spring;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -84,7 +83,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> IFloraGetter.Spring_Property => this.Spring_Property;
         #endregion
         #region Summer
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Summer = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Summer_Property => _Summer;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -99,7 +97,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> IFloraGetter.Summer_Property => this.Summer_Property;
         #endregion
         #region Fall
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Fall = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Fall_Property => _Fall;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -114,7 +111,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> IFloraGetter.Fall_Property => this.Fall_Property;
         #endregion
         #region Winter
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Winter = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Winter_Property => _Winter;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

@@ -46,7 +46,6 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDLink<ItemAbstract> IItemEntryGetter.Item_Property => this.Item_Property;
         #endregion
         #region Count
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Int32> _Count = NotifyingSetItem.Factory<Int32>(markAsSet: false);
         public INotifyingSetItem<Int32> Count_Property => _Count;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

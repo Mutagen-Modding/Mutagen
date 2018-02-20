@@ -2,10 +2,10 @@
    <ParentRepos>
       <RepoListing>
          <Nickname>CSharpExt</Nickname>
-         <Sha>179b77987b917ad38bdea616f25cd5567f1164b7</Sha>
+         <Sha>e436a4c8fa05dddbc176983f20f588d7ff3ae829</Sha>
          <Path>../CSharpExt</Path>
-         <CommitDate>02-13-2018 16:41:49</CommitDate>
-         <Description>P2Float.  P2Double cleaning</Description>
+         <CommitDate>02-20-2018 16:30:15</CommitDate>
+         <Description>IDictionaryGetter</Description>
          <Author>Justin Swanson</Author>
       </RepoListing>
       <RepoListing>

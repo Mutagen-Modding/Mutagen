@@ -63,7 +63,6 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDSetLink<Script> ILightGetter.Script_Property => this.Script_Property;
         #endregion
         #region Name
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<String> _Name = NotifyingSetItem.Factory<String>(markAsSet: false);
         public INotifyingSetItem<String> Name_Property => _Name;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -78,7 +77,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<String> ILightGetter.Name_Property => this.Name_Property;
         #endregion
         #region Icon
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
         public INotifyingSetItem<FilePath> Icon_Property => _Icon;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -93,7 +91,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<FilePath> ILightGetter.Icon_Property => this.Icon_Property;
         #endregion
         #region Time
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Int32> _Time = NotifyingItem.Factory<Int32>(defaultVal: -1);
         public INotifyingItem<Int32> Time_Property => _Time;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -108,7 +105,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Int32> ILightGetter.Time_Property => this.Time_Property;
         #endregion
         #region Radius
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt32> _Radius = NotifyingItem.Factory<UInt32>();
         public INotifyingItem<UInt32> Radius_Property => _Radius;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -123,7 +119,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<UInt32> ILightGetter.Radius_Property => this.Radius_Property;
         #endregion
         #region Color
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Color> _Color = NotifyingItem.Factory<Color>();
         public INotifyingItem<Color> Color_Property => _Color;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -138,7 +133,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Color> ILightGetter.Color_Property => this.Color_Property;
         #endregion
         #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Light.LightFlag> _Flags = NotifyingItem.Factory<Light.LightFlag>();
         public INotifyingItem<Light.LightFlag> Flags_Property => _Flags;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -153,7 +147,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Light.LightFlag> ILightGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region FalloffExponent
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _FalloffExponent = NotifyingItem.Factory<Single>(defaultVal: 1);
         public INotifyingItem<Single> FalloffExponent_Property => _FalloffExponent;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -168,7 +161,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> ILightGetter.FalloffExponent_Property => this.FalloffExponent_Property;
         #endregion
         #region FOV
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _FOV = NotifyingItem.Factory<Single>(defaultVal: 90);
         public INotifyingItem<Single> FOV_Property => _FOV;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -183,7 +175,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> ILightGetter.FOV_Property => this.FOV_Property;
         #endregion
         #region Value
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt32> _Value = NotifyingItem.Factory<UInt32>();
         public INotifyingItem<UInt32> Value_Property => _Value;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -198,7 +189,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<UInt32> ILightGetter.Value_Property => this.Value_Property;
         #endregion
         #region Weight
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _Weight = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> Weight_Property => _Weight;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -213,7 +203,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> ILightGetter.Weight_Property => this.Weight_Property;
         #endregion
         #region Fade
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Single> _Fade = NotifyingSetItem.Factory<Single>(markAsSet: false);
         public INotifyingSetItem<Single> Fade_Property => _Fade;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

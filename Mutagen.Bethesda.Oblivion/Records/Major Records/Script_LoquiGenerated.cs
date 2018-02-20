@@ -57,7 +57,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<ScriptMetaSummary> IScriptGetter.MetadataSummary_Property => this.MetadataSummary_Property;
         #endregion
         #region CompiledScript
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Byte[]> _CompiledScript = NotifyingSetItem.Factory<Byte[]>(markAsSet: false);
         public INotifyingSetItem<Byte[]> CompiledScript_Property => _CompiledScript;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -72,7 +71,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Byte[]> IScriptGetter.CompiledScript_Property => this.CompiledScript_Property;
         #endregion
         #region SourceCode
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<String> _SourceCode = NotifyingSetItem.Factory<String>(markAsSet: false);
         public INotifyingSetItem<String> SourceCode_Property => _SourceCode;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

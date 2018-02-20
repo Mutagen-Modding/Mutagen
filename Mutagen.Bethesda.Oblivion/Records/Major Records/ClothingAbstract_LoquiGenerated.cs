@@ -55,7 +55,6 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDSetLink<Enchantment> IClothingAbstractGetter.Enchantment_Property => this.Enchantment_Property;
         #endregion
         #region EnchantmentPoints
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<UInt16> _EnchantmentPoints = NotifyingSetItem.Factory<UInt16>(markAsSet: false);
         public INotifyingSetItem<UInt16> EnchantmentPoints_Property => _EnchantmentPoints;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -70,7 +69,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<UInt16> IClothingAbstractGetter.EnchantmentPoints_Property => this.EnchantmentPoints_Property;
         #endregion
         #region BipedFlags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<BipedFlag> _BipedFlags = NotifyingItem.Factory<BipedFlag>();
         public INotifyingItem<BipedFlag> BipedFlags_Property => _BipedFlags;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -85,7 +83,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<BipedFlag> IClothingAbstractGetter.BipedFlags_Property => this.BipedFlags_Property;
         #endregion
         #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<EquipmentFlag> _Flags = NotifyingItem.Factory<EquipmentFlag>();
         public INotifyingItem<EquipmentFlag> Flags_Property => _Flags;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -128,7 +125,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Model> IClothingAbstractGetter.MaleWorldModel_Property => this.MaleWorldModel_Property;
         #endregion
         #region MaleIcon
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<FilePath> _MaleIcon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
         public INotifyingSetItem<FilePath> MaleIcon_Property => _MaleIcon;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -171,7 +167,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Model> IClothingAbstractGetter.FemaleWorldModel_Property => this.FemaleWorldModel_Property;
         #endregion
         #region FemaleIcon
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<FilePath> _FemaleIcon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
         public INotifyingSetItem<FilePath> FemaleIcon_Property => _FemaleIcon;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

@@ -38,7 +38,6 @@ namespace Mutagen.Bethesda
         #endregion
 
         #region MajorRecordFlags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<MajorRecord.MajorRecordFlag> _MajorRecordFlags = NotifyingItem.Factory<MajorRecord.MajorRecordFlag>();
         public INotifyingItem<MajorRecord.MajorRecordFlag> MajorRecordFlags_Property => _MajorRecordFlags;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -53,7 +52,6 @@ namespace Mutagen.Bethesda
         INotifyingItemGetter<MajorRecord.MajorRecordFlag> IMajorRecordGetter.MajorRecordFlags_Property => this.MajorRecordFlags_Property;
         #endregion
         #region FormID
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<FormID> _FormID = NotifyingItem.Factory<FormID>();
         public INotifyingItemGetter<FormID> FormID_Property => _FormID;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -66,7 +64,6 @@ namespace Mutagen.Bethesda
         INotifyingItemGetter<FormID> IMajorRecordGetter.FormID_Property => this.FormID_Property;
         #endregion
         #region Version
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte[]> _Version = NotifyingItem.Factory<Byte[]>(noNullFallback: () => new byte[4]);
         public INotifyingItem<Byte[]> Version_Property => _Version;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -81,7 +78,6 @@ namespace Mutagen.Bethesda
         INotifyingItemGetter<Byte[]> IMajorRecordGetter.Version_Property => this.Version_Property;
         #endregion
         #region EditorID
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<String> _EditorID = NotifyingSetItem.Factory<String>(markAsSet: false);
         public INotifyingSetItem<String> EditorID_Property => _EditorID;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -96,7 +92,6 @@ namespace Mutagen.Bethesda
         INotifyingSetItemGetter<String> IMajorRecordGetter.EditorID_Property => this.EditorID_Property;
         #endregion
         #region RecordType
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<RecordType> _RecordType = NotifyingItem.Factory<RecordType>();
         public INotifyingItemGetter<RecordType> RecordType_Property => _RecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

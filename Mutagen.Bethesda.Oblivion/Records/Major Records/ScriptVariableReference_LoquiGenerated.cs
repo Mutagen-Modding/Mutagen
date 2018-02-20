@@ -40,7 +40,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region VariableIndex
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Int32> _VariableIndex = NotifyingItem.Factory<Int32>();
         public INotifyingItem<Int32> VariableIndex_Property => _VariableIndex;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

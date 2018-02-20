@@ -298,7 +298,7 @@ namespace Mutagen.Bethesda.Tests
         {
             MajorRecordLocator.FileLocations fileLocs = await fileLocationsTask;
 
-            foreach (var rec in mod.MajorRecords)
+            foreach (var rec in mod.MajorRecords.Values)
             {
                 if (rec.MajorRecordFlags.HasFlag(MajorRecord.MajorRecordFlag.Compressed)) continue;
                 AddDynamicProcessorInstructions(
@@ -422,7 +422,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 List<Task> tasks = new List<Task>();
                 int i = 0;
-                foreach (var majorRec in mod.MajorRecords)
+                foreach (var majorRec in mod.MajorRecords.Values)
                 {
                     if (!majorRec.MajorRecordFlags.HasFlag(MajorRecord.MajorRecordFlag.Compressed)) continue;
 

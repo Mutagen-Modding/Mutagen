@@ -55,7 +55,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Model> IMiscellaneousGetter.Model_Property => this.Model_Property;
         #endregion
         #region Icon
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
         public INotifyingSetItem<FilePath> Icon_Property => _Icon;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -77,7 +76,6 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDSetLink<Script> IMiscellaneousGetter.Script_Property => this.Script_Property;
         #endregion
         #region Value
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Int32> _Value = NotifyingItem.Factory<Int32>();
         public INotifyingItem<Int32> Value_Property => _Value;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -92,7 +90,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Int32> IMiscellaneousGetter.Value_Property => this.Value_Property;
         #endregion
         #region Weight
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _Weight = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> Weight_Property => _Weight;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

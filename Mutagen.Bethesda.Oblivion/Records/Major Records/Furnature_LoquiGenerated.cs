@@ -62,7 +62,6 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDSetLink<Script> IFurnatureGetter.Script_Property => this.Script_Property;
         #endregion
         #region MarkerFlags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Byte[]> _MarkerFlags = NotifyingSetItem.Factory<Byte[]>(
             markAsSet: false,
             noNullFallback: () => new byte[4]);

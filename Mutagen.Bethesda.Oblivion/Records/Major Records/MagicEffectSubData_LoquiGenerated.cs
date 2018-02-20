@@ -74,7 +74,6 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDLink<Sound> IMagicEffectSubDataGetter.AreaSound_Property => this.AreaSound_Property;
         #endregion
         #region ConstantEffectEnchantmentFactor
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _ConstantEffectEnchantmentFactor = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> ConstantEffectEnchantmentFactor_Property => _ConstantEffectEnchantmentFactor;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -89,7 +88,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> IMagicEffectSubDataGetter.ConstantEffectEnchantmentFactor_Property => this.ConstantEffectEnchantmentFactor_Property;
         #endregion
         #region ConstantEffectBarterFactor
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _ConstantEffectBarterFactor = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> ConstantEffectBarterFactor_Property => _ConstantEffectBarterFactor;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

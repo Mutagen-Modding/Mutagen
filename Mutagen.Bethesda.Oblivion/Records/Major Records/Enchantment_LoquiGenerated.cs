@@ -41,7 +41,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Type
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Enchantment.EnchantmentType> _Type = NotifyingItem.Factory<Enchantment.EnchantmentType>();
         public INotifyingItem<Enchantment.EnchantmentType> Type_Property => _Type;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -56,7 +55,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Enchantment.EnchantmentType> IEnchantmentGetter.Type_Property => this.Type_Property;
         #endregion
         #region ChargeAmount
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt32> _ChargeAmount = NotifyingItem.Factory<UInt32>();
         public INotifyingItem<UInt32> ChargeAmount_Property => _ChargeAmount;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -71,7 +69,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<UInt32> IEnchantmentGetter.ChargeAmount_Property => this.ChargeAmount_Property;
         #endregion
         #region EnchantCost
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt32> _EnchantCost = NotifyingItem.Factory<UInt32>();
         public INotifyingItem<UInt32> EnchantCost_Property => _EnchantCost;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -86,7 +83,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<UInt32> IEnchantmentGetter.EnchantCost_Property => this.EnchantCost_Property;
         #endregion
         #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Enchantment.Flag> _Flags = NotifyingItem.Factory<Enchantment.Flag>();
         public INotifyingItem<Enchantment.Flag> Flags_Property => _Flags;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

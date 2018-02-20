@@ -47,7 +47,6 @@ namespace Mutagen.Bethesda.Oblivion
         EDIDLink<MagicEffect> IEffectGetter.MagicEffect_Property => this.MagicEffect_Property;
         #endregion
         #region Magnitude
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt32> _Magnitude = NotifyingItem.Factory<UInt32>();
         public INotifyingItem<UInt32> Magnitude_Property => _Magnitude;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -62,7 +61,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<UInt32> IEffectGetter.Magnitude_Property => this.Magnitude_Property;
         #endregion
         #region Area
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt32> _Area = NotifyingItem.Factory<UInt32>();
         public INotifyingItem<UInt32> Area_Property => _Area;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -77,7 +75,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<UInt32> IEffectGetter.Area_Property => this.Area_Property;
         #endregion
         #region Duration
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt32> _Duration = NotifyingItem.Factory<UInt32>();
         public INotifyingItem<UInt32> Duration_Property => _Duration;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -92,7 +89,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<UInt32> IEffectGetter.Duration_Property => this.Duration_Property;
         #endregion
         #region Type
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Effect.EffectType> _Type = NotifyingItem.Factory<Effect.EffectType>();
         public INotifyingItem<Effect.EffectType> Type_Property => _Type;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -107,7 +103,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Effect.EffectType> IEffectGetter.Type_Property => this.Type_Property;
         #endregion
         #region ActorValue
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<ActorValue> _ActorValue = NotifyingItem.Factory<ActorValue>();
         public INotifyingItem<ActorValue> ActorValue_Property => _ActorValue;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

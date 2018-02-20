@@ -41,7 +41,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Type
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Spell.SpellType> _Type = NotifyingItem.Factory<Spell.SpellType>();
         public INotifyingItem<Spell.SpellType> Type_Property => _Type;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -56,7 +55,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Spell.SpellType> ISpellUnleveledGetter.Type_Property => this.Type_Property;
         #endregion
         #region Cost
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt32> _Cost = NotifyingItem.Factory<UInt32>();
         public INotifyingItem<UInt32> Cost_Property => _Cost;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -71,7 +69,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<UInt32> ISpellUnleveledGetter.Cost_Property => this.Cost_Property;
         #endregion
         #region Level
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Spell.SpellLevel> _Level = NotifyingItem.Factory<Spell.SpellLevel>();
         public INotifyingItem<Spell.SpellLevel> Level_Property => _Level;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -86,7 +83,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Spell.SpellLevel> ISpellUnleveledGetter.Level_Property => this.Level_Property;
         #endregion
         #region Flag
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Spell.SpellFlag> _Flag = NotifyingItem.Factory<Spell.SpellFlag>();
         public INotifyingItem<Spell.SpellFlag> Flag_Property => _Flag;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

@@ -55,7 +55,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Model> IHairGetter.Model_Property => this.Model_Property;
         #endregion
         #region Icon
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
         public INotifyingSetItem<FilePath> Icon_Property => _Icon;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -70,7 +69,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<FilePath> IHairGetter.Icon_Property => this.Icon_Property;
         #endregion
         #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Hair.HairFlag> _Flags = NotifyingSetItem.Factory<Hair.HairFlag>(markAsSet: false);
         public INotifyingSetItem<Hair.HairFlag> Flags_Property => _Flags;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

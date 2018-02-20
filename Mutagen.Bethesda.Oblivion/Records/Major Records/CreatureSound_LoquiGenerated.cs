@@ -40,7 +40,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region SoundType
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<CreatureSound.CreatureSoundType> _SoundType = NotifyingSetItem.Factory<CreatureSound.CreatureSoundType>(markAsSet: false);
         public INotifyingSetItem<CreatureSound.CreatureSoundType> SoundType_Property => _SoundType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

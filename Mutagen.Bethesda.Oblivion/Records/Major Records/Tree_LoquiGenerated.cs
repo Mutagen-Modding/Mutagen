@@ -55,7 +55,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Model> ITreeGetter.Model_Property => this.Model_Property;
         #endregion
         #region Icon
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
         public INotifyingSetItem<FilePath> Icon_Property => _Icon;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -88,7 +87,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region LeafCurvature
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _LeafCurvature = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> LeafCurvature_Property => _LeafCurvature;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -103,7 +101,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> ITreeGetter.LeafCurvature_Property => this.LeafCurvature_Property;
         #endregion
         #region MinimumLeafAngle
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _MinimumLeafAngle = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> MinimumLeafAngle_Property => _MinimumLeafAngle;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -118,7 +115,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> ITreeGetter.MinimumLeafAngle_Property => this.MinimumLeafAngle_Property;
         #endregion
         #region MaximumLeafAngle
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _MaximumLeafAngle = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> MaximumLeafAngle_Property => _MaximumLeafAngle;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -133,7 +129,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> ITreeGetter.MaximumLeafAngle_Property => this.MaximumLeafAngle_Property;
         #endregion
         #region BranchDimmingValue
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _BranchDimmingValue = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> BranchDimmingValue_Property => _BranchDimmingValue;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -148,7 +143,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> ITreeGetter.BranchDimmingValue_Property => this.BranchDimmingValue_Property;
         #endregion
         #region LeafDimmingValue
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _LeafDimmingValue = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> LeafDimmingValue_Property => _LeafDimmingValue;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -163,7 +157,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> ITreeGetter.LeafDimmingValue_Property => this.LeafDimmingValue_Property;
         #endregion
         #region ShadowRadius
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Int32> _ShadowRadius = NotifyingItem.Factory<Int32>();
         public INotifyingItem<Int32> ShadowRadius_Property => _ShadowRadius;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -178,7 +171,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Int32> ITreeGetter.ShadowRadius_Property => this.ShadowRadius_Property;
         #endregion
         #region RockingSpeed
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _RockingSpeed = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> RockingSpeed_Property => _RockingSpeed;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -193,7 +185,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> ITreeGetter.RockingSpeed_Property => this.RockingSpeed_Property;
         #endregion
         #region RustleSpeed
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _RustleSpeed = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> RustleSpeed_Property => _RustleSpeed;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -208,7 +199,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> ITreeGetter.RustleSpeed_Property => this.RustleSpeed_Property;
         #endregion
         #region BillboardWidth
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _BillboardWidth = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> BillboardWidth_Property => _BillboardWidth;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -223,7 +213,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> ITreeGetter.BillboardWidth_Property => this.BillboardWidth_Property;
         #endregion
         #region BillboardHeight
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _BillboardHeight = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> BillboardHeight_Property => _BillboardHeight;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

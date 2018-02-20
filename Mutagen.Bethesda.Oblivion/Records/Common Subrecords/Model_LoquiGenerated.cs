@@ -39,7 +39,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region File
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<FilePath> _File = NotifyingItem.Factory<FilePath>();
         public INotifyingItem<FilePath> File_Property => _File;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -54,7 +53,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<FilePath> IModelGetter.File_Property => this.File_Property;
         #endregion
         #region BoundRadius
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _BoundRadius = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> BoundRadius_Property => _BoundRadius;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -69,7 +67,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> IModelGetter.BoundRadius_Property => this.BoundRadius_Property;
         #endregion
         #region Hashes
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Byte[]> _Hashes = NotifyingSetItem.Factory<Byte[]>(markAsSet: false);
         public INotifyingSetItem<Byte[]> Hashes_Property => _Hashes;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

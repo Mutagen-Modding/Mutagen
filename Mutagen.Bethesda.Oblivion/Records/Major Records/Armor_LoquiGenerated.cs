@@ -41,7 +41,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region ArmorValue
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _ArmorValue = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> ArmorValue_Property => _ArmorValue;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -56,7 +55,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> IArmorGetter.ArmorValue_Property => this.ArmorValue_Property;
         #endregion
         #region Value
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt32> _Value = NotifyingItem.Factory<UInt32>();
         public INotifyingItem<UInt32> Value_Property => _Value;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -71,7 +69,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<UInt32> IArmorGetter.Value_Property => this.Value_Property;
         #endregion
         #region Health
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt32> _Health = NotifyingItem.Factory<UInt32>();
         public INotifyingItem<UInt32> Health_Property => _Health;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -86,7 +83,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<UInt32> IArmorGetter.Health_Property => this.Health_Property;
         #endregion
         #region Weight
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _Weight = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> Weight_Property => _Weight;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

@@ -39,7 +39,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Material
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<HavokData.MaterialType> _Material = NotifyingItem.Factory<HavokData.MaterialType>();
         public INotifyingItem<HavokData.MaterialType> Material_Property => _Material;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -54,7 +53,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<HavokData.MaterialType> IHavokDataGetter.Material_Property => this.Material_Property;
         #endregion
         #region Friction
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Friction = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Friction_Property => _Friction;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -69,7 +67,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> IHavokDataGetter.Friction_Property => this.Friction_Property;
         #endregion
         #region Restitution
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Restitution = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Restitution_Property => _Restitution;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

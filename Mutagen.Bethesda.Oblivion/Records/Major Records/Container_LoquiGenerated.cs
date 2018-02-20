@@ -80,7 +80,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Container.ContainerFlag> _Flags = NotifyingItem.Factory<Container.ContainerFlag>();
         public INotifyingItem<Container.ContainerFlag> Flags_Property => _Flags;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -95,7 +94,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Container.ContainerFlag> IContainerGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region Weight
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _Weight = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> Weight_Property => _Weight;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

@@ -46,7 +46,6 @@ namespace Mutagen.Bethesda
         }
 
         #region ContainedRecordType
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<String> _ContainedRecordType = NotifyingItem.Factory<String>();
         public INotifyingItemGetter<String> ContainedRecordType_Property => _ContainedRecordType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -59,7 +58,6 @@ namespace Mutagen.Bethesda
         INotifyingItemGetter<String> IGroupGetter<T>.ContainedRecordType_Property => this.ContainedRecordType_Property;
         #endregion
         #region GroupType
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<GroupTypeEnum> _GroupType = NotifyingItem.Factory<GroupTypeEnum>();
         public INotifyingItem<GroupTypeEnum> GroupType_Property => _GroupType;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -74,7 +72,6 @@ namespace Mutagen.Bethesda
         INotifyingItemGetter<GroupTypeEnum> IGroupGetter<T>.GroupType_Property => this.GroupType_Property;
         #endregion
         #region LastModified
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte[]> _LastModified = NotifyingItem.Factory<Byte[]>(noNullFallback: () => new byte[4]);
         public INotifyingItem<Byte[]> LastModified_Property => _LastModified;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

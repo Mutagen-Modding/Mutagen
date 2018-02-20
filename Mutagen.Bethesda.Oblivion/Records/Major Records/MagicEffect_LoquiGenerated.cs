@@ -41,7 +41,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Description
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<String> _Description = NotifyingSetItem.Factory<String>(markAsSet: false);
         public INotifyingSetItem<String> Description_Property => _Description;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -56,7 +55,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<String> IMagicEffectGetter.Description_Property => this.Description_Property;
         #endregion
         #region Icon
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<FilePath> _Icon = NotifyingSetItem.Factory<FilePath>(markAsSet: false);
         public INotifyingSetItem<FilePath> Icon_Property => _Icon;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -85,7 +83,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Model> IMagicEffectGetter.Model_Property => this.Model_Property;
         #endregion
         #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<MagicEffect.MagicFlag> _Flags = NotifyingItem.Factory<MagicEffect.MagicFlag>();
         public INotifyingItem<MagicEffect.MagicFlag> Flags_Property => _Flags;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -100,7 +97,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<MagicEffect.MagicFlag> IMagicEffectGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region BaseCost
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _BaseCost = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> BaseCost_Property => _BaseCost;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -115,7 +111,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> IMagicEffectGetter.BaseCost_Property => this.BaseCost_Property;
         #endregion
         #region Unused
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte[]> _Unused = NotifyingItem.Factory<Byte[]>(noNullFallback: () => new byte[4]);
         public INotifyingItem<Byte[]> Unused_Property => _Unused;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -130,7 +125,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte[]> IMagicEffectGetter.Unused_Property => this.Unused_Property;
         #endregion
         #region MagicSchool
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<MagicSchool> _MagicSchool = NotifyingItem.Factory<MagicSchool>();
         public INotifyingItem<MagicSchool> MagicSchool_Property => _MagicSchool;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -145,7 +139,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<MagicSchool> IMagicEffectGetter.MagicSchool_Property => this.MagicSchool_Property;
         #endregion
         #region Resistance
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Resistance> _Resistance = NotifyingItem.Factory<Resistance>();
         public INotifyingItem<Resistance> Resistance_Property => _Resistance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -160,7 +153,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Resistance> IMagicEffectGetter.Resistance_Property => this.Resistance_Property;
         #endregion
         #region CounterEffectCount
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt32> _CounterEffectCount = NotifyingItem.Factory<UInt32>();
         public INotifyingItem<UInt32> CounterEffectCount_Property => _CounterEffectCount;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -182,7 +174,6 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDLink<Light> IMagicEffectGetter.Light_Property => this.Light_Property;
         #endregion
         #region ProjectileSpeed
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _ProjectileSpeed = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> ProjectileSpeed_Property => _ProjectileSpeed;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

@@ -39,7 +39,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Fluff
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte[]> _Fluff = NotifyingItem.Factory<Byte[]>(noNullFallback: () => new byte[4]);
         public INotifyingItem<Byte[]> Fluff_Property => _Fluff;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -54,7 +53,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte[]> IScriptMetaSummaryGetter.Fluff_Property => this.Fluff_Property;
         #endregion
         #region RefCount
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt32> _RefCount = NotifyingItem.Factory<UInt32>();
         public INotifyingItem<UInt32> RefCount_Property => _RefCount;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -69,7 +67,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<UInt32> IScriptMetaSummaryGetter.RefCount_Property => this.RefCount_Property;
         #endregion
         #region CompiledSize
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Int32> _CompiledSize = NotifyingItem.Factory<Int32>();
         public INotifyingItemGetter<Int32> CompiledSize_Property => _CompiledSize;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -82,7 +79,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Int32> IScriptMetaSummaryGetter.CompiledSize_Property => this.CompiledSize_Property;
         #endregion
         #region VariableCount
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt32> _VariableCount = NotifyingItem.Factory<UInt32>();
         public INotifyingItem<UInt32> VariableCount_Property => _VariableCount;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -97,7 +93,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<UInt32> IScriptMetaSummaryGetter.VariableCount_Property => this.VariableCount_Property;
         #endregion
         #region Type
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Script.ScriptType> _Type = NotifyingItem.Factory<Script.ScriptType>();
         public INotifyingItem<Script.ScriptType> Type_Property => _Type;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

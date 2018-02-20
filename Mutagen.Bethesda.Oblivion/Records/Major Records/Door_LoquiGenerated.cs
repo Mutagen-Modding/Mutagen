@@ -83,7 +83,6 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDSetLink<Sound> IDoorGetter.LoopSound_Property => this.LoopSound_Property;
         #endregion
         #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<Door.DoorFlag> _Flags = NotifyingSetItem.Factory<Door.DoorFlag>(markAsSet: false);
         public INotifyingSetItem<Door.DoorFlag> Flags_Property => _Flags;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

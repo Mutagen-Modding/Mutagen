@@ -55,7 +55,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingSetItemGetter<Model> IGrassGetter.Model_Property => this.Model_Property;
         #endregion
         #region Density
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _Density = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> Density_Property => _Density;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -70,7 +69,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> IGrassGetter.Density_Property => this.Density_Property;
         #endregion
         #region MinSlope
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _MinSlope = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> MinSlope_Property => _MinSlope;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -85,7 +83,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> IGrassGetter.MinSlope_Property => this.MinSlope_Property;
         #endregion
         #region MaxSlope
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _MaxSlope = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> MaxSlope_Property => _MaxSlope;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -100,7 +97,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Byte> IGrassGetter.MaxSlope_Property => this.MaxSlope_Property;
         #endregion
         #region UnitFromWaterAmount
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<UInt16> _UnitFromWaterAmount = NotifyingItem.Factory<UInt16>();
         public INotifyingItem<UInt16> UnitFromWaterAmount_Property => _UnitFromWaterAmount;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -115,7 +111,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<UInt16> IGrassGetter.UnitFromWaterAmount_Property => this.UnitFromWaterAmount_Property;
         #endregion
         #region UnitFromWaterMode
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Grass.UnitFromWaterType> _UnitFromWaterMode = NotifyingItem.Factory<Grass.UnitFromWaterType>();
         public INotifyingItem<Grass.UnitFromWaterType> UnitFromWaterMode_Property => _UnitFromWaterMode;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -130,7 +125,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Grass.UnitFromWaterType> IGrassGetter.UnitFromWaterMode_Property => this.UnitFromWaterMode_Property;
         #endregion
         #region PositionRange
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _PositionRange = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> PositionRange_Property => _PositionRange;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -145,7 +139,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> IGrassGetter.PositionRange_Property => this.PositionRange_Property;
         #endregion
         #region HeightRange
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _HeightRange = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> HeightRange_Property => _HeightRange;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -160,7 +153,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> IGrassGetter.HeightRange_Property => this.HeightRange_Property;
         #endregion
         #region ColorRange
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _ColorRange = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> ColorRange_Property => _ColorRange;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -175,7 +167,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> IGrassGetter.ColorRange_Property => this.ColorRange_Property;
         #endregion
         #region WavePeriod
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Single> _WavePeriod = NotifyingItem.Factory<Single>();
         public INotifyingItem<Single> WavePeriod_Property => _WavePeriod;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -190,7 +181,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Single> IGrassGetter.WavePeriod_Property => this.WavePeriod_Property;
         #endregion
         #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Grass.GrassFlag> _Flags = NotifyingItem.Factory<Grass.GrassFlag>();
         public INotifyingItem<Grass.GrassFlag> Flags_Property => _Flags;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

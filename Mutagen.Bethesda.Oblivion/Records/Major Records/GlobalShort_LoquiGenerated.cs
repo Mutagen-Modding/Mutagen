@@ -41,7 +41,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Data
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Int16> _Data = NotifyingItem.Factory<Int16>();
         public INotifyingItemGetter<Int16> Data_Property => _Data;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

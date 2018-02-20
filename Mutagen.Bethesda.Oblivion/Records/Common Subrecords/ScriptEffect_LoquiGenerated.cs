@@ -46,7 +46,6 @@ namespace Mutagen.Bethesda.Oblivion
         FormIDLink<Script> IScriptEffectGetter.Script_Property => this.Script_Property;
         #endregion
         #region MagicSchool
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<MagicSchool> _MagicSchool = NotifyingItem.Factory<MagicSchool>();
         public INotifyingItem<MagicSchool> MagicSchool_Property => _MagicSchool;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -68,7 +67,6 @@ namespace Mutagen.Bethesda.Oblivion
         EDIDLink<MagicEffect> IScriptEffectGetter.VisualEffect_Property => this.VisualEffect_Property;
         #endregion
         #region Flags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<ScriptEffect.Flag> _Flags = NotifyingItem.Factory<ScriptEffect.Flag>();
         public INotifyingItem<ScriptEffect.Flag> Flags_Property => _Flags;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -83,7 +81,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<ScriptEffect.Flag> IScriptEffectGetter.Flags_Property => this.Flags_Property;
         #endregion
         #region Name
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingSetItem<String> _Name = NotifyingSetItem.Factory<String>(markAsSet: false);
         public INotifyingSetItem<String> Name_Property => _Name;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

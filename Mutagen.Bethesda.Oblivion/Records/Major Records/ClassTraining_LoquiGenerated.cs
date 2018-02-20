@@ -39,7 +39,6 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region TrainedSkill
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Skill> _TrainedSkill = NotifyingItem.Factory<Skill>();
         public INotifyingItem<Skill> TrainedSkill_Property => _TrainedSkill;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -54,7 +53,6 @@ namespace Mutagen.Bethesda.Oblivion
         INotifyingItemGetter<Skill> IClassTrainingGetter.TrainedSkill_Property => this.TrainedSkill_Property;
         #endregion
         #region MaximumTrainingLevel
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte> _MaximumTrainingLevel = NotifyingItem.Factory<Byte>();
         public INotifyingItem<Byte> MaximumTrainingLevel_Property => _MaximumTrainingLevel;
         public Byte MaximumTrainingLevel
@@ -67,7 +65,6 @@ namespace Mutagen.Bethesda.Oblivion
         public static RangeUInt8 MaximumTrainingLevel_Range = new RangeUInt8(0, 100);
         #endregion
         #region Fluff
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected readonly INotifyingItem<Byte[]> _Fluff = NotifyingItem.Factory<Byte[]>(noNullFallback: () => new byte[2]);
         public INotifyingItem<Byte[]> Fluff_Property => _Fluff;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

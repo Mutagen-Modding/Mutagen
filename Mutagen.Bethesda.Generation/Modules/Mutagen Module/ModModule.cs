@@ -13,8 +13,8 @@ namespace Mutagen.Bethesda.Generation
         public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
         {
             if (obj.GetObjectData().ObjectType != ObjectType.Mod) return;
-            fg.AppendLine($"private Dictionary<FormID, MajorRecord> _majorRecords = new Dictionary<FormID, MajorRecord>();");
-            fg.AppendLine($"public IEnumerable<MajorRecord> MajorRecords => _majorRecords.Values;");
+            fg.AppendLine($"private NotifyingDictionary<FormID, MajorRecord> _majorRecords = new NotifyingDictionary<FormID, MajorRecord>();");
+            fg.AppendLine($"public INotifyingDictionaryGetter<FormID, MajorRecord> MajorRecords => _majorRecords;");
             fg.AppendLine($"public MajorRecord this[FormID id]");
             using (new BraceWrapper(fg))
             {
