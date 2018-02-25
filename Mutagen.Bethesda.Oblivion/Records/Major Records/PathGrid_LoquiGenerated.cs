@@ -13,6 +13,8 @@ using Noggog;
 using Noggog.Notifying;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Oblivion;
+using Mutagen.Bethesda;
+using Mutagen.Bethesda.Internals;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -20,73 +22,71 @@ using Noggog.Xml;
 using Loqui.Xml;
 using System.Diagnostics;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 
 namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public partial class RegionDataSounds : RegionData, IRegionDataSounds, ILoquiObjectSetter, IEquatable<RegionDataSounds>
+    public partial class PathGrid : MajorRecord, IPathGrid, ILoquiObjectSetter, IEquatable<PathGrid>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => RegionDataSounds_Registration.Instance;
-        public new static RegionDataSounds_Registration Registration => RegionDataSounds_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => PathGrid_Registration.Instance;
+        public new static PathGrid_Registration Registration => PathGrid_Registration.Instance;
 
         #region Ctor
-        public RegionDataSounds()
+        public PathGrid()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region MusicType
+        #region Points
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<MusicType> _MusicType = NotifyingSetItem.Factory<MusicType>(markAsSet: false);
-        public INotifyingSetItem<MusicType> MusicType_Property => _MusicType;
+        private readonly INotifyingList<PathGridPoint> _Points = new NotifyingList<PathGridPoint>();
+        public INotifyingList<PathGridPoint> Points => _Points;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public MusicType MusicType
+        public IEnumerable<PathGridPoint> PointsEnumerable
         {
-            get => this._MusicType.Item;
-            set => this._MusicType.Set(value);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<MusicType> IRegionDataSounds.MusicType_Property => this.MusicType_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<MusicType> IRegionDataSoundsGetter.MusicType_Property => this.MusicType_Property;
-        #endregion
-        #region Sounds
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private readonly INotifyingList<RegionSound> _Sounds = new NotifyingList<RegionSound>();
-        public INotifyingList<RegionSound> Sounds => _Sounds;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public IEnumerable<RegionSound> SoundsEnumerable
-        {
-            get => _Sounds;
-            set => _Sounds.SetTo(value);
+            get => _Points;
+            set => _Points.SetTo(value);
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingList<RegionSound> IRegionDataSounds.Sounds => _Sounds;
+        INotifyingList<PathGridPoint> IPathGrid.Points => _Points;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingListGetter<RegionSound> IRegionDataSoundsGetter.Sounds => _Sounds;
+        INotifyingListGetter<PathGridPoint> IPathGridGetter.Points => _Points;
         #endregion
 
+        #endregion
+        #region Unknown
+        protected INotifyingSetItem<Byte[]> _Unknown = NotifyingSetItem.Factory<Byte[]>(markAsSet: false);
+        public INotifyingSetItem<Byte[]> Unknown_Property => _Unknown;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public Byte[] Unknown
+        {
+            get => this._Unknown.Item;
+            set => this._Unknown.Set(value);
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingSetItem<Byte[]> IPathGrid.Unknown_Property => this.Unknown_Property;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        INotifyingSetItemGetter<Byte[]> IPathGridGetter.Unknown_Property => this.Unknown_Property;
         #endregion
 
         #region Loqui Getter Interface
 
-        protected override object GetNthObject(ushort index) => RegionDataSoundsCommon.GetNthObject(index, this);
+        protected override object GetNthObject(ushort index) => PathGridCommon.GetNthObject(index, this);
 
-        protected override bool GetNthObjectHasBeenSet(ushort index) => RegionDataSoundsCommon.GetNthObjectHasBeenSet(index, this);
+        protected override bool GetNthObjectHasBeenSet(ushort index) => PathGridCommon.GetNthObjectHasBeenSet(index, this);
 
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => RegionDataSoundsCommon.UnsetNthObject(index, this, cmds);
+        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => PathGridCommon.UnsetNthObject(index, this, cmds);
 
         #endregion
 
         #region Loqui Interface
         protected override void SetNthObjectHasBeenSet(ushort index, bool on)
         {
-            RegionDataSoundsCommon.SetNthObjectHasBeenSet(index, on, this);
+            PathGridCommon.SetNthObjectHasBeenSet(index, on, this);
         }
 
         #endregion
@@ -94,49 +94,49 @@ namespace Mutagen.Bethesda.Oblivion
         #region To String
         public override string ToString()
         {
-            return RegionDataSoundsCommon.ToString(this, printMask: null);
+            return PathGridCommon.ToString(this, printMask: null);
         }
 
         public string ToString(
             string name = null,
-            RegionDataSounds_Mask<bool> printMask = null)
+            PathGrid_Mask<bool> printMask = null)
         {
-            return RegionDataSoundsCommon.ToString(this, name: name, printMask: printMask);
+            return PathGridCommon.ToString(this, name: name, printMask: printMask);
         }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            RegionDataSoundsCommon.ToString(this, fg, name: name, printMask: null);
+            PathGridCommon.ToString(this, fg, name: name, printMask: null);
         }
 
         #endregion
 
-        public new RegionDataSounds_Mask<bool> GetHasBeenSetMask()
+        public new PathGrid_Mask<bool> GetHasBeenSetMask()
         {
-            return RegionDataSoundsCommon.GetHasBeenSetMask(this);
+            return PathGridCommon.GetHasBeenSetMask(this);
         }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is RegionDataSounds rhs)) return false;
+            if (!(obj is PathGrid rhs)) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(RegionDataSounds rhs)
+        public bool Equals(PathGrid rhs)
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (MusicType_Property.HasBeenSet != rhs.MusicType_Property.HasBeenSet) return false;
-            if (MusicType_Property.HasBeenSet)
+            if (Points.HasBeenSet != rhs.Points.HasBeenSet) return false;
+            if (Points.HasBeenSet)
             {
-                if (MusicType != rhs.MusicType) return false;
+                if (!Points.SequenceEqual(rhs.Points)) return false;
             }
-            if (Sounds.HasBeenSet != rhs.Sounds.HasBeenSet) return false;
-            if (Sounds.HasBeenSet)
+            if (Unknown_Property.HasBeenSet != rhs.Unknown_Property.HasBeenSet) return false;
+            if (Unknown_Property.HasBeenSet)
             {
-                if (!Sounds.SequenceEqual(rhs.Sounds)) return false;
+                if (!Unknown.EqualsFast(rhs.Unknown)) return false;
             }
             return true;
         }
@@ -144,13 +144,13 @@ namespace Mutagen.Bethesda.Oblivion
         public override int GetHashCode()
         {
             int ret = 0;
-            if (MusicType_Property.HasBeenSet)
+            if (Points.HasBeenSet)
             {
-                ret = HashHelper.GetHashCode(MusicType).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(Points).CombineHashCode(ret);
             }
-            if (Sounds.HasBeenSet)
+            if (Unknown_Property.HasBeenSet)
             {
-                ret = HashHelper.GetHashCode(Sounds).CombineHashCode(ret);
+                ret = HashHelper.GetHashCode(Unknown).CombineHashCode(ret);
             }
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
@@ -162,7 +162,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region XML Translation
         #region XML Create
         [DebuggerStepThrough]
-        public new static RegionDataSounds Create_XML(XElement root)
+        public new static PathGrid Create_XML(XElement root)
         {
             return Create_XML(
                 root: root,
@@ -171,9 +171,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static RegionDataSounds Create_XML(
+        public static PathGrid Create_XML(
             XElement root,
-            out RegionDataSounds_ErrorMask errorMask)
+            out PathGrid_ErrorMask errorMask)
         {
             return Create_XML(
                 root: root,
@@ -182,10 +182,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static RegionDataSounds Create_XML(
+        public static PathGrid Create_XML(
             XElement root,
             bool doMasks,
-            out RegionDataSounds_ErrorMask errorMask)
+            out PathGrid_ErrorMask errorMask)
         {
             var ret = Create_XML(
                 root: root,
@@ -195,26 +195,26 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static (RegionDataSounds Object, RegionDataSounds_ErrorMask ErrorMask) Create_XML(
+        public static (PathGrid Object, PathGrid_ErrorMask ErrorMask) Create_XML(
             XElement root,
             bool doMasks)
         {
-            RegionDataSounds_ErrorMask errMaskRet = null;
+            PathGrid_ErrorMask errMaskRet = null;
             var ret = Create_XML_Internal(
                 root: root,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new RegionDataSounds_ErrorMask()) : default(Func<RegionDataSounds_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new PathGrid_ErrorMask()) : default(Func<PathGrid_ErrorMask>));
             return (ret, errMaskRet);
         }
 
-        public static RegionDataSounds Create_XML(string path)
+        public static PathGrid Create_XML(string path)
         {
             var root = XDocument.Load(path).Root;
             return Create_XML(root: root);
         }
 
-        public static RegionDataSounds Create_XML(
+        public static PathGrid Create_XML(
             string path,
-            out RegionDataSounds_ErrorMask errorMask)
+            out PathGrid_ErrorMask errorMask)
         {
             var root = XDocument.Load(path).Root;
             return Create_XML(
@@ -222,15 +222,15 @@ namespace Mutagen.Bethesda.Oblivion
                 errorMask: out errorMask);
         }
 
-        public static RegionDataSounds Create_XML(Stream stream)
+        public static PathGrid Create_XML(Stream stream)
         {
             var root = XDocument.Load(stream).Root;
             return Create_XML(root: root);
         }
 
-        public static RegionDataSounds Create_XML(
+        public static PathGrid Create_XML(
             Stream stream,
-            out RegionDataSounds_ErrorMask errorMask)
+            out PathGrid_ErrorMask errorMask)
         {
             var root = XDocument.Load(stream).Root;
             return Create_XML(
@@ -245,7 +245,7 @@ namespace Mutagen.Bethesda.Oblivion
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<RegionDataSounds, RegionDataSounds_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<PathGrid, PathGrid_ErrorMask>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
@@ -256,10 +256,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void CopyIn_XML(
             XElement root,
-            out RegionDataSounds_ErrorMask errorMask,
+            out PathGrid_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<RegionDataSounds, RegionDataSounds_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<PathGrid, PathGrid_ErrorMask>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
@@ -280,7 +280,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_XML(
             string path,
-            out RegionDataSounds_ErrorMask errorMask,
+            out PathGrid_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(path).Root;
@@ -302,7 +302,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_XML(
             Stream stream,
-            out RegionDataSounds_ErrorMask errorMask,
+            out PathGrid_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(stream).Root;
@@ -314,12 +314,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void CopyIn_XML(
             XElement root,
-            out RegionData_ErrorMask errorMask,
+            out MajorRecord_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
             this.CopyIn_XML(
                 root: root,
-                errorMask: out RegionDataSounds_ErrorMask errMask,
+                errorMask: out PathGrid_ErrorMask errMask,
                 cmds: cmds);
             errorMask = errMask;
         }
@@ -329,10 +329,10 @@ namespace Mutagen.Bethesda.Oblivion
         #region XML Write
         public virtual void Write_XML(
             XmlWriter writer,
-            out RegionDataSounds_ErrorMask errorMask,
+            out PathGrid_ErrorMask errorMask,
             string name = null)
         {
-            errorMask = (RegionDataSounds_ErrorMask)this.Write_XML_Internal(
+            errorMask = (PathGrid_ErrorMask)this.Write_XML_Internal(
                 writer: writer,
                 name: name,
                 doMasks: true);
@@ -340,7 +340,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_XML(
             string path,
-            out RegionDataSounds_ErrorMask errorMask,
+            out PathGrid_ErrorMask errorMask,
             string name = null)
         {
             using (var writer = new XmlTextWriter(path, Encoding.ASCII))
@@ -356,7 +356,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_XML(
             Stream stream,
-            out RegionDataSounds_ErrorMask errorMask,
+            out PathGrid_ErrorMask errorMask,
             string name = null)
         {
             using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
@@ -413,7 +413,7 @@ namespace Mutagen.Bethesda.Oblivion
             bool doMasks,
             string name = null)
         {
-            RegionDataSoundsCommon.Write_XML(
+            PathGridCommon.Write_XML(
                 writer: writer,
                 item: this,
                 doMasks: doMasks,
@@ -422,11 +422,11 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static RegionDataSounds Create_XML_Internal(
+        private static PathGrid Create_XML_Internal(
             XElement root,
-            Func<RegionDataSounds_ErrorMask> errorMask)
+            Func<PathGrid_ErrorMask> errorMask)
         {
-            var ret = new RegionDataSounds();
+            var ret = new PathGrid();
             try
             {
                 foreach (var elem in root.Elements())
@@ -447,36 +447,35 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         protected static void Fill_XML_Internal(
-            RegionDataSounds item,
+            PathGrid item,
             XElement root,
             string name,
-            Func<RegionDataSounds_ErrorMask> errorMask)
+            Func<PathGrid_ErrorMask> errorMask)
         {
             switch (name)
             {
-                case "MusicType":
-                    item._MusicType.SetIfSucceeded(EnumXmlTranslation<MusicType>.Instance.Parse(
-                        root,
-                        nullable: false,
-                        fieldIndex: (int)RegionDataSounds_FieldIndex.MusicType,
-                        errorMask: errorMask).Bubble((o) => o.Value));
-                    break;
-                case "Sounds":
-                    item._Sounds.SetIfSucceeded(ListXmlTranslation<RegionSound, MaskItem<Exception, RegionSound_ErrorMask>>.Instance.Parse(
+                case "Points":
+                    item._Points.SetIfSucceeded(ListXmlTranslation<PathGridPoint, MaskItem<Exception, PathGridPoint_ErrorMask>>.Instance.Parse(
                         root: root,
-                        fieldIndex: (int)RegionDataSounds_FieldIndex.Sounds,
+                        fieldIndex: (int)PathGrid_FieldIndex.Points,
                         errorMask: errorMask,
-                        transl: (XElement r, bool listDoMasks, out MaskItem<Exception, RegionSound_ErrorMask> listSubMask) =>
+                        transl: (XElement r, bool listDoMasks, out MaskItem<Exception, PathGridPoint_ErrorMask> listSubMask) =>
                         {
-                            return LoquiXmlTranslation<RegionSound, RegionSound_ErrorMask>.Instance.Parse(
+                            return LoquiXmlTranslation<PathGridPoint, PathGridPoint_ErrorMask>.Instance.Parse(
                                 root: r,
                                 doMasks: listDoMasks,
                                 errorMask: out listSubMask);
                         }
                         ));
                     break;
+                case "Unknown":
+                    item._Unknown.SetIfSucceeded(ByteArrayXmlTranslation.Instance.Parse(
+                        root,
+                        fieldIndex: (int)PathGrid_FieldIndex.Unknown,
+                        errorMask: errorMask));
+                    break;
                 default:
-                    RegionData.Fill_XML_Internal(
+                    MajorRecord.Fill_XML_Internal(
                         item: item,
                         root: root,
                         name: name,
@@ -490,7 +489,7 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]
-        public new static RegionDataSounds Create_Binary(MutagenFrame frame)
+        public new static PathGrid Create_Binary(MutagenFrame frame)
         {
             return Create_Binary(
                 frame: frame,
@@ -499,9 +498,9 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static RegionDataSounds Create_Binary(
+        public static PathGrid Create_Binary(
             MutagenFrame frame,
-            out RegionDataSounds_ErrorMask errorMask)
+            out PathGrid_ErrorMask errorMask)
         {
             return Create_Binary(
                 frame: frame,
@@ -510,10 +509,10 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static RegionDataSounds Create_Binary(
+        public static PathGrid Create_Binary(
             MutagenFrame frame,
             bool doMasks,
-            out RegionDataSounds_ErrorMask errorMask)
+            out PathGrid_ErrorMask errorMask)
         {
             var ret = Create_Binary(
                 frame: frame,
@@ -524,20 +523,20 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         [DebuggerStepThrough]
-        public static (RegionDataSounds Object, RegionDataSounds_ErrorMask ErrorMask) Create_Binary(
+        public static (PathGrid Object, PathGrid_ErrorMask ErrorMask) Create_Binary(
             MutagenFrame frame,
             RecordTypeConverter recordTypeConverter,
             bool doMasks)
         {
-            RegionDataSounds_ErrorMask errMaskRet = null;
+            PathGrid_ErrorMask errMaskRet = null;
             var ret = Create_Binary_Internal(
                 frame: frame,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new RegionDataSounds_ErrorMask()) : default(Func<RegionDataSounds_ErrorMask>),
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new PathGrid_ErrorMask()) : default(Func<PathGrid_ErrorMask>),
                 recordTypeConverter: recordTypeConverter);
             return (ret, errMaskRet);
         }
 
-        public static RegionDataSounds Create_Binary(string path)
+        public static PathGrid Create_Binary(string path)
         {
             using (var reader = new MutagenReader(path))
             {
@@ -546,9 +545,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public static RegionDataSounds Create_Binary(
+        public static PathGrid Create_Binary(
             string path,
-            out RegionDataSounds_ErrorMask errorMask)
+            out PathGrid_ErrorMask errorMask)
         {
             using (var reader = new MutagenReader(path))
             {
@@ -559,7 +558,7 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public static RegionDataSounds Create_Binary(Stream stream)
+        public static PathGrid Create_Binary(Stream stream)
         {
             using (var reader = new MutagenReader(stream))
             {
@@ -568,9 +567,9 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
-        public static RegionDataSounds Create_Binary(
+        public static PathGrid Create_Binary(
             Stream stream,
-            out RegionDataSounds_ErrorMask errorMask)
+            out PathGrid_ErrorMask errorMask)
         {
             using (var reader = new MutagenReader(stream))
             {
@@ -588,7 +587,7 @@ namespace Mutagen.Bethesda.Oblivion
             MutagenFrame frame,
             NotifyingFireParameters cmds = null)
         {
-            LoquiBinaryTranslation<RegionDataSounds, RegionDataSounds_ErrorMask>.Instance.CopyIn(
+            LoquiBinaryTranslation<PathGrid, PathGrid_ErrorMask>.Instance.CopyIn(
                 frame: frame,
                 item: this,
                 skipProtected: true,
@@ -599,10 +598,10 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void CopyIn_Binary(
             MutagenFrame frame,
-            out RegionDataSounds_ErrorMask errorMask,
+            out PathGrid_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiBinaryTranslation<RegionDataSounds, RegionDataSounds_ErrorMask>.Instance.CopyIn(
+            LoquiBinaryTranslation<PathGrid, PathGrid_ErrorMask>.Instance.CopyIn(
                 frame: frame,
                 item: this,
                 skipProtected: true,
@@ -626,7 +625,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_Binary(
             string path,
-            out RegionDataSounds_ErrorMask errorMask,
+            out PathGrid_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
             using (var reader = new MutagenReader(path))
@@ -654,7 +653,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public void CopyIn_Binary(
             Stream stream,
-            out RegionDataSounds_ErrorMask errorMask,
+            out PathGrid_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
             using (var reader = new MutagenReader(stream))
@@ -669,12 +668,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         public override void CopyIn_Binary(
             MutagenFrame frame,
-            out RegionData_ErrorMask errorMask,
+            out MajorRecord_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
             this.CopyIn_Binary(
                 frame: frame,
-                errorMask: out RegionDataSounds_ErrorMask errMask,
+                errorMask: out PathGrid_ErrorMask errMask,
                 cmds: cmds);
             errorMask = errMask;
         }
@@ -684,9 +683,9 @@ namespace Mutagen.Bethesda.Oblivion
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
-            out RegionDataSounds_ErrorMask errorMask)
+            out PathGrid_ErrorMask errorMask)
         {
-            errorMask = (RegionDataSounds_ErrorMask)this.Write_Binary_Internal(
+            errorMask = (PathGrid_ErrorMask)this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
                 doMasks: true);
@@ -694,7 +693,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             string path,
-            out RegionDataSounds_ErrorMask errorMask)
+            out PathGrid_ErrorMask errorMask)
         {
             using (var writer = new MutagenWriter(path))
             {
@@ -706,7 +705,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public virtual void Write_Binary(
             Stream stream,
-            out RegionDataSounds_ErrorMask errorMask)
+            out PathGrid_ErrorMask errorMask)
         {
             using (var writer = new MutagenWriter(stream))
             {
@@ -745,7 +744,7 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter recordTypeConverter,
             bool doMasks)
         {
-            RegionDataSoundsCommon.Write_Binary(
+            PathGridCommon.Write_Binary(
                 writer: writer,
                 item: this,
                 doMasks: doMasks,
@@ -755,54 +754,86 @@ namespace Mutagen.Bethesda.Oblivion
         }
         #endregion
 
-        private static RegionDataSounds Create_Binary_Internal(
+        static partial void FillBinary_Points_Custom(
             MutagenFrame frame,
-            Func<RegionDataSounds_ErrorMask> errorMask,
+            PathGrid item,
+            int fieldIndex,
+            Func<PathGrid_ErrorMask> errorMask);
+
+        static partial void WriteBinary_Points_Custom(
+            MutagenWriter writer,
+            PathGrid item,
+            int fieldIndex,
+            Func<PathGrid_ErrorMask> errorMask);
+
+        public static void WriteBinary_Points(
+            MutagenWriter writer,
+            PathGrid item,
+            int fieldIndex,
+            Func<PathGrid_ErrorMask> errorMask)
+        {
+            WriteBinary_Points_Custom(
+                writer: writer,
+                item: item,
+                fieldIndex: fieldIndex,
+                errorMask: errorMask);
+        }
+
+        static partial void FillBinary_Unknown_Custom(
+            MutagenFrame frame,
+            PathGrid item,
+            int fieldIndex,
+            Func<PathGrid_ErrorMask> errorMask);
+
+        static partial void WriteBinary_Unknown_Custom(
+            MutagenWriter writer,
+            PathGrid item,
+            int fieldIndex,
+            Func<PathGrid_ErrorMask> errorMask);
+
+        public static void WriteBinary_Unknown(
+            MutagenWriter writer,
+            PathGrid item,
+            int fieldIndex,
+            Func<PathGrid_ErrorMask> errorMask)
+        {
+            WriteBinary_Unknown_Custom(
+                writer: writer,
+                item: item,
+                fieldIndex: fieldIndex,
+                errorMask: errorMask);
+        }
+
+        private static PathGrid Create_Binary_Internal(
+            MutagenFrame frame,
+            Func<PathGrid_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter)
         {
-            var ret = new RegionDataSounds();
-            try
-            {
-                using (frame)
-                {
-                    Fill_Binary_Structs(
-                        item: ret,
-                        frame: frame,
-                        errorMask: errorMask);
-                    RegionDataSounds_FieldIndex? lastParsed = null;
-                    while (!frame.Complete)
-                    {
-                        var parsed = Fill_Binary_RecordTypes(
-                            item: ret,
-                            frame: frame,
-                            lastParsed: lastParsed,
-                            errorMask: errorMask,
-                            recordTypeConverter: recordTypeConverter);
-                        if (parsed.Failed) break;
-                        lastParsed = parsed.Value;
-                    }
-                }
-            }
-            catch (Exception ex)
-            when (errorMask != null)
-            {
-                errorMask().Overall = ex;
-            }
-            return ret;
+            return UtilityTranslation.MajorRecordParse<PathGrid, PathGrid_ErrorMask, PathGrid_FieldIndex>(
+                record: new PathGrid(),
+                frame: frame,
+                errorMask: errorMask,
+                recType: PathGrid_Registration.PGRD_HEADER,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: Fill_Binary_Structs,
+                fillTyped: Fill_Binary_RecordTypes);
         }
 
         protected static void Fill_Binary_Structs(
-            RegionDataSounds item,
+            PathGrid item,
             MutagenFrame frame,
-            Func<RegionDataSounds_ErrorMask> errorMask)
+            Func<PathGrid_ErrorMask> errorMask)
         {
+            MajorRecord.Fill_Binary_Structs(
+                item: item,
+                frame: frame,
+                errorMask: errorMask);
         }
 
-        protected static TryGet<RegionDataSounds_FieldIndex?> Fill_Binary_RecordTypes(
-            RegionDataSounds item,
+        protected static TryGet<PathGrid_FieldIndex?> Fill_Binary_RecordTypes(
+            PathGrid item,
             MutagenFrame frame,
-            RegionDataSounds_FieldIndex? lastParsed,
-            Func<RegionDataSounds_ErrorMask> errorMask,
+            Func<PathGrid_ErrorMask> errorMask,
             RecordTypeConverter recordTypeConverter = null)
         {
             var nextRecordType = HeaderTranslation.GetNextSubRecordType(
@@ -811,63 +842,59 @@ namespace Mutagen.Bethesda.Oblivion
                 recordTypeConverter: recordTypeConverter);
             switch (nextRecordType.Type)
             {
-                case "RDMD":
-                    frame.Position += Constants.SUBRECORD_LENGTH;
-                    item._MusicType.SetIfSucceeded(Mutagen.Bethesda.Binary.EnumBinaryTranslation<MusicType>.Instance.Parse(
-                        frame.Spawn(contentLength),
-                        fieldIndex: (int)RegionDataSounds_FieldIndex.MusicType,
-                        errorMask: errorMask));
-                    return TryGet<RegionDataSounds_FieldIndex?>.Succeed(RegionDataSounds_FieldIndex.MusicType);
-                case "RDSD":
-                    frame.Position += Constants.SUBRECORD_LENGTH;
-                    var SoundstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionSound, MaskItem<Exception, RegionSound_ErrorMask>>.Instance.ParseRepeatedItem(
-                        frame: frame.Spawn(contentLength),
-                        fieldIndex: (int)RegionDataSounds_FieldIndex.Sounds,
-                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
-                        errorMask: errorMask,
-                        transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, RegionSound_ErrorMask> listSubMask) =>
-                        {
-                            return LoquiBinaryTranslation<RegionSound, RegionSound_ErrorMask>.Instance.Parse(
-                                frame: r.Spawn(snapToFinalPosition: false),
-                                doMasks: listDoMasks,
-                                errorMask: out listSubMask);
-                        }
-                        );
-                    item._Sounds.SetIfSucceeded(SoundstryGet);
-                    return TryGet<RegionDataSounds_FieldIndex?>.Succeed(RegionDataSounds_FieldIndex.Sounds);
+                case "DATA":
+                    using (var subFrame = frame.Spawn(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))
+                    {
+                        FillBinary_Points_Custom(
+                            frame: subFrame,
+                            item: item,
+                            fieldIndex: (int)PathGrid_FieldIndex.Points,
+                            errorMask: errorMask);
+                    }
+                    return TryGet<PathGrid_FieldIndex?>.Succeed(PathGrid_FieldIndex.Points);
+                case "PGAG":
+                    using (var subFrame = frame.Spawn(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))
+                    {
+                        FillBinary_Unknown_Custom(
+                            frame: subFrame,
+                            item: item,
+                            fieldIndex: (int)PathGrid_FieldIndex.Unknown,
+                            errorMask: errorMask);
+                    }
+                    return TryGet<PathGrid_FieldIndex?>.Succeed(PathGrid_FieldIndex.Unknown);
                 default:
-                    return RegionData.Fill_Binary_RecordTypes(
+                    return MajorRecord.Fill_Binary_RecordTypes(
                         item: item,
                         frame: frame,
-                        errorMask: errorMask).Bubble((i) => RegionDataSoundsCommon.ConvertFieldIndex(i));
+                        errorMask: errorMask).Bubble((i) => PathGridCommon.ConvertFieldIndex(i));
             }
         }
 
         #endregion
 
-        public RegionDataSounds Copy(
-            RegionDataSounds_CopyMask copyMask = null,
-            IRegionDataSoundsGetter def = null)
+        public PathGrid Copy(
+            PathGrid_CopyMask copyMask = null,
+            IPathGridGetter def = null)
         {
-            return RegionDataSounds.Copy(
+            return PathGrid.Copy(
                 this,
                 copyMask: copyMask,
                 def: def);
         }
 
-        public static RegionDataSounds Copy(
-            IRegionDataSounds item,
-            RegionDataSounds_CopyMask copyMask = null,
-            IRegionDataSoundsGetter def = null)
+        public static PathGrid Copy(
+            IPathGrid item,
+            PathGrid_CopyMask copyMask = null,
+            IPathGridGetter def = null)
         {
-            RegionDataSounds ret;
-            if (item.GetType().Equals(typeof(RegionDataSounds)))
+            PathGrid ret;
+            if (item.GetType().Equals(typeof(PathGrid)))
             {
-                ret = new RegionDataSounds();
+                ret = new PathGrid();
             }
             else
             {
-                ret = (RegionDataSounds)System.Activator.CreateInstance(item.GetType());
+                ret = (PathGrid)System.Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom(
                 item,
@@ -878,14 +905,14 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static CopyType CopyGeneric<CopyType>(
             CopyType item,
-            RegionDataSounds_CopyMask copyMask = null,
-            IRegionDataSoundsGetter def = null)
-            where CopyType : class, IRegionDataSounds
+            PathGrid_CopyMask copyMask = null,
+            IPathGridGetter def = null)
+            where CopyType : class, IPathGrid
         {
             CopyType ret;
-            if (item.GetType().Equals(typeof(RegionDataSounds)))
+            if (item.GetType().Equals(typeof(PathGrid)))
             {
-                ret = new RegionDataSounds() as CopyType;
+                ret = new PathGrid() as CopyType;
             }
             else
             {
@@ -901,19 +928,19 @@ namespace Mutagen.Bethesda.Oblivion
             return ret;
         }
 
-        public static RegionDataSounds Copy_ToLoqui(
-            IRegionDataSoundsGetter item,
-            RegionDataSounds_CopyMask copyMask = null,
-            IRegionDataSoundsGetter def = null)
+        public static PathGrid Copy_ToLoqui(
+            IPathGridGetter item,
+            PathGrid_CopyMask copyMask = null,
+            IPathGridGetter def = null)
         {
-            RegionDataSounds ret;
-            if (item.GetType().Equals(typeof(RegionDataSounds)))
+            PathGrid ret;
+            if (item.GetType().Equals(typeof(PathGrid)))
             {
-                ret = new RegionDataSounds() as RegionDataSounds;
+                ret = new PathGrid() as PathGrid;
             }
             else
             {
-                ret = (RegionDataSounds)System.Activator.CreateInstance(item.GetType());
+                ret = (PathGrid)System.Activator.CreateInstance(item.GetType());
             }
             ret.CopyFieldsFrom(
                 item,
@@ -924,16 +951,16 @@ namespace Mutagen.Bethesda.Oblivion
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
-            RegionDataSounds_FieldIndex enu = (RegionDataSounds_FieldIndex)index;
+            PathGrid_FieldIndex enu = (PathGrid_FieldIndex)index;
             switch (enu)
             {
-                case RegionDataSounds_FieldIndex.MusicType:
-                    this._MusicType.Set(
-                        (MusicType)obj,
-                        cmds);
+                case PathGrid_FieldIndex.Points:
+                    this._Points.SetTo((IEnumerable<PathGridPoint>)obj, cmds);
                     break;
-                case RegionDataSounds_FieldIndex.Sounds:
-                    this._Sounds.SetTo((IEnumerable<RegionSound>)obj, cmds);
+                case PathGrid_FieldIndex.Unknown:
+                    this._Unknown.Set(
+                        (Byte[])obj,
+                        cmds);
                     break;
                 default:
                     base.SetNthObject(index, obj, cmds);
@@ -944,41 +971,41 @@ namespace Mutagen.Bethesda.Oblivion
         public override void Clear(NotifyingUnsetParameters cmds = null)
         {
             CallClearPartial_Internal(cmds);
-            RegionDataSoundsCommon.Clear(this, cmds);
+            PathGridCommon.Clear(this, cmds);
         }
 
 
-        public new static RegionDataSounds Create(IEnumerable<KeyValuePair<ushort, object>> fields)
+        public new static PathGrid Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
-            var ret = new RegionDataSounds();
+            var ret = new PathGrid();
             foreach (var pair in fields)
             {
-                CopyInInternal_RegionDataSounds(ret, pair);
+                CopyInInternal_PathGrid(ret, pair);
             }
             return ret;
         }
 
-        protected new static void CopyInInternal_RegionDataSounds(RegionDataSounds obj, KeyValuePair<ushort, object> pair)
+        protected new static void CopyInInternal_PathGrid(PathGrid obj, KeyValuePair<ushort, object> pair)
         {
-            if (!EnumExt.TryParse(pair.Key, out RegionDataSounds_FieldIndex enu))
+            if (!EnumExt.TryParse(pair.Key, out PathGrid_FieldIndex enu))
             {
-                CopyInInternal_RegionData(obj, pair);
+                CopyInInternal_MajorRecord(obj, pair);
             }
             switch (enu)
             {
-                case RegionDataSounds_FieldIndex.MusicType:
-                    obj._MusicType.Set(
-                        (MusicType)pair.Value,
-                        null);
+                case PathGrid_FieldIndex.Points:
+                    obj._Points.SetTo((IEnumerable<PathGridPoint>)pair.Value, null);
                     break;
-                case RegionDataSounds_FieldIndex.Sounds:
-                    obj._Sounds.SetTo((IEnumerable<RegionSound>)pair.Value, null);
+                case PathGrid_FieldIndex.Unknown:
+                    obj._Unknown.Set(
+                        (Byte[])pair.Value,
+                        null);
                     break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, RegionDataSounds obj)
+        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, PathGrid obj)
         {
             ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
         }
@@ -987,23 +1014,23 @@ namespace Mutagen.Bethesda.Oblivion
     #endregion
 
     #region Interface
-    public interface IRegionDataSounds : IRegionDataSoundsGetter, IRegionData, ILoquiClass<IRegionDataSounds, IRegionDataSoundsGetter>, ILoquiClass<RegionDataSounds, IRegionDataSoundsGetter>
+    public interface IPathGrid : IPathGridGetter, IMajorRecord, ILoquiClass<IPathGrid, IPathGridGetter>, ILoquiClass<PathGrid, IPathGridGetter>
     {
-        new MusicType MusicType { get; set; }
-        new INotifyingSetItem<MusicType> MusicType_Property { get; }
+        new INotifyingList<PathGridPoint> Points { get; }
+        new Byte[] Unknown { get; set; }
+        new INotifyingSetItem<Byte[]> Unknown_Property { get; }
 
-        new INotifyingList<RegionSound> Sounds { get; }
     }
 
-    public interface IRegionDataSoundsGetter : IRegionDataGetter
+    public interface IPathGridGetter : IMajorRecordGetter
     {
-        #region MusicType
-        MusicType MusicType { get; }
-        INotifyingSetItemGetter<MusicType> MusicType_Property { get; }
-
+        #region Points
+        INotifyingListGetter<PathGridPoint> Points { get; }
         #endregion
-        #region Sounds
-        INotifyingListGetter<RegionSound> Sounds { get; }
+        #region Unknown
+        Byte[] Unknown { get; }
+        INotifyingSetItemGetter<Byte[]> Unknown_Property { get; }
+
         #endregion
 
     }
@@ -1015,47 +1042,49 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     #region Field Index
-    public enum RegionDataSounds_FieldIndex
+    public enum PathGrid_FieldIndex
     {
-        DataType = 0,
-        Flags = 1,
-        Priority = 2,
-        MusicType = 3,
-        Sounds = 4,
+        MajorRecordFlags = 0,
+        FormID = 1,
+        Version = 2,
+        EditorID = 3,
+        RecordType = 4,
+        Points = 5,
+        Unknown = 6,
     }
     #endregion
 
     #region Registration
-    public class RegionDataSounds_Registration : ILoquiRegistration
+    public class PathGrid_Registration : ILoquiRegistration
     {
-        public static readonly RegionDataSounds_Registration Instance = new RegionDataSounds_Registration();
+        public static readonly PathGrid_Registration Instance = new PathGrid_Registration();
 
         public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
             protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
-            msgID: 114,
+            msgID: 129,
             version: 0);
 
-        public const string GUID = "45ee0280-5f00-4126-9120-50ed00cc27c3";
+        public const string GUID = "9fc6e922-dfb7-4ad4-81d3-bea823f22198";
 
         public const ushort FieldCount = 2;
 
-        public static readonly Type MaskType = typeof(RegionDataSounds_Mask<>);
+        public static readonly Type MaskType = typeof(PathGrid_Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(RegionDataSounds_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(PathGrid_ErrorMask);
 
-        public static readonly Type ClassType = typeof(RegionDataSounds);
+        public static readonly Type ClassType = typeof(PathGrid);
 
-        public static readonly Type GetterType = typeof(IRegionDataSoundsGetter);
+        public static readonly Type GetterType = typeof(IPathGridGetter);
 
-        public static readonly Type SetterType = typeof(IRegionDataSounds);
+        public static readonly Type SetterType = typeof(IPathGrid);
 
-        public static readonly Type CommonType = typeof(RegionDataSoundsCommon);
+        public static readonly Type CommonType = typeof(PathGridCommon);
 
-        public const string FullName = "Mutagen.Bethesda.Oblivion.RegionDataSounds";
+        public const string FullName = "Mutagen.Bethesda.Oblivion.PathGrid";
 
-        public const string Name = "RegionDataSounds";
+        public const string Name = "PathGrid";
 
         public const string Namespace = "Mutagen.Bethesda.Oblivion";
 
@@ -1067,10 +1096,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             switch (str.Upper)
             {
-                case "MUSICTYPE":
-                    return (ushort)RegionDataSounds_FieldIndex.MusicType;
-                case "SOUNDS":
-                    return (ushort)RegionDataSounds_FieldIndex.Sounds;
+                case "POINTS":
+                    return (ushort)PathGrid_FieldIndex.Points;
+                case "UNKNOWN":
+                    return (ushort)PathGrid_FieldIndex.Unknown;
                 default:
                     return null;
             }
@@ -1078,103 +1107,103 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            RegionDataSounds_FieldIndex enu = (RegionDataSounds_FieldIndex)index;
+            PathGrid_FieldIndex enu = (PathGrid_FieldIndex)index;
             switch (enu)
             {
-                case RegionDataSounds_FieldIndex.Sounds:
+                case PathGrid_FieldIndex.Points:
                     return true;
-                case RegionDataSounds_FieldIndex.MusicType:
+                case PathGrid_FieldIndex.Unknown:
                     return false;
                 default:
-                    return RegionData_Registration.GetNthIsEnumerable(index);
+                    return MajorRecord_Registration.GetNthIsEnumerable(index);
             }
         }
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            RegionDataSounds_FieldIndex enu = (RegionDataSounds_FieldIndex)index;
+            PathGrid_FieldIndex enu = (PathGrid_FieldIndex)index;
             switch (enu)
             {
-                case RegionDataSounds_FieldIndex.Sounds:
+                case PathGrid_FieldIndex.Points:
                     return true;
-                case RegionDataSounds_FieldIndex.MusicType:
+                case PathGrid_FieldIndex.Unknown:
                     return false;
                 default:
-                    return RegionData_Registration.GetNthIsLoqui(index);
+                    return MajorRecord_Registration.GetNthIsLoqui(index);
             }
         }
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            RegionDataSounds_FieldIndex enu = (RegionDataSounds_FieldIndex)index;
+            PathGrid_FieldIndex enu = (PathGrid_FieldIndex)index;
             switch (enu)
             {
-                case RegionDataSounds_FieldIndex.MusicType:
-                case RegionDataSounds_FieldIndex.Sounds:
+                case PathGrid_FieldIndex.Points:
+                case PathGrid_FieldIndex.Unknown:
                     return false;
                 default:
-                    return RegionData_Registration.GetNthIsSingleton(index);
+                    return MajorRecord_Registration.GetNthIsSingleton(index);
             }
         }
 
         public static string GetNthName(ushort index)
         {
-            RegionDataSounds_FieldIndex enu = (RegionDataSounds_FieldIndex)index;
+            PathGrid_FieldIndex enu = (PathGrid_FieldIndex)index;
             switch (enu)
             {
-                case RegionDataSounds_FieldIndex.MusicType:
-                    return "MusicType";
-                case RegionDataSounds_FieldIndex.Sounds:
-                    return "Sounds";
+                case PathGrid_FieldIndex.Points:
+                    return "Points";
+                case PathGrid_FieldIndex.Unknown:
+                    return "Unknown";
                 default:
-                    return RegionData_Registration.GetNthName(index);
+                    return MajorRecord_Registration.GetNthName(index);
             }
         }
 
         public static bool IsNthDerivative(ushort index)
         {
-            RegionDataSounds_FieldIndex enu = (RegionDataSounds_FieldIndex)index;
+            PathGrid_FieldIndex enu = (PathGrid_FieldIndex)index;
             switch (enu)
             {
-                case RegionDataSounds_FieldIndex.MusicType:
-                case RegionDataSounds_FieldIndex.Sounds:
+                case PathGrid_FieldIndex.Points:
+                case PathGrid_FieldIndex.Unknown:
                     return false;
                 default:
-                    return RegionData_Registration.IsNthDerivative(index);
+                    return MajorRecord_Registration.IsNthDerivative(index);
             }
         }
 
         public static bool IsProtected(ushort index)
         {
-            RegionDataSounds_FieldIndex enu = (RegionDataSounds_FieldIndex)index;
+            PathGrid_FieldIndex enu = (PathGrid_FieldIndex)index;
             switch (enu)
             {
-                case RegionDataSounds_FieldIndex.MusicType:
-                case RegionDataSounds_FieldIndex.Sounds:
+                case PathGrid_FieldIndex.Points:
+                case PathGrid_FieldIndex.Unknown:
                     return false;
                 default:
-                    return RegionData_Registration.IsProtected(index);
+                    return MajorRecord_Registration.IsProtected(index);
             }
         }
 
         public static Type GetNthType(ushort index)
         {
-            RegionDataSounds_FieldIndex enu = (RegionDataSounds_FieldIndex)index;
+            PathGrid_FieldIndex enu = (PathGrid_FieldIndex)index;
             switch (enu)
             {
-                case RegionDataSounds_FieldIndex.MusicType:
-                    return typeof(MusicType);
-                case RegionDataSounds_FieldIndex.Sounds:
-                    return typeof(NotifyingList<RegionSound>);
+                case PathGrid_FieldIndex.Points:
+                    return typeof(NotifyingList<PathGridPoint>);
+                case PathGrid_FieldIndex.Unknown:
+                    return typeof(Byte[]);
                 default:
-                    return RegionData_Registration.GetNthType(index);
+                    return MajorRecord_Registration.GetNthType(index);
             }
         }
 
-        public static readonly RecordType RDAT_HEADER = new RecordType("RDAT");
-        public static readonly RecordType RDMD_HEADER = new RecordType("RDMD");
-        public static readonly RecordType RDSD_HEADER = new RecordType("RDSD");
-        public static readonly RecordType TRIGGERING_RECORD_TYPE = RDAT_HEADER;
+        public static readonly RecordType PGRD_HEADER = new RecordType("PGRD");
+        public static readonly RecordType DATA_HEADER = new RecordType("DATA");
+        public static readonly RecordType PGAG_HEADER = new RecordType("PGAG");
+        public static readonly RecordType TRIGGERING_RECORD_TYPE = PGRD_HEADER;
         public const int NumStructFields = 0;
         public const int NumTypedFields = 2;
         #region Interface
@@ -1207,17 +1236,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Extensions
-    public static partial class RegionDataSoundsCommon
+    public static partial class PathGridCommon
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this IRegionDataSounds item,
-            IRegionDataSoundsGetter rhs,
-            RegionDataSounds_CopyMask copyMask = null,
-            IRegionDataSoundsGetter def = null,
+            this IPathGrid item,
+            IPathGridGetter rhs,
+            PathGrid_CopyMask copyMask = null,
+            IPathGridGetter def = null,
             NotifyingFireParameters cmds = null)
         {
-            RegionDataSoundsCommon.CopyFieldsFrom(
+            PathGridCommon.CopyFieldsFrom(
                 item: item,
                 rhs: rhs,
                 def: def,
@@ -1228,14 +1257,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void CopyFieldsFrom(
-            this IRegionDataSounds item,
-            IRegionDataSoundsGetter rhs,
-            out RegionDataSounds_ErrorMask errorMask,
-            RegionDataSounds_CopyMask copyMask = null,
-            IRegionDataSoundsGetter def = null,
+            this IPathGrid item,
+            IPathGridGetter rhs,
+            out PathGrid_ErrorMask errorMask,
+            PathGrid_CopyMask copyMask = null,
+            IPathGridGetter def = null,
             NotifyingFireParameters cmds = null)
         {
-            RegionDataSoundsCommon.CopyFieldsFrom(
+            PathGridCommon.CopyFieldsFrom(
                 item: item,
                 rhs: rhs,
                 def: def,
@@ -1246,20 +1275,20 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void CopyFieldsFrom(
-            this IRegionDataSounds item,
-            IRegionDataSoundsGetter rhs,
-            IRegionDataSoundsGetter def,
+            this IPathGrid item,
+            IPathGridGetter rhs,
+            IPathGridGetter def,
             bool doMasks,
-            out RegionDataSounds_ErrorMask errorMask,
-            RegionDataSounds_CopyMask copyMask,
+            out PathGrid_ErrorMask errorMask,
+            PathGrid_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            RegionDataSounds_ErrorMask retErrorMask = null;
-            Func<RegionDataSounds_ErrorMask> maskGetter = () =>
+            PathGrid_ErrorMask retErrorMask = null;
+            Func<PathGrid_ErrorMask> maskGetter = () =>
             {
                 if (retErrorMask == null)
                 {
-                    retErrorMask = new RegionDataSounds_ErrorMask();
+                    retErrorMask = new PathGrid_ErrorMask();
                 }
                 return retErrorMask;
             };
@@ -1275,15 +1304,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void CopyFieldsFrom(
-            this IRegionDataSounds item,
-            IRegionDataSoundsGetter rhs,
-            IRegionDataSoundsGetter def,
+            this IPathGrid item,
+            IPathGridGetter rhs,
+            IPathGridGetter def,
             bool doMasks,
-            Func<RegionDataSounds_ErrorMask> errorMask,
-            RegionDataSounds_CopyMask copyMask,
+            Func<PathGrid_ErrorMask> errorMask,
+            PathGrid_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            RegionDataCommon.CopyFieldsFrom(
+            MajorRecordCommon.CopyFieldsFrom(
                 item,
                 rhs,
                 def,
@@ -1291,43 +1320,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 errorMask,
                 copyMask,
                 cmds);
-            if (copyMask?.MusicType ?? true)
+            if (copyMask?.Points.Overall != CopyOption.Skip)
             {
                 try
                 {
-                    item.MusicType_Property.SetToWithDefault(
-                        rhs: rhs.MusicType_Property,
-                        def: def?.MusicType_Property,
-                        cmds: cmds);
-                }
-                catch (Exception ex)
-                when (doMasks)
-                {
-                    errorMask().SetNthException((int)RegionDataSounds_FieldIndex.MusicType, ex);
-                }
-            }
-            if (copyMask?.Sounds.Overall != CopyOption.Skip)
-            {
-                try
-                {
-                    item.Sounds.SetToWithDefault(
-                        rhs: rhs.Sounds,
-                        def: def?.Sounds,
+                    item.Points.SetToWithDefault(
+                        rhs: rhs.Points,
+                        def: def?.Points,
                         cmds: cmds,
                         converter: (r, d) =>
                         {
-                            switch (copyMask?.Sounds.Overall ?? CopyOption.Reference)
+                            switch (copyMask?.Points.Overall ?? CopyOption.Reference)
                             {
                                 case CopyOption.Reference:
                                     return r;
                                 case CopyOption.MakeCopy:
-                                    if (r == null) return default(RegionSound);
-                                    return RegionSound.Copy(
+                                    if (r == null) return default(PathGridPoint);
+                                    return PathGridPoint.Copy(
                                         r,
-                                        copyMask?.Sounds?.Specific,
+                                        copyMask?.Points?.Specific,
                                         def: d);
                                 default:
-                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Sounds.Overall}. Cannot execute copy.");
+                                    throw new NotImplementedException($"Unknown CopyOption {copyMask?.Points.Overall}. Cannot execute copy.");
                             }
                         }
                         );
@@ -1335,7 +1349,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 catch (Exception ex)
                 when (doMasks)
                 {
-                    errorMask().SetNthException((int)RegionDataSounds_FieldIndex.Sounds, ex);
+                    errorMask().SetNthException((int)PathGrid_FieldIndex.Points, ex);
+                }
+            }
+            if (copyMask?.Unknown ?? true)
+            {
+                try
+                {
+                    item.Unknown_Property.SetToWithDefault(
+                        rhs: rhs.Unknown_Property,
+                        def: def?.Unknown_Property,
+                        cmds: cmds);
+                }
+                catch (Exception ex)
+                when (doMasks)
+                {
+                    errorMask().SetNthException((int)PathGrid_FieldIndex.Unknown, ex);
                 }
             }
         }
@@ -1345,134 +1374,134 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static void SetNthObjectHasBeenSet(
             ushort index,
             bool on,
-            IRegionDataSounds obj,
+            IPathGrid obj,
             NotifyingFireParameters cmds = null)
         {
-            RegionDataSounds_FieldIndex enu = (RegionDataSounds_FieldIndex)index;
+            PathGrid_FieldIndex enu = (PathGrid_FieldIndex)index;
             switch (enu)
             {
-                case RegionDataSounds_FieldIndex.MusicType:
-                    obj.MusicType_Property.HasBeenSet = on;
+                case PathGrid_FieldIndex.Points:
+                    obj.Points.HasBeenSet = on;
                     break;
-                case RegionDataSounds_FieldIndex.Sounds:
-                    obj.Sounds.HasBeenSet = on;
+                case PathGrid_FieldIndex.Unknown:
+                    obj.Unknown_Property.HasBeenSet = on;
                     break;
                 default:
-                    RegionDataCommon.SetNthObjectHasBeenSet(index, on, obj);
+                    MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
             }
         }
 
         public static void UnsetNthObject(
             ushort index,
-            IRegionDataSounds obj,
+            IPathGrid obj,
             NotifyingUnsetParameters cmds = null)
         {
-            RegionDataSounds_FieldIndex enu = (RegionDataSounds_FieldIndex)index;
+            PathGrid_FieldIndex enu = (PathGrid_FieldIndex)index;
             switch (enu)
             {
-                case RegionDataSounds_FieldIndex.MusicType:
-                    obj.MusicType_Property.Unset(cmds);
+                case PathGrid_FieldIndex.Points:
+                    obj.Points.Unset(cmds);
                     break;
-                case RegionDataSounds_FieldIndex.Sounds:
-                    obj.Sounds.Unset(cmds);
+                case PathGrid_FieldIndex.Unknown:
+                    obj.Unknown_Property.Unset(cmds);
                     break;
                 default:
-                    RegionDataCommon.UnsetNthObject(index, obj);
+                    MajorRecordCommon.UnsetNthObject(index, obj);
                     break;
             }
         }
 
         public static bool GetNthObjectHasBeenSet(
             ushort index,
-            IRegionDataSounds obj)
+            IPathGrid obj)
         {
-            RegionDataSounds_FieldIndex enu = (RegionDataSounds_FieldIndex)index;
+            PathGrid_FieldIndex enu = (PathGrid_FieldIndex)index;
             switch (enu)
             {
-                case RegionDataSounds_FieldIndex.MusicType:
-                    return obj.MusicType_Property.HasBeenSet;
-                case RegionDataSounds_FieldIndex.Sounds:
-                    return obj.Sounds.HasBeenSet;
+                case PathGrid_FieldIndex.Points:
+                    return obj.Points.HasBeenSet;
+                case PathGrid_FieldIndex.Unknown:
+                    return obj.Unknown_Property.HasBeenSet;
                 default:
-                    return RegionDataCommon.GetNthObjectHasBeenSet(index, obj);
+                    return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
         }
 
         public static object GetNthObject(
             ushort index,
-            IRegionDataSoundsGetter obj)
+            IPathGridGetter obj)
         {
-            RegionDataSounds_FieldIndex enu = (RegionDataSounds_FieldIndex)index;
+            PathGrid_FieldIndex enu = (PathGrid_FieldIndex)index;
             switch (enu)
             {
-                case RegionDataSounds_FieldIndex.MusicType:
-                    return obj.MusicType;
-                case RegionDataSounds_FieldIndex.Sounds:
-                    return obj.Sounds;
+                case PathGrid_FieldIndex.Points:
+                    return obj.Points;
+                case PathGrid_FieldIndex.Unknown:
+                    return obj.Unknown;
                 default:
-                    return RegionDataCommon.GetNthObject(index, obj);
+                    return MajorRecordCommon.GetNthObject(index, obj);
             }
         }
 
         public static void Clear(
-            IRegionDataSounds item,
+            IPathGrid item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.MusicType_Property.Unset(cmds.ToUnsetParams());
-            item.Sounds.Unset(cmds.ToUnsetParams());
+            item.Points.Unset(cmds.ToUnsetParams());
+            item.Unknown_Property.Unset(cmds.ToUnsetParams());
         }
 
-        public static RegionDataSounds_Mask<bool> GetEqualsMask(
-            this IRegionDataSoundsGetter item,
-            IRegionDataSoundsGetter rhs)
+        public static PathGrid_Mask<bool> GetEqualsMask(
+            this IPathGridGetter item,
+            IPathGridGetter rhs)
         {
-            var ret = new RegionDataSounds_Mask<bool>();
+            var ret = new PathGrid_Mask<bool>();
             FillEqualsMask(item, rhs, ret);
             return ret;
         }
 
         public static void FillEqualsMask(
-            IRegionDataSoundsGetter item,
-            IRegionDataSoundsGetter rhs,
-            RegionDataSounds_Mask<bool> ret)
+            IPathGridGetter item,
+            IPathGridGetter rhs,
+            PathGrid_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.MusicType = item.MusicType_Property.Equals(rhs.MusicType_Property, (l, r) => l == r);
-            if (item.Sounds.HasBeenSet == rhs.Sounds.HasBeenSet)
+            if (item.Points.HasBeenSet == rhs.Points.HasBeenSet)
             {
-                if (item.Sounds.HasBeenSet)
+                if (item.Points.HasBeenSet)
                 {
-                    ret.Sounds = new MaskItem<bool, IEnumerable<MaskItem<bool, RegionSound_Mask<bool>>>>();
-                    ret.Sounds.Specific = item.Sounds.SelectAgainst<RegionSound, MaskItem<bool, RegionSound_Mask<bool>>>(rhs.Sounds, ((l, r) =>
+                    ret.Points = new MaskItem<bool, IEnumerable<MaskItem<bool, PathGridPoint_Mask<bool>>>>();
+                    ret.Points.Specific = item.Points.SelectAgainst<PathGridPoint, MaskItem<bool, PathGridPoint_Mask<bool>>>(rhs.Points, ((l, r) =>
                     {
-                        MaskItem<bool, RegionSound_Mask<bool>> itemRet;
-                        itemRet = new MaskItem<bool, RegionSound_Mask<bool>>();
-                        itemRet.Specific = RegionSoundCommon.GetEqualsMask(l, r);
+                        MaskItem<bool, PathGridPoint_Mask<bool>> itemRet;
+                        itemRet = new MaskItem<bool, PathGridPoint_Mask<bool>>();
+                        itemRet.Specific = PathGridPointCommon.GetEqualsMask(l, r);
                         itemRet.Overall = itemRet.Specific.AllEqual((b) => b);
                         return itemRet;
                     }
-                    ), out ret.Sounds.Overall);
-                    ret.Sounds.Overall = ret.Sounds.Overall && ret.Sounds.Specific.All((b) => b.Overall);
+                    ), out ret.Points.Overall);
+                    ret.Points.Overall = ret.Points.Overall && ret.Points.Specific.All((b) => b.Overall);
                 }
                 else
                 {
-                    ret.Sounds = new MaskItem<bool, IEnumerable<MaskItem<bool, RegionSound_Mask<bool>>>>();
-                    ret.Sounds.Overall = true;
+                    ret.Points = new MaskItem<bool, IEnumerable<MaskItem<bool, PathGridPoint_Mask<bool>>>>();
+                    ret.Points.Overall = true;
                 }
             }
             else
             {
-                ret.Sounds = new MaskItem<bool, IEnumerable<MaskItem<bool, RegionSound_Mask<bool>>>>();
-                ret.Sounds.Overall = false;
+                ret.Points = new MaskItem<bool, IEnumerable<MaskItem<bool, PathGridPoint_Mask<bool>>>>();
+                ret.Points.Overall = false;
             }
-            RegionDataCommon.FillEqualsMask(item, rhs, ret);
+            ret.Unknown = item.Unknown_Property.Equals(rhs.Unknown_Property, (l, r) => l.EqualsFast(r));
+            MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
-            this IRegionDataSoundsGetter item,
+            this IPathGridGetter item,
             string name = null,
-            RegionDataSounds_Mask<bool> printMask = null)
+            PathGrid_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             item.ToString(fg, name, printMask);
@@ -1480,33 +1509,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public static void ToString(
-            this IRegionDataSoundsGetter item,
+            this IPathGridGetter item,
             FileGeneration fg,
             string name = null,
-            RegionDataSounds_Mask<bool> printMask = null)
+            PathGrid_Mask<bool> printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(RegionDataSounds)} =>");
+                fg.AppendLine($"{nameof(PathGrid)} =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(RegionDataSounds)}) =>");
+                fg.AppendLine($"{name} ({nameof(PathGrid)}) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.MusicType ?? true)
+                if (printMask?.Points?.Overall ?? true)
                 {
-                    fg.AppendLine($"MusicType => {item.MusicType}");
-                }
-                if (printMask?.Sounds?.Overall ?? true)
-                {
-                    fg.AppendLine("Sounds =>");
+                    fg.AppendLine("Points =>");
                     fg.AppendLine("[");
                     using (new DepthWrapper(fg))
                     {
-                        foreach (var subItem in item.Sounds)
+                        foreach (var subItem in item.Points)
                         {
                             fg.AppendLine("[");
                             using (new DepthWrapper(fg))
@@ -1518,43 +1543,51 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     fg.AppendLine("]");
                 }
+                if (printMask?.Unknown ?? true)
+                {
+                    fg.AppendLine($"Unknown => {item.Unknown}");
+                }
             }
             fg.AppendLine("]");
         }
 
         public static bool HasBeenSet(
-            this IRegionDataSoundsGetter item,
-            RegionDataSounds_Mask<bool?> checkMask)
+            this IPathGridGetter item,
+            PathGrid_Mask<bool?> checkMask)
         {
-            if (checkMask.MusicType.HasValue && checkMask.MusicType.Value != item.MusicType_Property.HasBeenSet) return false;
-            if (checkMask.Sounds.Overall.HasValue && checkMask.Sounds.Overall.Value != item.Sounds.HasBeenSet) return false;
+            if (checkMask.Points.Overall.HasValue && checkMask.Points.Overall.Value != item.Points.HasBeenSet) return false;
+            if (checkMask.Unknown.HasValue && checkMask.Unknown.Value != item.Unknown_Property.HasBeenSet) return false;
             return true;
         }
 
-        public static RegionDataSounds_Mask<bool> GetHasBeenSetMask(IRegionDataSoundsGetter item)
+        public static PathGrid_Mask<bool> GetHasBeenSetMask(IPathGridGetter item)
         {
-            var ret = new RegionDataSounds_Mask<bool>();
-            ret.MusicType = item.MusicType_Property.HasBeenSet;
-            ret.Sounds = new MaskItem<bool, IEnumerable<MaskItem<bool, RegionSound_Mask<bool>>>>(item.Sounds.HasBeenSet, item.Sounds.Select((i) => new MaskItem<bool, RegionSound_Mask<bool>>(true, i.GetHasBeenSetMask())));
+            var ret = new PathGrid_Mask<bool>();
+            ret.Points = new MaskItem<bool, IEnumerable<MaskItem<bool, PathGridPoint_Mask<bool>>>>(item.Points.HasBeenSet, item.Points.Select((i) => new MaskItem<bool, PathGridPoint_Mask<bool>>(true, i.GetHasBeenSetMask())));
+            ret.Unknown = item.Unknown_Property.HasBeenSet;
             return ret;
         }
 
-        public static RegionDataSounds_FieldIndex? ConvertFieldIndex(RegionData_FieldIndex? index)
+        public static PathGrid_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
         {
             if (!index.HasValue) return null;
             return ConvertFieldIndex(index: index.Value);
         }
 
-        public static RegionDataSounds_FieldIndex ConvertFieldIndex(RegionData_FieldIndex index)
+        public static PathGrid_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
-                case RegionData_FieldIndex.DataType:
-                    return (RegionDataSounds_FieldIndex)((int)index);
-                case RegionData_FieldIndex.Flags:
-                    return (RegionDataSounds_FieldIndex)((int)index);
-                case RegionData_FieldIndex.Priority:
-                    return (RegionDataSounds_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.MajorRecordFlags:
+                    return (PathGrid_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.FormID:
+                    return (PathGrid_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.Version:
+                    return (PathGrid_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.EditorID:
+                    return (PathGrid_FieldIndex)((int)index);
+                case MajorRecord_FieldIndex.RecordType:
+                    return (PathGrid_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -1564,54 +1597,45 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region XML Write
         public static void Write_XML(
             XmlWriter writer,
-            IRegionDataSoundsGetter item,
+            IPathGridGetter item,
             bool doMasks,
-            out RegionDataSounds_ErrorMask errorMask,
+            out PathGrid_ErrorMask errorMask,
             string name = null)
         {
-            RegionDataSounds_ErrorMask errMaskRet = null;
+            PathGrid_ErrorMask errMaskRet = null;
             Write_XML_Internal(
                 writer: writer,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new RegionDataSounds_ErrorMask()) : default(Func<RegionDataSounds_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new PathGrid_ErrorMask()) : default(Func<PathGrid_ErrorMask>));
             errorMask = errMaskRet;
         }
 
         private static void Write_XML_Internal(
             XmlWriter writer,
-            IRegionDataSoundsGetter item,
-            Func<RegionDataSounds_ErrorMask> errorMask,
+            IPathGridGetter item,
+            Func<PathGrid_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.RegionDataSounds"))
+                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.PathGrid"))
                 {
                     if (name != null)
                     {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.RegionDataSounds");
+                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.PathGrid");
                     }
-                    if (item.MusicType_Property.HasBeenSet)
+                    if (item.Points.HasBeenSet)
                     {
-                        EnumXmlTranslation<MusicType>.Instance.Write(
+                        ListXmlTranslation<PathGridPoint, MaskItem<Exception, PathGridPoint_ErrorMask>>.Instance.Write(
                             writer: writer,
-                            name: nameof(item.MusicType),
-                            item: item.MusicType_Property,
-                            fieldIndex: (int)RegionDataSounds_FieldIndex.MusicType,
-                            errorMask: errorMask);
-                    }
-                    if (item.Sounds.HasBeenSet)
-                    {
-                        ListXmlTranslation<RegionSound, MaskItem<Exception, RegionSound_ErrorMask>>.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Sounds),
-                            item: item.Sounds,
-                            fieldIndex: (int)RegionDataSounds_FieldIndex.Sounds,
+                            name: nameof(item.Points),
+                            item: item.Points,
+                            fieldIndex: (int)PathGrid_FieldIndex.Points,
                             errorMask: errorMask,
-                            transl: (RegionSound subItem, bool listDoMasks, out MaskItem<Exception, RegionSound_ErrorMask> listSubMask) =>
+                            transl: (PathGridPoint subItem, bool listDoMasks, out MaskItem<Exception, PathGridPoint_ErrorMask> listSubMask) =>
                             {
-                                LoquiXmlTranslation<RegionSound, RegionSound_ErrorMask>.Instance.Write(
+                                LoquiXmlTranslation<PathGridPoint, PathGridPoint_ErrorMask>.Instance.Write(
                                     writer: writer,
                                     item: subItem,
                                     name: "Item",
@@ -1619,6 +1643,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                                     errorMask: out listSubMask);
                             }
                             );
+                    }
+                    if (item.Unknown_Property.HasBeenSet)
+                    {
+                        ByteArrayXmlTranslation.Instance.Write(
+                            writer: writer,
+                            name: nameof(item.Unknown),
+                            item: item.Unknown_Property,
+                            fieldIndex: (int)PathGrid_FieldIndex.Unknown,
+                            errorMask: errorMask);
                     }
                 }
             }
@@ -1636,33 +1669,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Binary Write
         public static void Write_Binary(
             MutagenWriter writer,
-            RegionDataSounds item,
+            PathGrid item,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
-            out RegionDataSounds_ErrorMask errorMask)
+            out PathGrid_ErrorMask errorMask)
         {
-            RegionDataSounds_ErrorMask errMaskRet = null;
+            PathGrid_ErrorMask errMaskRet = null;
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new RegionDataSounds_ErrorMask()) : default(Func<RegionDataSounds_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new PathGrid_ErrorMask()) : default(Func<PathGrid_ErrorMask>));
             errorMask = errMaskRet;
         }
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
-            RegionDataSounds item,
+            PathGrid item,
             RecordTypeConverter recordTypeConverter,
-            Func<RegionDataSounds_ErrorMask> errorMask)
+            Func<PathGrid_ErrorMask> errorMask)
         {
             try
             {
-                Write_Binary_RecordTypes(
-                    item: item,
+                using (HeaderExport.ExportHeader(
                     writer: writer,
-                    recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask);
+                    record: PathGrid_Registration.PGRD_HEADER,
+                    type: ObjectType.Record))
+                {
+                    MajorRecordCommon.Write_Binary_Embedded(
+                        item: item,
+                        writer: writer,
+                        errorMask: errorMask);
+                    Write_Binary_RecordTypes(
+                        item: item,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter,
+                        errorMask: errorMask);
+                }
             }
             catch (Exception ex)
             when (errorMask != null)
@@ -1673,39 +1716,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
         public static void Write_Binary_RecordTypes(
-            RegionDataSounds item,
+            PathGrid item,
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
-            Func<RegionDataSounds_ErrorMask> errorMask)
+            Func<PathGrid_ErrorMask> errorMask)
         {
-            RegionDataCommon.Write_Binary_RecordTypes(
+            MajorRecordCommon.Write_Binary_RecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter,
                 errorMask: errorMask);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<MusicType>.Instance.Write(
-                writer,
-                item.MusicType_Property,
-                length: new ContentLength(4),
-                fieldIndex: (int)RegionDataSounds_FieldIndex.MusicType,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(RegionDataSounds_Registration.RDMD_HEADER),
-                nullable: false);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionSound, MaskItem<Exception, RegionSound_ErrorMask>>.Instance.Write(
+            PathGrid.WriteBinary_Points(
                 writer: writer,
-                item: item.Sounds,
-                fieldIndex: (int)RegionDataSounds_FieldIndex.Sounds,
-                recordType: RegionDataSounds_Registration.RDSD_HEADER,
-                errorMask: errorMask,
-                transl: (RegionSound subItem, bool listDoMasks, out MaskItem<Exception, RegionSound_ErrorMask> listSubMask) =>
-                {
-                    LoquiBinaryTranslation<RegionSound, RegionSound_ErrorMask>.Instance.Write(
-                        writer: writer,
-                        item: subItem,
-                        doMasks: listDoMasks,
-                        errorMask: out listSubMask);
-                }
-                );
+                item: item,
+                fieldIndex: (int)PathGrid_FieldIndex.Points,
+                errorMask: errorMask);
+            PathGrid.WriteBinary_Unknown(
+                writer: writer,
+                item: item,
+                fieldIndex: (int)PathGrid_FieldIndex.Unknown,
+                errorMask: errorMask);
         }
 
         #endregion
@@ -1716,45 +1746,45 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #region Modules
 
     #region Mask
-    public class RegionDataSounds_Mask<T> : RegionData_Mask<T>, IMask<T>, IEquatable<RegionDataSounds_Mask<T>>
+    public class PathGrid_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<PathGrid_Mask<T>>
     {
         #region Ctors
-        public RegionDataSounds_Mask()
+        public PathGrid_Mask()
         {
         }
 
-        public RegionDataSounds_Mask(T initialValue)
+        public PathGrid_Mask(T initialValue)
         {
-            this.MusicType = initialValue;
-            this.Sounds = new MaskItem<T, IEnumerable<MaskItem<T, RegionSound_Mask<T>>>>(initialValue, null);
+            this.Points = new MaskItem<T, IEnumerable<MaskItem<T, PathGridPoint_Mask<T>>>>(initialValue, null);
+            this.Unknown = initialValue;
         }
         #endregion
 
         #region Members
-        public T MusicType;
-        public MaskItem<T, IEnumerable<MaskItem<T, RegionSound_Mask<T>>>> Sounds;
+        public MaskItem<T, IEnumerable<MaskItem<T, PathGridPoint_Mask<T>>>> Points;
+        public T Unknown;
         #endregion
 
         #region Equals
         public override bool Equals(object obj)
         {
-            if (!(obj is RegionDataSounds_Mask<T> rhs)) return false;
+            if (!(obj is PathGrid_Mask<T> rhs)) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(RegionDataSounds_Mask<T> rhs)
+        public bool Equals(PathGrid_Mask<T> rhs)
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.MusicType, rhs.MusicType)) return false;
-            if (!object.Equals(this.Sounds, rhs.Sounds)) return false;
+            if (!object.Equals(this.Points, rhs.Points)) return false;
+            if (!object.Equals(this.Unknown, rhs.Unknown)) return false;
             return true;
         }
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = ret.CombineHashCode(this.MusicType?.GetHashCode());
-            ret = ret.CombineHashCode(this.Sounds?.GetHashCode());
+            ret = ret.CombineHashCode(this.Points?.GetHashCode());
+            ret = ret.CombineHashCode(this.Unknown?.GetHashCode());
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -1765,49 +1795,48 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override bool AllEqual(Func<T, bool> eval)
         {
             if (!base.AllEqual(eval)) return false;
-            if (!eval(this.MusicType)) return false;
-            if (this.Sounds != null)
+            if (this.Points != null)
             {
-                if (!eval(this.Sounds.Overall)) return false;
-                if (this.Sounds.Specific != null)
+                if (!eval(this.Points.Overall)) return false;
+                if (this.Points.Specific != null)
                 {
-                    foreach (var item in this.Sounds.Specific)
+                    foreach (var item in this.Points.Specific)
                     {
                         if (!eval(item.Overall)) return false;
                         if (item.Specific != null && !item.Specific.AllEqual(eval)) return false;
                     }
                 }
             }
+            if (!eval(this.Unknown)) return false;
             return true;
         }
         #endregion
 
         #region Translate
-        public new RegionDataSounds_Mask<R> Translate<R>(Func<T, R> eval)
+        public new PathGrid_Mask<R> Translate<R>(Func<T, R> eval)
         {
-            var ret = new RegionDataSounds_Mask<R>();
+            var ret = new PathGrid_Mask<R>();
             this.Translate_InternalFill(ret, eval);
             return ret;
         }
 
-        protected void Translate_InternalFill<R>(RegionDataSounds_Mask<R> obj, Func<T, R> eval)
+        protected void Translate_InternalFill<R>(PathGrid_Mask<R> obj, Func<T, R> eval)
         {
             base.Translate_InternalFill(obj, eval);
-            obj.MusicType = eval(this.MusicType);
-            if (Sounds != null)
+            if (Points != null)
             {
-                obj.Sounds = new MaskItem<R, IEnumerable<MaskItem<R, RegionSound_Mask<R>>>>();
-                obj.Sounds.Overall = eval(this.Sounds.Overall);
-                if (Sounds.Specific != null)
+                obj.Points = new MaskItem<R, IEnumerable<MaskItem<R, PathGridPoint_Mask<R>>>>();
+                obj.Points.Overall = eval(this.Points.Overall);
+                if (Points.Specific != null)
                 {
-                    List<MaskItem<R, RegionSound_Mask<R>>> l = new List<MaskItem<R, RegionSound_Mask<R>>>();
-                    obj.Sounds.Specific = l;
-                    foreach (var item in Sounds.Specific)
+                    List<MaskItem<R, PathGridPoint_Mask<R>>> l = new List<MaskItem<R, PathGridPoint_Mask<R>>>();
+                    obj.Points.Specific = l;
+                    foreach (var item in Points.Specific)
                     {
-                        MaskItem<R, RegionSound_Mask<R>> mask = default(MaskItem<R, RegionSound_Mask<R>>);
+                        MaskItem<R, PathGridPoint_Mask<R>> mask = default(MaskItem<R, PathGridPoint_Mask<R>>);
                         if (item != null)
                         {
-                            mask = new MaskItem<R, RegionSound_Mask<R>>();
+                            mask = new MaskItem<R, PathGridPoint_Mask<R>>();
                             mask.Overall = eval(item.Overall);
                             if (item.Specific != null)
                             {
@@ -1818,6 +1847,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                 }
             }
+            obj.Unknown = eval(this.Unknown);
         }
         #endregion
 
@@ -1825,7 +1855,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void ClearEnumerables()
         {
             base.ClearEnumerables();
-            this.Sounds.Specific = null;
+            this.Points.Specific = null;
         }
         #endregion
 
@@ -1835,36 +1865,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(RegionDataSounds_Mask<bool> printMask = null)
+        public string ToString(PathGrid_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, RegionDataSounds_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, PathGrid_Mask<bool> printMask = null)
         {
-            fg.AppendLine($"{nameof(RegionDataSounds_Mask<T>)} =>");
+            fg.AppendLine($"{nameof(PathGrid_Mask<T>)} =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.MusicType ?? true)
+                if (printMask?.Points?.Overall ?? true)
                 {
-                    fg.AppendLine($"MusicType => {MusicType}");
-                }
-                if (printMask?.Sounds?.Overall ?? true)
-                {
-                    fg.AppendLine("Sounds =>");
+                    fg.AppendLine("Points =>");
                     fg.AppendLine("[");
                     using (new DepthWrapper(fg))
                     {
-                        if (Sounds.Overall != null)
+                        if (Points.Overall != null)
                         {
-                            fg.AppendLine(Sounds.Overall.ToString());
+                            fg.AppendLine(Points.Overall.ToString());
                         }
-                        if (Sounds.Specific != null)
+                        if (Points.Specific != null)
                         {
-                            foreach (var subItem in Sounds.Specific)
+                            foreach (var subItem in Points.Specific)
                             {
                                 fg.AppendLine("[");
                                 using (new DepthWrapper(fg))
@@ -1877,6 +1903,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                     fg.AppendLine("]");
                 }
+                if (printMask?.Unknown ?? true)
+                {
+                    fg.AppendLine($"Unknown => {Unknown}");
+                }
             }
             fg.AppendLine("]");
         }
@@ -1884,24 +1914,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public class RegionDataSounds_ErrorMask : RegionData_ErrorMask, IErrorMask<RegionDataSounds_ErrorMask>
+    public class PathGrid_ErrorMask : MajorRecord_ErrorMask, IErrorMask<PathGrid_ErrorMask>
     {
         #region Members
-        public Exception MusicType;
-        public MaskItem<Exception, IEnumerable<MaskItem<Exception, RegionSound_ErrorMask>>> Sounds;
+        public MaskItem<Exception, IEnumerable<MaskItem<Exception, PathGridPoint_ErrorMask>>> Points;
+        public Exception Unknown;
         #endregion
 
         #region IErrorMask
         public override void SetNthException(int index, Exception ex)
         {
-            RegionDataSounds_FieldIndex enu = (RegionDataSounds_FieldIndex)index;
+            PathGrid_FieldIndex enu = (PathGrid_FieldIndex)index;
             switch (enu)
             {
-                case RegionDataSounds_FieldIndex.MusicType:
-                    this.MusicType = ex;
+                case PathGrid_FieldIndex.Points:
+                    this.Points = new MaskItem<Exception, IEnumerable<MaskItem<Exception, PathGridPoint_ErrorMask>>>(ex, null);
                     break;
-                case RegionDataSounds_FieldIndex.Sounds:
-                    this.Sounds = new MaskItem<Exception, IEnumerable<MaskItem<Exception, RegionSound_ErrorMask>>>(ex, null);
+                case PathGrid_FieldIndex.Unknown:
+                    this.Unknown = ex;
                     break;
                 default:
                     base.SetNthException(index, ex);
@@ -1911,14 +1941,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void SetNthMask(int index, object obj)
         {
-            RegionDataSounds_FieldIndex enu = (RegionDataSounds_FieldIndex)index;
+            PathGrid_FieldIndex enu = (PathGrid_FieldIndex)index;
             switch (enu)
             {
-                case RegionDataSounds_FieldIndex.MusicType:
-                    this.MusicType = (Exception)obj;
+                case PathGrid_FieldIndex.Points:
+                    this.Points = (MaskItem<Exception, IEnumerable<MaskItem<Exception, PathGridPoint_ErrorMask>>>)obj;
                     break;
-                case RegionDataSounds_FieldIndex.Sounds:
-                    this.Sounds = (MaskItem<Exception, IEnumerable<MaskItem<Exception, RegionSound_ErrorMask>>>)obj;
+                case PathGrid_FieldIndex.Unknown:
+                    this.Unknown = (Exception)obj;
                     break;
                 default:
                     base.SetNthMask(index, obj);
@@ -1929,8 +1959,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override bool IsInError()
         {
             if (Overall != null) return true;
-            if (MusicType != null) return true;
-            if (Sounds != null) return true;
+            if (Points != null) return true;
+            if (Unknown != null) return true;
             return false;
         }
         #endregion
@@ -1945,7 +1975,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void ToString(FileGeneration fg)
         {
-            fg.AppendLine("RegionDataSounds_ErrorMask =>");
+            fg.AppendLine("PathGrid_ErrorMask =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
@@ -1966,18 +1996,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         protected override void ToString_FillInternal(FileGeneration fg)
         {
             base.ToString_FillInternal(fg);
-            fg.AppendLine($"MusicType => {MusicType}");
-            fg.AppendLine("Sounds =>");
+            fg.AppendLine("Points =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (Sounds.Overall != null)
+                if (Points.Overall != null)
                 {
-                    fg.AppendLine(Sounds.Overall.ToString());
+                    fg.AppendLine(Points.Overall.ToString());
                 }
-                if (Sounds.Specific != null)
+                if (Points.Specific != null)
                 {
-                    foreach (var subItem in Sounds.Specific)
+                    foreach (var subItem in Points.Specific)
                     {
                         fg.AppendLine("[");
                         using (new DepthWrapper(fg))
@@ -1989,18 +2018,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
             }
             fg.AppendLine("]");
+            fg.AppendLine($"Unknown => {Unknown}");
         }
         #endregion
 
         #region Combine
-        public RegionDataSounds_ErrorMask Combine(RegionDataSounds_ErrorMask rhs)
+        public PathGrid_ErrorMask Combine(PathGrid_ErrorMask rhs)
         {
-            var ret = new RegionDataSounds_ErrorMask();
-            ret.MusicType = this.MusicType.Combine(rhs.MusicType);
-            ret.Sounds = new MaskItem<Exception, IEnumerable<MaskItem<Exception, RegionSound_ErrorMask>>>(this.Sounds.Overall.Combine(rhs.Sounds.Overall), new List<MaskItem<Exception, RegionSound_ErrorMask>>(this.Sounds.Specific.And(rhs.Sounds.Specific)));
+            var ret = new PathGrid_ErrorMask();
+            ret.Points = new MaskItem<Exception, IEnumerable<MaskItem<Exception, PathGridPoint_ErrorMask>>>(this.Points.Overall.Combine(rhs.Points.Overall), new List<MaskItem<Exception, PathGridPoint_ErrorMask>>(this.Points.Specific.And(rhs.Points.Specific)));
+            ret.Unknown = this.Unknown.Combine(rhs.Unknown);
             return ret;
         }
-        public static RegionDataSounds_ErrorMask Combine(RegionDataSounds_ErrorMask lhs, RegionDataSounds_ErrorMask rhs)
+        public static PathGrid_ErrorMask Combine(PathGrid_ErrorMask lhs, PathGrid_ErrorMask rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -2008,11 +2038,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
 
     }
-    public class RegionDataSounds_CopyMask : RegionData_CopyMask
+    public class PathGrid_CopyMask : MajorRecord_CopyMask
     {
         #region Members
-        public bool MusicType;
-        public MaskItem<CopyOption, RegionSound_CopyMask> Sounds;
+        public MaskItem<CopyOption, PathGridPoint_CopyMask> Points;
+        public bool Unknown;
         #endregion
 
     }

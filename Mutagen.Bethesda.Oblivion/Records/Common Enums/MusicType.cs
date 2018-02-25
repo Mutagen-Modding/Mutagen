@@ -6,13 +6,10 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class RegionDataSound
+    public enum MusicType
     {
-        public enum MusicType
-        {
-            Default,
-            Public,
-            Dungeon
-        }
+        Default,
+        Public,
+        Dungeon
     }
 }

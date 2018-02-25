@@ -48,6 +48,7 @@
     <Compile Include="Records\Common Enums\IngredientFlag.cs" />
     <Compile Include="Records\Common Enums\LeveledFlag.cs" />
     <Compile Include="Records\Common Enums\MagicSchool.cs" />
+    <Compile Include="Records\Common Enums\MusicType.cs" />
     <Compile Include="Records\Common Enums\Resistance.cs" />
     <Compile Include="Records\Common Enums\Skill.cs" />
     <Compile Include="Records\Common Enums\SoulLevel.cs" />
@@ -88,6 +89,9 @@
     <Compile Include="Records\Major Records\Book.cs">
       <DependentUpon>Book.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Cell.cs">
+      <DependentUpon>Cell.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Class.cs">
       <DependentUpon>Class.xml</DependentUpon>
     </Compile>
@@ -117,6 +121,9 @@
     </Compile>
     <Compile Include="Records\Major Records\Door.cs">
       <DependentUpon>Door.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\EnableParent.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Enchantment.cs">
       <DependentUpon>Enchantment.xml</DependentUpon>
@@ -214,14 +221,26 @@
     <Compile Include="Records\Major Records\LocalVariable_LoquiGenerated.cs">
       <DependentUpon>Script.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\LockInformation.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\MagicEffect.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\MagicEffect_LoquiGenerated.cs">
       <DependentUpon>MagicEffect.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\MapMarker.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\NPC.cs">
       <DependentUpon>NPC.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PathGrid.cs">
+      <DependentUpon>PathGrid.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PlacedObject.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Race.cs">
       <DependentUpon>Race.xml</DependentUpon>
@@ -251,9 +270,6 @@
       <DependentUpon>Region.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\RegionDataObject.cs">
-      <DependentUpon>Region.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\RegionDataSound.cs">
       <DependentUpon>Region.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\RegionSound.cs">
@@ -520,6 +536,42 @@
     <Compile Include="Records\Major Records\RegionSound_LoquiGenerated.cs">
       <DependentUpon>Region.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Common Subrecords\Ownership_LoquiGenerated.cs">
+      <DependentUpon>Ownership.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Cell_LoquiGenerated.cs">
+      <DependentUpon>Cell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PlacedObject_LoquiGenerated.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\TeleportDestination_LoquiGenerated.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LockInformation_LoquiGenerated.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\EnableParent_LoquiGenerated.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\DistantLODData_LoquiGenerated.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MapMarker_LoquiGenerated.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Water_LoquiGenerated.cs">
+      <DependentUpon>Water.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PlacedCreature_LoquiGenerated.cs">
+      <DependentUpon>PlacedCreature.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PathGrid_LoquiGenerated.cs">
+      <DependentUpon>PathGrid.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PathGridPoint_LoquiGenerated.cs">
+      <DependentUpon>PathGrid.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Records\Common Subrecords\Effect.xml">
@@ -529,6 +581,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Common Subrecords\Model.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Common Subrecords\Ownership.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Common Subrecords\Relation.xml">
@@ -560,6 +615,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Book.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\Cell.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Class.xml">
@@ -652,6 +710,15 @@
     <Content Include="Records\Major Records\NPCSpawn.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Records\Major Records\PathGrid.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\PlacedCreature.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\PlacedObject.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Records\Major Records\Potion.xml">
       <SubType>Designer</SubType>
     </Content>
@@ -692,6 +759,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Tree.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\Water.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Weapon.xml">

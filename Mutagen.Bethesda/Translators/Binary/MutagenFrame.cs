@@ -173,9 +173,7 @@ namespace Mutagen.Bethesda.Binary
             var bytes = this.Reader.ReadBytes((int)this.RemainingLength.Value);
             var res = ZlibStream.UncompressBuffer(bytes);
             return new MutagenFrame(
-                new MutagenReader(
-                    new BinaryReader(
-                        new MemoryStream(res))));
+                new MutagenReader(res));
         }
     }
 }

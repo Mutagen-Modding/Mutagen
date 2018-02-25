@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="PlacedCreature" baseClass="Bethesda.MajorRecord" objType="Record" recordType="ACRE" GUID="b0f41e71-09f4-46b3-8769-7252455d209f" ID="128">
+    <Fields>
+      <FormIDLink name="Object" recordType="NAME" refName="Bethesda.MajorRecord" />
+      <RefDirect name="Ownership" refName="Ownership" />
+      <RefDirect name="EnableParent" recordType="XESP" refName="EnableParent" />
+      <ByteArray name="RagdollData" recordType="XRGD" />
+      <Float name="Scale" recordType="XSCL" />
+      <Data>
+        <Fields>
+          <P3Float name="Position" />
+          <P3Float name="Rotation" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+</Loqui>

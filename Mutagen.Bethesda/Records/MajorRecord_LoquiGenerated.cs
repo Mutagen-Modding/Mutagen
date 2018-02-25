@@ -967,6 +967,9 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType LTEX_HEADER = new RecordType("LTEX");
         public static readonly RecordType LVLI_HEADER = new RecordType("LVLI");
         public static readonly RecordType LIGH_HEADER = new RecordType("LIGH");
+        public static readonly RecordType PGRD_HEADER = new RecordType("PGRD");
+        public static readonly RecordType ACRE_HEADER = new RecordType("ACRE");
+        public static readonly RecordType REFR_HEADER = new RecordType("REFR");
         public static readonly RecordType REGN_HEADER = new RecordType("REGN");
         public static readonly RecordType SCPT_HEADER = new RecordType("SCPT");
         public static readonly RecordType SKIL_HEADER = new RecordType("SKIL");
@@ -974,11 +977,13 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType STAT_HEADER = new RecordType("STAT");
         public static readonly RecordType SBSP_HEADER = new RecordType("SBSP");
         public static readonly RecordType TREE_HEADER = new RecordType("TREE");
+        public static readonly RecordType WATR_HEADER = new RecordType("WATR");
         public static readonly RecordType WTHR_HEADER = new RecordType("WTHR");
         public static readonly RecordType ACTI_HEADER = new RecordType("ACTI");
         public static readonly RecordType APPA_HEADER = new RecordType("APPA");
         public static readonly RecordType BSGN_HEADER = new RecordType("BSGN");
         public static readonly RecordType BOOK_HEADER = new RecordType("BOOK");
+        public static readonly RecordType CELL_HEADER = new RecordType("CELL");
         public static readonly RecordType CLAS_HEADER = new RecordType("CLAS");
         public static readonly RecordType CONT_HEADER = new RecordType("CONT");
         public static readonly RecordType CREA_HEADER = new RecordType("CREA");
@@ -1025,6 +1030,9 @@ namespace Mutagen.Bethesda.Internals
                         LTEX_HEADER,
                         LVLI_HEADER,
                         LIGH_HEADER,
+                        PGRD_HEADER,
+                        ACRE_HEADER,
+                        REFR_HEADER,
                         REGN_HEADER,
                         SCPT_HEADER,
                         SKIL_HEADER,
@@ -1032,11 +1040,13 @@ namespace Mutagen.Bethesda.Internals
                         STAT_HEADER,
                         SBSP_HEADER,
                         TREE_HEADER,
+                        WATR_HEADER,
                         WTHR_HEADER,
                         ACTI_HEADER,
                         APPA_HEADER,
                         BSGN_HEADER,
                         BOOK_HEADER,
+                        CELL_HEADER,
                         CLAS_HEADER,
                         CONT_HEADER,
                         CREA_HEADER,

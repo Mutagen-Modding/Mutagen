@@ -11,8 +11,9 @@ using System.Text;
 using Loqui;
 using Noggog;
 using Noggog.Notifying;
-using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda;
+using Mutagen.Bethesda.Internals;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
@@ -21,53 +22,38 @@ using Loqui.Xml;
 using System.Diagnostics;
 using Mutagen.Bethesda.Binary;
 
-namespace Mutagen.Bethesda
+namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
-    public abstract partial class NamedMajorRecord : MajorRecord, INamedMajorRecord, ILoquiObjectSetter, IEquatable<NamedMajorRecord>
+    public partial class Water : MajorRecord, IWater, ILoquiObjectSetter, IEquatable<Water>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        ILoquiRegistration ILoquiObject.Registration => NamedMajorRecord_Registration.Instance;
-        public new static NamedMajorRecord_Registration Registration => NamedMajorRecord_Registration.Instance;
+        ILoquiRegistration ILoquiObject.Registration => Water_Registration.Instance;
+        public new static Water_Registration Registration => Water_Registration.Instance;
 
         #region Ctor
-        public NamedMajorRecord()
+        public Water()
         {
             CustomCtor();
         }
         partial void CustomCtor();
         #endregion
 
-        #region Name
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected INotifyingSetItem<String> _Name = NotifyingSetItem.Factory<String>(markAsSet: false);
-        public INotifyingSetItem<String> Name_Property => _Name;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public String Name
-        {
-            get => this._Name.Item;
-            set => this._Name.Set(value);
-        }
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItem<String> INamedMajorRecord.Name_Property => this.Name_Property;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        INotifyingSetItemGetter<String> INamedMajorRecordGetter.Name_Property => this.Name_Property;
-        #endregion
 
         #region Loqui Getter Interface
 
-        protected override object GetNthObject(ushort index) => NamedMajorRecordCommon.GetNthObject(index, this);
+        protected override object GetNthObject(ushort index) => WaterCommon.GetNthObject(index, this);
 
-        protected override bool GetNthObjectHasBeenSet(ushort index) => NamedMajorRecordCommon.GetNthObjectHasBeenSet(index, this);
+        protected override bool GetNthObjectHasBeenSet(ushort index) => WaterCommon.GetNthObjectHasBeenSet(index, this);
 
-        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => NamedMajorRecordCommon.UnsetNthObject(index, this, cmds);
+        protected override void UnsetNthObject(ushort index, NotifyingUnsetParameters cmds) => WaterCommon.UnsetNthObject(index, this, cmds);
 
         #endregion
 
         #region Loqui Interface
         protected override void SetNthObjectHasBeenSet(ushort index, bool on)
         {
-            NamedMajorRecordCommon.SetNthObjectHasBeenSet(index, on, this);
+            WaterCommon.SetNthObjectHasBeenSet(index, on, this);
         }
 
         #endregion
@@ -75,55 +61,46 @@ namespace Mutagen.Bethesda
         #region To String
         public override string ToString()
         {
-            return NamedMajorRecordCommon.ToString(this, printMask: null);
+            return WaterCommon.ToString(this, printMask: null);
         }
 
         public string ToString(
             string name = null,
-            NamedMajorRecord_Mask<bool> printMask = null)
+            Water_Mask<bool> printMask = null)
         {
-            return NamedMajorRecordCommon.ToString(this, name: name, printMask: printMask);
+            return WaterCommon.ToString(this, name: name, printMask: printMask);
         }
 
         public override void ToString(
             FileGeneration fg,
             string name = null)
         {
-            NamedMajorRecordCommon.ToString(this, fg, name: name, printMask: null);
+            WaterCommon.ToString(this, fg, name: name, printMask: null);
         }
 
         #endregion
 
-        public new NamedMajorRecord_Mask<bool> GetHasBeenSetMask()
+        public new Water_Mask<bool> GetHasBeenSetMask()
         {
-            return NamedMajorRecordCommon.GetHasBeenSetMask(this);
+            return WaterCommon.GetHasBeenSetMask(this);
         }
         #region Equals and Hash
         public override bool Equals(object obj)
         {
-            if (!(obj is NamedMajorRecord rhs)) return false;
+            if (!(obj is Water rhs)) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(NamedMajorRecord rhs)
+        public bool Equals(Water rhs)
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (Name_Property.HasBeenSet != rhs.Name_Property.HasBeenSet) return false;
-            if (Name_Property.HasBeenSet)
-            {
-                if (!object.Equals(Name, rhs.Name)) return false;
-            }
             return true;
         }
 
         public override int GetHashCode()
         {
             int ret = 0;
-            if (Name_Property.HasBeenSet)
-            {
-                ret = HashHelper.GetHashCode(Name).CombineHashCode(ret);
-            }
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -132,12 +109,92 @@ namespace Mutagen.Bethesda
 
 
         #region XML Translation
+        #region XML Create
+        [DebuggerStepThrough]
+        public new static Water Create_XML(XElement root)
+        {
+            return Create_XML(
+                root: root,
+                doMasks: false,
+                errorMask: out var errorMask);
+        }
+
+        [DebuggerStepThrough]
+        public static Water Create_XML(
+            XElement root,
+            out Water_ErrorMask errorMask)
+        {
+            return Create_XML(
+                root: root,
+                doMasks: true,
+                errorMask: out errorMask);
+        }
+
+        [DebuggerStepThrough]
+        public static Water Create_XML(
+            XElement root,
+            bool doMasks,
+            out Water_ErrorMask errorMask)
+        {
+            var ret = Create_XML(
+                root: root,
+                doMasks: doMasks);
+            errorMask = ret.ErrorMask;
+            return ret.Object;
+        }
+
+        [DebuggerStepThrough]
+        public static (Water Object, Water_ErrorMask ErrorMask) Create_XML(
+            XElement root,
+            bool doMasks)
+        {
+            Water_ErrorMask errMaskRet = null;
+            var ret = Create_XML_Internal(
+                root: root,
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Water_ErrorMask()) : default(Func<Water_ErrorMask>));
+            return (ret, errMaskRet);
+        }
+
+        public static Water Create_XML(string path)
+        {
+            var root = XDocument.Load(path).Root;
+            return Create_XML(root: root);
+        }
+
+        public static Water Create_XML(
+            string path,
+            out Water_ErrorMask errorMask)
+        {
+            var root = XDocument.Load(path).Root;
+            return Create_XML(
+                root: root,
+                errorMask: out errorMask);
+        }
+
+        public static Water Create_XML(Stream stream)
+        {
+            var root = XDocument.Load(stream).Root;
+            return Create_XML(root: root);
+        }
+
+        public static Water Create_XML(
+            Stream stream,
+            out Water_ErrorMask errorMask)
+        {
+            var root = XDocument.Load(stream).Root;
+            return Create_XML(
+                root: root,
+                errorMask: out errorMask);
+        }
+
+        #endregion
+
         #region XML Copy In
         public override void CopyIn_XML(
             XElement root,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<NamedMajorRecord, NamedMajorRecord_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<Water, Water_ErrorMask>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
@@ -148,10 +205,10 @@ namespace Mutagen.Bethesda
 
         public virtual void CopyIn_XML(
             XElement root,
-            out NamedMajorRecord_ErrorMask errorMask,
+            out Water_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiXmlTranslation<NamedMajorRecord, NamedMajorRecord_ErrorMask>.Instance.CopyIn(
+            LoquiXmlTranslation<Water, Water_ErrorMask>.Instance.CopyIn(
                 root: root,
                 item: this,
                 skipProtected: true,
@@ -172,7 +229,7 @@ namespace Mutagen.Bethesda
 
         public void CopyIn_XML(
             string path,
-            out NamedMajorRecord_ErrorMask errorMask,
+            out Water_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(path).Root;
@@ -194,7 +251,7 @@ namespace Mutagen.Bethesda
 
         public void CopyIn_XML(
             Stream stream,
-            out NamedMajorRecord_ErrorMask errorMask,
+            out Water_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
             var root = XDocument.Load(stream).Root;
@@ -211,7 +268,7 @@ namespace Mutagen.Bethesda
         {
             this.CopyIn_XML(
                 root: root,
-                errorMask: out NamedMajorRecord_ErrorMask errMask,
+                errorMask: out Water_ErrorMask errMask,
                 cmds: cmds);
             errorMask = errMask;
         }
@@ -221,10 +278,10 @@ namespace Mutagen.Bethesda
         #region XML Write
         public virtual void Write_XML(
             XmlWriter writer,
-            out NamedMajorRecord_ErrorMask errorMask,
+            out Water_ErrorMask errorMask,
             string name = null)
         {
-            errorMask = (NamedMajorRecord_ErrorMask)this.Write_XML_Internal(
+            errorMask = (Water_ErrorMask)this.Write_XML_Internal(
                 writer: writer,
                 name: name,
                 doMasks: true);
@@ -232,7 +289,7 @@ namespace Mutagen.Bethesda
 
         public virtual void Write_XML(
             string path,
-            out NamedMajorRecord_ErrorMask errorMask,
+            out Water_ErrorMask errorMask,
             string name = null)
         {
             using (var writer = new XmlTextWriter(path, Encoding.ASCII))
@@ -248,7 +305,7 @@ namespace Mutagen.Bethesda
 
         public virtual void Write_XML(
             Stream stream,
-            out NamedMajorRecord_ErrorMask errorMask,
+            out Water_ErrorMask errorMask,
             string name = null)
         {
             using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
@@ -262,12 +319,50 @@ namespace Mutagen.Bethesda
             }
         }
 
+        public override void Write_XML(
+            XmlWriter writer,
+            string name = null)
+        {
+            this.Write_XML_Internal(
+                writer: writer,
+                name: name,
+                doMasks: false);
+        }
+
+        public override void Write_XML(
+            string path,
+            string name = null)
+        {
+            using (var writer = new XmlTextWriter(path, Encoding.ASCII))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 3;
+                Write_XML(
+                    writer: writer,
+                    name: name);
+            }
+        }
+
+        public override void Write_XML(
+            Stream stream,
+            string name = null)
+        {
+            using (var writer = new XmlTextWriter(stream, Encoding.ASCII))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.Indentation = 3;
+                Write_XML(
+                    writer: writer,
+                    name: name);
+            }
+        }
+
         protected override object Write_XML_Internal(
             XmlWriter writer,
             bool doMasks,
             string name = null)
         {
-            NamedMajorRecordCommon.Write_XML(
+            WaterCommon.Write_XML(
                 writer: writer,
                 item: this,
                 doMasks: doMasks,
@@ -276,20 +371,38 @@ namespace Mutagen.Bethesda
         }
         #endregion
 
+        private static Water Create_XML_Internal(
+            XElement root,
+            Func<Water_ErrorMask> errorMask)
+        {
+            var ret = new Water();
+            try
+            {
+                foreach (var elem in root.Elements())
+                {
+                    Fill_XML_Internal(
+                        item: ret,
+                        root: elem,
+                        name: elem.Name.LocalName,
+                        errorMask: errorMask);
+                }
+            }
+            catch (Exception ex)
+            when (errorMask != null)
+            {
+                errorMask().Overall = ex;
+            }
+            return ret;
+        }
+
         protected static void Fill_XML_Internal(
-            NamedMajorRecord item,
+            Water item,
             XElement root,
             string name,
-            Func<NamedMajorRecord_ErrorMask> errorMask)
+            Func<Water_ErrorMask> errorMask)
         {
             switch (name)
             {
-                case "Name":
-                    item._Name.SetIfSucceeded(StringXmlTranslation.Instance.Parse(
-                        root,
-                        fieldIndex: (int)NamedMajorRecord_FieldIndex.Name,
-                        errorMask: errorMask));
-                    break;
                 default:
                     MajorRecord.Fill_XML_Internal(
                         item: item,
@@ -303,12 +416,107 @@ namespace Mutagen.Bethesda
         #endregion
 
         #region Binary Translation
+        #region Binary Create
+        [DebuggerStepThrough]
+        public new static Water Create_Binary(MutagenFrame frame)
+        {
+            return Create_Binary(
+                frame: frame,
+                doMasks: false,
+                errorMask: out var errorMask);
+        }
+
+        [DebuggerStepThrough]
+        public static Water Create_Binary(
+            MutagenFrame frame,
+            out Water_ErrorMask errorMask)
+        {
+            return Create_Binary(
+                frame: frame,
+                doMasks: true,
+                errorMask: out errorMask);
+        }
+
+        [DebuggerStepThrough]
+        public static Water Create_Binary(
+            MutagenFrame frame,
+            bool doMasks,
+            out Water_ErrorMask errorMask)
+        {
+            var ret = Create_Binary(
+                frame: frame,
+                recordTypeConverter: null,
+                doMasks: doMasks);
+            errorMask = ret.ErrorMask;
+            return ret.Object;
+        }
+
+        [DebuggerStepThrough]
+        public static (Water Object, Water_ErrorMask ErrorMask) Create_Binary(
+            MutagenFrame frame,
+            RecordTypeConverter recordTypeConverter,
+            bool doMasks)
+        {
+            Water_ErrorMask errMaskRet = null;
+            var ret = Create_Binary_Internal(
+                frame: frame,
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Water_ErrorMask()) : default(Func<Water_ErrorMask>),
+                recordTypeConverter: recordTypeConverter);
+            return (ret, errMaskRet);
+        }
+
+        public static Water Create_Binary(string path)
+        {
+            using (var reader = new MutagenReader(path))
+            {
+                var frame = new MutagenFrame(reader);
+                return Create_Binary(frame: frame);
+            }
+        }
+
+        public static Water Create_Binary(
+            string path,
+            out Water_ErrorMask errorMask)
+        {
+            using (var reader = new MutagenReader(path))
+            {
+                var frame = new MutagenFrame(reader);
+                return Create_Binary(
+                    frame: frame,
+                    errorMask: out errorMask);
+            }
+        }
+
+        public static Water Create_Binary(Stream stream)
+        {
+            using (var reader = new MutagenReader(stream))
+            {
+                var frame = new MutagenFrame(reader);
+                return Create_Binary(frame: frame);
+            }
+        }
+
+        public static Water Create_Binary(
+            Stream stream,
+            out Water_ErrorMask errorMask)
+        {
+            using (var reader = new MutagenReader(stream))
+            {
+                var frame = new MutagenFrame(reader);
+                return Create_Binary(
+                    frame: frame,
+                    errorMask: out errorMask);
+            }
+        }
+
+        #endregion
+
         #region Binary Copy In
         public override void CopyIn_Binary(
             MutagenFrame frame,
             NotifyingFireParameters cmds = null)
         {
-            LoquiBinaryTranslation<NamedMajorRecord, NamedMajorRecord_ErrorMask>.Instance.CopyIn(
+            LoquiBinaryTranslation<Water, Water_ErrorMask>.Instance.CopyIn(
                 frame: frame,
                 item: this,
                 skipProtected: true,
@@ -319,10 +527,10 @@ namespace Mutagen.Bethesda
 
         public virtual void CopyIn_Binary(
             MutagenFrame frame,
-            out NamedMajorRecord_ErrorMask errorMask,
+            out Water_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
-            LoquiBinaryTranslation<NamedMajorRecord, NamedMajorRecord_ErrorMask>.Instance.CopyIn(
+            LoquiBinaryTranslation<Water, Water_ErrorMask>.Instance.CopyIn(
                 frame: frame,
                 item: this,
                 skipProtected: true,
@@ -346,7 +554,7 @@ namespace Mutagen.Bethesda
 
         public void CopyIn_Binary(
             string path,
-            out NamedMajorRecord_ErrorMask errorMask,
+            out Water_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
             using (var reader = new MutagenReader(path))
@@ -374,7 +582,7 @@ namespace Mutagen.Bethesda
 
         public void CopyIn_Binary(
             Stream stream,
-            out NamedMajorRecord_ErrorMask errorMask,
+            out Water_ErrorMask errorMask,
             NotifyingFireParameters cmds = null)
         {
             using (var reader = new MutagenReader(stream))
@@ -394,7 +602,7 @@ namespace Mutagen.Bethesda
         {
             this.CopyIn_Binary(
                 frame: frame,
-                errorMask: out NamedMajorRecord_ErrorMask errMask,
+                errorMask: out Water_ErrorMask errMask,
                 cmds: cmds);
             errorMask = errMask;
         }
@@ -404,9 +612,9 @@ namespace Mutagen.Bethesda
         #region Binary Write
         public virtual void Write_Binary(
             MutagenWriter writer,
-            out NamedMajorRecord_ErrorMask errorMask)
+            out Water_ErrorMask errorMask)
         {
-            errorMask = (NamedMajorRecord_ErrorMask)this.Write_Binary_Internal(
+            errorMask = (Water_ErrorMask)this.Write_Binary_Internal(
                 writer: writer,
                 recordTypeConverter: null,
                 doMasks: true);
@@ -414,7 +622,7 @@ namespace Mutagen.Bethesda
 
         public virtual void Write_Binary(
             string path,
-            out NamedMajorRecord_ErrorMask errorMask)
+            out Water_ErrorMask errorMask)
         {
             using (var writer = new MutagenWriter(path))
             {
@@ -426,7 +634,7 @@ namespace Mutagen.Bethesda
 
         public virtual void Write_Binary(
             Stream stream,
-            out NamedMajorRecord_ErrorMask errorMask)
+            out Water_ErrorMask errorMask)
         {
             using (var writer = new MutagenWriter(stream))
             {
@@ -436,12 +644,36 @@ namespace Mutagen.Bethesda
             }
         }
 
+        public override void Write_Binary(MutagenWriter writer)
+        {
+            this.Write_Binary_Internal(
+                writer: writer,
+                recordTypeConverter: null,
+                doMasks: false);
+        }
+
+        public override void Write_Binary(string path)
+        {
+            using (var writer = new MutagenWriter(path))
+            {
+                Write_Binary(writer: writer);
+            }
+        }
+
+        public override void Write_Binary(Stream stream)
+        {
+            using (var writer = new MutagenWriter(stream))
+            {
+                Write_Binary(writer: writer);
+            }
+        }
+
         protected override object Write_Binary_Internal(
             MutagenWriter writer,
             RecordTypeConverter recordTypeConverter,
             bool doMasks)
         {
-            NamedMajorRecordCommon.Write_Binary(
+            WaterCommon.Write_Binary(
                 writer: writer,
                 item: this,
                 doMasks: doMasks,
@@ -451,52 +683,58 @@ namespace Mutagen.Bethesda
         }
         #endregion
 
-        protected static TryGet<NamedMajorRecord_FieldIndex?> Fill_Binary_RecordTypes(
-            NamedMajorRecord item,
+        private static Water Create_Binary_Internal(
             MutagenFrame frame,
-            Func<NamedMajorRecord_ErrorMask> errorMask,
-            RecordTypeConverter recordTypeConverter = null)
+            Func<Water_ErrorMask> errorMask,
+            RecordTypeConverter recordTypeConverter)
         {
-            var nextRecordType = HeaderTranslation.GetNextSubRecordType(
-                reader: frame.Reader,
-                contentLength: out var contentLength,
-                recordTypeConverter: recordTypeConverter);
-            switch (nextRecordType.Type)
-            {
-                case "FULL":
-                    frame.Position += Constants.SUBRECORD_LENGTH;
-                    var NametryGet = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.Spawn(contentLength),
-                        fieldIndex: (int)NamedMajorRecord_FieldIndex.Name,
-                        errorMask: errorMask);
-                    item._Name.SetIfSucceeded(NametryGet);
-                    return TryGet<NamedMajorRecord_FieldIndex?>.Succeed(NamedMajorRecord_FieldIndex.Name);
-                default:
-                    return MajorRecord.Fill_Binary_RecordTypes(
-                        item: item,
-                        frame: frame,
-                        errorMask: errorMask).Bubble((i) => NamedMajorRecordCommon.ConvertFieldIndex(i));
-            }
+            return UtilityTranslation.MajorRecordParse<Water, Water_ErrorMask, Water_FieldIndex>(
+                record: new Water(),
+                frame: frame,
+                errorMask: errorMask,
+                recType: Water_Registration.WATR_HEADER,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: Fill_Binary_Structs,
+                fillTyped: null);
+        }
+
+        protected static void Fill_Binary_Structs(
+            Water item,
+            MutagenFrame frame,
+            Func<Water_ErrorMask> errorMask)
+        {
+            MajorRecord.Fill_Binary_Structs(
+                item: item,
+                frame: frame,
+                errorMask: errorMask);
         }
 
         #endregion
 
-        public NamedMajorRecord Copy(
-            NamedMajorRecord_CopyMask copyMask = null,
-            INamedMajorRecordGetter def = null)
+        public Water Copy(
+            Water_CopyMask copyMask = null,
+            IWaterGetter def = null)
         {
-            return NamedMajorRecord.Copy(
+            return Water.Copy(
                 this,
                 copyMask: copyMask,
                 def: def);
         }
 
-        public static NamedMajorRecord Copy(
-            INamedMajorRecord item,
-            NamedMajorRecord_CopyMask copyMask = null,
-            INamedMajorRecordGetter def = null)
+        public static Water Copy(
+            IWater item,
+            Water_CopyMask copyMask = null,
+            IWaterGetter def = null)
         {
-            NamedMajorRecord ret = (NamedMajorRecord)System.Activator.CreateInstance(item.GetType());
+            Water ret;
+            if (item.GetType().Equals(typeof(Water)))
+            {
+                ret = new Water();
+            }
+            else
+            {
+                ret = (Water)System.Activator.CreateInstance(item.GetType());
+            }
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
@@ -506,11 +744,19 @@ namespace Mutagen.Bethesda
 
         public static CopyType CopyGeneric<CopyType>(
             CopyType item,
-            NamedMajorRecord_CopyMask copyMask = null,
-            INamedMajorRecordGetter def = null)
-            where CopyType : class, INamedMajorRecord
+            Water_CopyMask copyMask = null,
+            IWaterGetter def = null)
+            where CopyType : class, IWater
         {
-            CopyType ret = (CopyType)System.Activator.CreateInstance(item.GetType());
+            CopyType ret;
+            if (item.GetType().Equals(typeof(Water)))
+            {
+                ret = new Water() as CopyType;
+            }
+            else
+            {
+                ret = (CopyType)System.Activator.CreateInstance(item.GetType());
+            }
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
@@ -521,12 +767,20 @@ namespace Mutagen.Bethesda
             return ret;
         }
 
-        public static NamedMajorRecord Copy_ToLoqui(
-            INamedMajorRecordGetter item,
-            NamedMajorRecord_CopyMask copyMask = null,
-            INamedMajorRecordGetter def = null)
+        public static Water Copy_ToLoqui(
+            IWaterGetter item,
+            Water_CopyMask copyMask = null,
+            IWaterGetter def = null)
         {
-            NamedMajorRecord ret = (NamedMajorRecord)System.Activator.CreateInstance(item.GetType());
+            Water ret;
+            if (item.GetType().Equals(typeof(Water)))
+            {
+                ret = new Water() as Water;
+            }
+            else
+            {
+                ret = (Water)System.Activator.CreateInstance(item.GetType());
+            }
             ret.CopyFieldsFrom(
                 item,
                 copyMask: copyMask,
@@ -536,14 +790,9 @@ namespace Mutagen.Bethesda
 
         protected override void SetNthObject(ushort index, object obj, NotifyingFireParameters cmds = null)
         {
-            NamedMajorRecord_FieldIndex enu = (NamedMajorRecord_FieldIndex)index;
+            Water_FieldIndex enu = (Water_FieldIndex)index;
             switch (enu)
             {
-                case NamedMajorRecord_FieldIndex.Name:
-                    this._Name.Set(
-                        (String)obj,
-                        cmds);
-                    break;
                 default:
                     base.SetNthObject(index, obj, cmds);
                     break;
@@ -553,28 +802,33 @@ namespace Mutagen.Bethesda
         public override void Clear(NotifyingUnsetParameters cmds = null)
         {
             CallClearPartial_Internal(cmds);
-            NamedMajorRecordCommon.Clear(this, cmds);
+            WaterCommon.Clear(this, cmds);
         }
 
 
-        protected new static void CopyInInternal_NamedMajorRecord(NamedMajorRecord obj, KeyValuePair<ushort, object> pair)
+        public new static Water Create(IEnumerable<KeyValuePair<ushort, object>> fields)
         {
-            if (!EnumExt.TryParse(pair.Key, out NamedMajorRecord_FieldIndex enu))
+            var ret = new Water();
+            foreach (var pair in fields)
+            {
+                CopyInInternal_Water(ret, pair);
+            }
+            return ret;
+        }
+
+        protected new static void CopyInInternal_Water(Water obj, KeyValuePair<ushort, object> pair)
+        {
+            if (!EnumExt.TryParse(pair.Key, out Water_FieldIndex enu))
             {
                 CopyInInternal_MajorRecord(obj, pair);
             }
             switch (enu)
             {
-                case NamedMajorRecord_FieldIndex.Name:
-                    obj._Name.Set(
-                        (String)pair.Value,
-                        null);
-                    break;
                 default:
                     throw new ArgumentException($"Unknown enum type: {enu}");
             }
         }
-        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, NamedMajorRecord obj)
+        public static void CopyIn(IEnumerable<KeyValuePair<ushort, object>> fields, Water obj)
         {
             ILoquiObjectExt.CopyFieldsIn(obj, fields, def: null, skipProtected: false, cmds: null);
         }
@@ -583,20 +837,12 @@ namespace Mutagen.Bethesda
     #endregion
 
     #region Interface
-    public interface INamedMajorRecord : INamedMajorRecordGetter, IMajorRecord, ILoquiClass<INamedMajorRecord, INamedMajorRecordGetter>, ILoquiClass<NamedMajorRecord, INamedMajorRecordGetter>
+    public interface IWater : IWaterGetter, IMajorRecord, ILoquiClass<IWater, IWaterGetter>, ILoquiClass<Water, IWaterGetter>
     {
-        new String Name { get; set; }
-        new INotifyingSetItem<String> Name_Property { get; }
-
     }
 
-    public interface INamedMajorRecordGetter : IMajorRecordGetter
+    public interface IWaterGetter : IMajorRecordGetter
     {
-        #region Name
-        String Name { get; }
-        INotifyingSetItemGetter<String> Name_Property { get; }
-
-        #endregion
 
     }
 
@@ -604,53 +850,52 @@ namespace Mutagen.Bethesda
 
 }
 
-namespace Mutagen.Bethesda.Internals
+namespace Mutagen.Bethesda.Oblivion.Internals
 {
     #region Field Index
-    public enum NamedMajorRecord_FieldIndex
+    public enum Water_FieldIndex
     {
         MajorRecordFlags = 0,
         FormID = 1,
         Version = 2,
         EditorID = 3,
         RecordType = 4,
-        Name = 5,
     }
     #endregion
 
     #region Registration
-    public class NamedMajorRecord_Registration : ILoquiRegistration
+    public class Water_Registration : ILoquiRegistration
     {
-        public static readonly NamedMajorRecord_Registration Instance = new NamedMajorRecord_Registration();
+        public static readonly Water_Registration Instance = new Water_Registration();
 
-        public static ProtocolKey ProtocolKey => ProtocolDefinition_Bethesda.ProtocolKey;
+        public static ProtocolKey ProtocolKey => ProtocolDefinition_Oblivion.ProtocolKey;
 
         public static readonly ObjectKey ObjectKey = new ObjectKey(
-            protocolKey: ProtocolDefinition_Bethesda.ProtocolKey,
-            msgID: 2,
+            protocolKey: ProtocolDefinition_Oblivion.ProtocolKey,
+            msgID: 127,
             version: 0);
 
-        public const string GUID = "492d4810-c631-49fc-8358-a68f4d1af93d";
+        public const string GUID = "31d50641-f6df-4533-89c3-e764dc35a702";
 
-        public const ushort FieldCount = 1;
+        public const ushort FieldCount = 0;
 
-        public static readonly Type MaskType = typeof(NamedMajorRecord_Mask<>);
+        public static readonly Type MaskType = typeof(Water_Mask<>);
 
-        public static readonly Type ErrorMaskType = typeof(NamedMajorRecord_ErrorMask);
+        public static readonly Type ErrorMaskType = typeof(Water_ErrorMask);
 
-        public static readonly Type ClassType = typeof(NamedMajorRecord);
+        public static readonly Type ClassType = typeof(Water);
 
-        public static readonly Type GetterType = typeof(INamedMajorRecordGetter);
+        public static readonly Type GetterType = typeof(IWaterGetter);
 
-        public static readonly Type SetterType = typeof(INamedMajorRecord);
+        public static readonly Type SetterType = typeof(IWater);
 
-        public static readonly Type CommonType = typeof(NamedMajorRecordCommon);
+        public static readonly Type CommonType = typeof(WaterCommon);
 
-        public const string FullName = "Mutagen.Bethesda.NamedMajorRecord";
+        public const string FullName = "Mutagen.Bethesda.Oblivion.Water";
 
-        public const string Name = "NamedMajorRecord";
+        public const string Name = "Water";
 
-        public const string Namespace = "Mutagen.Bethesda";
+        public const string Namespace = "Mutagen.Bethesda.Oblivion";
 
         public const byte GenericCount = 0;
 
@@ -660,8 +905,6 @@ namespace Mutagen.Bethesda.Internals
         {
             switch (str.Upper)
             {
-                case "NAME":
-                    return (ushort)NamedMajorRecord_FieldIndex.Name;
                 default:
                     return null;
             }
@@ -669,11 +912,9 @@ namespace Mutagen.Bethesda.Internals
 
         public static bool GetNthIsEnumerable(ushort index)
         {
-            NamedMajorRecord_FieldIndex enu = (NamedMajorRecord_FieldIndex)index;
+            Water_FieldIndex enu = (Water_FieldIndex)index;
             switch (enu)
             {
-                case NamedMajorRecord_FieldIndex.Name:
-                    return false;
                 default:
                     return MajorRecord_Registration.GetNthIsEnumerable(index);
             }
@@ -681,11 +922,9 @@ namespace Mutagen.Bethesda.Internals
 
         public static bool GetNthIsLoqui(ushort index)
         {
-            NamedMajorRecord_FieldIndex enu = (NamedMajorRecord_FieldIndex)index;
+            Water_FieldIndex enu = (Water_FieldIndex)index;
             switch (enu)
             {
-                case NamedMajorRecord_FieldIndex.Name:
-                    return false;
                 default:
                     return MajorRecord_Registration.GetNthIsLoqui(index);
             }
@@ -693,11 +932,9 @@ namespace Mutagen.Bethesda.Internals
 
         public static bool GetNthIsSingleton(ushort index)
         {
-            NamedMajorRecord_FieldIndex enu = (NamedMajorRecord_FieldIndex)index;
+            Water_FieldIndex enu = (Water_FieldIndex)index;
             switch (enu)
             {
-                case NamedMajorRecord_FieldIndex.Name:
-                    return false;
                 default:
                     return MajorRecord_Registration.GetNthIsSingleton(index);
             }
@@ -705,11 +942,9 @@ namespace Mutagen.Bethesda.Internals
 
         public static string GetNthName(ushort index)
         {
-            NamedMajorRecord_FieldIndex enu = (NamedMajorRecord_FieldIndex)index;
+            Water_FieldIndex enu = (Water_FieldIndex)index;
             switch (enu)
             {
-                case NamedMajorRecord_FieldIndex.Name:
-                    return "Name";
                 default:
                     return MajorRecord_Registration.GetNthName(index);
             }
@@ -717,11 +952,9 @@ namespace Mutagen.Bethesda.Internals
 
         public static bool IsNthDerivative(ushort index)
         {
-            NamedMajorRecord_FieldIndex enu = (NamedMajorRecord_FieldIndex)index;
+            Water_FieldIndex enu = (Water_FieldIndex)index;
             switch (enu)
             {
-                case NamedMajorRecord_FieldIndex.Name:
-                    return false;
                 default:
                     return MajorRecord_Registration.IsNthDerivative(index);
             }
@@ -729,11 +962,9 @@ namespace Mutagen.Bethesda.Internals
 
         public static bool IsProtected(ushort index)
         {
-            NamedMajorRecord_FieldIndex enu = (NamedMajorRecord_FieldIndex)index;
+            Water_FieldIndex enu = (Water_FieldIndex)index;
             switch (enu)
             {
-                case NamedMajorRecord_FieldIndex.Name:
-                    return false;
                 default:
                     return MajorRecord_Registration.IsProtected(index);
             }
@@ -741,90 +972,18 @@ namespace Mutagen.Bethesda.Internals
 
         public static Type GetNthType(ushort index)
         {
-            NamedMajorRecord_FieldIndex enu = (NamedMajorRecord_FieldIndex)index;
+            Water_FieldIndex enu = (Water_FieldIndex)index;
             switch (enu)
             {
-                case NamedMajorRecord_FieldIndex.Name:
-                    return typeof(String);
                 default:
                     return MajorRecord_Registration.GetNthType(index);
             }
         }
 
+        public static readonly RecordType WATR_HEADER = new RecordType("WATR");
+        public static readonly RecordType TRIGGERING_RECORD_TYPE = WATR_HEADER;
         public const int NumStructFields = 0;
-        public const int NumTypedFields = 1;
-        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
-        public static readonly RecordType ACTI_HEADER = new RecordType("ACTI");
-        public static readonly RecordType APPA_HEADER = new RecordType("APPA");
-        public static readonly RecordType BSGN_HEADER = new RecordType("BSGN");
-        public static readonly RecordType BOOK_HEADER = new RecordType("BOOK");
-        public static readonly RecordType CELL_HEADER = new RecordType("CELL");
-        public static readonly RecordType CLAS_HEADER = new RecordType("CLAS");
-        public static readonly RecordType CONT_HEADER = new RecordType("CONT");
-        public static readonly RecordType CREA_HEADER = new RecordType("CREA");
-        public static readonly RecordType DOOR_HEADER = new RecordType("DOOR");
-        public static readonly RecordType ENCH_HEADER = new RecordType("ENCH");
-        public static readonly RecordType EYES_HEADER = new RecordType("EYES");
-        public static readonly RecordType FACT_HEADER = new RecordType("FACT");
-        public static readonly RecordType FLOR_HEADER = new RecordType("FLOR");
-        public static readonly RecordType FURN_HEADER = new RecordType("FURN");
-        public static readonly RecordType HAIR_HEADER = new RecordType("HAIR");
-        public static readonly RecordType INGR_HEADER = new RecordType("INGR");
-        public static readonly RecordType KEYM_HEADER = new RecordType("KEYM");
-        public static readonly RecordType MGEF_HEADER = new RecordType("MGEF");
-        public static readonly RecordType MISC_HEADER = new RecordType("MISC");
-        public static readonly RecordType NPC__HEADER = new RecordType("NPC_");
-        public static readonly RecordType ALCH_HEADER = new RecordType("ALCH");
-        public static readonly RecordType RACE_HEADER = new RecordType("RACE");
-        public static readonly RecordType SGST_HEADER = new RecordType("SGST");
-        public static readonly RecordType SLGM_HEADER = new RecordType("SLGM");
-        public static readonly RecordType WEAP_HEADER = new RecordType("WEAP");
-        public static readonly RecordType WRLD_HEADER = new RecordType("WRLD");
-        public static readonly RecordType ARMO_HEADER = new RecordType("ARMO");
-        public static readonly RecordType CLOT_HEADER = new RecordType("CLOT");
-        public static readonly RecordType LVSP_HEADER = new RecordType("LVSP");
-        public static readonly RecordType SPEL_HEADER = new RecordType("SPEL");
-        public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
-        private static readonly Lazy<ICollectionGetter<RecordType>> _TriggeringRecordTypes = new Lazy<ICollectionGetter<RecordType>>(() =>
-        {
-            return new CollectionGetterWrapper<RecordType>(
-                new HashSet<RecordType>(
-                    new RecordType[]
-                    {
-                        FULL_HEADER,
-                        ACTI_HEADER,
-                        APPA_HEADER,
-                        BSGN_HEADER,
-                        BOOK_HEADER,
-                        CELL_HEADER,
-                        CLAS_HEADER,
-                        CONT_HEADER,
-                        CREA_HEADER,
-                        DOOR_HEADER,
-                        ENCH_HEADER,
-                        EYES_HEADER,
-                        FACT_HEADER,
-                        FLOR_HEADER,
-                        FURN_HEADER,
-                        HAIR_HEADER,
-                        INGR_HEADER,
-                        KEYM_HEADER,
-                        MGEF_HEADER,
-                        MISC_HEADER,
-                        NPC__HEADER,
-                        ALCH_HEADER,
-                        RACE_HEADER,
-                        SGST_HEADER,
-                        SLGM_HEADER,
-                        WEAP_HEADER,
-                        WRLD_HEADER,
-                        ARMO_HEADER,
-                        CLOT_HEADER,
-                        LVSP_HEADER,
-                        SPEL_HEADER
-                    })
-            );
-        });
+        public const int NumTypedFields = 0;
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
         ObjectKey ILoquiRegistration.ObjectKey => ObjectKey;
@@ -855,17 +1014,17 @@ namespace Mutagen.Bethesda.Internals
     #endregion
 
     #region Extensions
-    public static partial class NamedMajorRecordCommon
+    public static partial class WaterCommon
     {
         #region Copy Fields From
         public static void CopyFieldsFrom(
-            this INamedMajorRecord item,
-            INamedMajorRecordGetter rhs,
-            NamedMajorRecord_CopyMask copyMask = null,
-            INamedMajorRecordGetter def = null,
+            this IWater item,
+            IWaterGetter rhs,
+            Water_CopyMask copyMask = null,
+            IWaterGetter def = null,
             NotifyingFireParameters cmds = null)
         {
-            NamedMajorRecordCommon.CopyFieldsFrom(
+            WaterCommon.CopyFieldsFrom(
                 item: item,
                 rhs: rhs,
                 def: def,
@@ -876,14 +1035,14 @@ namespace Mutagen.Bethesda.Internals
         }
 
         public static void CopyFieldsFrom(
-            this INamedMajorRecord item,
-            INamedMajorRecordGetter rhs,
-            out NamedMajorRecord_ErrorMask errorMask,
-            NamedMajorRecord_CopyMask copyMask = null,
-            INamedMajorRecordGetter def = null,
+            this IWater item,
+            IWaterGetter rhs,
+            out Water_ErrorMask errorMask,
+            Water_CopyMask copyMask = null,
+            IWaterGetter def = null,
             NotifyingFireParameters cmds = null)
         {
-            NamedMajorRecordCommon.CopyFieldsFrom(
+            WaterCommon.CopyFieldsFrom(
                 item: item,
                 rhs: rhs,
                 def: def,
@@ -894,20 +1053,20 @@ namespace Mutagen.Bethesda.Internals
         }
 
         public static void CopyFieldsFrom(
-            this INamedMajorRecord item,
-            INamedMajorRecordGetter rhs,
-            INamedMajorRecordGetter def,
+            this IWater item,
+            IWaterGetter rhs,
+            IWaterGetter def,
             bool doMasks,
-            out NamedMajorRecord_ErrorMask errorMask,
-            NamedMajorRecord_CopyMask copyMask,
+            out Water_ErrorMask errorMask,
+            Water_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
-            NamedMajorRecord_ErrorMask retErrorMask = null;
-            Func<NamedMajorRecord_ErrorMask> maskGetter = () =>
+            Water_ErrorMask retErrorMask = null;
+            Func<Water_ErrorMask> maskGetter = () =>
             {
                 if (retErrorMask == null)
                 {
-                    retErrorMask = new NamedMajorRecord_ErrorMask();
+                    retErrorMask = new Water_ErrorMask();
                 }
                 return retErrorMask;
             };
@@ -923,12 +1082,12 @@ namespace Mutagen.Bethesda.Internals
         }
 
         public static void CopyFieldsFrom(
-            this INamedMajorRecord item,
-            INamedMajorRecordGetter rhs,
-            INamedMajorRecordGetter def,
+            this IWater item,
+            IWaterGetter rhs,
+            IWaterGetter def,
             bool doMasks,
-            Func<NamedMajorRecord_ErrorMask> errorMask,
-            NamedMajorRecord_CopyMask copyMask,
+            Func<Water_ErrorMask> errorMask,
+            Water_CopyMask copyMask,
             NotifyingFireParameters cmds = null)
         {
             MajorRecordCommon.CopyFieldsFrom(
@@ -939,21 +1098,6 @@ namespace Mutagen.Bethesda.Internals
                 errorMask,
                 copyMask,
                 cmds);
-            if (copyMask?.Name ?? true)
-            {
-                try
-                {
-                    item.Name_Property.SetToWithDefault(
-                        rhs: rhs.Name_Property,
-                        def: def?.Name_Property,
-                        cmds: cmds);
-                }
-                catch (Exception ex)
-                when (doMasks)
-                {
-                    errorMask().SetNthException((int)NamedMajorRecord_FieldIndex.Name, ex);
-                }
-            }
         }
 
         #endregion
@@ -961,15 +1105,12 @@ namespace Mutagen.Bethesda.Internals
         public static void SetNthObjectHasBeenSet(
             ushort index,
             bool on,
-            INamedMajorRecord obj,
+            IWater obj,
             NotifyingFireParameters cmds = null)
         {
-            NamedMajorRecord_FieldIndex enu = (NamedMajorRecord_FieldIndex)index;
+            Water_FieldIndex enu = (Water_FieldIndex)index;
             switch (enu)
             {
-                case NamedMajorRecord_FieldIndex.Name:
-                    obj.Name_Property.HasBeenSet = on;
-                    break;
                 default:
                     MajorRecordCommon.SetNthObjectHasBeenSet(index, on, obj);
                     break;
@@ -978,15 +1119,12 @@ namespace Mutagen.Bethesda.Internals
 
         public static void UnsetNthObject(
             ushort index,
-            INamedMajorRecord obj,
+            IWater obj,
             NotifyingUnsetParameters cmds = null)
         {
-            NamedMajorRecord_FieldIndex enu = (NamedMajorRecord_FieldIndex)index;
+            Water_FieldIndex enu = (Water_FieldIndex)index;
             switch (enu)
             {
-                case NamedMajorRecord_FieldIndex.Name:
-                    obj.Name_Property.Unset(cmds);
-                    break;
                 default:
                     MajorRecordCommon.UnsetNthObject(index, obj);
                     break;
@@ -995,13 +1133,11 @@ namespace Mutagen.Bethesda.Internals
 
         public static bool GetNthObjectHasBeenSet(
             ushort index,
-            INamedMajorRecord obj)
+            IWater obj)
         {
-            NamedMajorRecord_FieldIndex enu = (NamedMajorRecord_FieldIndex)index;
+            Water_FieldIndex enu = (Water_FieldIndex)index;
             switch (enu)
             {
-                case NamedMajorRecord_FieldIndex.Name:
-                    return obj.Name_Property.HasBeenSet;
                 default:
                     return MajorRecordCommon.GetNthObjectHasBeenSet(index, obj);
             }
@@ -1009,48 +1145,44 @@ namespace Mutagen.Bethesda.Internals
 
         public static object GetNthObject(
             ushort index,
-            INamedMajorRecordGetter obj)
+            IWaterGetter obj)
         {
-            NamedMajorRecord_FieldIndex enu = (NamedMajorRecord_FieldIndex)index;
+            Water_FieldIndex enu = (Water_FieldIndex)index;
             switch (enu)
             {
-                case NamedMajorRecord_FieldIndex.Name:
-                    return obj.Name;
                 default:
                     return MajorRecordCommon.GetNthObject(index, obj);
             }
         }
 
         public static void Clear(
-            INamedMajorRecord item,
+            IWater item,
             NotifyingUnsetParameters cmds = null)
         {
-            item.Name_Property.Unset(cmds.ToUnsetParams());
         }
 
-        public static NamedMajorRecord_Mask<bool> GetEqualsMask(
-            this INamedMajorRecordGetter item,
-            INamedMajorRecordGetter rhs)
+        public static Water_Mask<bool> GetEqualsMask(
+            this IWaterGetter item,
+            IWaterGetter rhs)
         {
-            var ret = new NamedMajorRecord_Mask<bool>();
+            var ret = new Water_Mask<bool>();
             FillEqualsMask(item, rhs, ret);
             return ret;
         }
 
         public static void FillEqualsMask(
-            INamedMajorRecordGetter item,
-            INamedMajorRecordGetter rhs,
-            NamedMajorRecord_Mask<bool> ret)
+            IWaterGetter item,
+            IWaterGetter rhs,
+            Water_Mask<bool> ret)
         {
             if (rhs == null) return;
-            ret.Name = item.Name_Property.Equals(rhs.Name_Property, (l, r) => object.Equals(l, r));
             MajorRecordCommon.FillEqualsMask(item, rhs, ret);
         }
 
         public static string ToString(
-            this INamedMajorRecordGetter item,
+            this IWaterGetter item,
             string name = null,
-            NamedMajorRecord_Mask<bool> printMask = null)
+            Water_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             item.ToString(fg, name, printMask);
@@ -1058,65 +1190,59 @@ namespace Mutagen.Bethesda.Internals
         }
 
         public static void ToString(
-            this INamedMajorRecordGetter item,
+            this IWaterGetter item,
             FileGeneration fg,
             string name = null,
-            NamedMajorRecord_Mask<bool> printMask = null)
+            Water_Mask<bool> printMask = null)
         {
             if (name == null)
             {
-                fg.AppendLine($"{nameof(NamedMajorRecord)} =>");
+                fg.AppendLine($"{nameof(Water)} =>");
             }
             else
             {
-                fg.AppendLine($"{name} ({nameof(NamedMajorRecord)}) =>");
+                fg.AppendLine($"{name} ({nameof(Water)}) =>");
             }
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Name ?? true)
-                {
-                    fg.AppendLine($"Name => {item.Name}");
-                }
             }
             fg.AppendLine("]");
         }
 
         public static bool HasBeenSet(
-            this INamedMajorRecordGetter item,
-            NamedMajorRecord_Mask<bool?> checkMask)
+            this IWaterGetter item,
+            Water_Mask<bool?> checkMask)
         {
-            if (checkMask.Name.HasValue && checkMask.Name.Value != item.Name_Property.HasBeenSet) return false;
             return true;
         }
 
-        public static NamedMajorRecord_Mask<bool> GetHasBeenSetMask(INamedMajorRecordGetter item)
+        public static Water_Mask<bool> GetHasBeenSetMask(IWaterGetter item)
         {
-            var ret = new NamedMajorRecord_Mask<bool>();
-            ret.Name = item.Name_Property.HasBeenSet;
+            var ret = new Water_Mask<bool>();
             return ret;
         }
 
-        public static NamedMajorRecord_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
+        public static Water_FieldIndex? ConvertFieldIndex(MajorRecord_FieldIndex? index)
         {
             if (!index.HasValue) return null;
             return ConvertFieldIndex(index: index.Value);
         }
 
-        public static NamedMajorRecord_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
+        public static Water_FieldIndex ConvertFieldIndex(MajorRecord_FieldIndex index)
         {
             switch (index)
             {
                 case MajorRecord_FieldIndex.MajorRecordFlags:
-                    return (NamedMajorRecord_FieldIndex)((int)index);
+                    return (Water_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.FormID:
-                    return (NamedMajorRecord_FieldIndex)((int)index);
+                    return (Water_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.Version:
-                    return (NamedMajorRecord_FieldIndex)((int)index);
+                    return (Water_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.EditorID:
-                    return (NamedMajorRecord_FieldIndex)((int)index);
+                    return (Water_FieldIndex)((int)index);
                 case MajorRecord_FieldIndex.RecordType:
-                    return (NamedMajorRecord_FieldIndex)((int)index);
+                    return (Water_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -1126,42 +1252,33 @@ namespace Mutagen.Bethesda.Internals
         #region XML Write
         public static void Write_XML(
             XmlWriter writer,
-            INamedMajorRecordGetter item,
+            IWaterGetter item,
             bool doMasks,
-            out NamedMajorRecord_ErrorMask errorMask,
+            out Water_ErrorMask errorMask,
             string name = null)
         {
-            NamedMajorRecord_ErrorMask errMaskRet = null;
+            Water_ErrorMask errMaskRet = null;
             Write_XML_Internal(
                 writer: writer,
                 name: name,
                 item: item,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new NamedMajorRecord_ErrorMask()) : default(Func<NamedMajorRecord_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Water_ErrorMask()) : default(Func<Water_ErrorMask>));
             errorMask = errMaskRet;
         }
 
         private static void Write_XML_Internal(
             XmlWriter writer,
-            INamedMajorRecordGetter item,
-            Func<NamedMajorRecord_ErrorMask> errorMask,
+            IWaterGetter item,
+            Func<Water_ErrorMask> errorMask,
             string name = null)
         {
             try
             {
-                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.NamedMajorRecord"))
+                using (new ElementWrapper(writer, name ?? "Mutagen.Bethesda.Oblivion.Water"))
                 {
                     if (name != null)
                     {
-                        writer.WriteAttributeString("type", "Mutagen.Bethesda.NamedMajorRecord");
-                    }
-                    if (item.Name_Property.HasBeenSet)
-                    {
-                        StringXmlTranslation.Instance.Write(
-                            writer: writer,
-                            name: nameof(item.Name),
-                            item: item.Name_Property,
-                            fieldIndex: (int)NamedMajorRecord_FieldIndex.Name,
-                            errorMask: errorMask);
+                        writer.WriteAttributeString("type", "Mutagen.Bethesda.Oblivion.Water");
                     }
                 }
             }
@@ -1179,37 +1296,43 @@ namespace Mutagen.Bethesda.Internals
         #region Binary Write
         public static void Write_Binary(
             MutagenWriter writer,
-            NamedMajorRecord item,
+            Water item,
             RecordTypeConverter recordTypeConverter,
             bool doMasks,
-            out NamedMajorRecord_ErrorMask errorMask)
+            out Water_ErrorMask errorMask)
         {
-            NamedMajorRecord_ErrorMask errMaskRet = null;
+            Water_ErrorMask errMaskRet = null;
             Write_Binary_Internal(
                 writer: writer,
                 item: item,
                 recordTypeConverter: recordTypeConverter,
-                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new NamedMajorRecord_ErrorMask()) : default(Func<NamedMajorRecord_ErrorMask>));
+                errorMask: doMasks ? () => errMaskRet ?? (errMaskRet = new Water_ErrorMask()) : default(Func<Water_ErrorMask>));
             errorMask = errMaskRet;
         }
 
         private static void Write_Binary_Internal(
             MutagenWriter writer,
-            NamedMajorRecord item,
+            Water item,
             RecordTypeConverter recordTypeConverter,
-            Func<NamedMajorRecord_ErrorMask> errorMask)
+            Func<Water_ErrorMask> errorMask)
         {
             try
             {
-                MajorRecordCommon.Write_Binary_Embedded(
-                    item: item,
+                using (HeaderExport.ExportHeader(
                     writer: writer,
-                    errorMask: errorMask);
-                Write_Binary_RecordTypes(
-                    item: item,
-                    writer: writer,
-                    recordTypeConverter: recordTypeConverter,
-                    errorMask: errorMask);
+                    record: Water_Registration.WATR_HEADER,
+                    type: ObjectType.Record))
+                {
+                    MajorRecordCommon.Write_Binary_Embedded(
+                        item: item,
+                        writer: writer,
+                        errorMask: errorMask);
+                    MajorRecordCommon.Write_Binary_RecordTypes(
+                        item: item,
+                        writer: writer,
+                        recordTypeConverter: recordTypeConverter,
+                        errorMask: errorMask);
+                }
             }
             catch (Exception ex)
             when (errorMask != null)
@@ -1219,26 +1342,6 @@ namespace Mutagen.Bethesda.Internals
         }
         #endregion
 
-        public static void Write_Binary_RecordTypes(
-            NamedMajorRecord item,
-            MutagenWriter writer,
-            RecordTypeConverter recordTypeConverter,
-            Func<NamedMajorRecord_ErrorMask> errorMask)
-        {
-            MajorRecordCommon.Write_Binary_RecordTypes(
-                item: item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter,
-                errorMask: errorMask);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Name_Property,
-                fieldIndex: (int)NamedMajorRecord_FieldIndex.Name,
-                errorMask: errorMask,
-                header: recordTypeConverter.ConvertToCustom(NamedMajorRecord_Registration.FULL_HEADER),
-                nullable: false);
-        }
-
         #endregion
 
     }
@@ -1247,41 +1350,34 @@ namespace Mutagen.Bethesda.Internals
     #region Modules
 
     #region Mask
-    public class NamedMajorRecord_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<NamedMajorRecord_Mask<T>>
+    public class Water_Mask<T> : MajorRecord_Mask<T>, IMask<T>, IEquatable<Water_Mask<T>>
     {
         #region Ctors
-        public NamedMajorRecord_Mask()
+        public Water_Mask()
         {
         }
 
-        public NamedMajorRecord_Mask(T initialValue)
+        public Water_Mask(T initialValue)
         {
-            this.Name = initialValue;
         }
-        #endregion
-
-        #region Members
-        public T Name;
         #endregion
 
         #region Equals
         public override bool Equals(object obj)
         {
-            if (!(obj is NamedMajorRecord_Mask<T> rhs)) return false;
+            if (!(obj is Water_Mask<T> rhs)) return false;
             return Equals(rhs);
         }
 
-        public bool Equals(NamedMajorRecord_Mask<T> rhs)
+        public bool Equals(Water_Mask<T> rhs)
         {
             if (rhs == null) return false;
             if (!base.Equals(rhs)) return false;
-            if (!object.Equals(this.Name, rhs.Name)) return false;
             return true;
         }
         public override int GetHashCode()
         {
             int ret = 0;
-            ret = ret.CombineHashCode(this.Name?.GetHashCode());
             ret = ret.CombineHashCode(base.GetHashCode());
             return ret;
         }
@@ -1292,23 +1388,21 @@ namespace Mutagen.Bethesda.Internals
         public override bool AllEqual(Func<T, bool> eval)
         {
             if (!base.AllEqual(eval)) return false;
-            if (!eval(this.Name)) return false;
             return true;
         }
         #endregion
 
         #region Translate
-        public new NamedMajorRecord_Mask<R> Translate<R>(Func<T, R> eval)
+        public new Water_Mask<R> Translate<R>(Func<T, R> eval)
         {
-            var ret = new NamedMajorRecord_Mask<R>();
+            var ret = new Water_Mask<R>();
             this.Translate_InternalFill(ret, eval);
             return ret;
         }
 
-        protected void Translate_InternalFill<R>(NamedMajorRecord_Mask<R> obj, Func<T, R> eval)
+        protected void Translate_InternalFill<R>(Water_Mask<R> obj, Func<T, R> eval)
         {
             base.Translate_InternalFill(obj, eval);
-            obj.Name = eval(this.Name);
         }
         #endregion
 
@@ -1325,23 +1419,19 @@ namespace Mutagen.Bethesda.Internals
             return ToString(printMask: null);
         }
 
-        public string ToString(NamedMajorRecord_Mask<bool> printMask = null)
+        public string ToString(Water_Mask<bool> printMask = null)
         {
             var fg = new FileGeneration();
             ToString(fg, printMask);
             return fg.ToString();
         }
 
-        public void ToString(FileGeneration fg, NamedMajorRecord_Mask<bool> printMask = null)
+        public void ToString(FileGeneration fg, Water_Mask<bool> printMask = null)
         {
-            fg.AppendLine($"{nameof(NamedMajorRecord_Mask<T>)} =>");
+            fg.AppendLine($"{nameof(Water_Mask<T>)} =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
-                if (printMask?.Name ?? true)
-                {
-                    fg.AppendLine($"Name => {Name}");
-                }
             }
             fg.AppendLine("]");
         }
@@ -1349,21 +1439,14 @@ namespace Mutagen.Bethesda.Internals
 
     }
 
-    public class NamedMajorRecord_ErrorMask : MajorRecord_ErrorMask, IErrorMask<NamedMajorRecord_ErrorMask>
+    public class Water_ErrorMask : MajorRecord_ErrorMask, IErrorMask<Water_ErrorMask>
     {
-        #region Members
-        public Exception Name;
-        #endregion
-
         #region IErrorMask
         public override void SetNthException(int index, Exception ex)
         {
-            NamedMajorRecord_FieldIndex enu = (NamedMajorRecord_FieldIndex)index;
+            Water_FieldIndex enu = (Water_FieldIndex)index;
             switch (enu)
             {
-                case NamedMajorRecord_FieldIndex.Name:
-                    this.Name = ex;
-                    break;
                 default:
                     base.SetNthException(index, ex);
                     break;
@@ -1372,12 +1455,9 @@ namespace Mutagen.Bethesda.Internals
 
         public override void SetNthMask(int index, object obj)
         {
-            NamedMajorRecord_FieldIndex enu = (NamedMajorRecord_FieldIndex)index;
+            Water_FieldIndex enu = (Water_FieldIndex)index;
             switch (enu)
             {
-                case NamedMajorRecord_FieldIndex.Name:
-                    this.Name = (Exception)obj;
-                    break;
                 default:
                     base.SetNthMask(index, obj);
                     break;
@@ -1387,7 +1467,6 @@ namespace Mutagen.Bethesda.Internals
         public override bool IsInError()
         {
             if (Overall != null) return true;
-            if (Name != null) return true;
             return false;
         }
         #endregion
@@ -1402,7 +1481,7 @@ namespace Mutagen.Bethesda.Internals
 
         public override void ToString(FileGeneration fg)
         {
-            fg.AppendLine("NamedMajorRecord_ErrorMask =>");
+            fg.AppendLine("Water_ErrorMask =>");
             fg.AppendLine("[");
             using (new DepthWrapper(fg))
             {
@@ -1423,18 +1502,16 @@ namespace Mutagen.Bethesda.Internals
         protected override void ToString_FillInternal(FileGeneration fg)
         {
             base.ToString_FillInternal(fg);
-            fg.AppendLine($"Name => {Name}");
         }
         #endregion
 
         #region Combine
-        public NamedMajorRecord_ErrorMask Combine(NamedMajorRecord_ErrorMask rhs)
+        public Water_ErrorMask Combine(Water_ErrorMask rhs)
         {
-            var ret = new NamedMajorRecord_ErrorMask();
-            ret.Name = this.Name.Combine(rhs.Name);
+            var ret = new Water_ErrorMask();
             return ret;
         }
-        public static NamedMajorRecord_ErrorMask Combine(NamedMajorRecord_ErrorMask lhs, NamedMajorRecord_ErrorMask rhs)
+        public static Water_ErrorMask Combine(Water_ErrorMask lhs, Water_ErrorMask rhs)
         {
             if (lhs != null && rhs != null) return lhs.Combine(rhs);
             return lhs ?? rhs;
@@ -1442,12 +1519,8 @@ namespace Mutagen.Bethesda.Internals
         #endregion
 
     }
-    public class NamedMajorRecord_CopyMask : MajorRecord_CopyMask
+    public class Water_CopyMask : MajorRecord_CopyMask
     {
-        #region Members
-        public bool Name;
-        #endregion
-
     }
     #endregion
 

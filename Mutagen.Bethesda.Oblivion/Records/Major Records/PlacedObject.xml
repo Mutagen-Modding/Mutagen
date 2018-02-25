@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="PlacedObject" baseClass="Bethesda.MajorRecord" recordType="REFR" objType="Record" GUID="7a559a46-7ef9-49e9-98c1-ec16c3df81f2" ID="121">
+    <Fields>
+      <FormIDLink name="Object" recordType="NAME" refName="Bethesda.MajorRecord" />
+      <RefDirect name="TeleportDestination" recordType="XTEL" refName="TeleportDestination" />
+      <RefDirect name="Lock" recordType="XLOC" refName="LockInformation" />
+      <RefDirect name="Ownership" refName="Ownership" />
+      <RefDirect name="EnableParent" recordType="XESP" refName="EnableParent" />
+      <FormIDLink name="Target" recordType="XTRG" refName="PlacedObject" />
+      <UInt8 name="SpeedTreeSeed" recordType="XSED" />
+      <RefDirect name="DistantLODData" recordType="XLOD" refName="DistantLODData" />
+      <Float name="Charge" recordType="XCHG" />
+      <Int32 name="Health" recordType="XHLT" />
+      <Int32 name="LevelModifier" recordType="XLCM" />
+      <FormIDLink name="Unknown" recordType="XRTM" refName="Bethesda.MajorRecord" />
+      <Enum name="ActionFlags" enumName="PlacedObject.ActionFlag" byteLength="4" />
+      <Int32 name="Count" recordType="XCNT" />
+      <RefDirect name="MapMarker" refName="MapMarker" markerType="XMRK" />
+      <Bool name="OpenByDefault" recordType="ONAM" customBinary="true" hasBeenSet="False" />
+      <ByteArray name="RagdollData" recordType="XRGD" />
+      <Float name="Scale" recordType="XSCL" />
+      <FormIDLink name="ContainedSoul" refName="SoulGem" />
+      <Data>
+        <Fields>
+          <P3Float name="Position" />
+          <P3Float name="Rotation" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+  <Object name="TeleportDestination" objType="Subrecord" GUID="852c0c03-6606-4ae4-8733-4375d9cd1544" ID="122">
+    <Fields>
+      <FormIDLink name="Door" refName="Door" />
+      <P3Float name="Position" />
+      <P3Float name="Rotation" />
+    </Fields>
+  </Object>
+  <Object name="LockInformation" objType="Subrecord" GUID="46a1b7ce-4f49-4017-8beb-bef9481e5fd2" ID="123">
+    <Fields>
+      <UInt8 name="LockLevel" />
+      <Zero byteLength="3" />
+      <FormIDLink name="Key" refName="Key" />
+      <Enum name="Flags" enumName="LockInformation.Flag" byteLength="4" />
+    </Fields>
+  </Object>
+  <Object name="EnableParent" objType="Subrecord" GUID="e078cd3d-8b51-4e47-ac43-427229d9cf88" ID="124">
+    <Fields>
+      <FormIDLink name="Reference" refName="PlacedObject" />
+      <Enum name="Flags" enumName="EnableParent.Flag" byteLength="4" />
+    </Fields>
+  </Object>
+  <Object name="DistantLODData" objType="Subrecord" GUID="d259776d-0a81-447e-8981-6b3af132e18c" ID="125">
+    <Fields>
+      <Float name="Unknown0" />
+      <Float name="Unknown1" />
+      <Float name="Unknown2" />
+    </Fields>
+  </Object>
+  <Object name="MapMarker" objType="Subrecord" GUID="96e2692c-898d-48c5-acd1-fbbee402a4f9" ID="126">
+    <Fields>
+      <Enum name="Flags" enumName="MapMarker.Flag" byteLength="1" />
+      <String name="Name" recordType="FULL" />
+    </Fields>
+  </Object>
+</Loqui>

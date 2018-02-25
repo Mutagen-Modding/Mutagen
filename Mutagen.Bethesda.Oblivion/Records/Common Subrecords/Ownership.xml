@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Ownership" objType="Subrecord" GUID="47c19ec1-59bb-4753-9572-a06d4cb853d1" ID="119">
+    <Fields>
+      <FormIDLink name="Owner" recordType="XOWN" refName="Faction" />
+      <Int32 name="FactionRank" recordType="XRNK" />
+      <FormIDLink name="GlobalVariable" recordType="XGLB" refName="Global" />
+    </Fields>
+  </Object>
+</Loqui>

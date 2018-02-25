@@ -74,7 +74,7 @@
   </Object>
   <Object name="RegionDataSounds" objType="Subrecord" baseClass="RegionData" GUID="45ee0280-5f00-4126-9120-50ed00cc27c3" ID="114">
     <Fields>
-      <Enum name="MusicType" enumName="RegionDataSound.MusicType" byteLength="4" recordType="RDMD" />
+      <Enum name="MusicType" enumName="MusicType" byteLength="4" recordType="RDMD" />
       <RefList name="Sounds" refName="RegionSound" recordType="RDSD" />
     </Fields>
   </Object>

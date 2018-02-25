@@ -38,6 +38,12 @@ namespace Mutagen.Bethesda.Binary
             this.reader = reader;
         }
 
+        public MutagenReader(byte[] bytes)
+            : this(new BinaryReader(
+                new MemoryStream(bytes)))
+        {
+        }
+
         public bool ReadBoolean()
         {
             return this.reader.ReadBoolean();
