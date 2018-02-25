@@ -102,7 +102,6 @@ namespace Mutagen.Bethesda.Oblivion
         #region MaleBipedModel
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingSetItem<Model> _MaleBipedModel = new NotifyingSetItem<Model>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItem<Model> MaleBipedModel_Property => this._MaleBipedModel;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Model IClothingAbstractGetter.MaleBipedModel => this.MaleBipedModel;
@@ -116,7 +115,6 @@ namespace Mutagen.Bethesda.Oblivion
         #region MaleWorldModel
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingSetItem<Model> _MaleWorldModel = new NotifyingSetItem<Model>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItem<Model> MaleWorldModel_Property => this._MaleWorldModel;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Model IClothingAbstractGetter.MaleWorldModel => this.MaleWorldModel;
@@ -145,7 +143,6 @@ namespace Mutagen.Bethesda.Oblivion
         #region FemaleBipedModel
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingSetItem<Model> _FemaleBipedModel = new NotifyingSetItem<Model>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItem<Model> FemaleBipedModel_Property => this._FemaleBipedModel;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Model IClothingAbstractGetter.FemaleBipedModel => this.FemaleBipedModel;
@@ -159,7 +156,6 @@ namespace Mutagen.Bethesda.Oblivion
         #region FemaleWorldModel
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingSetItem<Model> _FemaleWorldModel = new NotifyingSetItem<Model>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItem<Model> FemaleWorldModel_Property => this._FemaleWorldModel;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Model IClothingAbstractGetter.FemaleWorldModel => this.FemaleWorldModel;
@@ -1411,12 +1407,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
+        public static readonly RecordType ARMO_HEADER = new RecordType("ARMO");
+        public static readonly RecordType CLOT_HEADER = new RecordType("CLOT");
         public static readonly RecordType SCRI_HEADER = new RecordType("SCRI");
         public static readonly RecordType ENAM_HEADER = new RecordType("ENAM");
         public static readonly RecordType ANAM_HEADER = new RecordType("ANAM");
         public static readonly RecordType BMDT_HEADER = new RecordType("BMDT");
-        public static readonly RecordType ARMO_HEADER = new RecordType("ARMO");
-        public static readonly RecordType CLOT_HEADER = new RecordType("CLOT");
         public static readonly RecordType MODL_HEADER = new RecordType("MODL");
         public static readonly RecordType MOD2_HEADER = new RecordType("MOD2");
         public static readonly RecordType ICON_HEADER = new RecordType("ICON");
@@ -1430,10 +1427,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
-                        SCRI_HEADER,
-                        ENAM_HEADER,
-                        ANAM_HEADER,
-                        BMDT_HEADER,
+                        FULL_HEADER,
                         ARMO_HEADER,
                         CLOT_HEADER
                     })

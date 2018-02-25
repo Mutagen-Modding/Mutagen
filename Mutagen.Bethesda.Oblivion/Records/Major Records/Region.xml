@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Region" objType="Record" recordType="REGN" baseClass="Bethesda.MajorRecord" GUID="638d02e0-687a-49ad-a934-6f2ed1e05c3a" ID="107">
+    <Fields>
+      <FilePath name="Icon" recordType="ICON" />
+      <Color name="MapColor" recordType="RCLR" extraByte="true" />
+      <FormIDLink name="Worldspace" refName="Worldspace" recordType="WNAM" />
+      <RefList name="Areas" refName="RegionArea" />
+      <CustomLogic name="RegionAreaLogic" recordType="RDAT" />
+      <RefDirect name="Objects" refName="RegionDataObjects" noBinary="true" />
+      <RefDirect name="Weather" refName="RegionDataWeather" noBinary="true" />
+      <RefDirect name="MapName" refName="RegionDataMapName" noBinary="true" />
+      <RefDirect name="Grasses" refName="RegionDataGrasses" noBinary="true" />
+      <RefDirect name="Sounds" refName="RegionDataSounds" noBinary="true" />
+    </Fields>
+  </Object>
+  <Object name="RegionArea" objType="Subrecord" GUID="9cbce207-fe81-4953-a29f-9010447d54ff" ID="108">
+    <Fields>
+      <UInt32 name="EdgeFallOff" recordType="RPLI" />
+      <List name="RegionPoints" recordType="RPLD">
+        <P2Float />
+      </List>
+    </Fields>
+  </Object>
+  <Object name="RegionData" abstract="true" objType="Subrecord" GUID="46664e25-f4ef-428c-b13f-c81ff3127714" ID="109" recordType="RDAT">
+    <Fields>
+      <Data recordType="RDAT">
+        <Fields>
+          <Enum name="DataType" enumName="RegionData.RegionDataType" byteLength="4" protected="true" />
+          <Enum name="Flags" enumName="RegionData.RegionDataFlag" byteLength="1" />
+          <UInt8 name="Priority" />
+          <Zero byteLength="2" />
+        </Fields>
+      </Data>
+    </Fields>
+  </Object>
+  <Object name="RegionDataObjects" objType="Subrecord" baseClass="RegionData" GUID="6c1a729e-5137-4710-b72d-2f6a5a9f0b7e" ID="110">
+    <Fields>
+      <RefList name="Objects" refName="RegionDataObject" recordType="RDOT" />
+    </Fields>
+  </Object>
+  <Object name="RegionDataObject" objType="Subrecord" GUID="e814f192-a945-4518-bfd0-00e67eae8105" ID="117">
+    <Fields>
+      <FormIDLink name="Object" refName="Bethesda.MajorRecord" />
+      <UInt16 name="ParentIndex" />
+      <ByteArray name="Unknown1" nullable="NotNull" length="2" />
+      <Float name="Density" />
+      <UInt8 name="Clustering" />
+      <UInt8 name="MinSlope" />
+      <UInt8 name="MaxSlope" />
+      <Enum name="Flags" enumName="RegionDataObject.Flag" byteLength="1" />
+      <UInt16 name="RadiusWrtPercent" />
+      <UInt16 name="Radius" />
+      <Float name="MinHeight" />
+      <Float name="MaxHeight" />
+      <Float name="Sink" />
+      <Float name="SinkVariance" />
+      <Float name="SizeVariance" />
+      <P3UInt16 name="AngleVariance" />
+      <ByteArray name="Unknow2n" nullable="NotNull" length="6" />
+    </Fields>
+  </Object>
+  <Object name="RegionDataMapName" objType="Subrecord" baseClass="RegionData" GUID="acca1023-9d99-47c2-82a4-d46ed90b087b" ID="111">
+    <Fields>
+      <String name="MapName" recordType="RDMP" />
+    </Fields>
+  </Object>
+  <Object name="RegionDataGrasses" objType="Subrecord" baseClass="RegionData" GUID="1c951313-4152-4555-922e-549f944794e8" ID="112">
+    <Fields>
+      <List name="Grasses" recordType="RDGS">
+        <FormIDLink refName="Grass" />
+      </List>
+    </Fields>
+  </Object>
+  <Object name="RegionDataSounds" objType="Subrecord" baseClass="RegionData" GUID="45ee0280-5f00-4126-9120-50ed00cc27c3" ID="114">
+    <Fields>
+      <Enum name="MusicType" enumName="RegionDataSound.MusicType" byteLength="4" recordType="RDMD" />
+      <RefList name="Sounds" refName="RegionSound" recordType="RDSD" />
+    </Fields>
+  </Object>
+  <Object name="RegionSound" objType="Subrecord" GUID="faf7a6a8-9444-4e36-98e6-5a7af8122e29" ID="118">
+    <Fields>
+      <FormIDLink name="Sound" refName="Sound" />
+      <Enum name="Flags" enumName="RegionSound.Flag" />
+      <Float name="Chance" min="0" max="100" />
+    </Fields>
+  </Object>
+  <Object name="RegionDataWeather" objType="Subrecord" baseClass="RegionData" GUID="920ad66e-13de-42ac-a509-355019f9519a" ID="115">
+    <Fields>
+      <RefList name="Weathers" refName="WeatherChance" recordType="RDWT" />
+    </Fields>
+  </Object>
+</Loqui>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="us-ascii"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -244,6 +244,21 @@
     <Compile Include="Records\Major Records\Rank_LoquiGenerated.cs">
       <DependentUpon>Faction.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\Region.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RegionData.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RegionDataObject.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RegionDataSound.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RegionSound.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Script.cs">
       <DependentUpon>Script.xml</DependentUpon>
     </Compile>
@@ -472,8 +487,38 @@
     <Compile Include="Records\Major Records\Climate_LoquiGenerated.cs">
       <DependentUpon>Climate.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\WeatherChance_LoquiGenerated.cs">
-      <DependentUpon>Climate.xml</DependentUpon>
+    <Compile Include="Records\Major Records\Region_LoquiGenerated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RegionArea_LoquiGenerated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RegionData_LoquiGenerated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RegionDataObjects_LoquiGenerated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RegionDataMapName_LoquiGenerated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RegionDataGrasses_LoquiGenerated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RegionDataSounds_LoquiGenerated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RegionDataWeather_LoquiGenerated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RegionDataObject_LoquiGenerated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\WeatherChance_LoquiGenerated.cs">
+      <DependentUpon>WeatherChance.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\RegionSound_LoquiGenerated.cs">
+      <DependentUpon>Region.xml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -487,6 +532,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Common Subrecords\Relation.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Common Subrecords\WeatherChance.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Header\HEDR.xml">
@@ -608,6 +656,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Race.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Records\Major Records\Region.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Records\Major Records\Script.xml">

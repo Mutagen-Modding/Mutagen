@@ -37,6 +37,7 @@ namespace Mutagen.Bethesda.Generation
             gen.AddTypeAssociation<BufferType>("Buffer");
             gen.AddTypeAssociation<DataType>("Data");
             gen.AddTypeAssociation<ZeroType>("Zero");
+            gen.AddTypeAssociation<CustomLogic>("CustomLogic");
             gen.AddTypeAssociation<TransferType>("Transfer");
             gen.AddTypeAssociation<GroupType>("Group");
             gen.AddTypeAssociation<SpecialParseType>("SpecialParse");

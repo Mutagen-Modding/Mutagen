@@ -67,7 +67,6 @@ namespace Mutagen.Bethesda.Oblivion
                 return TryGet<Header>.Succeed(change.New);
             }
         );
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItem<Header> Header_Property => this._Header;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Header ITES4Getter.Header => this.Header;

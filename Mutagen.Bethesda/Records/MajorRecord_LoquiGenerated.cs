@@ -967,6 +967,7 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType LTEX_HEADER = new RecordType("LTEX");
         public static readonly RecordType LVLI_HEADER = new RecordType("LVLI");
         public static readonly RecordType LIGH_HEADER = new RecordType("LIGH");
+        public static readonly RecordType REGN_HEADER = new RecordType("REGN");
         public static readonly RecordType SCPT_HEADER = new RecordType("SCPT");
         public static readonly RecordType SKIL_HEADER = new RecordType("SKIL");
         public static readonly RecordType SOUN_HEADER = new RecordType("SOUN");
@@ -979,10 +980,6 @@ namespace Mutagen.Bethesda.Internals
         public static readonly RecordType BSGN_HEADER = new RecordType("BSGN");
         public static readonly RecordType BOOK_HEADER = new RecordType("BOOK");
         public static readonly RecordType CLAS_HEADER = new RecordType("CLAS");
-        public static readonly RecordType SCRI_HEADER = new RecordType("SCRI");
-        public static readonly RecordType ENAM_HEADER = new RecordType("ENAM");
-        public static readonly RecordType ANAM_HEADER = new RecordType("ANAM");
-        public static readonly RecordType BMDT_HEADER = new RecordType("BMDT");
         public static readonly RecordType CONT_HEADER = new RecordType("CONT");
         public static readonly RecordType CREA_HEADER = new RecordType("CREA");
         public static readonly RecordType DOOR_HEADER = new RecordType("DOOR");
@@ -1028,6 +1025,7 @@ namespace Mutagen.Bethesda.Internals
                         LTEX_HEADER,
                         LVLI_HEADER,
                         LIGH_HEADER,
+                        REGN_HEADER,
                         SCPT_HEADER,
                         SKIL_HEADER,
                         SOUN_HEADER,
@@ -1040,10 +1038,6 @@ namespace Mutagen.Bethesda.Internals
                         BSGN_HEADER,
                         BOOK_HEADER,
                         CLAS_HEADER,
-                        SCRI_HEADER,
-                        ENAM_HEADER,
-                        ANAM_HEADER,
-                        BMDT_HEADER,
                         CONT_HEADER,
                         CREA_HEADER,
                         DOOR_HEADER,

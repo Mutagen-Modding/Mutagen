@@ -293,34 +293,51 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
+        private async Task SetBasicTriggers(
+            ObjectGeneration obj,
+            MutagenObjData data,
+            bool isGRUP)
+        {
+            if (obj.TryGetRecordType(out var recType) && !isGRUP)
+            {
+                data.TriggeringRecordTypes.Add(recType);
+                return;
+            }
+
+            if (obj.HasBaseObject)
+            {
+                var baseTrigger = await obj.BaseClass.TryGetTriggeringRecordTypes();
+                if (baseTrigger.Succeeded)
+                {
+                    data.TriggeringRecordTypes.Add(baseTrigger.Value);
+                    return;
+                }
+            }
+
+            HashSet<RecordType> recTypes = new HashSet<RecordType>();
+            foreach (var field in obj.IterateFields(
+                nonIntegrated: true,
+                expandSets: SetMarkerType.ExpandSets.FalseAndInclude))
+            {
+                if (!field.IntegrateField
+                    && !(field is DataType)
+                    && !(field is SpecialParseType)) continue;
+                if (!field.TryGetFieldData(out var fieldData)) break;
+                if (!fieldData.HasTrigger) break;
+                recTypes.Add(fieldData.TriggeringRecordTypes);
+                fieldData.IsTriggerForObject = true;
+                if (field is SetMarkerType) break;
+                if (field.IsEnumerable && !(field is ByteArrayType)) continue;
+                if (!field.HasBeenSet) break;
+            }
+            data.TriggeringRecordTypes.Add(recTypes);
+        }
+
         private async Task SetObjectTrigger(ObjectGeneration obj)
         {
             var data = obj.GetObjectData();
             var isGRUP = obj.Name.Equals("Group");
-            if (obj.TryGetRecordType(out var recType) && !isGRUP)
-            {
-                data.TriggeringRecordTypes.Add(recType);
-            }
-            else
-            {
-                HashSet<RecordType> recTypes = new HashSet<RecordType>();
-                foreach (var field in obj.IterateFields(
-                    nonIntegrated: true,
-                    expandSets: SetMarkerType.ExpandSets.FalseAndInclude))
-                {
-                    if (!field.IntegrateField
-                        && !(field is DataType)
-                        && !(field is SpecialParseType)) continue;
-                    if (!field.TryGetFieldData(out var fieldData)) break;
-                    if (!fieldData.HasTrigger) break;
-                    recTypes.Add(fieldData.TriggeringRecordTypes);
-                    fieldData.IsTriggerForObject = true;
-                    if (field is SetMarkerType) break;
-                    if (field.IsEnumerable && !(field is ByteArrayType)) continue;
-                    if (!field.HasBeenSet) break;
-                }
-                data.TriggeringRecordTypes.Add(recTypes);
-            }
+            await SetBasicTriggers(obj, data, isGRUP);
 
             if (isGRUP)
             {

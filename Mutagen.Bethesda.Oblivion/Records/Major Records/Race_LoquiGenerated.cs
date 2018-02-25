@@ -201,7 +201,6 @@ namespace Mutagen.Bethesda.Oblivion
         #region Voices
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingSetItem<RaceVoices> _Voices = new NotifyingSetItem<RaceVoices>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItem<RaceVoices> Voices_Property => this._Voices;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         RaceVoices IRaceGetter.Voices => this.Voices;
@@ -215,7 +214,6 @@ namespace Mutagen.Bethesda.Oblivion
         #region DefaultHair
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingSetItem<RaceHair> _DefaultHair = new NotifyingSetItem<RaceHair>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItem<RaceHair> DefaultHair_Property => this._DefaultHair;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         RaceHair IRaceGetter.DefaultHair => this.DefaultHair;
@@ -274,7 +272,6 @@ namespace Mutagen.Bethesda.Oblivion
         #region RaceStats
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingSetItem<RaceStatsGendered> _RaceStats = new NotifyingSetItem<RaceStatsGendered>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItem<RaceStatsGendered> RaceStats_Property => this._RaceStats;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         RaceStatsGendered IRaceGetter.RaceStats => this.RaceStats;
@@ -306,7 +303,6 @@ namespace Mutagen.Bethesda.Oblivion
         #region BodyData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingSetItem<GenderedBodyData> _BodyData = new NotifyingSetItem<GenderedBodyData>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItem<GenderedBodyData> BodyData_Property => this._BodyData;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         GenderedBodyData IRaceGetter.BodyData => this.BodyData;
@@ -356,7 +352,6 @@ namespace Mutagen.Bethesda.Oblivion
         #region FaceGenData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingSetItem<FaceGenData> _FaceGenData = new NotifyingSetItem<FaceGenData>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItem<FaceGenData> FaceGenData_Property => this._FaceGenData;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         FaceGenData IRaceGetter.FaceGenData => this.FaceGenData;

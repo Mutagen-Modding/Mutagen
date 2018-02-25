@@ -42,7 +42,6 @@ namespace Mutagen.Bethesda.Oblivion
         #region Male
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingSetItem<BodyData> _Male = new NotifyingSetItem<BodyData>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItem<BodyData> Male_Property => this._Male;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         BodyData IGenderedBodyDataGetter.Male => this.Male;
@@ -56,7 +55,6 @@ namespace Mutagen.Bethesda.Oblivion
         #region Female
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingSetItem<BodyData> _Female = new NotifyingSetItem<BodyData>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItem<BodyData> Female_Property => this._Female;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         BodyData IGenderedBodyDataGetter.Female => this.Female;

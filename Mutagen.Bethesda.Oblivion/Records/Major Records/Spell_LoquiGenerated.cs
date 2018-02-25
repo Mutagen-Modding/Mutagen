@@ -684,6 +684,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
+        public static readonly RecordType FULL_HEADER = new RecordType("FULL");
         public static readonly RecordType LVSP_HEADER = new RecordType("LVSP");
         public static readonly RecordType SPEL_HEADER = new RecordType("SPEL");
         public static ICollectionGetter<RecordType> TriggeringRecordTypes => _TriggeringRecordTypes.Value;
@@ -693,6 +694,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 new HashSet<RecordType>(
                     new RecordType[]
                     {
+                        FULL_HEADER,
                         LVSP_HEADER,
                         SPEL_HEADER
                     })

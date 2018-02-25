@@ -58,7 +58,6 @@ namespace Mutagen.Bethesda.Oblivion
         #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingSetItem<SoundData> _Data = new NotifyingSetItem<SoundData>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItem<SoundData> Data_Property => this._Data;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         SoundData ISoundGetter.Data => this.Data;

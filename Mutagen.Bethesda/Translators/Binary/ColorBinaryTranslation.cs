@@ -25,6 +25,17 @@ namespace Mutagen.Bethesda.Binary
             writer.Write(item);
         }
 
+        protected Func<MutagenWriter, Color?, bool, Exception> GetWriter(bool extraByte)
+        {
+            if (!extraByte) return Write_Internal;
+            return (w, c, doM) =>
+            {
+                var ret = Write_Internal(w, c, doM);
+                w.WriteZeros(1);
+                return ret;
+            };
+        }
+        
         public TryGet<Color> Parse<M>(
             MutagenFrame frame,
             int fieldIndex,
@@ -57,8 +68,8 @@ namespace Mutagen.Bethesda.Binary
                 header,
                 fieldIndex,
                 nullable,
-                errorMask);
-            writer.WriteZeros(1);
+                errorMask,
+                write: GetWriter(extraByte));
         }
 
         public void Write<M>(
@@ -74,8 +85,8 @@ namespace Mutagen.Bethesda.Binary
                 writer,
                 item.Item,
                 fieldIndex,
-                errorMask);
-            writer.WriteZeros(1);
+                errorMask,
+                write: GetWriter(extraByte));
         }
 
         public void Write<M>(
@@ -90,8 +101,8 @@ namespace Mutagen.Bethesda.Binary
                 writer,
                 item.Item,
                 fieldIndex,
-                errorMask);
-            writer.WriteZeros(1);
+                errorMask,
+                write: GetWriter(extraByte));
         }
     }
 }

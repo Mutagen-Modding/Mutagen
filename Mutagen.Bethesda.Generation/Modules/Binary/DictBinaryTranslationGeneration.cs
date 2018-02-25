@@ -17,11 +17,11 @@ namespace Mutagen.Bethesda.Generation
         {
             if (subData.HasTrigger)
             {
-                return ListBinaryType.Trigger;
+                return ListBinaryType.SubTrigger;
             }
             else if (data.RecordType.HasValue)
             {
-                return ListBinaryType.Frame;
+                return ListBinaryType.Trigger;
             }
             else
             {
@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Generation
                 args.Add($"writer: {writerAccessor}");
                 args.Add($"item: {itemAccessor.PropertyOrDirectAccess}.Values");
                 args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
-                if (listBinaryType == ListBinaryType.Frame)
+                if (listBinaryType == ListBinaryType.Trigger)
                 {
                     args.Add($"recordType: {objGen.RecordTypeHeaderName(data.RecordType.Value)}");
                 }
@@ -136,7 +136,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 fg.AppendLine("frame.Position += Constants.SUBRECORD_LENGTH + contentLength; // Skip marker");
             }
-            else if (listBinaryType == ListBinaryType.Frame)
+            else if (listBinaryType == ListBinaryType.Trigger)
             {
                 fg.AppendLine("frame.Position += Constants.SUBRECORD_LENGTH;");
             }
@@ -145,12 +145,12 @@ namespace Mutagen.Bethesda.Generation
             using (var args = new ArgsWrapper(fg,
                 $"{retAccessor.DirectAccess}{this.Namespace}ListBinaryTranslation<{dict.ValueTypeGen.TypeName}, {subMaskStr}>.Instance.ParseRepeatedItem"))
             {
-                if (listBinaryType == ListBinaryType.Trigger)
+                if (listBinaryType == ListBinaryType.SubTrigger)
                 {
                     args.Add($"frame: frame");
                     args.Add($"triggeringRecord: {subData.TriggeringRecordSetAccessor}");
                 }
-                else if (listBinaryType == ListBinaryType.Frame)
+                else if (listBinaryType == ListBinaryType.Trigger)
                 {
                     args.Add($"frame: frame.Spawn(contentLength)");
                 }

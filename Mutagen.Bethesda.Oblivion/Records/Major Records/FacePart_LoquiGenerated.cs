@@ -57,7 +57,6 @@ namespace Mutagen.Bethesda.Oblivion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingSetItem<Model> _Model = new NotifyingSetItem<Model>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItem<Model> Model_Property => this._Model;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Model IFacePartGetter.Model => this.Model;

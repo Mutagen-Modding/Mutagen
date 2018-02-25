@@ -111,8 +111,8 @@ namespace Mutagen.Bethesda
         }
 
         public static FileLocations GetFileLocations(
-        Stream stream,
-        params RecordType[] interestingTypes)
+            Stream stream,
+            params RecordType[] interestingTypes)
         {
             return GetFileLocations(stream, (IEnumerable<RecordType>)interestingTypes);
         }
@@ -190,7 +190,7 @@ namespace Mutagen.Bethesda
                             }
                             reader.Position += new ContentLength(4); // Skip flags
                             var formID = FormID.Factory(reader.ReadBytes(4));
-                            ret.Add(formID, new FileSection(recordLocation, recordLocation + recLength - 1));
+                            ret.Add(formID, new FileSection(recordLocation, recordLocation + recLength + Constants.RECORD_LENGTH + Constants.RECORD_META_OFFSET - 1));
                             reader.Position += new ContentLength(4);
                             reader.Position += recLength;
                         }

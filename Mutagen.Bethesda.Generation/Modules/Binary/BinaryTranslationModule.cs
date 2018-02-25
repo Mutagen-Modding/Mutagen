@@ -43,6 +43,8 @@ namespace Mutagen.Bethesda.Generation
             this._typeGenerations[typeof(Int32Type)] = new PrimitiveBinaryTranslationGeneration<int>();
             this._typeGenerations[typeof(Int64NullType)] = new PrimitiveBinaryTranslationGeneration<long?>();
             this._typeGenerations[typeof(Int64Type)] = new PrimitiveBinaryTranslationGeneration<long>();
+            this._typeGenerations[typeof(P3UInt16NullType)] = new PrimitiveBinaryTranslationGeneration<P3UInt16?>();
+            this._typeGenerations[typeof(P3UInt16Type)] = new PrimitiveBinaryTranslationGeneration<P3UInt16>();
             this._typeGenerations[typeof(P2FloatNullType)] = new PrimitiveBinaryTranslationGeneration<P2Float?>();
             this._typeGenerations[typeof(P2FloatType)] = new PrimitiveBinaryTranslationGeneration<P2Float>();
             this._typeGenerations[typeof(StringType)] = new StringBinaryTranslationGeneration();
@@ -65,6 +67,7 @@ namespace Mutagen.Bethesda.Generation
             this._typeGenerations[typeof(ColorType)] = new ColorBinaryTranslationGeneration();
             this._typeGenerations[typeof(SpecialParseType)] = new SpecialParseTranslationGeneration();
             this._typeGenerations[typeof(ZeroType)] = new ZeroBinaryTranslationGeneration();
+            this._typeGenerations[typeof(CustomLogic)] = new CustomLogicTranslationGeneration();
             this.MainAPI = new TranslationModuleAPI(
                 writerAPI: new MethodAPI(
                     majorAPI: new string[] { "MutagenWriter writer" },
@@ -139,89 +142,14 @@ namespace Mutagen.Bethesda.Generation
 
         private void GenerateCustomPartials(ObjectGeneration obj, FileGeneration fg)
         {
-            foreach (var field in obj.IterateFields())
+            foreach (var field in obj.IterateFields(nonIntegrated: true))
             {
                 if (!field.TryGetFieldData(out var mutaData)) continue;
-                if (!mutaData.CustomBinary) continue;
-                using (var args = new FunctionWrapper(fg,
-                    $"static partial void FillBinary_{field.Name}_Custom{obj.Mask_GenericClause(MaskType.Error)}",
-                    wheres: obj.GenericTypes_ErrorMaskWheres)
-                {
-                    SemiColon = true
-                })
-                {
-                    args.Add($"{nameof(MutagenFrame)} frame");
-                    args.Add($"{obj.ObjectName} item");
-                    if (field.HasIndex)
-                    {
-                        args.Add($"int fieldIndex");
-                        args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
-                    }
-                    else
-                    {
-                        args.Add("bool doMasks");
-                        args.Add($"out {obj.Mask(MaskType.Error)} errorMask");
-                    }
-                }
-                fg.AppendLine();
-                using (var args = new FunctionWrapper(fg,
-                    $"static partial void WriteBinary_{field.Name}_Custom{obj.Mask_GenericClause(MaskType.Error)}",
-                    wheres: obj.GenericTypes_ErrorMaskWheres)
-                {
-                    SemiColon = true
-                })
-                {
-                    args.Add($"{nameof(MutagenWriter)} writer");
-                    args.Add($"{obj.ObjectName} item");
-                    if (field.HasIndex)
-                    {
-                        args.Add($"int fieldIndex");
-                        args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
-                    }
-                    else
-                    {
-                        args.Add("bool doMasks");
-                        args.Add($"out {obj.Mask(MaskType.Error)} errorMask");
-                    }
-                }
-                fg.AppendLine();
-                using (var args = new FunctionWrapper(fg,
-                    $"public static void WriteBinary_{field.Name}{obj.Mask_GenericClause(MaskType.Error)}",
-                    wheres: obj.GenericTypes_ErrorMaskWheres))
-                {
-                    args.Add($"{nameof(MutagenWriter)} writer");
-                    args.Add($"{obj.ObjectName} item");
-                    if (field.HasIndex)
-                    {
-                        args.Add($"int fieldIndex");
-                        args.Add($"Func<{obj.Mask(MaskType.Error)}> errorMask");
-                    }
-                    else
-                    {
-                        args.Add("bool doMasks");
-                        args.Add($"out {obj.Mask(MaskType.Error)} errorMask");
-                    }
-                }
-                using (new BraceWrapper(fg))
-                {
-                    using (var args = new ArgsWrapper(fg,
-                        $"WriteBinary_{field.Name}_Custom"))
-                    {
-                        args.Add("writer: writer");
-                        args.Add("item: item");
-                        if (field.HasIndex)
-                        {
-                            args.Add($"fieldIndex: fieldIndex");
-                            args.Add($"errorMask: errorMask");
-                        }
-                        else
-                        {
-                            args.Add("doMasks: doMasks");
-                            args.Add($"errorMask: out errorMask");
-                        }
-                    }
-                }
-                fg.AppendLine();
+                if (!mutaData.CustomBinary && !(field is CustomLogic)) continue;
+                CustomLogicTranslationGeneration.GeneratePartialMethods(
+                    fg: fg,
+                    obj: obj,
+                    field: field);
             }
         }
 
@@ -479,6 +407,7 @@ namespace Mutagen.Bethesda.Generation
                             if (!field.Field.TryGetFieldData(out var data)
                                 || !data.HasTrigger
                                 || data.TriggeringRecordTypes.Count == 0) continue;
+                            if (data.NoBinary) continue;
                             if (field.Field.Derivative && !data.CustomBinary) continue;
                             if (!this.TryGetTypeGeneration(field.Field.GetType(), out var generator))
                             {
@@ -530,7 +459,8 @@ namespace Mutagen.Bethesda.Generation
                                     {
                                         fg.AppendLine($"return TryGet<{obj.FieldIndexName}?>.Succeed({dataSet.SubFields.Last(f => f.IntegrateField).IndexEnumName});");
                                     }
-                                    else if (field.Field is SpecialParseType special)
+                                    else if (field.Field is SpecialParseType
+                                        || field.Field is CustomLogic)
                                     {
                                         fg.AppendLine($"return TryGet<{obj.FieldIndexName}?>.Succeed({(typelessStruct ? "lastParsed" : "null")});");
                                     }
@@ -767,32 +697,10 @@ namespace Mutagen.Bethesda.Generation
             var data = field.GetFieldData();
             if (data.CustomBinary)
             {
-                if (data.HasTrigger)
-                {
-                    fg.AppendLine($"using (var subFrame = {frameAccessor}.Spawn(Constants.SUBRECORD_LENGTH + contentLength))");
-                }
-                using (new BraceWrapper(fg, doIt: data.HasTrigger))
-                {
-                    using (var args = new ArgsWrapper(fg,
-                        $"FillBinary_{field.Name}_Custom"))
-                    {
-                        args.Add($"frame: {(data.HasTrigger ? "subFrame" : frameAccessor)}");
-                        args.Add("item: item");
-                        if (field.HasIndex)
-                        {
-                            if (field.IntegrateField)
-                            {
-                                args.Add($"fieldIndex: (int){field.IndexEnumName}");
-                            }
-                            args.Add($"errorMask: errorMask");
-                        }
-                        else
-                        {
-                            args.Add("doMasks: doMasks");
-                            args.Add($"errorMask: out errorMask");
-                        }
-                    }
-                }
+                CustomLogicTranslationGeneration.GenerateFill(
+                    fg,
+                    field,
+                    frameAccessor);
                 return;
             }
             generator.GenerateCopyIn(
@@ -973,14 +881,11 @@ namespace Mutagen.Bethesda.Generation
                         var maskType = this.Gen.MaskModule.GetMaskModule(field.GetType()).GetErrorMaskTypeStr(field);
                         if (data.CustomBinary)
                         {
-                            using (var args = new ArgsWrapper(fg,
-                                $"{obj.ObjectName}.WriteBinary_{field.Name}"))
-                            {
-                                args.Add("writer: writer");
-                                args.Add("item: item");
-                                args.Add($"fieldIndex: (int){field.IndexEnumName}");
-                                args.Add("errorMask: errorMask");
-                            }
+                            CustomLogicTranslationGeneration.GenerateWrite(
+                                fg: fg,
+                                obj: obj,
+                                field: field,
+                                writerAccessor: "writer");
                             continue;
                         }
                         if (!this.TryGetTypeGeneration(field.GetType(), out var generator))
@@ -1035,14 +940,11 @@ namespace Mutagen.Bethesda.Generation
                         if (field.Derivative && !data.CustomBinary) continue;
                         if (data.CustomBinary)
                         {
-                            using (var args = new ArgsWrapper(fg,
-                                $"{obj.ObjectName}.WriteBinary_{field.Name}"))
-                            {
-                                args.Add("writer: writer");
-                                args.Add("item: item");
-                                args.Add($"fieldIndex: (int){field.IndexEnumName}");
-                                args.Add("errorMask: errorMask");
-                            }
+                            CustomLogicTranslationGeneration.GenerateWrite(
+                                fg: fg,
+                                obj: obj,
+                                field: field,
+                                writerAccessor: "writer");
                             continue;
                         }
                         if (!this.TryGetTypeGeneration(field.GetType(), out var generator))
@@ -1115,6 +1017,7 @@ namespace Mutagen.Bethesda.Generation
                         else
                         {
                             if (!generator.ShouldGenerateWrite(field)) continue;
+                            if (data.NoBinary) continue;
                             generator.GenerateWrite(
                                 fg: fg,
                                 objGen: obj,

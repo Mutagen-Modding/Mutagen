@@ -124,7 +124,6 @@ namespace Mutagen.Bethesda.Oblivion
         #region ScriptEffect
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingSetItem<ScriptEffect> _ScriptEffect = new NotifyingSetItem<ScriptEffect>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItem<ScriptEffect> ScriptEffect_Property => this._ScriptEffect;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ScriptEffect IEffectGetter.ScriptEffect => this.ScriptEffect;

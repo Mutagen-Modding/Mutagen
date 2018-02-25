@@ -150,11 +150,12 @@ namespace Mutagen.Bethesda.Binary
         }
 
         [DebuggerStepThrough]
-        public MutagenFrame Spawn(ContentLength length)
+        public MutagenFrame Spawn(ContentLength length, bool snapToFinalPosition = true)
         {
             return new MutagenFrame(
                 this.Reader,
-                this.Reader.Position + length);
+                this.Reader.Position + length,
+                snapToFinalPosition: snapToFinalPosition);
         }
 
         [DebuggerStepThrough]

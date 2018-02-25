@@ -55,6 +55,7 @@ namespace Mutagen.Bethesda.Generation
             data.IncludeInLength = node.GetAttribute<bool>("includeInLength", true);
             data.Vestigial = node.GetAttribute<bool>("vestigial", false);
             data.CustomBinary = node.GetAttribute<bool>("customBinary", false);
+            data.NoBinary = node.GetAttribute<bool>("noBinary", false);
             ModifyGRUPAttributes(field);
             await base.PostFieldLoad(obj, field, node);
         }

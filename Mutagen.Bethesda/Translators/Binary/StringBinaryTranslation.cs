@@ -75,6 +75,67 @@ namespace Mutagen.Bethesda.Binary
             }
         }
 
+        public void Write<M>(
+            MutagenWriter writer,
+            string item,
+            int fieldIndex,
+            Func<M> errorMask,
+            bool nullTerminate = true)
+            where M : IErrorMask
+        {
+            this.Write(
+                writer,
+                item,
+                errorMask != null,
+                out var subMask,
+                nullTerminate: nullTerminate);
+            ErrorMask.HandleException(
+                errorMask,
+                fieldIndex,
+                subMask);
+        }
+
+        public void Write<M>(
+            MutagenWriter writer,
+            IHasItemGetter<string> item,
+            int fieldIndex,
+            Func<M> errorMask,
+            bool nullTerminate = true)
+            where M : IErrorMask
+        {
+            this.Write(
+                writer,
+                item.Item,
+                errorMask != null,
+                out var subMask,
+                nullTerminate: nullTerminate);
+            ErrorMask.HandleException(
+                errorMask,
+                fieldIndex,
+                subMask);
+        }
+
+        public void Write<M>(
+            MutagenWriter writer,
+            IHasBeenSetItemGetter<string> item,
+            int fieldIndex,
+            Func<M> errorMask,
+            bool nullTerminate = true)
+            where M : IErrorMask
+        {
+            if (!item.HasBeenSet) return;
+            this.Write(
+                writer,
+                item.Item,
+                errorMask != null,
+                out var subMask,
+                nullTerminate: nullTerminate);
+            ErrorMask.HandleException(
+                errorMask,
+                fieldIndex,
+                subMask);
+        }
+
         public void Write(
             MutagenWriter writer,
             string item,

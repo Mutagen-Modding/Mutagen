@@ -89,6 +89,7 @@
     <Compile Include="Translators\Binary\EnumBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\FilePathBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\FloatBinaryTranslation.cs" />
+    <Compile Include="Translators\Binary\P3UInt16BinaryTranslation.cs" />
     <Compile Include="Translators\Binary\P2FloatBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\RecordTypeBinaryTranslation.cs" />
     <Compile Include="Translators\Binary\FormIDBinaryTranslation.cs" />

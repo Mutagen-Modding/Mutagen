@@ -23,6 +23,8 @@ namespace Mutagen.Bethesda.Tests
             instructions.Instruction.SkipSourceSections.Add(new RangeInt64(0x93A648, 0xB44656));
             instructions.Instruction.SkipOutputSections.Add(new RangeInt64(0x93A648, 0xB8BA09));
             instructions.Instruction.IgnoreDifferenceSections.Add(new RangeInt64(0xBFF2E2, 0xBFF2E5));
+            instructions.Instruction.IgnoreDifferenceSections.Add(new RangeInt64(0xC61493, 0xC61496));
+            instructions.Instruction.IgnoreDifferenceSections.Add(new RangeInt64(0xCA3A6F, 0xCA3A72));
             return instructions;
         }
 
@@ -39,6 +41,7 @@ namespace Mutagen.Bethesda.Tests
             ProcessNPC_Mismatch(rec, instr, filePath, loc, compressed);
             ProcessCreature_Mismatch(rec, instr, filePath, loc, compressed);
             ProcessLeveledItemDataFields(rec, instr, filePath, loc);
+            ProcessRegions(rec, instr, filePath, loc);
         }
 
         private void ProcessNPC_Mismatch(
@@ -171,6 +174,89 @@ namespace Mutagen.Bethesda.Tests
                     SectionToMove = new RangeInt64(dataIndex + loc.Min, dataIndex + loc.Min + 7 - 1)
                 };
                 instr.Moves.Add(move);
+            }
+        }
+
+        private void ProcessRegions(
+            MajorRecord rec,
+            Instruction instr,
+            string filePath,
+            FileSection loc)
+        {
+            if (!(rec is Region)) return;
+            using (var stream = new MutagenReader(filePath))
+            {
+                stream.Position = loc.Min;
+                var str = stream.ReadString((int)loc.Range.Width + Constants.RECORD_HEADER_LENGTH);
+                var rdatIndex = str.IndexOf("RDAT");
+                if (rdatIndex == -1) return;
+                SortedList<uint, RangeInt64> rdats = new SortedList<uint, RangeInt64>();
+                while (rdatIndex != -1)
+                {
+                    var nextRdat = str.IndexOf("RDAT", rdatIndex + 1);
+                    stream.Position = new FileLocation(rdatIndex + 6 + loc.Min);
+                    var index = stream.ReadUInt32();
+                    rdats[index] =
+                        new RangeInt64(
+                            rdatIndex + loc.Min.Offset,
+                            nextRdat == -1 ? loc.Max.Offset : nextRdat - 1 + loc.Min.Offset);
+                    rdatIndex = nextRdat;
+                }
+                foreach (var item in rdats.Reverse())
+                {
+                    if (item.Key == (int)RegionData.RegionDataType.Icon) continue;
+                    instr.Moves.Add(
+                        new Move()
+                        {
+                            LocationToMove = loc.Max + 1,
+                            SectionToMove = item.Value
+                        });
+                }
+
+                if (rdats.ContainsKey((int)RegionData.RegionDataType.Icon))
+                { // Need to create icon record
+                    var edidIndex = str.IndexOf("EDID");
+                    if (edidIndex == -1)
+                    {
+                        throw new ArgumentException();
+                    }
+                    stream.Position = new FileLocation(edidIndex + loc.Min + Constants.HEADER_LENGTH);
+                    var edidLen = stream.ReadUInt16();
+                    stream.Position += edidLen;
+                    var locToPlace = stream.Position.Offset;
+
+                    // Get icon string
+                    var iconLoc = rdats[(int)RegionData.RegionDataType.Icon];
+                    stream.Position = new FileLocation(iconLoc.Min + Region.RDAT_LEN + 6);
+                    var iconStr = stream.ReadString((int)(iconLoc.Max - stream.Position));
+
+                    // Get icon bytes
+                    MemoryStream memStream = new MemoryStream();
+                    using (var writer = new MutagenWriter(memStream))
+                    {
+                        using (HeaderExport.ExportHeader(
+                            writer,
+                            new RecordType("ICON"),
+                            ObjectType.Subrecord))
+                        {
+                            writer.Write(iconStr);
+                            writer.Write(default(byte));
+                        }
+                    }
+
+                    instr.Additions.Add(
+                        new DataTarget()
+                        {
+                            Location = locToPlace,
+                            Data = memStream.ToArray()
+                        });
+                    instr.Moves.Add(
+                        new Move()
+                        {
+                            LocationToMove = long.MaxValue,
+                            SectionToMove = iconLoc
+                        });
+                }
             }
         }
 

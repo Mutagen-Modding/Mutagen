@@ -21,11 +21,4 @@
       </Data>
     </Fields>
   </Object>
-  
-  <Object name="WeatherChance" objType="Subrecord" GUID="6db15123-8d44-41b3-932f-cf3d904a2690" ID="106">
-    <Fields>
-      <FormIDLink name="Weather" refName="Weather" />
-      <Int32 name="Chance" />
-    </Fields>
-  </Object>
 </Loqui>

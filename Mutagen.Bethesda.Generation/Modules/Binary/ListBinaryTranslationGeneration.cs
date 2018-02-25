@@ -11,6 +11,7 @@ namespace Mutagen.Bethesda.Generation
     public enum ListBinaryType
     {
         Amount,
+        SubTrigger,
         Trigger,
         Frame
     }
@@ -28,15 +29,15 @@ namespace Mutagen.Bethesda.Generation
             }
             else if (subData.HasTrigger)
             {
-                return ListBinaryType.Trigger;
+                return ListBinaryType.SubTrigger;
             }
             else if (data.RecordType.HasValue)
             {
-                return ListBinaryType.Frame;
+                return ListBinaryType.Trigger;
             }
             else
             {
-                throw new ArgumentException();
+                return ListBinaryType.Frame;
             }
         }
 
@@ -72,7 +73,7 @@ namespace Mutagen.Bethesda.Generation
                 args.Add($"writer: {writerAccessor}");
                 args.Add($"item: {itemAccessor.PropertyOrDirectAccess}");
                 args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
-                if (listBinaryType == ListBinaryType.Frame)
+                if (listBinaryType == ListBinaryType.Trigger)
                 {
                     args.Add($"recordType: {objGen.RecordTypeHeaderName(data.RecordType.Value)}");
                 }
@@ -143,7 +144,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 fg.AppendLine("frame.Position += Constants.SUBRECORD_LENGTH + contentLength; // Skip marker");
             }
-            else if (listBinaryType == ListBinaryType.Frame)
+            else if (listBinaryType == ListBinaryType.Trigger)
             {
                 fg.AppendLine("frame.Position += Constants.SUBRECORD_LENGTH;");
             }
@@ -157,14 +158,18 @@ namespace Mutagen.Bethesda.Generation
                     args.Add($"frame: frame");
                     args.Add($"amount: {list.MaxValue.Value}");
                 }
-                else if (listBinaryType == ListBinaryType.Trigger)
+                else if (listBinaryType == ListBinaryType.SubTrigger)
                 {
                     args.Add($"frame: frame");
                     args.Add($"triggeringRecord: {subData.TriggeringRecordSetAccessor}");
                 }
-                else if (listBinaryType == ListBinaryType.Frame)
+                else if (listBinaryType == ListBinaryType.Trigger)
                 {
                     args.Add($"frame: frame.Spawn(contentLength)");
+                }
+                else if (listBinaryType == ListBinaryType.Frame)
+                {
+                    args.Add($"frame: frame");
                 }
                 else
                 {

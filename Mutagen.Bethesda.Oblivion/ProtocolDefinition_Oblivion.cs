@@ -105,6 +105,16 @@ namespace Loqui
             LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.WeatherSound_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.Climate_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.WeatherChance_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.Region_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.RegionArea_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.RegionData_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.RegionDataObjects_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.RegionDataMapName_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.RegionDataGrasses_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.RegionDataSounds_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.RegionDataWeather_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.RegionDataObject_Registration.Instance);
+            LoquiRegistration.Register(Mutagen.Bethesda.Oblivion.Internals.RegionSound_Registration.Instance);
         }
     }
 }

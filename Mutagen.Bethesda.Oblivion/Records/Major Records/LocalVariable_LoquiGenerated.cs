@@ -42,7 +42,6 @@ namespace Mutagen.Bethesda.Oblivion
         #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingSetItem<LocalVariableData> _Data = new NotifyingSetItem<LocalVariableData>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItem<LocalVariableData> Data_Property => this._Data;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         LocalVariableData ILocalVariableGetter.Data => this.Data;

@@ -55,6 +55,7 @@
     <Compile Include="Custom Data\MutagenObjData.cs" />
     <Compile Include="Extensions\ObjectGenerationExt.cs" />
     <Compile Include="Extensions\TypeGenerationExt.cs" />
+    <Compile Include="Fields\CustomLogic.cs" />
     <Compile Include="Fields\DataType.cs" />
     <Compile Include="Fields\EnumType.cs" />
     <Compile Include="Fields\GroupType.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="Modules\Binary\BinaryTranslationModule.cs" />
     <Compile Include="Modules\Binary\ByteArrayTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\ColorBinaryTranslationGeneration.cs" />
+    <Compile Include="Modules\Binary\CustomLogicTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\DataBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\EnumBinaryTranslationGeneration.cs" />
     <Compile Include="Modules\Binary\FilePathBinaryTranslationGeneration.cs" />

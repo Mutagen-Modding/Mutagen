@@ -58,7 +58,6 @@ namespace Mutagen.Bethesda.Oblivion
         #region Havok
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly INotifyingSetItem<HavokData> _Havok = new NotifyingSetItem<HavokData>();
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItem<HavokData> Havok_Property => this._Havok;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         HavokData ILandTextureGetter.Havok => this.Havok;

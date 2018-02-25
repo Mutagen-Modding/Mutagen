@@ -11,14 +11,15 @@ namespace Mutagen.Bethesda.Generation
     {
         public override async Task PostLoad(ObjectGeneration obj)
         {
-            var data = obj.GetObjectData();
-            await data.WiringComplete.Task;
+            var objData = obj.GetObjectData();
+            await objData.WiringComplete.Task;
             Dictionary<string, TypeGeneration> triggerMapping = new Dictionary<string, TypeGeneration>();
             Dictionary<RecordType, TypeGeneration> triggerRecMapping = new Dictionary<RecordType, TypeGeneration>();
             foreach (var field in obj.IterateFields())
             {
                 if (!field.TryGetFieldData(out var mutaData)) continue;
                 if (!mutaData.HasTrigger) continue;
+                if (mutaData.NoBinary) continue;
                 foreach (var trigger in mutaData.TriggeringRecordAccessors)
                 {
                     if (triggerMapping.TryGetValue(trigger, out var existingField))
@@ -43,9 +44,10 @@ namespace Mutagen.Bethesda.Generation
                 expandSets: SetMarkerType.ExpandSets.False))
             {
                 if (field is SetMarkerType) continue;
-                if (field.Derivative) continue;
+                if (field.Derivative || field.IntegrateField) continue;
                 var hasTrigger = field.TryGetFieldData(out var fieldData)
                     && fieldData.HasTrigger;
+                if (field.GetFieldData()?.NoBinary ?? false) continue;
                 if (hasTrigger)
                 {
                     triggerEncountered = true;

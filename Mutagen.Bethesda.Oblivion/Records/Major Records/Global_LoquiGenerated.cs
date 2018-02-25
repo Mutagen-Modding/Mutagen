@@ -518,7 +518,7 @@ namespace Mutagen.Bethesda.Oblivion
             switch (nextRecordType.Type)
             {
                 case "FNAM":
-                    using (var subFrame = frame.Spawn(Constants.SUBRECORD_LENGTH + contentLength))
+                    using (var subFrame = frame.Spawn(Constants.SUBRECORD_LENGTH + contentLength, snapToFinalPosition: false))
                     {
                         FillBinary_TypeChar_Custom(
                             frame: subFrame,

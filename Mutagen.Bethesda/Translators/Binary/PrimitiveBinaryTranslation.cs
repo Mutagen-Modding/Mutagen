@@ -102,38 +102,27 @@ namespace Mutagen.Bethesda.Binary
             errorMask = Write_Internal(writer, item, doMasks);
         }
 
-        private Exception Write_Internal(MutagenWriter writer, T? item, bool doMasks)
+        protected Exception Write_Internal(MutagenWriter writer, T? item, bool doMasks)
         {
-            Exception errorMask = null;
-            if (!item.HasValue) return errorMask;
-            try
-            {
-                WriteValue(writer, item.Value);
-            }
-            catch (Exception ex)
-            when (doMasks)
-            {
-                errorMask = ex;
-            }
-
-            return errorMask;
+            if (!item.HasValue) return null;
+            return Write_Internal(
+                writer,
+                item.Value,
+                doMasks);
         }
 
-        private Exception Write_Internal(MutagenWriter writer, T item, bool doMasks)
+        protected Exception Write_Internal(MutagenWriter writer, T item, bool doMasks)
         {
-            Exception errorMask;
             try
             {
                 WriteValue(writer, item);
-                errorMask = null;
             }
             catch (Exception ex)
             when (doMasks)
             {
-                errorMask = ex;
+                return ex;
             }
-
-            return errorMask;
+            return null;
         }
 
         void IBinaryTranslation<T, Exception>.Write(MutagenWriter writer, T item, ContentLength length, bool doMasks, out Exception errorMask)
@@ -157,7 +146,8 @@ namespace Mutagen.Bethesda.Binary
             RecordType header,
             bool nullable,
             bool doMasks,
-            out Exception errorMask)
+            out Exception errorMask,
+            Func<MutagenWriter, T?, bool, Exception> write = null)
         {
             if (item == null)
             {
@@ -170,9 +160,10 @@ namespace Mutagen.Bethesda.Binary
             }
             try
             {
+                write = write ?? this.Write_Internal;
                 using (HeaderExport.ExportHeader(writer, header, ObjectType.Subrecord))
                 {
-                    errorMask = this.Write_Internal(writer, item, doMasks);
+                    errorMask = write(writer, item, doMasks);
                 }
             }
             catch (Exception ex)
@@ -188,7 +179,8 @@ namespace Mutagen.Bethesda.Binary
             RecordType header,
             int fieldIndex,
             bool nullable,
-            Func<M> errorMask)
+            Func<M> errorMask,
+            Func<MutagenWriter, T?, bool, Exception> write = null)
             where M : IErrorMask
         {
             this.Write(
@@ -197,7 +189,8 @@ namespace Mutagen.Bethesda.Binary
                 header,
                 nullable,
                 errorMask != null,
-                out var subMask);
+                out var subMask,
+                write: write);
             ErrorMask.HandleException(
                 errorMask,
                 fieldIndex,
@@ -208,14 +201,12 @@ namespace Mutagen.Bethesda.Binary
             MutagenWriter writer,
             T? item,
             int fieldIndex,
-            Func<M> errorMask)
+            Func<M> errorMask,
+            Func<MutagenWriter, T?, bool, Exception> write = null)
             where M : IErrorMask
         {
-            this.Write(
-                writer,
-                item,
-                errorMask != null,
-                out var subMask);
+            write = write ?? Write_Internal;
+            var subMask = write(writer, item, errorMask != null);
             ErrorMask.HandleException(
                 errorMask,
                 fieldIndex,

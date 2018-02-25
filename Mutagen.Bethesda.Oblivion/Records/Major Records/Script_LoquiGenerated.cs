@@ -47,7 +47,6 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ScriptMetaSummary _MetadataSummary_Object = new ScriptMetaSummary();
         protected INotifyingSetItem<ScriptMetaSummary> _MetadataSummary;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public INotifyingSetItemGetter<ScriptMetaSummary> MetadataSummary_Property => this._MetadataSummary;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ScriptMetaSummary IScriptGetter.MetadataSummary => this.MetadataSummary;
