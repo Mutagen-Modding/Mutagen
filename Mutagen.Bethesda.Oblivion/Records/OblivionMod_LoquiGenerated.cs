@@ -1681,6 +1681,181 @@ namespace Mutagen.Bethesda.Oblivion
             }
         }
 
+        public INotifyingKeyedCollection<FormID, T> GetGroup<T>()
+            where T : IMajorRecord
+        {
+            var t = typeof(T);
+            if (t.Equals(typeof(GameSetting)))
+            {
+                return (INotifyingKeyedCollection<FormID, T>)GameSettings;
+            }
+            if (t.Equals(typeof(Global)))
+            {
+                return (INotifyingKeyedCollection<FormID, T>)Globals;
+            }
+            if (t.Equals(typeof(Class)))
+            {
+                return (INotifyingKeyedCollection<FormID, T>)Classes;
+            }
+            if (t.Equals(typeof(Faction)))
+            {
+                return (INotifyingKeyedCollection<FormID, T>)Factions;
+            }
+            if (t.Equals(typeof(Hair)))
+            {
+                return (INotifyingKeyedCollection<FormID, T>)Hairs;
+            }
+            if (t.Equals(typeof(Eye)))
+            {
+                return (INotifyingKeyedCollection<FormID, T>)Eyes;
+            }
+            if (t.Equals(typeof(Race)))
+            {
+                return (INotifyingKeyedCollection<FormID, T>)Races;
+            }
+            if (t.Equals(typeof(Sound)))
+            {
+                return (INotifyingKeyedCollection<FormID, T>)Sounds;
+            }
+            if (t.Equals(typeof(SkillRecord)))
+            {
+                return (INotifyingKeyedCollection<FormID, T>)Skills;
+            }
+            if (t.Equals(typeof(MagicEffect)))
+            {
+                return (INotifyingKeyedCollection<FormID, T>)MagicEffects;
+            }
+            if (t.Equals(typeof(Script)))
+            {
+                return (INotifyingKeyedCollection<FormID, T>)Scripts;
+            }
+            if (t.Equals(typeof(LandTexture)))
+            {
+                return (INotifyingKeyedCollection<FormID, T>)LandTextures;
+            }
+            if (t.Equals(typeof(Enchantment)))
+            {
+                return (INotifyingKeyedCollection<FormID, T>)Enchantments;
+            }
+            if (t.Equals(typeof(SpellUnleveled)))
+            {
+                return (INotifyingKeyedCollection<FormID, T>)Spells;
+            }
+            if (t.Equals(typeof(Birthsign)))
+            {
+                return (INotifyingKeyedCollection<FormID, T>)Birthsigns;
+            }
+            if (t.Equals(typeof(Activator)))
+            {
+                return (INotifyingKeyedCollection<FormID, T>)Activators;
+            }
+            if (t.Equals(typeof(AlchemicalApparatus)))
+            {
+                return (INotifyingKeyedCollection<FormID, T>)AlchemicalApparatus;
+            }
+            if (t.Equals(typeof(Armor)))
+            {
+                return (INotifyingKeyedCollection<FormID, T>)Armors;
+            }
+            if (t.Equals(typeof(Book)))
+            {
+                return (INotifyingKeyedCollection<FormID, T>)Books;
+            }
+            if (t.Equals(typeof(Clothing)))
+            {
+                return (INotifyingKeyedCollection<FormID, T>)Clothes;
+            }
+            if (t.Equals(typeof(Container)))
+            {
+                return (INotifyingKeyedCollection<FormID, T>)Containers;
+            }
+            if (t.Equals(typeof(Door)))
+            {
+                return (INotifyingKeyedCollection<FormID, T>)Doors;
+            }
+            if (t.Equals(typeof(Ingredient)))
+            {
+                return (INotifyingKeyedCollection<FormID, T>)Ingredients;
+            }
+            if (t.Equals(typeof(Light)))
+            {
+                return (INotifyingKeyedCollection<FormID, T>)Lights;
+            }
+            if (t.Equals(typeof(Miscellaneous)))
+            {
+                return (INotifyingKeyedCollection<FormID, T>)Miscellaneous;
+            }
+            if (t.Equals(typeof(Static)))
+            {
+                return (INotifyingKeyedCollection<FormID, T>)Statics;
+            }
+            if (t.Equals(typeof(Grass)))
+            {
+                return (INotifyingKeyedCollection<FormID, T>)Grasses;
+            }
+            if (t.Equals(typeof(Tree)))
+            {
+                return (INotifyingKeyedCollection<FormID, T>)Trees;
+            }
+            if (t.Equals(typeof(Flora)))
+            {
+                return (INotifyingKeyedCollection<FormID, T>)Flora;
+            }
+            if (t.Equals(typeof(Furnature)))
+            {
+                return (INotifyingKeyedCollection<FormID, T>)Furnature;
+            }
+            if (t.Equals(typeof(Weapon)))
+            {
+                return (INotifyingKeyedCollection<FormID, T>)Weapons;
+            }
+            if (t.Equals(typeof(Ammo)))
+            {
+                return (INotifyingKeyedCollection<FormID, T>)Ammo;
+            }
+            if (t.Equals(typeof(NPC)))
+            {
+                return (INotifyingKeyedCollection<FormID, T>)NPCs;
+            }
+            if (t.Equals(typeof(Creature)))
+            {
+                return (INotifyingKeyedCollection<FormID, T>)Creatures;
+            }
+            if (t.Equals(typeof(LeveledCreature)))
+            {
+                return (INotifyingKeyedCollection<FormID, T>)LeveledCreatures;
+            }
+            if (t.Equals(typeof(SoulGem)))
+            {
+                return (INotifyingKeyedCollection<FormID, T>)SoulGems;
+            }
+            if (t.Equals(typeof(Key)))
+            {
+                return (INotifyingKeyedCollection<FormID, T>)Keys;
+            }
+            if (t.Equals(typeof(Potion)))
+            {
+                return (INotifyingKeyedCollection<FormID, T>)Potions;
+            }
+            if (t.Equals(typeof(Subspace)))
+            {
+                return (INotifyingKeyedCollection<FormID, T>)Subspaces;
+            }
+            if (t.Equals(typeof(SigilStone)))
+            {
+                return (INotifyingKeyedCollection<FormID, T>)SigilStones;
+            }
+            if (t.Equals(typeof(LeveledItem)))
+            {
+                return (INotifyingKeyedCollection<FormID, T>)LeveledItems;
+            }
+            if (t.Equals(typeof(Weather)))
+            {
+                return (INotifyingKeyedCollection<FormID, T>)Weathers;
+            }
+            throw new ArgumentException($"Unkown group type: {t}");
+        }
+
         #endregion
 
         #region Binary Translation

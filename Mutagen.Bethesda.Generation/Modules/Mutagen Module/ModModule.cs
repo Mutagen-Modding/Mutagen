@@ -55,6 +55,33 @@ namespace Mutagen.Bethesda.Generation
                     }
                 }
             }
+            fg.AppendLine();
+
+            using (var args = new FunctionWrapper(fg,
+                "public INotifyingKeyedCollection<FormID, T> GetGroup<T>",
+                wheres: "where T : IMajorRecord"))
+            {
+
+            }
+            using (new BraceWrapper(fg))
+            {
+                fg.AppendLine("var t = typeof(T);");
+                foreach (var field in obj.IterateFields())
+                {
+                    if (!(field is LoquiType loqui)) continue;
+                    if (loqui.TargetObjectGeneration?.GetObjectData().ObjectType != ObjectType.Group) continue;
+                    if (!loqui.TryGetSpecificationAsObject("T", out var subObj))
+                    {
+                        throw new ArgumentException();
+                    }
+                    fg.AppendLine($"if (t.Equals(typeof({subObj.Name})))");
+                    using (new BraceWrapper(fg))
+                    {
+                        fg.AppendLine($"return (INotifyingKeyedCollection<FormID, T>){field.Name};");
+                    }
+                }
+                fg.AppendLine("throw new ArgumentException($\"Unkown group type: {t}\");");
+            }
 
             await base.GenerateInClass(obj, fg);
             fg.AppendLine();
