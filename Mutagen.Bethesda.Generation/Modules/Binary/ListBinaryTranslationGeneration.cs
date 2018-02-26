@@ -180,11 +180,23 @@ namespace Mutagen.Bethesda.Generation
                 {
                     if (list.SubTypeGeneration is LoquiType loqui)
                     {
-                        args.Add($"objType: {nameof(ObjectType)}.{loqui.TargetObjectGeneration.GetObjectType()}");
+                        switch (loqui.TargetObjectGeneration.GetObjectType())
+                        {
+                            case ObjectType.Subrecord:
+                                args.Add($"lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH");
+                                break;
+                            case ObjectType.Group:
+                            case ObjectType.Record:
+                                args.Add($"lengthLength: Mutagen.Bethesda.Constants.RECORD_LENGTHLENGTH");
+                                break;
+                            case ObjectType.Mod:
+                            default:
+                                throw new ArgumentException();
+                        }
                     }
                     else
                     {
-                        args.Add($"objType: {nameof(ObjectType)}.{ObjectType.Subrecord}");
+                        args.Add($"lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH");
                     }
                 }
                 args.Add($"errorMask: {maskAccessor}");

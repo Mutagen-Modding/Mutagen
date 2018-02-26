@@ -785,7 +785,7 @@ namespace Mutagen.Bethesda.Oblivion
                     var WeatherstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherChance, MaskItem<Exception, WeatherChance_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)RegionDataWeather_FieldIndex.Weathers,
-                        objType: ObjectType.Subrecord,
+                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, WeatherChance_ErrorMask> listSubMask) =>
                         {

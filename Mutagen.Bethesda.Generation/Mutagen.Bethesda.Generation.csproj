@@ -89,6 +89,8 @@
     <Compile Include="Modules\Mutagen Module\CorrectnessModule.cs" />
     <Compile Include="Modules\Mutagen Module\DataTypeModule.cs" />
     <Compile Include="Modules\Mutagen Module\GenericsModule.cs" />
+    <Compile Include="Modules\Mutagen Module\DictTypeModule.cs" />
+    <Compile Include="Modules\Mutagen Module\ListTypeModule.cs" />
     <Compile Include="Modules\Mutagen Module\ModModule.cs" />
     <Compile Include="Modules\Mutagen Module\MutagenModule.cs" />
     <Compile Include="Modules\Mutagen Module\NumFieldsModule.cs" />

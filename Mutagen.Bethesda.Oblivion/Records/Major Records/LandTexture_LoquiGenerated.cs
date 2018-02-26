@@ -877,7 +877,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         triggeringRecord: LandTexture_Registration.GNAM_HEADER,
                         fieldIndex: (int)LandTexture_FieldIndex.PotentialGrass,
-                        objType: ObjectType.Subrecord,
+                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
                         {

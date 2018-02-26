@@ -946,7 +946,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         triggeringRecord: LocalVariable_Registration.TriggeringRecordTypes,
                         fieldIndex: (int)Script_FieldIndex.LocalVariables,
-                        objType: ObjectType.Subrecord,
+                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, LocalVariable_ErrorMask> listSubMask) =>
                         {
@@ -964,7 +964,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         triggeringRecord: ScriptReference_Registration.TriggeringRecordTypes,
                         fieldIndex: (int)Script_FieldIndex.References,
-                        objType: ObjectType.Subrecord,
+                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, RecordType header, bool listDoMasks, out MaskItem<Exception, ScriptReference_ErrorMask> listSubMask) =>
                         {

@@ -1174,7 +1174,7 @@ namespace Mutagen.Bethesda.Oblivion
                     var CounterEffectstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<EDIDLink<MagicEffect>, Exception>.Instance.ParseRepeatedItem(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)MagicEffect_FieldIndex.CounterEffects,
-                        objType: ObjectType.Subrecord,
+                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
                         {

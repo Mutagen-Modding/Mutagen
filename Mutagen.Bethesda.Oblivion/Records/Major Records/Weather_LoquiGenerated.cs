@@ -1632,7 +1632,7 @@ namespace Mutagen.Bethesda.Oblivion
                     var WeatherTypestryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<WeatherType, MaskItem<Exception, WeatherType_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)Weather_FieldIndex.WeatherTypes,
-                        objType: ObjectType.Subrecord,
+                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, WeatherType_ErrorMask> listSubMask) =>
                         {
@@ -1791,7 +1791,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         triggeringRecord: Weather_Registration.SNAM_HEADER,
                         fieldIndex: (int)Weather_FieldIndex.Sounds,
-                        objType: ObjectType.Subrecord,
+                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, WeatherSound_ErrorMask> listSubMask) =>
                         {

@@ -911,7 +911,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         triggeringRecord: LeveledCreature_Registration.LVLO_HEADER,
                         fieldIndex: (int)LeveledCreature_FieldIndex.Entries,
-                        objType: ObjectType.Subrecord,
+                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, LeveledEntry_ErrorMask<NPCSpawn_ErrorMask>> listSubMask) =>
                         {

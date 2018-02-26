@@ -944,7 +944,7 @@ namespace Mutagen.Bethesda
                             frame: frame,
                             triggeringRecord: T_RecordType,
                             fieldIndex: (int)Group_FieldIndex.Items,
-                            objType: ObjectType.Record,
+                            lengthLength: new ContentLength(4),
                             errorMask: errorMask,
                             transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, T_ErrMask> listSubMask) =>
                             {

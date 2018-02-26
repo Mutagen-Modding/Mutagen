@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.Binary
             MutagenFrame frame,
             bool doMasks,
             RecordType triggeringRecord,
-            ObjectType objType,
+            ContentLength lengthLength,
             out MaskItem<Exception, IEnumerable<M>> errorMask,
             BinarySubParseDelegate<T, M> transl)
         {
@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Binary
                 var ret = new List<T>();
                 while (!frame.Complete)
                 {
-                    if (!HeaderTranslation.TryGetRecordType(safeFrame.Reader, objType, triggeringRecord)) break;
+                    if (!HeaderTranslation.TryGetRecordType(safeFrame.Reader, lengthLength, triggeringRecord)) break;
                     var startingPos = frame.Position;
                     var get = transl(safeFrame, doMasks, out var subMaskObj);
                     if (get.Succeeded)
@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Binary
             MutagenFrame frame,
             bool doMasks,
             ICollectionGetter<RecordType> triggeringRecord,
-            ObjectType objType,
+            ContentLength lengthLength,
             out MaskItem<Exception, IEnumerable<M>> errorMask,
             BinarySubParseRecordDelegate<T, M> transl)
         {
@@ -122,7 +122,7 @@ namespace Mutagen.Bethesda.Binary
         public TryGet<IEnumerable<T>> ParseRepeatedItem(
             MutagenFrame frame,
             bool doMasks,
-            ObjectType objType,
+            ContentLength lengthLength,
             out MaskItem<Exception, IEnumerable<M>> errorMask,
             BinarySubParseDelegate<T, M> transl)
         {
@@ -168,7 +168,7 @@ namespace Mutagen.Bethesda.Binary
             MutagenFrame frame,
             int fieldIndex,
             RecordType triggeringRecord,
-            ObjectType objType,
+            ContentLength lengthLength,
             Func<Mask> errorMask,
             BinarySubParseDelegate<T, M> transl)
             where Mask : IErrorMask
@@ -177,7 +177,7 @@ namespace Mutagen.Bethesda.Binary
                 frame: frame,
                 triggeringRecord: triggeringRecord,
                 doMasks: errorMask != null,
-                objType: objType,
+                lengthLength: lengthLength,
                 errorMask: out var err,
                 transl: transl);
             ErrorMask.HandleErrorMask(
@@ -191,7 +191,7 @@ namespace Mutagen.Bethesda.Binary
             MutagenFrame frame,
             int fieldIndex,
             ICollectionGetter<RecordType> triggeringRecord,
-            ObjectType objType,
+            ContentLength lengthLength,
             Func<Mask> errorMask,
             BinarySubParseRecordDelegate<T, M> transl)
             where Mask : IErrorMask
@@ -200,7 +200,7 @@ namespace Mutagen.Bethesda.Binary
                 frame: frame,
                 triggeringRecord: triggeringRecord,
                 doMasks: errorMask != null,
-                objType: objType,
+                lengthLength: lengthLength,
                 errorMask: out var err,
                 transl: transl);
             ErrorMask.HandleErrorMask(
@@ -214,7 +214,7 @@ namespace Mutagen.Bethesda.Binary
             MutagenFrame frame,
             int fieldIndex,
             ICollectionGetter<RecordType> triggeringRecord,
-            ObjectType objType,
+            ContentLength lengthLength,
             Func<Mask> errorMask,
             BinarySubParseDelegate<T, M> transl)
             where Mask : IErrorMask
@@ -223,7 +223,7 @@ namespace Mutagen.Bethesda.Binary
                 frame: frame,
                 triggeringRecord: triggeringRecord,
                 doMasks: errorMask != null,
-                objType: objType,
+                lengthLength: lengthLength,
                 errorMask: out var err,
                 transl: (MutagenFrame reader, RecordType header, bool doMasks, out M maskObj) => transl(reader, doMasks, out maskObj));
             ErrorMask.HandleErrorMask(
@@ -236,7 +236,7 @@ namespace Mutagen.Bethesda.Binary
         public TryGet<IEnumerable<T>> ParseRepeatedItem<Mask>(
             MutagenFrame frame,
             int fieldIndex,
-            ObjectType objType,
+            ContentLength lengthLength,
             Func<Mask> errorMask,
             BinarySubParseDelegate<T, M> transl)
             where Mask : IErrorMask
@@ -244,7 +244,7 @@ namespace Mutagen.Bethesda.Binary
             var ret = this.ParseRepeatedItem(
                 frame: frame,
                 doMasks: errorMask != null,
-                objType: objType,
+                lengthLength: lengthLength,
                 errorMask: out var err,
                 transl: transl);
             ErrorMask.HandleErrorMask(

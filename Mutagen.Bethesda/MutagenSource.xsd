@@ -131,6 +131,14 @@
       </xs:complexContent>
     </xs:complexType>
 
+    <xs:complexType name="Dict">
+      <xs:complexContent>
+        <xs:extension base="Dict">
+          <xs:attribute name="lengthLength" type="xs:byte" />
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+
     <xs:complexType name="Enum">
       <xs:complexContent>
         <xs:extension base="Enum">

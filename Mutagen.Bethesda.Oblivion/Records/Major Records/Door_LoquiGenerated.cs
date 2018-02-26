@@ -981,7 +981,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         triggeringRecord: Door_Registration.TNAM_HEADER,
                         fieldIndex: (int)Door_FieldIndex.RandomTeleportDestinations,
-                        objType: ObjectType.Subrecord,
+                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
                         {

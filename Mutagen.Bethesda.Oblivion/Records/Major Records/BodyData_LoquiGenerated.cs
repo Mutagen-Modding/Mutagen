@@ -795,7 +795,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         triggeringRecord: BodyPart_Registration.TriggeringRecordTypes,
                         fieldIndex: (int)BodyData_FieldIndex.BodyParts,
-                        objType: ObjectType.Subrecord,
+                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, BodyPart_ErrorMask> listSubMask) =>
                         {

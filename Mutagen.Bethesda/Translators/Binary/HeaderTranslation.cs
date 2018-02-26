@@ -127,23 +127,9 @@ namespace Mutagen.Bethesda.Binary
 
         public static bool TryParseRecordType(
             MutagenReader reader,
-            ObjectType type,
+            ContentLength lengthLength,
             RecordType expectedHeader)
         {
-            ContentLength lengthLength;
-            switch (type)
-            {
-                case ObjectType.Subrecord:
-                    lengthLength = Constants.SUBRECORD_LENGTHLENGTH;
-                    break;
-                case ObjectType.Record:
-                    lengthLength = Constants.RECORD_LENGTHLENGTH;
-                    break;
-                case ObjectType.Group:
-                case ObjectType.Mod:
-                default:
-                    throw new ArgumentException();
-            }
             if (TryParse(
                 reader,
                 expectedHeader,
@@ -157,23 +143,9 @@ namespace Mutagen.Bethesda.Binary
 
         public static bool TryGetRecordType(
             MutagenReader reader,
-            ObjectType type,
+            ContentLength lengthLength,
             RecordType expectedHeader)
         {
-            ContentLength lengthLength;
-            switch (type)
-            {
-                case ObjectType.Subrecord:
-                    lengthLength = Constants.SUBRECORD_LENGTHLENGTH;
-                    break;
-                case ObjectType.Record:
-                    lengthLength = Constants.RECORD_LENGTHLENGTH;
-                    break;
-                case ObjectType.Group:
-                case ObjectType.Mod:
-                default:
-                    throw new ArgumentException();
-            }
             if (TryGet(
                 reader,
                 expectedHeader,

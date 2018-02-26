@@ -799,7 +799,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         triggeringRecord: SoundItem_Registration.TriggeringRecordTypes,
                         fieldIndex: (int)CreatureSound_FieldIndex.Sounds,
-                        objType: ObjectType.Subrecord,
+                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, SoundItem_ErrorMask> listSubMask) =>
                         {

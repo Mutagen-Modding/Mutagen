@@ -785,7 +785,7 @@ namespace Mutagen.Bethesda.Oblivion
                     var ObjectstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionDataObject, MaskItem<Exception, RegionDataObject_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)RegionDataObjects_FieldIndex.Objects,
-                        objType: ObjectType.Subrecord,
+                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, RegionDataObject_ErrorMask> listSubMask) =>
                         {

@@ -908,7 +908,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         triggeringRecord: Enchantment_Registration.EFID_HEADER,
                         fieldIndex: (int)Enchantment_FieldIndex.Effects,
-                        objType: ObjectType.Subrecord,
+                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, Effect_ErrorMask> listSubMask) =>
                         {

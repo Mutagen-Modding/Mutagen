@@ -980,7 +980,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         triggeringRecord: MasterReference_Registration.TriggeringRecordTypes,
                         fieldIndex: (int)TES4_FieldIndex.MasterReferences,
-                        objType: ObjectType.Subrecord,
+                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, MasterReference_ErrorMask> listSubMask) =>
                         {

@@ -797,7 +797,7 @@ namespace Mutagen.Bethesda.Oblivion
                     var RegionPointstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<P2Float, Exception>.Instance.ParseRepeatedItem(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)RegionArea_FieldIndex.RegionPoints,
-                        objType: ObjectType.Subrecord,
+                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
                         {

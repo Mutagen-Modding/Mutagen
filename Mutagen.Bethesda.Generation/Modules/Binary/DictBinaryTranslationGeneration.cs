@@ -159,13 +159,29 @@ namespace Mutagen.Bethesda.Generation
                     throw new NotImplementedException();
                 }
                 args.Add($"fieldIndex: (int){typeGen.IndexEnumName}");
-                if (dict.ValueTypeGen is LoquiType loqui)
+                if (dict.CustomData.TryGetValue("lengthLength", out object len))
                 {
-                    args.Add($"objType: {nameof(ObjectType)}.{loqui.TargetObjectGeneration.GetObjectType()}");
+                    args.Add($"lengthLength: new ContentLength({len})");
+                }
+                else if (dict.ValueTypeGen is LoquiType loqui)
+                {
+                    switch (loqui.TargetObjectGeneration.GetObjectType())
+                    {
+                        case ObjectType.Subrecord:
+                            args.Add($"lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH");
+                            break;
+                        case ObjectType.Group:
+                        case ObjectType.Record:
+                            args.Add($"lengthLength: Mutagen.Bethesda.Constants.RECORD_LENGTHLENGTH");
+                            break;
+                        case ObjectType.Mod:
+                        default:
+                            throw new ArgumentException();
+                    }
                 }
                 else
                 {
-                    args.Add($"objType: {nameof(ObjectType)}.{ObjectType.Subrecord}");
+                    args.Add($"lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH");
                 }
                 args.Add($"errorMask: {maskAccessor}");
                 args.Add((gen) =>

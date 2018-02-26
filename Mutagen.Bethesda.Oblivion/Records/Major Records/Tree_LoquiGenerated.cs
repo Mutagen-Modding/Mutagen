@@ -1070,7 +1070,7 @@ namespace Mutagen.Bethesda.Oblivion
                     var SpeedTreeSeedstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<UInt32, Exception>.Instance.ParseRepeatedItem(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)Tree_FieldIndex.SpeedTreeSeeds,
-                        objType: ObjectType.Subrecord,
+                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
                         {

@@ -8,7 +8,7 @@
       <String name="ContainedRecordType" derivative="true" customBinary="true" />
       <Enum name="GroupType" enumName="GroupTypeEnum" byteLength="4" />
       <ByteArray name="LastModified" length="4" nullable="NotNull" />
-      <Dict name="Items">
+      <Dict name="Items" lengthLength="4" >
         <KeyedValue keyAccessor="FormID" keyType="FormID" >
           <Ref>
             <Generic>T</Generic>

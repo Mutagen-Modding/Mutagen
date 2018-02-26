@@ -1430,7 +1430,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         triggeringRecord: Race_Registration.SPLO_HEADER,
                         fieldIndex: (int)Race_FieldIndex.Spells,
-                        objType: ObjectType.Subrecord,
+                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
                         {
@@ -1448,7 +1448,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         triggeringRecord: Race_Registration.XNAM_HEADER,
                         fieldIndex: (int)Race_FieldIndex.Relations,
-                        objType: ObjectType.Subrecord,
+                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, Relation_ErrorMask> listSubMask) =>
                         {
@@ -1550,7 +1550,7 @@ namespace Mutagen.Bethesda.Oblivion
                         frame: frame,
                         triggeringRecord: FacePart_Registration.TriggeringRecordTypes,
                         fieldIndex: (int)Race_FieldIndex.FaceData,
-                        objType: ObjectType.Subrecord,
+                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, FacePart_ErrorMask> listSubMask) =>
                         {
@@ -1574,7 +1574,7 @@ namespace Mutagen.Bethesda.Oblivion
                     var HairstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Hair>, Exception>.Instance.ParseRepeatedItem(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)Race_FieldIndex.Hairs,
-                        objType: ObjectType.Subrecord,
+                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
                         {
@@ -1591,7 +1591,7 @@ namespace Mutagen.Bethesda.Oblivion
                     var EyestryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<FormIDLink<Eye>, Exception>.Instance.ParseRepeatedItem(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)Race_FieldIndex.Eyes,
-                        objType: ObjectType.Subrecord,
+                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, bool listDoMasks, out Exception listSubMask) =>
                         {

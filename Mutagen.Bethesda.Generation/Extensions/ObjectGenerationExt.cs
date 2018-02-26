@@ -79,6 +79,22 @@ namespace Mutagen.Bethesda.Generation
             throw new ArgumentException($"Object {objGen.Name} did not have object type defined.");
         }
 
+        public static ContentLength GetLengthLength(this ObjectGeneration objGen)
+        {
+            var objType = objGen.GetObjectType();
+            switch (objType)
+            {
+                case ObjectType.Subrecord:
+                    return Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH;
+                case ObjectType.Group:
+                case ObjectType.Record:
+                    return Mutagen.Bethesda.Constants.RECORD_LENGTHLENGTH;
+                case ObjectType.Mod:
+                default:
+                    throw new ArgumentException();
+            }
+        }
+
         public static string GetTriggeringSource(this ObjectGeneration objGen)
         {
             return objGen.GetObjectData().TriggeringSource;

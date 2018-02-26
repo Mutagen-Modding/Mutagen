@@ -823,7 +823,7 @@ namespace Mutagen.Bethesda.Oblivion
                     var SoundstryGet = Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionSound, MaskItem<Exception, RegionSound_ErrorMask>>.Instance.ParseRepeatedItem(
                         frame: frame.Spawn(contentLength),
                         fieldIndex: (int)RegionDataSounds_FieldIndex.Sounds,
-                        objType: ObjectType.Subrecord,
+                        lengthLength: Mutagen.Bethesda.Constants.SUBRECORD_LENGTHLENGTH,
                         errorMask: errorMask,
                         transl: (MutagenFrame r, bool listDoMasks, out MaskItem<Exception, RegionSound_ErrorMask> listSubMask) =>
                         {
