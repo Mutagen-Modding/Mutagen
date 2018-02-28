@@ -1095,6 +1095,30 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #region Mutagen
+        public override IEnumerable<ILink> Links => GetLinks();
+        private IEnumerable<ILink> GetLinks()
+        {
+            foreach (var item in base.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in Relations.SelectMany(f => f.Links))
+            {
+                yield return item;
+            }
+            foreach (var item in Voices.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in DefaultHair.Links)
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        #endregion
+
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]

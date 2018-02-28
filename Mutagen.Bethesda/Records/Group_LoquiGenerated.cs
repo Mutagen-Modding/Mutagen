@@ -549,6 +549,15 @@ namespace Mutagen.Bethesda
 
         #region Mutagen
         public static readonly RecordType T_RecordType;
+        public IEnumerable<ILink> Links => GetLinks();
+        private IEnumerable<ILink> GetLinks()
+        {
+            foreach (var item in Items.Values.SelectMany(f => f.Links))
+            {
+                yield return item;
+            }
+            yield break;
+        }
         #endregion
 
         #region Binary Translation

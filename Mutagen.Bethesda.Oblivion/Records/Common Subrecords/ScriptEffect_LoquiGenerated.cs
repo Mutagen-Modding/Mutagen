@@ -512,6 +512,13 @@ namespace Mutagen.Bethesda.Oblivion
             Break0 = 1,
             Break1 = 2
         }
+        public IEnumerable<ILink> Links => GetLinks();
+        private IEnumerable<ILink> GetLinks()
+        {
+            yield return Script_Property;
+            yield return VisualEffect_Property;
+            yield break;
+        }
         #endregion
 
         #region Binary Translation

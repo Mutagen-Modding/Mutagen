@@ -1680,6 +1680,34 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #region Mutagen
+        public override IEnumerable<ILink> Links => GetLinks();
+        private IEnumerable<ILink> GetLinks()
+        {
+            foreach (var item in base.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in Items.SelectMany(f => f.Links))
+            {
+                yield return item;
+            }
+            foreach (var item in Factions.SelectMany(f => f.Links))
+            {
+                yield return item;
+            }
+            yield return DeathItem_Property;
+            yield return Script_Property;
+            yield return CombatStyle_Property;
+            yield return InheritsSoundFrom_Property;
+            foreach (var item in Sounds.SelectMany(f => f.Links))
+            {
+                yield return item;
+            }
+            yield break;
+        }
+        #endregion
+
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]

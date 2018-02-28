@@ -1856,6 +1856,179 @@ namespace Mutagen.Bethesda.Oblivion
             throw new ArgumentException($"Unkown group type: {t}");
         }
 
+        public IEnumerable<ILink> Links => GetLinks();
+        private IEnumerable<ILink> GetLinks()
+        {
+            foreach (var item in GameSettings.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in Globals.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in Classes.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in Factions.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in Hairs.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in Eyes.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in Races.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in Sounds.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in Skills.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in MagicEffects.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in Scripts.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in LandTextures.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in Enchantments.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in Spells.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in Birthsigns.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in Activators.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in AlchemicalApparatus.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in Armors.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in Books.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in Clothes.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in Containers.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in Doors.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in Ingredients.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in Lights.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in Miscellaneous.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in Statics.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in Grasses.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in Trees.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in Flora.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in Furnature.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in Weapons.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in Ammo.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in NPCs.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in Creatures.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in LeveledCreatures.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in SoulGems.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in Keys.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in Potions.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in Subspaces.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in SigilStones.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in LeveledItems.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in Weathers.Links)
+            {
+                yield return item;
+            }
+            yield break;
+        }
         #endregion
 
         #region Binary Translation

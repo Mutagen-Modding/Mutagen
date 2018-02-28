@@ -518,6 +518,19 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #region Mutagen
+        public IEnumerable<ILink> Links => GetLinks();
+        private IEnumerable<ILink> GetLinks()
+        {
+            yield return EnchantEffect_Property;
+            yield return CastingSound_Property;
+            yield return BoltSound_Property;
+            yield return HitSound_Property;
+            yield return AreaSound_Property;
+            yield break;
+        }
+        #endregion
+
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]

@@ -575,6 +575,16 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 errorMask: errorMask);
         }
+        public IEnumerable<ILink> Links => GetLinks();
+        private IEnumerable<ILink> GetLinks()
+        {
+            yield return MagicEffect_Property;
+            foreach (var item in ScriptEffect.Links)
+            {
+                yield return item;
+            }
+            yield break;
+        }
         #endregion
 
         #region Binary Translation

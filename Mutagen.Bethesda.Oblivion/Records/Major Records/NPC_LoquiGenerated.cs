@@ -2006,6 +2006,32 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
+        #region Mutagen
+        public override IEnumerable<ILink> Links => GetLinks();
+        private IEnumerable<ILink> GetLinks()
+        {
+            foreach (var item in base.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in Factions.SelectMany(f => f.Links))
+            {
+                yield return item;
+            }
+            yield return DeathItem_Property;
+            yield return Race_Property;
+            yield return Script_Property;
+            foreach (var item in Items.SelectMany(f => f.Links))
+            {
+                yield return item;
+            }
+            yield return Class_Property;
+            yield return Hair_Property;
+            yield return CombatStyle_Property;
+            yield break;
+        }
+        #endregion
+
         #region Binary Translation
         #region Binary Create
         [DebuggerStepThrough]

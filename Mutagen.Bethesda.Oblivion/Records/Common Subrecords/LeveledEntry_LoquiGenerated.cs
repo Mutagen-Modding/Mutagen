@@ -565,6 +565,12 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public bool StructCustom;
+        public IEnumerable<ILink> Links => GetLinks();
+        private IEnumerable<ILink> GetLinks()
+        {
+            yield return Reference_Property;
+            yield break;
+        }
         #endregion
 
         #region Binary Translation

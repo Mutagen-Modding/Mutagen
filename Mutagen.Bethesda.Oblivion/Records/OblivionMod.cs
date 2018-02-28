@@ -7,7 +7,7 @@ using Noggog.Notifying;
 
 namespace Mutagen.Bethesda.Oblivion
 {
-    public partial class OblivionMod : IMod
+    public partial class OblivionMod : IMod, ILinkContainer
     {
         public INotifyingListGetter<MasterReference> MasterReferences => this.TES4.MasterReferences;
 

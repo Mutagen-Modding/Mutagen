@@ -761,6 +761,17 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Range0 = 1
         }
+        public override IEnumerable<ILink> Links => GetLinks();
+        private IEnumerable<ILink> GetLinks()
+        {
+            foreach (var item in base.Links)
+            {
+                yield return item;
+            }
+            yield return Script_Property;
+            yield return Sound_Property;
+            yield break;
+        }
         #endregion
 
         #region Binary Translation

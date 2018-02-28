@@ -769,6 +769,21 @@ namespace Mutagen.Bethesda.Oblivion
         {
             Break0 = 1
         }
+        public override IEnumerable<ILink> Links => GetLinks();
+        private IEnumerable<ILink> GetLinks()
+        {
+            foreach (var item in base.Links)
+            {
+                yield return item;
+            }
+            yield return Light_Property;
+            yield return EffectShader_Property;
+            foreach (var item in SubData.Links)
+            {
+                yield return item;
+            }
+            yield break;
+        }
         #endregion
 
         #region Binary Translation

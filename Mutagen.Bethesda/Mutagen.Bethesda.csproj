@@ -52,6 +52,7 @@
     <Compile Include="Links\IEDIDLink.cs" />
     <Compile Include="Links\IFormIDLink.cs" />
     <Compile Include="Links\ILink.cs" />
+    <Compile Include="Links\ILinkContainer.cs" />
     <Compile Include="Links\LinkExt.cs" />
     <Compile Include="Links\NamedFormID.cs" />
     <Compile Include="FormID.cs" />

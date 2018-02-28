@@ -535,6 +535,19 @@ namespace Mutagen.Bethesda.Oblivion
                 writer: writer,
                 errorMask: errorMask);
         }
+        public override IEnumerable<ILink> Links => GetLinks();
+        private IEnumerable<ILink> GetLinks()
+        {
+            foreach (var item in base.Links)
+            {
+                yield return item;
+            }
+            foreach (var item in Entries.SelectMany(f => f.Links))
+            {
+                yield return item;
+            }
+            yield break;
+        }
         #endregion
 
         #region Binary Translation

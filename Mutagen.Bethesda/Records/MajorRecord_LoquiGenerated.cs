@@ -380,6 +380,14 @@ namespace Mutagen.Bethesda
 
         #endregion
 
+        #region Mutagen
+        public virtual IEnumerable<ILink> Links => GetLinks();
+        private IEnumerable<ILink> GetLinks()
+        {
+            yield break;
+        }
+        #endregion
+
         #region Binary Translation
         #region Binary Copy In
         public virtual void CopyIn_Binary(
